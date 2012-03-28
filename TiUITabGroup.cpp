@@ -5,10 +5,16 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "tibb.h"
-#include "TitaniumRuntime.h"
+#include "TiUITabGroup.h"
 
-int tibb_run(const char* javaScript, int argc, char** argv)
+TiUITabGroup::TiUITabGroup()
 {
-    return TitaniumRuntime::run(javaScript, argc, argv);
+    // TODO Auto-generated constructor stub
+
 }
+
+TiUITabGroup::~TiUITabGroup()
+{
+    // TODO Auto-generated destructor stub
+}
+

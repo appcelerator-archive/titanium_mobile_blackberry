@@ -5,10 +5,13 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "tibb.h"
-#include "TitaniumRuntime.h"
+#include "TiUIBase.h"
 
-int tibb_run(const char* javaScript, int argc, char** argv)
+TiUIBase::TiUIBase()
 {
-    return TitaniumRuntime::run(javaScript, argc, argv);
 }
+
+TiUIBase::~TiUIBase()
+{
+}
+

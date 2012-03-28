@@ -5,10 +5,18 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "tibb.h"
-#include "TitaniumRuntime.h"
+#ifndef TIUITABGROUP_H_
+#define TIUITABGROUP_H_
 
-int tibb_run(const char* javaScript, int argc, char** argv)
+#include "TiUIBase.h"
+
+class TiUITabGroup : public TiUIBase
 {
-    return TitaniumRuntime::run(javaScript, argc, argv);
-}
+public:
+protected:
+    virtual ~TiUITabGroup();
+private:
+    TiUITabGroup();
+};
+
+#endif /* TIUITABGROUP_H_ */
