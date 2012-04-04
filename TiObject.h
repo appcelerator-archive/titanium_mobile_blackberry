@@ -64,9 +64,8 @@ protected:
     virtual TiObject* onLookupMember(const char* memberName);
     virtual void onSetGetPropertyCallback(Handle<ObjectTemplate>* objTemplate);
     virtual void onSetFunctionCallback(Handle<ObjectTemplate>* objTemplate);
-    virtual Handle<ObjectTemplate>* getGlobalTemplate();
-    virtual void setGlobalTemplate(Handle<ObjectTemplate>* globalTemplate);
     virtual bool userCanAddMember(const char* propertyName);
+    virtual void onSetProperty(const char* propertyName,Local<Value> value);
 private:
     static Handle<Value> propGetter_(Local<String> prop,
                                      const AccessorInfo& info);
@@ -79,7 +78,6 @@ private:
     char* name_;
     OBJECT_ENTRY** childObject_;
     int childObjectCount_;
-    Handle<ObjectTemplate>* globalTemplate_;
     bool hasInitialized_;
 };
 

@@ -10,16 +10,19 @@
 
 #include "TiObject.h"
 
+class TiCascadesApp;
+
 class TiTitaniumObject : public TiObject
 {
 public:
-    static TiObject* createObject();
+    static TiObject* createObject(TiCascadesApp& cascadesApp);
 protected:
     virtual ~TiTitaniumObject();
     virtual void onCreateStaticMembers();
 	virtual bool canAddMembers() const;
 private:
     TiTitaniumObject();
+    TiCascadesApp* cascadesApp_;
 };
 
 #endif /* TITITANIUMOBJECT_H_ */

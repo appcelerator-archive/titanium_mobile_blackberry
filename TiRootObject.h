@@ -24,12 +24,12 @@ public:
 protected:
     virtual ~TiRootObject();
     virtual void onCreateStaticMembers();
-	virtual Handle<ObjectTemplate>* getGlobalTemplate();
 private:
     TiRootObject();
 
     Persistent<Context> context_;
     Handle<ObjectTemplate> globalTemplate_;
+    TiCascadesApp* cascadesApp_;
 };
 
 #endif /* TIROOTOBJECT_H_ */

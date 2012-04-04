@@ -34,6 +34,17 @@
 									<listOptionValue builtIn="false" value="C:/bbndk-2.0.0/target/target-override/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/tibb/include}&quot;"/>
 								</option>
+								<option id="com.qnx.qcc.option.compiler.defines.1265970181" superClass="com.qnx.qcc.option.compiler.defines" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="_REENTRANT"/>
+									<listOptionValue builtIn="false" value="QT_NO_DEBUG"/>
+									<listOptionValue builtIn="false" value="QT_DECLARATIVE_LIB"/>
+									<listOptionValue builtIn="false" value="QT_SCRIPT_LIB"/>
+									<listOptionValue builtIn="false" value="QT_SVG_LIB"/>
+									<listOptionValue builtIn="false" value="QT_SQL_LIB"/>
+									<listOptionValue builtIn="false" value="QT_GUI_LIB"/>
+									<listOptionValue builtIn="false" value="QT_NETWORK_LIB"/>
+									<listOptionValue builtIn="false" value="QT_CORE_LIB"/>
+								</option>
 								<inputType id="com.qnx.qcc.inputType.compiler.837486040" superClass="com.qnx.qcc.inputType.compiler"/>
 							</tool>
 							<tool id="com.qnx.qcc.tool.assembler.586740030" name="QCC Assembler" superClass="com.qnx.qcc.tool.assembler">
@@ -86,10 +97,21 @@
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/tibb/include}&quot;"/>
 								</option>
+								<option id="com.qnx.qcc.option.compiler.defines.329860137" superClass="com.qnx.qcc.option.compiler.defines" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="_REENTRANT"/>
+									<listOptionValue builtIn="false" value="QT_NO_DEBUG"/>
+									<listOptionValue builtIn="false" value="QT_DECLARATIVE_LIB"/>
+									<listOptionValue builtIn="false" value="QT_SCRIPT_LIB"/>
+									<listOptionValue builtIn="false" value="QT_SVG_LIB"/>
+									<listOptionValue builtIn="false" value="QT_SQL_LIB"/>
+									<listOptionValue builtIn="false" value="QT_GUI_LIB"/>
+									<listOptionValue builtIn="false" value="QT_NETWORK_LIB"/>
+									<listOptionValue builtIn="false" value="QT_CORE_LIB"/>
+								</option>
 								<inputType id="com.qnx.qcc.inputType.compiler.1530303731" superClass="com.qnx.qcc.inputType.compiler"/>
 							</tool>
 							<tool id="com.qnx.qcc.tool.assembler.1325825065" name="QCC Assembler" superClass="com.qnx.qcc.tool.assembler">
-								<option id="com.qnx.qcc.option.assembler.includePath.1506837843" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath" valueType="includePath"/>
+								<option id="com.qnx.qcc.option.assembler.includePath.1506837843" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath"/>
 								<inputType id="com.qnx.qcc.inputType.assembler.2013760859" superClass="com.qnx.qcc.inputType.assembler"/>
 							</tool>
 							<tool id="com.qnx.qcc.tool.linker.1282267218" name="QCC Linker" superClass="com.qnx.qcc.tool.linker"/>
@@ -135,10 +157,21 @@
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/tibb/include}&quot;"/>
 								</option>
+								<option id="com.qnx.qcc.option.compiler.defines.940981227" superClass="com.qnx.qcc.option.compiler.defines" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="_REENTRANT"/>
+									<listOptionValue builtIn="false" value="QT_NO_DEBUG"/>
+									<listOptionValue builtIn="false" value="QT_DECLARATIVE_LIB"/>
+									<listOptionValue builtIn="false" value="QT_SCRIPT_LIB"/>
+									<listOptionValue builtIn="false" value="QT_SVG_LIB"/>
+									<listOptionValue builtIn="false" value="QT_SQL_LIB"/>
+									<listOptionValue builtIn="false" value="QT_GUI_LIB"/>
+									<listOptionValue builtIn="false" value="QT_NETWORK_LIB"/>
+									<listOptionValue builtIn="false" value="QT_CORE_LIB"/>
+								</option>
 								<inputType id="com.qnx.qcc.inputType.compiler.1164155620" superClass="com.qnx.qcc.inputType.compiler"/>
 							</tool>
 							<tool id="com.qnx.qcc.tool.assembler.1103305926" name="QCC Assembler" superClass="com.qnx.qcc.tool.assembler">
-								<option id="com.qnx.qcc.option.assembler.includePath.721729755" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath" valueType="includePath"/>
+								<option id="com.qnx.qcc.option.assembler.includePath.721729755" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath"/>
 								<inputType id="com.qnx.qcc.inputType.assembler.331078804" superClass="com.qnx.qcc.inputType.assembler"/>
 							</tool>
 							<tool id="com.qnx.qcc.tool.linker.1191618140" name="QCC Linker" superClass="com.qnx.qcc.tool.linker"/>
@@ -184,10 +217,21 @@
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/tibb/include}&quot;"/>
 								</option>
+								<option id="com.qnx.qcc.option.compiler.defines.1807513299" superClass="com.qnx.qcc.option.compiler.defines" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="_REENTRANT"/>
+									<listOptionValue builtIn="false" value="QT_NO_DEBUG"/>
+									<listOptionValue builtIn="false" value="QT_DECLARATIVE_LIB"/>
+									<listOptionValue builtIn="false" value="QT_SCRIPT_LIB"/>
+									<listOptionValue builtIn="false" value="QT_SVG_LIB"/>
+									<listOptionValue builtIn="false" value="QT_SQL_LIB"/>
+									<listOptionValue builtIn="false" value="QT_GUI_LIB"/>
+									<listOptionValue builtIn="false" value="QT_NETWORK_LIB"/>
+									<listOptionValue builtIn="false" value="QT_CORE_LIB"/>
+								</option>
 								<inputType id="com.qnx.qcc.inputType.compiler.261181031" superClass="com.qnx.qcc.inputType.compiler"/>
 							</tool>
 							<tool id="com.qnx.qcc.tool.assembler.361548406" name="QCC Assembler" superClass="com.qnx.qcc.tool.assembler">
-								<option id="com.qnx.qcc.option.assembler.includePath.344240156" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath" valueType="includePath"/>
+								<option id="com.qnx.qcc.option.assembler.includePath.344240156" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath"/>
 								<inputType id="com.qnx.qcc.inputType.assembler.537373931" superClass="com.qnx.qcc.inputType.assembler"/>
 							</tool>
 							<tool id="com.qnx.qcc.tool.linker.1298469204" name="QCC Linker" superClass="com.qnx.qcc.tool.linker"/>
@@ -221,5 +265,7 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.qnx.tools.ide.qde.managedbuilder.core.qccScannerInfo"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="1">
+		<resource resourceType="PROJECT" workspacePath="/tibb"/>
+	</storageModule>
 </cproject>

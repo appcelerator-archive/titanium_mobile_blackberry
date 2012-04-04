@@ -8,7 +8,6 @@
 #ifndef TITANIUMRUNTIME_H_
 #define TITANIUMRUNTIME_H_
 
-#include "JavascriptEngine.h"
 #include "TiObject.h"
 #include "TiObjectScope.h"
 

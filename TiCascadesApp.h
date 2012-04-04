@@ -20,13 +20,17 @@
 
 class TiCascadesApp : public QObject
 {
+    Q_OBJECT
 public:
     TiCascadesApp();
     virtual ~TiCascadesApp();
     void initializeApp();
     void setScene();
+    void setBackgroundColor(unsigned int color);
+    void setBackgroundColor(const char* color);
+    void* createContainer();
+    void addContainerToAppContainer(void* container);
 private:
-Q_OBJECT
     bb::cascades::Container* appContainer_;
 };
 

@@ -9,9 +9,25 @@
 
 TiUIBase::TiUIBase()
 {
+    cascadesApp_=NULL;
 }
 
 TiUIBase::~TiUIBase()
 {
 }
 
+TiUIBase::TiUIBase(TiCascadesApp& app,const char* name):
+        TiObject(name)
+{
+    cascadesApp_=&app;
+}
+
+TiCascadesApp* TiUIBase::getCascadesApp() const
+{
+    return cascadesApp_;
+}
+
+bool TiUIBase::canAddMembers() const
+{
+    return true;
+}

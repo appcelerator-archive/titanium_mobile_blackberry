@@ -119,7 +119,6 @@ void TiObject::addMember(TiObject* object, const char* name)
     }
     entry->setObjectName(memberName);
     entry->obj_ = object;
-    object->setGlobalTemplate(getGlobalTemplate());
     object->initializeTiObject(this);
 }
 
@@ -155,13 +154,8 @@ void TiObject::onSetFunctionCallback(Handle<ObjectTemplate>* objTemplate)
     HandleScope handleScope;
     (*objTemplate)->SetCallAsFunctionHandler(functCallback_);
 }
-Handle<ObjectTemplate>* TiObject::getGlobalTemplate()
+void TiObject::onSetProperty(const char* propertyName,Local<Value> value)
 {
-    return globalTemplate_;
-}
-void TiObject::setGlobalTemplate(Handle<ObjectTemplate>* globalTemplate)
-{
-    globalTemplate_ = globalTemplate;
 }
 bool TiObject::userCanAddMember(const char* propertyName)
 {
@@ -242,6 +236,7 @@ Handle<Value> TiObject::propSetter_(Local<String> prop, Local<Value> value,
     {
         info.Holder()->Set(prop, value);
     }
+    obj->onSetProperty(propString,value);
     return value;
 }
 Handle<Value> TiObject::functCallback_(const Arguments& args)

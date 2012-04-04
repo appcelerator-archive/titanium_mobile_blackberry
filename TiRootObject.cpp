@@ -24,13 +24,8 @@ TiRootObject::~TiRootObject()
 
 void TiRootObject::onCreateStaticMembers()
 {
-    TiObject* ti = TiTitaniumObject::createObject();
+    TiObject* ti = TiTitaniumObject::createObject(*cascadesApp_);
     addMember(ti);
-}
-
-Handle<ObjectTemplate>* TiRootObject::getGlobalTemplate()
-{
-    return &globalTemplate_;
 }
 
 TiRootObject* TiRootObject::createRootObject()
@@ -43,6 +38,7 @@ TiRootObject* TiRootObject::createRootObject()
 int TiRootObject::executeScript(TiCascadesApp& app, const char* javaScript)
 {
     HandleScope handleScope;
+    cascadesApp_=&app;
     globalTemplate_ = ObjectTemplate::New();
     globalTemplate_->SetInternalFieldCount(2);
     onSetGetPropertyCallback(&globalTemplate_);

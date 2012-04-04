@@ -10,17 +10,21 @@
 
 #include "TiObject.h"
 
+class TiCascadesApp;
+
 class TiUIObject : public TiObject
 {
 public:
-	static void addObjectToParent(TiObject* parent);
+	static void addObjectToParent(TiObject* parent,TiCascadesApp& cascadesApp);
 protected:
     virtual ~TiUIObject();
     virtual void onCreateStaticMembers();
 private:
     TiUIObject();
+    TiUIObject(TiCascadesApp& cascadesApp);
 	static Handle<Value> setBackgroundColor_(void* userContext,TiObject* caller,const Arguments& args);
 	static Handle<Value> createTabGroup_(void* userContext,TiObject* caller,const Arguments& args);
+	TiCascadesApp* cascadesApp_;
 };
 
 #endif /* TIUIOBJECT_H_ */

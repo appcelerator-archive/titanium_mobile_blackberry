@@ -12,6 +12,10 @@ EXTRA_INCVPATH+=$(QNX_TARGET)/usr/include/freetype2 \
 	$(PROJECT_ROOT)/include \
 	$(PROJECT_ROOT)/../libv8/include
 
+PRE_BUILD=moc.exe -DQT_NO_DEBUG -DQT_DECLARATIVE_LIB -DQT_SCRIPT_LIB -DQT_SVG_LIB -DQT_SQL_LIB -DQT_GUI_LIB \
+	-DQT_NETWORK_LIB -DQT_CORE_LIB $(addprefix -I, $(INCVPATH)) 
+
+
 # Extra library search path for target overrides and patches
 EXTRA_LIBVPATH+=$(QNX_TARGET)/../target-override/$(CPUVARDIR)/lib \
 	$(QNX_TARGET)/../target-override/$(CPUVARDIR)/usr/lib \
@@ -26,11 +30,7 @@ CCFLAGS+=-fstack-protector-all -D_FORTIFY_SOURCE=2 \
 LDFLAGS+=-Wl,-z,relro -Wl,-z,now $(if $(filter g so shared,$(VARIANTS)),,-pie)
 
 # Add your required library names, here
-LIBS+=v8 v8preparser
-
-# Extra .so required
-LDFLAGS+=-lQtCascades -lQtCore -lQtDeclarative -lQtGui -lQtMultimedia -lQtNetwork
-LDFLAGS+=-lQtOpenGL -lQtScript -lQtScriptTools -lQtSql -lQtSvg -lQtTest -lQtXml -lbb -lheimdall 
+LIBS+=
 
 include $(MKFILES_ROOT)/qmacros.mk
 

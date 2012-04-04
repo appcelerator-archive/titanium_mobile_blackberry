@@ -14,12 +14,19 @@
 #include <bb/cascades/QmlDocument>
 #include <bb/cascades/Control>
 
+class TiCascadesApp;
+
 class TiUIBase : public TiObject
 {
 public:
 protected:
+    TiUIBase(TiCascadesApp& app,const char* name);
     TiUIBase();
     virtual ~TiUIBase();
+    virtual TiCascadesApp* getCascadesApp() const;
+    virtual bool canAddMembers() const;
+private:
+    TiCascadesApp* cascadesApp_;
 };
 
 #endif /* TIUIBASE_H_ */

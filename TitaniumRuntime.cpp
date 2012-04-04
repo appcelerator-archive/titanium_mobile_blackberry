@@ -52,6 +52,7 @@ int TitaniumRuntime::internalRun(int argc, char** argv)
     rootObject_.attachTiObject(obj);
     bb::cascades::Application app(argc, argv);
     TiCascadesApp mainApp;
+    mainApp.initializeApp();
     obj->executeScript(mainApp, javaScript_);
     mainApp.setScene();
     // TODO: implement a message pump here
