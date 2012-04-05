@@ -24,6 +24,7 @@ private:
     TiUIObject(TiCascadesApp& cascadesApp);
 	static Handle<Value> setBackgroundColor_(void* userContext,TiObject* caller,const Arguments& args);
 	static Handle<Value> createTabGroup_(void* userContext,TiObject* caller,const Arguments& args);
+    static Handle<Value> createWindow_(void* userContext,TiObject* caller,const Arguments& args);
 	TiCascadesApp* cascadesApp_;
 };
 

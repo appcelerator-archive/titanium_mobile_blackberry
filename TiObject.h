@@ -48,6 +48,8 @@ public:
     TiObject(const char* objectName);
     TiObject(const char* objectName, Handle<Value> value);
     virtual ~TiObject();
+    static char* getStringFromObject(Handle<Value> value,const char* defaultString);
+    static void freeString(char* str);
     void addRef();
     void release();
     virtual const char* getName() const;

@@ -9,6 +9,8 @@
 #include "TiGenericFunctionObject.h"
 #include "TiUtility.h"
 #include "TiCascadesApp.h"
+#include "TiUIWindow.h"
+#include <string.h>
 
 TiUIObject::TiUIObject()
         : TiObject("UI")
@@ -34,17 +36,22 @@ void TiUIObject::addObjectToParent(TiObject* parent,TiCascadesApp& cascadesApp)
 
 void TiUIObject::onCreateStaticMembers()
 {
-    TiGenericFunctionObject::addGenericFunctionToParent(this,
-                                                        "setBackgroundColor",
-                                                        this,
-                                                        setBackgroundColor_);
+
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTabGroup",
                                                         this, createTabGroup_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this,
+                                                        "createWindow",this,createWindow_);
+}
+
+Handle<Value> TiUIObject::createTabGroup_(void* userContext, TiObject* caller,
+                                          const Arguments& args)
+{
+    return Undefined();
 }
 
 Handle<Value> TiUIObject::setBackgroundColor_(void* userContext,
-                                              TiObject* caller,
-                                              const Arguments& args)
+                                            TiObject* caller,
+                                            const Arguments& args)
 {
     HandleScope handleScope;
     TiUIObject* obj=(TiUIObject*)userContext;
@@ -53,19 +60,12 @@ Handle<Value> TiUIObject::setBackgroundColor_(void* userContext,
         // TODO: throw an exception
         return Undefined();
     }
-    unsigned int col;
     if(args[0]->IsString())
     {
         Handle < String > colStr=Handle<String>::Cast(args[0]);
         String::Utf8Value utfColStr(colStr);
         const char* c=(const char*)(*utfColStr);
-        obj->cascadesApp_->setBackgroundColor(c);
-    }
-    else if(args[0]->IsNumber())
-    {
-        Handle<Number> colInt=Handle<Number>::Cast(args[0]);
-        col=colInt->Value();
-        obj->cascadesApp_->setBackgroundColor(col);
+        obj->cascadesApp_->setBackgroundColor(NULL,c);
     }
     else
     {
@@ -75,8 +75,28 @@ Handle<Value> TiUIObject::setBackgroundColor_(void* userContext,
     return Undefined();
 }
 
-Handle<Value> TiUIObject::createTabGroup_(void* userContext, TiObject* caller,
-                                          const Arguments& args)
+Handle<Value> TiUIObject::createWindow_(void* userContext, TiObject* caller,
+                                        const Arguments& args)
 {
-    return Undefined();
+    HandleScope handleScope;
+    TiUIObject* obj=(TiUIObject*)userContext;
+    Handle < Context > context = args.Holder()->CreationContext();
+    Handle < External > globalTemplate =
+            Handle < External
+            > ::Cast(
+                    context->Global()->GetHiddenValue(
+                            String::New("globalTemplate_")));
+    Handle < ObjectTemplate > *global =
+            (Handle<ObjectTemplate>*) (globalTemplate->Value());
+    Handle < Object > result;
+    result=(*global)->NewInstance();
+    TiUIWindow* wnd=TiUIWindow::createWindow(*(obj->cascadesApp_),"");
+	if((args.Length()>0)&&(args[0]->IsObject()))
+	{
+		Local<Object> settingsObj=Local<Object>::Cast(args[0]);
+		wnd->setParametersFromObject(settingsObj);
+	}
+    result->SetHiddenValue(String::New("ti_"), External::New(wnd));
+    return handleScope.Close(result);
 }
+

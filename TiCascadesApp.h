@@ -9,6 +9,7 @@
 #ifndef TICASCADESAPP_H_
 #define TICASCADESAPP_H_
 
+#ifndef _WIN32
 #include <QtCore/QObject>
 #include <QtCore/QMetaType>
 
@@ -17,6 +18,14 @@
 #include <bb/cascades/Control>
 #include <bb/cascades/Container>
 #include <bb/cascades/Application>
+#else
+#define Q_OBJECT
+class QObject
+{
+};
+#endif
+
+typedef void* UIHANDLE;
 
 class TiCascadesApp : public QObject
 {
@@ -26,12 +35,11 @@ public:
     virtual ~TiCascadesApp();
     void initializeApp();
     void setScene();
-    void setBackgroundColor(unsigned int color);
-    void setBackgroundColor(const char* color);
-    void* createContainer();
-    void addContainerToAppContainer(void* container);
+    void setBackgroundColor(UIHANDLE container,const char* color);
+    UIHANDLE createContainer();
+    void addContainerToAppContainer(UIHANDLE container);
 private:
-    bb::cascades::Container* appContainer_;
+    UIHANDLE appContainer_;
 };
 
 #endif /* TICASCADESAPP_H_ */

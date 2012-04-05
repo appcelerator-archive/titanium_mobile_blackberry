@@ -55,6 +55,44 @@ TiObject::~TiObject()
     }
 }
 
+char* TiObject::getStringFromObject(Handle<Value> value,const char* defaultString)
+{
+    char* str=NULL;
+    HandleScope handleScope;
+    if(value->IsString())
+    {
+        Handle<String> v8str=Handle<String>::Cast(value);
+        String::Utf8Value v8utf8str(v8str);
+        str=new char[strlen(*v8utf8str)+1];
+        strcpy(str,*v8utf8str);
+    }
+    // TODO: complete object "as string"
+    /*
+    else if(value->IsObject())
+    {
+        Handle<Object> v8obj=Handle<Object>::Cast(value);
+
+    }
+    */
+    else
+    {
+        str=new char[strlen((defaultString==NULL)?"":defaultString)+1];
+        strcpy(str,(defaultString==NULL)?"":defaultString);
+
+    }
+    return str;
+}
+
+void TiObject::freeString(char* str)
+{
+    if(str!=NULL)
+    {
+        delete[] str;
+    }
+}
+
+
+
 void TiObject::addRef()
 {
     // TODO: protect in multi-threaded environment
@@ -229,13 +267,21 @@ Handle<Value> TiObject::propSetter_(Local<String> prop, Local<Value> value,
                                    > ::Cast(
                                            valueObj->GetHiddenValue(
                                                    String::New("ti_")));
-        TiObject* obj2 = (TiObject*) ptr2->Value();
+		TiObject* obj2;
+		if(ptr2.IsEmpty())
+		{
+			obj2=new TiObject("");
+			obj2->initializeTiObject(NULL);
+			valueObj->SetHiddenValue(String::New("ti_"),External::New(obj2));
+		}
+		else
+		{
+			obj2 = (TiObject*) ptr2->Value();
+		}
+		///valueObj->
         obj->addMember(obj2, propString);
     }
-    else
-    {
-        info.Holder()->Set(prop, value);
-    }
+    //info.Holder()->Set(prop, value);
     obj->onSetProperty(propString,value);
     return value;
 }
