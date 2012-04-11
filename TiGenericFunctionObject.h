@@ -10,14 +10,12 @@
 
 #include "TiObject.h"
 
-typedef Handle<Value> (*GENERIC_FUNCTION_CALLBACK)(void*, TiObject*,
-                                                   const Arguments&);
+typedef Handle<Value> (*GENERIC_FUNCTION_CALLBACK)(void*, TiObject*, const Arguments&);
 
 class TiGenericFunctionObject : public TiObject
 {
 public:
-    static void addGenericFunctionToParent(TiObject* parent, const char* name,
-                                           void* userContext,
+    static void addGenericFunctionToParent(TiObject* parent, const char* name, void* userContext,
                                            GENERIC_FUNCTION_CALLBACK callback);
     virtual bool isFunction() const;
 protected:

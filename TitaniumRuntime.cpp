@@ -19,6 +19,7 @@
 #include "TiRootObject.h"
 #include "TiTitaniumObject.h"
 #include "TiCascadesApp.h"
+#include "NativeObjectFactory.h"
 
 TitaniumRuntime::TitaniumRuntime()
 {
@@ -53,15 +54,11 @@ int TitaniumRuntime::internalRun(int argc, char** argv)
     bb::cascades::Application app(argc, argv);
     TiCascadesApp mainApp;
     mainApp.initializeApp();
-    obj->executeScript(mainApp, javaScript_);
+    NativeObjectFactory objFactory(&mainApp);
+    obj->executeScript(&objFactory, javaScript_);
     mainApp.setScene();
     // TODO: implement a message pump here
     return bb::cascades::Application::exec();
-}
-
-int TitaniumRuntime::runJavascript(const char* script)
-{
-    return 0;
 }
 
 void TitaniumRuntime::Log(const char* msg)

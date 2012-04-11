@@ -24,31 +24,30 @@ TiRootObject::~TiRootObject()
 
 void TiRootObject::onCreateStaticMembers()
 {
-    TiObject* ti = TiTitaniumObject::createObject(*cascadesApp_);
+    TiObject* ti = TiTitaniumObject::createObject(objectFactory_);
     addMember(ti);
+    addMember(ti, "Ti");
 }
 
 TiRootObject* TiRootObject::createRootObject()
 {
     TiRootObject* obj = new TiRootObject;
-    obj->initializeTiObject(NULL);
     return obj;
 }
 
-int TiRootObject::executeScript(TiCascadesApp& app, const char* javaScript)
+int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* javaScript)
 {
     HandleScope handleScope;
-    cascadesApp_=&app;
+    objectFactory_ = objectFactory;
+    initializeTiObject (NULL);
     globalTemplate_ = ObjectTemplate::New();
     globalTemplate_->SetInternalFieldCount(2);
     onSetGetPropertyCallback(&globalTemplate_);
     onSetFunctionCallback(&globalTemplate_);
     context_ = Context::New(NULL, globalTemplate_);
-    context_->Global()->SetHiddenValue(String::New("globalTemplate_"),
-                                       External::New(&globalTemplate_));
-    context_->Global()->SetHiddenValue(String::New("ti_"), External::New(this));
+    context_->Global()->SetHiddenValue(String::New("globalTemplate_"), External::New(&globalTemplate_));
+    setTiObjectToJsObject(context_->Global(), this);
     Context::Scope context_scope(context_);
-    onCreateStaticMembers();
 
     TryCatch tryCatch;
     Handle < Script > compiledScript = Script::Compile(String::New(javaScript));
@@ -66,6 +65,7 @@ int TiRootObject::executeScript(TiCascadesApp& app, const char* javaScript)
         printf("%s\n", *error);
         return -1;
     }
+    onStartMessagePump();
     return 0;
 }
 

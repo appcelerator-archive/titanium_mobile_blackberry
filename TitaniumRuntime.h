@@ -20,7 +20,6 @@ private:
     TitaniumRuntime(const char* javaScript);
     virtual ~TitaniumRuntime();
     int internalRun(int argc, char** argv);
-    int runJavascript(const char* script);
     void Log(const char* msg);
 
     char* javaScript_;

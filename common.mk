@@ -7,8 +7,9 @@ USEFILE=
 
 # Extra include path for libfreetype and for target overrides and patches
 EXTRA_INCVPATH+=$(QNX_TARGET)/usr/include/freetype2 \
-	$(QNX_TARGET)/../target-override/usr/include \
-	$(QNX_TARGET)/../target-override/usr/include/QtCore \
+	$(QNX_TARGET)/usr/include \
+	$(QNX_TARGET)/usr/include/qt4/QtCore \
+	$(QNX_TARGET)/usr/include/qt4 \
 	$(PROJECT_ROOT)/include \
 	$(PROJECT_ROOT)/../libv8/include
 
@@ -17,8 +18,8 @@ PRE_BUILD=moc.exe -DQT_NO_DEBUG -DQT_DECLARATIVE_LIB -DQT_SCRIPT_LIB -DQT_SVG_LI
 
 
 # Extra library search path for target overrides and patches
-EXTRA_LIBVPATH+=$(QNX_TARGET)/../target-override/$(CPUVARDIR)/lib \
-	$(QNX_TARGET)/../target-override/$(CPUVARDIR)/usr/lib \
+EXTRA_LIBVPATH+=$(QNX_TARGET)/$(CPUVARDIR)/usr/lib \
+	$(QNX_TARGET)/$(CPUVARDIR)/usr/lib/qt4/lib \
 	$(PROJECT_ROOT)/../libv8/lib/$(CPU)
 
 # Compiler options for enhanced security and recording the compiler options in release builds

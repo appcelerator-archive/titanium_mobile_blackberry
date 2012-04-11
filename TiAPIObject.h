@@ -19,8 +19,7 @@ protected:
     virtual void onCreateStaticMembers();
 private:
     TiAPIObject();
-    static Handle<Value> debug_(void* userContext, TiObject* caller,
-                                const Arguments& args);
+    static Handle<Value> debug_(void* userContext, TiObject* caller, const Arguments& args);
 };
 
 #endif /* TIAPIOBJECT_H_ */

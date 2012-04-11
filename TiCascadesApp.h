@@ -5,19 +5,13 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-
 #ifndef TICASCADESAPP_H_
 #define TICASCADESAPP_H_
 
 #ifndef _WIN32
 #include <QtCore/QObject>
 #include <QtCore/QMetaType>
-
-#include <bb/cascades/Event>
-#include <bb/cascades/UiObject>
-#include <bb/cascades/Control>
 #include <bb/cascades/Container>
-#include <bb/cascades/Application>
 #else
 #define Q_OBJECT
 class QObject
@@ -25,21 +19,17 @@ class QObject
 };
 #endif
 
-typedef void* UIHANDLE;
-
 class TiCascadesApp : public QObject
 {
-    Q_OBJECT
+Q_OBJECT
 public:
     TiCascadesApp();
     virtual ~TiCascadesApp();
     void initializeApp();
     void setScene();
-    void setBackgroundColor(UIHANDLE container,const char* color);
-    UIHANDLE createContainer();
-    void addContainerToAppContainer(UIHANDLE container);
-private:
-    UIHANDLE appContainer_;
+#ifndef _WIN32
+    bb::cascades::Container* appContainer_;
+#endif
 };
 
 #endif /* TICASCADESAPP_H_ */

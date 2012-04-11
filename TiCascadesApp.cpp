@@ -5,65 +5,48 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-
 #include "TiCascadesApp.h"
-#include <QtCore/QObject>
-#include <QtCore/QMetaType>
+#include <bb/cascades/Application>
+
 #include <bb/cascades/DockLayout>
 #include <bb/cascades/DockLayoutProperties>
 #include <bb/cascades/Color>
+#include <bb/cascades/Label>
+#include <bb/cascades/QmlDocument>
+#include <bb/cascades/Font>
+#include <bb/cascades/Event>
+#include <bb/cascades/UiObject>
+#include <bb/cascades/Control>
+#include <bb/cascades/Container>
+#include <bb/cascades/Application>
+#include <bb/cascades/StackLayout>
+#include <bb/cascades/Page>
 #include "TiUtility.h"
-
-
 
 using namespace bb::cascades;
 
 TiCascadesApp::TiCascadesApp()
 {
-    appContainer_=NULL;
+    appContainer_ = NULL;
 }
 
 TiCascadesApp::~TiCascadesApp()
 {
-    if(appContainer_!=NULL)
+    if (appContainer_ != NULL)
     {
-        delete (Container*)appContainer_;
-        appContainer_=NULL;
+        appContainer_ = NULL;
     }
 }
 void TiCascadesApp::initializeApp()
 {
-    appContainer_=new Container();
-    ((Container*)appContainer_)->setLayout(new DockLayout());
+    appContainer_ = new Container();
+    appContainer_->setLayout(new DockLayout());
 }
 
 void TiCascadesApp::setScene()
 {
-    Application::setScene((Container*)appContainer_);
+    Page* page = new Page();
+    page->setContent(appContainer_);
+    Application::setScene(page);
 }
 
-void TiCascadesApp::setBackgroundColor(UIHANDLE container,const char* color)
-{
-    float r;
-    float g;
-    float b;
-    float a;
-    TiUtility::convertHTMLStringToColorComponents(color,&r,&g,&b,&a);
-    Container* ct=(Container*)container;
-    if(ct==NULL)
-    {
-        ct=(Container*)appContainer_;
-    }
-    ct->setBackground(*(new Color(r,g,b,a)));
-}
-
-UIHANDLE TiCascadesApp::createContainer()
-{
-    return new Container();
-}
-
-void TiCascadesApp::addContainerToAppContainer(UIHANDLE container)
-{
-    Container* ctn=(Container*)container;
-    ((Container*)appContainer_)->add(ctn);
-}

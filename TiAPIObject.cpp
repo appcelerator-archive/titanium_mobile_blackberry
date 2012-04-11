@@ -25,12 +25,10 @@ void TiAPIObject::addObjectToParent(TiObject* parent)
 
 void TiAPIObject::onCreateStaticMembers()
 {
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "debug", this,
-                                                        debug_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "debug", this, debug_);
 }
 
-Handle<Value> TiAPIObject::debug_(void* userContext, TiObject* caller,
-                                  const Arguments& args)
+Handle<Value> TiAPIObject::debug_(void* userContext, TiObject* caller, const Arguments& args)
 {
     int i;
     for (i = 0; i < args.Length(); i++)

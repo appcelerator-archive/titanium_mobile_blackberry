@@ -12,17 +12,17 @@
 TiTitaniumObject::TiTitaniumObject()
         : TiObject("Titanium")
 {
-    cascadesApp_=NULL;
+    objectFactory_ = NULL;
 }
 
 TiTitaniumObject::~TiTitaniumObject()
 {
 }
 
-TiObject* TiTitaniumObject::createObject(TiCascadesApp& cascadesApp)
+TiObject* TiTitaniumObject::createObject(NativeObjectFactory* objectFactory)
 {
-    TiTitaniumObject* obj=new TiTitaniumObject;
-    obj->cascadesApp_=&cascadesApp;
+    TiTitaniumObject* obj = new TiTitaniumObject;
+    obj->objectFactory_ = objectFactory;
     return obj;
 }
 
@@ -30,7 +30,8 @@ void TiTitaniumObject::onCreateStaticMembers()
 {
     ADD_STATIC_TI_VALUE("buildDate", String::New(__DATE__), this);
     ADD_STATIC_TI_VALUE("version", Number::New(2.0), this);
-    TiUIObject::addObjectToParent(this,*cascadesApp_);
+    // TODO: remove hard coded version number
+    TiUIObject::addObjectToParent(this, objectFactory_);
     TiAPIObject::addObjectToParent(this);
 }
 
