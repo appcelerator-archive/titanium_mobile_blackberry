@@ -1,8 +1,8 @@
-/*
- * TiUISlider.cpp
- *
- *  Created on: 2012-04-17
- *      Author: dcampbell
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #include "TiUISlider.h"
@@ -25,7 +25,7 @@ TiUISlider* TiUISlider::createSlider(NativeObjectFactory* nativeObjectFactory)
 
 void TiUISlider::initializeTiObject(TiObject* parentContext)
 {
-    if (!hasInitialized())
+    if (!isInitialized())
     {
         TiUIBase::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(NO_TYPE_SLIDER);

@@ -8,9 +8,18 @@
 #ifndef NATIVEOBJECTFACTORY_H_
 #define NATIVEOBJECTFACTORY_H_
 
+#include "TiEventContainerFactory.h"
+
 class NativeObject;
 class NativeContainerObject;
 class TiCascadesApp;
+
+/*
+ * NativeObjectFactory
+ *
+ * Creates native control objects
+ *
+ */
 
 class NativeObjectFactory
 {
@@ -19,9 +28,14 @@ public:
     virtual ~NativeObjectFactory();
     NativeObject* createNativeObject(int type);
     NativeObject* getRootContainer() const;
+    void setRootContainer(NativeObject* container);
+    void setEventContainerFactory(TiEventContainerFactory* eventContainerFactory);
+    TiEventContainerFactory* getEventContainerFactory() const;
+
 private:
     TiCascadesApp* cascadesApp_;
-    NativeContainerObject* rootContainer_;
+    NativeObject* rootContainer_;
+    TiEventContainerFactory* eventContainerFactory_;
 };
 
 #endif /* NATIVEOBJECTFACTORY_H_ */

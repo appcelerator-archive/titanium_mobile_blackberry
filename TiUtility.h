@@ -8,6 +8,13 @@
 #ifndef TIUTILITY_H_
 #define TIUTILITY_H_
 
+/*
+ * TiUtility
+ *
+ * Misc utility methods
+ *
+ */
+
 class TiUtility
 {
 public:

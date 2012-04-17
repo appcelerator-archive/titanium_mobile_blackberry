@@ -8,28 +8,25 @@
 #ifndef TICASCADESAPP_H_
 #define TICASCADESAPP_H_
 
-#ifndef _WIN32
 #include <QtCore/QObject>
 #include <QtCore/QMetaType>
-#include <bb/cascades/Container>
-#else
-#define Q_OBJECT
-class QObject
-{
-};
-#endif
+
+class NativeObject;
+
+/*
+ * TiCascadesApp
+ *
+ * Cascades application object
+ */
 
 class TiCascadesApp : public QObject
 {
 Q_OBJECT
-public:
+    public:
     TiCascadesApp();
     virtual ~TiCascadesApp();
     void initializeApp();
-    void setScene();
-#ifndef _WIN32
-    bb::cascades::Container* appContainer_;
-#endif
+    void setScene(NativeObject* mainWindow);
 };
 
 #endif /* TICASCADESAPP_H_ */

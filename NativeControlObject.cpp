@@ -94,27 +94,27 @@ int NativeControlObject::setValue(float value)
 }
 
 const static NATIVE_PROPSET_CALLBACK g_functionMap[] =
-{
-        NULL,                                          // N_PROP_SET_UNDEFINED
-        NULL,                                          // N_PROP_SET_ANCHOR_POINT
-        NULL,                                          // N_PROP_SET_ANIMATED_CENTER_POINT
-        PROP_SETTING_FUNCTION(setBackgroundColor),     // N_PROP_SET_BACKGROUND_COLOR
-        NULL,                                          // N_PROP_SET_BACKGROUND_DISABLED_COLOR
-        NULL,                                          // N_PROP_SET_BACKGROUND_DISABLED_IMAGE
-        NULL,                                          // N_PROP_SET_BACKGROUND_FOCUSED_COLOR
-        PROP_SETTING_FUNCTION(setLabel),               // N_PROP_SET_LABEL
-        PROP_SETTING_FUNCTION(setMax),                 // N_PROP_SET_MAX
-        PROP_SETTING_FUNCTION(setMin),                 // N_PROP_SET_MIN
-        PROP_SETTING_FUNCTION(setText),                // N_PROP_SET_TEXT
-        PROP_SETTING_FUNCTION(setTextAlign),           // N_PROP_SET_TEXT_ALIGN
-        PROP_SETTING_FUNCTION(setTop),                 // N_PROP_SET_TOP
-        PROP_SETTING_FUNCTION(setValue)                // N_PROP_SET_VALUE
-};
+        {
+                NULL,                                          // N_PROP_SET_UNDEFINED
+                NULL,                                          // N_PROP_SET_ANCHOR_POINT
+                NULL,                                          // N_PROP_SET_ANIMATED_CENTER_POINT
+                PROP_SETTING_FUNCTION(setBackgroundColor),     // N_PROP_SET_BACKGROUND_COLOR
+                NULL,                                          // N_PROP_SET_BACKGROUND_DISABLED_COLOR
+                NULL,                                          // N_PROP_SET_BACKGROUND_DISABLED_IMAGE
+                NULL,                                          // N_PROP_SET_BACKGROUND_FOCUSED_COLOR
+                PROP_SETTING_FUNCTION(setLabel),               // N_PROP_SET_LABEL
+                PROP_SETTING_FUNCTION(setMax),                 // N_PROP_SET_MAX
+                PROP_SETTING_FUNCTION(setMin),                 // N_PROP_SET_MIN
+                PROP_SETTING_FUNCTION(setText),                // N_PROP_SET_TEXT
+                PROP_SETTING_FUNCTION(setTextAlign),           // N_PROP_SET_TEXT_ALIGN
+                PROP_SETTING_FUNCTION(setTop),                 // N_PROP_SET_TOP
+                PROP_SETTING_FUNCTION(setValue)                // N_PROP_SET_VALUE
+        };
 
 int NativeControlObject::setPropertyValue(int propertyNumber, const char* value)
 {
     if ((propertyNumber < 0) || (propertyNumber >= (int) (sizeof(g_functionMap) / sizeof(*g_functionMap)))
-        || (g_functionMap[propertyNumber] == NULL))
+            || (g_functionMap[propertyNumber] == NULL))
     {
         return NATIVE_ERROR_NOTSUPPORTED;
     }

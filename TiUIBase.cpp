@@ -9,30 +9,34 @@
 #include "TiGenericFunctionObject.h"
 #include "TiPropertySetFunctionObject.h"
 #include "TiPropertyMapObject.h"
+#include "TiV8Event.h"
 
 const static TI_PROPERTY g_tiProperties[] =
-{
-    {"label", "setLabel", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        NATIVE_TYPE_CSTRING, N_PROP_SET_LABEL},
+        {
+                {"backgroundColor", "setBackgroundColor", "black", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_CSTRING, N_PROP_SET_BACKGROUND_COLOR},
 
-    {"max", "setMax", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_MAX},
+                {"label", "setLabel", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_CSTRING, N_PROP_SET_LABEL},
 
-    {"min", "setMin", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_MIN},
+                {"max", "setMax", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_MAX},
 
-    {"text", "setText", "",TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        NATIVE_TYPE_CSTRING, N_PROP_SET_TEXT},
+                {"min", "setMin", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_MIN},
 
-    {"textAlign", "setTextAlign", "center", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        NATIVE_TYPE_CSTRING | NATIVE_TYPE_INT, N_PROP_SET_TEXT_ALIGN},
+                {"text", "setText", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_CSTRING, N_PROP_SET_TEXT},
 
-    {"top", "setTop", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_TOP},
+                {"textAlign", "setTextAlign", "center", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_CSTRING | NATIVE_TYPE_INT, N_PROP_SET_TEXT_ALIGN},
 
-    {"value", "setValue", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        NATIVE_TYPE_INT, N_PROP_SET_VALUE}
-};
+                {"top", "setTop", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_TOP},
+
+                {"value", "setValue", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_INT, N_PROP_SET_VALUE}
+        };
 
 TiUIBase::TiUIBase()
 {
@@ -99,7 +103,8 @@ void TiUIBase::setTiMappingProperties(const TI_PROPERTY* prop, int propertyCount
     for (i = 0; i < propertyCount; i++)
     {
         TiObject* value = TiPropertyMapObject::addProperty(this, prop[i].propertyName, prop[i].nativePropertyNumber,
-                                                           prop[i].supportedTypes, valueModify, this);
+                                                           prop[i].supportedTypes,
+                                                           valueModify, this);
         if ((prop[i].permissions & TI_PROP_PERMISSION_WRITE) && (prop[i].propertySetterFunctionName != NULL))
         {
             TiPropertySetFunctionObject::addPropertySetter(this, value, prop[i].propertySetterFunctionName);
@@ -140,19 +145,19 @@ void TiUIBase::setParametersFromObject(Local<Object> obj)
         return;
     }
     Handle < Object > self = Handle < Object > ::Cast(controlValue);
-    Handle<Array> propNames=obj->GetPropertyNames();
-    uint32_t props=propNames->Length();
-    Local<Value> propValue;
-    Handle<String> propString;
+    Handle < Array > propNames = obj->GetPropertyNames();
+    uint32_t props = propNames->Length();
+    Local < Value > propValue;
+    Handle < String > propString;
     TiObject* foundProp;
-    for(i=0; i<props; i++)
+    for (i = 0; i < props; i++)
     {
-        propString=Handle<String>::Cast(propNames->Get(Integer::New(i)));
+        propString = Handle < String > ::Cast(propNames->Get(Integer::New(i)));
         String::Utf8Value propNameUTF(propString);
-        foundProp=onLookupMember(*propNameUTF);
-        if(foundProp!=NULL)
+        foundProp = onLookupMember(*propNameUTF);
+        if (foundProp != NULL)
         {
-            propValue=obj->Get(propString);
+            propValue = obj->Get(propString);
             foundProp->setValue(propValue);
         }
     }
@@ -183,8 +188,18 @@ VALUE_MODIFY TiUIBase::valueModify(int propertyNumber, const char* value, void* 
     return modify;
 }
 
-void TiUIBase::onAddEventListener(const char* eventName,Handle<Function> eventFunction)
+void TiUIBase::onAddEventListener(const char* eventName, Handle<Function> eventFunction)
 {
+    HandleScope handleScope;
+    NativeObject* no = getNativeObject();
+    if (no == NULL)
+    {
+        return;
+    }
+    Handle < Object > source = Handle < Object > ::Cast(getValue());
+    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(getValue());
+    TiV8Event* event = TiV8Event::createEvent(eventName, eventFunction, source);
+    no->setEventHandler(eventName, event);
 }
 
 Handle<Value> TiUIBase::add_(void* userContext, TiObject* caller, const Arguments& args)
@@ -215,11 +230,14 @@ Handle<Value> TiUIBase::add_(void* userContext, TiObject* caller, const Argument
 Handle<Value> TiUIBase::addEventListener_(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
-    if((args.Length()!=2)||(!args[0]->IsString())||(!args[1]->IsFunction()))
+    if ((args.Length() != 2) || (!args[0]->IsString()) || (!args[1]->IsFunction()))
     {
         return Undefined();
     }
     TiUIBase* obj = (TiUIBase*) userContext;
-    Handle<Function> func=Handle<Function>::Cast(args[1]);
+    Handle < String > eventName = Handle < String > ::Cast(args[0]);
+    Handle < Function > func = Handle < Function > ::Cast(args[1]);
+    String::Utf8Value eventNameUTF(eventName);
+    obj->onAddEventListener(*eventNameUTF, func);
     return Undefined();
 }

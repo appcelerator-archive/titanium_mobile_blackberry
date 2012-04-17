@@ -11,7 +11,11 @@
 #include "NativeObject.h"
 #include <bb/cascades/Control>
 
-//typedef int (*NATIVECONTROL_SETPROP_CALLBACK)(NativeControlObject*,const char*);
+/*
+ * NativeControlObject
+ *
+ * Base class for all UI controls
+ */
 
 class NativeControlObject : public NativeObject
 {
@@ -28,9 +32,11 @@ public:
     virtual int setTextAlign(const char* align);
     virtual int setTop(float top);
     virtual int setValue(float value);
+
 protected:
     virtual bb::cascades::Control* getControl() const;
     virtual void setControl(bb::cascades::Control* control);
+
 private:
     bb::cascades::Control* control_;
 };

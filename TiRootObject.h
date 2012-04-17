@@ -14,6 +14,8 @@ using namespace std;
 
 struct FUNCTION_ENTRY;
 /*
+ * TiRootObject
+ *
  * Root namespace in Titanium
  */
 class TiRootObject : public TiObject
@@ -21,9 +23,11 @@ class TiRootObject : public TiObject
 public:
     static TiRootObject* createRootObject();
     int executeScript(NativeObjectFactory* objectFactory, const char* javaScript);
+
 protected:
     virtual ~TiRootObject();
     virtual void onCreateStaticMembers();
+
 private:
     TiRootObject();
 

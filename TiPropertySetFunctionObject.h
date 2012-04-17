@@ -10,14 +10,23 @@
 
 #include "TiObject.h"
 
+/*
+ * TiPropertySetFunctionObject
+ *
+ * Represents setter methods for Titanium properties.
+ *
+ */
+
 class TiPropertySetFunctionObject : public TiObject
 {
 public:
     static void addPropertySetter(TiObject* parent, TiObject* property, const char* setterName);
     virtual bool isFunction() const;
+
 protected:
     virtual ~TiPropertySetFunctionObject();
     virtual Handle<Value> onFunctionCall(const Arguments& args);
+
 private:
     TiPropertySetFunctionObject(const char* name);
     TiObject* property_;

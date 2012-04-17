@@ -1,15 +1,22 @@
-/*
- * NativeSliderObject.h
- *
- *  Created on: 2012-04-17
- *      Author: dcampbell
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #ifndef NATIVESLIDEROBJECT_H_
 #define NATIVESLIDEROBJECT_H_
 
 #include "NativeControlObject.h"
+#include "TiCascadesEventHandler.h"
 #include <bb/cascades/Slider>
+
+/*
+ * NativeSliderObject
+ *
+ * UI: Slider control
+ */
 
 class NativeSliderObject : public NativeControlObject
 {
@@ -17,13 +24,18 @@ public:
     NativeSliderObject();
     virtual ~NativeSliderObject();
     virtual int getObjectType() const;
-    virtual int initialize();
+    virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual NAHANDLE getNativeHandle() const;
     virtual int setMax(float max);
     virtual int setMin(float min);
     virtual int setValue(float value);
+    virtual int setEventHandler(const char* eventName, TiEvent* event);
+    virtual void completeInitialization();
+
 private:
     bb::cascades::Slider* slider_;
+    TiEventContainer* eventChange_;
+    TiCascadesEventHandler* eventChangeHandler_;
 };
 
 #endif /* NATIVESLIDEROBJECT_H_ */

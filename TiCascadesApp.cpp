@@ -22,31 +22,32 @@
 #include <bb/cascades/StackLayout>
 #include <bb/cascades/Page>
 #include "TiUtility.h"
+#include "NativeObject.h"
 
 using namespace bb::cascades;
 
 TiCascadesApp::TiCascadesApp()
 {
-    appContainer_ = NULL;
 }
 
 TiCascadesApp::~TiCascadesApp()
 {
-    if (appContainer_ != NULL)
-    {
-        appContainer_ = NULL;
-    }
 }
 void TiCascadesApp::initializeApp()
 {
-    appContainer_ = new Container();
-    appContainer_->setLayout(new DockLayout());
 }
 
-void TiCascadesApp::setScene()
+void TiCascadesApp::setScene(NativeObject* mainWindow)
 {
     Page* page = new Page();
-    page->setContent(appContainer_);
+    if (mainWindow != NULL)
+    {
+        Container* mainContainer = (Container*) (mainWindow->getNativeHandle());
+        if (mainContainer != NULL)
+        {
+            page->setContent(mainContainer);
+        }
+    }
     Application::setScene(page);
 }
 

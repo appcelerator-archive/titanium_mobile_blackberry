@@ -20,6 +20,7 @@ typedef void* NAHANDLE;
 #define NO_TYPE_LABEL                           3
 #define NO_TYPE_BUTTON                          4
 #define NO_TYPE_SLIDER                          5
+#define NO_TYPE_PROGRESSBAR                     6
 
 #define N_PROP_SET_UNDEFINED                    0
 #define N_PROP_SET_ANCHOR_POINT                 1
@@ -37,14 +38,21 @@ typedef void* NAHANDLE;
 #define N_PROP_SET_VALUE                        13
 
 class NativeObjectFactory;
+class TiEvent;
+class TiEventContainerFactory;
+
+#include "TiEventContainer.h"
+#include "TiBase.h"
+
 /*
+ * NativeObject
+ *
  * Abstract class that represents a native object.
  */
-class NativeObject
+class NativeObject :
+                     public TiBase
 {
 public:
-    virtual void addRef();
-    virtual void release();
     virtual int getObjectType() const=0;
     virtual int setPropertyValue(int propertyNumber, const char* value);
     virtual int addChildNativeObject(NativeObject* obj);
@@ -52,13 +60,15 @@ public:
     virtual int open();
     virtual void completeInitialization();
     virtual int isInitializationComplete() const;
+    virtual int setEventHandler(const char* eventName, TiEvent* event);
+
 protected:
     NativeObject();
     virtual ~NativeObject();
-    virtual int initialize();
+    virtual int initialize(TiEventContainerFactory* containerFactory);
     friend class NativeObjectFactory;
+
 private:
-    int refCount_;
     int isInitializationComplete_;
 };
 

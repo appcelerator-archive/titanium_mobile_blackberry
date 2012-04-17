@@ -10,26 +10,11 @@
 
 NativeObject::NativeObject()
 {
-    refCount_ = 1;
     isInitializationComplete_ = 0;
 }
 
 NativeObject::~NativeObject()
 {
-}
-
-void NativeObject::addRef()
-{
-    refCount_++;
-}
-
-void NativeObject::release()
-{
-    refCount_--;
-    if (refCount_ == 0)
-    {
-        delete this;
-    }
 }
 
 int NativeObject::setPropertyValue(int propertyNumber, const char* value)
@@ -42,7 +27,7 @@ int NativeObject::addChildNativeObject(NativeObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-int NativeObject::initialize()
+int NativeObject::initialize(TiEventContainerFactory* containerFactory)
 {
     return NATIVE_ERROR_OK;
 }
@@ -61,7 +46,13 @@ void NativeObject::completeInitialization()
 {
     isInitializationComplete_ = 1;
 }
+
 int NativeObject::isInitializationComplete() const
 {
     return isInitializationComplete_;
+}
+
+int NativeObject::setEventHandler(const char* eventName, TiEvent* event)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
 }

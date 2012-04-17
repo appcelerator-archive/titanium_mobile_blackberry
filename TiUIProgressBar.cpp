@@ -5,31 +5,31 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "TiUIButton.h"
+#include "TiUIProgressBar.h"
 
-TiUIButton::TiUIButton(NativeObjectFactory* nativeObjectFactory)
+TiUIProgressBar::TiUIProgressBar(NativeObjectFactory* nativeObjectFactory)
         :
           TiUIBase(nativeObjectFactory, "")
 {
 }
 
-TiUIButton::~TiUIButton()
+TiUIProgressBar::~TiUIProgressBar()
 {
 }
 
-TiUIButton* TiUIButton::createButton(NativeObjectFactory* nativeObjectFactory)
+TiUIProgressBar* TiUIProgressBar::createProgressBar(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUIButton* obj = new TiUIButton(nativeObjectFactory);
+    TiUIProgressBar* obj = new TiUIProgressBar(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }
 
-void TiUIButton::initializeTiObject(TiObject* parentContext)
+void TiUIProgressBar::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
         TiUIBase::initializeTiObject(parentContext);
-        NativeObject* obj = getNativeObjectFactory()->createNativeObject(NO_TYPE_BUTTON);
+        NativeObject* obj = getNativeObjectFactory()->createNativeObject(NO_TYPE_PROGRESSBAR);
         setNativeObject(obj);
         obj->release();
     }

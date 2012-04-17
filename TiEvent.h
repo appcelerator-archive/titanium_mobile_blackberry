@@ -5,25 +5,26 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef TIUITABGROUP_H_
-#define TIUITABGROUP_H_
+#ifndef TIEVENT_H_
+#define TIEVENT_H_
 
-#include "TiUIBase.h"
+#include "TiBase.h"
 
 /*
- * TiUITabGroup
+ * TiEvent
  *
- * Represents a Titanium tab control object
+ * Abstract class the represents an event subscriber
  *
  */
 
-class TiUITabGroup : public TiUIBase
+class TiEvent : public TiBase
 {
 public:
+    virtual void fire(void* fireDataObject)=0;
+
 protected:
-    virtual ~TiUITabGroup();
-    private:
-    TiUITabGroup();
+    virtual ~TiEvent();
+    TiEvent();
 };
 
-#endif /* TIUITABGROUP_H_ */
+#endif /* TIEVENT_H_ */

@@ -13,30 +13,33 @@
 #include <bb/cascades/Label>
 #include <bb/cascades/Button>
 #include <bb/cascades/Slider>
+#include <bb/cascades/Color>
+#include <bb/cascades/ProgressIndicator>
 #include "TiUtility.h"
+#include "NativeObjectFactory.h"
 
 using namespace bb::cascades;
 
 NativeContainerObject::NativeContainerObject()
 {
     container_ = NULL;
-    root_ = NULL;
+    nativeObjectFactory_ = NULL;
 }
 
 NativeContainerObject::NativeContainerObject(Container* container)
 {
     container_ = container;
-    root_ = NULL;
+    nativeObjectFactory_ = NULL;
 }
 
 NativeContainerObject::~NativeContainerObject()
 {
 }
 
-NativeObject* NativeContainerObject::createContainer(NativeContainerObject* root)
+NativeObject* NativeContainerObject::createContainer(NativeObjectFactory* nativeObjectFactory)
 {
     NativeContainerObject* obj = new NativeContainerObject;
-    obj->setRootContainer(root);
+    obj->nativeObjectFactory_ = nativeObjectFactory;
     return obj;
 }
 
@@ -50,17 +53,14 @@ NAHANDLE NativeContainerObject::getNativeHandle() const
     return container_;
 }
 
-int NativeContainerObject::initialize()
+int NativeContainerObject::initialize(TiEventContainerFactory* containerFactory)
 {
     container_ = Container::create();
     if (container_ == NULL)
     {
         return NATIVE_ERROR_OUTOFMEMORY;
     }
-    container_->setLayout(new DockLayout());
-    //container_->setLayout(new StackLayout());
-    container_->setLayoutProperties(
-            DockLayoutProperties::create().horizontal(HorizontalAlignment::Center).vertical(VerticalAlignment::Center));
+    container_->setLayout(StackLayout::create());
     return NATIVE_ERROR_OK;
 }
 
@@ -70,10 +70,11 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
     bb::cascades::Label* label;
     bb::cascades::Button* button;
     bb::cascades::Slider* slider;
+    bb::cascades::ProgressIndicator* progressIndicator;
     switch (obj->getObjectType())
     {
     case NO_TYPE_CONTAINER:
-    case NO_TYPE_WINDOW:
+        case NO_TYPE_WINDOW:
         container = (bb::cascades::Container*) obj->getNativeHandle();
         container_->add(container);
         return NATIVE_ERROR_OK;
@@ -82,30 +83,35 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
         container_->add(label);
         return NATIVE_ERROR_OK;
     case NO_TYPE_BUTTON:
-        button=(bb::cascades::Button*)obj->getNativeHandle();
+        button = (bb::cascades::Button*) obj->getNativeHandle();
         container_->add(button);
         return NATIVE_ERROR_OK;
     case NO_TYPE_SLIDER:
-        slider=(bb::cascades::Slider*)obj->getNativeHandle();
+        slider = (bb::cascades::Slider*) obj->getNativeHandle();
         container_->add(slider);
         return NATIVE_ERROR_OK;
-
+    case NO_TYPE_PROGRESSBAR:
+        progressIndicator = (bb::cascades::ProgressIndicator*) obj->getNativeHandle();
+        container_->add(progressIndicator);
+        return NATIVE_ERROR_OK;
     }
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 int NativeContainerObject::open()
 {
-    if (root_ == NULL)
-    {
-        return NATIVE_ERROR_NOTSUPPORTED;
-    }
-    bb::cascades::Container* rootContainer = (bb::cascades::Container*) root_->getNativeHandle();
-    rootContainer->add(container_);
+    nativeObjectFactory_->setRootContainer(this);
     return NATIVE_ERROR_OK;
 }
 
-void NativeContainerObject::setRootContainer(NativeContainerObject* root)
+int NativeContainerObject::setBackgroundColor(const char* text)
 {
-    root_ = root;
+    float a;
+    float r;
+    float g;
+    float b;
+    TiUtility::convertHTMLStringToColorComponents(text, &r, &g, &b, &a);
+    Color color = Color::fromRGBA(r, g, b, a);
+    container_->setBackground(color);
+    return NATIVE_ERROR_OK;
 }

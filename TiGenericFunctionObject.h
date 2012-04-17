@@ -12,15 +12,25 @@
 
 typedef Handle<Value> (*GENERIC_FUNCTION_CALLBACK)(void*, TiObject*, const Arguments&);
 
+/*
+ * TiGenericFunctionObject
+ *
+ * A generic class that represents methods. Since methods are
+ * considered objects in the Javascript world, they must have
+ * object reflections in the Titanium runtime.
+ */
+
 class TiGenericFunctionObject : public TiObject
 {
 public:
     static void addGenericFunctionToParent(TiObject* parent, const char* name, void* userContext,
                                            GENERIC_FUNCTION_CALLBACK callback);
     virtual bool isFunction() const;
+
 protected:
     virtual ~TiGenericFunctionObject();
     virtual Handle<Value> onFunctionCall(const Arguments& args);
+
 private:
     TiGenericFunctionObject();
     TiGenericFunctionObject(const char* name);

@@ -19,6 +19,8 @@
 class TiCascadesApp;
 
 /*
+ * TiCascadesApp
+ *
  * Titanium base class for all UI objects such as windows, labels, buttons, etc...
  */
 class TiUIBase : public TiObject
@@ -29,6 +31,7 @@ public:
     virtual NativeObjectFactory* getNativeObjectFactory() const;
     virtual NativeObject* getNativeObject() const;
     virtual void setTiMappingProperties(const TI_PROPERTY* prop, int propertyCount);
+
 protected:
     TiUIBase(NativeObjectFactory* nativeObjectFactory, const char* name);
     TiUIBase();
@@ -37,8 +40,9 @@ protected:
     virtual bool canAddMembers() const;
     virtual void setNativeObject(NativeObject* nativeObject);
     virtual void onCreateStaticMembers();
-    virtual void onAddEventListener(const char* eventName,Handle<Function> eventFunction);
+    virtual void onAddEventListener(const char* eventName, Handle<Function> eventFunction);
     Persistent<Object> createConfig_;
+
 private:
     static VALUE_MODIFY valueModify(int propertyNumber, const char* value, void* context);
     static Handle<Value> add_(void* userContext, TiObject* caller, const Arguments& args);

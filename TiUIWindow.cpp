@@ -32,7 +32,7 @@ void TiUIWindow::onCreateStaticMembers()
 
 void TiUIWindow::initializeTiObject(TiObject* parentContext)
 {
-    if (!hasInitialized())
+    if (!isInitialized())
     {
         TiUIBase::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(NO_TYPE_WINDOW);

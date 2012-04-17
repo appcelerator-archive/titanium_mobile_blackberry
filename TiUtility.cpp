@@ -13,6 +13,22 @@
 #define min(X,Y) ((X) < (Y) ? (X) : (Y))
 #endif
 
+struct COLOR_NAME_MAPPING
+{
+    const char* name;
+    unsigned int value;
+};
+
+const static COLOR_NAME_MAPPING g_mapping[] =
+        {
+                {"white", 0xFFFFFFFF}, {"silver", 0xFFC0C0C0}, {"gray", 0xFF808080},
+                {"black", 0xFF000000}, {"red", 0xFFFF0000}, {"maroon", 0xFF800000},
+                {"yellow", 0xFFFFFF00}, {"olive", 0xFF808000}, {"lime", 0xFF00FF00},
+                {"green", 0xFF008000}, {"aqua", 0xFF00FFFF}, {"teal", 0xFF008080},
+                {"blue", 0xFF0000FF}, {"navy", 0xFF000080}, {"fuchsia", 0xFFFF00FF},
+                {"purple", 0xFF800080}, {"cyan", 0xFF00FFFF}
+        };
+
 TiUtility::TiUtility()
 {
 }
@@ -78,8 +94,23 @@ void TiUtility::convertHTMLStringToColorComponents(const char* htmlString, float
     *r = 0.0f;
     *g = 0.0f;
     *b = 0.0f;
-    if ((htmlString == NULL) || (htmlString[0] == 0) || (htmlString[0] != '#'))
+    if ((htmlString == NULL) || (htmlString[0] == 0))
     {
+        return;
+    }
+    if (htmlString[0] != '#')
+    {
+        for (int i = 0; i < (int) (sizeof(g_mapping) / sizeof(*g_mapping)); i++)
+        {
+            if (stricmp(htmlString, g_mapping[i].name) == 0)
+            {
+                *a = ((float) ((g_mapping[i].value >> 24) & 0x000000FF)) / 255.0f;
+                *r = ((float) ((g_mapping[i].value >> 16) & 0x000000FF)) / 255.0f;
+                *g = ((float) ((g_mapping[i].value >> 8) & 0x000000FF)) / 255.0f;
+                *b = ((float) (g_mapping[i].value & 0x000000FF)) / 255.0f;
+                break;
+            }
+        }
         return;
     }
     htmlString++;

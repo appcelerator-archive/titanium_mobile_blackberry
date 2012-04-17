@@ -12,14 +12,24 @@
 
 typedef VALUE_MODIFY (*MODIFY_VALUE_CALLBACK)(int, const char*, void*);
 
+/*
+ * TiPropertyMapObject
+ *
+ * Generic representation of Titanium properties
+ *
+ */
+
 class TiPropertyMapObject : public TiObject
 {
 public:
     static TiPropertyMapObject* addProperty(TiObject* parent, const char* name, int propertyNumber,
-                                            int supportedTypes, MODIFY_VALUE_CALLBACK cb, void* context);
+                                            int supportedTypes,
+                                            MODIFY_VALUE_CALLBACK cb, void* context);
+
 protected:
     virtual ~TiPropertyMapObject();
     virtual VALUE_MODIFY onValueChange(Handle<Value> oldValue, Handle<Value> newValue);
+
 private:
     TiPropertyMapObject(const char* name);
     int propertyNumber_;

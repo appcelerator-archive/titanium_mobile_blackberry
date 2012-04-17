@@ -11,6 +11,8 @@
 #include "TiUIBase.h"
 
 /*
+ * TiUILabel
+ *
  * Represents a Titanium label object
  *
  * This object can be created by:
@@ -20,9 +22,11 @@ class TiUILabel : public TiUIBase
 {
 public:
     static TiUILabel* createLabel(NativeObjectFactory* nativeObjectFactory);
+
 protected:
     virtual ~TiUILabel();
     virtual void initializeTiObject(TiObject* parentContext);
+
 private:
     TiUILabel(NativeObjectFactory* nativeObjectFactory);
 };

@@ -5,25 +5,26 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef TIUITABGROUP_H_
-#define TIUITABGROUP_H_
-
-#include "TiUIBase.h"
+#ifndef TIBASE_H_
+#define TIBASE_H_
 
 /*
- * TiUITabGroup
+ * TiBase
  *
- * Represents a Titanium tab control object
- *
+ * Base class for all objects that
+ * need to be reference counted.
  */
 
-class TiUITabGroup : public TiUIBase
+class TiBase
 {
 public:
-protected:
-    virtual ~TiUITabGroup();
+    virtual void addRef();
+    virtual void release();
+    protected:
+    TiBase();
+    virtual ~TiBase();
     private:
-    TiUITabGroup();
+    int refCount_;
 };
 
-#endif /* TIUITABGROUP_H_ */
+#endif /* TIBASE_H_ */

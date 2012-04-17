@@ -1,11 +1,11 @@
 /****************************************************************************
-** Meta object code from reading C++ file 'TiCascadesApp.h'
-**
-** Created: Wed Apr 11 10:09:25 2012
-**      by: The Qt Meta Object Compiler version 63 (Qt 4.8.0)
-**
-** WARNING! All changes made in this file will be lost!
-*****************************************************************************/
+ ** Meta object code from reading C++ file 'TiCascadesApp.h'
+ **
+ ** Created: Wed Apr 11 10:09:25 2012
+ **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.0)
+ **
+ ** WARNING! All changes made in this file will be lost!
+ *****************************************************************************/
 
 #include "TiCascadesApp.h"
 #if !defined(Q_MOC_OUTPUT_REVISION)
@@ -19,22 +19,22 @@
 QT_BEGIN_MOC_NAMESPACE
 static const uint qt_meta_data_TiCascadesApp[] = {
 
- // content:
-       6,       // revision
-       0,       // classname
-       0,    0, // classinfo
-       0,    0, // methods
-       0,    0, // properties
-       0,    0, // enums/sets
-       0,    0, // constructors
-       0,       // flags
-       0,       // signalCount
+// content:
+        6,// revision
+        0,       // classname
+        0, 0, // classinfo
+        0, 0, // methods
+        0, 0, // properties
+        0, 0, // enums/sets
+        0, 0, // constructors
+        0,       // flags
+        0,       // signalCount
 
-       0        // eod
-};
+        0        // eod
+        };
 
 static const char qt_meta_stringdata_TiCascadesApp[] = {
-    "TiCascadesApp\0"
+        "TiCascadesApp\0"
 };
 
 void TiCascadesApp::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -46,18 +46,18 @@ void TiCascadesApp::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
 }
 
 const QMetaObjectExtraData TiCascadesApp::staticMetaObjectExtraData = {
-    0,  qt_static_metacall 
+        0, qt_static_metacall
 };
 
 const QMetaObject TiCascadesApp::staticMetaObject = {
-    { &QObject::staticMetaObject, qt_meta_stringdata_TiCascadesApp,
-      qt_meta_data_TiCascadesApp, &staticMetaObjectExtraData }
+        {&QObject::staticMetaObject, qt_meta_stringdata_TiCascadesApp,
+                qt_meta_data_TiCascadesApp, &staticMetaObjectExtraData}
 };
 
 #ifdef Q_NO_DATA_RELOCATION
-const QMetaObject &TiCascadesApp::getStaticMetaObject() { return staticMetaObject; }
+const QMetaObject &TiCascadesApp::getStaticMetaObject()
+{   return staticMetaObject;}
 #endif //Q_NO_DATA_RELOCATION
-
 const QMetaObject *TiCascadesApp::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->metaObject : &staticMetaObject;
@@ -65,9 +65,10 @@ const QMetaObject *TiCascadesApp::metaObject() const
 
 void *TiCascadesApp::qt_metacast(const char *_clname)
 {
-    if (!_clname) return 0;
+    if (!_clname)
+        return 0;
     if (!strcmp(_clname, qt_meta_stringdata_TiCascadesApp))
-        return static_cast<void*>(const_cast< TiCascadesApp*>(this));
+        return static_cast<void*>(const_cast<TiCascadesApp*>(this));
     return QObject::qt_metacast(_clname);
 }
 

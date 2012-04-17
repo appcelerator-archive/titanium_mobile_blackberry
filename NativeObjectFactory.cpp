@@ -11,15 +11,16 @@
 #include "NativeLabelObject.h"
 #include "NativeButtonObject.h"
 #include "NativeSliderObject.h"
+#include "NativeProgressBarObject.h"
 #include <bb/cascades/Container>
 
 using namespace bb::cascades;
 
 NativeObjectFactory::NativeObjectFactory(TiCascadesApp* cascadesApp)
 {
-    cascadesApp_ = cascadesApp;
-    NativeContainerObject* root = new NativeContainerObject(cascadesApp->appContainer_);
-    rootContainer_ = root;
+    cascadesApp_ = NULL;
+    eventContainerFactory_ = NULL;
+    rootContainer_ = NULL;
 }
 
 NativeObjectFactory::~NativeObjectFactory()
@@ -29,6 +30,10 @@ NativeObjectFactory::~NativeObjectFactory()
         rootContainer_->release();
         rootContainer_ = NULL;
     }
+    if (eventContainerFactory_ != NULL)
+    {
+        delete eventContainerFactory_;
+    }
 }
 
 NativeObject* NativeObjectFactory::createNativeObject(int type)
@@ -37,8 +42,8 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
     switch (type)
     {
     case NO_TYPE_CONTAINER:
-    case NO_TYPE_WINDOW:
-        obj = NativeContainerObject::createContainer(rootContainer_);
+        case NO_TYPE_WINDOW:
+        obj = NativeContainerObject::createContainer(this);
         break;
     case NO_TYPE_LABEL:
         obj = new NativeLabelObject;
@@ -49,16 +54,45 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
     case NO_TYPE_SLIDER:
         obj = new NativeSliderObject;
         break;
+    case NO_TYPE_PROGRESSBAR:
+        obj = new NativeProgressBarObject;
+        break;
     }
     if (obj != NULL)
     {
-        obj->initialize();
+        obj->initialize(eventContainerFactory_);
     }
     return obj;
 }
 
+void NativeObjectFactory::setRootContainer(NativeObject* container)
+{
+    if (container != NULL)
+    {
+        container->addRef();
+    }
+    if (rootContainer_ != NULL)
+    {
+        rootContainer_->release();
+    }
+    rootContainer_ = container;
+}
+
+void NativeObjectFactory::setEventContainerFactory(TiEventContainerFactory* eventContainerFactory)
+{
+    eventContainerFactory_ = eventContainerFactory;
+}
+
+TiEventContainerFactory* NativeObjectFactory::getEventContainerFactory() const
+{
+    return eventContainerFactory_;
+}
+
 NativeObject* NativeObjectFactory::getRootContainer() const
 {
-    rootContainer_->addRef();
+    if (rootContainer_ != NULL)
+    {
+        rootContainer_->addRef();
+    }
     return rootContainer_;
 }

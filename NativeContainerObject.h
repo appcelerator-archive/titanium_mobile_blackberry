@@ -8,13 +8,21 @@
 #ifndef NATIVECONTAINEROBJECT_H_
 #define NATIVECONTAINEROBJECT_H_
 
-#include "NativeObject.h"
+#include "NativeControlObject.h"
 #include <bb/cascades/Container>
 
-class NativeContainerObject : public NativeObject
+class NativeObjectFactory;
+
+/*
+ * NativeContainerObject
+ *
+ * UI: Container (Window)
+ */
+
+class NativeContainerObject : public NativeControlObject
 {
 public:
-    static NativeObject* createContainer(NativeContainerObject* root);
+    static NativeObject* createContainer(NativeObjectFactory* nativeObjectFactory);
     NativeContainerObject();
     NativeContainerObject(bb::cascades::Container* container);
     virtual ~NativeContainerObject();
@@ -22,12 +30,14 @@ public:
     virtual NAHANDLE getNativeHandle() const;
     virtual int addChildNativeObject(NativeObject* obj);
     virtual int open();
-    void setRootContainer(NativeContainerObject* root);
+    virtual int setBackgroundColor(const char* text);
+
 protected:
-    virtual int initialize();
+    virtual int initialize(TiEventContainerFactory* containerFactory);
+
 private:
     bb::cascades::Container* container_;
-    NativeContainerObject* root_;
+    NativeObjectFactory* nativeObjectFactory_;
 };
 
 #endif /* NATIVECONTAINEROBJECT_H_ */

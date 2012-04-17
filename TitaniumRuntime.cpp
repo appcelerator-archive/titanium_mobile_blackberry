@@ -20,6 +20,7 @@
 #include "TiTitaniumObject.h"
 #include "TiCascadesApp.h"
 #include "NativeObjectFactory.h"
+#include "NativeObject.h"
 
 TitaniumRuntime::TitaniumRuntime()
 {
@@ -56,7 +57,12 @@ int TitaniumRuntime::internalRun(int argc, char** argv)
     mainApp.initializeApp();
     NativeObjectFactory objFactory(&mainApp);
     obj->executeScript(&objFactory, javaScript_);
-    mainApp.setScene();
+    NativeObject* nativeObject = objFactory.getRootContainer();
+    mainApp.setScene(nativeObject);
+    if (nativeObject != NULL)
+    {
+        nativeObject->release();
+    }
     // TODO: implement a message pump here
     return bb::cascades::Application::exec();
 }

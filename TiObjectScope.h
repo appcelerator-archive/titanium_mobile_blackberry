@@ -8,22 +8,29 @@
 #ifndef TIOBJECTSCOPE_H_
 #define TIOBJECTSCOPE_H_
 
-class TiObject;
+class TiBase;
+
+/*
+ * TiObjectScope
+ *
+ * A helper class for managing reference counting by scope
+ */
 
 class TiObjectScope
 {
 public:
     TiObjectScope();
-    TiObjectScope(TiObject* obj);
+    TiObjectScope(TiBase* obj);
     TiObjectScope(const TiObjectScope& scope);
     virtual ~TiObjectScope();
     const TiObjectScope& operator =(const TiObjectScope& scope);
-    operator TiObject*() const;
-    TiObject* operator ->() const;
-    void attachTiObject(TiObject* obj);
-    TiObject* detachTiObject();
+    operator TiBase*() const;
+    TiBase* operator ->() const;
+    void attachTiObject(TiBase* obj);
+    TiBase* detachTiObject();
+
 private:
-    TiObject* object_;
+    TiBase* object_;
 };
 
 #endif /* TIOBJECTSCOPE_H_ */

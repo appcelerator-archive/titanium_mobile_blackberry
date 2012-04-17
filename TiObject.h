@@ -16,7 +16,10 @@
 #endif
 
 #include <string.h>
+#include <map>
+#include <string>
 
+#include "TiBase.h"
 #include "TiObjectScope.h"
 #include "NativeObject.h"
 #include "NativeObjectFactory.h"
@@ -32,16 +35,15 @@ using namespace std;
 
 class TiObject;
 
-struct OBJECT_ENTRY
+struct ObjectEntry
 {
-    OBJECT_ENTRY();
-    ~OBJECT_ENTRY();
-    void setObjectName(const char* objectName);
-    const char* getObjectName() const;
+    ObjectEntry();
+    ObjectEntry(const ObjectEntry& entry);
+    ~ObjectEntry();
+    const ObjectEntry& operator =(const ObjectEntry& entry);
 
     TiObject* obj_;
     void* userContext_;
-    char* objectName_;
 };
 
 #define JS_TYPE_UNDEFINED           1
@@ -56,7 +58,10 @@ struct OBJECT_ENTRY
 
 enum VALUE_MODIFY
 {
-    VALUE_MODIFY_ALLOW, VALUE_MODIFY_DENY, VALUE_MODIFY_NOT_SUPPORTED, VALUE_MODIFY_INVALID,
+    VALUE_MODIFY_ALLOW,
+    VALUE_MODIFY_DENY,
+    VALUE_MODIFY_NOT_SUPPORTED,
+    VALUE_MODIFY_INVALID,
     VALUE_MODIFY_INVALID_TYPE
 };
 
@@ -74,7 +79,14 @@ struct TI_PROPERTY
     int nativePropertyNumber;
 };
 
-class TiObject
+/*
+ * TiObject
+ *
+ * Base class that reflects Javascript objects
+ *
+ */
+
+class TiObject : public TiBase
 {
 public:
     TiObject();
@@ -86,19 +98,18 @@ public:
     static TiObject* getTiObjectFromJsObject(Handle<Value> value);
     static void setTiObjectToJsObject(Handle<Value> jsObject, TiObject* tiObj);
     static Handle<ObjectTemplate> getObjectTemplateFromJsObject(Handle<Value> value);
-    void addRef();
-    void release();
     virtual const char* getName() const;
     virtual void addMember(TiObject* object, const char* name = NULL);
-    virtual Handle<Value> getValue();
+    virtual Handle<Value> getValue() const;
     virtual VALUE_MODIFY setValue(Handle<Value> value);
     virtual bool hasMembers() const;
     virtual bool isFunction() const;
     virtual bool canAddMembers() const;
-    virtual bool hasInitialized() const;
+    virtual bool isInitialized() const;
     virtual bool isUIObject() const;
     virtual void setTiMappingProperties(const TI_PROPERTY* prop, int propertyCount);
     virtual TiObject* getParentObject() const;
+
 protected:
     virtual void initializeTiObject(TiObject* parentObject);
     virtual Handle<Value> onFunctionCall(const Arguments& args);
@@ -111,18 +122,17 @@ protected:
     virtual void onStartMessagePump();
     virtual VALUE_MODIFY onValueChange(Handle<Value> oldValue, Handle<Value> newValue);
     virtual VALUE_MODIFY onChildValueChange(TiObject* childObject, Handle<Value> oldValue, Handle<Value> newValue);
+
 private:
     static Handle<Value> propGetter_(Local<String> prop, const AccessorInfo& info);
     static Handle<Value> propSetter_(Local<String> prop, Local<Value> value, const AccessorInfo& info);
     static Handle<Value> functCallback_(const Arguments& args);
     Persistent<Value> value_;
 
-    int refCount_;
-    char* name_;
-    OBJECT_ENTRY** childObject_;
-    int childObjectCount_;
-    bool hasInitialized_;
+    string name_;
+    bool isInitialized_;
     TiObject* parentObject_;
+    map<string, ObjectEntry> childObjectMap_;
 };
 
 #endif /* TIOBJECT_H_ */

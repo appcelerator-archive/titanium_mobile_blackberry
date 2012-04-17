@@ -26,7 +26,7 @@ TiUILabel* TiUILabel::createLabel(NativeObjectFactory* nativeObjectFactory)
 
 void TiUILabel::initializeTiObject(TiObject* parentContext)
 {
-    if (!hasInitialized())
+    if (!isInitialized())
     {
         TiUIBase::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(NO_TYPE_LABEL);

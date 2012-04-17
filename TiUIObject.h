@@ -13,15 +13,19 @@
 class TiCascadesApp;
 
 /*
+ * TiUIObject
+ *
  * Titanium.UI namespace
  */
 class TiUIObject : public TiObject
 {
 public:
     static void addObjectToParent(TiObject* parent, NativeObjectFactory* objectFactory);
+
 protected:
     virtual ~TiUIObject();
     virtual void onCreateStaticMembers();
+
 private:
     TiUIObject();
     TiUIObject(NativeObjectFactory* objectFactory);
@@ -30,6 +34,7 @@ private:
     static Handle<Value> createLabel_(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> createButton_(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> createSlider_(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> createProgressBar_(void* userContext, TiObject* caller, const Arguments& args);
     NativeObjectFactory* objectFactory_;
     NativeObject* contentContainer_;
 };

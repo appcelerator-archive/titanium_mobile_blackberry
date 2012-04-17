@@ -11,6 +11,8 @@
 #include "TiUIBase.h"
 
 /*
+ * TiUIWindow
+ *
  * Represents a Titanium window object
  *
  * This object can be created by:
@@ -20,10 +22,12 @@ class TiUIWindow : public TiUIBase
 {
 public:
     static TiUIWindow* createWindow(NativeObjectFactory* objectFactory, const char* name);
+
 protected:
     virtual ~TiUIWindow();
     virtual void initializeTiObject(TiObject* parentContext);
     virtual void onCreateStaticMembers();
+
 private:
     TiUIWindow(NativeObjectFactory* objectFactory, const char* name);
     static Handle<Value> open_(void* userContext, TiObject* caller, const Arguments& args);

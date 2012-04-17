@@ -10,13 +10,20 @@
 
 #include "TiObject.h"
 
+/*
+ * TiAPIObject
+ *
+ * Object that represents name space: Titanium.API
+ */
+
 class TiAPIObject : public TiObject
 {
 public:
     static void addObjectToParent(TiObject* parent);
-protected:
+    protected:
     virtual ~TiAPIObject();
     virtual void onCreateStaticMembers();
+
 private:
     TiAPIObject();
     static Handle<Value> debug_(void* userContext, TiObject* caller, const Arguments& args);

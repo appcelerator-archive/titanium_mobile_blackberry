@@ -11,10 +11,17 @@
 #include "TiObject.h"
 #include "TiObjectScope.h"
 
+/*
+ * TitaniumRuntime
+ *
+ * Main runtime startup class
+ */
+
 class TitaniumRuntime
 {
 public:
     static int run(const char* javaScript, int argc, char** argv);
+
 private:
     TitaniumRuntime();
     TitaniumRuntime(const char* javaScript);

@@ -13,52 +13,30 @@
 
 TiObject::TiObject()
 {
-    refCount_ = 1;
-    name_ = NULL;
-    childObject_ = NULL;
-    childObjectCount_ = 0;
-    hasInitialized_ = false;
+    isInitialized_ = false;
     parentObject_ = NULL;
 }
 
 TiObject::TiObject(const char* objectName)
 {
-    refCount_ = 1;
-    name_ = new char[strlen((objectName == NULL) ? "" : objectName) + 1];
-    strcpy(name_, (objectName == NULL) ? "" : objectName);
-    childObject_ = NULL;
-    childObjectCount_ = 0;
+    name_ = objectName;
     if (!value_.IsEmpty())
     {
         value_.Dispose();
     }
-    hasInitialized_ = false;
+    isInitialized_ = false;
     parentObject_ = NULL;
 }
 
 TiObject::TiObject(const char* objectName, Handle<Value> value)
 {
-    refCount_ = 1;
-    name_ = new char[strlen((objectName == NULL) ? "" : objectName) + 1];
-    strcpy(name_, (objectName == NULL) ? "" : objectName);
-    childObject_ = NULL;
-    childObjectCount_ = 0;
+    name_ = objectName;
     value_ = Persistent < Value > ::New(value);
     parentObject_ = NULL;
 }
 
 TiObject::~TiObject()
 {
-    if (name_ != NULL)
-    {
-        delete[] name_;
-        name_ = NULL;
-    }
-    int i;
-    for (i = 0; i < childObjectCount_; i++)
-    {
-        delete childObject_[i];
-    }
 }
 
 char* TiObject::getStringFromObject(Handle<Value> value, const char* defaultString)
@@ -129,33 +107,18 @@ Handle<ObjectTemplate> TiObject::getObjectTemplateFromJsObject(Handle<Value> val
     Handle < Object > obj = Handle < Object > ::Cast(value);
     Handle < Context > context = obj->CreationContext();
     Handle < External > globalTemplateExternal = Handle < External
-                                                 > ::Cast(
-                                                         context->Global()->GetHiddenValue(
-                                                                 String::New(HIDDEN_TEMP_OBJECT_PROPERTY)));
+            > ::Cast(
+                     context->Global()->GetHiddenValue(
+                                                       String::New(HIDDEN_TEMP_OBJECT_PROPERTY)));
     Handle < ObjectTemplate > temp = *((Handle<ObjectTemplate>*) globalTemplateExternal->Value());
     return handleScope.Close(temp);
 }
 
-void TiObject::addRef()
-{
-    // TODO: protect in multi-threaded environment
-    refCount_++;
-}
-
-void TiObject::release()
-{
-    // TODO: protect in multi-threaded environment
-    if ((--refCount_) == 0)
-    {
-        delete this;
-    }
-}
-
 void TiObject::initializeTiObject(TiObject* parentContext)
 {
-    if (!hasInitialized())
+    if (!isInitialized())
     {
-        hasInitialized_ = true;
+        isInitialized_ = true;
         parentObject_ = parentContext;
         onCreateStaticMembers();
     }
@@ -173,38 +136,26 @@ void TiObject::onCreateStaticMembers()
 
 const char* TiObject::getName() const
 {
-    return (name_ == NULL) ? "" : name_;
+    return name_.c_str();
 }
 
 void TiObject::addMember(TiObject* object, const char* name/*=NULL*/)
 {
     HandleScope handleScope;
-    int i;
-    OBJECT_ENTRY* entry = NULL;
-    const char* memberName = (name == NULL) ? object->getName() : name;
+    map<string, ObjectEntry>::iterator it;
+    ObjectEntry entry;
+    entry.obj_ = object;
     object->addRef();
-    for (i = 0; i < childObjectCount_; i++)
+    it = childObjectMap_.find(name);
+    if (it != childObjectMap_.end())
     {
-        if (strcmp(childObject_[i]->getObjectName(), memberName) == 0)
-        {
-            delete childObject_[i];
-            childObject_[i] = new OBJECT_ENTRY;
-            entry = childObject_[i];
-        }
+        childObjectMap_.erase(it);
     }
-    if (entry == NULL)
-    {
-        childObjectCount_++;
-        childObject_ = (OBJECT_ENTRY**) realloc(childObject_, sizeof(OBJECT_ENTRY*) * childObjectCount_);
-        childObject_[childObjectCount_ - 1] = new OBJECT_ENTRY;
-        entry = childObject_[childObjectCount_ - 1];
-    }
-    entry->setObjectName(memberName);
-    entry->obj_ = object;
+    childObjectMap_[name] = entry;
     object->initializeTiObject(this);
 }
 
-Handle<Value> TiObject::getValue()
+Handle<Value> TiObject::getValue() const
 {
     HandleScope handleScope;
     return value_;
@@ -212,18 +163,18 @@ Handle<Value> TiObject::getValue()
 
 TiObject* TiObject::onLookupMember(const char* memberName)
 {
-    int i;
-    HandleScope handleScope;
-    Handle < Object > obj;
-    for (i = 0; i < childObjectCount_; i++)
+    map<string, ObjectEntry>::iterator it;
+    it = childObjectMap_.find(memberName);
+    if (it == childObjectMap_.end())
     {
-        if (strcmp(childObject_[i]->objectName_, memberName) == 0)
-        {
-            childObject_[i]->obj_->addRef();
-            return childObject_[i]->obj_;
-        }
+        return NULL;
     }
-    return NULL;
+    TiObject* obj = it->second.obj_;
+    if (obj != NULL)
+    {
+        obj->addRef();
+    }
+    return obj;
 }
 
 void TiObject::onSetGetPropertyCallback(Handle<ObjectTemplate>* objTemplate)
@@ -244,10 +195,10 @@ void TiObject::onSetProperty(const char* propertyName, Local<Value> value)
 
 void TiObject::onStartMessagePump()
 {
-    int i;
-    for (i = 0; i < childObjectCount_; i++)
+    map<string, ObjectEntry>::iterator it;
+    for (it = childObjectMap_.begin(); it != childObjectMap_.end(); it++)
     {
-        childObject_[i]->obj_->onStartMessagePump();
+        it->second.obj_->onStartMessagePump();
     }
 }
 
@@ -283,7 +234,7 @@ VALUE_MODIFY TiObject::setValue(Handle<Value> value)
 }
 
 bool TiObject::userCanAddMember(const char* propertyName) const
-{
+                                {
     return true;
 }
 
@@ -292,6 +243,12 @@ Handle<Value> TiObject::propGetter_(Local<String> prop, const AccessorInfo& info
     HandleScope handleScope;
     Handle < Object > result;
     TiObject* obj = getTiObjectFromJsObject(info.Holder());
+    if (obj == NULL)
+    {
+        Handle < Value > internalReturn;
+        internalReturn = info.Holder()->GetHiddenValue(prop);
+        return handleScope.Close(internalReturn);
+    }
     Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(info.Holder());
     String::Utf8Value propName(prop);
     const char* propString = (const char*) (*propName);
@@ -325,6 +282,11 @@ Handle<Value> TiObject::propSetter_(Local<String> prop, Local<Value> value, cons
     HandleScope handleScope;
     Handle < Object > result;
     TiObject* obj = getTiObjectFromJsObject(info.Holder());
+    if (obj == NULL)
+    {
+        info.Holder()->SetHiddenValue(prop, value);
+        return value;
+    }
     String::Utf8Value propName(prop);
     const char* propString = (const char*) (*propName);
     TiObject* destObj = obj->onLookupMember(propString);
@@ -365,7 +327,7 @@ Handle<Value> TiObject::functCallback_(const Arguments& args)
 
 bool TiObject::hasMembers() const
 {
-    return (childObjectCount_ == 0) ? false : true;
+    return (childObjectMap_.empty() ? false : true);
 }
 
 bool TiObject::isFunction() const
@@ -378,9 +340,9 @@ bool TiObject::canAddMembers() const
     return true;
 }
 
-bool TiObject::hasInitialized() const
+bool TiObject::isInitialized() const
 {
-    return hasInitialized_;
+    return isInitialized_;
 }
 
 bool TiObject::isUIObject() const
@@ -401,20 +363,23 @@ TiObject* TiObject::getParentObject() const
     return parentObject_;
 }
 
-OBJECT_ENTRY::OBJECT_ENTRY()
+ObjectEntry::ObjectEntry()
 {
     obj_ = NULL;
     userContext_ = NULL;
-    objectName_ = NULL;
 }
 
-OBJECT_ENTRY::~OBJECT_ENTRY()
+ObjectEntry::ObjectEntry(const ObjectEntry& entry)
 {
-    if (objectName_ != NULL)
+    if (entry.obj_ != NULL)
     {
-        delete[] objectName_;
-        objectName_ = NULL;
+        entry.obj_->addRef();
     }
+    obj_ = entry.obj_;
+}
+
+ObjectEntry::~ObjectEntry()
+{
     if (obj_ != NULL)
     {
         obj_->release();
@@ -422,19 +387,16 @@ OBJECT_ENTRY::~OBJECT_ENTRY()
     }
 }
 
-void OBJECT_ENTRY::setObjectName(const char* objectName)
+const ObjectEntry& ObjectEntry::operator =(const ObjectEntry& entry)
 {
-    if (objectName_ != NULL)
+    if (entry.obj_ != NULL)
     {
-        delete[] objectName_;
+        entry.obj_->addRef();
     }
-    const char* name = (objectName == NULL) ? "" : objectName;
-    objectName_ = new char[strlen(name) + 1];
-    strcpy(objectName_, name);
+    if (obj_ != NULL)
+    {
+        obj_->release();
+    }
+    obj_ = entry.obj_;
+    return (*this);
 }
-
-const char* OBJECT_ENTRY::getObjectName() const
-{
-    return (objectName_ == NULL) ? "" : objectName_;
-}
-

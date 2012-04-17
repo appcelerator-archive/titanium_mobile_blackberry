@@ -6,7 +6,7 @@
  */
 
 #include "TiObjectScope.h"
-#include "TiObject.h"
+#include "TiBase.h"
 #include <utility>
 #include <stdio.h>
 #include <string.h>
@@ -17,7 +17,7 @@ TiObjectScope::TiObjectScope()
 
 }
 
-TiObjectScope::TiObjectScope(TiObject* obj)
+TiObjectScope::TiObjectScope(TiBase* obj)
 {
     object_ = obj;
 }
@@ -53,17 +53,17 @@ const TiObjectScope& TiObjectScope::operator =(const TiObjectScope& scope)
     return (*this);
 }
 
-TiObject* TiObjectScope::operator ->() const
+TiBase* TiObjectScope::operator ->() const
 {
     return object_;
 }
 
-TiObjectScope::operator TiObject*() const
+TiObjectScope::operator TiBase*() const
 {
     return object_;
 }
 
-void TiObjectScope::attachTiObject(TiObject* obj)
+void TiObjectScope::attachTiObject(TiBase* obj)
 {
     if (obj != NULL)
     {
@@ -76,9 +76,9 @@ void TiObjectScope::attachTiObject(TiObject* obj)
     object_ = obj;
 }
 
-TiObject* TiObjectScope::detachTiObject()
+TiBase* TiObjectScope::detachTiObject()
 {
-    TiObject* obj = object_;
+    TiBase* obj = object_;
     object_ = NULL;
     return obj;
 }

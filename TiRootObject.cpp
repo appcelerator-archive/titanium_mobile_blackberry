@@ -7,6 +7,7 @@
 
 #include "TiRootObject.h"
 #include "TiTitaniumObject.h"
+#include "TiV8EventContainerFactory.h"
 
 TiRootObject::TiRootObject()
         : TiObject("")
@@ -39,9 +40,11 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
 {
     HandleScope handleScope;
     objectFactory_ = objectFactory;
-    initializeTiObject (NULL);
+    initializeTiObject(NULL);
     globalTemplate_ = ObjectTemplate::New();
     globalTemplate_->SetInternalFieldCount(2);
+    TiV8EventContainerFactory* eventFactory = TiV8EventContainerFactory::createEventContainerFactory(globalTemplate_);
+    objectFactory->setEventContainerFactory(eventFactory);
     onSetGetPropertyCallback(&globalTemplate_);
     onSetFunctionCallback(&globalTemplate_);
     context_ = Context::New(NULL, globalTemplate_);

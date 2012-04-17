@@ -11,6 +11,12 @@
 #include "NativeControlObject.h"
 #include <bb/cascades/Label>
 
+/*
+ * NativeLabelObject
+ *
+ * UI: Label control
+ */
+
 class NativeLabelObject : public NativeControlObject
 {
 public:
@@ -20,9 +26,10 @@ public:
     virtual int setText(const char* text);
     virtual int setColor(const char* color);
     virtual int setTextAlign(const char* align);
-    virtual int initialize();
+    virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual void completeInitialization();
     virtual NAHANDLE getNativeHandle() const;
+
 private:
     bb::cascades::Label* label_;
 };
