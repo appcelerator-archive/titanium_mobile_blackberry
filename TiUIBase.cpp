@@ -12,9 +12,26 @@
 
 const static TI_PROPERTY g_tiProperties[] =
 {
-    {"text", "setText", "",TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE, N_PROP_SET_TEXT},
+    {"label", "setLabel", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_CSTRING, N_PROP_SET_LABEL},
+
+    {"max", "setMax", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_MAX},
+
+    {"min", "setMin", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_MIN},
+
+    {"text", "setText", "",TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_CSTRING, N_PROP_SET_TEXT},
+
     {"textAlign", "setTextAlign", "center", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_SET_TEXT_ALIGN}
+        NATIVE_TYPE_CSTRING | NATIVE_TYPE_INT, N_PROP_SET_TEXT_ALIGN},
+
+    {"top", "setTop", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_TOP},
+
+    {"value", "setValue", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_INT, N_PROP_SET_VALUE}
 };
 
 TiUIBase::TiUIBase()
@@ -82,7 +99,7 @@ void TiUIBase::setTiMappingProperties(const TI_PROPERTY* prop, int propertyCount
     for (i = 0; i < propertyCount; i++)
     {
         TiObject* value = TiPropertyMapObject::addProperty(this, prop[i].propertyName, prop[i].nativePropertyNumber,
-                                                           valueModify, this);
+                                                           prop[i].supportedTypes, valueModify, this);
         if ((prop[i].permissions & TI_PROP_PERMISSION_WRITE) && (prop[i].propertySetterFunctionName != NULL))
         {
             TiPropertySetFunctionObject::addPropertySetter(this, value, prop[i].propertySetterFunctionName);
@@ -108,13 +125,14 @@ void TiUIBase::onCreateStaticMembers()
 {
     TiObject::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "add", this, add_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "addEventListener", this, addEventListener_);
     setTiMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
 }
 
 void TiUIBase::setParametersFromObject(Local<Object> obj)
 {
     HandleScope handleScope;
-    int i;
+    uint32_t i;
     Handle < Value > value;
     Handle < Value > controlValue = getValue();
     if (!controlValue->IsObject())
@@ -122,12 +140,20 @@ void TiUIBase::setParametersFromObject(Local<Object> obj)
         return;
     }
     Handle < Object > self = Handle < Object > ::Cast(controlValue);
-    for (i = 0; i < (int) (sizeof(g_tiProperties) / sizeof(*g_tiProperties)); i++)
+    Handle<Array> propNames=obj->GetPropertyNames();
+    uint32_t props=propNames->Length();
+    Local<Value> propValue;
+    Handle<String> propString;
+    TiObject* foundProp;
+    for(i=0; i<props; i++)
     {
-        value = obj->Get(String::New(g_tiProperties[i].propertyName));
-        if (!value.IsEmpty())
+        propString=Handle<String>::Cast(propNames->Get(Integer::New(i)));
+        String::Utf8Value propNameUTF(propString);
+        foundProp=onLookupMember(*propNameUTF);
+        if(foundProp!=NULL)
         {
-            self->Set(String::New(g_tiProperties[i].propertyName), value);
+            propValue=obj->Get(propString);
+            foundProp->setValue(propValue);
         }
     }
 }
@@ -157,6 +183,10 @@ VALUE_MODIFY TiUIBase::valueModify(int propertyNumber, const char* value, void* 
     return modify;
 }
 
+void TiUIBase::onAddEventListener(const char* eventName,Handle<Function> eventFunction)
+{
+}
+
 Handle<Value> TiUIBase::add_(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
@@ -177,7 +207,19 @@ Handle<Value> TiUIBase::add_(void* userContext, TiObject* caller, const Argument
     }
     else
     {
-        // TODO: expand this excaption
+        // TODO: expand this exception
     }
+    return Undefined();
+}
+
+Handle<Value> TiUIBase::addEventListener_(void* userContext, TiObject* caller, const Arguments& args)
+{
+    HandleScope handleScope;
+    if((args.Length()!=2)||(!args[0]->IsString())||(!args[1]->IsFunction()))
+    {
+        return Undefined();
+    }
+    TiUIBase* obj = (TiUIBase*) userContext;
+    Handle<Function> func=Handle<Function>::Cast(args[1]);
     return Undefined();
 }

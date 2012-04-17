@@ -10,14 +10,16 @@
 
 typedef void* NAHANDLE;
 
-#define NATIVE_ERROR_OK                 0
-#define NATIVE_ERROR_NOTSUPPORTED       1
-#define NATIVE_ERROR_OUTOFMEMORY        2
-#define NATIVE_ERROR_INVALID_ARG        3
+#define NATIVE_ERROR_OK                         0
+#define NATIVE_ERROR_NOTSUPPORTED               1
+#define NATIVE_ERROR_OUTOFMEMORY                2
+#define NATIVE_ERROR_INVALID_ARG                3
 
-#define NO_TYPE_CONTAINER               1
-#define NO_TYPE_WINDOW                  2
-#define NO_TYPE_LABEL                   3
+#define NO_TYPE_CONTAINER                       1
+#define NO_TYPE_WINDOW                          2
+#define NO_TYPE_LABEL                           3
+#define NO_TYPE_BUTTON                          4
+#define NO_TYPE_SLIDER                          5
 
 #define N_PROP_SET_UNDEFINED                    0
 #define N_PROP_SET_ANCHOR_POINT                 1
@@ -26,8 +28,13 @@ typedef void* NAHANDLE;
 #define N_PROP_SET_BACKGROUND_DISABLED_COLOR    4
 #define N_PROP_SET_BACKGROUND_DISABLED_IMAGE    5
 #define N_PROP_SET_BACKGROUND_FOCUSED_COLOR     6
-#define N_PROP_SET_TEXT                         7
-#define N_PROP_SET_TEXT_ALIGN                   8
+#define N_PROP_SET_LABEL                        7
+#define N_PROP_SET_MAX                          8
+#define N_PROP_SET_MIN                          9
+#define N_PROP_SET_TEXT                         10
+#define N_PROP_SET_TEXT_ALIGN                   11
+#define N_PROP_SET_TOP                          12
+#define N_PROP_SET_VALUE                        13
 
 class NativeObjectFactory;
 /*

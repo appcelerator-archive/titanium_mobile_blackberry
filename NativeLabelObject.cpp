@@ -7,6 +7,7 @@
 
 #include "NativeLabelObject.h"
 #include <bb/cascades/TextAlignment>
+#include <bb/cascades/SystemFont>
 
 NativeLabelObject::NativeLabelObject()
 {
@@ -59,6 +60,7 @@ int NativeLabelObject::initialize()
 {
     label_ = bb::cascades::Label::create();
     setControl(label_);
+    label_->setFont(bb::cascades::SystemFont::getFont(bb::cascades::SystemFont::H1));
     return NATIVE_ERROR_OK;
 }
 

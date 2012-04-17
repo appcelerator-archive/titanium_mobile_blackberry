@@ -9,6 +9,8 @@
 #include "NativeObjectFactory.h"
 #include "NativeContainerObject.h"
 #include "NativeLabelObject.h"
+#include "NativeButtonObject.h"
+#include "NativeSliderObject.h"
 #include <bb/cascades/Container>
 
 using namespace bb::cascades;
@@ -40,6 +42,12 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
         break;
     case NO_TYPE_LABEL:
         obj = new NativeLabelObject;
+        break;
+    case NO_TYPE_BUTTON:
+        obj = new NativeButtonObject;
+        break;
+    case NO_TYPE_SLIDER:
+        obj = new NativeSliderObject;
         break;
     }
     if (obj != NULL)

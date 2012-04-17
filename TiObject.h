@@ -56,7 +56,8 @@ struct OBJECT_ENTRY
 
 enum VALUE_MODIFY
 {
-    VALUE_MODIFY_ALLOW, VALUE_MODIFY_DENY, VALUE_MODIFY_NOT_SUPPORTED, VALUE_MODIFY_INVALID
+    VALUE_MODIFY_ALLOW, VALUE_MODIFY_DENY, VALUE_MODIFY_NOT_SUPPORTED, VALUE_MODIFY_INVALID,
+    VALUE_MODIFY_INVALID_TYPE
 };
 
 #define TI_PROP_PERMISSION_READ         1
@@ -69,6 +70,7 @@ struct TI_PROPERTY
     const char* propertySetterFunctionName;
     const char* defaultValue;
     int permissions;
+    int supportedTypes;
     int nativePropertyNumber;
 };
 

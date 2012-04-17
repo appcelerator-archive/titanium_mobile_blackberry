@@ -21,8 +21,13 @@ public:
     virtual int setPropertyValue(int propertyNumber, const char* value);
 
     virtual int setBackgroundColor(const char* text);
+    virtual int setLabel(const char* text);
+    virtual int setMax(float max);
+    virtual int setMin(float min);
     virtual int setText(const char* text);
     virtual int setTextAlign(const char* align);
+    virtual int setTop(float top);
+    virtual int setValue(float value);
 protected:
     virtual bb::cascades::Control* getControl() const;
     virtual void setControl(bb::cascades::Control* control);
