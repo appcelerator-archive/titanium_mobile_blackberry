@@ -146,6 +146,10 @@ void TiObject::addMember(TiObject* object, const char* name/*=NULL*/)
     ObjectEntry entry;
     entry.obj_ = object;
     object->addRef();
+    if (name == NULL)
+    {
+        name = object->getName();
+    }
     it = childObjectMap_.find(name);
     if (it != childObjectMap_.end())
     {
@@ -153,6 +157,7 @@ void TiObject::addMember(TiObject* object, const char* name/*=NULL*/)
     }
     childObjectMap_[name] = entry;
     object->initializeTiObject(this);
+    object->release();
 }
 
 Handle<Value> TiObject::getValue() const
