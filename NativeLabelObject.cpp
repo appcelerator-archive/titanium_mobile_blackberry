@@ -56,7 +56,7 @@ int NativeLabelObject::setTextAlign(const char* align)
     return NATIVE_ERROR_OK;
 }
 
-int NativeLabelObject::initialize(TiEventContainerFactory* containerFactory)
+int NativeLabelObject::initialize(TiEventContainerFactory*)
 {
     label_ = bb::cascades::Label::create();
     setControl(label_);

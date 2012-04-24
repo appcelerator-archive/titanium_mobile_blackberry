@@ -26,13 +26,11 @@ Q_OBJECT
 public:
     TiCascadesEventHandler(TiEventContainer* eventContainer);
     virtual ~TiCascadesEventHandler();
-
     TiEventContainer* getEventContainer() const;
-    Q_SLOT
+
+public slots:
     void valueChanging(float value);
-    Q_SLOT
     void valueChanged(float value);
-    Q_SLOT
     void clicked();
 
 private:

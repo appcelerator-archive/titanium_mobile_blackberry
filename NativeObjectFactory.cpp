@@ -30,10 +30,8 @@ NativeObjectFactory::~NativeObjectFactory()
         rootContainer_->release();
         rootContainer_ = NULL;
     }
-    if (eventContainerFactory_ != NULL)
-    {
-        delete eventContainerFactory_;
-    }
+    delete eventContainerFactory_;
+    eventContainerFactory_ = NULL;
 }
 
 NativeObject* NativeObjectFactory::createNativeObject(int type)
@@ -80,6 +78,10 @@ void NativeObjectFactory::setRootContainer(NativeObject* container)
 
 void NativeObjectFactory::setEventContainerFactory(TiEventContainerFactory* eventContainerFactory)
 {
+    if(eventContainerFactory_!=NULL)
+    {
+        delete eventContainerFactory_;
+    }
     eventContainerFactory_ = eventContainerFactory;
 }
 

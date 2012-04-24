@@ -15,6 +15,7 @@
 #include <bb/cascades/Slider>
 #include <bb/cascades/Color>
 #include <bb/cascades/ProgressIndicator>
+#include <qtgui/QColor>
 #include "TiUtility.h"
 #include "NativeObjectFactory.h"
 
@@ -66,34 +67,40 @@ int NativeContainerObject::initialize(TiEventContainerFactory* containerFactory)
 
 int NativeContainerObject::addChildNativeObject(NativeObject* obj)
 {
-    bb::cascades::Container* container;
-    bb::cascades::Label* label;
-    bb::cascades::Button* button;
-    bb::cascades::Slider* slider;
-    bb::cascades::ProgressIndicator* progressIndicator;
     switch (obj->getObjectType())
     {
     case NO_TYPE_CONTAINER:
-        case NO_TYPE_WINDOW:
-        container = (bb::cascades::Container*) obj->getNativeHandle();
+
+    case NO_TYPE_WINDOW:
+        {
+        bb::cascades::Container* container = (bb::cascades::Container*) obj->getNativeHandle();
         container_->add(container);
         return NATIVE_ERROR_OK;
+    }
     case NO_TYPE_LABEL:
-        label = (bb::cascades::Label*) obj->getNativeHandle();
+        {
+        bb::cascades::Label* label = (bb::cascades::Label*) obj->getNativeHandle();
         container_->add(label);
         return NATIVE_ERROR_OK;
+    }
     case NO_TYPE_BUTTON:
-        button = (bb::cascades::Button*) obj->getNativeHandle();
+        {
+        bb::cascades::Button* button = (bb::cascades::Button*) obj->getNativeHandle();
         container_->add(button);
         return NATIVE_ERROR_OK;
+    }
     case NO_TYPE_SLIDER:
-        slider = (bb::cascades::Slider*) obj->getNativeHandle();
+        {
+        bb::cascades::Slider* slider = (bb::cascades::Slider*) obj->getNativeHandle();
         container_->add(slider);
         return NATIVE_ERROR_OK;
+    }
     case NO_TYPE_PROGRESSBAR:
-        progressIndicator = (bb::cascades::ProgressIndicator*) obj->getNativeHandle();
+        {
+        bb::cascades::ProgressIndicator* progressIndicator = (bb::cascades::ProgressIndicator*) obj->getNativeHandle();
         container_->add(progressIndicator);
         return NATIVE_ERROR_OK;
+    }
     }
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -106,12 +113,12 @@ int NativeContainerObject::open()
 
 int NativeContainerObject::setBackgroundColor(const char* text)
 {
-    float a;
-    float r;
-    float g;
-    float b;
-    TiUtility::convertHTMLStringToColorComponents(text, &r, &g, &b, &a);
-    Color color = Color::fromRGBA(r, g, b, a);
-    container_->setBackground(color);
+    QString colorString = text;
+    QColor color;
+    color.setNamedColor(colorString);
+    qreal r, g, b, a;
+    color.getRgbF(&r, &g, &b, &a);
+    Color cscolor = Color::fromRGBA(r, g, b, a);
+    container_->setBackground(cscolor);
     return NATIVE_ERROR_OK;
 }

@@ -17,15 +17,15 @@ TiObject::TiObject()
     parentObject_ = NULL;
 }
 
-TiObject::TiObject(const char* objectName)
+TiObject::TiObject(const char* objectName) :
+        isInitialized_(false),
+        parentObject_(NULL)
 {
     name_ = objectName;
     if (!value_.IsEmpty())
     {
         value_.Dispose();
     }
-    isInitialized_ = false;
-    parentObject_ = NULL;
 }
 
 TiObject::TiObject(const char* objectName, Handle<Value> value)
@@ -143,9 +143,7 @@ void TiObject::addMember(TiObject* object, const char* name/*=NULL*/)
 {
     HandleScope handleScope;
     map<string, ObjectEntry>::iterator it;
-    ObjectEntry entry;
-    entry.obj_ = object;
-    object->addRef();
+    ObjectEntry entry(object);
     if (name == NULL)
     {
         name = object->getName();
@@ -157,7 +155,6 @@ void TiObject::addMember(TiObject* object, const char* name/*=NULL*/)
     }
     childObjectMap_[name] = entry;
     object->initializeTiObject(this);
-    object->release();
 }
 
 Handle<Value> TiObject::getValue() const
@@ -174,11 +171,7 @@ TiObject* TiObject::onLookupMember(const char* memberName)
     {
         return NULL;
     }
-    TiObject* obj = it->second.obj_;
-    if (obj != NULL)
-    {
-        obj->addRef();
-    }
+    TiObject* obj = it->second.getObject();
     return obj;
 }
 
@@ -203,7 +196,12 @@ void TiObject::onStartMessagePump()
     map<string, ObjectEntry>::iterator it;
     for (it = childObjectMap_.begin(); it != childObjectMap_.end(); it++)
     {
-        it->second.obj_->onStartMessagePump();
+        TiObject* obj = it->second.getObject();
+        if (obj != NULL)
+        {
+            obj->onStartMessagePump();
+            obj->release();
+        }
     }
 }
 
@@ -383,6 +381,15 @@ ObjectEntry::ObjectEntry(const ObjectEntry& entry)
     obj_ = entry.obj_;
 }
 
+ObjectEntry::ObjectEntry(TiObject* obj)
+{
+    if (obj != NULL)
+    {
+        obj->addRef();
+    }
+    obj_ = obj;
+}
+
 ObjectEntry::~ObjectEntry()
 {
     if (obj_ != NULL)
@@ -404,4 +411,13 @@ const ObjectEntry& ObjectEntry::operator =(const ObjectEntry& entry)
     }
     obj_ = entry.obj_;
     return (*this);
+}
+
+TiObject* ObjectEntry::getObject() const
+{
+    if(obj_!=NULL)
+    {
+        obj_->addRef();
+    }
+    return obj_;
 }

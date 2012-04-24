@@ -14,7 +14,7 @@ class TiEventContainer;
  * TiEventContainerFactory
  *
  * Abstract class that creates event containers. The list
- * is event containers is specific to a control and therefore
+ * of event containers is specific to a control and therefore
  * must be created by the control, e.g., the button control
  * creates a 'click' event container and this container contains
  * a list of subscribers who subscribe to 'click'.

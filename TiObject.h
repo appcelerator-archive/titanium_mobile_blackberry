@@ -35,13 +35,16 @@ using namespace std;
 
 class TiObject;
 
-struct ObjectEntry
+class ObjectEntry
 {
+public:
     ObjectEntry();
     ObjectEntry(const ObjectEntry& entry);
+    ObjectEntry(TiObject* obj);
     ~ObjectEntry();
     const ObjectEntry& operator =(const ObjectEntry& entry);
-
+    TiObject* getObject() const;
+private:
     TiObject* obj_;
     void* userContext_;
 };
