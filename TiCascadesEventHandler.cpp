@@ -30,6 +30,7 @@ void TiCascadesEventHandler::valueChanging(float value)
 
 void TiCascadesEventHandler::valueChanged(float value)
 {
+    // TODO: finish this
 }
 
 void TiCascadesEventHandler::clicked()

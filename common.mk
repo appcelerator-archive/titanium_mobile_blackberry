@@ -13,10 +13,6 @@ EXTRA_INCVPATH+=$(QNX_TARGET)/usr/include/freetype2 \
 	$(PROJECT_ROOT)/include \
 	$(PROJECT_ROOT)/../libv8/include
 
-PRE_BUILD=moc.exe -DQT_NO_DEBUG -DQT_DECLARATIVE_LIB -DQT_SCRIPT_LIB -DQT_SVG_LIB -DQT_SQL_LIB -DQT_GUI_LIB \
-	-DQT_NETWORK_LIB -DQT_CORE_LIB $(addprefix -I, $(INCVPATH)) 
-
-
 # Extra library search path for target overrides and patches
 EXTRA_LIBVPATH+=$(QNX_TARGET)/$(CPUVARDIR)/usr/lib \
 	$(QNX_TARGET)/$(CPUVARDIR)/usr/lib/qt4/lib \

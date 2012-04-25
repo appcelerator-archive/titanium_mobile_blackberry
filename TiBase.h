@@ -20,10 +20,12 @@ class TiBase
 public:
     virtual void addRef();
     virtual void release();
-    protected:
+
+protected:
     TiBase();
     virtual ~TiBase();
-    private:
+
+private:
     int refCount_;
 };
 

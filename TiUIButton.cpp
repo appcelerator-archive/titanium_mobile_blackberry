@@ -29,7 +29,7 @@ void TiUIButton::initializeTiObject(TiObject* parentContext)
     if (!isInitialized())
     {
         TiUIBase::initializeTiObject(parentContext);
-        NativeObject* obj = getNativeObjectFactory()->createNativeObject(NO_TYPE_BUTTON);
+        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_BUTTON);
         setNativeObject(obj);
         obj->release();
     }

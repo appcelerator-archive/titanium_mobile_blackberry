@@ -22,7 +22,8 @@ class NativeObject;
 class TiCascadesApp : public QObject
 {
 Q_OBJECT
-    public:
+
+public:
     TiCascadesApp();
     virtual ~TiCascadesApp();
     void initializeApp();

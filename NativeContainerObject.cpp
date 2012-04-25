@@ -16,7 +16,6 @@
 #include <bb/cascades/Color>
 #include <bb/cascades/ProgressIndicator>
 #include <qtgui/QColor>
-#include "TiUtility.h"
 #include "NativeObjectFactory.h"
 
 using namespace bb::cascades;
@@ -46,7 +45,7 @@ NativeObject* NativeContainerObject::createContainer(NativeObjectFactory* native
 
 int NativeContainerObject::getObjectType() const
 {
-    return NO_TYPE_CONTAINER;
+    return N_TYPE_CONTAINER;
 }
 
 NAHANDLE NativeContainerObject::getNativeHandle() const
@@ -69,38 +68,47 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
 {
     switch (obj->getObjectType())
     {
-    case NO_TYPE_CONTAINER:
+    case N_TYPE_CONTAINER:
 
-    case NO_TYPE_WINDOW:
-        {
+    case N_TYPE_WINDOW:
+
+    {
         bb::cascades::Container* container = (bb::cascades::Container*) obj->getNativeHandle();
         container_->add(container);
         return NATIVE_ERROR_OK;
     }
-    case NO_TYPE_LABEL:
+
+    case N_TYPE_LABEL:
         {
         bb::cascades::Label* label = (bb::cascades::Label*) obj->getNativeHandle();
         container_->add(label);
         return NATIVE_ERROR_OK;
     }
-    case NO_TYPE_BUTTON:
-        {
+
+    case N_TYPE_BUTTON:
+
+    {
         bb::cascades::Button* button = (bb::cascades::Button*) obj->getNativeHandle();
         container_->add(button);
         return NATIVE_ERROR_OK;
     }
-    case NO_TYPE_SLIDER:
-        {
+
+    case N_TYPE_SLIDER:
+
+    {
         bb::cascades::Slider* slider = (bb::cascades::Slider*) obj->getNativeHandle();
         container_->add(slider);
         return NATIVE_ERROR_OK;
     }
-    case NO_TYPE_PROGRESSBAR:
-        {
+
+    case N_TYPE_PROGRESSBAR:
+
+    {
         bb::cascades::ProgressIndicator* progressIndicator = (bb::cascades::ProgressIndicator*) obj->getNativeHandle();
         container_->add(progressIndicator);
         return NATIVE_ERROR_OK;
     }
+
     }
     return NATIVE_ERROR_NOTSUPPORTED;
 }

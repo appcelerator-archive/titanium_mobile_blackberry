@@ -7,21 +7,8 @@
 
 #include "TiCascadesApp.h"
 #include <bb/cascades/Application>
-
-#include <bb/cascades/DockLayout>
-#include <bb/cascades/DockLayoutProperties>
-#include <bb/cascades/Color>
-#include <bb/cascades/Label>
-#include <bb/cascades/QmlDocument>
-#include <bb/cascades/Font>
-#include <bb/cascades/Event>
-#include <bb/cascades/UiObject>
-#include <bb/cascades/Control>
 #include <bb/cascades/Container>
-#include <bb/cascades/Application>
-#include <bb/cascades/StackLayout>
 #include <bb/cascades/Page>
-#include "TiUtility.h"
 #include "NativeObject.h"
 
 using namespace bb::cascades;

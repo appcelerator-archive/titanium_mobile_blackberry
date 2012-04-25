@@ -99,8 +99,7 @@ NativeObject* TiUIBase::getNativeObject() const
 
 void TiUIBase::setTiMappingProperties(const TI_PROPERTY* prop, int propertyCount)
 {
-    int i;
-    for (i = 0; i < propertyCount; i++)
+    for (int i = 0; i < propertyCount; i++)
     {
         TiObject* value = TiPropertyMapObject::addProperty(this, prop[i].propertyName, prop[i].nativePropertyNumber,
                                                            prop[i].supportedTypes,
@@ -137,7 +136,6 @@ void TiUIBase::onCreateStaticMembers()
 void TiUIBase::setParametersFromObject(Local<Object> obj)
 {
     HandleScope handleScope;
-    uint32_t i;
     Handle < Value > value;
     Handle < Value > controlValue = getValue();
     if (!controlValue->IsObject())
@@ -150,7 +148,7 @@ void TiUIBase::setParametersFromObject(Local<Object> obj)
     Local < Value > propValue;
     Handle < String > propString;
     TiObject* foundProp;
-    for (i = 0; i < props; i++)
+    for (uint32_t i = 0; i < props; i++)
     {
         propString = Handle < String > ::Cast(propNames->Get(Integer::New(i)));
         String::Utf8Value propNameUTF(propString);
@@ -167,11 +165,11 @@ VALUE_MODIFY TiUIBase::valueModify(int propertyNumber, const char* value, void* 
 {
     TiUIBase* self = (TiUIBase*) context;
     NativeObject* object = self->getNativeObject();
-    VALUE_MODIFY modify = VALUE_MODIFY_ALLOW;
     if (object == NULL)
     {
         return VALUE_MODIFY_NOT_SUPPORTED;
     }
+    VALUE_MODIFY modify = VALUE_MODIFY_ALLOW;
     switch (object->setPropertyValue(propertyNumber, value))
     {
     case NATIVE_ERROR_OK:

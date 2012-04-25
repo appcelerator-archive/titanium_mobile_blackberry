@@ -39,22 +39,28 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
     NativeObject* obj = NULL;
     switch (type)
     {
-    case NO_TYPE_CONTAINER:
-        case NO_TYPE_WINDOW:
+    case N_TYPE_CONTAINER:
+
+    case N_TYPE_WINDOW:
         obj = NativeContainerObject::createContainer(this);
         break;
-    case NO_TYPE_LABEL:
-        obj = new NativeLabelObject;
+
+    case N_TYPE_LABEL:
+        obj = NativeLabelObject::createLabel();
         break;
-    case NO_TYPE_BUTTON:
+
+    case N_TYPE_BUTTON:
         obj = new NativeButtonObject;
         break;
-    case NO_TYPE_SLIDER:
+
+    case N_TYPE_SLIDER:
         obj = new NativeSliderObject;
         break;
-    case NO_TYPE_PROGRESSBAR:
+
+    case N_TYPE_PROGRESSBAR:
         obj = new NativeProgressBarObject;
         break;
+
     }
     if (obj != NULL)
     {
@@ -78,7 +84,7 @@ void NativeObjectFactory::setRootContainer(NativeObject* container)
 
 void NativeObjectFactory::setEventContainerFactory(TiEventContainerFactory* eventContainerFactory)
 {
-    if(eventContainerFactory_!=NULL)
+    if (eventContainerFactory_ != NULL)
     {
         delete eventContainerFactory_;
     }

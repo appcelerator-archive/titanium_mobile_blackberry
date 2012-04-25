@@ -47,6 +47,7 @@ private:
     static VALUE_MODIFY valueModify(int propertyNumber, const char* value, void* context);
     static Handle<Value> add_(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> addEventListener_(void* userContext, TiObject* caller, const Arguments& args);
+
     // fields
     NativeObject* nativeObject_;
     NativeObjectFactory* nativeObjectFactory_;

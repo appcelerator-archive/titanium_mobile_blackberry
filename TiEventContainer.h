@@ -25,10 +25,16 @@ public:
     virtual void setDataProperty(const char* propertyName, const char* value)=0;
     virtual void setDataProperty(const char* propertyName, int value)=0;
     virtual void setDataProperty(const char* propertyName, float value)=0;
-    virtual ~TiEventContainer();
+    virtual ~TiEventContainer()
+    {
+    }
+    ;
 
 protected:
-    TiEventContainer();
+    TiEventContainer()
+    {
+    }
+    ;
 };
 
 #endif /* TIEVENTCONTAINER_H_ */

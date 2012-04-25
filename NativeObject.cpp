@@ -44,10 +44,10 @@ int NativeObject::open()
 
 void NativeObject::completeInitialization()
 {
-    isInitializationComplete_ = 1;
+    isInitializationComplete_ = true;
 }
 
-int NativeObject::isInitializationComplete() const
+bool NativeObject::isInitializationComplete() const
 {
     return isInitializationComplete_;
 }

@@ -18,9 +18,14 @@ NativeLabelObject::~NativeLabelObject()
 {
 }
 
+NativeLabelObject* NativeLabelObject::createLabel()
+{
+    return new NativeLabelObject;
+}
+
 int NativeLabelObject::getObjectType() const
 {
-    return NO_TYPE_LABEL;
+    return N_TYPE_LABEL;
 }
 
 int NativeLabelObject::setText(const char* text)
@@ -37,15 +42,15 @@ int NativeLabelObject::setColor(const char* color)
 
 int NativeLabelObject::setTextAlign(const char* align)
 {
-    if (strcmp(align, "left") == 0)
+    if (stricmp(align, "left") == 0)
     {
         label_->setTextAlignment(bb::cascades::TextAlignment::ForceLeft);
     }
-    else if (strcmp(align, "right") == 0)
+    else if (stricmp(align, "right") == 0)
     {
         label_->setTextAlignment(bb::cascades::TextAlignment::ForceRight);
     }
-    else if (strcmp(align, "center") == 0)
+    else if (stricmp(align, "center") == 0)
     {
         label_->setTextAlignment(bb::cascades::TextAlignment::Center);
     }

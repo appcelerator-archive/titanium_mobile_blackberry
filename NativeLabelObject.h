@@ -20,8 +20,7 @@
 class NativeLabelObject : public NativeControlObject
 {
 public:
-    NativeLabelObject();
-    virtual ~NativeLabelObject();
+    static NativeLabelObject* createLabel();
     virtual int getObjectType() const;
     virtual int setText(const char* text);
     virtual int setColor(const char* color);
@@ -29,6 +28,10 @@ public:
     virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual void completeInitialization();
     virtual NAHANDLE getNativeHandle() const;
+
+protected:
+    NativeLabelObject();
+    virtual ~NativeLabelObject();
 
 private:
     bb::cascades::Label* label_;

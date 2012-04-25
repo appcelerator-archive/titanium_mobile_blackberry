@@ -15,12 +15,12 @@ typedef void* NAHANDLE;
 #define NATIVE_ERROR_OUTOFMEMORY                2
 #define NATIVE_ERROR_INVALID_ARG                3
 
-#define NO_TYPE_CONTAINER                       1
-#define NO_TYPE_WINDOW                          2
-#define NO_TYPE_LABEL                           3
-#define NO_TYPE_BUTTON                          4
-#define NO_TYPE_SLIDER                          5
-#define NO_TYPE_PROGRESSBAR                     6
+#define N_TYPE_CONTAINER                        1
+#define N_TYPE_WINDOW                           2
+#define N_TYPE_LABEL                            3
+#define N_TYPE_BUTTON                           4
+#define N_TYPE_SLIDER                           5
+#define N_TYPE_PROGRESSBAR                      6
 
 #define N_PROP_SET_UNDEFINED                    0
 #define N_PROP_SET_ANCHOR_POINT                 1
@@ -47,7 +47,10 @@ class TiEventContainerFactory;
 /*
  * NativeObject
  *
- * Abstract class that represents a native object.
+ * Abstract class that represents a native object. A
+ * native object represents an object that has been
+ * implemented for a specific platform
+ * such as a button, label, file, etc...
  */
 class NativeObject :
                      public TiBase
@@ -59,7 +62,7 @@ public:
     virtual NAHANDLE getNativeHandle() const;
     virtual int open();
     virtual void completeInitialization();
-    virtual int isInitializationComplete() const;
+    virtual bool isInitializationComplete() const;
     virtual int setEventHandler(const char* eventName, TiEvent* event);
 
 protected:
@@ -69,7 +72,7 @@ protected:
     friend class NativeObjectFactory;
 
 private:
-    int isInitializationComplete_;
+    bool isInitializationComplete_;
 };
 
 #endif /* NATIVEOBJECT_H_ */

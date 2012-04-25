@@ -22,7 +22,7 @@ NativeButtonObject::~NativeButtonObject()
 
 int NativeButtonObject::getObjectType() const
 {
-    return NO_TYPE_BUTTON;
+    return N_TYPE_BUTTON;
 }
 
 int NativeButtonObject::initialize(TiEventContainerFactory* containerFactory)

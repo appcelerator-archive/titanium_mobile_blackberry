@@ -25,7 +25,7 @@ NativeSliderObject::~NativeSliderObject()
 
 int NativeSliderObject::getObjectType() const
 {
-    return NO_TYPE_SLIDER;
+    return N_TYPE_SLIDER;
 }
 
 int NativeSliderObject::initialize(TiEventContainerFactory* containerFactory)

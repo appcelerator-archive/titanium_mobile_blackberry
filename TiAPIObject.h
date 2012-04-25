@@ -20,7 +20,8 @@ class TiAPIObject : public TiObject
 {
 public:
     static void addObjectToParent(TiObject* parent);
-    protected:
+
+protected:
     virtual ~TiAPIObject();
     virtual void onCreateStaticMembers();
 

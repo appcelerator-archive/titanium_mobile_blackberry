@@ -7,7 +7,6 @@
 
 #include "TiUIObject.h"
 #include "TiGenericFunctionObject.h"
-#include "TiUtility.h"
 #include "TiCascadesApp.h"
 #include "TiUIWindow.h"
 #include "TiUILabel.h"
@@ -53,6 +52,7 @@ void TiUIObject::onCreateStaticMembers()
 
 Handle<Value> TiUIObject::createTabGroup_(void* userContext, TiObject* caller, const Arguments& args)
 {
+    // TODO: finish this
     return Undefined();
 }
 

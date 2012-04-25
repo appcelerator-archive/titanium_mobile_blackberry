@@ -17,15 +17,12 @@ TiObject::TiObject()
     parentObject_ = NULL;
 }
 
-TiObject::TiObject(const char* objectName) :
-        isInitialized_(false),
-        parentObject_(NULL)
+TiObject::TiObject(const char* objectName)
+        :
+          isInitialized_(false),
+          parentObject_(NULL)
 {
     name_ = objectName;
-    if (!value_.IsEmpty())
-    {
-        value_.Dispose();
-    }
 }
 
 TiObject::TiObject(const char* objectName, Handle<Value> value)
@@ -37,6 +34,10 @@ TiObject::TiObject(const char* objectName, Handle<Value> value)
 
 TiObject::~TiObject()
 {
+    if (!value_.IsEmpty())
+    {
+        value_.Dispose();
+    }
 }
 
 char* TiObject::getStringFromObject(Handle<Value> value, const char* defaultString)
@@ -237,7 +238,8 @@ VALUE_MODIFY TiObject::setValue(Handle<Value> value)
 }
 
 bool TiObject::userCanAddMember(const char* propertyName) const
-                                {
+
+{
     return true;
 }
 
@@ -415,7 +417,7 @@ const ObjectEntry& ObjectEntry::operator =(const ObjectEntry& entry)
 
 TiObject* ObjectEntry::getObject() const
 {
-    if(obj_!=NULL)
+    if (obj_ != NULL)
     {
         obj_->addRef();
     }

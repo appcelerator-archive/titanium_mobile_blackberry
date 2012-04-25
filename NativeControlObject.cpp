@@ -44,6 +44,10 @@ void NativeControlObject::setControl(bb::cascades::Control* control)
     control_ = control;
 }
 
+// PROP_SETTER_xxx creates a static version of functions which
+// calls the non-static on method on the NativeControlObject
+// class.
+
 PROP_SETTER_CSTRING(setBackgroundColor)
 int NativeControlObject::setBackgroundColor(const char* text)
 {
@@ -92,6 +96,9 @@ int NativeControlObject::setValue(float value)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
+
+// PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
+// PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
 const static NATIVE_PROPSET_CALLBACK g_functionMap[] =
         {

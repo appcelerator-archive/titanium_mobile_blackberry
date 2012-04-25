@@ -20,8 +20,6 @@
 class NativeControlObject : public NativeObject
 {
 public:
-    NativeControlObject();
-    virtual ~NativeControlObject();
     virtual int setPropertyValue(int propertyNumber, const char* value);
 
     virtual int setBackgroundColor(const char* text);
@@ -34,6 +32,8 @@ public:
     virtual int setValue(float value);
 
 protected:
+    NativeControlObject();
+    virtual ~NativeControlObject();
     virtual bb::cascades::Control* getControl() const;
     virtual void setControl(bb::cascades::Control* control);
 
