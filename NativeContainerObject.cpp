@@ -6,17 +6,20 @@
  */
 
 #include "NativeContainerObject.h"
+#include "NativeObjectFactory.h"
 #include <bb/cascades/Container>
 #include <bb/cascades/DockLayout>
 #include <bb/cascades/DockLayoutProperties>
 #include <bb/cascades/Stacklayout>
+#include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/Label>
 #include <bb/cascades/Button>
 #include <bb/cascades/Slider>
 #include <bb/cascades/Color>
 #include <bb/cascades/ProgressIndicator>
+#include <bb/cascades/ImageView>
 #include <qtgui/QColor>
-#include "NativeObjectFactory.h"
+#include "TiUtility.h"
 
 using namespace bb::cascades;
 
@@ -79,7 +82,8 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
     }
 
     case N_TYPE_LABEL:
-        {
+
+    {
         bb::cascades::Label* label = (bb::cascades::Label*) obj->getNativeHandle();
         container_->add(label);
         return NATIVE_ERROR_OK;
@@ -107,6 +111,14 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
         bb::cascades::ProgressIndicator* progressIndicator = (bb::cascades::ProgressIndicator*) obj->getNativeHandle();
         container_->add(progressIndicator);
         return NATIVE_ERROR_OK;
+    }
+
+    case NO_TYPE_IMAGEVIEW:
+
+    {
+        bb::cascades::ImageView* imageView = (bb::cascades::ImageView*) obj->getNativeHandle();
+    	container_->add(imageView);
+    	return NATIVE_ERROR_OK;
     }
 
     }

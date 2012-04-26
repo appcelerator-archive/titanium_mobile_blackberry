@@ -12,6 +12,7 @@
 #include "NativeButtonObject.h"
 #include "NativeSliderObject.h"
 #include "NativeProgressBarObject.h"
+#include "NativeImageViewObject.h"
 #include <bb/cascades/Container>
 
 using namespace bb::cascades;
@@ -60,6 +61,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
     case N_TYPE_PROGRESSBAR:
         obj = new NativeProgressBarObject;
         break;
+
+    case NO_TYPE_IMAGEVIEW:
+    	obj = new NativeImageViewObject;
+    	break;
 
     }
     if (obj != NULL)

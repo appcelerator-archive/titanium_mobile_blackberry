@@ -35,7 +35,19 @@ const static TI_PROPERTY g_tiProperties[] =
                         NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_TOP},
 
                 {"value", "setValue", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_INT, N_PROP_SET_VALUE}
+                        NATIVE_TYPE_INT, N_PROP_SET_VALUE},
+
+                {"image", "setImage", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                		NATIVE_TYPE_CSTRING, N_PROP_SET_IMAGE},
+
+                {"width", "setWidth", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                		NATIVE_TYPE_DOUBLE, N_PROP_SET_WIDTH},
+
+                {"height", "setHeight", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                		NATIVE_TYPE_DOUBLE, N_PROP_SET_HEIGHT},
+
+                {"left", "setLeft", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                                		NATIVE_TYPE_DOUBLE, N_PROP_SET_LEFT},
         };
 
 TiUIBase::TiUIBase()
