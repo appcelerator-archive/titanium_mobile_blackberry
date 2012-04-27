@@ -226,7 +226,7 @@ VALUE_MODIFY TiObject::setValue(Handle<Value> value)
     TiObject* parent = getParentObject();
     if (parent != NULL)
     {
-        modify = onChildValueChange(this, value_, value);
+        modify = parent->onChildValueChange(this, value_, value);
         parent->release();
         if (modify != VALUE_MODIFY_ALLOW)
         {
