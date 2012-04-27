@@ -38,6 +38,17 @@ VALUE_MODIFY TiPropertyMapObject::onValueChange(Handle<Value> oldValue, Handle<V
     {
         return modify;
     }
+    if (supportedTypes_ & NATIVE_TYPE_BOOL)
+    {
+        if (newValue->IsBoolean())
+        {
+            stringValue = Handle < String > ::Cast(newValue);
+            String::Utf8Value utf(stringValue);
+            return (callback_)(propertyNumber_, *utf, context_);
+            //Handle < Boolean > boolValue = Handle < Boolean > ::Cast(newValue);
+            //return (callback_)(propertyNumber_, (boolValue->Value ? "true" : "false"), context_);
+        }
+    }
     if (supportedTypes_ & NATIVE_TYPE_INT)
     {
         if ((newValue->IsInt32()) || (newValue->IsUint32()))

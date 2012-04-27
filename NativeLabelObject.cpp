@@ -8,6 +8,8 @@
 #include "NativeLabelObject.h"
 #include <bb/cascades/TextAlignment>
 #include <bb/cascades/SystemFont>
+#include <bb/cascades/Color>
+#include <qtgui/QColor>
 
 NativeLabelObject::NativeLabelObject()
 {
@@ -35,8 +37,17 @@ int NativeLabelObject::setText(const char* text)
     return NATIVE_ERROR_OK;
 }
 
-int NativeLabelObject::setColor(const char* color)
+int NativeLabelObject::setColor(const char* colortext)
 {
+    QString colorString = colortext;
+    QColor color;
+    color.setNamedColor(colorString);
+    qreal r, g, b, a;
+    color.getRgbF(&r, &g, &b, &a);
+    bb::cascades::Color cscolor = bb::cascades::Color::fromRGBA(r, g, b, a);
+    // TODO: setTextColor is not yet supported by Cascades. When it becomes
+    // available, un-comment out the next line.
+    //label_->setTextColor(cscolor);
     return NATIVE_ERROR_OK;
 }
 

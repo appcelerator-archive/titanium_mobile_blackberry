@@ -28,26 +28,32 @@ const static TiProperty g_tiProperties[] =
                 {"backgroundColor", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
                         NATIVE_TYPE_INT, N_PROP_BACKGROUND_COLOR},
 
+                {"color", "black", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_CSTRING, N_PROP_COLOR},
+
                 {"label", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_CSTRING, N_PROP_SET_LABEL},
+                        NATIVE_TYPE_CSTRING, N_PROP_LABEL},
 
                 {"max", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_MAX},
+                        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_MAX},
 
                 {"min", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_MIN},
+                        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_MIN},
 
                 {"text", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_CSTRING, N_PROP_SET_TEXT},
+                        NATIVE_TYPE_CSTRING, N_PROP_TEXT},
 
                 {"textAlign", "center", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_CSTRING | NATIVE_TYPE_INT, N_PROP_SET_TEXT_ALIGN},
+                        NATIVE_TYPE_CSTRING | NATIVE_TYPE_INT, N_PROP_TEXT_ALIGN},
 
                 {"top", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_TOP},
+                        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_TOP},
 
                 {"value", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_INT, N_PROP_SET_VALUE}
+                        NATIVE_TYPE_INT, N_PROP_VALUE},
+
+                {"visible", "true", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_BOOL, N_PROP_VISIBLE}
         };
 
 TiUIBase::TiUIBase()

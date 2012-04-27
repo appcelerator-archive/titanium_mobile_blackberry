@@ -23,6 +23,7 @@ public:
     virtual int setPropertyValue(int propertyNumber, const char* value);
 
     virtual int setBackgroundColor(const char* text);
+    virtual int setColor(const char* color);
     virtual int setLabel(const char* text);
     virtual int setMax(float max);
     virtual int setMin(float min);
@@ -30,7 +31,7 @@ public:
     virtual int setTextAlign(const char* align);
     virtual int setTop(float top);
     virtual int setValue(float value);
-
+    virtual int setVisible(bool value);
 protected:
     NativeControlObject();
     virtual ~NativeControlObject();

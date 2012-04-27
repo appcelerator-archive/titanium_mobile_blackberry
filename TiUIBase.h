@@ -30,7 +30,7 @@ public:
     virtual bool isUIObject() const;
     virtual NativeObjectFactory* getNativeObjectFactory() const;
     virtual NativeObject* getNativeObject() const;
-    virtual void setTiMappingProperties(const TI_PROPERTY* prop, int propertyCount);
+    virtual void setTiMappingProperties(const TiProperty* prop, int propertyCount);
 
 protected:
     TiUIBase(NativeObjectFactory* nativeObjectFactory, const char* name);

@@ -362,7 +362,7 @@ bool TiObject::isUIObject() const
     return false;
 }
 
-void TiObject::setTiMappingProperties(const TI_PROPERTY* prop, int propertyCount)
+void TiObject::setTiMappingProperties(const TiProperty* prop, int propertyCount)
 {
 }
 
