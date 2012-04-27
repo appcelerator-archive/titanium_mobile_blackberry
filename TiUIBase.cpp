@@ -8,33 +8,45 @@
 #include "TiUIBase.h"
 #include "TiGenericFunctionObject.h"
 #include "TiPropertySetFunctionObject.h"
+#include "TiPropertyGetFunctionObject.h"
 #include "TiPropertyMapObject.h"
 #include "TiV8Event.h"
+#include <string>
+#include <ctype.h>
 
-const static TI_PROPERTY g_tiProperties[] =
+const static TiProperty g_tiProperties[] =
         {
-                {"backgroundColor", "setBackgroundColor", "black", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_CSTRING, N_PROP_SET_BACKGROUND_COLOR},
+                {"anchorPoint", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_OBJECT, N_PROP_ANCHOR_POINT},
 
-                {"label", "setLabel", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                {"animatedCenterPoint", "", TI_PROP_PERMISSION_READ,
+                        NATIVE_TYPE_OBJECT, N_PROP_ANIMATED_CENTER_POINT},
+
+                {"autoLink", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_INT, N_PROP_AUTO_LINK},
+
+                {"backgroundColor", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_INT, N_PROP_BACKGROUND_COLOR},
+
+                {"label", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
                         NATIVE_TYPE_CSTRING, N_PROP_SET_LABEL},
 
-                {"max", "setMax", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                {"max", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
                         NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_MAX},
 
-                {"min", "setMin", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                {"min", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
                         NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_MIN},
 
-                {"text", "setText", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                {"text", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
                         NATIVE_TYPE_CSTRING, N_PROP_SET_TEXT},
 
-                {"textAlign", "setTextAlign", "center", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                {"textAlign", "center", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
                         NATIVE_TYPE_CSTRING | NATIVE_TYPE_INT, N_PROP_SET_TEXT_ALIGN},
 
-                {"top", "setTop", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                {"top", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
                         NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_TOP},
 
-                {"value", "setValue", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                {"value", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
                         NATIVE_TYPE_INT, N_PROP_SET_VALUE}
         };
 
@@ -97,16 +109,31 @@ NativeObject* TiUIBase::getNativeObject() const
     return nativeObject_;
 }
 
-void TiUIBase::setTiMappingProperties(const TI_PROPERTY* prop, int propertyCount)
+void TiUIBase::setTiMappingProperties(const TiProperty* prop, int propertyCount)
 {
+    string name;
+    char c[2];
+    c[1] = 0;
     for (int i = 0; i < propertyCount; i++)
     {
         TiObject* value = TiPropertyMapObject::addProperty(this, prop[i].propertyName, prop[i].nativePropertyNumber,
                                                            prop[i].supportedTypes,
                                                            valueModify, this);
-        if ((prop[i].permissions & TI_PROP_PERMISSION_WRITE) && (prop[i].propertySetterFunctionName != NULL))
+        if (prop[i].permissions & TI_PROP_PERMISSION_WRITE)
         {
-            TiPropertySetFunctionObject::addPropertySetter(this, value, prop[i].propertySetterFunctionName);
+            c[0] = toupper(prop[i].propertyName[0]);
+            name = "set";
+            name += c;
+            name += prop[i].propertyName + 1;
+            TiPropertySetFunctionObject::addPropertySetter(this, value, name.c_str());
+        }
+        if (prop[i].permissions & TI_PROP_PERMISSION_READ)
+        {
+            c[0] = toupper(prop[i].propertyName[0]);
+            name = "get";
+            name += c;
+            name += prop[i].propertyName + 1;
+            TiPropertyGetFunctionObject::addPropertyGetter(this, value, name.c_str());
         }
         value->release();
     }

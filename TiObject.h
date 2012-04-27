@@ -58,6 +58,7 @@ public:
 #define NATIVE_TYPE_CSTRING         1
 #define NATIVE_TYPE_INT             2
 #define NATIVE_TYPE_DOUBLE          3
+#define NATIVE_TYPE_OBJECT          4
 
 enum VALUE_MODIFY
 {
@@ -72,7 +73,7 @@ enum VALUE_MODIFY
 #define TI_PROP_PERMISSION_WRITE        2
 #define TI_PROP_PERMISSION_DELETE       4
 
-struct TI_PROPERTY
+struct TiProperty
 {
     const char* propertyName;
     const char* propertySetterFunctionName;
@@ -104,13 +105,14 @@ public:
     virtual const char* getName() const;
     virtual void addMember(TiObject* object, const char* name = NULL);
     virtual Handle<Value> getValue() const;
+    virtual Handle<Value> evaluate() const;
     virtual VALUE_MODIFY setValue(Handle<Value> value);
     virtual bool hasMembers() const;
     virtual bool isFunction() const;
     virtual bool canAddMembers() const;
     virtual bool isInitialized() const;
     virtual bool isUIObject() const;
-    virtual void setTiMappingProperties(const TI_PROPERTY* prop, int propertyCount);
+    virtual void setTiMappingProperties(const TiProperty* prop, int propertyCount);
     virtual TiObject* getParentObject() const;
 
 protected:

@@ -60,7 +60,6 @@ int NativeContainerObject::initialize(TiEventContainerFactory* containerFactory)
     {
         return NATIVE_ERROR_OUTOFMEMORY;
     }
-    //container_->setLayout(StackLayout::create());
     return NATIVE_ERROR_OK;
 }
 
@@ -115,8 +114,20 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
 
 int NativeContainerObject::open()
 {
-    container_->setLayout(new DockLayout());
-    nativeObjectFactory_->setRootContainer(this);
+    bb::cascades::Container* appContainer = Container::create();
+    appContainer->setLayout(new DockLayout());
+    container_->setLayout(StackLayout::create());
+    DockLayoutProperties* layout = DockLayoutProperties::create();
+    layout->setHorizontalAlignment(HorizontalAlignment::Fill);
+    layout->setVerticalAlignment(VerticalAlignment::Fill);
+    container_->setLayoutProperties(layout);
+    // TODO: remove this hard coded width
+    appContainer->setPreferredWidth(1024.0f);
+    container_->setPreferredWidth(1024.0f);
+    appContainer->add(container_);
+    NativeContainerObject* root = new NativeContainerObject(appContainer);
+    nativeObjectFactory_->setRootContainer(root);
+    root->release();
     return NATIVE_ERROR_OK;
 }
 

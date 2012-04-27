@@ -41,3 +41,21 @@ NAHANDLE NativeProgressBarObject::getNativeHandle() const
     return progressIndicator_;
 }
 
+int NativeProgressBarObject::setMax(float value)
+{
+    progressIndicator_->setToValue(value);
+    return NATIVE_ERROR_OK;
+}
+
+int NativeProgressBarObject::setMin(float value)
+{
+    progressIndicator_->setFromValue(value);
+    return NATIVE_ERROR_OK;
+}
+
+int NativeProgressBarObject::setValue(float value)
+{
+    progressIndicator_->setValue(value);
+    return NATIVE_ERROR_OK;
+}
+

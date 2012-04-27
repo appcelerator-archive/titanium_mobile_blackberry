@@ -164,6 +164,13 @@ Handle<Value> TiObject::getValue() const
     return value_;
 }
 
+Handle<Value> TiObject::evaluate() const
+{
+    // TODO: complete this
+    HandleScope handleScope;
+    return value_;
+}
+
 TiObject* TiObject::onLookupMember(const char* memberName)
 {
     map<string, ObjectEntry>::iterator it;
