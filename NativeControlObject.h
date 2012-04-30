@@ -30,6 +30,10 @@ public:
     virtual int setTextAlign(const char* align);
     virtual int setTop(float top);
     virtual int setValue(float value);
+    virtual int setLeft(float left);
+    virtual int setWidth(float width);
+    virtual int setHeight(float height);
+    virtual int setHintText(const char* text);
 
 protected:
     NativeControlObject();

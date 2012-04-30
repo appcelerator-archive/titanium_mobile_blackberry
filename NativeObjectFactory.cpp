@@ -12,6 +12,7 @@
 #include "NativeButtonObject.h"
 #include "NativeSliderObject.h"
 #include "NativeProgressBarObject.h"
+#include "NativeTextFieldObject.h"
 #include <bb/cascades/Container>
 
 using namespace bb::cascades;
@@ -59,6 +60,9 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
 
     case N_TYPE_PROGRESSBAR:
         obj = new NativeProgressBarObject;
+        break;
+    case N_TYPE_TEXT_FIELD:
+        obj = new NativeTextFieldObject;
         break;
 
     }

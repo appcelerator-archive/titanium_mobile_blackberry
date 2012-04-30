@@ -35,7 +35,19 @@ const static TI_PROPERTY g_tiProperties[] =
                         NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_TOP},
 
                 {"value", "setValue", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_INT, N_PROP_SET_VALUE}
+                        NATIVE_TYPE_INT, N_PROP_SET_VALUE},
+
+                {"left", "setLeft", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_LEFT},
+
+                {"width", "setWidth", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_WIDTH},
+
+                {"height", "setHeight", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_HEIGHT},
+
+                {"hintText", "setHintText", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+                        NATIVE_TYPE_CSTRING, N_PROP_SET_HINT_TEXT}
         };
 
 TiUIBase::TiUIBase()
@@ -136,21 +148,21 @@ void TiUIBase::onCreateStaticMembers()
 void TiUIBase::setParametersFromObject(Local<Object> obj)
 {
     HandleScope handleScope;
-    Handle < Value > value;
-    Handle < Value > controlValue = getValue();
+    Handle<Value> value;
+    Handle<Value> controlValue = getValue();
     if (!controlValue->IsObject())
     {
         return;
     }
-    Handle < Object > self = Handle < Object > ::Cast(controlValue);
-    Handle < Array > propNames = obj->GetPropertyNames();
+    Handle<Object> self = Handle<Object>::Cast(controlValue);
+    Handle<Array> propNames = obj->GetPropertyNames();
     uint32_t props = propNames->Length();
-    Local < Value > propValue;
-    Handle < String > propString;
+    Local<Value> propValue;
+    Handle<String> propString;
     TiObject* foundProp;
     for (uint32_t i = 0; i < props; i++)
     {
-        propString = Handle < String > ::Cast(propNames->Get(Integer::New(i)));
+        propString = Handle<String>::Cast(propNames->Get(Integer::New(i)));
         String::Utf8Value propNameUTF(propString);
         foundProp = onLookupMember(*propNameUTF);
         if (foundProp != NULL)
@@ -194,8 +206,8 @@ void TiUIBase::onAddEventListener(const char* eventName, Handle<Function> eventF
     {
         return;
     }
-    Handle < Object > source = Handle < Object > ::Cast(getValue());
-    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(getValue());
+    Handle<Object> source = Handle<Object>::Cast(getValue());
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(getValue());
     TiV8Event* event = TiV8Event::createEvent(eventName, eventFunction, source);
     no->setEventHandler(eventName, event);
 }
@@ -233,8 +245,8 @@ Handle<Value> TiUIBase::addEventListener_(void* userContext, TiObject* caller, c
         return Undefined();
     }
     TiUIBase* obj = (TiUIBase*) userContext;
-    Handle < String > eventName = Handle < String > ::Cast(args[0]);
-    Handle < Function > func = Handle < Function > ::Cast(args[1]);
+    Handle<String> eventName = Handle<String>::Cast(args[0]);
+    Handle<Function> func = Handle<Function>::Cast(args[1]);
     String::Utf8Value eventNameUTF(eventName);
     obj->onAddEventListener(*eventNameUTF, func);
     return Undefined();

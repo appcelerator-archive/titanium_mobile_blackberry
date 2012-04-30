@@ -33,6 +33,12 @@ void TiCascadesEventHandler::valueChanged(float value)
     // TODO: finish this
 }
 
+void TiCascadesEventHandler::textChanging(QString str)
+{
+    eventContainer_->setDataProperty("value", str.toStdString().c_str());
+    eventContainer_->fireEvent();
+}
+
 void TiCascadesEventHandler::clicked()
 {
     // TODO: add x, y coordinates

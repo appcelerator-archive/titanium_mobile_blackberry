@@ -7,13 +7,12 @@
 
 #include "NativeContainerObject.h"
 #include <bb/cascades/Container>
-#include <bb/cascades/DockLayout>
-#include <bb/cascades/DockLayoutProperties>
-#include <bb/cascades/Stacklayout>
+#include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/Label>
 #include <bb/cascades/Button>
 #include <bb/cascades/Slider>
 #include <bb/cascades/Color>
+#include <bb/cascades/TextField>
 #include <bb/cascades/ProgressIndicator>
 #include <qtgui/QColor>
 #include "NativeObjectFactory.h"
@@ -109,13 +108,21 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
         return NATIVE_ERROR_OK;
     }
 
+    case N_TYPE_TEXT_FIELD:
+
+    {
+        bb::cascades::TextField* textField = (bb::cascades::TextField*) obj->getNativeHandle();
+        container_->add(textField);
+        return NATIVE_ERROR_OK;
+    }
+
     }
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 int NativeContainerObject::open()
 {
-    container_->setLayout(new DockLayout());
+    container_->setLayout(new AbsoluteLayout());
     nativeObjectFactory_->setRootContainer(this);
     return NATIVE_ERROR_OK;
 }

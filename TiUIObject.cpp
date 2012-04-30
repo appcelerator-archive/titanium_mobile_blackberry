@@ -13,6 +13,7 @@
 #include "TiUIButton.h"
 #include "TiUISlider.h"
 #include "TiUIProgressBar.h"
+#include "TiUITextField.h"
 #include <string.h>
 
 TiUIObject::TiUIObject()
@@ -48,6 +49,7 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createButton", this, createButton_);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSlider", this, createSlider_);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createProgressBar", this, createProgressBar_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTextField", this, createTextField_);
 }
 
 Handle<Value> TiUIObject::createTabGroup_(void* userContext, TiObject* caller, const Arguments& args)
@@ -143,5 +145,23 @@ Handle<Value> TiUIObject::createProgressBar_(void* userContext, TiObject* caller
         progressBar->setParametersFromObject(settingsObj);
     }
     setTiObjectToJsObject(result, progressBar);
+    return handleScope.Close(result);
+}
+
+Handle<Value> TiUIObject::createTextField_(void* userContext, TiObject* caller, const Arguments& args)
+{
+    HandleScope handleScope;
+    TiUIObject* obj = (TiUIObject*) userContext;
+    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
+    Handle < Object > result;
+    result = global->NewInstance();
+    TiUITextField* textField = TiUITextField::createTextField(obj->objectFactory_);
+    textField->setValue(result);
+    if ((args.Length() > 0) && (args[0]->IsObject()))
+    {
+        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        textField->setParametersFromObject(settingsObj);
+    }
+    setTiObjectToJsObject(result, textField);
     return handleScope.Close(result);
 }

@@ -32,6 +32,7 @@ public slots:
     void valueChanging(float value);
     void valueChanged(float value);
     void clicked();
+    void textChanging(QString str);
 
 private:
     TiEventContainer* eventContainer_;

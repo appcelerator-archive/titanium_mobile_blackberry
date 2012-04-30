@@ -97,6 +97,30 @@ int NativeControlObject::setValue(float value)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETTER_FLOAT(setWidth)
+int NativeControlObject::setWidth(float width)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER_FLOAT(setHeight)
+int NativeControlObject::setHeight(float height)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER_FLOAT(setLeft)
+int NativeControlObject::setLeft(float left)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER_CSTRING(setHintText)
+int NativeControlObject::setHintText(const char* hint)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
@@ -115,7 +139,11 @@ const static NATIVE_PROPSET_CALLBACK g_functionMap[] =
                 PROP_SETTING_FUNCTION(setText),                // N_PROP_SET_TEXT
                 PROP_SETTING_FUNCTION(setTextAlign),           // N_PROP_SET_TEXT_ALIGN
                 PROP_SETTING_FUNCTION(setTop),                 // N_PROP_SET_TOP
-                PROP_SETTING_FUNCTION(setValue)                // N_PROP_SET_VALUE
+                PROP_SETTING_FUNCTION(setValue),               // N_PROP_SET_VALUE
+                PROP_SETTING_FUNCTION(setLeft),                // N_PROP_SET_LEFT
+                PROP_SETTING_FUNCTION(setWidth),               // N_PROP_SET_WIDTH
+                PROP_SETTING_FUNCTION(setHeight),              // N_PROP_SET_HEIGHT
+                PROP_SETTING_FUNCTION(setHintText)             // N_RROP_HINT_TEXT
         };
 
 int NativeControlObject::setPropertyValue(int propertyNumber, const char* value)
