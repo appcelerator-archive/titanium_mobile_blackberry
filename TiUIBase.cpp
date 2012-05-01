@@ -261,6 +261,13 @@ Handle<Value> TiUIBase::add_(void* userContext, TiObject* caller, const Argument
 Handle<Value> TiUIBase::addEventListener_(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
+    // JavaScript usage:
+    //
+    // arg[0] = event name (string)
+    // arg[1] = event function (function)
+    //
+    // myobject.addEventListener('myevent',function(e) {...});
+    //
     if ((args.Length() != 2) || (!args[0]->IsString()) || (!args[1]->IsFunction()))
     {
         return Undefined();

@@ -254,16 +254,15 @@ Handle<Value> TiObject::propGetter_(Local<String> prop, const AccessorInfo& info
 {
     HandleScope handleScope;
     Handle < Object > result;
+    String::Utf8Value propName(prop);
+    const char* propString = (const char*) (*propName);
     TiObject* obj = getTiObjectFromJsObject(info.Holder());
     if (obj == NULL)
     {
-        Handle < Value > internalReturn;
-        internalReturn = info.Holder()->GetHiddenValue(prop);
-        return handleScope.Close(internalReturn);
+        // Returns "empty". This will cause V8 to go back to default lookup.
+        return result;
     }
     Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(info.Holder());
-    String::Utf8Value propName(prop);
-    const char* propString = (const char*) (*propName);
     TiObject* propObject = obj->onLookupMember(propString);
     if (propObject == NULL)
     {
@@ -289,6 +288,7 @@ Handle<Value> TiObject::propGetter_(Local<String> prop, const AccessorInfo& info
     propObject->release();
     return handleScope.Close(result);
 }
+
 Handle<Value> TiObject::propSetter_(Local<String> prop, Local<Value> value, const AccessorInfo& info)
 {
     HandleScope handleScope;
@@ -296,8 +296,8 @@ Handle<Value> TiObject::propSetter_(Local<String> prop, Local<Value> value, cons
     TiObject* obj = getTiObjectFromJsObject(info.Holder());
     if (obj == NULL)
     {
-        info.Holder()->SetHiddenValue(prop, value);
-        return value;
+        obj=new TiObject("",info.Holder());
+        setTiObjectToJsObject(info.Holder(),obj);
     }
     String::Utf8Value propName(prop);
     const char* propString = (const char*) (*propName);

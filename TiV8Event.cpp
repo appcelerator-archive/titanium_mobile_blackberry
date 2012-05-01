@@ -17,10 +17,13 @@ TiV8Event::~TiV8Event()
     {
         function_.Dispose();
     }
-    if (!source_.IsEmpty())
-    {
-        source_.Dispose();
-    }
+    // TODO: remove these lines when testing is complete
+    /*
+     if (!source_.IsEmpty())
+     {
+     source_.Dispose();
+     }
+     */
 }
 
 void TiV8Event::fire(void* fireDataObject)
@@ -30,9 +33,11 @@ void TiV8Event::fire(void* fireDataObject)
     {
         return;
     }
+    Handle < Context > context = function_->CreationContext();
+    Context::Scope context_scope(context);
     Handle < Object > dataObject = *((Persistent<Object>*) fireDataObject);
     dataObject->Set(String::New("source"), source_);
-    function_->Call(function_, 1, (Handle<Value>*) &dataObject);
+    function_->CallAsFunction(context->Global(), 1, (Handle<Value>*) &dataObject);
 }
 
 TiV8Event* TiV8Event::createEvent(const char* eventName, Handle<Function> eventScript, Handle<Object> source)
@@ -40,6 +45,8 @@ TiV8Event* TiV8Event::createEvent(const char* eventName, Handle<Function> eventS
     HandleScope handleScope;
     TiV8Event* obj = new TiV8Event();
     obj->function_ = Persistent < Function > ::New(eventScript);
-    obj->source_ = Persistent < Object > ::New(source);
+    // TODO: Remove this next line. This is test work to be removed.
+    //obj->source_ = Persistent < Object > ::New(source);
+    obj->source_ = source;
     return obj;
 }
