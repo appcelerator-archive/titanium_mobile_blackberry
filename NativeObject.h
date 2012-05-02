@@ -23,6 +23,7 @@ typedef void* NAHANDLE;
 #define N_TYPE_PROGRESSBAR                      6
 #define N_TYPE_IMAGEVIEW                        7
 #define N_TYPE_TEXT_FIELD                       8
+#define N_TYPE_ACTIVITYINDICATOR                9
 
 #define N_PROP_UNDEFINED                        0
 #define N_PROP_ANCHOR_POINT                     1

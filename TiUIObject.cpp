@@ -15,6 +15,7 @@
 #include "TiUIProgressBar.h"
 #include "TiUIImageView.h"
 #include "TiUITextField.h"
+#include "TiUIActivityIndicator.h"
 #include <string.h>
 
 TiUIObject::TiUIObject()
@@ -52,6 +53,7 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createProgressBar", this, createProgressBar_);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTextField", this, createTextField_);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createImageView", this, createImageView_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createActivityIndicator", this, createActivityIndicator_);
 }
 
 Handle<Value> TiUIObject::createTabGroup_(void* userContext, TiObject* caller, const Arguments& args)
@@ -150,7 +152,6 @@ Handle<Value> TiUIObject::createProgressBar_(void* userContext, TiObject* caller
     return handleScope.Close(result);
 }
 
-
 Handle<Value> TiUIObject::createTextField_(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
@@ -184,5 +185,23 @@ Handle<Value> TiUIObject::createImageView_(void* userContext, TiObject* caller, 
         imageView->setParametersFromObject(settingsObj);
     }
     setTiObjectToJsObject(result, imageView);
+    return handleScope.Close(result);
+}
+
+Handle<Value> TiUIObject::createActivityIndicator_(void* userContext, TiObject* caller, const Arguments& args)
+{
+    HandleScope handleScope;
+    TiUIObject* obj = (TiUIObject*) userContext;
+    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
+    Handle < Object > result;
+    result = global->NewInstance();
+    TiUIActivityIndicator* activityIndicator = TiUIActivityIndicator::createActivityIndicator(obj->objectFactory_);
+    activityIndicator->setValue(result);
+    if ((args.Length() > 0) && (args[0]->IsObject()))
+    {
+        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        activityIndicator->setParametersFromObject(settingsObj);
+    }
+    setTiObjectToJsObject(result, activityIndicator);
     return handleScope.Close(result);
 }

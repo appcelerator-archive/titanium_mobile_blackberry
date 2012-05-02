@@ -14,6 +14,7 @@
 #include "NativeProgressBarObject.h"
 #include "NativeTextFieldObject.h"
 #include "NativeImageViewObject.h"
+#include "NativeActivityIndicatorObject.h"
 #include <bb/cascades/Container>
 
 using namespace bb::cascades;
@@ -68,6 +69,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
 
     case N_TYPE_IMAGEVIEW:
         obj = NativeImageViewObject::createImageView();
+        break;
+
+    case N_TYPE_ACTIVITYINDICATOR:
+    	obj = new NativeActivityIndicatorObject;
         break;
 
     }
