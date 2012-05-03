@@ -47,7 +47,7 @@ const static TI_PROPERTY g_tiProperties[] =
                         NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_HEIGHT},
 
                 {"hintText", "setHintText", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_CSTRING, N_PROP_SET_HINT_TEXT}
+                        NATIVE_TYPE_CSTRING, N_PROP_SET_HINT_TEXT},
         };
 
 TiUIBase::TiUIBase()

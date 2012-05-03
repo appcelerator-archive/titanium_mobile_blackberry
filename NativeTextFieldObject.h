@@ -9,8 +9,6 @@
 #define NATIVETEXTFIELDOBJECT_H_
 
 #include "NativeControlObject.h"
-#include "TiCascadesEventHandler.h"
-#include <bb/cascades/TextField>
 
 class NativeTextFieldObject : public NativeControlObject
 {

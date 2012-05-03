@@ -6,7 +6,6 @@
  */
 
 #include "TiUITextField.h"
-#include <string.h>
 
 TiUITextField::TiUITextField(NativeObjectFactory* nativeObjectFactory)
         : TiUIBase(nativeObjectFactory, "")

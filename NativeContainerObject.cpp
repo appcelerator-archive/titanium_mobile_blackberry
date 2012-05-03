@@ -6,16 +6,17 @@
  */
 
 #include "NativeContainerObject.h"
-#include <bb/cascades/Container>
-#include <bb/cascades/AbsoluteLayout>
-#include <bb/cascades/Label>
-#include <bb/cascades/Button>
-#include <bb/cascades/Slider>
-#include <bb/cascades/Color>
-#include <bb/cascades/TextField>
-#include <bb/cascades/ProgressIndicator>
-#include <qtgui/QColor>
 #include "NativeObjectFactory.h"
+#include <bb/cascades/AbsoluteLayout>
+#include <bb/cascades/Button>
+#include <bb/cascades/Color>
+#include <bb/cascades/Container>
+#include <bb/cascades/Label>
+#include <bb/cascades/ProgressIndicator>
+#include <bb/cascades/Slider>
+#include <bb/cascades/TextField>
+#include <qtgui/QColor>
+
 
 using namespace bb::cascades;
 
