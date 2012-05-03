@@ -10,6 +10,18 @@
 
 #include "NativeControlObject.h"
 
+//forward decration
+namespace bb
+{
+namespace cascades
+{
+class TextField;
+}
+}
+
+class TiEventContainer;
+class TiCascadesEventHandler;
+
 class NativeTextFieldObject : public NativeControlObject
 {
 public:

@@ -10,6 +10,8 @@
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
 #include <QtCore/QString>
+#include <bb/cascades/textField>
+#include "TiCascadesEventHandler.h"
 
 NativeTextFieldObject::NativeTextFieldObject()
 {
