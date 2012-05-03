@@ -9,7 +9,7 @@
 #include <string.h>
 
 TiUILabel::TiUILabel(NativeObjectFactory* nativeObjectFactory)
-        : TiUIBase(nativeObjectFactory, "")
+    : TiUIBase(nativeObjectFactory, "")
 {
 }
 

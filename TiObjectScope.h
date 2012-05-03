@@ -24,7 +24,7 @@ public:
     TiObjectScope(const TiObjectScope& scope);
     virtual ~TiObjectScope();
     const TiObjectScope& operator =(const TiObjectScope& scope);
-    operator TiBase*() const;
+    operator TiBase* () const;
     TiBase* operator ->() const;
     void attachTiObject(TiBase* obj);
     TiBase* detachTiObject();
