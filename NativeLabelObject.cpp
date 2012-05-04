@@ -30,20 +30,30 @@ int NativeLabelObject::getObjectType() const
     return N_TYPE_LABEL;
 }
 
-int NativeLabelObject::setText(const char* text)
+int NativeLabelObject::setText(TiObject* obj)
 {
-    QString str = text;
+    QString str;
+    int error = NativeControlObject::getString(obj, str);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
     label_->setText(str);
     return NATIVE_ERROR_OK;
 }
 
-int NativeLabelObject::setColor(const char* colortext)
+int NativeLabelObject::setColor(TiObject* obj)
 {
-    QString colorString = colortext;
-    QColor color;
-    color.setNamedColor(colorString);
-    qreal r, g, b, a;
-    color.getRgbF(&r, &g, &b, &a);
+    float r;
+    float g;
+    float b;
+    float a;
+
+    int error = NativeControlObject::getColorComponents(obj, &r, &g, &b, &a);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
     bb::cascades::Color cscolor = bb::cascades::Color::fromRGBA(r, g, b, a);
     // TODO: setTextColor is not yet supported by Cascades. When it becomes
     // available, un-comment out the next line.
@@ -51,8 +61,9 @@ int NativeLabelObject::setColor(const char* colortext)
     return NATIVE_ERROR_OK;
 }
 
-int NativeLabelObject::setTextAlign(const char* align)
+int NativeLabelObject::setTextAlign(TiObject* obj)
 {
+    /*
     if (stricmp(align, "left") == 0)
     {
         label_->setTextAlignment(bb::cascades::TextAlignment::ForceLeft);
@@ -69,6 +80,7 @@ int NativeLabelObject::setTextAlign(const char* align)
     {
         return NATIVE_ERROR_INVALID_ARG;
     }
+    */
     return NATIVE_ERROR_OK;
 }
 

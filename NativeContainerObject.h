@@ -30,7 +30,7 @@ public:
     virtual NAHANDLE getNativeHandle() const;
     virtual int addChildNativeObject(NativeObject* obj);
     virtual int open();
-    virtual int setBackgroundColor(const char* text);
+    virtual int setBackgroundColor(TiObject* obj);
 
 protected:
     virtual int initialize(TiEventContainerFactory* containerFactory);

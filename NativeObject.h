@@ -71,14 +71,15 @@ typedef void* NAHANDLE;
 #define N_PROP_TEXT                             46
 #define N_PROP_TEXT_ALIGN                       47
 #define N_PROP_TEXT_ID                          48
-#define N_PROP_TOP                              49
-#define N_PROP_TOUCH_ENABLED                    50
-#define N_PROP_TRANSFORM                        51
-#define N_PROP_VALUE                            52
-#define N_PROP_VISIBLE                          53
-#define N_PROP_WIDTH                            54
-#define N_PROP_WORD_WRAP                        55
-#define N_PROP_ZINDEX                           56
+#define N_PROP_TITLE                            49
+#define N_PROP_TOP                              50
+#define N_PROP_TOUCH_ENABLED                    51
+#define N_PROP_TRANSFORM                        52
+#define N_PROP_VALUE                            53
+#define N_PROP_VISIBLE                          54
+#define N_PROP_WIDTH                            55
+#define N_PROP_WORD_WRAP                        56
+#define N_PROP_ZINDEX                           57
 
 class NativeObjectFactory;
 class TiEvent;
@@ -86,6 +87,10 @@ class TiEventContainerFactory;
 
 #include "TiEventContainer.h"
 #include "TiBase.h"
+
+class TiObject;
+
+#define N_SUCCEEDED(x)          ((x)==NATIVE_ERROR_OK)
 
 /*
  * NativeObject
@@ -96,11 +101,11 @@ class TiEventContainerFactory;
  * such as a button, label, file, etc...
  */
 class NativeObject :
-                     public TiBase
+    public TiBase
 {
 public:
-    virtual int getObjectType() const=0;
-    virtual int setPropertyValue(int propertyNumber, const char* value);
+    virtual int getObjectType() const = 0;
+    virtual int setPropertyValue(int propertyNumber, TiObject* obj);
     virtual int addChildNativeObject(NativeObject* obj);
     virtual NAHANDLE getNativeHandle() const;
     virtual int open();

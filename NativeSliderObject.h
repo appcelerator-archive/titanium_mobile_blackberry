@@ -26,9 +26,9 @@ public:
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual NAHANDLE getNativeHandle() const;
-    virtual int setMax(float max);
-    virtual int setMin(float min);
-    virtual int setValue(float value);
+    virtual int setMax(TiObject* obj);
+    virtual int setMin(TiObject* obj);
+    virtual int setValue(TiObject* obj);
     virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual void completeInitialization();
 

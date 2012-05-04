@@ -26,7 +26,7 @@ public:
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual NAHANDLE getNativeHandle() const;
-    virtual int setLabel(const char* text);
+    virtual int setTitle(TiObject* obj);
     virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual void completeInitialization();
 

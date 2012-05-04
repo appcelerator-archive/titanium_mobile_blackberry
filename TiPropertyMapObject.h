@@ -10,7 +10,7 @@
 
 #include "TiObject.h"
 
-typedef VALUE_MODIFY (*MODIFY_VALUE_CALLBACK)(int, const char*, void*);
+typedef VALUE_MODIFY(*MODIFY_VALUE_CALLBACK)(int, TiObject*, void*);
 
 /*
  * TiPropertyMapObject
@@ -23,7 +23,6 @@ class TiPropertyMapObject : public TiObject
 {
 public:
     static TiPropertyMapObject* addProperty(TiObject* parent, const char* name, int propertyNumber,
-                                            int supportedTypes,
                                             MODIFY_VALUE_CALLBACK cb, void* context);
 
 protected:
@@ -33,7 +32,6 @@ protected:
 private:
     TiPropertyMapObject(const char* name);
     int propertyNumber_;
-    int supportedTypes_;
     MODIFY_VALUE_CALLBACK callback_;
     void* context_;
 

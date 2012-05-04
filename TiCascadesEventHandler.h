@@ -21,7 +21,7 @@ class TiEventContainer;
 
 class TiCascadesEventHandler : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
     TiCascadesEventHandler(TiEventContainer* eventContainer);

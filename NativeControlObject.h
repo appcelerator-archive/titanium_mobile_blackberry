@@ -17,21 +17,29 @@
  * Base class for all UI controls
  */
 
+class TiObject;
+class QString;
+
 class NativeControlObject : public NativeObject
 {
 public:
-    virtual int setPropertyValue(int propertyNumber, const char* value);
+    virtual int setPropertyValue(int propertyNumber, TiObject* obj);
 
-    virtual int setBackgroundColor(const char* text);
-    virtual int setColor(const char* color);
-    virtual int setLabel(const char* text);
-    virtual int setMax(float max);
-    virtual int setMin(float min);
-    virtual int setText(const char* text);
-    virtual int setTextAlign(const char* align);
-    virtual int setTop(float top);
-    virtual int setValue(float value);
-    virtual int setVisible(bool value);
+    virtual int setBackgroundColor(TiObject* obj);
+    virtual int setColor(TiObject* obj);
+    virtual int setLabel(TiObject* obj);
+    virtual int setMax(TiObject* obj);
+    virtual int setMin(TiObject* obj);
+    virtual int setText(TiObject* obj);
+    virtual int setTextAlign(TiObject* obj);
+    virtual int setTop(TiObject* obj);
+    virtual int setTitle(TiObject* obj);
+    virtual int setValue(TiObject* obj);
+    virtual int setVisible(TiObject* obj);
+    static int getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a);
+    static int getBoolean(TiObject* obj, bool* value);
+    static int getString(TiObject* obj, QString& str);
+    static int getFloat(TiObject* obj, float* value);
 protected:
     NativeControlObject();
     virtual ~NativeControlObject();

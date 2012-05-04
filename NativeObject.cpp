@@ -17,7 +17,7 @@ NativeObject::~NativeObject()
 {
 }
 
-int NativeObject::setPropertyValue(int propertyNumber, const char* value)
+int NativeObject::setPropertyValue(int propertyNumber, TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }

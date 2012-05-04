@@ -42,20 +42,38 @@ NAHANDLE NativeSliderObject::getNativeHandle() const
     return slider_;
 }
 
-int NativeSliderObject::setMax(float value)
+int NativeSliderObject::setMax(TiObject* obj)
 {
+    float value;
+    int error = NativeControlObject::getFloat(obj, &value);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
     slider_->setToValue(value);
     return NATIVE_ERROR_OK;
 }
 
-int NativeSliderObject::setMin(float value)
+int NativeSliderObject::setMin(TiObject* obj)
 {
+    float value;
+    int error = NativeControlObject::getFloat(obj, &value);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
     slider_->setFromValue(value);
     return NATIVE_ERROR_OK;
 }
 
-int NativeSliderObject::setValue(float value)
+int NativeSliderObject::setValue(TiObject* obj)
 {
+    float value;
+    int error = NativeControlObject::getFloat(obj, &value);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
     slider_->setValue(value);
     return NATIVE_ERROR_OK;
 }

@@ -8,7 +8,7 @@
 #include "TiPropertyGetFunctionObject.h"
 
 TiPropertyGetFunctionObject::TiPropertyGetFunctionObject(const char* name)
-        : TiObject(name)
+    : TiObject(name)
 {
     property_ = NULL;
 }

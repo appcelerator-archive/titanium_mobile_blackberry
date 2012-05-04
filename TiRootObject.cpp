@@ -10,7 +10,7 @@
 #include "TiV8EventContainerFactory.h"
 
 TiRootObject::TiRootObject()
-        : TiObject("")
+    : TiObject("")
 {
 
 }

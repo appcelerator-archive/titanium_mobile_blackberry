@@ -8,7 +8,7 @@
 #include "TiObject.h"
 #include <malloc.h>
 
-#define HIDDEN_TI_OBJECT_PROPERTY			"ti_"
+#define HIDDEN_TI_OBJECT_PROPERTY           "ti_"
 #define HIDDEN_TEMP_OBJECT_PROPERTY         "globalTemplate_"
 
 TiObject::TiObject()
@@ -18,9 +18,9 @@ TiObject::TiObject()
 }
 
 TiObject::TiObject(const char* objectName)
-        :
-          isInitialized_(false),
-          parentObject_(NULL)
+    :
+    isInitialized_(false),
+    parentObject_(NULL)
 {
     name_ = objectName;
 }
@@ -109,8 +109,8 @@ Handle<ObjectTemplate> TiObject::getObjectTemplateFromJsObject(Handle<Value> val
     Handle < Context > context = obj->CreationContext();
     Handle < External > globalTemplateExternal = Handle < External
             > ::Cast(
-                     context->Global()->GetHiddenValue(
-                                                       String::New(HIDDEN_TEMP_OBJECT_PROPERTY)));
+                context->Global()->GetHiddenValue(
+                    String::New(HIDDEN_TEMP_OBJECT_PROPERTY)));
     Handle < ObjectTemplate > temp = *((Handle<ObjectTemplate>*) globalTemplateExternal->Value());
     return handleScope.Close(temp);
 }
@@ -228,6 +228,10 @@ VALUE_MODIFY TiObject::setValue(Handle<Value> value)
     VALUE_MODIFY modify = onValueChange(value_, value);
     if (modify != VALUE_MODIFY_ALLOW)
     {
+        if (modify == VALUE_MODIFY_IGNORE)
+        {
+            modify = VALUE_MODIFY_ALLOW;
+        }
         return modify;
     }
     TiObject* parent = getParentObject();
@@ -237,11 +241,20 @@ VALUE_MODIFY TiObject::setValue(Handle<Value> value)
         parent->release();
         if (modify != VALUE_MODIFY_ALLOW)
         {
+            if (modify == VALUE_MODIFY_IGNORE)
+            {
+                modify = VALUE_MODIFY_ALLOW;
+            }
             return modify;
         }
     }
-    value_ = Persistent < Value > ::New(value);
+    value_ = Persistent<Value>::New(value);
     return modify;
+}
+
+void TiObject::forceSetValue(Handle<Value> value)
+{
+    value_ = Persistent<Value>::New(value);
 }
 
 bool TiObject::userCanAddMember(const char* propertyName) const
@@ -255,7 +268,7 @@ Handle<Value> TiObject::propGetter_(Local<String> prop, const AccessorInfo& info
     HandleScope handleScope;
     Handle < Object > result;
     String::Utf8Value propName(prop);
-    const char* propString = (const char*) (*propName);
+    const char* propString = (const char*)(*propName);
     TiObject* obj = getTiObjectFromJsObject(info.Holder());
     if (obj == NULL)
     {
@@ -296,11 +309,11 @@ Handle<Value> TiObject::propSetter_(Local<String> prop, Local<Value> value, cons
     TiObject* obj = getTiObjectFromJsObject(info.Holder());
     if (obj == NULL)
     {
-        obj=new TiObject("",info.Holder());
-        setTiObjectToJsObject(info.Holder(),obj);
+        obj = new TiObject("", info.Holder());
+        setTiObjectToJsObject(info.Holder(), obj);
     }
     String::Utf8Value propName(prop);
-    const char* propString = (const char*) (*propName);
+    const char* propString = (const char*)(*propName);
     TiObject* destObj = obj->onLookupMember(propString);
     TiObject* srcObj = getTiObjectFromJsObject(value);
     if (srcObj == NULL)

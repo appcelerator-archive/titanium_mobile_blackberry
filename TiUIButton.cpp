@@ -8,8 +8,8 @@
 #include "TiUIButton.h"
 
 TiUIButton::TiUIButton(NativeObjectFactory* nativeObjectFactory)
-        :
-          TiUIBase(nativeObjectFactory, "")
+    :
+    TiUIBase(nativeObjectFactory, "")
 {
 }
 

@@ -44,9 +44,14 @@ NAHANDLE NativeButtonObject::getNativeHandle() const
     return button_;
 }
 
-int NativeButtonObject::setLabel(const char* text)
+int NativeButtonObject::setTitle(TiObject* obj)
 {
-    QString str = text;
+    QString str;
+    int error = NativeControlObject::getString(obj, str);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
     button_->setText(str);
     return NATIVE_ERROR_OK;
 }

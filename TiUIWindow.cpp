@@ -9,7 +9,7 @@
 #include "TiGenericFunctionObject.h"
 
 TiUIWindow::TiUIWindow(NativeObjectFactory* objectFactory, const char* name)
-        : TiUIBase(objectFactory, name)
+    : TiUIBase(objectFactory, name)
 {
 }
 

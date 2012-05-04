@@ -31,7 +31,7 @@ using namespace std;
 
 // void ADD_STATUS_TI_VALUE(const char* name, Handle<Value> value, TiObject* parent)
 
-#define ADD_STATIC_TI_VALUE(N,V,P)		{TiObject* __ti__=new TiObject((N),(V));(P)->addMember(__ti__);__ti__->release();}
+#define ADD_STATIC_TI_VALUE(N,V,P)      {TiObject* __ti__=new TiObject((N),(V));(P)->addMember(__ti__);__ti__->release();}
 
 class TiObject;
 
@@ -44,7 +44,7 @@ public:
     ~ObjectEntry();
     const ObjectEntry& operator =(const ObjectEntry& entry);
     TiObject* getObject() const;
-    private:
+private:
     TiObject* obj_;
     void* userContext_;
 };
@@ -67,7 +67,8 @@ enum VALUE_MODIFY
     VALUE_MODIFY_DENY,
     VALUE_MODIFY_NOT_SUPPORTED,
     VALUE_MODIFY_INVALID,
-    VALUE_MODIFY_INVALID_TYPE
+    VALUE_MODIFY_INVALID_TYPE,
+    VALUE_MODIFY_IGNORE
 };
 
 #define TI_PROP_PERMISSION_READ         1
@@ -77,9 +78,7 @@ enum VALUE_MODIFY
 struct TiProperty
 {
     const char* propertyName;
-    const char* defaultValue;
     int permissions;
-    int supportedTypes;
     int nativePropertyNumber;
 };
 
@@ -107,6 +106,7 @@ public:
     virtual Handle<Value> getValue() const;
     virtual Handle<Value> evaluate() const;
     virtual VALUE_MODIFY setValue(Handle<Value> value);
+    virtual void forceSetValue(Handle<Value> value);
     virtual bool hasMembers() const;
     virtual bool isFunction() const;
     virtual bool canAddMembers() const;

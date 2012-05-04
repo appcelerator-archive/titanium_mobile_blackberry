@@ -41,20 +41,38 @@ NAHANDLE NativeProgressBarObject::getNativeHandle() const
     return progressIndicator_;
 }
 
-int NativeProgressBarObject::setMax(float value)
+int NativeProgressBarObject::setMax(TiObject* obj)
 {
+    float value;
+    int error = NativeControlObject::getFloat(obj, &value);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
     progressIndicator_->setToValue(value);
     return NATIVE_ERROR_OK;
 }
 
-int NativeProgressBarObject::setMin(float value)
+int NativeProgressBarObject::setMin(TiObject* obj)
 {
+    float value;
+    int error = NativeControlObject::getFloat(obj, &value);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
     progressIndicator_->setFromValue(value);
     return NATIVE_ERROR_OK;
 }
 
-int NativeProgressBarObject::setValue(float value)
+int NativeProgressBarObject::setValue(TiObject* obj)
 {
+    float value;
+    int error = NativeControlObject::getFloat(obj, &value);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
     progressIndicator_->setValue(value);
     return NATIVE_ERROR_OK;
 }

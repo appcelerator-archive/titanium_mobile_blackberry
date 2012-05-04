@@ -16,14 +16,14 @@
 #include <string.h>
 
 TiUIObject::TiUIObject()
-        : TiObject("UI")
+    : TiObject("UI")
 {
     objectFactory_ = NULL;
     contentContainer_ = NULL;
 }
 
 TiUIObject::TiUIObject(NativeObjectFactory* objectFactory)
-        : TiObject("UI")
+    : TiObject("UI")
 {
     objectFactory_ = objectFactory;
     contentContainer_ = NULL;

@@ -14,7 +14,7 @@ TiGenericFunctionObject::TiGenericFunctionObject()
 }
 
 TiGenericFunctionObject::TiGenericFunctionObject(const char* name)
-        : TiObject(name)
+    : TiObject(name)
 {
     context_ = NULL;
     callback_ = NULL;
@@ -37,7 +37,7 @@ Handle<Value> TiGenericFunctionObject::onFunctionCall(const Arguments& args)
 }
 
 void TiGenericFunctionObject::addGenericFunctionToParent(TiObject* parent, const char* name, void* userContext,
-                                                         GENERIC_FUNCTION_CALLBACK callback)
+        GENERIC_FUNCTION_CALLBACK callback)
 {
     TiGenericFunctionObject* obj = new TiGenericFunctionObject(name);
     obj->context_ = userContext;
