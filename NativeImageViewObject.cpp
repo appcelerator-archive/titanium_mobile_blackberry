@@ -7,23 +7,30 @@
 
 #include "NativeImageViewObject.h"
 #include "TiEventContainerFactory.h"
+#include "TiCascadesEventHandler.h"
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
+#include <bb/cascades/imageview>
 
 NativeImageViewObject::NativeImageViewObject()
 {
-   imageView_ = NULL;
-   left_ = 0;
-   top_ = 0;
+    imageView_ = NULL;
+    left_ = 0;
+    top_ = 0;
 }
 
 NativeImageViewObject::~NativeImageViewObject()
 {
 }
 
+NativeImageViewObject* NativeImageViewObject::createImageView()
+{
+   return new NativeImageViewObject;
+}
+
 int NativeImageViewObject::getObjectType() const
 {
-    return NO_TYPE_IMAGEVIEW;
+    return N_TYPE_IMAGEVIEW;
 }
 
 int NativeImageViewObject::initialize(TiEventContainerFactory* containerFactory)
@@ -38,44 +45,44 @@ int NativeImageViewObject::initialize(TiEventContainerFactory* containerFactory)
 
 int NativeImageViewObject::setImage(const char* image)
 {
-   imageView_->setImage(bb::cascades::Image(image));
-   return NATIVE_ERROR_OK;
+    imageView_->setImage(bb::cascades::Image(image));
+    return NATIVE_ERROR_OK;
 }
 
 int NativeImageViewObject::setWidth(float width)
 {
-   imageView_->setMaxWidth(width);
-   imageView_->setMinWidth(width);
-   return NATIVE_ERROR_OK;
+    imageView_->setMaxWidth(width);
+    imageView_->setMinWidth(width);
+    return NATIVE_ERROR_OK;
 }
 
 int NativeImageViewObject::setHeight(float height)
 {
-   imageView_->setMaxHeight(height);
-   imageView_->setMinHeight(height);
-   return NATIVE_ERROR_OK;
+    imageView_->setMaxHeight(height);
+    imageView_->setMinHeight(height);
+    return NATIVE_ERROR_OK;
 }
 
 int NativeImageViewObject::setLeft(float left)
 {
-   bb::cascades::AbsoluteLayoutProperties* pProp = new bb::cascades::AbsoluteLayoutProperties;
-   left_ = left;
-   pProp->setPositionX(left_);
-   pProp->setPositionY(top_);
-   imageView_->setLayoutProperties(pProp);
+    bb::cascades::AbsoluteLayoutProperties* pProp = new bb::cascades::AbsoluteLayoutProperties;
+    left_ = left;
+    pProp->setPositionX(left_);
+    pProp->setPositionY(top_);
+    imageView_->setLayoutProperties(pProp);
 
-   return NATIVE_ERROR_OK;
+    return NATIVE_ERROR_OK;
 }
 
 int NativeImageViewObject::setTop(float top)
 {
-   bb::cascades::AbsoluteLayoutProperties* pProp = new bb::cascades::AbsoluteLayoutProperties;
-   top_ = top;
-   pProp->setPositionY(top_);
-   pProp->setPositionX(left_);
-   imageView_->setLayoutProperties(pProp);
+    bb::cascades::AbsoluteLayoutProperties* pProp = new bb::cascades::AbsoluteLayoutProperties;
+    top_ = top;
+    pProp->setPositionY(top_);
+    pProp->setPositionX(left_);
+    imageView_->setLayoutProperties(pProp);
 
-   return NATIVE_ERROR_OK;
+    return NATIVE_ERROR_OK;
 }
 
 NAHANDLE NativeImageViewObject::getNativeHandle() const
@@ -93,8 +100,8 @@ int NativeImageViewObject::setEventHandler(const char* eventName, TiEvent* event
 {
     if (strcmp(eventName, "change") == 0)
     {
-    	eventImageChanged_->addListener(event);
+        eventImageChanged_->addListener(event);
     }
+
     return NATIVE_ERROR_NOTSUPPORTED;
 }
-

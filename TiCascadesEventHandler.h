@@ -33,7 +33,6 @@ public slots:
     void valueChanging(float value);
     void valueChanged(float value);
     void clicked();
-    Q_SLOT
     void imageChanged(const bb::cascades::Image);
 
 private:

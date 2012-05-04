@@ -42,5 +42,6 @@ void TiCascadesEventHandler::clicked()
 
 void TiCascadesEventHandler::imageChanged(const bb::cascades::Image image)
 {
+    // TODO: add x, y coordinates
     eventContainer_->fireEvent();
 }

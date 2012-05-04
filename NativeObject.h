@@ -41,7 +41,6 @@ typedef void* NAHANDLE;
 #define N_PROP_SET_WIDTH                        15
 #define N_PROP_SET_HEIGHT                       16
 #define N_PROP_SET_LEFT                         17
-#define N_PROP_SET_TOP                          18
 
 class NativeObjectFactory;
 class TiEvent;

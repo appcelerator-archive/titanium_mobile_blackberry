@@ -62,8 +62,8 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
         obj = new NativeProgressBarObject;
         break;
 
-    case NO_TYPE_IMAGEVIEW:
-    	obj = new NativeImageViewObject;
+    case N_TYPE_IMAGEVIEW:
+    	obj = NativeImageViewObject::createImageView();
     	break;
 
     }

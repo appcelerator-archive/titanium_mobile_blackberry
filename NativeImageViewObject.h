@@ -9,14 +9,22 @@
 #define NATIVEIMAGEVIEWOBJECT_H_
 
 #include "NativeControlObject.h"
-#include "TiCascadesEventHandler.h"
-#include "bb/cascades/imageview"
 
-class NativeImageViewObject: public NativeControlObject
+//forward declaration
+namespace bb
+{
+namespace cascades
+{
+class ImageView;
+}
+}
+
+class TiCascadesEventHandler;
+
+class NativeImageViewObject : public NativeControlObject
 {
 public:
-	NativeImageViewObject();
-    virtual ~NativeImageViewObject();
+    static NativeImageViewObject* createImageView();
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual int setImage(const char* image);
@@ -27,15 +35,19 @@ public:
     virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual void completeInitialization();
     virtual NAHANDLE getNativeHandle() const;
+
+protected:
+    virtual ~NativeImageViewObject();
+
 private:
+    NativeImageViewObject();
+    NativeImageViewObject(const NativeImageViewObject& obj);
+    NativeImageViewObject& operator=(const NativeImageViewObject& obj);
     bb::cascades::ImageView* imageView_;
     TiEventContainer* eventImageChanged_;
     TiCascadesEventHandler* eventHandler_;
     float left_;
     float top_;
 };
-
-
-
 
 #endif /* NATIVEIMAGEVIEWOBJECT_H_ */
