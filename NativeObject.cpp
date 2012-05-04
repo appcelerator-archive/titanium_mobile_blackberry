@@ -42,6 +42,16 @@ int NativeObject::open()
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+int NativeObject::start()
+{
+	return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+int NativeObject::stop()
+{
+	return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 void NativeObject::completeInitialization()
 {
     isInitializationComplete_ = true;

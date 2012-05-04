@@ -7,7 +7,6 @@
 
 #include "TiUIActivityIndicator.h"
 #include "TiGenericFunctionObject.h"
-#include "NativeActivityIndicatorObject.h"
 
 TiUIActivityIndicator::TiUIActivityIndicator(NativeObjectFactory* nativeObjectFactory)
 :TiUIBase(nativeObjectFactory, "")
@@ -47,7 +46,7 @@ Handle<Value> TiUIActivityIndicator::show_(void* userContext, TiObject* caller, 
 {
     HandleScope handleScope;
     TiUIActivityIndicator* obj = (TiUIActivityIndicator*) userContext;
-    NativeActivityIndicatorObject* no = (NativeActivityIndicatorObject*)obj->getNativeObject();
+    NativeObject* no = obj->getNativeObject();
     no->start();
     no->release();
     return Undefined();
@@ -57,7 +56,7 @@ Handle<Value> TiUIActivityIndicator::hide_(void* userContext, TiObject* caller, 
 {
     HandleScope handleScope;
     TiUIActivityIndicator* obj = (TiUIActivityIndicator*) userContext;
-    NativeActivityIndicatorObject* no = (NativeActivityIndicatorObject*)obj->getNativeObject();
+    NativeObject* no = obj->getNativeObject();
     no->stop();
     no->release();
     return Undefined();

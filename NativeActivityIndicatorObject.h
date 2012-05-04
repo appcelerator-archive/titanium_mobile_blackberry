@@ -25,7 +25,6 @@ public:
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual NAHANDLE getNativeHandle() const;
-    virtual void completeInitialization();
     virtual int start();
     virtual int stop();
 

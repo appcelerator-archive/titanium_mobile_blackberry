@@ -46,9 +46,5 @@ NAHANDLE NativeActivityIndicatorObject::getNativeHandle() const
     return indicator_;
 }
 
-void NativeActivityIndicatorObject::completeInitialization()
-{
-	NativeControlObject::completeInitialization();
-}
 
 

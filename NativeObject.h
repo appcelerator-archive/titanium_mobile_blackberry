@@ -109,6 +109,8 @@ public:
     virtual int addChildNativeObject(NativeObject* obj);
     virtual NAHANDLE getNativeHandle() const;
     virtual int open();
+    virtual int start();
+    virtual int stop();
     virtual void completeInitialization();
     virtual bool isInitializationComplete() const;
     virtual int setEventHandler(const char* eventName, TiEvent* event);
