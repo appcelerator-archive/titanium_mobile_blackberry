@@ -12,43 +12,67 @@
 #include "TiV8Event.h"
 
 const static TI_PROPERTY g_tiProperties[] =
-        {
-                {"backgroundColor", "setBackgroundColor", "black", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_CSTRING, N_PROP_SET_BACKGROUND_COLOR},
+{
+    {
+        "backgroundColor", "setBackgroundColor", "black", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_CSTRING, N_PROP_SET_BACKGROUND_COLOR
+    },
 
-                {"label", "setLabel", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_CSTRING, N_PROP_SET_LABEL},
+    {
+        "label", "setLabel", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_CSTRING, N_PROP_SET_LABEL
+    },
 
-                {"max", "setMax", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_MAX},
+    {
+        "max", "setMax", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_MAX
+    },
 
-                {"min", "setMin", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_MIN},
+    {
+        "min", "setMin", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_MIN
+    },
 
-                {"text", "setText", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_CSTRING, N_PROP_SET_TEXT},
+    {
+        "text", "setText", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_CSTRING, N_PROP_SET_TEXT
+    },
 
-                {"textAlign", "setTextAlign", "center", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_CSTRING | NATIVE_TYPE_INT, N_PROP_SET_TEXT_ALIGN},
+    {
+        "textAlign", "setTextAlign", "center", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_CSTRING | NATIVE_TYPE_INT, N_PROP_SET_TEXT_ALIGN
+    },
 
-                {"top", "setTop", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_TOP},
+    {
+        "top", "setTop", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_INT | NATIVE_TYPE_DOUBLE, N_PROP_SET_TOP
+    },
 
-                {"value", "setValue", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                        NATIVE_TYPE_INT, N_PROP_SET_VALUE},
+    {
+        "value", "setValue", "0", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_INT, N_PROP_SET_VALUE
+    },
 
-                {"image", "setImage", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                		NATIVE_TYPE_CSTRING, N_PROP_SET_IMAGE},
+    {
+        "image", "setImage", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_CSTRING, N_PROP_SET_IMAGE
+    },
 
-                {"width", "setWidth", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                		NATIVE_TYPE_DOUBLE, N_PROP_SET_WIDTH},
+    {
+        "width", "setWidth", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_DOUBLE, N_PROP_SET_WIDTH
+    },
 
-                {"height", "setHeight", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                		NATIVE_TYPE_DOUBLE, N_PROP_SET_HEIGHT},
+    {
+        "height", "setHeight", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_DOUBLE, N_PROP_SET_HEIGHT
+    },
 
-                {"left", "setLeft", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-                                		NATIVE_TYPE_DOUBLE, N_PROP_SET_LEFT},
-        };
+    {
+        "left", "setLeft", "", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        NATIVE_TYPE_DOUBLE, N_PROP_SET_LEFT
+    },
+};
 
 TiUIBase::TiUIBase()
 {
@@ -70,7 +94,7 @@ TiUIBase::~TiUIBase()
 }
 
 TiUIBase::TiUIBase(NativeObjectFactory* nativeObjectFactory, const char* name)
-        : TiObject(name)
+    : TiObject(name)
 {
     nativeObjectFactory_ = nativeObjectFactory;
     nativeObject_ = NULL;
@@ -114,8 +138,8 @@ void TiUIBase::setTiMappingProperties(const TI_PROPERTY* prop, int propertyCount
     for (int i = 0; i < propertyCount; i++)
     {
         TiObject* value = TiPropertyMapObject::addProperty(this, prop[i].propertyName, prop[i].nativePropertyNumber,
-                                                           prop[i].supportedTypes,
-                                                           valueModify, this);
+                          prop[i].supportedTypes,
+                          valueModify, this);
         if ((prop[i].permissions & TI_PROP_PERMISSION_WRITE) && (prop[i].propertySetterFunctionName != NULL))
         {
             TiPropertySetFunctionObject::addPropertySetter(this, value, prop[i].propertySetterFunctionName);
@@ -148,21 +172,21 @@ void TiUIBase::onCreateStaticMembers()
 void TiUIBase::setParametersFromObject(Local<Object> obj)
 {
     HandleScope handleScope;
-    Handle < Value > value;
-    Handle < Value > controlValue = getValue();
+    Handle<Value> value;
+    Handle<Value> controlValue = getValue();
     if (!controlValue->IsObject())
     {
         return;
     }
-    Handle < Object > self = Handle < Object > ::Cast(controlValue);
-    Handle < Array > propNames = obj->GetPropertyNames();
+    Handle<Object> self = Handle<Object>::Cast(controlValue);
+    Handle<Array> propNames = obj->GetPropertyNames();
     uint32_t props = propNames->Length();
-    Local < Value > propValue;
-    Handle < String > propString;
+    Local<Value> propValue;
+    Handle<String> propString;
     TiObject* foundProp;
     for (uint32_t i = 0; i < props; i++)
     {
-        propString = Handle < String > ::Cast(propNames->Get(Integer::New(i)));
+        propString = Handle<String>::Cast(propNames->Get(Integer::New(i)));
         String::Utf8Value propNameUTF(propString);
         foundProp = onLookupMember(*propNameUTF);
         if (foundProp != NULL)
@@ -206,8 +230,8 @@ void TiUIBase::onAddEventListener(const char* eventName, Handle<Function> eventF
     {
         return;
     }
-    Handle < Object > source = Handle < Object > ::Cast(getValue());
-    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(getValue());
+    Handle<Object> source = Handle<Object>::Cast(getValue());
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(getValue());
     TiV8Event* event = TiV8Event::createEvent(eventName, eventFunction, source);
     no->setEventHandler(eventName, event);
 }
@@ -245,8 +269,8 @@ Handle<Value> TiUIBase::addEventListener_(void* userContext, TiObject* caller, c
         return Undefined();
     }
     TiUIBase* obj = (TiUIBase*) userContext;
-    Handle < String > eventName = Handle < String > ::Cast(args[0]);
-    Handle < Function > func = Handle < Function > ::Cast(args[1]);
+    Handle<String> eventName = Handle<String>::Cast(args[0]);
+    Handle<Function> func = Handle<Function>::Cast(args[1]);
     String::Utf8Value eventNameUTF(eventName);
     obj->onAddEventListener(*eventNameUTF, func);
     return Undefined();

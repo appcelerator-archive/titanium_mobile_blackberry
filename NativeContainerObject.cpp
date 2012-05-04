@@ -81,7 +81,6 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
     }
 
     case N_TYPE_LABEL:
-
     {
         bb::cascades::Label* label = (bb::cascades::Label*) obj->getNativeHandle();
         container_->add(label);

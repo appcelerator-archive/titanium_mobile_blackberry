@@ -10,18 +10,18 @@
 
 #define PROP_SETTING_FUNCTION(NAME)     prop_##NAME
 #define PROP_SETTER_CSTRING(NAME)       static int prop_##NAME(NativeControlObject* object,const char* value) \
-{\
-    return object->NAME(value);\
-}
+    {\
+        return object->NAME(value);\
+    }
 #define PROP_SETTER_INT(NAME)           static int prop_##NAME(NativeControlObject* object,const char* value) \
-{\
-    return object->NAME(atoi(value));\
-}
+    {\
+        return object->NAME(atoi(value));\
+    }
 
 #define PROP_SETTER_FLOAT(NAME)         static int prop_##NAME(NativeControlObject* object,const char* value) \
-{\
-    return object->NAME(atof(value));\
-}
+    {\
+        return object->NAME(atof(value));\
+    }
 
 typedef int (*NATIVE_PROPSET_CALLBACK)(NativeControlObject*, const char*);
 
@@ -81,25 +81,25 @@ int NativeControlObject::setText(const char* text)
 PROP_SETTER_CSTRING(setImage)
 int NativeControlObject::setImage(const char* image)
 {
-   return NATIVE_ERROR_NOTSUPPORTED;
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETTER_FLOAT(setWidth)
 int NativeControlObject::setWidth(float width)
 {
-   return NATIVE_ERROR_NOTSUPPORTED;
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETTER_FLOAT(setHeight)
 int NativeControlObject::setHeight(float height)
 {
-   return NATIVE_ERROR_NOTSUPPORTED;
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETTER_FLOAT(setLeft)
 int NativeControlObject::setLeft(float left)
 {
-   return NATIVE_ERROR_NOTSUPPORTED;
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETTER_CSTRING(setTextAlign)
@@ -125,32 +125,32 @@ int NativeControlObject::setValue(float value)
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
 const static NATIVE_PROPSET_CALLBACK g_functionMap[] =
-        {
-                NULL,                                          // N_PROP_SET_UNDEFINED
-                NULL,                                          // N_PROP_SET_ANCHOR_POINT
-                NULL,                                          // N_PROP_SET_ANIMATED_CENTER_POINT
-                PROP_SETTING_FUNCTION(setBackgroundColor),     // N_PROP_SET_BACKGROUND_COLOR
-                NULL,                                          // N_PROP_SET_BACKGROUND_DISABLED_COLOR
-                NULL,                                          // N_PROP_SET_BACKGROUND_DISABLED_IMAGE
-                NULL,                                          // N_PROP_SET_BACKGROUND_FOCUSED_COLOR
-                PROP_SETTING_FUNCTION(setLabel),               // N_PROP_SET_LABEL
-                PROP_SETTING_FUNCTION(setMax),                 // N_PROP_SET_MAX
-                PROP_SETTING_FUNCTION(setMin),                 // N_PROP_SET_MIN
-                PROP_SETTING_FUNCTION(setText),                // N_PROP_SET_TEXT
-                PROP_SETTING_FUNCTION(setTextAlign),           // N_PROP_SET_TEXT_ALIGN
-                PROP_SETTING_FUNCTION(setTop),                 // N_PROP_SET_TOP
-                PROP_SETTING_FUNCTION(setValue),               // N_PROP_SET_VALUE
-                PROP_SETTING_FUNCTION(setImage),               // N_PROP_SET_IMAGE
-                PROP_SETTING_FUNCTION(setWidth),               // N_PROP_SET_WIDTH
-                PROP_SETTING_FUNCTION(setHeight),              // N_PROP_SET_HEIGHT
-                PROP_SETTING_FUNCTION(setLeft),                // N_PROP_SET_LEFT
-                PROP_SETTING_FUNCTION(setTop)                  // N_PROP_SET_RIGHT
+{
+    NULL,                                          // N_PROP_SET_UNDEFINED
+    NULL,                                          // N_PROP_SET_ANCHOR_POINT
+    NULL,                                          // N_PROP_SET_ANIMATED_CENTER_POINT
+    PROP_SETTING_FUNCTION(setBackgroundColor),     // N_PROP_SET_BACKGROUND_COLOR
+    NULL,                                          // N_PROP_SET_BACKGROUND_DISABLED_COLOR
+    NULL,                                          // N_PROP_SET_BACKGROUND_DISABLED_IMAGE
+    NULL,                                          // N_PROP_SET_BACKGROUND_FOCUSED_COLOR
+    PROP_SETTING_FUNCTION(setLabel),               // N_PROP_SET_LABEL
+    PROP_SETTING_FUNCTION(setMax),                 // N_PROP_SET_MAX
+    PROP_SETTING_FUNCTION(setMin),                 // N_PROP_SET_MIN
+    PROP_SETTING_FUNCTION(setText),                // N_PROP_SET_TEXT
+    PROP_SETTING_FUNCTION(setTextAlign),           // N_PROP_SET_TEXT_ALIGN
+    PROP_SETTING_FUNCTION(setTop),                 // N_PROP_SET_TOP
+    PROP_SETTING_FUNCTION(setValue),               // N_PROP_SET_VALUE
+    PROP_SETTING_FUNCTION(setImage),               // N_PROP_SET_IMAGE
+    PROP_SETTING_FUNCTION(setWidth),               // N_PROP_SET_WIDTH
+    PROP_SETTING_FUNCTION(setHeight),              // N_PROP_SET_HEIGHT
+    PROP_SETTING_FUNCTION(setLeft),                // N_PROP_SET_LEFT
+    PROP_SETTING_FUNCTION(setTop)                  // N_PROP_SET_RIGHT
 
-        };
+};
 
 int NativeControlObject::setPropertyValue(int propertyNumber, const char* value)
 {
-    if ((propertyNumber < 0) || (propertyNumber >= (int) (sizeof(g_functionMap) / sizeof(*g_functionMap)))
+    if ((propertyNumber < 0) || (propertyNumber >= (int)(sizeof(g_functionMap) / sizeof(*g_functionMap)))
             || (g_functionMap[propertyNumber] == NULL))
     {
         return NATIVE_ERROR_NOTSUPPORTED;

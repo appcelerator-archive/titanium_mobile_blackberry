@@ -58,10 +58,10 @@ class TiEventContainerFactory;
  * such as a button, label, file, etc...
  */
 class NativeObject :
-                     public TiBase
+    public TiBase
 {
 public:
-    virtual int getObjectType() const=0;
+    virtual int getObjectType() const = 0;
     virtual int setPropertyValue(int propertyNumber, const char* value);
     virtual int addChildNativeObject(NativeObject* obj);
     virtual NAHANDLE getNativeHandle() const;

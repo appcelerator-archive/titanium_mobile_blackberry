@@ -23,7 +23,7 @@ class TiEventContainer;
 class TiEventContainerFactory
 {
 public:
-    virtual TiEventContainer* createEventContainer()=0;
+    virtual TiEventContainer* createEventContainer() = 0;
     virtual ~TiEventContainerFactory();
 
 protected:

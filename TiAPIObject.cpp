@@ -9,7 +9,7 @@
 #include "TiGenericFunctionObject.h"
 
 TiAPIObject::TiAPIObject()
-        : TiObject("API")
+    : TiObject("API")
 {
 }
 
@@ -39,9 +39,9 @@ Handle<Value> TiAPIObject::debug_(void* userContext, TiObject* caller, const Arg
         }
         else
         {
-            Local < String > log = args[i]->ToString();
+            Local<String> log = args[i]->ToString();
             String::Utf8Value logString(log);
-            printf("%s", (const char*) (*logString));
+            printf("%s", (const char*)(*logString));
         }
     }
     printf("\n");
