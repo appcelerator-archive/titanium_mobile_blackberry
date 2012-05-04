@@ -41,6 +41,7 @@ protected:
 
 private:
     NativeImageViewObject();
+    // Disable copy ctor and assignment operator
     NativeImageViewObject(const NativeImageViewObject& obj);
     NativeImageViewObject& operator=(const NativeImageViewObject& obj);
     bb::cascades::ImageView* imageView_;

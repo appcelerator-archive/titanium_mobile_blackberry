@@ -16,8 +16,8 @@
 #include <bb/cascades/ImageView>
 #include <bb/cascades/Label>
 #include <bb/cascades/ProgressIndicator>
-#include <bb/cascades/Stacklayout>
 #include <bb/cascades/Slider>
+#include <bb/cascades/Stacklayout>
 #include <qtgui/QColor>
 
 using namespace bb::cascades;
