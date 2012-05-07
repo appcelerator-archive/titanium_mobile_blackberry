@@ -10,7 +10,7 @@
 
 #include "NativeControlObject.h"
 
-//forward decration
+//forward declaration
 namespace bb
 {
 namespace cascades
@@ -25,8 +25,7 @@ class TiCascadesEventHandler;
 class NativeTextFieldObject : public NativeControlObject
 {
 public:
-    NativeTextFieldObject();
-    virtual ~NativeTextFieldObject();
+    static NativeTextFieldObject* createTextField();
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual int setWidth(float width);
@@ -38,7 +37,15 @@ public:
     virtual void completeInitialization();
     virtual NAHANDLE getNativeHandle() const;
 
+protected:
+    virtual ~NativeTextFieldObject();
+
 private:
+    NativeTextFieldObject();
+    //this class is neither copy-constructible nor assignable
+    NativeTextFieldObject(const NativeTextFieldObject& obj);
+    NativeTextFieldObject& operator=(const NativeTextFieldObject& obj);
+
     bb::cascades::TextField* textField_;
     TiEventContainer* eventFieldChanged_;
     TiCascadesEventHandler* eventHandler_;

@@ -7,11 +7,11 @@
 
 #include "NativeTextFieldObject.h"
 #include "TiEventContainerFactory.h"
+#include "TiCascadesEventHandler.h"
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
-#include <QtCore/QString>
 #include <bb/cascades/textField>
-#include "TiCascadesEventHandler.h"
+#include <QtCore/QString>
 
 NativeTextFieldObject::NativeTextFieldObject()
 {
@@ -27,6 +27,11 @@ NativeTextFieldObject::~NativeTextFieldObject()
 int NativeTextFieldObject::getObjectType() const
 {
     return N_TYPE_TEXT_FIELD;
+}
+
+NativeTextFieldObject* NativeTextFieldObject::createTextField()
+{
+    return new NativeTextFieldObject;
 }
 
 int NativeTextFieldObject::initialize(TiEventContainerFactory* containerFactory)

@@ -29,6 +29,10 @@ protected:
 
 private:
     TiUITextField(NativeObjectFactory* nativeObjectFactory);
+
+    //This class is neither copy-constructible nor assignable
+    TiUITextField(const TiUITextField& obj);
+    TiUITextField& operator=(const TiUITextField& obj);
 };
 
 #endif /* TIUITEXTFIELD_H_ */
