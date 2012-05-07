@@ -28,9 +28,12 @@ protected:
     virtual void onCreateStaticMembers();
 
 private:
-    TiUIActivityIndicator(NativeObjectFactory* nativeObjectFactory);
+    explicit TiUIActivityIndicator(NativeObjectFactory* nativeObjectFactory);
     static Handle<Value> show_(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> hide_(void* userContext, TiObject* caller, const Arguments& args);
+    // Disable copy ctor & assignment operator
+    TiUIActivityIndicator(const TiUIActivityIndicator& indicator);
+    TiUIActivityIndicator& operator=(const TiUIActivityIndicator& indicator);
 };
 
 

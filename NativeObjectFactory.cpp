@@ -72,7 +72,7 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
         break;
 
     case N_TYPE_ACTIVITYINDICATOR:
-    	obj = new NativeActivityIndicatorObject;
+        obj = NativeActivityIndicatorObject::createActivityIndicator();
         break;
 
     }

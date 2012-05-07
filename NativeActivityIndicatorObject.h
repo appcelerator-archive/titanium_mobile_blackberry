@@ -20,15 +20,21 @@
 class NativeActivityIndicatorObject : public NativeControlObject
 {
 public:
-	NativeActivityIndicatorObject();
-    virtual ~NativeActivityIndicatorObject();
+    static NativeActivityIndicatorObject* createActivityIndicator();
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual NAHANDLE getNativeHandle() const;
     virtual int start();
     virtual int stop();
 
+protected:
+    virtual ~NativeActivityIndicatorObject();
+
 private:
+    explicit NativeActivityIndicatorObject();
+    // Disable copy ctor & assignment operator
+    NativeActivityIndicatorObject(const NativeActivityIndicatorObject& indicator);
+    NativeActivityIndicatorObject& operator=(const NativeActivityIndicatorObject& indicator);
     bb::cascades::ActivityIndicator* indicator_;
 };
 

@@ -17,6 +17,11 @@ NativeActivityIndicatorObject::~NativeActivityIndicatorObject()
 {
 }
 
+NativeActivityIndicatorObject* NativeActivityIndicatorObject::createActivityIndicator()
+{
+    return new NativeActivityIndicatorObject();
+}
+
 int NativeActivityIndicatorObject::getObjectType() const
 {
     return N_TYPE_ACTIVITYINDICATOR;
