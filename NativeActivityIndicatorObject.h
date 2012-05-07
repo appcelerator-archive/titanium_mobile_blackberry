@@ -9,7 +9,15 @@
 #define NATIVEACTIVITYINDICATOROBJECT_H_
 
 #include "NativeControlObject.h"
-#include <bb/cascades/ActivityIndicator>
+
+//forward declaration
+namespace bb
+{
+namespace cascades
+{
+class ActivityIndicator;
+}
+}
 
 /*
  * NativeActivityIndicatorObject

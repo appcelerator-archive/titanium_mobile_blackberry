@@ -7,6 +7,7 @@
 
 #include "NativeActivityIndicatorObject.h"
 #include "TiEventContainerFactory.h"
+#include <bb/cascades/ActivityIndicator>
 
 NativeActivityIndicatorObject::NativeActivityIndicatorObject()
 {
