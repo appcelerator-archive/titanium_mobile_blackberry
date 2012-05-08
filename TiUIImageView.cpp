@@ -5,33 +5,31 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "TiUILabel.h"
-#include <string.h>
+#include "TiUIImageView.h"
 
-TiUILabel::TiUILabel(NativeObjectFactory* nativeObjectFactory)
+TiUIImageView::TiUIImageView(NativeObjectFactory* nativeObjectFactory)
     : TiUIBase(nativeObjectFactory, "")
 {
 }
 
-TiUILabel::~TiUILabel()
+TiUIImageView::~TiUIImageView()
 {
 }
 
-TiUILabel* TiUILabel::createLabel(NativeObjectFactory* nativeObjectFactory)
+TiUIImageView* TiUIImageView::createImageView(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUILabel* obj = new TiUILabel(nativeObjectFactory);
+    TiUIImageView* obj = new TiUIImageView(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }
 
-void TiUILabel::initializeTiObject(TiObject* parentContext)
+void TiUIImageView::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
         TiUIBase::initializeTiObject(parentContext);
-        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_LABEL);
+        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_IMAGEVIEW);
         setNativeObject(obj);
         obj->release();
     }
 }
-

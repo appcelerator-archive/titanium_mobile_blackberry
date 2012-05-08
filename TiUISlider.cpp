@@ -8,7 +8,7 @@
 #include "TiUISlider.h"
 
 TiUISlider::TiUISlider(NativeObjectFactory* nativeObjectFactory)
-        : TiUIBase(nativeObjectFactory, "")
+    : TiUIBase(nativeObjectFactory, "")
 {
 }
 

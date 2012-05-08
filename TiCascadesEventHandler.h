@@ -10,6 +10,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QMetaType>
+#include "bb/cascades/imageview"
 
 class TiEventContainer;
 
@@ -21,7 +22,7 @@ class TiEventContainer;
 
 class TiCascadesEventHandler : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
     TiCascadesEventHandler(TiEventContainer* eventContainer);
@@ -32,6 +33,7 @@ public slots:
     void valueChanging(float value);
     void valueChanged(float value);
     void clicked();
+    void imageChanged(const bb::cascades::Image);
     void textChanging(QString str);
 
 private:

@@ -8,7 +8,7 @@
 #include "TiPropertySetFunctionObject.h"
 
 TiPropertySetFunctionObject::TiPropertySetFunctionObject(const char* name)
-        : TiObject(name)
+    : TiObject(name)
 {
 }
 

@@ -30,7 +30,7 @@ void TiV8Event::fire(void* fireDataObject)
     {
         return;
     }
-    Handle < Object > dataObject = *((Persistent<Object>*) fireDataObject);
+    Handle<Object> dataObject = *((Persistent<Object>*) fireDataObject);
     dataObject->Set(String::New("source"), source_);
     function_->Call(function_, 1, (Handle<Value>*) &dataObject);
 }
@@ -39,7 +39,7 @@ TiV8Event* TiV8Event::createEvent(const char* eventName, Handle<Function> eventS
 {
     HandleScope handleScope;
     TiV8Event* obj = new TiV8Event();
-    obj->function_ = Persistent < Function > ::New(eventScript);
-    obj->source_ = Persistent < Object > ::New(source);
+    obj->function_ = Persistent<Function>::New(eventScript);
+    obj->source_ = Persistent<Object>::New(source);
     return obj;
 }

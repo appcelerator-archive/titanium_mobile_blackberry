@@ -20,7 +20,7 @@
 class TiEvent : public TiBase
 {
 public:
-    virtual void fire(void* fireDataObject)=0;
+    virtual void fire(void* fireDataObject) = 0;
 
 protected:
     virtual ~TiEvent();

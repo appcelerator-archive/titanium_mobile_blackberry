@@ -11,12 +11,15 @@
 #include <bb/cascades/Button>
 #include <bb/cascades/Color>
 #include <bb/cascades/Container>
+#include <bb/cascades/DockLayout>
+#include <bb/cascades/DockLayoutProperties>
+#include <bb/cascades/ImageView>
 #include <bb/cascades/Label>
 #include <bb/cascades/ProgressIndicator>
 #include <bb/cascades/Slider>
+#include <bb/cascades/Stacklayout>
 #include <bb/cascades/TextField>
 #include <qtgui/QColor>
-
 
 using namespace bb::cascades;
 
@@ -79,7 +82,7 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
     }
 
     case N_TYPE_LABEL:
-        {
+    {
         bb::cascades::Label* label = (bb::cascades::Label*) obj->getNativeHandle();
         container_->add(label);
         return NATIVE_ERROR_OK;
@@ -109,15 +112,25 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
         return NATIVE_ERROR_OK;
     }
 
+    case N_TYPE_IMAGEVIEW:
+
+    {
+        bb::cascades::ImageView* imageView = (bb::cascades::ImageView*) obj->getNativeHandle();
+        container_->add(imageView);
+        return NATIVE_ERROR_OK;
+    }
+
     case N_TYPE_TEXT_FIELD:
 
     {
         bb::cascades::TextField* textField = (bb::cascades::TextField*) obj->getNativeHandle();
         container_->add(textField);
         return NATIVE_ERROR_OK;
+
     }
 
     }
+
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 

@@ -28,12 +28,13 @@ public:
     virtual int setMin(float min);
     virtual int setText(const char* text);
     virtual int setTextAlign(const char* align);
-    virtual int setTop(float top);
     virtual int setValue(float value);
-    virtual int setLeft(float left);
+    virtual int setHintText(const char* text);
+    virtual int setImage(const char* image);
     virtual int setWidth(float width);
     virtual int setHeight(float height);
-    virtual int setHintText(const char* text);
+    virtual int setLeft(float left);
+    virtual int setTop(float top);
 
 protected:
     NativeControlObject();

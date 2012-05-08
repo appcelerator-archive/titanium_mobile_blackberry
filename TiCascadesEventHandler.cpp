@@ -7,6 +7,7 @@
 
 #include "TiCascadesEventHandler.h"
 #include "TiEventContainer.h"
+#include "bb/cascades/imageview"
 
 TiCascadesEventHandler::TiCascadesEventHandler(TiEventContainer* eventContainer)
 {
@@ -40,6 +41,12 @@ void TiCascadesEventHandler::textChanging(QString str)
 }
 
 void TiCascadesEventHandler::clicked()
+{
+    // TODO: add x, y coordinates
+    eventContainer_->fireEvent();
+}
+
+void TiCascadesEventHandler::imageChanged(const bb::cascades::Image image)
 {
     // TODO: add x, y coordinates
     eventContainer_->fireEvent();

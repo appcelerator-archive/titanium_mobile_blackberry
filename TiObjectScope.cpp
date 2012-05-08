@@ -58,7 +58,7 @@ TiBase* TiObjectScope::operator ->() const
     return object_;
 }
 
-TiObjectScope::operator TiBase*() const
+TiObjectScope::operator TiBase* () const
 {
     return object_;
 }

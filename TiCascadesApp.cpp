@@ -29,7 +29,7 @@ void TiCascadesApp::setScene(NativeObject* mainWindow)
     Page* page = new Page();
     if (mainWindow != NULL)
     {
-        Container* mainContainer = (Container*) (mainWindow->getNativeHandle());
+        Container* mainContainer = (Container*)(mainWindow->getNativeHandle());
         if (mainContainer != NULL)
         {
             page->setContent(mainContainer);
