@@ -10,7 +10,7 @@
 
 extern "C"
 {
-int tibb_run(const char* javaScript, int argc, char** argv);
+    int tibb_run(const char* javaScript, int argc, char** argv);
 }
 
 #endif /* TIBB_H_ */

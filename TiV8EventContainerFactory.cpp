@@ -23,7 +23,7 @@ TiV8EventContainerFactory::~TiV8EventContainerFactory()
 TiEventContainer* TiV8EventContainerFactory::createEventContainer()
 {
     HandleScope handleScope;
-    Local < Object > eventData = globalTemplate_->NewInstance();
+    Local<Object> eventData = globalTemplate_->NewInstance();
     TiV8EventContainer* obj = new TiV8EventContainer(eventData);
     return obj;
 }
@@ -31,6 +31,6 @@ TiEventContainer* TiV8EventContainerFactory::createEventContainer()
 TiV8EventContainerFactory* TiV8EventContainerFactory::createEventContainerFactory(Handle<ObjectTemplate> temp)
 {
     TiV8EventContainerFactory* obj = new TiV8EventContainerFactory;
-    obj->globalTemplate_ = Persistent < ObjectTemplate > ::New(temp);
+    obj->globalTemplate_ = Persistent<ObjectTemplate>::New(temp);
     return obj;
 }

@@ -22,7 +22,7 @@ class TiUITabGroup : public TiUIBase
 public:
 protected:
     virtual ~TiUITabGroup();
-    private:
+private:
     TiUITabGroup();
 };
 

@@ -5,33 +5,31 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "TiUILabel.h"
-#include <string.h>
+#include "TiUITextField.h"
 
-TiUILabel::TiUILabel(NativeObjectFactory* nativeObjectFactory)
+TiUITextField::TiUITextField(NativeObjectFactory* nativeObjectFactory)
     : TiUIBase(nativeObjectFactory, "")
 {
 }
 
-TiUILabel::~TiUILabel()
+TiUITextField::~TiUITextField()
 {
 }
 
-TiUILabel* TiUILabel::createLabel(NativeObjectFactory* nativeObjectFactory)
+TiUITextField* TiUITextField::createTextField(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUILabel* obj = new TiUILabel(nativeObjectFactory);
+    TiUITextField* obj = new TiUITextField(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }
 
-void TiUILabel::initializeTiObject(TiObject* parentContext)
+void TiUITextField::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
         TiUIBase::initializeTiObject(parentContext);
-        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_LABEL);
+        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_TEXT_FIELD);
         setNativeObject(obj);
         obj->release();
     }
 }
-

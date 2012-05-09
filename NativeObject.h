@@ -21,6 +21,8 @@ typedef void* NAHANDLE;
 #define N_TYPE_BUTTON                           4
 #define N_TYPE_SLIDER                           5
 #define N_TYPE_PROGRESSBAR                      6
+#define N_TYPE_IMAGEVIEW                        7
+#define N_TYPE_TEXT_FIELD                       8
 
 #define N_PROP_UNDEFINED                        0
 #define N_PROP_ANCHOR_POINT                     1
@@ -54,31 +56,33 @@ typedef void* NAHANDLE;
 #define N_PROP_FONT                             29
 #define N_PROP_HEIGHT                           30
 #define N_PROP_HIGHLIGHTED_COLOR                31
-#define N_PROP_HTML                             32
-#define N_PROP_KEEP_SCREEN_ON                   33
-#define N_PROP_LABEL                            34
-#define N_PROP_LAYOUT                           35
-#define N_PROP_LEFT                             36
-#define N_PROP_MAX                              37
-#define N_PROP_MIN                              38
-#define N_PROP_MINIMUM_FONT_SIZE                39
-#define N_PROP_OPACITY                          40
-#define N_PROP_RIGHT                            41
-#define N_PROP_SHADOW_COLOR                     42
-#define N_PROP_SHADOW_OFFSET                    43
-#define N_PROP_SIZE                             44
-#define N_PROP_SOFT_KEYBOARD_ON_FOCUS           45
-#define N_PROP_TEXT                             46
-#define N_PROP_TEXT_ALIGN                       47
-#define N_PROP_TEXT_ID                          48
-#define N_PROP_TOP                              49
-#define N_PROP_TOUCH_ENABLED                    50
-#define N_PROP_TRANSFORM                        51
-#define N_PROP_VALUE                            52
-#define N_PROP_VISIBLE                          53
-#define N_PROP_WIDTH                            54
-#define N_PROP_WORD_WRAP                        55
-#define N_PROP_ZINDEX                           56
+#define N_PROP_HINT_TEXT                        32
+#define N_PROP_HTML                             33
+#define N_PROP_IMAGE                            34
+#define N_PROP_KEEP_SCREEN_ON                   35
+#define N_PROP_LABEL                            36
+#define N_PROP_LAYOUT                           37
+#define N_PROP_LEFT                             38
+#define N_PROP_MAX                              39
+#define N_PROP_MIN                              40
+#define N_PROP_MINIMUM_FONT_SIZE                41
+#define N_PROP_OPACITY                          42
+#define N_PROP_RIGHT                            43
+#define N_PROP_SHADOW_COLOR                     44
+#define N_PROP_SHADOW_OFFSET                    45
+#define N_PROP_SIZE                             46
+#define N_PROP_SOFT_KEYBOARD_ON_FOCUS           47
+#define N_PROP_TEXT                             48
+#define N_PROP_TEXT_ALIGN                       49
+#define N_PROP_TEXT_ID                          50
+#define N_PROP_TOP                              51
+#define N_PROP_TOUCH_ENABLED                    52
+#define N_PROP_TRANSFORM                        53
+#define N_PROP_VALUE                            54
+#define N_PROP_VISIBLE                          55
+#define N_PROP_WIDTH                            56
+#define N_PROP_WORD_WRAP                        57
+#define N_PROP_ZINDEX                           58
 
 class NativeObjectFactory;
 class TiEvent;
@@ -96,10 +100,10 @@ class TiEventContainerFactory;
  * such as a button, label, file, etc...
  */
 class NativeObject :
-                     public TiBase
+    public TiBase
 {
 public:
-    virtual int getObjectType() const=0;
+    virtual int getObjectType() const = 0;
     virtual int setPropertyValue(int propertyNumber, const char* value);
     virtual int addChildNativeObject(NativeObject* obj);
     virtual NAHANDLE getNativeHandle() const;

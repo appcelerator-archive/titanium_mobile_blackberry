@@ -21,7 +21,7 @@ class NativeObject;
 
 class TiCascadesApp : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
     TiCascadesApp();

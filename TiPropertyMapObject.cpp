@@ -8,7 +8,7 @@
 #include "TiPropertyMapObject.h"
 
 TiPropertyMapObject::TiPropertyMapObject(const char* name)
-        : TiObject(name)
+    : TiObject(name)
 {
 }
 
@@ -17,8 +17,8 @@ TiPropertyMapObject::~TiPropertyMapObject()
 }
 
 TiPropertyMapObject* TiPropertyMapObject::addProperty(TiObject* parent, const char* name, int propertyNumber,
-                                                      int supportedTypes,
-                                                      MODIFY_VALUE_CALLBACK cb, void* context)
+        int supportedTypes,
+        MODIFY_VALUE_CALLBACK cb, void* context)
 {
     TiPropertyMapObject* object = new TiPropertyMapObject(name);
     object->propertyNumber_ = propertyNumber;
@@ -33,7 +33,7 @@ VALUE_MODIFY TiPropertyMapObject::onValueChange(Handle<Value> oldValue, Handle<V
 {
     HandleScope handleScope;
     VALUE_MODIFY modify = TiObject::onValueChange(oldValue, newValue);
-    Handle < String > stringValue;
+    Handle<String> stringValue;
     if (modify != VALUE_MODIFY_ALLOW)
     {
         return modify;
@@ -53,7 +53,7 @@ VALUE_MODIFY TiPropertyMapObject::onValueChange(Handle<Value> oldValue, Handle<V
     {
         if ((newValue->IsInt32()) || (newValue->IsUint32()))
         {
-            stringValue = Handle < String > ::Cast(newValue);
+            stringValue = Handle<String>::Cast(newValue);
             String::Utf8Value utf(stringValue);
             return (callback_)(propertyNumber_, *utf, context_);
         }
@@ -62,7 +62,7 @@ VALUE_MODIFY TiPropertyMapObject::onValueChange(Handle<Value> oldValue, Handle<V
     {
         if (newValue->IsNumber())
         {
-            stringValue = Handle < String > ::Cast(newValue);
+            stringValue = Handle<String>::Cast(newValue);
             String::Utf8Value utf(stringValue);
             return (callback_)(propertyNumber_, *utf, context_);
         }
@@ -71,7 +71,7 @@ VALUE_MODIFY TiPropertyMapObject::onValueChange(Handle<Value> oldValue, Handle<V
     {
         if (newValue->IsString())
         {
-            stringValue = Handle < String > ::Cast(newValue);
+            stringValue = Handle<String>::Cast(newValue);
             String::Utf8Value utf(stringValue);
             return (callback_)(propertyNumber_, *utf, context_);
         }

@@ -10,7 +10,7 @@
 
 #include "TiObject.h"
 
-typedef VALUE_MODIFY (*MODIFY_VALUE_CALLBACK)(int, const char*, void*);
+typedef VALUE_MODIFY(*MODIFY_VALUE_CALLBACK)(int, const char*, void*);
 
 /*
  * TiPropertyMapObject

@@ -14,7 +14,7 @@ TiGenericFunctionObject::TiGenericFunctionObject()
 }
 
 TiGenericFunctionObject::TiGenericFunctionObject(const char* name)
-        : TiObject(name)
+    : TiObject(name)
 {
     context_ = NULL;
     callback_ = NULL;
@@ -32,12 +32,12 @@ bool TiGenericFunctionObject::isFunction() const
 Handle<Value> TiGenericFunctionObject::onFunctionCall(const Arguments& args)
 {
     HandleScope handleScope;
-    Handle < Value > result = callback_(context_, this, args);
+    Handle<Value> result = callback_(context_, this, args);
     return handleScope.Close(result);
 }
 
 void TiGenericFunctionObject::addGenericFunctionToParent(TiObject* parent, const char* name, void* userContext,
-                                                         GENERIC_FUNCTION_CALLBACK callback)
+        GENERIC_FUNCTION_CALLBACK callback)
 {
     TiGenericFunctionObject* obj = new TiGenericFunctionObject(name);
     obj->context_ = userContext;
