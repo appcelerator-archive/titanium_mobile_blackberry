@@ -115,30 +115,32 @@ NativeObject* TiUIBase::getNativeObject() const
     return nativeObject_;
 }
 
-void TiUIBase::setTiMappingProperties(const TiProperty* prop, int propertyCount)
+void TiUIBase::setTiMappingProperties(const TiProperty* props, int propertyCount)
 {
     string name;
     char c[2];
     c[1] = 0;
     for (int i = 0; i < propertyCount; i++)
     {
-        TiObject* value = TiPropertyMapObject::addProperty(this, prop[i].propertyName, prop[i].nativePropertyNumber,
-                                                           prop[i].supportedTypes,
+        TiObject* value = TiPropertyMapObject::addProperty(this, props[i].propertyName, props[i].nativePropertyNumber,
+                                                           props[i].supportedTypes,
                                                            valueModify, this);
-        if (prop[i].permissions & TI_PROP_PERMISSION_WRITE)
+        // For all properties that have write permissions, add a setter method, e.g., myLabel.text=<my text>; myLabel.setText(<my text>);
+        if (props[i].permissions & TI_PROP_PERMISSION_WRITE)
         {
-            c[0] = toupper(prop[i].propertyName[0]);
+            c[0] = toupper(props[i].propertyName[0]);
             name = "set";
             name += c;
-            name += prop[i].propertyName + 1;
+            name += props[i].propertyName + 1;
             TiPropertySetFunctionObject::addPropertySetter(this, value, name.c_str());
         }
-        if (prop[i].permissions & TI_PROP_PERMISSION_READ)
+        // For all properties that have read permissions, add a getter method, e.g., var test=myLabel.text; var test=myLabel.getText();
+        if (props[i].permissions & TI_PROP_PERMISSION_READ)
         {
-            c[0] = toupper(prop[i].propertyName[0]);
+            c[0] = toupper(props[i].propertyName[0]);
             name = "get";
             name += c;
-            name += prop[i].propertyName + 1;
+            name += props[i].propertyName + 1;
             TiPropertyGetFunctionObject::addPropertyGetter(this, value, name.c_str());
         }
         value->release();
@@ -169,17 +171,16 @@ void TiUIBase::onCreateStaticMembers()
 void TiUIBase::setParametersFromObject(Local<Object> obj)
 {
     HandleScope handleScope;
-    Handle < Value > value;
-    Handle < Value > controlValue = getValue();
+    Handle<Value> value;
+    Handle<Value> controlValue = getValue();
     if (!controlValue->IsObject())
     {
         return;
     }
-    Handle < Object > self = Handle < Object > ::Cast(controlValue);
-    Handle < Array > propNames = obj->GetPropertyNames();
+    Handle<Array> propNames = obj->GetPropertyNames();
     uint32_t props = propNames->Length();
-    Local < Value > propValue;
-    Handle < String > propString;
+    Local<Value> propValue;
+    Handle<String> propString;
     TiObject* foundProp;
     for (uint32_t i = 0; i < props; i++)
     {
@@ -227,8 +228,8 @@ void TiUIBase::onAddEventListener(const char* eventName, Handle<Function> eventF
     {
         return;
     }
-    Handle < Object > source = Handle < Object > ::Cast(getValue());
-    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(getValue());
+    Handle<Object> source = Handle<Object>::Cast(getValue());
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(getValue());
     TiV8Event* event = TiV8Event::createEvent(eventName, eventFunction, source);
     no->setEventHandler(eventName, event);
 }
@@ -266,8 +267,8 @@ Handle<Value> TiUIBase::addEventListener_(void* userContext, TiObject* caller, c
         return Undefined();
     }
     TiUIBase* obj = (TiUIBase*) userContext;
-    Handle < String > eventName = Handle < String > ::Cast(args[0]);
-    Handle < Function > func = Handle < Function > ::Cast(args[1]);
+    Handle<String> eventName = Handle<String>::Cast(args[0]);
+    Handle<Function> func = Handle<Function>::Cast(args[1]);
     String::Utf8Value eventNameUTF(eventName);
     obj->onAddEventListener(*eventNameUTF, func);
     return Undefined();
