@@ -31,11 +31,6 @@ public:
     virtual int setTextAlign(const char* align);
     virtual int setValue(float value);
     virtual int setVisible(bool value);
-    virtual int setHintText(const char* text);
-    virtual int setImage(const char* image);
-    virtual int setWidth(float width);
-    virtual int setHeight(float height);
-    virtual int setLeft(float left);
     virtual int setTop(float top);
 protected:
     NativeControlObject();
