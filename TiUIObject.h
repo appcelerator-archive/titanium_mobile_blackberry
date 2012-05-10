@@ -10,7 +10,6 @@
 
 #include "TiObject.h"
 
-class TiCascadesApp;
 
 /*
  * TiUIObject
