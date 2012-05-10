@@ -16,13 +16,10 @@
 #include <bb/cascades/ImageView>
 #include <bb/cascades/Label>
 #include <bb/cascades/ProgressIndicator>
-<<<<<<< HEAD
 #include <bb/cascades/Slider>
 #include <bb/cascades/Stacklayout>
 #include <bb/cascades/TextField>
-=======
 #include <bb/cascades/ActivityIndicator>
->>>>>>> TIMOB-8810: Implement UI.ActivityIndicator
 #include <qtgui/QColor>
 
 using namespace bb::cascades;
