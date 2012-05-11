@@ -60,14 +60,14 @@ Handle<Value> TiUIObject::createWindow_(void* userContext, TiObject* caller, con
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
-    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
-    Handle < Object > result;
+    Handle<ObjectTemplate>global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result;
     result = global->NewInstance();
     TiUIWindow* wnd = TiUIWindow::createWindow(obj->objectFactory_, "");
     wnd->setValue(result);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
-        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
         wnd->setParametersFromObject(settingsObj);
     }
     setTiObjectToJsObject(result, wnd);
@@ -78,14 +78,14 @@ Handle<Value> TiUIObject::createLabel_(void* userContext, TiObject* caller, cons
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
-    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
-    Handle < Object > result;
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result;
     result = global->NewInstance();
     TiUILabel* label = TiUILabel::createLabel(obj->objectFactory_);
     label->setValue(result);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
-        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
         label->setParametersFromObject(settingsObj);
     }
     setTiObjectToJsObject(result, label);
@@ -96,14 +96,14 @@ Handle<Value> TiUIObject::createButton_(void* userContext, TiObject* caller, con
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
-    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
-    Handle < Object > result;
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result;
     result = global->NewInstance();
     TiUIButton* button = TiUIButton::createButton(obj->objectFactory_);
     button->setValue(result);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
-        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
         button->setParametersFromObject(settingsObj);
     }
     setTiObjectToJsObject(result, button);
@@ -114,14 +114,14 @@ Handle<Value> TiUIObject::createSlider_(void* userContext, TiObject* caller, con
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
-    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
-    Handle < Object > result;
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result;
     result = global->NewInstance();
     TiUISlider* slider = TiUISlider::createSlider(obj->objectFactory_);
     slider->setValue(result);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
-        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
         slider->setParametersFromObject(settingsObj);
     }
     setTiObjectToJsObject(result, slider);
@@ -132,14 +132,14 @@ Handle<Value> TiUIObject::createProgressBar_(void* userContext, TiObject* caller
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
-    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
-    Handle < Object > result;
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result;
     result = global->NewInstance();
     TiUIProgressBar* progressBar = TiUIProgressBar::createProgressBar(obj->objectFactory_);
     progressBar->setValue(result);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
-        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
         progressBar->setParametersFromObject(settingsObj);
     }
     setTiObjectToJsObject(result, progressBar);

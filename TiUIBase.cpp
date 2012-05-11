@@ -125,6 +125,7 @@ void TiUIBase::setTiMappingProperties(const TiProperty* prop, int propertyCount)
         TiObject* value = TiPropertyMapObject::addProperty(this, prop[i].propertyName, prop[i].nativePropertyNumber,
                                                            prop[i].supportedTypes,
                                                            valueModify, this);
+        // For all properties that have write permissions, add a setter method, e.g., myLabel.text=<my text>;
         if (prop[i].permissions & TI_PROP_PERMISSION_WRITE)
         {
             c[0] = toupper(prop[i].propertyName[0]);
@@ -133,6 +134,7 @@ void TiUIBase::setTiMappingProperties(const TiProperty* prop, int propertyCount)
             name += prop[i].propertyName + 1;
             TiPropertySetFunctionObject::addPropertySetter(this, value, name.c_str());
         }
+        // For all properties that have read permissions, add a getter method, e.g., var test=myLabel.text; var test=myLabel.getText();
         if (prop[i].permissions & TI_PROP_PERMISSION_READ)
         {
             c[0] = toupper(prop[i].propertyName[0]);
@@ -169,21 +171,21 @@ void TiUIBase::onCreateStaticMembers()
 void TiUIBase::setParametersFromObject(Local<Object> obj)
 {
     HandleScope handleScope;
-    Handle < Value > value;
-    Handle < Value > controlValue = getValue();
+    Handle<Value> value;
+    Handle<Value> controlValue = getValue();
     if (!controlValue->IsObject())
     {
         return;
     }
-    Handle < Object > self = Handle < Object > ::Cast(controlValue);
-    Handle < Array > propNames = obj->GetPropertyNames();
+    Handle<Object> self = Handle<Object>::Cast(controlValue);
+    Handle<Array> propNames = obj->GetPropertyNames();
     uint32_t props = propNames->Length();
-    Local < Value > propValue;
-    Handle < String > propString;
+    Local<Value> propValue;
+    Handle<String> propString;
     TiObject* foundProp;
     for (uint32_t i = 0; i < props; i++)
     {
-        propString = Handle < String > ::Cast(propNames->Get(Integer::New(i)));
+        propString = Handle<String>::Cast(propNames->Get(Integer::New(i)));
         String::Utf8Value propNameUTF(propString);
         foundProp = onLookupMember(*propNameUTF);
         if (foundProp != NULL)
@@ -227,8 +229,8 @@ void TiUIBase::onAddEventListener(const char* eventName, Handle<Function> eventF
     {
         return;
     }
-    Handle < Object > source = Handle < Object > ::Cast(getValue());
-    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(getValue());
+    Handle<Object> source = Handle<Object>::Cast(getValue());
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(getValue());
     TiV8Event* event = TiV8Event::createEvent(eventName, eventFunction, source);
     no->setEventHandler(eventName, event);
 }
@@ -273,8 +275,8 @@ Handle<Value> TiUIBase::addEventListener_(void* userContext, TiObject* caller, c
         return Undefined();
     }
     TiUIBase* obj = (TiUIBase*) userContext;
-    Handle < String > eventName = Handle < String > ::Cast(args[0]);
-    Handle < Function > func = Handle < Function > ::Cast(args[1]);
+    Handle<String> eventName = Handle<String>::Cast(args[0]);
+    Handle<Function> func = Handle<Function>::Cast(args[1]);
     String::Utf8Value eventNameUTF(eventName);
     obj->onAddEventListener(*eventNameUTF, func);
     return Undefined();

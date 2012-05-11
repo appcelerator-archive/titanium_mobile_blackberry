@@ -33,7 +33,7 @@ VALUE_MODIFY TiPropertyMapObject::onValueChange(Handle<Value> oldValue, Handle<V
 {
     HandleScope handleScope;
     VALUE_MODIFY modify = TiObject::onValueChange(oldValue, newValue);
-    Handle < String > stringValue;
+    Handle<String> stringValue;
     if (modify != VALUE_MODIFY_ALLOW)
     {
         return modify;
@@ -42,18 +42,16 @@ VALUE_MODIFY TiPropertyMapObject::onValueChange(Handle<Value> oldValue, Handle<V
     {
         if (newValue->IsBoolean())
         {
-            stringValue = Handle < String > ::Cast(newValue);
+            stringValue = Handle<String>::Cast(newValue);
             String::Utf8Value utf(stringValue);
             return (callback_)(propertyNumber_, *utf, context_);
-            //Handle < Boolean > boolValue = Handle < Boolean > ::Cast(newValue);
-            //return (callback_)(propertyNumber_, (boolValue->Value ? "true" : "false"), context_);
         }
     }
     if (supportedTypes_ & NATIVE_TYPE_INT)
     {
         if ((newValue->IsInt32()) || (newValue->IsUint32()))
         {
-            stringValue = Handle < String > ::Cast(newValue);
+            stringValue = Handle<String>::Cast(newValue);
             String::Utf8Value utf(stringValue);
             return (callback_)(propertyNumber_, *utf, context_);
         }
@@ -62,7 +60,7 @@ VALUE_MODIFY TiPropertyMapObject::onValueChange(Handle<Value> oldValue, Handle<V
     {
         if (newValue->IsNumber())
         {
-            stringValue = Handle < String > ::Cast(newValue);
+            stringValue = Handle<String>::Cast(newValue);
             String::Utf8Value utf(stringValue);
             return (callback_)(propertyNumber_, *utf, context_);
         }
@@ -71,7 +69,7 @@ VALUE_MODIFY TiPropertyMapObject::onValueChange(Handle<Value> oldValue, Handle<V
     {
         if (newValue->IsString())
         {
-            stringValue = Handle < String > ::Cast(newValue);
+            stringValue = Handle<String>::Cast(newValue);
             String::Utf8Value utf(stringValue);
             return (callback_)(propertyNumber_, *utf, context_);
         }

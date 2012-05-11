@@ -53,7 +53,7 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     Context::Scope context_scope(context_);
 
     TryCatch tryCatch;
-    Handle < Script > compiledScript = Script::Compile(String::New(javaScript));
+    Handle<Script> compiledScript = Script::Compile(String::New(javaScript));
     if (compiledScript.IsEmpty())
     {
         String::Utf8Value error(tryCatch.Exception());
@@ -61,7 +61,7 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
         // TODO: log
         return -1;
     }
-    Handle < Value > result = compiledScript->Run();
+    Handle<Value>result = compiledScript->Run();
     if (result.IsEmpty())
     {
         String::Utf8Value error(tryCatch.Exception());

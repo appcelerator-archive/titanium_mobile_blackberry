@@ -32,7 +32,7 @@ bool TiGenericFunctionObject::isFunction() const
 Handle<Value> TiGenericFunctionObject::onFunctionCall(const Arguments& args)
 {
     HandleScope handleScope;
-    Handle < Value > result = callback_(context_, this, args);
+    Handle<Value> result = callback_(context_, this, args);
     return handleScope.Close(result);
 }
 
