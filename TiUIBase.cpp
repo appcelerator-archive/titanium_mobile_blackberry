@@ -199,21 +199,21 @@ void TiUIBase::onCreateStaticMembers()
 void TiUIBase::setParametersFromObject(Local<Object> obj)
 {
     HandleScope handleScope;
-    Handle < Value > value;
-    Handle < Value > controlValue = getValue();
+    Handle<Value> value;
+    Handle<Value> controlValue = getValue();
     if (!controlValue->IsObject())
     {
         return;
     }
-    Handle < Object > self = Handle < Object > ::Cast(controlValue);
-    Handle < Array > propNames = obj->GetPropertyNames();
+    Handle<Object> self = Handle<Object>::Cast(controlValue);
+    Handle<Array> propNames = obj->GetPropertyNames();
     uint32_t props = propNames->Length();
-    Local < Value > propValue;
-    Handle < String > propString;
+    Local<Value> propValue;
+    Handle<String> propString;
     TiObject* foundProp;
     for (uint32_t i = 0; i < props; i++)
     {
-        propString = Handle < String > ::Cast(propNames->Get(Integer::New(i)));
+        propString = Handle<String>::Cast(propNames->Get(Integer::New(i)));
         String::Utf8Value propNameUTF(propString);
         foundProp = onLookupMember(*propNameUTF);
         if (foundProp != NULL)
@@ -303,8 +303,8 @@ Handle<Value> TiUIBase::addEventListener_(void* userContext, TiObject* caller, c
         return Undefined();
     }
     TiUIBase* obj = (TiUIBase*) userContext;
-    Handle<String> eventName = Handle < String > ::Cast(args[0]);
-    Handle<Function> func = Handle < Function > ::Cast(args[1]);
+    Handle<String> eventName = Handle<String>::Cast(args[0]);
+    Handle<Function> func = Handle<Function>::Cast(args[1]);
     String::Utf8Value eventNameUTF(eventName);
     obj->onAddEventListener(*eventNameUTF, func);
     return Undefined();

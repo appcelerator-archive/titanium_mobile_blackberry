@@ -197,10 +197,6 @@ int NativeControlObject::setPropertyValue(int propertyNumber, TiObject* obj)
 
 int NativeControlObject::getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a)
 {
-    if(obj == NULL)
-    {
-        return NATIVE_ERROR_INVALID_ARG;
-    }
     Handle<Value> value = obj->getValue();
     if ((value.IsEmpty()) || (!value->IsString()))
     {
@@ -224,10 +220,6 @@ int NativeControlObject::getColorComponents(TiObject* obj, float* r, float* g, f
 
 int NativeControlObject::getBoolean(TiObject* obj, bool* value)
 {
-    if(obj == NULL)
-    {
-        return NATIVE_ERROR_INVALID_ARG;
-    }
     Handle<Value> v8value = obj->getValue();
     if ((v8value.IsEmpty()) || ((!v8value->IsBoolean()) && (!v8value->IsBooleanObject())))
     {
@@ -240,10 +232,6 @@ int NativeControlObject::getBoolean(TiObject* obj, bool* value)
 
 int NativeControlObject::getString(TiObject* obj, QString& str)
 {
-    if(obj == NULL)
-    {
-        return NATIVE_ERROR_INVALID_ARG;
-    }
     Handle<Value> value = obj->getValue();
     if ((value.IsEmpty()) || (!value->IsString()))
     {
@@ -258,10 +246,6 @@ int NativeControlObject::getString(TiObject* obj, QString& str)
 
 int NativeControlObject::getFloat(TiObject* obj, float* value)
 {
-    if(obj == NULL)
-    {
-        return NATIVE_ERROR_INVALID_ARG;
-    }
     Handle<Value> v8value = obj->getValue();
     if ((v8value.IsEmpty()) || ((!v8value->IsNumber()) && (!v8value->IsNumberObject())))
     {
