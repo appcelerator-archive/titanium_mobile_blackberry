@@ -223,6 +223,14 @@ VALUE_MODIFY TiObject::onChildValueChange(TiObject* childObject, Handle<Value> o
     return VALUE_MODIFY_ALLOW;
 }
 
+/*
+ * setValue calls onValueChange which will determine how
+ * the value is handled. If the value VALUE_MODIFY_IGNORE
+ * is returned, the value is silently discarded without
+ * changing the value of the JavaScript object. This is
+ * useful in the case where the value has already been changed
+ * by calling forceSetValue in the overridden onValueChange.
+ */
 VALUE_MODIFY TiObject::setValue(Handle<Value> value)
 {
     VALUE_MODIFY modify = onValueChange(value_, value);
