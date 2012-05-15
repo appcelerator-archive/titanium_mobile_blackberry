@@ -5,32 +5,31 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "TiUIProgressBar.h"
+#include "TiUITextField.h"
 
-TiUIProgressBar::TiUIProgressBar(NativeObjectFactory* nativeObjectFactory)
+TiUITextField::TiUITextField(NativeObjectFactory* nativeObjectFactory)
     : TiUIBase(nativeObjectFactory, "")
 {
 }
 
-TiUIProgressBar::~TiUIProgressBar()
+TiUITextField::~TiUITextField()
 {
 }
 
-TiUIProgressBar* TiUIProgressBar::createProgressBar(NativeObjectFactory* nativeObjectFactory)
+TiUITextField* TiUITextField::createTextField(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUIProgressBar* obj = new TiUIProgressBar(nativeObjectFactory);
+    TiUITextField* obj = new TiUITextField(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }
 
-void TiUIProgressBar::initializeTiObject(TiObject* parentContext)
+void TiUITextField::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
         TiUIBase::initializeTiObject(parentContext);
-        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_PROGRESSBAR);
+        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_TEXT_FIELD);
         setNativeObject(obj);
         obj->release();
     }
 }
-

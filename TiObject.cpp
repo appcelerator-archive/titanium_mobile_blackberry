@@ -18,9 +18,8 @@ TiObject::TiObject()
 }
 
 TiObject::TiObject(const char* objectName)
-    :
-    isInitialized_(false),
-    parentObject_(NULL)
+    : isInitialized_(false)
+    , parentObject_(NULL)
 {
     name_ = objectName;
 }
@@ -83,7 +82,7 @@ TiObject* TiObject::getTiObjectFromJsObject(Handle<Value> value)
         return NULL;
     }
     Handle<Object> obj = Handle<Object>::Cast(value);
-    Handle<External> ext = Handle<External> ::Cast(obj->GetHiddenValue(String::New(HIDDEN_TI_OBJECT_PROPERTY)));
+    Handle<External> ext = Handle<External>::Cast(obj->GetHiddenValue(String::New(HIDDEN_TI_OBJECT_PROPERTY)));
     if (ext.IsEmpty())
     {
         return NULL;
@@ -108,8 +107,8 @@ Handle<ObjectTemplate> TiObject::getObjectTemplateFromJsObject(Handle<Value> val
     Handle<Object> obj = Handle<Object>::Cast(value);
     Handle<Context> context = obj->CreationContext();
     Handle<External> globalTemplateExternal = Handle<External>::Cast(
-            context->Global()->GetHiddenValue(String::New(HIDDEN_TEMP_OBJECT_PROPERTY)));
-    Handle<ObjectTemplate> temp = *((Handle<ObjectTemplate>*) globalTemplateExternal->Value());
+                context->Global()->GetHiddenValue(String::New(HIDDEN_TEMP_OBJECT_PROPERTY)));
+    Handle<ObjectTemplate>temp = *((Handle<ObjectTemplate>*) globalTemplateExternal->Value());
     return handleScope.Close(temp);
 }
 
@@ -273,8 +272,6 @@ Handle<Value> TiObject::propGetter_(Local<String> prop, const AccessorInfo& info
 {
     HandleScope handleScope;
     Handle<Object> result;
-    String::Utf8Value propName(prop);
-    const char* propString = (const char*)(*propName);
     TiObject* obj = getTiObjectFromJsObject(info.Holder());
     if (obj == NULL)
     {
@@ -282,13 +279,15 @@ Handle<Value> TiObject::propGetter_(Local<String> prop, const AccessorInfo& info
         return result;
     }
     Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(info.Holder());
+    String::Utf8Value propName(prop);
+    const char* propString = (const char*)(*propName);
     TiObject* propObject = obj->onLookupMember(propString);
     if (propObject == NULL)
     {
         // TODO: lookup
         return Undefined();
     }
-    Handle<Value>ret = propObject->getValue();
+    Handle<Value> ret = propObject->getValue();
     if (!ret.IsEmpty())
     {
         return handleScope.Close(ret);

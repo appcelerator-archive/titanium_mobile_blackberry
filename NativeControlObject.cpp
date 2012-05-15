@@ -174,7 +174,6 @@ const static NATIVE_PROPSET_CALLBACK g_functionMap[] =
     PROP_SETTING_FUNCTION(setText),                // N_PROP_TEXT
     PROP_SETTING_FUNCTION(setTextAlign),           // N_PROP_TEXT_ALIGN
     NULL,                                          // N_PROP_TEXT_ID
-    PROP_SETTING_FUNCTION(setTitle),               // N_PROP_TITLE
     PROP_SETTING_FUNCTION(setTop),                 // N_PROP_TOP
     NULL,                                          // N_PROP_TOUCH_ENABLED
     NULL,                                          // N_PROP_TRANSFORM
@@ -204,7 +203,7 @@ int NativeControlObject::getColorComponents(TiObject* obj, float* r, float* g, f
     }
     Handle<String> v8color = Handle<String>::Cast(value);
     String::Utf8Value v8colorString(v8color);
-    if(!QColor::isValidColor(*v8colorString))
+    if (!QColor::isValidColor(*v8colorString))
     {
         return NATIVE_ERROR_INVALID_ARG;
     }

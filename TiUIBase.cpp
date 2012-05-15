@@ -146,7 +146,7 @@ NativeObject* TiUIBase::getNativeObject() const
     return nativeObject_;
 }
 
-void TiUIBase::setTiMappingProperties(const TiProperty* prop, int propertyCount)
+void TiUIBase::setTiMappingProperties(const TiProperty* props, int propertyCount)
 {
     string name;
     char c[2];
@@ -157,18 +157,19 @@ void TiUIBase::setTiMappingProperties(const TiProperty* prop, int propertyCount)
                           valueModify, this);
         if (prop[i].permissions & TI_PROP_PERMISSION_WRITE)
         {
-            c[0] = toupper(prop[i].propertyName[0]);
+            c[0] = toupper(props[i].propertyName[0]);
             name = "set";
             name += c;
-            name += prop[i].propertyName + 1;
+            name += props[i].propertyName + 1;
             TiPropertySetFunctionObject::addPropertySetter(this, value, name.c_str());
         }
-        if (prop[i].permissions & TI_PROP_PERMISSION_READ)
+        // For all properties that have read permissions, add a getter method, e.g., var test=myLabel.text; var test=myLabel.getText();
+        if (props[i].permissions & TI_PROP_PERMISSION_READ)
         {
-            c[0] = toupper(prop[i].propertyName[0]);
+            c[0] = toupper(props[i].propertyName[0]);
             name = "get";
             name += c;
-            name += prop[i].propertyName + 1;
+            name += props[i].propertyName + 1;
             TiPropertyGetFunctionObject::addPropertyGetter(this, value, name.c_str());
         }
         value->release();

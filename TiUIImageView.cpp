@@ -5,32 +5,31 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "TiUIProgressBar.h"
+#include "TiUIImageView.h"
 
-TiUIProgressBar::TiUIProgressBar(NativeObjectFactory* nativeObjectFactory)
+TiUIImageView::TiUIImageView(NativeObjectFactory* nativeObjectFactory)
     : TiUIBase(nativeObjectFactory, "")
 {
 }
 
-TiUIProgressBar::~TiUIProgressBar()
+TiUIImageView::~TiUIImageView()
 {
 }
 
-TiUIProgressBar* TiUIProgressBar::createProgressBar(NativeObjectFactory* nativeObjectFactory)
+TiUIImageView* TiUIImageView::createImageView(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUIProgressBar* obj = new TiUIProgressBar(nativeObjectFactory);
+    TiUIImageView* obj = new TiUIImageView(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }
 
-void TiUIProgressBar::initializeTiObject(TiObject* parentContext)
+void TiUIImageView::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
         TiUIBase::initializeTiObject(parentContext);
-        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_PROGRESSBAR);
+        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_IMAGEVIEW);
         setNativeObject(obj);
         obj->release();
     }
 }
-
