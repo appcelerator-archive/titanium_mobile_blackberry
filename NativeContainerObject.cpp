@@ -6,17 +6,21 @@
  */
 
 #include "NativeContainerObject.h"
+#include "NativeObjectFactory.h"
+#include <bb/cascades/AbsoluteLayout>
+#include <bb/cascades/Button>
+#include <bb/cascades/Color>
 #include <bb/cascades/Container>
 #include <bb/cascades/DockLayout>
 #include <bb/cascades/DockLayoutProperties>
-#include <bb/cascades/Stacklayout>
+#include <bb/cascades/ImageView>
 #include <bb/cascades/Label>
-#include <bb/cascades/Button>
-#include <bb/cascades/Slider>
-#include <bb/cascades/Color>
 #include <bb/cascades/ProgressIndicator>
+#include <bb/cascades/Slider>
+#include <bb/cascades/Stacklayout>
+#include <bb/cascades/TextField>
+#include <bb/cascades/ActivityIndicator>
 #include <qtgui/QColor>
-#include "NativeObjectFactory.h"
 
 using namespace bb::cascades;
 
@@ -78,7 +82,7 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
     }
 
     case N_TYPE_LABEL:
-        {
+    {
         bb::cascades::Label* label = (bb::cascades::Label*) obj->getNativeHandle();
         container_->add(label);
         return NATIVE_ERROR_OK;
@@ -108,26 +112,40 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
         return NATIVE_ERROR_OK;
     }
 
+    case N_TYPE_IMAGEVIEW:
+
+    {
+        bb::cascades::ImageView* imageView = (bb::cascades::ImageView*) obj->getNativeHandle();
+        container_->add(imageView);
+        return NATIVE_ERROR_OK;
     }
+
+    case N_TYPE_ACTIVITYINDICATOR:
+
+    {
+        bb::cascades::ActivityIndicator* activityIndicator = (bb::cascades::ActivityIndicator*) obj->getNativeHandle();
+        container_->add(activityIndicator);
+        return NATIVE_ERROR_OK;
+    }
+
+    case N_TYPE_TEXT_FIELD:
+
+    {
+        bb::cascades::TextField* textField = (bb::cascades::TextField*) obj->getNativeHandle();
+        container_->add(textField);
+        return NATIVE_ERROR_OK;
+
+    }
+
+    }
+
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 int NativeContainerObject::open()
 {
-    bb::cascades::Container* appContainer = Container::create();
-    appContainer->setLayout(new DockLayout());
-    container_->setLayout(StackLayout::create());
-    DockLayoutProperties* layout = DockLayoutProperties::create();
-    layout->setHorizontalAlignment(HorizontalAlignment::Fill);
-    layout->setVerticalAlignment(VerticalAlignment::Fill);
-    container_->setLayoutProperties(layout);
-    // TODO: remove this hard coded width
-    appContainer->setPreferredWidth(1024.0f);
-    container_->setPreferredWidth(1024.0f);
-    appContainer->add(container_);
-    NativeContainerObject* root = new NativeContainerObject(appContainer);
-    nativeObjectFactory_->setRootContainer(root);
-    root->release();
+    container_->setLayout(new AbsoluteLayout());
+    nativeObjectFactory_->setRootContainer(this);
     return NATIVE_ERROR_OK;
 }
 

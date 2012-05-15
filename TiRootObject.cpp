@@ -6,11 +6,15 @@
  */
 
 #include "TiRootObject.h"
+
+#include "TiGenericFunctionObject.h"
+#include "TiJSONObject.h"
+#include "TiStringObject.h"
 #include "TiTitaniumObject.h"
 #include "TiV8EventContainerFactory.h"
 
 TiRootObject::TiRootObject()
-        : TiObject("")
+    : TiObject("")
 {
 
 }
@@ -28,6 +32,18 @@ void TiRootObject::onCreateStaticMembers()
     TiObject* ti = TiTitaniumObject::createObject(objectFactory_);
     addMember(ti);
     addMember(ti, "Ti");
+
+    TiStringObject::addObjectToParent(this, objectFactory_);
+    TiJSONObject::addObjectToParent(this, objectFactory_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "L", this, _L);   // TODO: use the same object as Ti.Locale.getString
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "alert", this, _alert);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "clearInterval", this, _clearInterval);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "clearTimeout", this, _clearTimeout);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "decodeURIComponent", this, _decodeURIComponent);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "encodeURIComponent", this, _encodeURIComponent);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "require", this, _require);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "setInterval", this, _setInterval);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "setTimeout", this, _setTimeout);
 }
 
 TiRootObject* TiRootObject::createRootObject()
@@ -70,5 +86,60 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     }
     onStartMessagePump();
     return 0;
+}
+
+/* Methods defined by Global */
+Handle<Value> TiRootObject::_L(void* userContext, TiObject* caller, const Arguments& args)
+{
+    // TODO: finish this
+    return Undefined();
+}
+
+Handle<Value> TiRootObject::_alert(void* userContext, TiObject* caller, const Arguments& args)
+{
+    // TODO: finish this
+    return Undefined();
+}
+
+Handle<Value> TiRootObject::_clearInterval(void* userContext, TiObject* caller, const Arguments& args)
+{
+    // TODO: finish this
+    return Undefined();
+}
+
+Handle<Value> TiRootObject::_clearTimeout(void* userContext, TiObject* caller, const Arguments& args)
+{
+    // TODO: finish this
+    return Undefined();
+}
+
+Handle<Value> TiRootObject::_decodeURIComponent(void* userContext, TiObject* caller, const Arguments& args)
+{
+    // TODO: finish this
+    return Undefined();
+}
+
+Handle<Value> TiRootObject::_encodeURIComponent(void* userContext, TiObject* caller, const Arguments& args)
+{
+    // TODO: finish this
+    return Undefined();
+}
+
+Handle<Value> TiRootObject::_require(void* userContext, TiObject* caller, const Arguments& args)
+{
+    // TODO: finish this
+    return Undefined();
+}
+
+Handle<Value> TiRootObject::_setInterval(void* userContext, TiObject* caller, const Arguments& args)
+{
+    // TODO: finish this
+    return Undefined();
+}
+
+Handle<Value> TiRootObject::_setTimeout(void* userContext, TiObject* caller, const Arguments& args)
+{
+    // TODO: finish this
+    return Undefined();
 }
 

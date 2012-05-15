@@ -8,7 +8,7 @@
 #include "TiObject.h"
 #include <malloc.h>
 
-#define HIDDEN_TI_OBJECT_PROPERTY			"ti_"
+#define HIDDEN_TI_OBJECT_PROPERTY           "ti_"
 #define HIDDEN_TEMP_OBJECT_PROPERTY         "globalTemplate_"
 
 TiObject::TiObject()
@@ -18,9 +18,8 @@ TiObject::TiObject()
 }
 
 TiObject::TiObject(const char* objectName)
-        :
-          isInitialized_(false),
-          parentObject_(NULL)
+    : isInitialized_(false)
+    , parentObject_(NULL)
 {
     name_ = objectName;
 }
@@ -28,7 +27,7 @@ TiObject::TiObject(const char* objectName)
 TiObject::TiObject(const char* objectName, Handle<Value> value)
 {
     name_ = objectName;
-    value_ = Persistent < Value > ::New(value);
+    value_ = Persistent<Value>::New(value);
     parentObject_ = NULL;
 }
 
@@ -298,7 +297,7 @@ Handle<Value> TiObject::propSetter_(Local<String> prop, Local<Value> value, cons
         setTiObjectToJsObject(info.Holder(),obj);
     }
     String::Utf8Value propName(prop);
-    const char* propString = (const char*) (*propName);
+    const char* propString = (const char*)(*propName);
     TiObject* destObj = obj->onLookupMember(propString);
     TiObject* srcObj = getTiObjectFromJsObject(value);
     if (srcObj == NULL)

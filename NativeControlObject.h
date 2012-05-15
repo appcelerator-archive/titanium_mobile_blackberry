@@ -29,9 +29,9 @@ public:
     virtual int setMin(float min);
     virtual int setText(const char* text);
     virtual int setTextAlign(const char* align);
-    virtual int setTop(float top);
     virtual int setValue(float value);
     virtual int setVisible(bool value);
+    virtual int setTop(float top);
 protected:
     NativeControlObject();
     virtual ~NativeControlObject();

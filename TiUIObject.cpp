@@ -13,17 +13,20 @@
 #include "TiUIButton.h"
 #include "TiUISlider.h"
 #include "TiUIProgressBar.h"
+#include "TiUIImageView.h"
+#include "TiUITextField.h"
+#include "TiUIActivityIndicator.h"
 #include <string.h>
 
 TiUIObject::TiUIObject()
-        : TiObject("UI")
+    : TiObject("UI")
 {
     objectFactory_ = NULL;
     contentContainer_ = NULL;
 }
 
 TiUIObject::TiUIObject(NativeObjectFactory* objectFactory)
-        : TiObject("UI")
+    : TiObject("UI")
 {
     objectFactory_ = objectFactory;
     contentContainer_ = NULL;
@@ -48,6 +51,9 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createButton", this, createButton_);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSlider", this, createSlider_);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createProgressBar", this, createProgressBar_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTextField", this, createTextField_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createImageView", this, createImageView_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createActivityIndicator", this, createActivityIndicator_);
 }
 
 Handle<Value> TiUIObject::createTabGroup_(void* userContext, TiObject* caller, const Arguments& args)
@@ -60,7 +66,7 @@ Handle<Value> TiUIObject::createWindow_(void* userContext, TiObject* caller, con
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
-    Handle<ObjectTemplate>global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
     Handle<Object> result;
     result = global->NewInstance();
     TiUIWindow* wnd = TiUIWindow::createWindow(obj->objectFactory_, "");
@@ -143,5 +149,59 @@ Handle<Value> TiUIObject::createProgressBar_(void* userContext, TiObject* caller
         progressBar->setParametersFromObject(settingsObj);
     }
     setTiObjectToJsObject(result, progressBar);
+    return handleScope.Close(result);
+}
+
+Handle<Value> TiUIObject::createTextField_(void* userContext, TiObject* caller, const Arguments& args)
+{
+    HandleScope handleScope;
+    TiUIObject* obj = (TiUIObject*) userContext;
+    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
+    Handle < Object > result;
+    result = global->NewInstance();
+    TiUITextField* textField = TiUITextField::createTextField(obj->objectFactory_);
+    textField->setValue(result);
+    if ((args.Length() > 0) && (args[0]->IsObject()))
+    {
+        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        textField->setParametersFromObject(settingsObj);
+    }
+    setTiObjectToJsObject(result, textField);
+    return handleScope.Close(result);
+}
+
+Handle<Value> TiUIObject::createImageView_(void* userContext, TiObject* caller, const Arguments& args)
+{
+    HandleScope handleScope;
+    TiUIObject* obj = (TiUIObject*) userContext;
+    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
+    Handle < Object > result;
+    result = global->NewInstance();
+    TiUIImageView* imageView = TiUIImageView::createImageView(obj->objectFactory_);
+    imageView->setValue(result);
+    if ((args.Length() > 0) && (args[0]->IsObject()))
+    {
+        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        imageView->setParametersFromObject(settingsObj);
+    }
+    setTiObjectToJsObject(result, imageView);
+    return handleScope.Close(result);
+}
+
+Handle<Value> TiUIObject::createActivityIndicator_(void* userContext, TiObject* caller, const Arguments& args)
+{
+    HandleScope handleScope;
+    TiUIObject* obj = (TiUIObject*) userContext;
+    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
+    Handle < Object > result;
+    result = global->NewInstance();
+    TiUIActivityIndicator* activityIndicator = TiUIActivityIndicator::createActivityIndicator(obj->objectFactory_);
+    activityIndicator->setValue(result);
+    if ((args.Length() > 0) && (args[0]->IsObject()))
+    {
+        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        activityIndicator->setParametersFromObject(settingsObj);
+    }
+    setTiObjectToJsObject(result, activityIndicator);
     return handleScope.Close(result);
 }

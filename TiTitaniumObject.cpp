@@ -10,7 +10,7 @@
 #include "TiAPIObject.h"
 
 TiTitaniumObject::TiTitaniumObject()
-        : TiObject("Titanium")
+    : TiObject("Titanium")
 {
     objectFactory_ = NULL;
 }

@@ -31,7 +31,7 @@ using namespace std;
 
 // void ADD_STATUS_TI_VALUE(const char* name, Handle<Value> value, TiObject* parent)
 
-#define ADD_STATIC_TI_VALUE(N,V,P)		{TiObject* __ti__=new TiObject((N),(V));(P)->addMember(__ti__);__ti__->release();}
+#define ADD_STATIC_TI_VALUE(N,V,P)      {TiObject* __ti__=new TiObject((N),(V));(P)->addMember(__ti__);__ti__->release();}
 
 class TiObject;
 
@@ -44,7 +44,7 @@ public:
     ~ObjectEntry();
     const ObjectEntry& operator =(const ObjectEntry& entry);
     TiObject* getObject() const;
-    private:
+private:
     TiObject* obj_;
     void* userContext_;
 };

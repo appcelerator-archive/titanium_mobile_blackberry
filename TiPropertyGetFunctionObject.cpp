@@ -33,6 +33,7 @@ bool TiPropertyGetFunctionObject::isFunction() const
 Handle<Value> TiPropertyGetFunctionObject::onFunctionCall(const Arguments& args)
 {
     HandleScope handleScope;
+    // Getter methods don't have any arguments, e.g. mylabel.getText()
     if (args.Length() != 0)
     {
         // TODO: expand this exception message

@@ -31,6 +31,16 @@ protected:
 private:
     TiRootObject();
 
+    static Handle<Value> _L(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _alert(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _clearInterval(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _clearTimeout(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _decodeURIComponent(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _encodeURIComponent(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _require(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _setInterval(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _setTimeout(void* userContext, TiObject* caller, const Arguments& args);
+
     Persistent<Context> context_;
     Handle<ObjectTemplate> globalTemplate_;
     NativeObjectFactory* objectFactory_;
