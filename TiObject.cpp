@@ -18,9 +18,8 @@ TiObject::TiObject()
 }
 
 TiObject::TiObject(const char* objectName)
-    :
-    isInitialized_(false),
-    parentObject_(NULL)
+    : isInitialized_(false)
+    , parentObject_(NULL)
 {
     name_ = objectName;
 }
@@ -28,7 +27,7 @@ TiObject::TiObject(const char* objectName)
 TiObject::TiObject(const char* objectName, Handle<Value> value)
 {
     name_ = objectName;
-    value_ = Persistent < Value > ::New(value);
+    value_ = Persistent<Value>::New(value);
     parentObject_ = NULL;
 }
 
@@ -46,7 +45,7 @@ char* TiObject::getStringFromObject(Handle<Value> value, const char* defaultStri
     HandleScope handleScope;
     if (value->IsString())
     {
-        Handle < String > v8str = Handle < String > ::Cast(value);
+        Handle<String> v8str = Handle<String>::Cast(value);
         String::Utf8Value v8utf8str(v8str);
         str = new char[strlen(*v8utf8str) + 1];
         strcpy(str, *v8utf8str);
@@ -82,8 +81,8 @@ TiObject* TiObject::getTiObjectFromJsObject(Handle<Value> value)
     {
         return NULL;
     }
-    Handle < Object > obj = Handle < Object > ::Cast(value);
-    Handle < External > ext = Handle < External > ::Cast(obj->GetHiddenValue(String::New(HIDDEN_TI_OBJECT_PROPERTY)));
+    Handle<Object> obj = Handle<Object>::Cast(value);
+    Handle<External> ext = Handle<External>::Cast(obj->GetHiddenValue(String::New(HIDDEN_TI_OBJECT_PROPERTY)));
     if (ext.IsEmpty())
     {
         return NULL;
@@ -98,20 +97,18 @@ void TiObject::setTiObjectToJsObject(Handle<Value> jsObject, TiObject* tiObj)
     {
         return;
     }
-    Handle < Object > obj = Handle < Object > ::Cast(jsObject);
+    Handle<Object> obj = Handle<Object>::Cast(jsObject);
     obj->SetHiddenValue(String::New(HIDDEN_TI_OBJECT_PROPERTY), External::New(tiObj));
 }
 
 Handle<ObjectTemplate> TiObject::getObjectTemplateFromJsObject(Handle<Value> value)
 {
     HandleScope handleScope;
-    Handle < Object > obj = Handle < Object > ::Cast(value);
-    Handle < Context > context = obj->CreationContext();
-    Handle < External > globalTemplateExternal = Handle < External
-            > ::Cast(
-                context->Global()->GetHiddenValue(
-                    String::New(HIDDEN_TEMP_OBJECT_PROPERTY)));
-    Handle < ObjectTemplate > temp = *((Handle<ObjectTemplate>*) globalTemplateExternal->Value());
+    Handle<Object> obj = Handle<Object>::Cast(value);
+    Handle<Context> context = obj->CreationContext();
+    Handle<External> globalTemplateExternal = Handle<External>::Cast(
+                context->Global()->GetHiddenValue(String::New(HIDDEN_TEMP_OBJECT_PROPERTY)));
+    Handle<ObjectTemplate>temp = *((Handle<ObjectTemplate>*) globalTemplateExternal->Value());
     return handleScope.Close(temp);
 }
 
@@ -223,6 +220,14 @@ VALUE_MODIFY TiObject::onChildValueChange(TiObject* childObject, Handle<Value> o
     return VALUE_MODIFY_ALLOW;
 }
 
+/*
+ * setValue calls onValueChange which will determine how
+ * the value is handled. If the value VALUE_MODIFY_IGNORE
+ * is returned, the value is silently discarded without
+ * changing the value of the JavaScript object. This is
+ * useful in the case where the value has already been changed
+ * by calling forceSetValue in the overridden onValueChange.
+ */
 VALUE_MODIFY TiObject::setValue(Handle<Value> value)
 {
     VALUE_MODIFY modify = onValueChange(value_, value);
@@ -266,23 +271,23 @@ bool TiObject::userCanAddMember(const char* propertyName) const
 Handle<Value> TiObject::propGetter_(Local<String> prop, const AccessorInfo& info)
 {
     HandleScope handleScope;
-    Handle < Object > result;
-    String::Utf8Value propName(prop);
-    const char* propString = (const char*)(*propName);
+    Handle<Object> result;
     TiObject* obj = getTiObjectFromJsObject(info.Holder());
     if (obj == NULL)
     {
         // Returns "empty". This will cause V8 to go back to default lookup.
         return result;
     }
-    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(info.Holder());
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(info.Holder());
+    String::Utf8Value propName(prop);
+    const char* propString = (const char*)(*propName);
     TiObject* propObject = obj->onLookupMember(propString);
     if (propObject == NULL)
     {
         // TODO: lookup
         return Undefined();
     }
-    Handle < Value > ret = propObject->getValue();
+    Handle<Value> ret = propObject->getValue();
     if (!ret.IsEmpty())
     {
         return handleScope.Close(ret);
@@ -305,7 +310,7 @@ Handle<Value> TiObject::propGetter_(Local<String> prop, const AccessorInfo& info
 Handle<Value> TiObject::propSetter_(Local<String> prop, Local<Value> value, const AccessorInfo& info)
 {
     HandleScope handleScope;
-    Handle < Object > result;
+    Handle<Object> result;
     TiObject* obj = getTiObjectFromJsObject(info.Holder());
     if (obj == NULL)
     {

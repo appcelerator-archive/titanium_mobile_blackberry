@@ -19,6 +19,8 @@
         return object->NAME(obj);\
     }
 
+#define GET_ARRAY_SIZE(T)               ((int)(sizeof(T) / sizeof(*T)))
+
 typedef int (*NATIVE_PROPSET_CALLBACK)(NativeControlObject*, TiObject*);
 
 NativeControlObject::NativeControlObject()
@@ -95,19 +97,13 @@ int NativeControlObject::setTitle(TiObject* obj)
 PROP_SETTER(setTop)
 int NativeControlObject::setTop(TiObject* obj)
 {
-    //control_->setTopMargin(top);
-    return NATIVE_ERROR_OK;
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETTER(setValue)
 int NativeControlObject::setValue(TiObject* obj)
 {
-    NAHANDLE value = getNativeHandle();
-    if (value == NULL)
-    {
-        return NATIVE_ERROR_NOTSUPPORTED;
-    }
-    return NATIVE_ERROR_OK;
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETTER(setVisible)
@@ -178,7 +174,6 @@ const static NATIVE_PROPSET_CALLBACK g_functionMap[] =
     PROP_SETTING_FUNCTION(setText),                // N_PROP_TEXT
     PROP_SETTING_FUNCTION(setTextAlign),           // N_PROP_TEXT_ALIGN
     NULL,                                          // N_PROP_TEXT_ID
-    PROP_SETTING_FUNCTION(setTitle),               // N_PROP_TITLE
     PROP_SETTING_FUNCTION(setTop),                 // N_PROP_TOP
     NULL,                                          // N_PROP_TOUCH_ENABLED
     NULL,                                          // N_PROP_TRANSFORM
@@ -191,7 +186,7 @@ const static NATIVE_PROPSET_CALLBACK g_functionMap[] =
 
 int NativeControlObject::setPropertyValue(int propertyNumber, TiObject* obj)
 {
-    if ((propertyNumber < 0) || (propertyNumber >= (int)(sizeof(g_functionMap) / sizeof(*g_functionMap)))
+    if ((propertyNumber < 0) || (propertyNumber >= GET_ARRAY_SIZE(g_functionMap))
             || (g_functionMap[propertyNumber] == NULL))
     {
         return NATIVE_ERROR_NOTSUPPORTED;
@@ -208,10 +203,11 @@ int NativeControlObject::getColorComponents(TiObject* obj, float* r, float* g, f
     }
     Handle<String> v8color = Handle<String>::Cast(value);
     String::Utf8Value v8colorString(v8color);
-    const char* colorCStr = *v8colorString;
-    QString colorQString = colorCStr;
-    QColor qcolor;
-    qcolor.setNamedColor(colorQString);
+    if (!QColor::isValidColor(*v8colorString))
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    QColor qcolor(*v8colorString);
     qreal qr, qg, qb, qa;
     qcolor.getRgbF(&qr, &qg, &qb, &qa);
     *r = qr;
