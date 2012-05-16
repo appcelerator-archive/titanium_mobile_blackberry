@@ -24,16 +24,15 @@
 typedef int (*NATIVE_PROPSET_CALLBACK)(NativeControlObject*, TiObject*);
 
 // Prototypes
-static void initPropertyMap();
+static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap();
 
 // Statics
-static vector<NATIVE_PROPSET_CALLBACK> s_functionMap;
+static const vector<NATIVE_PROPSET_CALLBACK> s_functionMap = initFunctionMap();
 
 
 NativeControlObject::NativeControlObject()
 {
     control_ = NULL;
-    initPropertyMap();
 }
 
 NativeControlObject::~NativeControlObject()
@@ -130,75 +129,72 @@ int NativeControlObject::setVisible(TiObject* obj)
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
-static void initPropertyMap()
+static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
 {
-    static bool initialized = false;
-    if (initialized == false)
-    {
-        initialized = true;
-        s_functionMap.resize(N_PROP_LAST);
+    vector<NATIVE_PROPSET_CALLBACK> vect;
+    vect.resize(N_PROP_LAST);
 
-        s_functionMap[N_PROP_UNDEFINED]                         = NULL;
-        s_functionMap[N_PROP_ANCHOR_POINT]                      = NULL;
-        s_functionMap[N_PROP_ANIMATED_CENTER_POINT]             = NULL;
-        s_functionMap[N_PROP_AUTO_LINK]                         = NULL;
-        s_functionMap[N_PROP_BACKGROUND_COLOR]                  = PROP_SETTING_FUNCTION(setBackgroundColor);
-        s_functionMap[N_PROP_BACKGROUND_DISABLED_COLOR]         = NULL;
-        s_functionMap[N_PROP_BACKGROUND_DISABLED_IMAGE]         = NULL;
-        s_functionMap[N_PROP_BACKGROUND_FOCUSED_COLOR]          = NULL;
-        s_functionMap[N_PROP_BACKGROUND_FOCUSED_IMAGE]          = NULL;
-        s_functionMap[N_PROP_BACKGROUND_GRADIANT]               = NULL;
-        s_functionMap[N_PROP_BACKGROUND_IMAGE]                  = NULL;
-        s_functionMap[N_PROP_BACKGROUND_LEFT_CAP]               = NULL;
-        s_functionMap[N_PROP_BACKGROUND_PADDING_BOTTOM]         = NULL;
-        s_functionMap[N_PROP_BACKGROUND_PADDING_LEFT]           = NULL;
-        s_functionMap[N_PROP_BACKGROUND_PADDING_RIGHT]          = NULL;
-        s_functionMap[N_PROP_BACKGROUND_PADDING_TOP]            = NULL;
-        s_functionMap[N_PROP_BACKGROUND_REPEAT]                 = NULL;
-        s_functionMap[N_PROP_BACKGROUND_SELECTED_COLOR]         = NULL;
-        s_functionMap[N_PROP_BACKGROUND_SELECTED_IMAGE]         = NULL;
-        s_functionMap[N_PROP_BACKGROUND_TOP_CAP]                = NULL;
-        s_functionMap[N_PROP_BORDER_COLOR]                      = NULL;
-        s_functionMap[N_PROP_BORDER_RADIUS]                     = NULL;
-        s_functionMap[N_PROP_BORDER_WIDTH]                      = NULL;
-        s_functionMap[N_PROP_BOTTOM]                            = NULL;
-        s_functionMap[N_PROP_CENTER]                            = NULL;
-        s_functionMap[N_PROP_CHILDREN]                          = NULL;
-        s_functionMap[N_PROP_COLOR]                             = PROP_SETTING_FUNCTION(setColor);
-        s_functionMap[N_PROP_ELLIPSIZE]                         = NULL;
-        s_functionMap[N_PROP_FOCUSABLE]                         = NULL;
-        s_functionMap[N_PROP_FONT]                              = NULL;
-        s_functionMap[N_PROP_HEIGHT]                            = NULL;
-        s_functionMap[N_PROP_HIGHLIGHTED_COLOR]                 = NULL;
-        s_functionMap[N_PROP_HINT_TEXT]                         = NULL;
-        s_functionMap[N_PROP_HTML]                              = NULL;
-        s_functionMap[N_PROP_IMAGE]                             = NULL;
-        s_functionMap[N_PROP_KEEP_SCREEN_ON]                    = NULL;
-        s_functionMap[N_PROP_LABEL]                             = PROP_SETTING_FUNCTION(setLabel);
-        s_functionMap[N_PROP_LAYOUT]                            = NULL;
-        s_functionMap[N_PROP_LEFT]                              = NULL;
-        s_functionMap[N_PROP_MAX]                               = PROP_SETTING_FUNCTION(setMax);
-        s_functionMap[N_PROP_MIN]                               = PROP_SETTING_FUNCTION(setMin);
-        s_functionMap[N_PROP_MINIMUM_FONT_SIZE]                 = NULL;
-        s_functionMap[N_PROP_OPACITY]                           = NULL;
-        s_functionMap[N_PROP_RIGHT]                             = NULL;
-        s_functionMap[N_PROP_SHADOW_COLOR]                      = NULL;
-        s_functionMap[N_PROP_SHADOW_OFFSET]                     = NULL;
-        s_functionMap[N_PROP_SIZE]                              = NULL;
-        s_functionMap[N_PROP_SOFT_KEYBOARD_ON_FOCUS]            = NULL;
-        s_functionMap[N_PROP_TEXT]                              = PROP_SETTING_FUNCTION(setText);
-        s_functionMap[N_PROP_TEXT_ALIGN]                        = PROP_SETTING_FUNCTION(setTextAlign);
-        s_functionMap[N_PROP_TEXT_ID]                           = NULL;
-        s_functionMap[N_PROP_TITLE]                             = PROP_SETTING_FUNCTION(setTitle);
-        s_functionMap[N_PROP_TOP]                               = PROP_SETTING_FUNCTION(setTop);
-        s_functionMap[N_PROP_TOUCH_ENABLED]                     = NULL;
-        s_functionMap[N_PROP_TRANSFORM]                         = NULL;
-        s_functionMap[N_PROP_VALUE]                             = PROP_SETTING_FUNCTION(setValue);
-        s_functionMap[N_PROP_VISIBLE]                           = PROP_SETTING_FUNCTION(setVisible);
-        s_functionMap[N_PROP_WIDTH]                             = NULL;
-        s_functionMap[N_PROP_WORD_WRAP]                         = NULL;
-        s_functionMap[N_PROP_ZINDEX]                            = NULL;
-    }
+    vect[N_PROP_UNDEFINED]                         = NULL;
+    vect[N_PROP_ANCHOR_POINT]                      = NULL;
+    vect[N_PROP_ANIMATED_CENTER_POINT]             = NULL;
+    vect[N_PROP_AUTO_LINK]                         = NULL;
+    vect[N_PROP_BACKGROUND_COLOR]                  = PROP_SETTING_FUNCTION(setBackgroundColor);
+    vect[N_PROP_BACKGROUND_DISABLED_COLOR]         = NULL;
+    vect[N_PROP_BACKGROUND_DISABLED_IMAGE]         = NULL;
+    vect[N_PROP_BACKGROUND_FOCUSED_COLOR]          = NULL;
+    vect[N_PROP_BACKGROUND_FOCUSED_IMAGE]          = NULL;
+    vect[N_PROP_BACKGROUND_GRADIANT]               = NULL;
+    vect[N_PROP_BACKGROUND_IMAGE]                  = NULL;
+    vect[N_PROP_BACKGROUND_LEFT_CAP]               = NULL;
+    vect[N_PROP_BACKGROUND_PADDING_BOTTOM]         = NULL;
+    vect[N_PROP_BACKGROUND_PADDING_LEFT]           = NULL;
+    vect[N_PROP_BACKGROUND_PADDING_RIGHT]          = NULL;
+    vect[N_PROP_BACKGROUND_PADDING_TOP]            = NULL;
+    vect[N_PROP_BACKGROUND_REPEAT]                 = NULL;
+    vect[N_PROP_BACKGROUND_SELECTED_COLOR]         = NULL;
+    vect[N_PROP_BACKGROUND_SELECTED_IMAGE]         = NULL;
+    vect[N_PROP_BACKGROUND_TOP_CAP]                = NULL;
+    vect[N_PROP_BORDER_COLOR]                      = NULL;
+    vect[N_PROP_BORDER_RADIUS]                     = NULL;
+    vect[N_PROP_BORDER_WIDTH]                      = NULL;
+    vect[N_PROP_BOTTOM]                            = NULL;
+    vect[N_PROP_CENTER]                            = NULL;
+    vect[N_PROP_CHILDREN]                          = NULL;
+    vect[N_PROP_COLOR]                             = PROP_SETTING_FUNCTION(setColor);
+    vect[N_PROP_ELLIPSIZE]                         = NULL;
+    vect[N_PROP_FOCUSABLE]                         = NULL;
+    vect[N_PROP_FONT]                              = NULL;
+    vect[N_PROP_HEIGHT]                            = NULL;
+    vect[N_PROP_HIGHLIGHTED_COLOR]                 = NULL;
+    vect[N_PROP_HINT_TEXT]                         = NULL;
+    vect[N_PROP_HTML]                              = NULL;
+    vect[N_PROP_IMAGE]                             = NULL;
+    vect[N_PROP_KEEP_SCREEN_ON]                    = NULL;
+    vect[N_PROP_LABEL]                             = PROP_SETTING_FUNCTION(setLabel);
+    vect[N_PROP_LAYOUT]                            = NULL;
+    vect[N_PROP_LEFT]                              = NULL;
+    vect[N_PROP_MAX]                               = PROP_SETTING_FUNCTION(setMax);
+    vect[N_PROP_MIN]                               = PROP_SETTING_FUNCTION(setMin);
+    vect[N_PROP_MINIMUM_FONT_SIZE]                 = NULL;
+    vect[N_PROP_OPACITY]                           = NULL;
+    vect[N_PROP_RIGHT]                             = NULL;
+    vect[N_PROP_SHADOW_COLOR]                      = NULL;
+    vect[N_PROP_SHADOW_OFFSET]                     = NULL;
+    vect[N_PROP_SIZE]                              = NULL;
+    vect[N_PROP_SOFT_KEYBOARD_ON_FOCUS]            = NULL;
+    vect[N_PROP_TEXT]                              = PROP_SETTING_FUNCTION(setText);
+    vect[N_PROP_TEXT_ALIGN]                        = PROP_SETTING_FUNCTION(setTextAlign);
+    vect[N_PROP_TEXT_ID]                           = NULL;
+    vect[N_PROP_TITLE]                             = PROP_SETTING_FUNCTION(setTitle);
+    vect[N_PROP_TOP]                               = PROP_SETTING_FUNCTION(setTop);
+    vect[N_PROP_TOUCH_ENABLED]                     = NULL;
+    vect[N_PROP_TRANSFORM]                         = NULL;
+    vect[N_PROP_VALUE]                             = PROP_SETTING_FUNCTION(setValue);
+    vect[N_PROP_VISIBLE]                           = PROP_SETTING_FUNCTION(setVisible);
+    vect[N_PROP_WIDTH]                             = NULL;
+    vect[N_PROP_WORD_WRAP]                         = NULL;
+    vect[N_PROP_ZINDEX]                            = NULL;
+    return vect;
 }
 
 
