@@ -23,7 +23,7 @@ class QString;
 class NativeControlObject : public NativeObject
 {
 public:
-    virtual int setPropertyValue(int propertyNumber, TiObject* obj);
+    virtual int setPropertyValue(size_t propertyNumber, TiObject* obj);
 
     virtual int setBackgroundColor(TiObject* obj);
     virtual int setColor(TiObject* obj);
@@ -40,7 +40,6 @@ public:
     static int getBoolean(TiObject* obj, bool* value);
     static int getString(TiObject* obj, QString& str);
     static int getFloat(TiObject* obj, float* value);
-    virtual int setTop(float top);
 protected:
     NativeControlObject();
     virtual ~NativeControlObject();

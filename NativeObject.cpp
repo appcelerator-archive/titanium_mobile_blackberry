@@ -17,7 +17,7 @@ NativeObject::~NativeObject()
 {
 }
 
-int NativeObject::setPropertyValue(int propertyNumber, TiObject* obj)
+int NativeObject::setPropertyValue(size_t propertyNumber, TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }

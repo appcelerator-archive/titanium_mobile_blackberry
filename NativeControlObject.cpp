@@ -6,9 +6,11 @@
  */
 
 #include "NativeControlObject.h"
+
+#include "TiObject.h"
 #include <stdlib.h>
 #include <string.h>
-#include "TiObject.h"
+#include <vector>
 #include <bb/cascades/Color>
 #include <qtgui/QColor>
 
@@ -19,13 +21,19 @@
         return object->NAME(obj);\
     }
 
-#define GET_ARRAY_SIZE(T)               ((int)(sizeof(T) / sizeof(*T)))
-
 typedef int (*NATIVE_PROPSET_CALLBACK)(NativeControlObject*, TiObject*);
+
+// Prototypes
+static void initPropertyMap();
+
+// Statics
+static vector<NATIVE_PROPSET_CALLBACK> s_functionMap;
+
 
 NativeControlObject::NativeControlObject()
 {
     control_ = NULL;
+    initPropertyMap();
 }
 
 NativeControlObject::~NativeControlObject()
@@ -121,77 +129,87 @@ int NativeControlObject::setVisible(TiObject* obj)
 
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
-// NOTE: These must be in order of the property index.
 
-const static NATIVE_PROPSET_CALLBACK g_functionMap[] =
+static void initPropertyMap()
 {
-    NULL,                                          // N_PROP_UNDEFINED
-    NULL,                                          // N_PROP_ANCHOR_POINT
-    NULL,                                          // N_PROP_ANIMATED_CENTER_POINT
-    NULL,                                          // N_PROP_AUTO_LINK
-    PROP_SETTING_FUNCTION(setBackgroundColor),     // N_PROP_BACKGROUND_COLOR
-    NULL,                                          // N_PROP_BACKGROUND_DISABLED_COLOR
-    NULL,                                          // N_PROP_BACKGROUND_DISABLED_IMAGE
-    NULL,                                          // N_PROP_BACKGROUND_FOCUSED_COLOR
-    NULL,                                          // N_PROP_BACKGROUND_FOCUSED_IMAGE
-    NULL,                                          // N_PROP_BACKGROUND_GRADIANT
-    NULL,                                          // N_PROP_BACKGROUND_IMAGE
-    NULL,                                          // N_PROP_BACKGROUND_LEFT_CAP
-    NULL,                                          // N_PROP_BACKGROUND_PADDING_BOTTOM
-    NULL,                                          // N_PROP_BACKGROUND_PADDING_LEFT
-    NULL,                                          // N_PROP_BACKGROUND_PADDING_RIGHT
-    NULL,                                          // N_PROP_BACKGROUND_PADDING_TOP
-    NULL,                                          // N_PROP_BACKGROUND_REPEAT
-    NULL,                                          // N_PROP_BACKGROUND_SELECTED_COLOR
-    NULL,                                          // N_PROP_BACKGROUND_SELECTED_IMAGE
-    NULL,                                          // N_PROP_BACKGROUND_TOP_CAP
-    NULL,                                          // N_PROP_BORDER_COLOR
-    NULL,                                          // N_PROP_BORDER_RADIUS
-    NULL,                                          // N_PROP_BORDER_WIDTH
-    NULL,                                          // N_PROP_BOTTOM
-    NULL,                                          // N_PROP_CENTER
-    NULL,                                          // N_PROP_CHILDREN
-    PROP_SETTING_FUNCTION(setColor),               // N_PROP_COLOR
-    NULL,                                          // N_PROP_ELLIPSIZE
-    NULL,                                          // N_PROP_FOCUSABLE
-    NULL,                                          // N_PROP_FONT
-    NULL,                                          // N_PROP_HEIGHT
-    NULL,                                          // N_PROP_HIGHLIGHTED_COLOR
-    NULL,                                          // N_PROP_HTML
-    NULL,                                          // N_PROP_KEEP_SCREEN_ON
-    PROP_SETTING_FUNCTION(setLabel),               // N_PROP_LABEL
-    NULL,                                          // N_PROP_LAYOUT
-    NULL,                                          // N_PROP_LEFT
-    PROP_SETTING_FUNCTION(setMax),                 // N_PROP_MAX
-    PROP_SETTING_FUNCTION(setMin),                 // N_PROP_MIN
-    NULL,                                          // N_PROP_MINIMUM_FONT_SIZE
-    NULL,                                          // N_PROP_OPACITY
-    NULL,                                          // N_PROP_RIGHT
-    NULL,                                          // N_PROP_SHADOW_COLOR
-    NULL,                                          // N_PROP_SHADOW_OFFSET
-    NULL,                                          // N_PROP_SIZE
-    NULL,                                          // N_PROP_SOFT_KEYBOARD_ON_FOCUS
-    PROP_SETTING_FUNCTION(setText),                // N_PROP_TEXT
-    PROP_SETTING_FUNCTION(setTextAlign),           // N_PROP_TEXT_ALIGN
-    NULL,                                          // N_PROP_TEXT_ID
-    PROP_SETTING_FUNCTION(setTop),                 // N_PROP_TOP
-    NULL,                                          // N_PROP_TOUCH_ENABLED
-    NULL,                                          // N_PROP_TRANSFORM
-    PROP_SETTING_FUNCTION(setValue),               // N_PROP_VALUE
-    PROP_SETTING_FUNCTION(setVisible),             // N_PROP_VISIBLE
-    NULL,                                          // N_PROP_WIDTH
-    NULL,                                          // N_PROP_WORD_WRAP
-    NULL                                           // N_PROP_ZINDEX
-};
+    static bool initialized = false;
+    if (initialized == false)
+    {
+        initialized = true;
+        s_functionMap.resize(N_PROP_LAST);
 
-int NativeControlObject::setPropertyValue(int propertyNumber, TiObject* obj)
+        s_functionMap[N_PROP_UNDEFINED]                         = NULL;
+        s_functionMap[N_PROP_ANCHOR_POINT]                      = NULL;
+        s_functionMap[N_PROP_ANIMATED_CENTER_POINT]             = NULL;
+        s_functionMap[N_PROP_AUTO_LINK]                         = NULL;
+        s_functionMap[N_PROP_BACKGROUND_COLOR]                  = PROP_SETTING_FUNCTION(setBackgroundColor);
+        s_functionMap[N_PROP_BACKGROUND_DISABLED_COLOR]         = NULL;
+        s_functionMap[N_PROP_BACKGROUND_DISABLED_IMAGE]         = NULL;
+        s_functionMap[N_PROP_BACKGROUND_FOCUSED_COLOR]          = NULL;
+        s_functionMap[N_PROP_BACKGROUND_FOCUSED_IMAGE]          = NULL;
+        s_functionMap[N_PROP_BACKGROUND_GRADIANT]               = NULL;
+        s_functionMap[N_PROP_BACKGROUND_IMAGE]                  = NULL;
+        s_functionMap[N_PROP_BACKGROUND_LEFT_CAP]               = NULL;
+        s_functionMap[N_PROP_BACKGROUND_PADDING_BOTTOM]         = NULL;
+        s_functionMap[N_PROP_BACKGROUND_PADDING_LEFT]           = NULL;
+        s_functionMap[N_PROP_BACKGROUND_PADDING_RIGHT]          = NULL;
+        s_functionMap[N_PROP_BACKGROUND_PADDING_TOP]            = NULL;
+        s_functionMap[N_PROP_BACKGROUND_REPEAT]                 = NULL;
+        s_functionMap[N_PROP_BACKGROUND_SELECTED_COLOR]         = NULL;
+        s_functionMap[N_PROP_BACKGROUND_SELECTED_IMAGE]         = NULL;
+        s_functionMap[N_PROP_BACKGROUND_TOP_CAP]                = NULL;
+        s_functionMap[N_PROP_BORDER_COLOR]                      = NULL;
+        s_functionMap[N_PROP_BORDER_RADIUS]                     = NULL;
+        s_functionMap[N_PROP_BORDER_WIDTH]                      = NULL;
+        s_functionMap[N_PROP_BOTTOM]                            = NULL;
+        s_functionMap[N_PROP_CENTER]                            = NULL;
+        s_functionMap[N_PROP_CHILDREN]                          = NULL;
+        s_functionMap[N_PROP_COLOR]                             = PROP_SETTING_FUNCTION(setColor);
+        s_functionMap[N_PROP_ELLIPSIZE]                         = NULL;
+        s_functionMap[N_PROP_FOCUSABLE]                         = NULL;
+        s_functionMap[N_PROP_FONT]                              = NULL;
+        s_functionMap[N_PROP_HEIGHT]                            = NULL;
+        s_functionMap[N_PROP_HIGHLIGHTED_COLOR]                 = NULL;
+        s_functionMap[N_PROP_HINT_TEXT]                         = NULL;
+        s_functionMap[N_PROP_HTML]                              = NULL;
+        s_functionMap[N_PROP_IMAGE]                             = NULL;
+        s_functionMap[N_PROP_KEEP_SCREEN_ON]                    = NULL;
+        s_functionMap[N_PROP_LABEL]                             = PROP_SETTING_FUNCTION(setLabel);
+        s_functionMap[N_PROP_LAYOUT]                            = NULL;
+        s_functionMap[N_PROP_LEFT]                              = NULL;
+        s_functionMap[N_PROP_MAX]                               = PROP_SETTING_FUNCTION(setMax);
+        s_functionMap[N_PROP_MIN]                               = PROP_SETTING_FUNCTION(setMin);
+        s_functionMap[N_PROP_MINIMUM_FONT_SIZE]                 = NULL;
+        s_functionMap[N_PROP_OPACITY]                           = NULL;
+        s_functionMap[N_PROP_RIGHT]                             = NULL;
+        s_functionMap[N_PROP_SHADOW_COLOR]                      = NULL;
+        s_functionMap[N_PROP_SHADOW_OFFSET]                     = NULL;
+        s_functionMap[N_PROP_SIZE]                              = NULL;
+        s_functionMap[N_PROP_SOFT_KEYBOARD_ON_FOCUS]            = NULL;
+        s_functionMap[N_PROP_TEXT]                              = PROP_SETTING_FUNCTION(setText);
+        s_functionMap[N_PROP_TEXT_ALIGN]                        = PROP_SETTING_FUNCTION(setTextAlign);
+        s_functionMap[N_PROP_TEXT_ID]                           = NULL;
+        s_functionMap[N_PROP_TITLE]                             = PROP_SETTING_FUNCTION(setTitle);
+        s_functionMap[N_PROP_TOP]                               = PROP_SETTING_FUNCTION(setTop);
+        s_functionMap[N_PROP_TOUCH_ENABLED]                     = NULL;
+        s_functionMap[N_PROP_TRANSFORM]                         = NULL;
+        s_functionMap[N_PROP_VALUE]                             = PROP_SETTING_FUNCTION(setValue);
+        s_functionMap[N_PROP_VISIBLE]                           = PROP_SETTING_FUNCTION(setVisible);
+        s_functionMap[N_PROP_WIDTH]                             = NULL;
+        s_functionMap[N_PROP_WORD_WRAP]                         = NULL;
+        s_functionMap[N_PROP_ZINDEX]                            = NULL;
+    }
+}
+
+
+int NativeControlObject::setPropertyValue(size_t propertyNumber, TiObject* obj)
 {
-    if ((propertyNumber < 0) || (propertyNumber >= GET_ARRAY_SIZE(g_functionMap))
-            || (g_functionMap[propertyNumber] == NULL))
+    if ((propertyNumber < 0) || (propertyNumber >= s_functionMap.size())
+            || (s_functionMap[propertyNumber] == NULL))
     {
         return NATIVE_ERROR_NOTSUPPORTED;
     }
-    return (g_functionMap[propertyNumber])(this, obj);
+    return (s_functionMap[propertyNumber])(this, obj);
 }
 
 int NativeControlObject::getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a)

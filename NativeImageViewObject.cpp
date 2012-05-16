@@ -45,7 +45,8 @@ int NativeImageViewObject::initialize(TiEventContainerFactory* containerFactory)
 
 int NativeImageViewObject::setImage(const char* image)
 {
-    imageView_->setImage(bb::cascades::Image(image));
+    // FIXME: following call fails to compile on R4
+    //imageView_->setImage(bb::cascades::Image(image));
     return NATIVE_ERROR_OK;
 }
 
