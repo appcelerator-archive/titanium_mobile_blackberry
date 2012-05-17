@@ -56,6 +56,19 @@ int NativeButtonObject::setTitle(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+int NativeButtonObject::setImage(TiObject* obj)
+{
+    QString str;
+    int error = NativeControlObject::getString(obj, str);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+    const bb::cascades::Image image = bb::cascades::Image(QUrl(str));
+    button_->setImage(image);
+    return NATIVE_ERROR_OK;
+}
+
 int NativeButtonObject::setEventHandler(const char* eventName, TiEvent* event)
 {
     if (strcmp(eventName, "click") == 0)
