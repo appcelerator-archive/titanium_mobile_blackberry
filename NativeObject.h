@@ -24,6 +24,8 @@ typedef void* NAHANDLE;
 #define N_TYPE_IMAGEVIEW                        7
 #define N_TYPE_TEXT_FIELD                       8
 #define N_TYPE_ACTIVITYINDICATOR                9
+#define N_TYPE_DROPDOWN                         10
+#define N_TYPE_OPTION                           11
 
 enum NATIVE_PROP
 {
@@ -70,7 +72,9 @@ enum NATIVE_PROP
     , N_PROP_MIN
     , N_PROP_MINIMUM_FONT_SIZE
     , N_PROP_OPACITY
+    , N_PROP_OPTIONS
     , N_PROP_RIGHT
+    , N_PROP_SELECTED_INDEX
     , N_PROP_SHADOW_COLOR
     , N_PROP_SHADOW_OFFSET
     , N_PROP_SIZE

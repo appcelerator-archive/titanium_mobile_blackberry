@@ -36,10 +36,14 @@ public:
     virtual int setTitle(TiObject* obj);
     virtual int setValue(TiObject* obj);
     virtual int setVisible(TiObject* obj);
+    virtual int setOptions(TiObject* obj);
+    virtual int setSelectedIndex(TiObject* obj);
     static int getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a);
     static int getBoolean(TiObject* obj, bool* value);
     static int getString(TiObject* obj, QString& str);
     static int getFloat(TiObject* obj, float* value);
+    static int getInteger(TiObject* obj, int* value);
+    static int getStringArray(TiObject* obj, QVector<QString>& value);
 protected:
     NativeControlObject();
     virtual ~NativeControlObject();

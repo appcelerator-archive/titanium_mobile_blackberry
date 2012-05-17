@@ -126,6 +126,18 @@ int NativeControlObject::setVisible(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+PROP_SETTER(setOptions)
+int NativeControlObject::setOptions(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setSelectedIndex)
+int NativeControlObject::setSelectedIndex(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
@@ -177,7 +189,9 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_MIN]                               = PROP_SETTING_FUNCTION(setMin);
     vect[N_PROP_MINIMUM_FONT_SIZE]                 = NULL;
     vect[N_PROP_OPACITY]                           = NULL;
+    vect[N_PROP_OPTIONS]                           = PROP_SETTING_FUNCTION(setOptions);
     vect[N_PROP_RIGHT]                             = NULL;
+    vect[N_PROP_SELECTED_INDEX]                    = PROP_SETTING_FUNCTION(setSelectedIndex);
     vect[N_PROP_SHADOW_COLOR]                      = NULL;
     vect[N_PROP_SHADOW_OFFSET]                     = NULL;
     vect[N_PROP_SIZE]                              = NULL;
@@ -266,5 +280,36 @@ int NativeControlObject::getFloat(TiObject* obj, float* value)
     }
     Handle<Number> num = Handle<Number>::Cast(v8value);
     *value = (float)num->Value();
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::getInteger(TiObject* obj, int* value)
+{
+    Handle<Value> v8value = obj->getValue();
+    if ((v8value.IsEmpty()) || ((!v8value->IsNumber()) && (!v8value->IsNumberObject())))
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    Handle<Number> num = Handle<Number>::Cast(v8value);
+    *value = (int)num->Value();
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::getStringArray(TiObject* obj, QVector<QString>& value)
+{
+    Handle<Value> v8value = obj->getValue();
+    if (v8value.IsEmpty() || !v8value->IsArray())
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    Handle<Array> array = Handle<Array>::Cast(v8value);
+    unsigned int uiLength = array->Length();
+    for (unsigned int i = 0; i < uiLength; ++i)
+    {
+        Handle<Value> l = array->Get(Integer::New(i));
+        String::Utf8Value v8UtfString(Handle<String>::Cast(l));
+        const char* cStr = *v8UtfString;
+        value.append(cStr);
+    }
     return NATIVE_ERROR_OK;
 }
