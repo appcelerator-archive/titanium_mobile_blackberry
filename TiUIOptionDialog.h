@@ -28,8 +28,8 @@ protected:
 
 private:
     explicit TiUIOptionDialog(NativeObjectFactory* nativeObjectFactory);
-    static Handle<Value> show_(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> hide_(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _show(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _hide(void* userContext, TiObject* caller, const Arguments& args);
     // Disable copy ctor & assignment operator
     TiUIOptionDialog(const TiUIOptionDialog& optionDialog);
     TiUIOptionDialog& operator=(const TiUIOptionDialog& optionDialog);

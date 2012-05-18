@@ -27,8 +27,8 @@ TiUIOptionDialog* TiUIOptionDialog::createOptionDialog(NativeObjectFactory* nati
 void TiUIOptionDialog::onCreateStaticMembers()
 {
     TiUIBase::onCreateStaticMembers();
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "show", this, show_);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "hide", this, hide_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "show", this, _show);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "hide", this, _hide);
 }
 
 void TiUIOptionDialog::initializeTiObject(TiObject* parentContext)
@@ -42,7 +42,7 @@ void TiUIOptionDialog::initializeTiObject(TiObject* parentContext)
     }
 }
 
-Handle<Value> TiUIOptionDialog::show_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIOptionDialog::_show(void* userContext, TiObject* caller, const Arguments& args)
 {
     TiUIOptionDialog* obj = (TiUIOptionDialog*)userContext;
     NativeObject* rootContainer = obj->getNativeObjectFactory()->getRootContainer();
@@ -53,7 +53,8 @@ Handle<Value> TiUIOptionDialog::show_(void* userContext, TiObject* caller, const
     return Undefined();
 }
 
-Handle<Value> TiUIOptionDialog::hide_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIOptionDialog::_hide(void* userContext, TiObject* caller, const Arguments& args)
 {
+    // TODO: Remove from container
     return Undefined();
 }

@@ -158,14 +158,14 @@ Handle<Value> TiUIObject::createTextField_(void* userContext, TiObject* caller, 
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
-    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
-    Handle < Object > result;
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result;
     result = global->NewInstance();
     TiUITextField* textField = TiUITextField::createTextField(obj->objectFactory_);
     textField->setValue(result);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
-        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
         textField->setParametersFromObject(settingsObj);
     }
     setTiObjectToJsObject(result, textField);
@@ -176,14 +176,14 @@ Handle<Value> TiUIObject::createImageView_(void* userContext, TiObject* caller, 
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
-    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
-    Handle < Object > result;
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result;
     result = global->NewInstance();
     TiUIImageView* imageView = TiUIImageView::createImageView(obj->objectFactory_);
     imageView->setValue(result);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
-        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
         imageView->setParametersFromObject(settingsObj);
     }
     setTiObjectToJsObject(result, imageView);
@@ -194,14 +194,14 @@ Handle<Value> TiUIObject::createActivityIndicator_(void* userContext, TiObject* 
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
-    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
-    Handle < Object > result;
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result;
     result = global->NewInstance();
     TiUIActivityIndicator* activityIndicator = TiUIActivityIndicator::createActivityIndicator(obj->objectFactory_);
     activityIndicator->setValue(result);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
-        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
         activityIndicator->setParametersFromObject(settingsObj);
     }
     setTiObjectToJsObject(result, activityIndicator);
@@ -212,14 +212,14 @@ Handle<Value> TiUIObject::createOptionDialog_(void* userContext, TiObject* calle
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
-    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
-    Handle < Object > result;
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result;
     result = global->NewInstance();
     TiUIOptionDialog* optionDialog = TiUIOptionDialog::createOptionDialog(obj->objectFactory_);
     optionDialog->setValue(result);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
-        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
         optionDialog->setParametersFromObject(settingsObj);
     }
     setTiObjectToJsObject(result, optionDialog);

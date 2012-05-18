@@ -12,6 +12,7 @@
 #include <string.h>
 #include <vector>
 #include <bb/cascades/Color>
+#include <bb/cascades/AbsoluteLayoutProperties>
 #include <qtgui/QColor>
 
 #define PROP_SETTING_FUNCTION(NAME)     prop_##NAME
@@ -33,6 +34,8 @@ static const vector<NATIVE_PROPSET_CALLBACK> s_functionMap = initFunctionMap();
 NativeControlObject::NativeControlObject()
 {
     control_ = NULL;
+    left_ = 0;
+    top_ = 0;
 }
 
 NativeControlObject::~NativeControlObject()
@@ -104,7 +107,18 @@ int NativeControlObject::setTitle(TiObject* obj)
 PROP_SETTER(setTop)
 int NativeControlObject::setTop(TiObject* obj)
 {
-    return NATIVE_ERROR_NOTSUPPORTED;
+    float value = 0;
+    int error = NativeControlObject::getFloat(obj, &value);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+    bb::cascades::AbsoluteLayoutProperties* pProp = new bb::cascades::AbsoluteLayoutProperties;
+    pProp->setPositionY(value);
+    pProp->setPositionX(left_);
+    control_->setLayoutProperties(pProp);
+
+    return NATIVE_ERROR_OK;
 }
 
 PROP_SETTER(setValue)
@@ -291,7 +305,10 @@ int NativeControlObject::getInteger(TiObject* obj, int* value)
         return NATIVE_ERROR_INVALID_ARG;
     }
     Handle<Number> num = Handle<Number>::Cast(v8value);
-    *value = (int)num->Value();
+    if (num->IsInt32())
+    {
+        *value = (int)num->Value();
+    }
     return NATIVE_ERROR_OK;
 }
 
@@ -306,10 +323,13 @@ int NativeControlObject::getStringArray(TiObject* obj, QVector<QString>& value)
     unsigned int uiLength = array->Length();
     for (unsigned int i = 0; i < uiLength; ++i)
     {
-        Handle<Value> l = array->Get(Integer::New(i));
-        String::Utf8Value v8UtfString(Handle<String>::Cast(l));
-        const char* cStr = *v8UtfString;
-        value.append(cStr);
+        Handle<Value> item = array->Get(Integer::New(i));
+        if (item->IsString())
+        {
+            String::Utf8Value v8UtfString(Handle<String>::Cast(item));
+            const char* cStr = *v8UtfString;
+            value.append(cStr);
+        }
     }
     return NATIVE_ERROR_OK;
 }

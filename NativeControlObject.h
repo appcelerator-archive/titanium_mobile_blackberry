@@ -52,6 +52,8 @@ protected:
 
 private:
     bb::cascades::Control* control_;
+    float left_;
+    float top_;
 };
 
 #endif /* NATIVECONTROLOBJECT_H_ */

@@ -15,17 +15,21 @@ typedef void* NAHANDLE;
 #define NATIVE_ERROR_OUTOFMEMORY                2
 #define NATIVE_ERROR_INVALID_ARG                3
 
-#define N_TYPE_CONTAINER                        1
-#define N_TYPE_WINDOW                           2
-#define N_TYPE_LABEL                            3
-#define N_TYPE_BUTTON                           4
-#define N_TYPE_SLIDER                           5
-#define N_TYPE_PROGRESSBAR                      6
-#define N_TYPE_IMAGEVIEW                        7
-#define N_TYPE_TEXT_FIELD                       8
-#define N_TYPE_ACTIVITYINDICATOR                9
-#define N_TYPE_DROPDOWN                         10
-#define N_TYPE_OPTION                           11
+enum NATIVE_TYPE
+{
+    N_TYPE_UNDEFINED
+    , N_TYPE_ACTIVITYINDICATOR
+    , N_TYPE_BUTTON
+    , N_TYPE_CONTAINER
+    , N_TYPE_DROPDOWN
+    , N_TYPE_IMAGEVIEW
+    , N_TYPE_LABEL
+    , N_TYPE_OPTION
+    , N_TYPE_PROGRESSBAR
+    , N_TYPE_SLIDER
+    , N_TYPE_TEXT_FIELD
+    , N_TYPE_WINDOW
+};
 
 enum NATIVE_PROP
 {
