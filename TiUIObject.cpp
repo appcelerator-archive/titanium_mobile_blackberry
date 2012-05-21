@@ -16,6 +16,7 @@
 #include "TiUIImageView.h"
 #include "TiUITextField.h"
 #include "TiUIActivityIndicator.h"
+#include "TiUISwitch.h"
 #include <string.h>
 
 TiUIObject::TiUIObject()
@@ -54,6 +55,7 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTextField", this, createTextField_);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createImageView", this, createImageView_);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createActivityIndicator", this, createActivityIndicator_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createSwitch", this, createSwitch_);
 }
 
 Handle<Value> TiUIObject::createTabGroup_(void* userContext, TiObject* caller, const Arguments& args)
@@ -203,5 +205,23 @@ Handle<Value> TiUIObject::createActivityIndicator_(void* userContext, TiObject* 
         activityIndicator->setParametersFromObject(settingsObj);
     }
     setTiObjectToJsObject(result, activityIndicator);
+    return handleScope.Close(result);
+}
+
+Handle<Value> TiUIObject::createSwitch_(void* userContext, TiObject* caller, const Arguments& args)
+{
+    HandleScope handleScope;
+    TiUIObject* obj = (TiUIObject*) userContext;
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result;
+    result = global->NewInstance();
+    TiUISwitch* switchObj = TiUISwitch::createSwitch(obj->objectFactory_);
+    switchObj->setValue(result);
+    if ((args.Length() > 0) && (args[0]->IsObject()))
+    {
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
+        switchObj->setParametersFromObject(settingsObj);
+    }
+    setTiObjectToJsObject(result, switchObj);
     return handleScope.Close(result);
 }

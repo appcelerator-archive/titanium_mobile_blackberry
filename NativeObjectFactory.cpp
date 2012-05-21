@@ -15,6 +15,7 @@
 #include "NativeTextFieldObject.h"
 #include "NativeImageViewObject.h"
 #include "NativeActivityIndicatorObject.h"
+#include "NativeToggleButtonObject.h"
 #include <bb/cascades/Container>
 
 using namespace bb::cascades;
@@ -73,6 +74,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
 
     case N_TYPE_ACTIVITYINDICATOR:
         obj = NativeActivityIndicatorObject::createActivityIndicator();
+        break;
+
+    case N_TYPE_TOGGLEBUTTON:
+        obj = NativeToggleButtonObject::createToggleButton();
         break;
 
     }

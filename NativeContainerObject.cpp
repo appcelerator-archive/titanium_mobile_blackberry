@@ -19,6 +19,7 @@
 #include <bb/cascades/Slider>
 #include <bb/cascades/Stacklayout>
 #include <bb/cascades/TextField>
+#include <bb/cascades/ToggleButton>
 #include <bb/cascades/ActivityIndicator>
 #include <qtgui/QColor>
 
@@ -135,6 +136,14 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
         container_->add(textField);
         return NATIVE_ERROR_OK;
 
+    }
+
+    case N_TYPE_TOGGLEBUTTON:
+
+    {
+        bb::cascades::ToggleButton* toggleButton = (bb::cascades::ToggleButton*) obj->getNativeHandle();
+        container_->add(toggleButton);
+        return NATIVE_ERROR_OK;
     }
 
     }
