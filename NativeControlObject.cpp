@@ -11,8 +11,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
-#include <bb/cascades/Color>
 #include <bb/cascades/AbsoluteLayoutProperties>
+#include <bb/cascades/Color>
 #include <qtgui/QColor>
 
 #define PROP_SETTING_FUNCTION(NAME)     prop_##NAME
@@ -300,15 +300,12 @@ int NativeControlObject::getFloat(TiObject* obj, float* value)
 int NativeControlObject::getInteger(TiObject* obj, int* value)
 {
     Handle<Value> v8value = obj->getValue();
-    if ((v8value.IsEmpty()) || ((!v8value->IsNumber()) && (!v8value->IsNumberObject())))
+    if ((v8value.IsEmpty()) || ((!v8value->IsNumber()) && (!v8value->IsNumberObject()) && (!v8value->IsInt32())))
     {
         return NATIVE_ERROR_INVALID_ARG;
     }
     Handle<Number> num = Handle<Number>::Cast(v8value);
-    if (num->IsInt32())
-    {
-        *value = (int)num->Value();
-    }
+    *value = (int)num->Value();
     return NATIVE_ERROR_OK;
 }
 
@@ -324,12 +321,13 @@ int NativeControlObject::getStringArray(TiObject* obj, QVector<QString>& value)
     for (unsigned int i = 0; i < uiLength; ++i)
     {
         Handle<Value> item = array->Get(Integer::New(i));
-        if (item->IsString())
+        if (item.IsEmpty() || ((!item->IsString()) && (!item->IsStringObject())))
         {
-            String::Utf8Value v8UtfString(Handle<String>::Cast(item));
-            const char* cStr = *v8UtfString;
-            value.append(cStr);
+            return NATIVE_ERROR_INVALID_ARG;
         }
+        String::Utf8Value v8UtfString(Handle<String>::Cast(item));
+        const char* cStr = *v8UtfString;
+        value.append(cStr);
     }
     return NATIVE_ERROR_OK;
 }

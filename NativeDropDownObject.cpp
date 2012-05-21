@@ -7,8 +7,8 @@
 
 #include "NativeDropDownObject.h"
 #include "NativeOptionObject.h"
-#include "TiEventContainerFactory.h"
 #include "TiCascadesEventHandler.h"
+#include "TiEventContainerFactory.h"
 #include <bb/cascades/DropDown>
 #include <qt4/QtCore/qvector.h>
 
