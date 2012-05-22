@@ -84,6 +84,11 @@ const static TiProperty g_tiProperties[] =
     {
         "visible", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_VISIBLE
+    },
+
+    {
+        "image", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_IMAGE
     }
 };
 
