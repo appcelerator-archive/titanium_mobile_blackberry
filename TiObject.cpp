@@ -15,6 +15,9 @@ TiObject::TiObject()
 {
     isInitialized_ = false;
     parentObject_ = NULL;
+#ifdef _TI_DEBUG_
+    cstrName_ = NULL;
+#endif // _TI_DEBUG_
 }
 
 TiObject::TiObject(const char* objectName)
@@ -22,6 +25,12 @@ TiObject::TiObject(const char* objectName)
     , parentObject_(NULL)
 {
     name_ = objectName;
+#ifdef _TI_DEBUG_
+    cstrName_ = name_.c_str();
+    debugMembers_ = (char*)malloc(1);
+    debugMembers_[0] = 0;
+    cstrdebugMembers_ = "";
+#endif // _TI_DEBUG_
 }
 
 TiObject::TiObject(const char* objectName, Handle<Value> value)
@@ -29,6 +38,10 @@ TiObject::TiObject(const char* objectName, Handle<Value> value)
     name_ = objectName;
     value_ = Persistent<Value>::New(value);
     parentObject_ = NULL;
+#ifdef _TI_DEBUG_
+    cstrName_ = name_.c_str();
+    cstrdebugMembers_ = "";
+#endif // _TI_DEBUG_
 }
 
 TiObject::~TiObject()
@@ -153,6 +166,13 @@ void TiObject::addMember(TiObject* object, const char* name/*=NULL*/)
     }
     childObjectMap_[name] = entry;
     object->initializeTiObject(this);
+#ifdef _TI_DEBUG_
+    // This debug code will create a string containing a list of properties and
+    // functions. This may be required for Titanium debugging.
+    debugMembers_ += "\n";
+    debugMembers_ += name;
+    cstrdebugMembers_ = debugMembers_.c_str();
+#endif
 }
 
 Handle<Value> TiObject::getValue() const
@@ -284,7 +304,17 @@ Handle<Value> TiObject::propGetter_(Local<String> prop, const AccessorInfo& info
     TiObject* propObject = obj->onLookupMember(propString);
     if (propObject == NULL)
     {
-        // TODO: lookup
+        // TODO: Fix the following block of commented out code. Currently it breaks
+        // Titanium runtime.
+        /*
+        if(obj->canAddMembers())
+        {
+            // If we're allowed to add members, return an "empty" result
+            // so V8 will handle it. V8 will set the value internally so
+            // we can ignore non-Titanium objects.
+            return result;
+        }
+        */
         return Undefined();
     }
     Handle<Value> ret = propObject->getValue();
@@ -314,8 +344,9 @@ Handle<Value> TiObject::propSetter_(Local<String> prop, Local<Value> value, cons
     TiObject* obj = getTiObjectFromJsObject(info.Holder());
     if (obj == NULL)
     {
-        obj = new TiObject("", info.Holder());
-        setTiObjectToJsObject(info.Holder(), obj);
+        // We are not tracking this object so let V8 handle it.
+        info.Holder()->ForceSet(prop, value);
+        return value;
     }
     String::Utf8Value propName(prop);
     const char* propString = (const char*)(*propName);

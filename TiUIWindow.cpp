@@ -17,9 +17,9 @@ TiUIWindow::~TiUIWindow()
 {
 }
 
-TiUIWindow* TiUIWindow::createWindow(NativeObjectFactory* objectFactory, const char* name)
+TiUIBase* TiUIWindow::createWindow(NativeObjectFactory* objectFactory)
 {
-    TiUIWindow* obj = new TiUIWindow(objectFactory, name);
+    TiUIWindow* obj = new TiUIWindow(objectFactory, "");
     obj->initializeTiObject(NULL);
     return obj;
 }

@@ -20,7 +20,7 @@
 class TiUIButton : public TiUIBase
 {
 public:
-    static TiUIButton* createButton(NativeObjectFactory* nativeObjectFactory);
+    static TiUIBase* createButton(NativeObjectFactory* nativeObjectFactory);
 
 protected:
     virtual ~TiUIButton();

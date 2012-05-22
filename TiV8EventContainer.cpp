@@ -56,11 +56,11 @@ void TiV8EventContainer::setDataProperty(const char* propertyName, float value)
 }
 
 // TiInternalEventListener
-TiInternalEventListener::TiInternalEventListener()
+TiV8EventContainer::TiInternalEventListener::TiInternalEventListener()
 {
     listener_ = NULL;
 }
-TiInternalEventListener::TiInternalEventListener(const TiInternalEventListener& listener)
+TiV8EventContainer::TiInternalEventListener::TiInternalEventListener(const TiInternalEventListener& listener)
 {
     listener_ = listener.listener_;
     if (listener_ != NULL)
@@ -68,7 +68,7 @@ TiInternalEventListener::TiInternalEventListener(const TiInternalEventListener& 
         listener_->addRef();
     }
 }
-TiInternalEventListener::TiInternalEventListener(TiEvent* listener)
+TiV8EventContainer::TiInternalEventListener::TiInternalEventListener(TiEvent* listener)
 {
     listener_ = listener;
     if (listener_ != NULL)
@@ -76,7 +76,7 @@ TiInternalEventListener::TiInternalEventListener(TiEvent* listener)
         listener_->addRef();
     }
 }
-TiInternalEventListener::~TiInternalEventListener()
+TiV8EventContainer::TiInternalEventListener::~TiInternalEventListener()
 {
     if (listener_ != NULL)
     {
@@ -84,7 +84,8 @@ TiInternalEventListener::~TiInternalEventListener()
         listener_ = NULL;
     }
 }
-const TiInternalEventListener& TiInternalEventListener::operator =(const TiInternalEventListener& listener)
+const TiV8EventContainer::TiInternalEventListener&
+TiV8EventContainer::TiInternalEventListener::operator =(const TiV8EventContainer::TiInternalEventListener& listener)
 {
     if (listener.listener_ != NULL)
     {
@@ -97,12 +98,12 @@ const TiInternalEventListener& TiInternalEventListener::operator =(const TiInter
     listener_ = listener.listener_;
     return (*this);
 }
-TiEvent* TiInternalEventListener::operator ->() const
+TiEvent* TiV8EventContainer::TiInternalEventListener::operator ->() const
 {
     return listener_;
 }
 
-TiEvent* TiInternalEventListener::getListener() const
+TiEvent* TiV8EventContainer::TiInternalEventListener::getListener() const
 {
     return listener_;
 }

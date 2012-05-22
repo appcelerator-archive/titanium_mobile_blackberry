@@ -37,6 +37,11 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "bottom", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_BOTTOM
+    },
+
+    {
         "color", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_COLOR
     },
@@ -47,6 +52,11 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "left", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_LEFT
+    },
+
+    {
         "max", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_MAX
     },
@@ -54,6 +64,11 @@ const static TiProperty g_tiProperties[] =
     {
         "min", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_MIN
+    },
+
+    {
+        "right", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_RIGHT
     },
 
     {
@@ -210,16 +225,14 @@ void TiUIBase::setParametersFromObject(Local<Object> obj)
     Handle<Array> propNames = obj->GetPropertyNames();
     uint32_t props = propNames->Length();
     Local<Value> propValue;
-    Handle<String> propString;
-    TiObject* foundProp;
     for (uint32_t i = 0; i < props; i++)
     {
-        propString = Handle<String>::Cast(propNames->Get(Integer::New(i)));
+        Handle<String> propString = Handle<String>::Cast(propNames->Get(Integer::New(i)));
         String::Utf8Value propNameUTF(propString);
-        foundProp = onLookupMember(*propNameUTF);
+        TiObject* foundProp = onLookupMember(*propNameUTF);
         if (foundProp != NULL)
         {
-            propValue = obj->Get(propString);
+            Local<Value> propValue = obj->Get(propString);
             foundProp->setValue(propValue);
         }
     }

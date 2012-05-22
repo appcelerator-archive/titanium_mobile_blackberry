@@ -59,6 +59,19 @@ int NativeControlObject::setBackgroundColor(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETTER(setBottom)
+int NativeControlObject::setBottom(TiObject* obj)
+{
+    float bottom;
+    int error = getFloat(obj, &bottom);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    ((bb::cascades::Control*)getNativeHandle())->setBottomMargin(bottom);
+    return NATIVE_ERROR_OK;
+}
+
 PROP_SETTER(setColor)
 int NativeControlObject::setColor(TiObject* obj)
 {
@@ -71,6 +84,19 @@ int NativeControlObject::setLabel(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETTER(setLeft)
+int NativeControlObject::setLeft(TiObject* obj)
+{
+    float left;
+    int error = getFloat(obj, &left);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    ((bb::cascades::Control*)getNativeHandle())->setLeftMargin(left);
+    return NATIVE_ERROR_OK;
+}
+
 PROP_SETTER(setMax)
 int NativeControlObject::setMax(TiObject* obj)
 {
@@ -81,6 +107,19 @@ PROP_SETTER(setMin)
 int NativeControlObject::setMin(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setRight)
+int NativeControlObject::setRight(TiObject* obj)
+{
+    float right;
+    int error = getFloat(obj, &right);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    ((bb::cascades::Control*)getNativeHandle())->setRightMargin(right);
+    return NATIVE_ERROR_OK;
 }
 
 PROP_SETTER(setText)
@@ -104,7 +143,14 @@ int NativeControlObject::setTitle(TiObject* obj)
 PROP_SETTER(setTop)
 int NativeControlObject::setTop(TiObject* obj)
 {
-    return NATIVE_ERROR_NOTSUPPORTED;
+    float top;
+    int error = getFloat(obj, &top);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    ((bb::cascades::Control*)getNativeHandle())->setTopMargin(top);
+    return NATIVE_ERROR_OK;
 }
 
 PROP_SETTER(setValue)
@@ -157,7 +203,7 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_BORDER_COLOR]                      = NULL;
     vect[N_PROP_BORDER_RADIUS]                     = NULL;
     vect[N_PROP_BORDER_WIDTH]                      = NULL;
-    vect[N_PROP_BOTTOM]                            = NULL;
+    vect[N_PROP_BOTTOM]                            = PROP_SETTING_FUNCTION(setBottom);
     vect[N_PROP_CENTER]                            = NULL;
     vect[N_PROP_CHILDREN]                          = NULL;
     vect[N_PROP_COLOR]                             = PROP_SETTING_FUNCTION(setColor);
@@ -171,13 +217,13 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_IMAGE]                             = NULL;
     vect[N_PROP_KEEP_SCREEN_ON]                    = NULL;
     vect[N_PROP_LABEL]                             = PROP_SETTING_FUNCTION(setLabel);
-    vect[N_PROP_LAYOUT]                            = NULL;
+    vect[N_PROP_LAYOUT]                            = PROP_SETTING_FUNCTION(setLeft);
     vect[N_PROP_LEFT]                              = NULL;
     vect[N_PROP_MAX]                               = PROP_SETTING_FUNCTION(setMax);
     vect[N_PROP_MIN]                               = PROP_SETTING_FUNCTION(setMin);
     vect[N_PROP_MINIMUM_FONT_SIZE]                 = NULL;
     vect[N_PROP_OPACITY]                           = NULL;
-    vect[N_PROP_RIGHT]                             = NULL;
+    vect[N_PROP_RIGHT]                             = PROP_SETTING_FUNCTION(setRight);
     vect[N_PROP_SHADOW_COLOR]                      = NULL;
     vect[N_PROP_SHADOW_OFFSET]                     = NULL;
     vect[N_PROP_SIZE]                              = NULL;

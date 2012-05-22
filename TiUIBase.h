@@ -19,7 +19,7 @@
 class TiCascadesApp;
 
 /*
- * TiCascadesApp
+ * TiUIBase
  *
  * Titanium base class for all UI objects such as windows, labels, buttons, etc...
  */
@@ -30,7 +30,7 @@ public:
     virtual bool isUIObject() const;
     virtual NativeObjectFactory* getNativeObjectFactory() const;
     virtual NativeObject* getNativeObject() const;
-    virtual void setTiMappingProperties(const TiProperty* prop, int propertyCount);
+    virtual void setTiMappingProperties(const TiProperty* props, int propertyCount);
 
 protected:
     TiUIBase(NativeObjectFactory* nativeObjectFactory, const char* name);

@@ -16,7 +16,7 @@ TiUITextField::~TiUITextField()
 {
 }
 
-TiUITextField* TiUITextField::createTextField(NativeObjectFactory* nativeObjectFactory)
+TiUIBase* TiUITextField::createTextField(NativeObjectFactory* nativeObjectFactory)
 {
     TiUITextField* obj = new TiUITextField(nativeObjectFactory);
     obj->initializeTiObject(NULL);

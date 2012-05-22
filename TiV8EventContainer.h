@@ -37,6 +37,21 @@ public:
     virtual void setDataProperty(const char* propertyName, float value);
 
 private:
+    class TiInternalEventListener
+    {
+    public:
+        TiInternalEventListener();
+        TiInternalEventListener(const TiInternalEventListener& listener);
+        TiInternalEventListener(TiEvent* listener);
+        ~TiInternalEventListener();
+        const TiInternalEventListener& operator =(const TiInternalEventListener& listener);
+        TiEvent* operator ->() const;
+        TiEvent* getListener() const;
+
+    private:
+        TiEvent* listener_;
+    };
+
     Persistent<Object> eventData_;
     vector<TiInternalEventListener> listeners_;
     TiCascadesEventHandler* eventHandler_;
@@ -49,20 +64,5 @@ private:
  * for using the vector template class
  *
  */
-
-class TiInternalEventListener
-{
-public:
-    TiInternalEventListener();
-    TiInternalEventListener(const TiInternalEventListener& listener);
-    TiInternalEventListener(TiEvent* listener);
-    ~TiInternalEventListener();
-    const TiInternalEventListener& operator =(const TiInternalEventListener& listener);
-    TiEvent* operator ->() const;
-    TiEvent* getListener() const;
-
-private:
-    TiEvent* listener_;
-};
 
 #endif /* TIV8EVENTCONTAINER_H_ */

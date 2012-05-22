@@ -47,6 +47,7 @@ NAHANDLE NativeButtonObject::getNativeHandle() const
 int NativeButtonObject::setTitle(TiObject* obj)
 {
     QString str;
+
     int error = NativeControlObject::getString(obj, str);
     if (!N_SUCCEEDED(error))
     {

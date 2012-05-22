@@ -16,7 +16,7 @@ TiUIButton::~TiUIButton()
 {
 }
 
-TiUIButton* TiUIButton::createButton(NativeObjectFactory* nativeObjectFactory)
+TiUIBase* TiUIButton::createButton(NativeObjectFactory* nativeObjectFactory)
 {
     TiUIButton* obj = new TiUIButton(nativeObjectFactory);
     obj->initializeTiObject(NULL);

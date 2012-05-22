@@ -16,7 +16,7 @@ TiUIProgressBar::~TiUIProgressBar()
 {
 }
 
-TiUIProgressBar* TiUIProgressBar::createProgressBar(NativeObjectFactory* nativeObjectFactory)
+TiUIBase* TiUIProgressBar::createProgressBar(NativeObjectFactory* nativeObjectFactory)
 {
     TiUIProgressBar* obj = new TiUIProgressBar(nativeObjectFactory);
     obj->initializeTiObject(NULL);

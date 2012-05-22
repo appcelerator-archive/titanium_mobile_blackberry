@@ -16,7 +16,7 @@ TiUISlider::~TiUISlider()
 {
 }
 
-TiUISlider* TiUISlider::createSlider(NativeObjectFactory* nativeObjectFactory)
+TiUIBase* TiUISlider::createSlider(NativeObjectFactory* nativeObjectFactory)
 {
     TiUISlider* obj = new TiUISlider(nativeObjectFactory);
     obj->initializeTiObject(NULL);
