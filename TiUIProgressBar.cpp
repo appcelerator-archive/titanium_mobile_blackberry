@@ -6,6 +6,7 @@
  */
 
 #include "TiUIProgressBar.h"
+#include "TiGenericFunctionObject.h"
 
 TiUIProgressBar::TiUIProgressBar(NativeObjectFactory* nativeObjectFactory)
     : TiUIBase(nativeObjectFactory, "")
@@ -14,6 +15,13 @@ TiUIProgressBar::TiUIProgressBar(NativeObjectFactory* nativeObjectFactory)
 
 TiUIProgressBar::~TiUIProgressBar()
 {
+}
+
+void TiUIProgressBar::onCreateStaticMembers()
+{
+    TiUIBase::onCreateStaticMembers();
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "show", this, _show);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "hide", this, _hide);
 }
 
 TiUIProgressBar* TiUIProgressBar::createProgressBar(NativeObjectFactory* nativeObjectFactory)
@@ -34,3 +42,14 @@ void TiUIProgressBar::initializeTiObject(TiObject* parentContext)
     }
 }
 
+Handle<Value> TiUIProgressBar::_show(void* userContext, TiObject* caller, const Arguments& args)
+{
+    // TODO: Implement this
+    return Undefined();
+}
+
+Handle<Value> TiUIProgressBar::_hide(void* userContext, TiObject* caller, const Arguments& args)
+{
+    // TODO: Implement this
+    return Undefined();
+}

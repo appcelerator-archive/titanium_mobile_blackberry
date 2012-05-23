@@ -62,8 +62,9 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
         break;
 
     case N_TYPE_PROGRESSBAR:
-        obj = new NativeProgressBarObject;
+        obj = NativeProgressBarObject::createProgressBar();
         break;
+
     case N_TYPE_TEXT_FIELD:
         obj = NativeTextFieldObject::createTextField();
         break;
