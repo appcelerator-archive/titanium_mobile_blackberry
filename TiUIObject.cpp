@@ -46,25 +46,25 @@ void TiUIObject::addObjectToParent(TiObject* parent, NativeObjectFactory* object
 
 void TiUIObject::onCreateStaticMembers()
 {
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTabGroup", this, createTabGroup_);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createWindow", this, createWindow_);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createLabel", this, createLabel_);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createButton", this, createButton_);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createSlider", this, createSlider_);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createProgressBar", this, createProgressBar_);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTextField", this, createTextField_);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createImageView", this, createImageView_);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createActivityIndicator", this, createActivityIndicator_);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createSwitch", this, createSwitch_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTabGroup", this, _createTabGroup);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createWindow", this, _createWindow);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createLabel", this, _createLabel);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createButton", this, _createButton);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createSlider", this, _createSlider);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createProgressBar", this, _createProgressBar);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTextField", this, _createTextField);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createImageView", this, _createImageView);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createActivityIndicator", this, _createActivityIndicator);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createSwitch", this, _createSwitch);
 }
 
-Handle<Value> TiUIObject::createTabGroup_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIObject::_createTabGroup(void* userContext, TiObject* caller, const Arguments& args)
 {
     // TODO: finish this
     return Undefined();
 }
 
-Handle<Value> TiUIObject::createWindow_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIObject::_createWindow(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
@@ -82,7 +82,7 @@ Handle<Value> TiUIObject::createWindow_(void* userContext, TiObject* caller, con
     return handleScope.Close(result);
 }
 
-Handle<Value> TiUIObject::createLabel_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIObject::_createLabel(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
@@ -100,7 +100,7 @@ Handle<Value> TiUIObject::createLabel_(void* userContext, TiObject* caller, cons
     return handleScope.Close(result);
 }
 
-Handle<Value> TiUIObject::createButton_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIObject::_createButton(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
@@ -118,7 +118,7 @@ Handle<Value> TiUIObject::createButton_(void* userContext, TiObject* caller, con
     return handleScope.Close(result);
 }
 
-Handle<Value> TiUIObject::createSlider_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIObject::_createSlider(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
@@ -136,7 +136,7 @@ Handle<Value> TiUIObject::createSlider_(void* userContext, TiObject* caller, con
     return handleScope.Close(result);
 }
 
-Handle<Value> TiUIObject::createProgressBar_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIObject::_createProgressBar(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
@@ -154,7 +154,7 @@ Handle<Value> TiUIObject::createProgressBar_(void* userContext, TiObject* caller
     return handleScope.Close(result);
 }
 
-Handle<Value> TiUIObject::createTextField_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIObject::_createTextField(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
@@ -172,7 +172,7 @@ Handle<Value> TiUIObject::createTextField_(void* userContext, TiObject* caller, 
     return handleScope.Close(result);
 }
 
-Handle<Value> TiUIObject::createImageView_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIObject::_createImageView(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
@@ -190,7 +190,7 @@ Handle<Value> TiUIObject::createImageView_(void* userContext, TiObject* caller, 
     return handleScope.Close(result);
 }
 
-Handle<Value> TiUIObject::createActivityIndicator_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIObject::_createActivityIndicator(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
@@ -208,7 +208,7 @@ Handle<Value> TiUIObject::createActivityIndicator_(void* userContext, TiObject* 
     return handleScope.Close(result);
 }
 
-Handle<Value> TiUIObject::createSwitch_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIObject::_createSwitch(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
