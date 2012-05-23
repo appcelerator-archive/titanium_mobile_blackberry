@@ -94,6 +94,11 @@ const static TiProperty g_tiProperties[] =
     {
         "selectedIndex", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_SELECTED_INDEX
+    },
+
+    {
+        "image", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_IMAGE
     }
 };
 

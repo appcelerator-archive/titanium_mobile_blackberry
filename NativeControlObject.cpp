@@ -152,6 +152,12 @@ int NativeControlObject::setSelectedIndex(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETTER(setImage)
+int NativeControlObject::setImage(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
@@ -194,7 +200,7 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_HIGHLIGHTED_COLOR]                 = NULL;
     vect[N_PROP_HINT_TEXT]                         = NULL;
     vect[N_PROP_HTML]                              = NULL;
-    vect[N_PROP_IMAGE]                             = NULL;
+    vect[N_PROP_IMAGE]                             = PROP_SETTING_FUNCTION(setImage);
     vect[N_PROP_KEEP_SCREEN_ON]                    = NULL;
     vect[N_PROP_LABEL]                             = PROP_SETTING_FUNCTION(setLabel);
     vect[N_PROP_LAYOUT]                            = NULL;

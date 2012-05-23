@@ -20,8 +20,7 @@
 class NativeProgressBarObject : public NativeControlObject
 {
 public:
-    NativeProgressBarObject();
-    virtual ~NativeProgressBarObject();
+    static NativeProgressBarObject* createProgressBar();
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual NAHANDLE getNativeHandle() const;
@@ -29,7 +28,14 @@ public:
     virtual int setMin(TiObject* obj);
     virtual int setValue(TiObject* obj);
 
+protected:
+    virtual ~NativeProgressBarObject();
+
 private:
+    explicit NativeProgressBarObject();
+    // Disable copy ctor & assignment operator
+    NativeProgressBarObject(const NativeProgressBarObject& progressBar);
+    NativeProgressBarObject& operator=(const NativeProgressBarObject& progressBar);
     bb::cascades::ProgressIndicator* progressIndicator_;
 };
 

@@ -21,12 +21,18 @@ class TiUIProgressBar : public TiUIBase
 public:
     static TiUIProgressBar* createProgressBar(NativeObjectFactory* nativeObjectFactory);
     virtual void initializeTiObject(TiObject* parentContext);
+    virtual void onCreateStaticMembers();
 
 protected:
     virtual ~TiUIProgressBar();
 
 private:
-    TiUIProgressBar(NativeObjectFactory* nativeObjectFactory);
+    explicit TiUIProgressBar(NativeObjectFactory* nativeObjectFactory);
+    // Disable copy ctor & assignment operator
+    TiUIProgressBar(const TiUIProgressBar& progressBar);
+    TiUIProgressBar& operator=(const TiUIProgressBar& progressBar);
+    static Handle<Value> _show(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _hide(void* userContext, TiObject* caller, const Arguments& args);
 };
 
 #endif /* TIUIPROGRESSBAR_H_ */
