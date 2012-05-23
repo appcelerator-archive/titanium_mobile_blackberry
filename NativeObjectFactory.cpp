@@ -14,6 +14,7 @@
 #include "NativeProgressBarObject.h"
 #include "NativeTextFieldObject.h"
 #include "NativeImageViewObject.h"
+#include "NativeListViewObject.h"
 #include "NativeActivityIndicatorObject.h"
 #include "NativeDropDownObject.h"
 #include <bb/cascades/Container>
@@ -79,6 +80,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
 
     case N_TYPE_DROPDOWN:
         obj = NativeDropDownObject::createDropDown();
+        break;
+
+    case N_TYPE_LIST_VIEW:
+        obj = NativeListViewObject::createListView();
         break;
 
     }

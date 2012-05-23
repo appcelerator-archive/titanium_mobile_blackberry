@@ -33,9 +33,13 @@ public:
     virtual int setText(TiObject* obj);
     virtual int setTextAlign(TiObject* obj);
     virtual int setTop(TiObject* obj);
+    virtual int setLeft(TiObject* obj);
     virtual int setTitle(TiObject* obj);
     virtual int setValue(TiObject* obj);
     virtual int setVisible(TiObject* obj);
+    virtual int setWidth(TiObject* obj);
+    virtual int setHeight(TiObject* obj);
+    virtual int setData(TiObject* obj);
     virtual int setOptions(TiObject* obj);
     virtual int setSelectedIndex(TiObject* obj);
     virtual int setImage(TiObject* obj);
@@ -45,6 +49,9 @@ public:
     static int getFloat(TiObject* obj, float* value);
     static int getInteger(TiObject* obj, int* value);
     static int getStringArray(TiObject* obj, QVector<QString>& value);
+    //obtain java script dictionary object and keep it in the multimap
+    static int getDictionaryData(TiObject* obj, std::multimap<QString, QString>& dictionary);
+
 protected:
     NativeControlObject();
     virtual ~NativeControlObject();

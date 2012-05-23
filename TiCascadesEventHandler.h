@@ -13,6 +13,7 @@
 #include "bb/cascades/imageview"
 
 class TiEventContainer;
+class NativeListViewObject;
 
 /*
  * TiCascadesEventHandler
@@ -25,7 +26,8 @@ class TiCascadesEventHandler : public QObject
     Q_OBJECT
 
 public:
-    TiCascadesEventHandler(TiEventContainer* eventContainer);
+    //TODO need to implement event handler for each native controller and pass controller to each event handler
+    TiCascadesEventHandler(TiEventContainer* eventContainer, NativeListViewObject* owner = NULL);
     virtual ~TiCascadesEventHandler();
     TiEventContainer* getEventContainer() const;
 
@@ -36,9 +38,11 @@ public slots:
     void imageChanged(const bb::cascades::Image);
     void textChanging(QString str);
     void selectedIndexChanged(int index);
+    void selectionChanged(QVariantList var, bool b);
 
 private:
     TiEventContainer* eventContainer_;
+    NativeListViewObject* owner_;
 };
 
 #endif /* TICASCADESEVENTHANDLER_H_ */

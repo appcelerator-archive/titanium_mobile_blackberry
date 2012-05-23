@@ -24,11 +24,13 @@ enum NATIVE_TYPE
     , N_TYPE_DROPDOWN
     , N_TYPE_IMAGEVIEW
     , N_TYPE_LABEL
+    , N_TYPE_LIST_VIEW
     , N_TYPE_OPTION
     , N_TYPE_PROGRESSBAR
     , N_TYPE_SLIDER
     , N_TYPE_TEXT_FIELD
     , N_TYPE_WINDOW
+
 };
 
 enum NATIVE_PROP
@@ -95,6 +97,7 @@ enum NATIVE_PROP
     , N_PROP_WIDTH
     , N_PROP_WORD_WRAP
     , N_PROP_ZINDEX
+    , N_PROP_DATA
 
     /* This MUST be the last element */
     , N_PROP_LAST
@@ -134,6 +137,7 @@ public:
     virtual void completeInitialization();
     virtual bool isInitializationComplete() const;
     virtual int setEventHandler(const char* eventName, TiEvent* event);
+    virtual int scrollToIndex(const char* index);
 
 protected:
     NativeObject();

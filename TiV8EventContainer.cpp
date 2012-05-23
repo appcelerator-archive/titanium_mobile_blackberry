@@ -55,6 +55,14 @@ void TiV8EventContainer::setDataProperty(const char* propertyName, float value)
     eventData_->Set(String::New(propertyName), Number::New(value));
 }
 
+void TiV8EventContainer::setComplexDataProperty(const char* complexPropertyName, const char* propertyName, const char* value)
+{
+    HandleScope handleScope;
+    Persistent<Object> complex =  Persistent<Object>::New(eventData_);
+    complex->Set(String::New(propertyName), String::New(value));
+    eventData_->Set(String::New(complexPropertyName), complex);
+}
+
 // TiInternalEventListener
 TiInternalEventListener::TiInternalEventListener()
 {

@@ -16,6 +16,7 @@
 #include "TiUIImageView.h"
 #include "TiUITextField.h"
 #include "TiUIActivityIndicator.h"
+#include "TiUITableView.h"
 #include "TiUIOptionDialog.h"
 #include <string.h>
 
@@ -56,6 +57,7 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createImageView", this, createImageView_);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createActivityIndicator", this, createActivityIndicator_);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createOptionDialog", this, createOptionDialog_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTableView", this, createTableView_);
 }
 
 Handle<Value> TiUIObject::createTabGroup_(void* userContext, TiObject* caller, const Arguments& args)
@@ -223,5 +225,23 @@ Handle<Value> TiUIObject::createOptionDialog_(void* userContext, TiObject* calle
         optionDialog->setParametersFromObject(settingsObj);
     }
     setTiObjectToJsObject(result, optionDialog);
+    return handleScope.Close(result);
+}
+
+Handle<Value> TiUIObject::createTableView_(void* userContext, TiObject* caller, const Arguments& args)
+{
+    HandleScope handleScope;
+    TiUIObject* obj = (TiUIObject*) userContext;
+    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
+    Handle < Object > result;
+    result = global->NewInstance();
+    TiUITableView* tableView = TiUITableView::createTableView(obj->objectFactory_);
+    tableView->setValue(result);
+    if ((args.Length() > 0) && (args[0]->IsObject()))
+    {
+        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        tableView->setParametersFromObject(settingsObj);
+    }
+    setTiObjectToJsObject(result, tableView);
     return handleScope.Close(result);
 }

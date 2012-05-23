@@ -5,13 +5,15 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
+#include "NativeListViewObject.h"
 #include "TiCascadesEventHandler.h"
 #include "TiEventContainer.h"
 #include "bb/cascades/imageview"
 
-TiCascadesEventHandler::TiCascadesEventHandler(TiEventContainer* eventContainer)
+TiCascadesEventHandler::TiCascadesEventHandler(TiEventContainer* eventContainer, NativeListViewObject* owner)
 {
     eventContainer_ = eventContainer;
+    owner_ = owner;
 }
 
 TiCascadesEventHandler::~TiCascadesEventHandler()
@@ -37,6 +39,19 @@ void TiCascadesEventHandler::valueChanged(float value)
 void TiCascadesEventHandler::textChanging(QString str)
 {
     eventContainer_->setDataProperty("value", str.toStdString().c_str());
+    eventContainer_->fireEvent();
+}
+
+void TiCascadesEventHandler::selectionChanged(QVariantList var, bool b)
+{
+    eventContainer_->setDataProperty("index", var[0].toString().toStdString().c_str());
+    QString str;
+    if (owner_)
+    {
+        str = owner_->getListViewElementFromIndex(var);
+    }
+    //TODO later we may need to implement all complex data types instead of using just names, but for now it is fine
+    eventContainer_->setComplexDataProperty("rowData", "title", str.toStdString().c_str());
     eventContainer_->fireEvent();
 }
 

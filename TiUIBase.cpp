@@ -99,7 +99,22 @@ const static TiProperty g_tiProperties[] =
     {
         "image", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_IMAGE
-    }
+    },
+
+    {
+        "width", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_WIDTH
+    },
+
+    {
+        "left", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_LEFT
+    },
+
+    {
+        "data", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_DATA
+    },
 };
 
 TiUIBase::TiUIBase()
