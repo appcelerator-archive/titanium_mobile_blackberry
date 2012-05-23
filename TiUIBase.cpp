@@ -99,6 +99,11 @@ const static TiProperty g_tiProperties[] =
     {
         "image", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_IMAGE
+    },
+
+    {
+        "font", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_FONT
     }
 };
 

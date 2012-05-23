@@ -158,6 +158,12 @@ int NativeControlObject::setImage(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETTER(setFont)
+int NativeControlObject::setFont(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
@@ -195,7 +201,7 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_COLOR]                             = PROP_SETTING_FUNCTION(setColor);
     vect[N_PROP_ELLIPSIZE]                         = NULL;
     vect[N_PROP_FOCUSABLE]                         = NULL;
-    vect[N_PROP_FONT]                              = NULL;
+    vect[N_PROP_FONT]                              = PROP_SETTING_FUNCTION(setFont);
     vect[N_PROP_HEIGHT]                            = NULL;
     vect[N_PROP_HIGHLIGHTED_COLOR]                 = NULL;
     vect[N_PROP_HINT_TEXT]                         = NULL;
@@ -335,5 +341,32 @@ int NativeControlObject::getStringArray(TiObject* obj, QVector<QString>& value)
         const char* cStr = *v8UtfString;
         value.append(cStr);
     }
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::getFontObject(TiObject* obj, QMap<QString, QString>& props)
+{
+    Handle<Value> v8value = obj->getValue();
+    if (v8value.IsEmpty() || !v8value->IsObject())
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    Handle<Array> array = Handle<Array>::Cast(v8value);
+    Handle<Array> keys = array->GetPropertyNames();
+
+    for (unsigned int i = 0; i < keys->Length(); i++)
+    {
+        v8::Handle<v8::String> key = keys->Get(v8::Integer::New(i))->ToString();
+        v8::String::Utf8Value keyStr(key);
+        v8::Handle<v8::String> value = array->Get(key)->ToString();
+        v8::String::Utf8Value valueStr(value);
+        const char* cstrKey = *keyStr;
+        QString strKey = cstrKey;
+        const char* cstrValue = *valueStr;
+        QString strValue = cstrValue;
+
+        props.insert(strKey, strValue);
+    }
+
     return NATIVE_ERROR_OK;
 }

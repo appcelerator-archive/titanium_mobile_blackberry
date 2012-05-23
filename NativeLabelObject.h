@@ -8,7 +8,7 @@
 #ifndef NATIVELABELOBJECT_H_
 #define NATIVELABELOBJECT_H_
 
-#include "NativeControlObject.h"
+#include "NativeAbstractTextControlObject.h"
 #include <bb/cascades/Label>
 
 /*
@@ -17,14 +17,11 @@
  * UI: Label control
  */
 
-class NativeLabelObject : public NativeControlObject
+class NativeLabelObject : public NativeAbstractTextControlObject
 {
 public:
     static NativeLabelObject* createLabel();
     virtual int getObjectType() const;
-    virtual int setText(TiObject* obj);
-    virtual int setColor(TiObject* obj);
-    virtual int setTextAlign(TiObject* obj);
     virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual NAHANDLE getNativeHandle() const;
 
