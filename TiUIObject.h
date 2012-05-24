@@ -31,7 +31,7 @@ protected:
 private:
     TiUIObject();
     TiUIObject(NativeObjectFactory* objectFactory);
-    static Handle<Value> createControlHelper(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args);
+    static Handle<Value> createControlHelper_(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args);
     static Handle<Value> createTabGroup_(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> createWindow_(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> createLabel_(void* userContext, TiObject* caller, const Arguments& args);

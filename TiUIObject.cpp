@@ -56,7 +56,7 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createActivityIndicator", this, createActivityIndicator_);
 }
 
-Handle<Value> TiUIObject::createControlHelper(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args)
+Handle<Value> TiUIObject::createControlHelper_(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args)
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
@@ -82,40 +82,40 @@ Handle<Value> TiUIObject::createTabGroup_(void* userContext, TiObject* caller, c
 
 Handle<Value> TiUIObject::createWindow_(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return createControlHelper(userContext, TiUIWindow::createWindow, args);
+    return createControlHelper_(userContext, TiUIWindow::createWindow, args);
 }
 
 Handle<Value> TiUIObject::createLabel_(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return createControlHelper(userContext, TiUILabel::createLabel, args);
+    return createControlHelper_(userContext, TiUILabel::createLabel, args);
 }
 
 Handle<Value> TiUIObject::createButton_(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return createControlHelper(userContext, TiUIButton::createButton, args);
+    return createControlHelper_(userContext, TiUIButton::createButton, args);
 }
 
 Handle<Value> TiUIObject::createSlider_(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return createControlHelper(userContext, TiUISlider::createSlider, args);
+    return createControlHelper_(userContext, TiUISlider::createSlider, args);
 }
 
 Handle<Value> TiUIObject::createProgressBar_(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return createControlHelper(userContext, TiUIProgressBar::createProgressBar, args);
+    return createControlHelper_(userContext, TiUIProgressBar::createProgressBar, args);
 }
 
 Handle<Value> TiUIObject::createTextField_(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return createControlHelper(userContext, TiUITextField::createTextField, args);
+    return createControlHelper_(userContext, TiUITextField::createTextField, args);
 }
 
 Handle<Value> TiUIObject::createImageView_(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return createControlHelper(userContext, TiUIImageView::createImageView, args);
+    return createControlHelper_(userContext, TiUIImageView::createImageView, args);
 }
 
 Handle<Value> TiUIObject::createActivityIndicator_(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return createControlHelper(userContext, TiUIActivityIndicator::createActivityIndicator, args);
+    return createControlHelper_(userContext, TiUIActivityIndicator::createActivityIndicator, args);
 }

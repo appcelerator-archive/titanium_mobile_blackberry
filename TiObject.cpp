@@ -15,8 +15,11 @@ TiObject::TiObject()
 {
     isInitialized_ = false;
     parentObject_ = NULL;
+    name_ = "";
 #ifdef _TI_DEBUG_
-    cstrName_ = NULL;
+    cstrName_ = name_.c_str();
+    debugMembers_ = "";
+    cstrdebugMembers_ = debugMembers_.c_str();
 #endif // _TI_DEBUG_
 }
 
@@ -27,9 +30,8 @@ TiObject::TiObject(const char* objectName)
     name_ = objectName;
 #ifdef _TI_DEBUG_
     cstrName_ = name_.c_str();
-    debugMembers_ = (char*)malloc(1);
-    debugMembers_[0] = 0;
-    cstrdebugMembers_ = "";
+    debugMembers_ = "";
+    cstrdebugMembers_ = debugMembers_.c_str();
 #endif // _TI_DEBUG_
 }
 
@@ -40,7 +42,8 @@ TiObject::TiObject(const char* objectName, Handle<Value> value)
     parentObject_ = NULL;
 #ifdef _TI_DEBUG_
     cstrName_ = name_.c_str();
-    cstrdebugMembers_ = "";
+    debugMembers_ = "";
+    cstrdebugMembers_ = debugMembers_.c_str();
 #endif // _TI_DEBUG_
 }
 
