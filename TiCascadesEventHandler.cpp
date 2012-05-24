@@ -51,3 +51,9 @@ void TiCascadesEventHandler::imageChanged(const bb::cascades::Image image)
     // TODO: add x, y coordinates
     eventContainer_->fireEvent();
 }
+
+void TiCascadesEventHandler::selectedIndexChanged(int index)
+{
+    eventContainer_->setDataProperty("value", index);
+    eventContainer_->fireEvent();
+}

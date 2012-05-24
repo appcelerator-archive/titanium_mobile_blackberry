@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
+#include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/Color>
 #include <qtgui/QColor>
 
@@ -33,6 +34,8 @@ static const vector<NATIVE_PROPSET_CALLBACK> s_functionMap = initFunctionMap();
 NativeControlObject::NativeControlObject()
 {
     control_ = NULL;
+    left_ = 0;
+    top_ = 0;
 }
 
 NativeControlObject::~NativeControlObject()
@@ -104,7 +107,18 @@ int NativeControlObject::setTitle(TiObject* obj)
 PROP_SETTER(setTop)
 int NativeControlObject::setTop(TiObject* obj)
 {
-    return NATIVE_ERROR_NOTSUPPORTED;
+    float value = 0;
+    int error = NativeControlObject::getFloat(obj, &value);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+    bb::cascades::AbsoluteLayoutProperties* pProp = new bb::cascades::AbsoluteLayoutProperties;
+    pProp->setPositionY(value);
+    pProp->setPositionX(left_);
+    control_->setLayoutProperties(pProp);
+
+    return NATIVE_ERROR_OK;
 }
 
 PROP_SETTER(setValue)
@@ -124,6 +138,18 @@ int NativeControlObject::setVisible(TiObject* obj)
     }
     ((bb::cascades::Control*)getNativeHandle())->setVisible(visible);
     return NATIVE_ERROR_OK;
+}
+
+PROP_SETTER(setOptions)
+int NativeControlObject::setOptions(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setSelectedIndex)
+int NativeControlObject::setSelectedIndex(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETTER(setImage)
@@ -183,7 +209,9 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_MIN]                               = PROP_SETTING_FUNCTION(setMin);
     vect[N_PROP_MINIMUM_FONT_SIZE]                 = NULL;
     vect[N_PROP_OPACITY]                           = NULL;
+    vect[N_PROP_OPTIONS]                           = PROP_SETTING_FUNCTION(setOptions);
     vect[N_PROP_RIGHT]                             = NULL;
+    vect[N_PROP_SELECTED_INDEX]                    = PROP_SETTING_FUNCTION(setSelectedIndex);
     vect[N_PROP_SHADOW_COLOR]                      = NULL;
     vect[N_PROP_SHADOW_OFFSET]                     = NULL;
     vect[N_PROP_SIZE]                              = NULL;
@@ -272,5 +300,40 @@ int NativeControlObject::getFloat(TiObject* obj, float* value)
     }
     Handle<Number> num = Handle<Number>::Cast(v8value);
     *value = (float)num->Value();
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::getInteger(TiObject* obj, int* value)
+{
+    Handle<Value> v8value = obj->getValue();
+    if ((v8value.IsEmpty()) || ((!v8value->IsNumber()) && (!v8value->IsNumberObject()) && (!v8value->IsInt32())))
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    Handle<Number> num = Handle<Number>::Cast(v8value);
+    *value = (int)num->Value();
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::getStringArray(TiObject* obj, QVector<QString>& value)
+{
+    Handle<Value> v8value = obj->getValue();
+    if (v8value.IsEmpty() || !v8value->IsArray())
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    Handle<Array> array = Handle<Array>::Cast(v8value);
+    unsigned int uiLength = array->Length();
+    for (unsigned int i = 0; i < uiLength; ++i)
+    {
+        Handle<Value> item = array->Get(Integer::New(i));
+        if (item.IsEmpty() || ((!item->IsString()) && (!item->IsStringObject())))
+        {
+            return NATIVE_ERROR_INVALID_ARG;
+        }
+        String::Utf8Value v8UtfString(Handle<String>::Cast(item));
+        const char* cStr = *v8UtfString;
+        value.append(cStr);
+    }
     return NATIVE_ERROR_OK;
 }
