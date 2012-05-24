@@ -28,10 +28,13 @@ protected:
     virtual ~TiUITableView();
     virtual void initializeTiObject(TiObject* parentContext);
     virtual void onCreateStaticMembers();
-    static Handle<Value> scrollToIndex_(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _scrollToIndex(void* userContext, TiObject* caller, const Arguments& args);
 
 private:
-    TiUITableView(NativeObjectFactory* nativeObjectFactory);
+    explicit TiUITableView(NativeObjectFactory* nativeObjectFactory);
+
+    TiUITableView(const TiUITableView& obj);
+    TiUITableView& operator=(const TiUITableView& obj);
 };
 
 #endif /* TIUITABLEVIEW_H_ */

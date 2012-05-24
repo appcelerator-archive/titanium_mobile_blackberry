@@ -47,7 +47,7 @@ protected:
     virtual ~NativeListViewObject();
 
 private:
-    NativeListViewObject();
+    explicit NativeListViewObject();
     //Not copy-constructible; Not assignable.
     NativeListViewObject(const NativeListViewObject& obj);
     NativeListViewObject& operator=(const NativeListViewObject& obj);

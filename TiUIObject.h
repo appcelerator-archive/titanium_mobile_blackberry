@@ -38,7 +38,7 @@ private:
     static Handle<Value> createTextField_(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> createActivityIndicator_(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> createOptionDialog_(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> createTableView_(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createTableView(void* userContext, TiObject* caller, const Arguments& args);
     NativeObjectFactory* objectFactory_;
     NativeObject* contentContainer_;
 };
