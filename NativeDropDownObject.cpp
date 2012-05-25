@@ -36,7 +36,7 @@ int NativeDropDownObject::initialize(TiEventContainerFactory* containerFactory)
     dropdown_ = bb::cascades::DropDown::create();
     setControl(dropdown_);
     eventClick_ = containerFactory->createEventContainer();
-    eventHandler_ = new TiCascadesEventHandler(eventClick_);
+    eventHandler_ = new DropDownEventHandler(eventClick_);
     return NATIVE_ERROR_OK;
 }
 

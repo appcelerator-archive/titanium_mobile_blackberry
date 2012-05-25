@@ -39,7 +39,7 @@ int NativeImageViewObject::initialize(TiEventContainerFactory* containerFactory)
     setControl(imageView_);
     eventImageChanged_ = containerFactory->createEventContainer();
     eventImageChanged_->setDataProperty("type", "change");
-    eventHandler_ = new TiCascadesEventHandler(eventImageChanged_);
+    eventHandler_ = new ImageViewEventHandler(eventImageChanged_);
     return NATIVE_ERROR_OK;
 }
 

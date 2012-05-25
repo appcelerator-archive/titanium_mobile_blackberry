@@ -7,9 +7,10 @@
 
 #include "NativeButtonObject.h"
 #include "TiEventContainerFactory.h"
+#include <bb/cascades/Button>
 #include <bb/cascades/DockLayoutProperties>
-#include <bb/cascades/VerticalAlignment>
 #include <bb/cascades/HorizontalAlignment>
+#include <bb/cascades/VerticalAlignment>
 
 NativeButtonObject::NativeButtonObject()
 {
@@ -35,7 +36,7 @@ int NativeButtonObject::initialize(TiEventContainerFactory* containerFactory)
     setControl(button_);
     eventClick_ = containerFactory->createEventContainer();
     eventClick_->setDataProperty("type", "click");
-    eventHandler_ = new TiCascadesEventHandler(eventClick_);
+    eventHandler_ = new ButtonEventHandler(eventClick_);
     return NATIVE_ERROR_OK;
 }
 

@@ -9,6 +9,7 @@
 #define NATIVEIMAGEVIEWOBJECT_H_
 
 #include "NativeControlObject.h"
+#include "bb/cascades/resources/image.h"
 
 //forward declaration
 namespace bb
@@ -19,7 +20,7 @@ class ImageView;
 }
 }
 
-class TiCascadesEventHandler;
+class ImageViewEventHandler;
 
 class NativeImageViewObject : public NativeControlObject
 {
@@ -46,9 +47,36 @@ private:
     NativeImageViewObject& operator=(const NativeImageViewObject& obj);
     bb::cascades::ImageView* imageView_;
     TiEventContainer* eventImageChanged_;
-    TiCascadesEventHandler* eventHandler_;
+    ImageViewEventHandler* eventHandler_;
     float left_;
     float top_;
+};
+
+//Event handler for ImageView object
+class ImageViewEventHandler : public QObject
+{
+    Q_OBJECT
+
+public:
+    ImageViewEventHandler(TiEventContainer* eventContainer)
+    {
+        eventContainer_ = eventContainer;
+    }
+    virtual ~ImageViewEventHandler() {}
+
+public slots:
+    void imageChanged(const bb::cascades::Image image)
+    {
+        // TODO: add x, y coordinates
+        eventContainer_->fireEvent();
+    }
+
+private:
+    TiEventContainer* eventContainer_;
+
+    // Disable copy ctor & assignment operator
+    ImageViewEventHandler(const ImageViewEventHandler& eHandler);
+    ImageViewEventHandler& operator=(const ImageViewEventHandler& eHandler);
 };
 
 #endif /* NATIVEIMAGEVIEWOBJECT_H_ */

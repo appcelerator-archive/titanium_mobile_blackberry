@@ -19,7 +19,8 @@ class DropDown;
 }
 }
 
-class TiCascadesEventHandler;
+class TiEventContainer;
+class DropDownEventHandler;
 
 /*
  * NativeDropDownObject
@@ -50,7 +51,34 @@ private:
     // Class members
     bb::cascades::DropDown* dropdown_;
     TiEventContainer* eventClick_;
-    TiCascadesEventHandler* eventHandler_;
+    DropDownEventHandler* eventHandler_;
+};
+
+//Event handler for button object
+class DropDownEventHandler : public QObject
+{
+    Q_OBJECT
+
+public:
+    DropDownEventHandler(TiEventContainer* eventContainer)
+    {
+        eventContainer_ = eventContainer;
+    }
+    virtual ~DropDownEventHandler() {}
+
+public slots:
+    void selectedIndexChanged(int index)
+    {
+        eventContainer_->setDataProperty("value", index);
+        eventContainer_->fireEvent();
+    }
+
+private:
+    TiEventContainer* eventContainer_;
+
+    // Disable copy ctor & assignment operator
+    DropDownEventHandler(const DropDownEventHandler& eHandler);
+    DropDownEventHandler& operator=(const DropDownEventHandler& eHandler);
 };
 
 #endif /* NATIVEDROPDOWNOBJECT_H_ */

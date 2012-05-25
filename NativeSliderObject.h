@@ -9,8 +9,17 @@
 #define NATIVESLIDEROBJECT_H_
 
 #include "NativeControlObject.h"
-#include "TiCascadesEventHandler.h"
-#include <bb/cascades/Slider>
+
+namespace bb
+{
+namespace cascades
+{
+class Slider;
+}
+}
+
+class TiEventContainer;
+class SliderEventHandler;
 
 /*
  * NativeSliderObject
@@ -35,7 +44,34 @@ public:
 private:
     bb::cascades::Slider* slider_;
     TiEventContainer* eventChange_;
-    TiCascadesEventHandler* eventChangeHandler_;
+    SliderEventHandler* eventChangeHandler_;
+};
+
+//Event handler for slider object
+class SliderEventHandler : public QObject
+{
+    Q_OBJECT
+
+public:
+    SliderEventHandler(TiEventContainer* eventContainer)
+    {
+        eventContainer_ = eventContainer;
+    }
+    virtual ~SliderEventHandler() {}
+
+public slots:
+    void valueChanging(float value)
+    {
+        eventContainer_->setDataProperty("value", value);
+        eventContainer_->fireEvent();
+    }
+
+private:
+    TiEventContainer* eventContainer_;
+
+    // Disable copy ctor & assignment operator
+    SliderEventHandler(const SliderEventHandler& eHandler);
+    SliderEventHandler& operator=(const SliderEventHandler& eHandler);
 };
 
 #endif /* NATIVESLIDEROBJECT_H_ */
