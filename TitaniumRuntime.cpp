@@ -56,18 +56,26 @@ int TitaniumRuntime::internalRun(int argc, char** argv)
     TiCascadesApp mainApp;
     mainApp.initializeApp();
     NativeObjectFactory objFactory(&mainApp);
-    obj->executeScript(&objFactory, javaScript_);
-    NativeObject* nativeObject = objFactory.getRootContainer();
-    mainApp.setScene(nativeObject);
-    if (nativeObject != NULL)
-    {
-        nativeObject->release();
-    }
-    // TODO: implement a message pump here
-    return bb::cascades::Application::exec();
+    objectFactory_ = &objFactory;
+    mainApp_ = &mainApp;
+    int ret = obj->executeScript(&objFactory, javaScript_, messageLoop, this);
+    // TODO: handle non-zero return code here
+    return ret;
 }
 
 void TitaniumRuntime::Log(const char* msg)
 {
     fprintf(stderr, "%s\n", msg);
+}
+
+int TitaniumRuntime::messageLoop(void* context)
+{
+    TitaniumRuntime* self = (TitaniumRuntime*)context;
+    NativeObject* nativeObject = self->objectFactory_->getRootContainer();
+    self->mainApp_->setScene(nativeObject);
+    if (nativeObject != NULL)
+    {
+        nativeObject->release();
+    }
+    return bb::cascades::Application::exec();
 }
