@@ -85,19 +85,19 @@ int NativeListViewObject::setTop(TiObject* obj)
 
 int NativeListViewObject::setData(TiObject* obj)
 {
-    std::multimap<QString, QString> dictionary;
+    QVector<QPair<QString, QString> > dictionary;
     int error = NativeControlObject::getDictionaryData(obj, dictionary);
     if (!N_SUCCEEDED(error))
     {
         return error;
     }
     QList<QString> dataList;
-    for (std::multimap<QString, QString>::const_iterator iter = dictionary.begin(); iter != dictionary.end(); ++iter)
+    for (int i = 0; i < dictionary.size(); ++i)
     {
         //TODO define const var, for title string
-        if (iter->first == "title")
+        if (dictionary[i].first == "title")
         {
-            dataList.append(iter->second);
+            dataList.append(dictionary[i].second);
         }
     }
     listView_->setDataModel(new bb::cascades::QListDataModel<QString>(dataList));
@@ -138,7 +138,7 @@ int NativeListViewObject::setEventHandler(const char* eventName, TiEvent* event)
     return NATIVE_ERROR_OK;
 }
 
-int NativeListViewObject::scrollToIndex(const char* index)
+int NativeListViewObject::scrollToIndex(int index)
 {
     QVariant variant(index);
     QVariantList scroll;

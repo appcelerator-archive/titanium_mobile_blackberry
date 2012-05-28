@@ -363,7 +363,7 @@ int NativeControlObject::getStringArray(TiObject* obj, QVector<QString>& value)
     return NATIVE_ERROR_OK;
 }
 
-int NativeControlObject::getDictionaryData(TiObject* obj, multimap<QString, QString>& dictionary)
+int NativeControlObject::getDictionaryData(TiObject* obj, QVector<QPair<QString, QString> >& dictionary)
 {
     Handle<Value> value = obj->getValue();
     if (value.IsEmpty() || (!value->IsArray()))
@@ -373,6 +373,7 @@ int NativeControlObject::getDictionaryData(TiObject* obj, multimap<QString, QStr
 
     Handle<Array> array = Handle<Array>::Cast(value);
     uint32_t length = array->Length();
+    dictionary.reserve(length);
     //traverse through the dictionary elements
     for (uint32_t i = 0; i < length; ++i)
     {
@@ -383,14 +384,14 @@ int NativeControlObject::getDictionaryData(TiObject* obj, multimap<QString, QStr
             uint32_t arLenght = propAr->Length();
             for (uint32_t j = 0; j < arLenght; ++j)
             {
-                Handle<String> propString = Handle < String > ::Cast(propAr->Get(j));
+                Handle<String> propString = Handle<String>::Cast(propAr->Get(j));
                 String::Utf8Value propNameUTF(propString);
-                QString key = *propNameUTF;
+                QString key = QString::fromUtf8(*propNameUTF);
                 Local<Value> propValue = el->ToObject()->Get(propString);
                 Local<String> valueStr = propValue->ToString();
                 String::Utf8Value valueUTF(valueStr);
-                QString val = *valueUTF;
-                dictionary.insert(std::make_pair(key, val));
+                QString val = QString::fromUtf8(*valueUTF);
+                dictionary.push_back(QPair<QString, QString>(key, val));
             }
         }
         else

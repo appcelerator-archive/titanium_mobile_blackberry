@@ -50,7 +50,7 @@ public:
     static int getInteger(TiObject* obj, int* value);
     static int getStringArray(TiObject* obj, QVector<QString>& value);
     //obtain java script dictionary object and keep it in the multimap
-    static int getDictionaryData(TiObject* obj, std::multimap<QString, QString>& dictionary);
+    static int getDictionaryData(TiObject* obj, QVector<QPair<QString, QString> >& dictionary);
 
 protected:
     NativeControlObject();

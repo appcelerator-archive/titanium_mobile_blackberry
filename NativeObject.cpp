@@ -57,7 +57,7 @@ void NativeObject::completeInitialization()
     isInitializationComplete_ = true;
 }
 
-int NativeObject::scrollToIndex(const char* index)
+int NativeObject::scrollToIndex(int index)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }

@@ -46,9 +46,7 @@ Handle<Value> TiUITableView::_scrollToIndex(void* userContext, TiObject* caller,
     HandleScope handleScope;
     TiUITableView* obj = (TiUITableView*) userContext;
     NativeObject* no = obj->getNativeObject();
-
-    Local<String> str = args[0]->ToString();
-    String::Utf8Value index(str);
-    no->scrollToIndex(*index);
+    Local<Integer> index = args[0]->ToInteger();
+    no->scrollToIndex(index->Value());
     return Undefined();
 }

@@ -62,6 +62,7 @@ enum NATIVE_PROP
     , N_PROP_CENTER
     , N_PROP_CHILDREN
     , N_PROP_COLOR
+    , N_PROP_DATA
     , N_PROP_ELLIPSIZE
     , N_PROP_FOCUSABLE
     , N_PROP_FONT
@@ -97,7 +98,6 @@ enum NATIVE_PROP
     , N_PROP_WIDTH
     , N_PROP_WORD_WRAP
     , N_PROP_ZINDEX
-    , N_PROP_DATA
 
     /* This MUST be the last element */
     , N_PROP_LAST
@@ -137,7 +137,7 @@ public:
     virtual void completeInitialization();
     virtual bool isInitializationComplete() const;
     virtual int setEventHandler(const char* eventName, TiEvent* event);
-    virtual int scrollToIndex(const char* index);
+    virtual int scrollToIndex(int index);
 
 protected:
     NativeObject();

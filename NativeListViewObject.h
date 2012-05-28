@@ -41,7 +41,7 @@ public:
     virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual QString getListViewElementFromIndex(QVariantList var);
     virtual NAHANDLE getNativeHandle() const;
-    virtual int scrollToIndex(const char* index);
+    virtual int scrollToIndex(int index);
 
 protected:
     virtual ~NativeListViewObject();

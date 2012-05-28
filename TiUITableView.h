@@ -33,6 +33,7 @@ protected:
 private:
     explicit TiUITableView(NativeObjectFactory* nativeObjectFactory);
 
+    // Disable copy ctor & assignment operator
     TiUITableView(const TiUITableView& obj);
     TiUITableView& operator=(const TiUITableView& obj);
 };

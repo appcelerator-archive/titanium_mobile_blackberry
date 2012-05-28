@@ -42,6 +42,11 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "data", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_DATA
+    },
+
+    {
         "label", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_LABEL
     },
@@ -109,11 +114,6 @@ const static TiProperty g_tiProperties[] =
     {
         "left", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_LEFT
-    },
-
-    {
-        "data", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_DATA
     },
 };
 
