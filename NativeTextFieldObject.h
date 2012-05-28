@@ -59,7 +59,7 @@ class TextFieldEventHandler : public QObject
     Q_OBJECT
 
 public:
-    TextFieldEventHandler(TiEventContainer* eventContainer)
+    explicit TextFieldEventHandler(TiEventContainer* eventContainer)
     {
         eventContainer_ = eventContainer;
     }
@@ -68,7 +68,7 @@ public:
 public slots:
     void textChanging(QString str)
     {
-        eventContainer_->setDataProperty("value", str.toStdString().c_str());
+        eventContainer_->setDataProperty("value", str.toUtf8().constData());
         eventContainer_->fireEvent();
     }
 

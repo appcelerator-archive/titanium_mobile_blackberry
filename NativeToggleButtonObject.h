@@ -59,7 +59,7 @@ class ToggleButtonEventHandler : public QObject
     Q_OBJECT
 
 public:
-    ToggleButtonEventHandler(TiEventContainer* eventContainer)
+    explicit ToggleButtonEventHandler(TiEventContainer* eventContainer)
     {
         eventContainer_ = eventContainer;
     }

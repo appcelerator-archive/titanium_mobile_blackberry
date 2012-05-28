@@ -36,8 +36,8 @@
 									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/cpp&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/cpp/c&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/cpp/embedded&quot;"/>
-									<listOptionValue builtIn="false" value="C:/bbndk-2.0.0/target/qnx6/usr/include/freetype2"/>
-									<listOptionValue builtIn="false" value="C:/bbndk-2.0.0/target/target-override/usr/include"/>
+									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
+									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/tibb/include}&quot;"/>
 								</option>
 								<option id="com.qnx.qcc.option.compiler.defines.1265970181" name="Defines (-D)" superClass="com.qnx.qcc.option.compiler.defines" valueType="definedSymbols">
@@ -55,8 +55,8 @@
 							</tool>
 							<tool id="com.qnx.qcc.tool.assembler.586740030" name="QCC Assembler" superClass="com.qnx.qcc.tool.assembler">
 								<option id="com.qnx.qcc.option.assembler.includePath.2003111605" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath" valueType="includePath">
-									<listOptionValue builtIn="false" value="C:/bbndk-2.0.0/target/qnx6/usr/include/freetype2"/>
-									<listOptionValue builtIn="false" value="C:/bbndk-2.0.0/target/target-override/usr/include"/>
+									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
+									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.assembler.1271507818" superClass="com.qnx.qcc.inputType.assembler"/>
 							</tool>
@@ -242,7 +242,7 @@
 							</tool>
 							<tool id="com.qnx.qcc.tool.assembler.361548406" name="QCC Assembler" superClass="com.qnx.qcc.tool.assembler">
 								<option id="com.qnx.qcc.option.assembler.includePath.344240156" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath" valueType="includePath">
-									<listOptionValue builtIn="false" value="C:/bbndk-10.0.4-beta/target/qnx6/usr/include/qt4"/>
+									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/qt4&quot;"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.assembler.537373931" superClass="com.qnx.qcc.inputType.assembler"/>
 							</tool>

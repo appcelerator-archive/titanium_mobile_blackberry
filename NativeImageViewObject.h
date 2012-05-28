@@ -58,7 +58,7 @@ class ImageViewEventHandler : public QObject
     Q_OBJECT
 
 public:
-    ImageViewEventHandler(TiEventContainer* eventContainer)
+    explicit ImageViewEventHandler(TiEventContainer* eventContainer)
     {
         eventContainer_ = eventContainer;
     }

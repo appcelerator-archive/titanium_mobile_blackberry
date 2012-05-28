@@ -7,7 +7,6 @@
 
 #include "NativeImageViewObject.h"
 #include "TiEventContainerFactory.h"
-#include "TiCascadesEventHandler.h"
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/imageview>

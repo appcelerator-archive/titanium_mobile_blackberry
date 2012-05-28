@@ -54,7 +54,7 @@ class ButtonEventHandler : public QObject
     Q_OBJECT
 
 public:
-    ButtonEventHandler(TiEventContainer* eventContainer)
+    explicit ButtonEventHandler(TiEventContainer* eventContainer)
     {
         eventContainer_ = eventContainer;
     }

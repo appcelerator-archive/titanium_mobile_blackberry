@@ -53,7 +53,7 @@ class SliderEventHandler : public QObject
     Q_OBJECT
 
 public:
-    SliderEventHandler(TiEventContainer* eventContainer)
+    explicit SliderEventHandler(TiEventContainer* eventContainer)
     {
         eventContainer_ = eventContainer;
     }

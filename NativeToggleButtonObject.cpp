@@ -6,7 +6,6 @@
  */
 
 #include "NativeToggleButtonObject.h"
-#include "TiCascadesEventHandler.h"
 #include "TiEventContainerFactory.h"
 #include <bb/cascades/ToggleButton>
 

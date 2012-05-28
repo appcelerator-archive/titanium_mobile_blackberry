@@ -60,7 +60,7 @@ class DropDownEventHandler : public QObject
     Q_OBJECT
 
 public:
-    DropDownEventHandler(TiEventContainer* eventContainer)
+    explicit DropDownEventHandler(TiEventContainer* eventContainer)
     {
         eventContainer_ = eventContainer;
     }
