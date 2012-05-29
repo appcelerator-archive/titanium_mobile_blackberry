@@ -10,8 +10,8 @@
 #include "TiCascadesEventHandler.h"
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
-#include <bb/cascades/textField>
-#include <QtCore/QString>
+#include <bb/cascades/TextField>
+#include <QString>
 
 NativeTextFieldObject::NativeTextFieldObject()
 {
@@ -37,7 +37,7 @@ NativeTextFieldObject* NativeTextFieldObject::createTextField()
 int NativeTextFieldObject::initialize(TiEventContainerFactory* containerFactory)
 {
     textField_ = bb::cascades::TextField::create();
-    setControl(textField_);
+    setTextControl(textField_);
     eventFieldChanged_ = containerFactory->createEventContainer();
     eventFieldChanged_->setDataProperty("type", "change");
     eventHandler_ = new TiCascadesEventHandler(eventFieldChanged_);

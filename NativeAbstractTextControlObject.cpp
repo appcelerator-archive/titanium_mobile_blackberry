@@ -7,9 +7,17 @@
 
 #include "NativeAbstractTextControlObject.h"
 #include <bb/cascades/controls/abstracttextcontrol.h>
-#include <bb/cascades/controls/textalignment.h>
-#include <qt4/QtCore/qmap.h>
-#include <qt4/QtCore/qstring.h>
+#include <QMap>
+#include <QString>
+
+#define FONT_FAMILY         "fontFamily"
+#define FONT_SIZE           "fontSize"
+#define FONT_STYLE          "fontStyle"
+#define FONT_STYLE_NORMAL   "normal"
+#define FONT_STYLE_ITALIC   "italic"
+#define FONT_WEIGHT         "fontWeight"
+#define FONT_WEIGHT_NORMAL  "normal"
+#define FONT_WEIGHT_BOLD    "bold"
 
 NativeAbstractTextControlObject::NativeAbstractTextControlObject()
 {
@@ -71,17 +79,16 @@ int NativeAbstractTextControlObject::setTextAlign(TiObject* obj)
 
     switch (value)
     {
-    case 0: // TEXT_ALIGNMENT_LEFT
+    case TEXT_ALIGNMENT_LEFT:
         textControl_->textStyle()->setAlignment(bb::cascades::TextAlignment::ForceLeft);
         break;
-    case 1: // TEXT_ALIGNMENT_CENTER
+    case TEXT_ALIGNMENT_CENTER:
         textControl_->textStyle()->setAlignment(bb::cascades::TextAlignment::Center);
         break;
-    case 2: // TEXT_ALIGNMENT_RIGHT
+    case TEXT_ALIGNMENT_RIGHT:
         textControl_->textStyle()->setAlignment(bb::cascades::TextAlignment::ForceRight);
         break;
     default:
-        textControl_->textStyle()->setAlignment(bb::cascades::TextAlignment::Default);
         break;
     }
 
@@ -91,7 +98,7 @@ int NativeAbstractTextControlObject::setTextAlign(TiObject* obj)
 int NativeAbstractTextControlObject::setFont(TiObject* obj)
 {
     QMap<QString, QString> font;
-    int error = NativeControlObject::getFontObject(obj, font);
+    int error = NativeControlObject::getMapObject(obj, font);
     if (error != NATIVE_ERROR_OK)
     {
         return error;
@@ -100,47 +107,39 @@ int NativeAbstractTextControlObject::setFont(TiObject* obj)
     QMap<QString, QString>::const_iterator it = font.begin();
     for (; it != font.end(); ++it)
     {
-        if (it.key().compare("fontFamily") == 0)
+        if (it.key().compare(FONT_FAMILY) == 0)
         {
             textControl_->textStyle()->setFontFamily(it.value());
         }
-        else if (it.key().compare("fontSize") == 0)
+        else if (it.key().compare(FONT_SIZE) == 0)
         {
-            bool bSucceed;
-            float size = it.value().toFloat(&bSucceed);
-            if (bSucceed)
+            bool bSucceeded;
+            float size = it.value().toFloat(&bSucceeded);
+            if (bSucceeded)
             {
                 textControl_->textStyle()->setSize(size);
             }
         }
-        else if (it.key().compare("fontStyle") == 0)
+        else if (it.key().compare(FONT_STYLE) == 0)
         {
-            if (it.value().compare("normal") == 0)
+            if (it.value().compare(FONT_STYLE_NORMAL) == 0)
             {
                 textControl_->textStyle()->setFontStyle(bb::cascades::FontStyle::Normal);
             }
-            else if (it.value().compare("italic") == 0)
+            else if (it.value().compare(FONT_STYLE_ITALIC) == 0)
             {
                 textControl_->textStyle()->setFontStyle(bb::cascades::FontStyle::Italic);
             }
-            else
-            {
-                textControl_->textStyle()->setFontStyle(bb::cascades::FontStyle::Default);
-            }
         }
-        else if (it.key().compare("fontWeight") == 0)
+        else if (it.key().compare(FONT_WEIGHT) == 0)
         {
-            if (it.value().compare("normal") == 0)
+            if (it.value().compare(FONT_WEIGHT_NORMAL) == 0)
             {
                 textControl_->textStyle()->setFontWeight(bb::cascades::FontWeight::Normal);
             }
-            else if (it.value().compare("bold") == 0)
+            else if (it.value().compare(FONT_WEIGHT_BOLD) == 0)
             {
                 textControl_->textStyle()->setFontWeight(bb::cascades::FontWeight::Bold);
-            }
-            else
-            {
-                textControl_->textStyle()->setFontWeight(bb::cascades::FontWeight::Default);
             }
         }
     }

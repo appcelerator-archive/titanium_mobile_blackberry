@@ -8,7 +8,7 @@
 #ifndef NATIVETEXTFIELDOBJECT_H_
 #define NATIVETEXTFIELDOBJECT_H_
 
-#include "NativeControlObject.h"
+#include "NativeAbstractTextControlObject.h"
 
 //forward declaration
 namespace bb
@@ -22,7 +22,7 @@ class TextField;
 class TiEventContainer;
 class TiCascadesEventHandler;
 
-class NativeTextFieldObject : public NativeControlObject
+class NativeTextFieldObject : public NativeAbstractTextControlObject
 {
 public:
     static NativeTextFieldObject* createTextField();

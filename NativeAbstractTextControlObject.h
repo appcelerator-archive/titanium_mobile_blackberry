@@ -19,6 +19,14 @@ class AbstractTextControl;
 }
 }
 
+// Text alignment constants
+enum N_TEXT_ALIGNMENT
+{
+    TEXT_ALIGNMENT_LEFT,
+    TEXT_ALIGNMENT_CENTER,
+    TEXT_ALIGNMENT_RIGHT
+};
+
 /*
  * NativeAbstractTextControlObject
  *
@@ -40,6 +48,9 @@ protected:
     virtual void setTextControl(bb::cascades::AbstractTextControl* textControl);
 
 private:
+    // Disable copy ctor & assignment operator
+    NativeAbstractTextControlObject(const NativeAbstractTextControlObject& textControl);
+    NativeAbstractTextControlObject& operator=(const NativeAbstractTextControlObject& textControl);
     bb::cascades::AbstractTextControl* textControl_;
 };
 
