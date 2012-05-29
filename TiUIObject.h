@@ -28,16 +28,17 @@ protected:
 private:
     TiUIObject();
     TiUIObject(NativeObjectFactory* objectFactory);
-    static Handle<Value> createTabGroup_(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> createWindow_(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> createLabel_(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> createButton_(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> createSlider_(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> createProgressBar_(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> createImageView_(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> createTextField_(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> createActivityIndicator_(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> createOptionDialog_(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createTabGroup(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createWindow(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createLabel(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createButton(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createSlider(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createProgressBar(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createImageView(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createTextField(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createActivityIndicator(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createSwitch(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createOptionDialog(void* userContext, TiObject* caller, const Arguments& args);
     NativeObjectFactory* objectFactory_;
     NativeObject* contentContainer_;
 };
