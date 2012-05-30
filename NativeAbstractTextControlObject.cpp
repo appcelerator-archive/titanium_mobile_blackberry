@@ -10,14 +10,14 @@
 #include <QMap>
 #include <QString>
 
-#define FONT_FAMILY         "fontFamily"
-#define FONT_SIZE           "fontSize"
-#define FONT_STYLE          "fontStyle"
-#define FONT_STYLE_NORMAL   "normal"
-#define FONT_STYLE_ITALIC   "italic"
-#define FONT_WEIGHT         "fontWeight"
-#define FONT_WEIGHT_NORMAL  "normal"
-#define FONT_WEIGHT_BOLD    "bold"
+static const char* FONT_FAMILY         = "fontFamily";
+static const char* FONT_SIZE           = "fontSize";
+static const char* FONT_STYLE          = "fontStyle";
+static const char* FONT_STYLE_NORMAL   = "normal";
+static const char* FONT_STYLE_ITALIC   = "italic";
+static const char* FONT_WEIGHT         = "fontWeight";
+static const char* FONT_WEIGHT_NORMAL  = "normal";
+static const char* FONT_WEIGHT_BOLD    = "bold";
 
 NativeAbstractTextControlObject::NativeAbstractTextControlObject()
 {
@@ -89,6 +89,7 @@ int NativeAbstractTextControlObject::setTextAlign(TiObject* obj)
         textControl_->textStyle()->setAlignment(bb::cascades::TextAlignment::ForceRight);
         break;
     default:
+        qDebug() << "Unknown value recieved: " << value;
         break;
     }
 
@@ -141,6 +142,10 @@ int NativeAbstractTextControlObject::setFont(TiObject* obj)
             {
                 textControl_->textStyle()->setFontWeight(bb::cascades::FontWeight::Bold);
             }
+        }
+        else
+        {
+            qDebug() << "Unknown key:value recieved: " << qPrintable(it.key()) << ":" << qPrintable(it.value());
         }
     }
 

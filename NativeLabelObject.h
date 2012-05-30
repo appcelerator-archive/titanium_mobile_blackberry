@@ -26,10 +26,13 @@ public:
     virtual NAHANDLE getNativeHandle() const;
 
 protected:
-    NativeLabelObject();
     virtual ~NativeLabelObject();
 
 private:
+    explicit NativeLabelObject();
+    // Disable copy ctor & assignment operator
+    NativeLabelObject(const NativeLabelObject& indicator);
+    NativeLabelObject& operator=(const NativeLabelObject& indicator);
     bb::cascades::Label* label_;
 };
 
