@@ -44,13 +44,7 @@ private:
 
     bb::cascades::TextField* textField_;
     TiEventContainer* eventFieldChanged_;
-    <<< <<< < .merge_file_a06532
-    TiCascadesEventHandler* eventHandler_;
-    == == == =
-        TextFieldEventHandler* eventHandler_;
-    float left_;
-    float top_;
-    >>> >>> > .merge_file_a06728
+    TextFieldEventHandler* eventHandler_;
 };
 
 //Event handler for textField object

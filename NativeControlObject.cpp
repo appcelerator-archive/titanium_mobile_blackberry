@@ -192,6 +192,12 @@ int NativeControlObject::setHeight(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+PROP_SETTER(setHintText)
+int NativeControlObject::setHintText(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
@@ -232,7 +238,7 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_FONT]                              = PROP_SETTING_FUNCTION(setFont);
     vect[N_PROP_HEIGHT]                            = PROP_SETTING_FUNCTION(setHeight);
     vect[N_PROP_HIGHLIGHTED_COLOR]                 = NULL;
-    vect[N_PROP_HINT_TEXT]                         = NULL;
+    vect[N_PROP_HINT_TEXT]                         = PROP_SETTING_FUNCTION(setHintText);
     vect[N_PROP_HTML]                              = NULL;
     vect[N_PROP_IMAGE]                             = PROP_SETTING_FUNCTION(setImage);
     vect[N_PROP_KEEP_SCREEN_ON]                    = NULL;

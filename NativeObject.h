@@ -101,6 +101,12 @@ enum NATIVE_PROP
     , N_PROP_LAST
 };
 
+#define Ti_DEBUG(msg, ...) \
+    do { \
+        qDebug() << __PRETTY_FUNCTION__; \
+        qDebug() << msg << __VA_ARGS__;  \
+    } while (0)
+
 
 #include "TiBase.h"
 #include "TiEventContainer.h"

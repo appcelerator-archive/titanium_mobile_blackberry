@@ -52,6 +52,11 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "hintText", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_HINT_TEXT
+    },
+
+    {
         "image", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_IMAGE
     },

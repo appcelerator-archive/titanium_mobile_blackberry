@@ -89,7 +89,7 @@ int NativeAbstractTextControlObject::setTextAlign(TiObject* obj)
         textControl_->textStyle()->setAlignment(bb::cascades::TextAlignment::ForceRight);
         break;
     default:
-        qDebug() << "Unknown value recieved: " << value;
+        Ti_DEBUG("Unknown value received:  ", value);
         break;
     }
 
@@ -120,6 +120,10 @@ int NativeAbstractTextControlObject::setFont(TiObject* obj)
             {
                 textControl_->textStyle()->setSize(size);
             }
+            else
+            {
+                Ti_DEBUG("Failed to convert font size to float with value: ", it.value());
+            }
         }
         else if (it.key().compare(FONT_STYLE) == 0)
         {
@@ -130,6 +134,10 @@ int NativeAbstractTextControlObject::setFont(TiObject* obj)
             else if (it.value().compare(FONT_STYLE_ITALIC) == 0)
             {
                 textControl_->textStyle()->setFontStyle(bb::cascades::FontStyle::Italic);
+            }
+            else
+            {
+                Ti_DEBUG("Unknown value received: ", it.value());
             }
         }
         else if (it.key().compare(FONT_WEIGHT) == 0)
@@ -142,10 +150,14 @@ int NativeAbstractTextControlObject::setFont(TiObject* obj)
             {
                 textControl_->textStyle()->setFontWeight(bb::cascades::FontWeight::Bold);
             }
+            else
+            {
+                Ti_DEBUG("Unknown value received: ", it.value());
+            }
         }
         else
         {
-            qDebug() << "Unknown key:value recieved: " << qPrintable(it.key()) << ":" << qPrintable(it.value());
+            Ti_DEBUG("Unknown key:value received: ", it.key(), it.value());
         }
     }
 
