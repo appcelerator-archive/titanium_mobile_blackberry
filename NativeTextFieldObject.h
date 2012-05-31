@@ -20,7 +20,7 @@ class TextField;
 }
 
 class TiEventContainer;
-class TiCascadesEventHandler;
+class TextFieldEventHandler;
 
 class NativeTextFieldObject : public NativeAbstractTextControlObject
 {
@@ -44,7 +44,40 @@ private:
 
     bb::cascades::TextField* textField_;
     TiEventContainer* eventFieldChanged_;
+    <<< <<< < .merge_file_a06532
     TiCascadesEventHandler* eventHandler_;
+    == == == =
+        TextFieldEventHandler* eventHandler_;
+    float left_;
+    float top_;
+    >>> >>> > .merge_file_a06728
+};
+
+//Event handler for textField object
+class TextFieldEventHandler : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit TextFieldEventHandler(TiEventContainer* eventContainer)
+    {
+        eventContainer_ = eventContainer;
+    }
+    virtual ~TextFieldEventHandler() {}
+
+public slots:
+    void textChanging(QString str)
+    {
+        eventContainer_->setDataProperty("value", str.toUtf8().constData());
+        eventContainer_->fireEvent();
+    }
+
+private:
+    TiEventContainer* eventContainer_;
+
+    // Disable copy ctor & assignment operator
+    TextFieldEventHandler(const TextFieldEventHandler& eHandler);
+    TextFieldEventHandler& operator=(const TextFieldEventHandler& eHandler);
 };
 
 #endif /* NATIVETEXTFIELDOBJECT_H_ */

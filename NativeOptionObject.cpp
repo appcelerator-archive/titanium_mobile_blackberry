@@ -7,7 +7,6 @@
 
 #include "NativeOptionObject.h"
 #include "TiEventContainerFactory.h"
-#include "TiCascadesEventHandler.h"
 #include <bb/cascades/Option>
 
 NativeOptionObject::NativeOptionObject()

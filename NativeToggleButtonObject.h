@@ -20,7 +20,7 @@ class ToggleButton;
 }
 
 class TiEventContainer;
-class TiCascadesEventHandler;
+class ToggleButtonEventHandler;
 
 /*
  * NativeToggleButtonObject
@@ -50,7 +50,30 @@ private:
     bb::cascades::ToggleButton* toggleButton_;
 
     TiEventContainer* eventStateChanged_;
-    TiCascadesEventHandler* eventHandler_;
+    ToggleButtonEventHandler* eventHandler_;
+};
+
+//Event handler for toggleButton object
+class ToggleButtonEventHandler : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit ToggleButtonEventHandler(TiEventContainer* eventContainer)
+    {
+        eventContainer_ = eventContainer;
+    }
+    virtual ~ToggleButtonEventHandler() {}
+
+public slots:
+    //TODO
+
+private:
+    TiEventContainer* eventContainer_;
+
+    // Disable copy ctor & assignment operator
+    ToggleButtonEventHandler(const ToggleButtonEventHandler& eHandler);
+    ToggleButtonEventHandler& operator=(const ToggleButtonEventHandler& eHandler);
 };
 
 #endif /* NATIVETOGGLEBUTTONOBJECT_H_ */

@@ -6,7 +6,6 @@
  */
 
 #include "NativeToggleButtonObject.h"
-#include "TiCascadesEventHandler.h"
 #include "TiEventContainerFactory.h"
 #include <bb/cascades/ToggleButton>
 
@@ -34,7 +33,7 @@ int NativeToggleButtonObject::initialize(TiEventContainerFactory* containerFacto
     toggleButton_ = bb::cascades::ToggleButton::create();
     setControl(toggleButton_);
     eventStateChanged_ = containerFactory->createEventContainer();
-    eventHandler_ = new TiCascadesEventHandler(eventStateChanged_);
+    eventHandler_ = new ToggleButtonEventHandler(eventStateChanged_);
     return NATIVE_ERROR_OK;
 }
 
@@ -67,5 +66,5 @@ int NativeToggleButtonObject::setEventHandler(const char* eventName, TiEvent* ev
 void NativeToggleButtonObject::completeInitialization()
 {
     NativeControlObject::completeInitialization();
-    QObject::connect(toggleButton_, SIGNAL(checkedChanged(bool checked)), eventHandler_, SLOT(checkedChanged(bool checked)));
+    //QObject::connect(toggleButton_, SIGNAL(checkedChanged(bool checked)), eventHandler_, SLOT(checkedChanged(bool checked)));
 }
