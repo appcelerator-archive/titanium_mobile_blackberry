@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
+#include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/Color>
 #include <qtgui/QColor>
@@ -33,37 +34,161 @@ static const vector<NATIVE_PROPSET_CALLBACK> s_functionMap = initFunctionMap();
 
 NativeControlObject::NativeControlObject()
 {
+    nextEventId_ = 1;
+    container_ = NULL;
     control_ = NULL;
+    layout_ = NULL;
     left_ = 0;
     top_ = 0;
+    // Defaults to transparent background
+    backgroundColor_ = bb::cascades::Color::fromRGBA(0.0f, 0.0f, 0.0f, 0.0f);
+    disabledBackgroundColor_ = backgroundColor_;
 }
 
 NativeControlObject::~NativeControlObject()
 {
 }
 
-bb::cascades::Control* NativeControlObject::getControl() const
+NAHANDLE NativeControlObject::getNativeHandle() const
 {
-    return control_;
+    return container_;
 }
 
 void NativeControlObject::setControl(bb::cascades::Control* control)
 {
+    if (container_ == NULL)
+    {
+        container_ = bb::cascades::Container::create();
+        container_->setLayout(new bb::cascades::AbsoluteLayout());
+        layout_ = new bb::cascades::AbsoluteLayoutProperties;
+        container_->setLayoutProperties(layout_);
+    }
+    container_->add(control);
     control_ = control;
 }
+
+int NativeControlObject::getNextEventId()
+{
+    // Account for overflow.
+    if (nextEventId_ < 1)
+    {
+        nextEventId_ = 1;
+    }
+    return nextEventId_++;
+}
+
+int NativeControlObject::setVisibility(bool visible)
+{
+    container_->setVisible(visible);
+    return NATIVE_ERROR_OK;
+}
+
 
 // PROP_SETTER_xxx creates a static version of functions which
 // calls the non-static on method on the NativeControlObject
 // class.
 
+PROP_SETTER(setAnchorPoint)
+int NativeControlObject::setAnchorPoint(TiObject* obj)
+{
+    float x;
+    float y;
+    int error = NativeControlObject::getPoint(obj, &x, &y);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    container_->setPivotX(x);
+    container_->setPivotY(y);
+    return NATIVE_ERROR_OK;
+}
+
+
 PROP_SETTER(setBackgroundColor)
 int NativeControlObject::setBackgroundColor(TiObject* obj)
 {
-    return NATIVE_ERROR_NOTSUPPORTED;
+    float r;
+    float g;
+    float b;
+    float a;
+
+    int error = NativeControlObject::getColorComponents(obj, &r, &g, &b, &a);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    backgroundColor_ = bb::cascades::Color::fromRGBA(r, g, b, a);
+    container_->setBackground(backgroundColor_);
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETTER(setBackgroundDisableColor)
+int NativeControlObject::setBackgroundDisableColor(TiObject* obj)
+{
+    float r;
+    float g;
+    float b;
+    float a;
+
+    int error = NativeControlObject::getColorComponents(obj, &r, &g, &b, &a);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    backgroundColor_ = bb::cascades::Color::fromRGBA(r, g, b, a);
+    container_->setBackground(backgroundColor_);
+    return NATIVE_ERROR_OK;
 }
 
 PROP_SETTER(setColor)
 int NativeControlObject::setColor(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setEnabled)
+int NativeControlObject::setEnabled(TiObject* obj)
+{
+    bool enabled;
+    int error = getBoolean(obj, &enabled);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    container_->setEnabled(enabled);
+    if (enabled)
+    {
+        container_->setBackground(backgroundColor_);
+    }
+    else
+    {
+        container_->setBackground(disabledBackgroundColor_);
+    }
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETTER(setHeight)
+int NativeControlObject::setHeight(TiObject* obj)
+{
+    float height;
+    int error = getFloat(obj, &height);
+    if (error != NATIVE_ERROR_OK)
+    {
+        Handle<String> v8str = obj->getValue()->ToString();
+        if (v8str.IsEmpty())
+        {
+            return NATIVE_ERROR_INVALID_ARG;
+        }
+        // TODO: parse height string, e.g., height='100%' height='22px' etc...
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    container_->setMaxHeight(height);
+    container_->setMinHeight(height);
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETTER(setImage)
+int NativeControlObject::setImage(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -82,6 +207,35 @@ int NativeControlObject::setMax(TiObject* obj)
 
 PROP_SETTER(setMin)
 int NativeControlObject::setMin(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setOpacity)
+int NativeControlObject::setOpacity(TiObject* obj)
+{
+    float value = 0;
+    int error = NativeControlObject::getFloat(obj, &value);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+    if ((value < 0.0f) || (value > 1.0f))
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    control_->setOpacity(value);
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETTER(setOptions)
+int NativeControlObject::setOptions(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setSelectedIndex)
+int NativeControlObject::setSelectedIndex(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -113,11 +267,8 @@ int NativeControlObject::setTop(TiObject* obj)
     {
         return error;
     }
-    bb::cascades::AbsoluteLayoutProperties* pProp = new bb::cascades::AbsoluteLayoutProperties;
-    pProp->setPositionY(value);
-    pProp->setPositionX(left_);
-    control_->setLayoutProperties(pProp);
-
+    layout_->setPositionY(value);
+    container_->setLayoutProperties(layout_);
     return NATIVE_ERROR_OK;
 }
 
@@ -136,26 +287,27 @@ int NativeControlObject::setVisible(TiObject* obj)
     {
         return error;
     }
-    ((bb::cascades::Control*)getNativeHandle())->setVisible(visible);
+    return setVisibility(visible);
+}
+
+PROP_SETTER(setWidth)
+int NativeControlObject::setWidth(TiObject* obj)
+{
+    float width;
+    int error = getFloat(obj, &width);
+    if (error != NATIVE_ERROR_OK)
+    {
+        Handle<String> v8str = obj->getValue()->ToString();
+        if (v8str.IsEmpty())
+        {
+            return NATIVE_ERROR_INVALID_ARG;
+        }
+        // TODO: parse width string, e.g., width='100%' width='22px' etc...
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    container_->setMaxWidth(width);
+    container_->setMinWidth(width);
     return NATIVE_ERROR_OK;
-}
-
-PROP_SETTER(setOptions)
-int NativeControlObject::setOptions(TiObject* obj)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
-PROP_SETTER(setSelectedIndex)
-int NativeControlObject::setSelectedIndex(TiObject* obj)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
-PROP_SETTER(setImage)
-int NativeControlObject::setImage(TiObject* obj)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
@@ -167,11 +319,11 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect.resize(N_PROP_LAST);
 
     vect[N_PROP_UNDEFINED]                         = NULL;
-    vect[N_PROP_ANCHOR_POINT]                      = NULL;
+    vect[N_PROP_ANCHOR_POINT]                      = PROP_SETTING_FUNCTION(setAnchorPoint);
     vect[N_PROP_ANIMATED_CENTER_POINT]             = NULL;
     vect[N_PROP_AUTO_LINK]                         = NULL;
     vect[N_PROP_BACKGROUND_COLOR]                  = PROP_SETTING_FUNCTION(setBackgroundColor);
-    vect[N_PROP_BACKGROUND_DISABLED_COLOR]         = NULL;
+    vect[N_PROP_BACKGROUND_DISABLED_COLOR]         = PROP_SETTING_FUNCTION(setBackgroundDisableColor);
     vect[N_PROP_BACKGROUND_DISABLED_IMAGE]         = NULL;
     vect[N_PROP_BACKGROUND_FOCUSED_COLOR]          = NULL;
     vect[N_PROP_BACKGROUND_FOCUSED_IMAGE]          = NULL;
@@ -193,10 +345,11 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_CENTER]                            = NULL;
     vect[N_PROP_CHILDREN]                          = NULL;
     vect[N_PROP_COLOR]                             = PROP_SETTING_FUNCTION(setColor);
+    vect[N_PROP_ENABLED]                           = PROP_SETTING_FUNCTION(setEnabled);
     vect[N_PROP_ELLIPSIZE]                         = NULL;
     vect[N_PROP_FOCUSABLE]                         = NULL;
     vect[N_PROP_FONT]                              = NULL;
-    vect[N_PROP_HEIGHT]                            = NULL;
+    vect[N_PROP_HEIGHT]                            = PROP_SETTING_FUNCTION(setHeight);
     vect[N_PROP_HIGHLIGHTED_COLOR]                 = NULL;
     vect[N_PROP_HINT_TEXT]                         = NULL;
     vect[N_PROP_HTML]                              = NULL;
@@ -208,7 +361,7 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_MAX]                               = PROP_SETTING_FUNCTION(setMax);
     vect[N_PROP_MIN]                               = PROP_SETTING_FUNCTION(setMin);
     vect[N_PROP_MINIMUM_FONT_SIZE]                 = NULL;
-    vect[N_PROP_OPACITY]                           = NULL;
+    vect[N_PROP_OPACITY]                           = PROP_SETTING_FUNCTION(setOpacity);
     vect[N_PROP_OPTIONS]                           = PROP_SETTING_FUNCTION(setOptions);
     vect[N_PROP_RIGHT]                             = NULL;
     vect[N_PROP_SELECTED_INDEX]                    = PROP_SETTING_FUNCTION(setSelectedIndex);
@@ -225,7 +378,7 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_TRANSFORM]                         = NULL;
     vect[N_PROP_VALUE]                             = PROP_SETTING_FUNCTION(setValue);
     vect[N_PROP_VISIBLE]                           = PROP_SETTING_FUNCTION(setVisible);
-    vect[N_PROP_WIDTH]                             = NULL;
+    vect[N_PROP_WIDTH]                             = PROP_SETTING_FUNCTION(setWidth);
     vect[N_PROP_WORD_WRAP]                         = NULL;
     vect[N_PROP_ZINDEX]                            = NULL;
     return vect;
@@ -334,6 +487,35 @@ int NativeControlObject::getStringArray(TiObject* obj, QVector<QString>& value)
         String::Utf8Value v8UtfString(Handle<String>::Cast(item));
         const char* cStr = *v8UtfString;
         value.append(cStr);
+    }
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::getPoint(TiObject* obj, float* x, float* y)
+{
+    Handle<Value> v8value = obj->getValue();
+    if ((v8value.IsEmpty()) || (!v8value->IsObject()))
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    Handle<Object> v8obj = Handle<Object>::Cast(v8value);
+    Handle<Value> v8x = v8obj->Get(String::New("x"));
+    if ((v8x.IsEmpty()) || (!v8x->IsNumber()) || (!v8x->IsNumberObject()))
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    Handle<Value> v8y = v8obj->Get(String::New("y"));
+    if ((v8y.IsEmpty()) || (!v8y->IsNumber()) || (!v8y->IsNumberObject()))
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    if (x != NULL)
+    {
+        *x = (float)v8x->ToNumber()->Value();
+    }
+    if (y != NULL)
+    {
+        *y = (float)v8y->ToNumber()->Value();
     }
     return NATIVE_ERROR_OK;
 }

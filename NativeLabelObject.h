@@ -26,7 +26,6 @@ public:
     virtual int setColor(TiObject* obj);
     virtual int setTextAlign(TiObject* obj);
     virtual int initialize(TiEventContainerFactory* containerFactory);
-    virtual NAHANDLE getNativeHandle() const;
 
 protected:
     NativeLabelObject();

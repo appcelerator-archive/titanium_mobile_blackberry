@@ -10,7 +10,7 @@
 
 #include "TiEventContainer.h"
 #include <v8.h>
-#include <vector>
+#include <map>
 
 using namespace v8;
 using namespace std;
@@ -30,6 +30,7 @@ public:
     TiV8EventContainer(Handle<Object> eventData);
     virtual ~TiV8EventContainer();
     virtual void addListener(TiEvent* listener);
+    virtual void removeListener(int id);
     virtual void fireEvent();
     virtual void setDataProperty(const char* propertyName, const char* value);
     virtual void setDataProperty(const char* propertyName, int value);
@@ -37,7 +38,7 @@ public:
 
 private:
     Persistent<Object> eventData_;
-    vector<TiInternalEventListener> listeners_;
+    map<int, TiInternalEventListener> listeners_;
 };
 
 /*

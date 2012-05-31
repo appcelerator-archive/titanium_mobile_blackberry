@@ -43,51 +43,10 @@ int NativeTextFieldObject::initialize(TiEventContainerFactory* containerFactory)
     return NATIVE_ERROR_OK;
 }
 
-int NativeTextFieldObject::setWidth(float width)
-{
-    textField_->setMaxWidth(width);
-    textField_->setMinWidth(width);
-    return NATIVE_ERROR_OK;
-}
-
-int NativeTextFieldObject::setHeight(float height)
-{
-    textField_->setMaxHeight(height);
-    textField_->setMinHeight(height);
-    return NATIVE_ERROR_OK;
-}
-
-int NativeTextFieldObject::setLeft(float left)
-{
-    bb::cascades::AbsoluteLayoutProperties* pProp = new bb::cascades::AbsoluteLayoutProperties;
-    left_ = left;
-    pProp->setPositionX(left_);
-    pProp->setPositionY(top_);
-    textField_->setLayoutProperties(pProp);
-
-    return NATIVE_ERROR_OK;
-}
-
-int NativeTextFieldObject::setTop(float top)
-{
-    bb::cascades::AbsoluteLayoutProperties* pProp = new bb::cascades::AbsoluteLayoutProperties;
-    top_ = top;
-    pProp->setPositionY(top_);
-    pProp->setPositionX(left_);
-    textField_->setLayoutProperties(pProp);
-
-    return NATIVE_ERROR_OK;
-}
-
 int NativeTextFieldObject::setHintText(const char* hintText)
 {
     textField_->setHintText(hintText);
     return NATIVE_ERROR_OK;
-}
-
-NAHANDLE NativeTextFieldObject::getNativeHandle() const
-{
-    return textField_;
 }
 
 void NativeTextFieldObject::completeInitialization()

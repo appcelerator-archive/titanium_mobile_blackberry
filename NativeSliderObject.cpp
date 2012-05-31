@@ -38,11 +38,6 @@ int NativeSliderObject::initialize(TiEventContainerFactory* containerFactory)
     return NATIVE_ERROR_OK;
 }
 
-NAHANDLE NativeSliderObject::getNativeHandle() const
-{
-    return slider_;
-}
-
 int NativeSliderObject::setMax(TiObject* obj)
 {
     float value;

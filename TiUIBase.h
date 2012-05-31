@@ -41,12 +41,15 @@ protected:
     virtual void setNativeObject(NativeObject* nativeObject);
     virtual void onCreateStaticMembers();
     virtual void onAddEventListener(const char* eventName, Handle<Function> eventFunction);
+    virtual void onRemoveEventListener(const char* eventName, Handle<Function> eventFunction);
     Persistent<Object> createConfig_;
 
 private:
     static VALUE_MODIFY valueModify(int propertyNumber, TiObject* value, void* context);
     static Handle<Value> add_(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> addEventListener_(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> hide_(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> removeEventListener_(void* userContext, TiObject* caller, const Arguments& args);
 
     // fields
     NativeObject* nativeObject_;

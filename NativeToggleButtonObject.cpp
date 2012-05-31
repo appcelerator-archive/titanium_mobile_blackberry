@@ -37,11 +37,6 @@ int NativeToggleButtonObject::initialize(TiEventContainerFactory* containerFacto
     return NATIVE_ERROR_OK;
 }
 
-NAHANDLE NativeToggleButtonObject::getNativeHandle() const
-{
-    return toggleButton_;
-}
-
 int NativeToggleButtonObject::setValue(TiObject* value)
 {
     bool checked;

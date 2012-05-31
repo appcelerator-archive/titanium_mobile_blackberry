@@ -66,3 +66,13 @@ int NativeObject::setEventHandler(const char* eventName, TiEvent* event)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
+
+int NativeObject::removeEventHandler(int eventId)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+int NativeObject::setVisibility(bool visible)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}

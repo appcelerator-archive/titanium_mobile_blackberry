@@ -7,6 +7,7 @@
 
 #include "NativeButtonObject.h"
 #include "TiEventContainerFactory.h"
+#include "TiEvent.h"
 #include <bb/cascades/Button>
 #include <bb/cascades/DockLayoutProperties>
 #include <bb/cascades/HorizontalAlignment>
@@ -40,11 +41,6 @@ int NativeButtonObject::initialize(TiEventContainerFactory* containerFactory)
     return NATIVE_ERROR_OK;
 }
 
-NAHANDLE NativeButtonObject::getNativeHandle() const
-{
-    return button_;
-}
-
 int NativeButtonObject::setTitle(TiObject* obj)
 {
     QString str;
@@ -72,9 +68,11 @@ int NativeButtonObject::setImage(TiObject* obj)
 
 int NativeButtonObject::setEventHandler(const char* eventName, TiEvent* event)
 {
+    event->setId(getNextEventId());
     if (strcmp(eventName, "click") == 0)
     {
         eventClick_->addListener(event);
+        return NATIVE_ERROR_OK;
     }
     return NATIVE_ERROR_NOTSUPPORTED;
 }

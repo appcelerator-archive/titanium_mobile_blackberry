@@ -9,8 +9,19 @@
 
 TiEvent::TiEvent()
 {
+    id_ = 0;
 }
 
 TiEvent::~TiEvent()
 {
+}
+
+void TiEvent::setId(int id)
+{
+    id_ = id;
+}
+
+int TiEvent::getId() const
+{
+    return id_;
 }

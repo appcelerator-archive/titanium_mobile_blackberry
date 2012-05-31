@@ -37,8 +37,18 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "backgroundDisableColor", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_BACKGROUND_DISABLED_COLOR
+    },
+
+    {
         "color", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_COLOR
+    },
+
+    {
+        "enabled", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_ENABLED
     },
 
     {
@@ -54,6 +64,11 @@ const static TiProperty g_tiProperties[] =
     {
         "min", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_MIN
+    },
+
+    {
+        "opacity", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_OPACITY
     },
 
     {
@@ -99,6 +114,11 @@ const static TiProperty g_tiProperties[] =
     {
         "image", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_IMAGE
+    },
+
+    {
+        "width", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_WIDTH
     }
 };
 
@@ -210,6 +230,8 @@ void TiUIBase::onCreateStaticMembers()
     TiObject::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "add", this, add_);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "addEventListener", this, addEventListener_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "hide", this, hide_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "removeEventListener", this, removeEventListener_);
     setTiMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
 }
 
@@ -276,6 +298,40 @@ void TiUIBase::onAddEventListener(const char* eventName, Handle<Function> eventF
     Handle<Object> source = Handle<Object>::Cast(getValue());
     TiV8Event* event = TiV8Event::createEvent(eventName, eventFunction, source);
     no->setEventHandler(eventName, event);
+    int id = event->getId();
+    eventFunction->SetHiddenValue(String::New("_event_ptr_"), External::New(event));
+    eventFunction->SetHiddenValue(String::New("_event_id_"), Integer::New(id));
+}
+
+void TiUIBase::onRemoveEventListener(const char* eventName, Handle<Function> eventFunction)
+{
+    HandleScope handleScope;
+    NativeObject* no = getNativeObject();
+    if (no == NULL)
+    {
+        return;
+    }
+    // Get the event subscriber's id so we know which to remove from the event container.
+    Handle<Int32> v8id = eventFunction->GetHiddenValue(String::New("_event_id_"))->ToInt32();
+    if ((v8id.IsEmpty()) || (v8id->Value() == 0))
+    {
+        return;
+    }
+    // Make sure that the function being removed has been already been added to this event container.
+    Handle<Value> v8extValue = eventFunction->GetHiddenValue(String::New("_event_ptr_"));
+    if ((!v8extValue.IsEmpty()) || (!v8extValue->IsExternal()))
+    {
+        return;
+    }
+    Handle<External> v8ext = Handle<External>::Cast(v8extValue);
+    TiUIBase* referencedControl = (TiUIBase*)v8ext->Value();
+    if (referencedControl != this)
+    {
+        // User was attempting to remove an event handler from a control that it
+        // doesn't belong to.
+        return;
+    }
+    no->removeEventHandler(v8id->Value());
 }
 
 Handle<Value> TiUIBase::add_(void* userContext, TiObject* caller, const Arguments& args)
@@ -322,5 +378,36 @@ Handle<Value> TiUIBase::addEventListener_(void* userContext, TiObject* caller, c
     Handle<Function> func = Handle<Function>::Cast(args[1]);
     String::Utf8Value eventNameUTF(eventName);
     obj->onAddEventListener(*eventNameUTF, func);
+    return Undefined();
+}
+
+Handle<Value> TiUIBase::hide_(void* userContext, TiObject* caller, const Arguments& args)
+{
+    HandleScope handleScope;
+    TiUIBase* obj = (TiUIBase*) userContext;
+    NativeObject* no = obj->getNativeObject();
+    no->setVisibility(false);
+    return Undefined();
+}
+
+Handle<Value> TiUIBase::removeEventListener_(void* userContext, TiObject* caller, const Arguments& args)
+{
+    HandleScope handleScope;
+    // JavaScript usage:
+    //
+    // arg[0] = event name (string)
+    // arg[1] = event function (function)
+    //
+    // myobject.removeEventListener('myevent',function(e) {...});
+    //
+    if ((args.Length() != 2) || (!args[0]->IsString()) || (!args[1]->IsFunction()))
+    {
+        return Undefined();
+    }
+    TiUIBase* obj = (TiUIBase*) userContext;
+    Handle<String> eventName = Handle<String>::Cast(args[0]);
+    Handle<Function> func = Handle<Function>::Cast(args[1]);
+    String::Utf8Value eventNameUTF(eventName);
+    obj->onRemoveEventListener(*eventNameUTF, func);
     return Undefined();
 }

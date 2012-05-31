@@ -49,47 +49,6 @@ int NativeImageViewObject::setImage(const char* image)
     return NATIVE_ERROR_OK;
 }
 
-int NativeImageViewObject::setWidth(float width)
-{
-    imageView_->setMaxWidth(width);
-    imageView_->setMinWidth(width);
-    return NATIVE_ERROR_OK;
-}
-
-int NativeImageViewObject::setHeight(float height)
-{
-    imageView_->setMaxHeight(height);
-    imageView_->setMinHeight(height);
-    return NATIVE_ERROR_OK;
-}
-
-int NativeImageViewObject::setLeft(float left)
-{
-    bb::cascades::AbsoluteLayoutProperties* pProp = new bb::cascades::AbsoluteLayoutProperties;
-    left_ = left;
-    pProp->setPositionX(left_);
-    pProp->setPositionY(top_);
-    imageView_->setLayoutProperties(pProp);
-
-    return NATIVE_ERROR_OK;
-}
-
-int NativeImageViewObject::setTop(float top)
-{
-    bb::cascades::AbsoluteLayoutProperties* pProp = new bb::cascades::AbsoluteLayoutProperties;
-    top_ = top;
-    pProp->setPositionY(top_);
-    pProp->setPositionX(left_);
-    imageView_->setLayoutProperties(pProp);
-
-    return NATIVE_ERROR_OK;
-}
-
-NAHANDLE NativeImageViewObject::getNativeHandle() const
-{
-    return imageView_;
-}
-
 void NativeImageViewObject::completeInitialization()
 {
     NativeControlObject::completeInitialization();

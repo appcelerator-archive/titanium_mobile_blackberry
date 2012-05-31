@@ -24,15 +24,21 @@ TiV8EventContainer::~TiV8EventContainer()
 void TiV8EventContainer::addListener(TiEvent* listener)
 {
     TiInternalEventListener ctnListener(listener);
-    listeners_.push_back(ctnListener);
+    int id = listener->getId();
+    listeners_[id] = ctnListener;
+}
+
+void TiV8EventContainer::removeListener(int id)
+{
+    listeners_.erase(id);
 }
 
 void TiV8EventContainer::fireEvent()
 {
-    vector<TiInternalEventListener>::iterator it;
+    map<int, TiInternalEventListener>::iterator it;
     for (it = listeners_.begin(); it != listeners_.end(); it++)
     {
-        it->getListener()->fire(&eventData_);
+        it->second.getListener()->fire(&eventData_);
     }
 }
 
