@@ -46,14 +46,15 @@ Handle<Value> TiUITableView::_scrollToIndex(void* userContext, TiObject* caller,
     HandleScope handleScope;
     TiUITableView* obj = (TiUITableView*) userContext;
     NativeObject* no = obj->getNativeObject();
-    if (args[0]->IsInt32())
+    if (args[0]->IsNumber())
     {
         Local<Integer> index = args[0]->ToInteger();
         no->scrollToIndex(index->Value());
     }
     else
     {
-        qDebug() << "TiUITableView::_scrollToIndex - Received arg is not an integer";
+        qDebug() << "TiUITableView::_scrollToIndex - args[0] is not a number.";
     }
+
     return Undefined();
 }

@@ -38,7 +38,7 @@ void TiCascadesEventHandler::valueChanged(float value)
 
 void TiCascadesEventHandler::textChanging(QString str)
 {
-    eventContainer_->setDataProperty("value", str.toInt());
+    eventContainer_->setDataProperty("value", str.toStdString().c_str());
     eventContainer_->fireEvent();
 }
 
