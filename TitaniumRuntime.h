@@ -17,6 +17,9 @@
  * Main runtime startup class
  */
 
+class NativeObjectFactory;
+class TiCascadesApp;
+
 class TitaniumRuntime
 {
 public:
@@ -28,9 +31,12 @@ private:
     virtual ~TitaniumRuntime();
     int internalRun(int argc, char** argv);
     void Log(const char* msg);
+    static int messageLoop(void* context);
 
     char* javaScript_;
     TiObjectScope rootObject_;
+    NativeObjectFactory* objectFactory_;
+    TiCascadesApp* mainApp_;
 };
 
 #endif /* TITANIUMRUNTIME_H_ */
