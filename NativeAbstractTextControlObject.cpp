@@ -80,7 +80,7 @@ int NativeAbstractTextControlObject::setTextAlign(TiObject* obj)
         // Try to parse as strings: center, left, right
         QString str;
         int error = NativeControlObject::getString(obj, str);
-        if (error != NATIVE_ERROR_OK)
+        if (error == NATIVE_ERROR_OK)
         {
             if (str.compare(STEXT_ALIGNMENT_CENTER) == 0)
             {
