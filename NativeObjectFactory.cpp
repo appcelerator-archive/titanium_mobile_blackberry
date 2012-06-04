@@ -15,6 +15,8 @@
 #include "NativeTextFieldObject.h"
 #include "NativeImageViewObject.h"
 #include "NativeActivityIndicatorObject.h"
+#include "NativeToggleButtonObject.h"
+#include "NativeDropDownObject.h"
 #include <bb/cascades/Container>
 
 using namespace bb::cascades;
@@ -61,8 +63,9 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
         break;
 
     case N_TYPE_PROGRESSBAR:
-        obj = new NativeProgressBarObject;
+        obj = NativeProgressBarObject::createProgressBar();
         break;
+
     case N_TYPE_TEXT_FIELD:
         obj = NativeTextFieldObject::createTextField();
         break;
@@ -75,6 +78,13 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
         obj = NativeActivityIndicatorObject::createActivityIndicator();
         break;
 
+    case N_TYPE_TOGGLEBUTTON:
+        obj = NativeToggleButtonObject::createToggleButton();
+        break;
+
+    case N_TYPE_DROPDOWN:
+        obj = NativeDropDownObject::createDropDown();
+        break;
     }
     if (obj != NULL)
     {

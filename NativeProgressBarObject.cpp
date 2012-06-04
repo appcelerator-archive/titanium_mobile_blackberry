@@ -13,7 +13,6 @@
 NativeProgressBarObject::NativeProgressBarObject()
 {
     progressIndicator_ = NULL;
-
 }
 
 NativeProgressBarObject::~NativeProgressBarObject()
@@ -23,6 +22,11 @@ NativeProgressBarObject::~NativeProgressBarObject()
 int NativeProgressBarObject::getObjectType() const
 {
     return N_TYPE_PROGRESSBAR;
+}
+
+NativeProgressBarObject* NativeProgressBarObject::createProgressBar()
+{
+    return new NativeProgressBarObject();
 }
 
 int NativeProgressBarObject::initialize(TiEventContainerFactory* containerFactory)

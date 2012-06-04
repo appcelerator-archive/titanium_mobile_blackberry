@@ -7,6 +7,7 @@
 
 #include "NativeSliderObject.h"
 #include "TiEventContainerFactory.h"
+#include "bb/cascades/slider"
 
 NativeSliderObject::NativeSliderObject()
 {
@@ -33,7 +34,7 @@ int NativeSliderObject::initialize(TiEventContainerFactory* containerFactory)
     slider_ = bb::cascades::Slider::create();
     setControl(slider_);
     eventChange_ = containerFactory->createEventContainer();
-    eventChangeHandler_ = new TiCascadesEventHandler(eventChange_);
+    eventChangeHandler_ = new SliderEventHandler(eventChange_);
     return NATIVE_ERROR_OK;
 }
 
