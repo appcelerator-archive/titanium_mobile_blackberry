@@ -11,7 +11,6 @@
 TiV8EventContainer::TiV8EventContainer(Handle<Object> eventData)
 {
     eventData_ = Persistent<Object>::New(eventData);
-    eventHandler_ = NULL;
 }
 
 TiV8EventContainer::~TiV8EventContainer()

@@ -9,8 +9,18 @@
 #define NATIVEBUTTONOBJECT_H_
 
 #include "NativeControlObject.h"
-#include "TiCascadesEventHandler.h"
-#include <bb/cascades/Button>
+#include <QtCore/QObject>
+
+namespace bb
+{
+namespace cascades
+{
+class Button;
+}
+}
+
+class TiEventContainer;
+class ButtonEventHandler;
 
 /*
  * NativeButtonObject
@@ -34,7 +44,34 @@ public:
 private:
     bb::cascades::Button* button_;
     TiEventContainer* eventClick_;
-    TiCascadesEventHandler* eventHandler_;
+    ButtonEventHandler* eventHandler_;
+};
+
+
+//Event handler for button object
+class ButtonEventHandler : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit ButtonEventHandler(TiEventContainer* eventContainer)
+    {
+        eventContainer_ = eventContainer;
+    }
+    virtual ~ButtonEventHandler() {}
+
+public slots:
+    void clicked()
+    {
+        eventContainer_->fireEvent();
+    }
+
+private:
+    TiEventContainer* eventContainer_;
+
+    // Disable copy ctor & assignment operator
+    ButtonEventHandler(const ButtonEventHandler& eHandler);
+    ButtonEventHandler& operator=(const ButtonEventHandler& eHandler);
 };
 
 #endif /* NATIVEBUTTONOBJECT_H_ */

@@ -7,7 +7,6 @@
 
 #include "NativeTextFieldObject.h"
 #include "TiEventContainerFactory.h"
-#include "TiCascadesEventHandler.h"
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/textField>
@@ -40,7 +39,7 @@ int NativeTextFieldObject::initialize(TiEventContainerFactory* containerFactory)
     setControl(textField_);
     eventFieldChanged_ = containerFactory->createEventContainer();
     eventFieldChanged_->setDataProperty("type", "change");
-    eventHandler_ = new TiCascadesEventHandler(eventFieldChanged_);
+    eventHandler_ = new TextFieldEventHandler(eventFieldChanged_);
     return NATIVE_ERROR_OK;
 }
 

@@ -34,7 +34,7 @@ int NativeListViewObject::initialize(TiEventContainerFactory* containerFactory)
     listView_ = bb::cascades::ListView::create();
     eventClicked_ = containerFactory->createEventContainer();
     eventClicked_->setDataProperty("type", "click");
-    eventHandler_ = new TiCascadesEventHandler(eventClicked_, this);
+    eventHandler_ = new ListViewEventHandler(eventClicked_, this);
     return NATIVE_ERROR_OK;
 }
 

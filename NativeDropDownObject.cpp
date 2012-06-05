@@ -7,7 +7,6 @@
 
 #include "NativeDropDownObject.h"
 #include "NativeOptionObject.h"
-#include "TiCascadesEventHandler.h"
 #include "TiEventContainerFactory.h"
 #include <bb/cascades/DropDown>
 #include <qt4/QtCore/qvector.h>
@@ -36,7 +35,7 @@ int NativeDropDownObject::initialize(TiEventContainerFactory* containerFactory)
     dropdown_ = bb::cascades::DropDown::create();
     setControl(dropdown_);
     eventClick_ = containerFactory->createEventContainer();
-    eventHandler_ = new TiCascadesEventHandler(eventClick_);
+    eventHandler_ = new DropDownEventHandler(eventClick_);
     return NATIVE_ERROR_OK;
 }
 

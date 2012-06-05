@@ -9,7 +9,6 @@
 #define TIV8EVENTCONTAINER_H_
 
 #include "TiEventContainer.h"
-#include "TiCascadesEventHandler.h"
 #include <v8.h>
 #include <vector>
 
@@ -40,7 +39,6 @@ public:
 private:
     Persistent<Object> eventData_;
     vector<TiInternalEventListener> listeners_;
-    TiCascadesEventHandler* eventHandler_;
 };
 
 /*

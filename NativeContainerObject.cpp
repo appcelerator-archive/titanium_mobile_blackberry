@@ -21,6 +21,8 @@
 #include <bb/cascades/Slider>
 #include <bb/cascades/Stacklayout>
 #include <bb/cascades/TextField>
+#include <bb/cascades/ToggleButton>
+#include <bb/cascades/ActivityIndicator>
 #include <bb/cascades/DropDown>
 #include <qtgui/QColor>
 
@@ -139,13 +141,20 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
 
     }
 
+    case N_TYPE_TOGGLEBUTTON:
+
+    {
+        bb::cascades::ToggleButton* toggleButton = (bb::cascades::ToggleButton*) obj->getNativeHandle();
+        container_->add(toggleButton);
+        return NATIVE_ERROR_OK;
+    }
+
     case N_TYPE_DROPDOWN:
 
     {
         bb::cascades::DropDown* dropdown = (bb::cascades::DropDown*) obj->getNativeHandle();
         container_->add(dropdown);
         return NATIVE_ERROR_OK;
-
     }
 
     case N_TYPE_LIST_VIEW:

@@ -16,6 +16,7 @@
 #include "NativeImageViewObject.h"
 #include "NativeListViewObject.h"
 #include "NativeActivityIndicatorObject.h"
+#include "NativeToggleButtonObject.h"
 #include "NativeDropDownObject.h"
 #include <bb/cascades/Container>
 
@@ -76,6 +77,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
 
     case N_TYPE_ACTIVITYINDICATOR:
         obj = NativeActivityIndicatorObject::createActivityIndicator();
+        break;
+
+    case N_TYPE_TOGGLEBUTTON:
+        obj = NativeToggleButtonObject::createToggleButton();
         break;
 
     case N_TYPE_DROPDOWN:

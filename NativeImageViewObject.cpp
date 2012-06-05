@@ -7,7 +7,6 @@
 
 #include "NativeImageViewObject.h"
 #include "TiEventContainerFactory.h"
-#include "TiCascadesEventHandler.h"
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/imageview>
@@ -39,7 +38,7 @@ int NativeImageViewObject::initialize(TiEventContainerFactory* containerFactory)
     setControl(imageView_);
     eventImageChanged_ = containerFactory->createEventContainer();
     eventImageChanged_->setDataProperty("type", "change");
-    eventHandler_ = new TiCascadesEventHandler(eventImageChanged_);
+    eventHandler_ = new ImageViewEventHandler(eventImageChanged_);
     return NATIVE_ERROR_OK;
 }
 
