@@ -10,7 +10,6 @@
 #include <bb/cascades/ListView>
 #include <bb/cascades/QListDataModel>
 #include "NativeListViewObject.h"
-#include "TiCascadesEventHandler.h"
 #include "TiEventContainerFactory.h"
 
 NativeListViewObject::NativeListViewObject()
