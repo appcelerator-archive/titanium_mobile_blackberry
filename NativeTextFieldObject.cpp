@@ -43,22 +43,41 @@ int NativeTextFieldObject::initialize(TiEventContainerFactory* containerFactory)
     return NATIVE_ERROR_OK;
 }
 
-int NativeTextFieldObject::setWidth(float width)
+int NativeTextFieldObject::setWidth(TiObject* obj)
 {
+    float width;
+    int error = NativeControlObject::getFloat(obj, &width);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+
     textField_->setMaxWidth(width);
     textField_->setMinWidth(width);
     return NATIVE_ERROR_OK;
 }
 
-int NativeTextFieldObject::setHeight(float height)
+int NativeTextFieldObject::setHeight(TiObject* obj)
 {
+    float height;
+    int error = NativeControlObject::getFloat(obj, &height);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
     textField_->setMaxHeight(height);
     textField_->setMinHeight(height);
     return NATIVE_ERROR_OK;
 }
 
-int NativeTextFieldObject::setLeft(float left)
+int NativeTextFieldObject::setLeft(TiObject* obj)
 {
+    float left;
+    int error = NativeControlObject::getFloat(obj, &left);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
     bb::cascades::AbsoluteLayoutProperties* pProp = new bb::cascades::AbsoluteLayoutProperties;
     left_ = left;
     pProp->setPositionX(left_);
@@ -68,8 +87,14 @@ int NativeTextFieldObject::setLeft(float left)
     return NATIVE_ERROR_OK;
 }
 
-int NativeTextFieldObject::setTop(float top)
+int NativeTextFieldObject::setTop(TiObject* obj)
 {
+    float top;
+    int error = NativeControlObject::getFloat(obj, &top);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
     bb::cascades::AbsoluteLayoutProperties* pProp = new bb::cascades::AbsoluteLayoutProperties;
     top_ = top;
     pProp->setPositionY(top_);

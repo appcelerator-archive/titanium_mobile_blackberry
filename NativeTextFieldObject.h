@@ -28,10 +28,10 @@ public:
     static NativeTextFieldObject* createTextField();
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
-    virtual int setWidth(float width);
-    virtual int setHeight(float height);
-    virtual int setLeft(float left);
-    virtual int setTop(float top);
+    virtual int setWidth(TiObject* obj);
+    virtual int setHeight(TiObject* obj);
+    virtual int setLeft(TiObject* obj);
+    virtual int setTop(TiObject* obj);
     virtual int setHintText(const char* hint);
     virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual void completeInitialization();

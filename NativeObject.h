@@ -24,12 +24,14 @@ enum NATIVE_TYPE
     , N_TYPE_DROPDOWN
     , N_TYPE_IMAGEVIEW
     , N_TYPE_LABEL
+    , N_TYPE_LIST_VIEW
     , N_TYPE_OPTION
     , N_TYPE_PROGRESSBAR
     , N_TYPE_SLIDER
     , N_TYPE_TEXT_FIELD
     , N_TYPE_TOGGLEBUTTON
     , N_TYPE_WINDOW
+
 };
 
 enum NATIVE_PROP
@@ -61,6 +63,7 @@ enum NATIVE_PROP
     , N_PROP_CENTER
     , N_PROP_CHILDREN
     , N_PROP_COLOR
+    , N_PROP_DATA
     , N_PROP_ELLIPSIZE
     , N_PROP_FOCUSABLE
     , N_PROP_FONT
@@ -135,6 +138,7 @@ public:
     virtual void completeInitialization();
     virtual bool isInitializationComplete() const;
     virtual int setEventHandler(const char* eventName, TiEvent* event);
+    virtual int scrollToIndex(int index);
 
 protected:
     NativeObject();
