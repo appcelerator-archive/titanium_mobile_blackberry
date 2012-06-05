@@ -18,9 +18,6 @@ static const char* FONT_STYLE_ITALIC      = "italic";
 static const char* FONT_WEIGHT            = "fontWeight";
 static const char* FONT_WEIGHT_NORMAL     = "normal";
 static const char* FONT_WEIGHT_BOLD       = "bold";
-static const char* STEXT_ALIGNMENT_LEFT   = "left";
-static const char* STEXT_ALIGNMENT_RIGHT  = "right";
-static const char* STEXT_ALIGNMENT_CENTER = "center";
 
 NativeAbstractTextControlObject::NativeAbstractTextControlObject()
 {
@@ -77,33 +74,7 @@ int NativeAbstractTextControlObject::setTextAlign(TiObject* obj)
     int error = NativeControlObject::getInteger(obj, &value);
     if (error != NATIVE_ERROR_OK)
     {
-        // Try to parse as strings: center, left, right
-        QString str;
-        int error = NativeControlObject::getString(obj, str);
-        if (error == NATIVE_ERROR_OK)
-        {
-            if (str.compare(STEXT_ALIGNMENT_CENTER) == 0)
-            {
-                value = TEXT_ALIGNMENT_CENTER;
-            }
-            else if (str.compare(STEXT_ALIGNMENT_LEFT) == 0)
-            {
-                value = TEXT_ALIGNMENT_LEFT;
-            }
-            else if (str.compare(STEXT_ALIGNMENT_RIGHT) == 0)
-            {
-                value = TEXT_ALIGNMENT_RIGHT;
-            }
-            else
-            {
-                Ti_DEBUG("Unknown value received:  ", str);
-                return error;
-            }
-        }
-        else
-        {
-            return error;
-        }
+        return error;
     }
 
     switch (value)

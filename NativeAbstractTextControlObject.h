@@ -19,14 +19,6 @@ class AbstractTextControl;
 }
 }
 
-// Text alignment constants
-enum N_TEXT_ALIGNMENT
-{
-    TEXT_ALIGNMENT_LEFT,
-    TEXT_ALIGNMENT_CENTER,
-    TEXT_ALIGNMENT_RIGHT
-};
-
 /*
  * NativeAbstractTextControlObject
  *

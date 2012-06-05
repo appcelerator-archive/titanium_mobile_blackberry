@@ -60,9 +60,9 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createOptionDialog", this, _createOptionDialog);
 
     // Adding javascript constants from Ti.UI
-    ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_LEFT", Number::New(0), this);
-    ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_CENTER", Number::New(1), this);
-    ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_RIGHT", Number::New(2), this);
+    ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_LEFT", Number::New(TEXT_ALIGNMENT_LEFT), this);
+    ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_CENTER", Number::New(TEXT_ALIGNMENT_CENTER), this);
+    ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_RIGHT", Number::New(TEXT_ALIGNMENT_RIGHT), this);
 }
 
 Handle<Value> TiUIObject::_createTabGroup(void* userContext, TiObject* caller, const Arguments& args)
