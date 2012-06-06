@@ -8,6 +8,7 @@
 #include "NativeContainerObject.h"
 #include "NativeObjectFactory.h"
 #include <bb/cascades/AbsoluteLayout>
+#include <bb/cascades/ActivityIndicator>
 #include <bb/cascades/Button>
 #include <bb/cascades/Color>
 #include <bb/cascades/Container>
@@ -15,6 +16,7 @@
 #include <bb/cascades/DockLayoutProperties>
 #include <bb/cascades/ImageView>
 #include <bb/cascades/Label>
+#include <bb/cascades/ListView>
 #include <bb/cascades/ProgressIndicator>
 #include <bb/cascades/Slider>
 #include <bb/cascades/Stacklayout>
@@ -152,6 +154,13 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
     {
         bb::cascades::DropDown* dropdown = (bb::cascades::DropDown*) obj->getNativeHandle();
         container_->add(dropdown);
+        return NATIVE_ERROR_OK;
+    }
+
+    case N_TYPE_LIST_VIEW:
+    {
+        bb::cascades::ListView* listView = (bb::cascades::ListView*) obj->getNativeHandle();
+        container_->add(listView);
         return NATIVE_ERROR_OK;
     }
 

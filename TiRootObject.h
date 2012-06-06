@@ -18,11 +18,15 @@ struct FUNCTION_ENTRY;
  *
  * Root namespace in Titanium
  */
+
+typedef int (*MESSAGELOOPENTRY)(void*);
+
 class TiRootObject : public TiObject
 {
 public:
     static TiRootObject* createRootObject();
-    int executeScript(NativeObjectFactory* objectFactory, const char* javaScript);
+    int executeScript(NativeObjectFactory* objectFactory, const char* javaScript,
+                      MESSAGELOOPENTRY messageLoopEntry, void* context);
 
 protected:
     virtual ~TiRootObject();

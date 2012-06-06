@@ -121,8 +121,32 @@ int NativeControlObject::setTop(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+PROP_SETTER(setLeft)
+int NativeControlObject::setLeft(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 PROP_SETTER(setValue)
 int NativeControlObject::setValue(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setWidth)
+int NativeControlObject::setWidth(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setHeight)
+int NativeControlObject::setHeight(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setData)
+int NativeControlObject::setData(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -244,7 +268,7 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_KEEP_SCREEN_ON]                    = NULL;
     vect[N_PROP_LABEL]                             = PROP_SETTING_FUNCTION(setLabel);
     vect[N_PROP_LAYOUT]                            = NULL;
-    vect[N_PROP_LEFT]                              = NULL;
+    vect[N_PROP_LEFT]                              = PROP_SETTING_FUNCTION(setLeft);
     vect[N_PROP_MAX]                               = PROP_SETTING_FUNCTION(setMax);
     vect[N_PROP_MIN]                               = PROP_SETTING_FUNCTION(setMin);
     vect[N_PROP_MINIMUM_FONT_SIZE]                 = NULL;
@@ -268,6 +292,7 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_WIDTH]                             = PROP_SETTING_FUNCTION(setWidth);
     vect[N_PROP_WORD_WRAP]                         = NULL;
     vect[N_PROP_ZINDEX]                            = NULL;
+    vect[N_PROP_DATA]                              = PROP_SETTING_FUNCTION(setData);
     return vect;
 }
 
@@ -400,5 +425,45 @@ int NativeControlObject::getMapObject(TiObject* obj, QMap<QString, QString>& pro
         props.insert(strKey, strValue);
     }
 
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::getDictionaryData(TiObject* obj, QVector<QPair<QString, QString> >& dictionary)
+{
+    Handle<Value> value = obj->getValue();
+    if (value.IsEmpty() || (!value->IsArray()))
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+
+    Handle<Array> array = Handle<Array>::Cast(value);
+    uint32_t length = array->Length();
+    dictionary.reserve(length);
+    //traverse through the dictionary elements
+    for (uint32_t i = 0; i < length; ++i)
+    {
+        Local<Value> el = array->Get(i);
+        if (el->IsObject())
+        {
+            Local<Array> propAr = el->ToObject()->GetPropertyNames();
+            uint32_t arLenght = propAr->Length();
+            for (uint32_t j = 0; j < arLenght; ++j)
+            {
+                Handle<String> propString = Handle<String>::Cast(propAr->Get(j));
+                String::Utf8Value propNameUTF(propString);
+                QString key = QString::fromUtf8(*propNameUTF);
+                Local<Value> propValue = el->ToObject()->Get(propString);
+                Local<String> valueStr = propValue->ToString();
+                String::Utf8Value valueUTF(valueStr);
+                QString val = QString::fromUtf8(*valueUTF);
+                dictionary.push_back(QPair<QString, QString>(key, val));
+            }
+        }
+        else
+        {
+            //if the element of the dictionary is not object, it means dictionary contains invalid data
+            return NATIVE_ERROR_INVALID_ARG;
+        }
+    }
     return NATIVE_ERROR_OK;
 }

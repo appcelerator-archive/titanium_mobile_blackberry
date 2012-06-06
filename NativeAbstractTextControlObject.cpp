@@ -6,6 +6,7 @@
  */
 
 #include "NativeAbstractTextControlObject.h"
+#include "TiObject.h"
 #include <bb/cascades/controls/abstracttextcontrol.h>
 #include <QMap>
 #include <QString>

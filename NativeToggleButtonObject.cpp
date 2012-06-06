@@ -66,5 +66,6 @@ int NativeToggleButtonObject::setEventHandler(const char* eventName, TiEvent* ev
 void NativeToggleButtonObject::completeInitialization()
 {
     NativeControlObject::completeInitialization();
+    //TODO: commented below line, because checkedChanged signal is not implemented for the toggleButton
     //QObject::connect(toggleButton_, SIGNAL(checkedChanged(bool checked)), eventHandler_, SLOT(checkedChanged(bool checked)));
 }
