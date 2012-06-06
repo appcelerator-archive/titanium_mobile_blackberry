@@ -6,7 +6,7 @@
  */
 
 #include "NativeAbstractTextControlObject.h"
-#include "TiObject.h"
+#include "TiConstants.h"
 #include <bb/cascades/controls/abstracttextcontrol.h>
 #include <QMap>
 #include <QString>
@@ -80,13 +80,13 @@ int NativeAbstractTextControlObject::setTextAlign(TiObject* obj)
 
     switch (value)
     {
-    case TEXT_ALIGNMENT_LEFT:
+    case Ti::UI::TEXT_ALIGNMENT_LEFT:
         textControl_->textStyle()->setAlignment(bb::cascades::TextAlignment::ForceLeft);
         break;
-    case TEXT_ALIGNMENT_CENTER:
+    case Ti::UI::TEXT_ALIGNMENT_CENTER:
         textControl_->textStyle()->setAlignment(bb::cascades::TextAlignment::Center);
         break;
-    case TEXT_ALIGNMENT_RIGHT:
+    case Ti::UI::TEXT_ALIGNMENT_RIGHT:
         textControl_->textStyle()->setAlignment(bb::cascades::TextAlignment::ForceRight);
         break;
     default:

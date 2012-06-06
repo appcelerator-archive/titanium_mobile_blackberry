@@ -44,8 +44,6 @@ public:
     virtual int setSelectedIndex(TiObject* obj);
     virtual int setImage(TiObject* obj);
     virtual int setFont(TiObject* obj);
-    virtual int setWidth(TiObject* obj);
-    virtual int setHeight(TiObject* obj);
     virtual int setHintText(TiObject* obj);
     static int getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a);
     static int getBoolean(TiObject* obj, bool* value);

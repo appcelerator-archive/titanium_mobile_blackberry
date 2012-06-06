@@ -133,18 +133,6 @@ int NativeControlObject::setValue(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setWidth)
-int NativeControlObject::setWidth(TiObject* obj)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
-PROP_SETTER(setHeight)
-int NativeControlObject::setHeight(TiObject* obj)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
 PROP_SETTER(setData)
 int NativeControlObject::setData(TiObject* obj)
 {
