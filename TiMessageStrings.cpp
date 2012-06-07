@@ -5,5 +5,5 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#define DEF_VALUE
-#include "TiExceptionStrings.h"
+#define TIMESSAGESTRINGS_DEF_VALUE
+#include "TiMessageStrings.h"

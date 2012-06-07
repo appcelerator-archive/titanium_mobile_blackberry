@@ -6,7 +6,8 @@
  */
 
 #include "TiPropertySetFunctionObject.h"
-#include "TiExceptionStrings.h"
+
+#include "TiMessageStrings.h"
 
 TiPropertySetFunctionObject::TiPropertySetFunctionObject(const char* name)
     : TiObject(name)
@@ -36,7 +37,7 @@ Handle<Value> TiPropertySetFunctionObject::onFunctionCall(const Arguments& args)
     if (args.Length() < 1)
     {
         // TODO: expand this exception message
-        return ThrowException(String::New(Ti::Missing_argument));
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
     property_->setValue(args[0]);
     return Undefined();

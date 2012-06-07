@@ -7,8 +7,8 @@
 
 #include "TiStringObject.h"
 
-#include "TiExceptionStrings.h"
 #include "TiGenericFunctionObject.h"
+#include "TiMessageStrings.h"
 #include <QRegExp>
 #include <QString>
 #include <QTextStream>
@@ -54,12 +54,9 @@ bool TiStringObject::canAddMembers() const
 
 Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const Arguments& args)
 {
-    HandleScope handleScope;
-    QString res;
-
-    if (!args[0]->IsString())   // TODO: support StringObject
+    if (args.Length() < 1 || !args[0]->IsString())   // TODO: support StringObject
     {
-        ThrowException(String::New(Ti::Expected_argument_of_type_string));
+        ThrowException(String::New(Ti::Msg::Expected_argument_of_type_string));
         return Undefined();
     }
 
@@ -67,6 +64,7 @@ Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const
     QString str = QString::fromUtf8(*utf8);
     QRegExp rx("%.*([diouxXfFeEgGaAcspCSn%])");
     rx.setMinimal(true);
+    QString res;
     QTextStream ts(&res);
     int start = 0, end = 0, i = 0;
 
@@ -127,7 +125,7 @@ Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const
             break;
 
         default:
-            ThrowException(String::New(Ti::INTERNAL__An_error_occurred_while_parsing_the_format_string));
+            ThrowException(String::New(Ti::Msg::INTERNAL__An_error_occurred_while_parsing_the_format_string));
             break;
         }
         start = end;
@@ -136,7 +134,7 @@ Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const
     // Warning str contains the result of the sprintf call at this point
 
     Handle<String> result = String::New(res.toUtf8());
-    return handleScope.Close(result);
+    return (result);
 }
 
 Handle<Value> TiStringObject::_formatCurrency(void* userContext, TiObject* caller, const Arguments& args)
@@ -183,7 +181,7 @@ static QString formatInt(QString s, Local<Value> arg)
         int v = arg->Int32Value();
         return s.sprintf(s.toLatin1().constData(), v);
     }
-    ThrowException(String::New(Ti::Expected_argument_of_type_integer));
+    ThrowException(String::New(Ti::Msg::Expected_argument_of_type_integer));
     return QString();
 }
 
@@ -199,7 +197,7 @@ static QString formatUInt(QString s, Local<Value> arg)
         unsigned int v = arg->Uint32Value();
         return s.sprintf(s.toLatin1().constData(), v);
     }
-    ThrowException(String::New(Ti::Expected_argument_of_type_unsigned_integer));
+    ThrowException(String::New(Ti::Msg::Expected_argument_of_type_unsigned_integer));
     return QString();
 }
 
@@ -216,7 +214,7 @@ static QString formatDouble(QString s, Local<Value> arg)
         double v = arg->NumberValue();
         return s.sprintf(s.toLatin1().constData(), v);
     }
-    ThrowException(String::New(Ti::Expected_argument_of_type_double));
+    ThrowException(String::New(Ti::Msg::Expected_argument_of_type_double));
     return QString();
 }
 
@@ -246,7 +244,7 @@ static QString formatString(QString s, Local<Value> arg)
     {
         printf("\t%s (%d): NYI arg is StringObject\n", __FUNCTION__, __LINE__);
     }
-    ThrowException(String::New(Ti::Expected_argument_of_type_string));
+    ThrowException(String::New(Ti::Msg::Expected_argument_of_type_string));
     return QString();
 }
 
@@ -261,6 +259,6 @@ static QString formatPointer(QString s, Local<Value> arg)
     {
         return s.sprintf(s.toLatin1().constData(), External::Unwrap(arg));
     }
-    ThrowException(String::New(Ti::Expected_argument_of_type_object_or_external));
+    ThrowException(String::New(Ti::Msg::Expected_argument_of_type_object_or_external));
     return QString();
 }

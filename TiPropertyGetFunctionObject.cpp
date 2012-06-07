@@ -6,7 +6,8 @@
  */
 
 #include "TiPropertyGetFunctionObject.h"
-#include "TiExceptionStrings.h"
+
+#include "TiMessageStrings.h"
 
 TiPropertyGetFunctionObject::TiPropertyGetFunctionObject(const char* name)
     : TiObject(name)
@@ -38,7 +39,7 @@ Handle<Value> TiPropertyGetFunctionObject::onFunctionCall(const Arguments& args)
     if (args.Length() != 0)
     {
         // TODO: expand this exception message
-        return ThrowException(String::New(Ti::Too_many_arguments));
+        return ThrowException(String::New(Ti::Msg::Too_many_arguments));
     }
     return handleScope.Close(property_->getValue());
 }
