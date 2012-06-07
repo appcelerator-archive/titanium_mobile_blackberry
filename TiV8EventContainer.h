@@ -9,8 +9,11 @@
 #define TIV8EVENTCONTAINER_H_
 
 #include "TiEventContainer.h"
-#include <v8.h>
 #include <vector>
+
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#include <v8.h>
+#pragma GCC diagnostic warning "-Wunused-parameter"
 
 using namespace v8;
 using namespace std;
