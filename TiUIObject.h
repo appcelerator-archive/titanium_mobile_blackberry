@@ -41,7 +41,9 @@ private:
     static Handle<Value> createImageView_(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> createTextField_(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> createActivityIndicator_(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createSwitch(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createOptionDialog(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createTableView(void* userContext, TiObject* caller, const Arguments& args);
     NativeObjectFactory* objectFactory_;
     NativeObject* contentContainer_;
 };

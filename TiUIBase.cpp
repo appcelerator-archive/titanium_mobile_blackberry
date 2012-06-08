@@ -47,6 +47,31 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "font", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_FONT
+    },
+
+    {
+        "height", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_HEIGHT
+    },
+
+    {
+        "hintText", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_HINT_TEXT
+    },
+
+    {
+        "image", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_IMAGE
+    },
+
+    {
+        "data", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_DATA
+    },
+
+    {
         "label", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_LABEL
     },
@@ -67,54 +92,53 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
-        "right", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_RIGHT
-    },
-
-    {
-        "text", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_TEXT
-    },
-
-    {
-        "textAlign", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_TEXT_ALIGN
-    },
-
-    {
-        "title", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_TITLE
-    },
-
-    {
-        "top", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_TOP
-    },
-
-    {
-        "value", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_VALUE
-    },
-
-    {
-        "visible", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_VISIBLE
-    },
-
-    {
         "options", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_OPTIONS
     },
 
-    {
-        "selectedIndex", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_SELECTED_INDEX
-    },
+    "right", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+    N_PROP_RIGHT
+},
 
-    {
-        "image", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_IMAGE
-    }
+{
+    "selectedIndex", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+    N_PROP_SELECTED_INDEX
+},
+
+{
+    "text", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+    N_PROP_TEXT
+},
+
+{
+    "textAlign", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+    N_PROP_TEXT_ALIGN
+},
+
+{
+    "title", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+    N_PROP_TITLE
+},
+
+{
+    "top", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+    N_PROP_TOP
+},
+
+{
+    "value", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+    N_PROP_VALUE
+},
+
+{
+    "visible", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+    N_PROP_VISIBLE
+},
+
+{
+    "width", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+    N_PROP_WIDTH
+}
 };
 
 TiUIBase::TiUIBase()

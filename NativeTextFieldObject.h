@@ -8,7 +8,7 @@
 #ifndef NATIVETEXTFIELDOBJECT_H_
 #define NATIVETEXTFIELDOBJECT_H_
 
-#include "NativeControlObject.h"
+#include "NativeAbstractTextControlObject.h"
 
 //forward declaration
 namespace bb
@@ -22,17 +22,13 @@ class TextField;
 class TiEventContainer;
 class TextFieldEventHandler;
 
-class NativeTextFieldObject : public NativeControlObject
+class NativeTextFieldObject : public NativeAbstractTextControlObject
 {
 public:
     static NativeTextFieldObject* createTextField();
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
-    virtual int setWidth(float width);
-    virtual int setHeight(float height);
-    virtual int setLeft(float left);
-    virtual int setTop(float top);
-    virtual int setHintText(const char* hint);
+    virtual int setHintText(TiObject* obj);
     virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual void completeInitialization();
     virtual NAHANDLE getNativeHandle() const;
@@ -41,16 +37,14 @@ protected:
     virtual ~NativeTextFieldObject();
 
 private:
-    NativeTextFieldObject();
+    explicit NativeTextFieldObject();
     //this class is neither copy-constructible nor assignable
-    NativeTextFieldObject(const NativeTextFieldObject& obj);
-    NativeTextFieldObject& operator=(const NativeTextFieldObject& obj);
+    NativeTextFieldObject(const NativeTextFieldObject& textField);
+    NativeTextFieldObject& operator=(const NativeTextFieldObject& textField);
 
     bb::cascades::TextField* textField_;
     TiEventContainer* eventFieldChanged_;
     TextFieldEventHandler* eventHandler_;
-    float left_;
-    float top_;
 };
 
 //Event handler for textField object

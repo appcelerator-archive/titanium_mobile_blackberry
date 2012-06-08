@@ -160,8 +160,20 @@ int NativeControlObject::setTop(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+PROP_SETTER(setLeft)
+int NativeControlObject::setLeft(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 PROP_SETTER(setValue)
 int NativeControlObject::setValue(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setData)
+int NativeControlObject::setData(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -193,6 +205,46 @@ int NativeControlObject::setSelectedIndex(TiObject* obj)
 
 PROP_SETTER(setImage)
 int NativeControlObject::setImage(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setFont)
+int NativeControlObject::setFont(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setWidth)
+int NativeControlObject::setWidth(TiObject* obj)
+{
+    float width = 0;
+    int error = NativeControlObject::getFloat(obj, &width);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+    control_->setMinWidth(width);
+    control_->setMaxWidth(width);
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETTER(setHeight)
+int NativeControlObject::setHeight(TiObject* obj)
+{
+    float height = 0;
+    int error = NativeControlObject::getFloat(obj, &height);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+    control_->setMinHeight(height);
+    control_->setMaxHeight(height);
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETTER(setHintText)
+int NativeControlObject::setHintText(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -234,16 +286,16 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_COLOR]                             = PROP_SETTING_FUNCTION(setColor);
     vect[N_PROP_ELLIPSIZE]                         = NULL;
     vect[N_PROP_FOCUSABLE]                         = NULL;
-    vect[N_PROP_FONT]                              = NULL;
-    vect[N_PROP_HEIGHT]                            = NULL;
+    vect[N_PROP_FONT]                              = PROP_SETTING_FUNCTION(setFont);
+    vect[N_PROP_HEIGHT]                            = PROP_SETTING_FUNCTION(setHeight);
     vect[N_PROP_HIGHLIGHTED_COLOR]                 = NULL;
-    vect[N_PROP_HINT_TEXT]                         = NULL;
+    vect[N_PROP_HINT_TEXT]                         = PROP_SETTING_FUNCTION(setHintText);
     vect[N_PROP_HTML]                              = NULL;
     vect[N_PROP_IMAGE]                             = PROP_SETTING_FUNCTION(setImage);
     vect[N_PROP_KEEP_SCREEN_ON]                    = NULL;
     vect[N_PROP_LABEL]                             = PROP_SETTING_FUNCTION(setLabel);
     vect[N_PROP_LAYOUT]                            = PROP_SETTING_FUNCTION(setLeft);
-    vect[N_PROP_LEFT]                              = NULL;
+    vect[N_PROP_LEFT]                              = PROP_SETTING_FUNCTION(setLeft);
     vect[N_PROP_MAX]                               = PROP_SETTING_FUNCTION(setMax);
     vect[N_PROP_MIN]                               = PROP_SETTING_FUNCTION(setMin);
     vect[N_PROP_MINIMUM_FONT_SIZE]                 = NULL;
@@ -264,9 +316,10 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_TRANSFORM]                         = NULL;
     vect[N_PROP_VALUE]                             = PROP_SETTING_FUNCTION(setValue);
     vect[N_PROP_VISIBLE]                           = PROP_SETTING_FUNCTION(setVisible);
-    vect[N_PROP_WIDTH]                             = NULL;
+    vect[N_PROP_WIDTH]                             = PROP_SETTING_FUNCTION(setWidth);
     vect[N_PROP_WORD_WRAP]                         = NULL;
     vect[N_PROP_ZINDEX]                            = NULL;
+    vect[N_PROP_DATA]                              = PROP_SETTING_FUNCTION(setData);
     return vect;
 }
 
@@ -373,6 +426,71 @@ int NativeControlObject::getStringArray(TiObject* obj, QVector<QString>& value)
         String::Utf8Value v8UtfString(Handle<String>::Cast(item));
         const char* cStr = *v8UtfString;
         value.append(cStr);
+    }
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::getMapObject(TiObject* obj, QMap<QString, QString>& props)
+{
+    Handle<Value> v8value = obj->getValue();
+    if (v8value.IsEmpty() || !v8value->IsObject())
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    Handle<Object> object = Handle<Object>::Cast(v8value);
+    Handle<Array> keys = object->GetPropertyNames();
+
+    for (unsigned int i = 0; i < keys->Length(); i++)
+    {
+        v8::Handle<v8::String> key = keys->Get(v8::Integer::New(i))->ToString();
+        v8::String::Utf8Value keyStr(key);
+        v8::Handle<v8::String> value = object->Get(key)->ToString();
+        v8::String::Utf8Value valueStr(value);
+        QString strKey = QString::fromUtf8(*keyStr);
+        QString strValue = QString::fromUtf8(*valueStr);
+
+        props.insert(strKey, strValue);
+    }
+
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::getDictionaryData(TiObject* obj, QVector<QPair<QString, QString> >& dictionary)
+{
+    Handle<Value> value = obj->getValue();
+    if (value.IsEmpty() || (!value->IsArray()))
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+
+    Handle<Array> array = Handle<Array>::Cast(value);
+    uint32_t length = array->Length();
+    dictionary.reserve(length);
+    //traverse through the dictionary elements
+    for (uint32_t i = 0; i < length; ++i)
+    {
+        Local<Value> el = array->Get(i);
+        if (el->IsObject())
+        {
+            Local<Array> propAr = el->ToObject()->GetPropertyNames();
+            uint32_t arLenght = propAr->Length();
+            for (uint32_t j = 0; j < arLenght; ++j)
+            {
+                Handle<String> propString = Handle<String>::Cast(propAr->Get(j));
+                String::Utf8Value propNameUTF(propString);
+                QString key = QString::fromUtf8(*propNameUTF);
+                Local<Value> propValue = el->ToObject()->Get(propString);
+                Local<String> valueStr = propValue->ToString();
+                String::Utf8Value valueUTF(valueStr);
+                QString val = QString::fromUtf8(*valueUTF);
+                dictionary.push_back(QPair<QString, QString>(key, val));
+            }
+        }
+        else
+        {
+            //if the element of the dictionary is not object, it means dictionary contains invalid data
+            return NATIVE_ERROR_INVALID_ARG;
+        }
     }
     return NATIVE_ERROR_OK;
 }

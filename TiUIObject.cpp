@@ -8,6 +8,7 @@
 #include "TiUIObject.h"
 #include "TiGenericFunctionObject.h"
 #include "TiCascadesApp.h"
+#include "TiConstants.h"
 #include "TiUIWindow.h"
 #include "TiUILabel.h"
 #include "TiUIButton.h"
@@ -16,6 +17,7 @@
 #include "TiUIImageView.h"
 #include "TiUITextField.h"
 #include "TiUIActivityIndicator.h"
+#include "TiUITableView.h"
 #include "TiUISwitch.h"
 #include "TiUIOptionDialog.h"
 #include <string.h>
@@ -47,6 +49,7 @@ void TiUIObject::addObjectToParent(TiObject* parent, NativeObjectFactory* object
 
 void TiUIObject::onCreateStaticMembers()
 {
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTableView", this, _createTableView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTabGroup", this, _createTabGroup);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createWindow", this, _createWindow);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createLabel", this, _createLabel);
@@ -58,6 +61,11 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createActivityIndicator", this, _createActivityIndicator);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSwitch", this, _createSwitch);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createOptionDialog", this, _createOptionDialog);
+
+    // Adding javascript constants from Ti.UI
+    ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_LEFT", Number::New(Ti::UI::TEXT_ALIGNMENT_LEFT), this);
+    ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_CENTER", Number::New(Ti::UI::TEXT_ALIGNMENT_CENTER), this);
+    ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_RIGHT", Number::New(Ti::UI::TEXT_ALIGNMENT_RIGHT), this);
 }
 
 Handle<Value> TiUIObject::createControlHelper_(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args)
@@ -140,6 +148,24 @@ Handle<Value> TiUIObject::_createOptionDialog(void* userContext, TiObject* calle
         optionDialog->setParametersFromObject(settingsObj);
     }
     setTiObjectToJsObject(result, optionDialog);
+    return handleScope.Close(result);
+}
+
+Handle<Value> TiUIObject::_createTableView(void* userContext, TiObject* caller, const Arguments& args)
+{
+    HandleScope handleScope;
+    TiUIObject* obj = (TiUIObject*) userContext;
+    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
+    Handle < Object > result;
+    result = global->NewInstance();
+    TiUITableView* tableView = TiUITableView::createTableView(obj->objectFactory_);
+    tableView->setValue(result);
+    if ((args.Length() > 0) && (args[0]->IsObject()))
+    {
+        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        tableView->setParametersFromObject(settingsObj);
+    }
+    setTiObjectToJsObject(result, tableView);
     return handleScope.Close(result);
 }
 
