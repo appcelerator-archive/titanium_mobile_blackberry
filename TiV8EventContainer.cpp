@@ -35,7 +35,7 @@ void TiV8EventContainer::removeListener(int id)
 
 void TiV8EventContainer::fireEvent()
 {
-    map<int, TiInternalEventListener>::iterator it;
+    map<int, TiInternalEventListener>::const_iterator it;
     for (it = listeners_.begin(); it != listeners_.end(); it++)
     {
         it->second.getListener()->fire(&eventData_);
@@ -73,6 +73,7 @@ TiInternalEventListener::TiInternalEventListener(const TiInternalEventListener& 
         listener_->addRef();
     }
 }
+
 TiInternalEventListener::TiInternalEventListener(TiEvent* listener)
 {
     listener_ = listener;
@@ -81,6 +82,7 @@ TiInternalEventListener::TiInternalEventListener(TiEvent* listener)
         listener_->addRef();
     }
 }
+
 TiInternalEventListener::~TiInternalEventListener()
 {
     if (listener_ != NULL)
@@ -89,6 +91,7 @@ TiInternalEventListener::~TiInternalEventListener()
         listener_ = NULL;
     }
 }
+
 const TiInternalEventListener& TiInternalEventListener::operator =(const TiInternalEventListener& listener)
 {
     if (listener.listener_ != NULL)
@@ -102,6 +105,7 @@ const TiInternalEventListener& TiInternalEventListener::operator =(const TiInter
     listener_ = listener.listener_;
     return (*this);
 }
+
 TiEvent* TiInternalEventListener::operator ->() const
 {
     return listener_;

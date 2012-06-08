@@ -14,6 +14,7 @@
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/Color>
+#include <bb/cascades/Container>
 #include <qtgui/QColor>
 
 #define PROP_SETTING_FUNCTION(NAME)     prop_##NAME
@@ -32,17 +33,17 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap();
 static const vector<NATIVE_PROPSET_CALLBACK> s_functionMap = initFunctionMap();
 
 
-NativeControlObject::NativeControlObject()
+NativeControlObject::NativeControlObject() :
+    container_(NULL),
+    control_(NULL),
+    layout_(NULL),
+    backgroundColor_(bb::cascades::Color::Transparent),
+    disabledBackgroundColor_(bb::cascades::Color::Transparent),
+    left_(0),
+    top_(0),
+    nextEventId_(1),
+    controlEnabled_(true)
 {
-    nextEventId_ = 1;
-    container_ = NULL;
-    control_ = NULL;
-    layout_ = NULL;
-    left_ = 0;
-    top_ = 0;
-    // Defaults to transparent background
-    backgroundColor_ = bb::cascades::Color::fromRGBA(0.0f, 0.0f, 0.0f, 0.0f);
-    disabledBackgroundColor_ = backgroundColor_;
 }
 
 NativeControlObject::~NativeControlObject()
@@ -72,6 +73,8 @@ int NativeControlObject::getNextEventId()
     // Account for overflow.
     if (nextEventId_ < 1)
     {
+        // This event id must start at 1 because 0 is reserved. Since
+        // V8 will always cast a value of undefined to zero.
         nextEventId_ = 1;
     }
     return nextEventId_++;
@@ -84,7 +87,7 @@ int NativeControlObject::setVisibility(bool visible)
 }
 
 
-// PROP_SETTER_xxx creates a static version of functions which
+// PROP_SETTER creates a static version of functions which
 // calls the non-static on method on the NativeControlObject
 // class.
 
@@ -118,7 +121,10 @@ int NativeControlObject::setBackgroundColor(TiObject* obj)
         return error;
     }
     backgroundColor_ = bb::cascades::Color::fromRGBA(r, g, b, a);
-    container_->setBackground(backgroundColor_);
+    if (controlEnabled_)
+    {
+        container_->setBackground(backgroundColor_);
+    }
     return NATIVE_ERROR_OK;
 }
 
@@ -135,8 +141,11 @@ int NativeControlObject::setBackgroundDisableColor(TiObject* obj)
     {
         return error;
     }
-    backgroundColor_ = bb::cascades::Color::fromRGBA(r, g, b, a);
-    container_->setBackground(backgroundColor_);
+    disabledBackgroundColor_ = bb::cascades::Color::fromRGBA(r, g, b, a);
+    if (!controlEnabled_)
+    {
+        container_->setBackground(disabledBackgroundColor_);
+    }
     return NATIVE_ERROR_OK;
 }
 

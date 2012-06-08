@@ -6,8 +6,8 @@
  */
 
 #include "NativeButtonObject.h"
-#include "TiEventContainerFactory.h"
 #include "TiEvent.h"
+#include "TiEventContainerFactory.h"
 #include <bb/cascades/Button>
 #include <bb/cascades/DockLayoutProperties>
 #include <bb/cascades/HorizontalAlignment>

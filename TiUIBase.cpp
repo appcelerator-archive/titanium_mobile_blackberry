@@ -189,7 +189,7 @@ void TiUIBase::setTiMappingProperties(const TiProperty* props, int propertyCount
     for (int i = 0; i < propertyCount; i++)
     {
         TiObject* value = TiPropertyMapObject::addProperty(this, props[i].propertyName, props[i].nativePropertyNumber,
-                          valueModify, this);
+                          _valueModify, this);
         // For all properties that have write permissions, add a setter method, e.g., myLabel.text=<my text>; myLabel.setText(<my text>);
         if (props[i].permissions & TI_PROP_PERMISSION_WRITE)
         {
@@ -228,10 +228,10 @@ void TiUIBase::setNativeObject(NativeObject* nativeObject)
 void TiUIBase::onCreateStaticMembers()
 {
     TiObject::onCreateStaticMembers();
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "add", this, add_);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "addEventListener", this, addEventListener_);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "hide", this, hide_);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "removeEventListener", this, removeEventListener_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "add", this, _add);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "addEventListener", this, _addEventListener);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "hide", this, _hide);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "removeEventListener", this, _removeEventListener);
     setTiMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
 }
 
@@ -262,7 +262,7 @@ void TiUIBase::setParametersFromObject(Local<Object> obj)
     }
 }
 
-VALUE_MODIFY TiUIBase::valueModify(int propertyNumber, TiObject* value, void* context)
+VALUE_MODIFY TiUIBase::_valueModify(int propertyNumber, TiObject* value, void* context)
 {
     TiUIBase* self = (TiUIBase*) context;
     NativeObject* object = self->getNativeObject();
@@ -317,7 +317,7 @@ void TiUIBase::onRemoveEventListener(const char* eventName, Handle<Function> eve
     {
         return;
     }
-    // Make sure that the function being removed has been already been added to this event container.
+    // Make sure that the function being removed has been added to this event container.
     Handle<Value> v8extValue = eventFunction->GetHiddenValue(String::New("_event_ptr_"));
     if ((!v8extValue.IsEmpty()) || (!v8extValue->IsExternal()))
     {
@@ -334,7 +334,7 @@ void TiUIBase::onRemoveEventListener(const char* eventName, Handle<Function> eve
     no->removeEventHandler(v8id->Value());
 }
 
-Handle<Value> TiUIBase::add_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIBase::_add(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
     TiUIBase* obj = (TiUIBase*) userContext;
@@ -359,7 +359,7 @@ Handle<Value> TiUIBase::add_(void* userContext, TiObject* caller, const Argument
     return Undefined();
 }
 
-Handle<Value> TiUIBase::addEventListener_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIBase::_addEventListener(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
     // JavaScript usage:
@@ -381,7 +381,7 @@ Handle<Value> TiUIBase::addEventListener_(void* userContext, TiObject* caller, c
     return Undefined();
 }
 
-Handle<Value> TiUIBase::hide_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIBase::_hide(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
     TiUIBase* obj = (TiUIBase*) userContext;
@@ -390,7 +390,7 @@ Handle<Value> TiUIBase::hide_(void* userContext, TiObject* caller, const Argumen
     return Undefined();
 }
 
-Handle<Value> TiUIBase::removeEventListener_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIBase::_removeEventListener(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
     // JavaScript usage:
