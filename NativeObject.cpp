@@ -57,6 +57,11 @@ void NativeObject::completeInitialization()
     isInitializationComplete_ = true;
 }
 
+int NativeObject::scrollToIndex(int index)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 bool NativeObject::isInitializationComplete() const
 {
     return isInitializationComplete_;

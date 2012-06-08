@@ -17,7 +17,7 @@ TiUIActivityIndicator::~TiUIActivityIndicator()
 {
 }
 
-TiUIActivityIndicator* TiUIActivityIndicator::createActivityIndicator(NativeObjectFactory* nativeObjectFactory)
+TiUIBase* TiUIActivityIndicator::createActivityIndicator(NativeObjectFactory* nativeObjectFactory)
 {
     TiUIActivityIndicator* obj = new TiUIActivityIndicator(nativeObjectFactory);
     obj->initializeTiObject(NULL);

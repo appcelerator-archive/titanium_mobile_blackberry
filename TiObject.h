@@ -138,6 +138,11 @@ private:
     bool isInitialized_;
     TiObject* parentObject_;
     map<string, ObjectEntry> childObjectMap_;
+#ifdef _TI_DEBUG_
+    const char* cstrName_;
+    string debugMembers_;
+    const char* cstrdebugMembers_;
+#endif // _TI_DEBUG_
 };
 
 #endif /* TIOBJECT_H_ */

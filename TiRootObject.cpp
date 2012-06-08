@@ -52,19 +52,20 @@ TiRootObject* TiRootObject::createRootObject()
     return obj;
 }
 
-int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* javaScript)
+int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* javaScript,
+                                MESSAGELOOPENTRY messageLoopEntry, void* context)
 {
     HandleScope handleScope;
     objectFactory_ = objectFactory;
     initializeTiObject(NULL);
     globalTemplate_ = ObjectTemplate::New();
-    globalTemplate_->SetInternalFieldCount(2);
     TiV8EventContainerFactory* eventFactory = TiV8EventContainerFactory::createEventContainerFactory(globalTemplate_);
     objectFactory->setEventContainerFactory(eventFactory);
     onSetGetPropertyCallback(&globalTemplate_);
     onSetFunctionCallback(&globalTemplate_);
     context_ = Context::New(NULL, globalTemplate_);
     context_->Global()->SetHiddenValue(String::New("globalTemplate_"), External::New(&globalTemplate_));
+    context_->Global()->SetHiddenValue(String::New("context_"), External::New(&context_));
     setTiObjectToJsObject(context_->Global(), this);
     Context::Scope context_scope(context_);
 
@@ -85,7 +86,7 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
         return -1;
     }
     onStartMessagePump();
-    return 0;
+    return (messageLoopEntry)(context);
 }
 
 /* Methods defined by Global */

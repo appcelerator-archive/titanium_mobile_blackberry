@@ -8,6 +8,7 @@
 #include "NativeContainerObject.h"
 #include "NativeObjectFactory.h"
 #include <bb/cascades/AbsoluteLayout>
+#include <bb/cascades/ActivityIndicator>
 #include <bb/cascades/Button>
 #include <bb/cascades/Color>
 #include <bb/cascades/Container>
@@ -15,6 +16,7 @@
 #include <bb/cascades/DockLayoutProperties>
 #include <bb/cascades/ImageView>
 #include <bb/cascades/Label>
+#include <bb/cascades/ListView>
 #include <bb/cascades/ProgressIndicator>
 #include <bb/cascades/Slider>
 #include <bb/cascades/Stacklayout>
@@ -61,6 +63,10 @@ NAHANDLE NativeContainerObject::getNativeHandle() const
 
 int NativeContainerObject::initialize(TiEventContainerFactory* containerFactory)
 {
+    if (container_ != NULL)
+    {
+        return NATIVE_ERROR_OK;
+    }
     container_ = Container::create();
     if (container_ == NULL)
     {

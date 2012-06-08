@@ -9,14 +9,12 @@
 #include "TiEventContainerFactory.h"
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
-#include <bb/cascades/textField>
-#include <QtCore/QString>
+#include <bb/cascades/TextField>
+#include <QString>
 
 NativeTextFieldObject::NativeTextFieldObject()
 {
     textField_ = NULL;
-    left_ = 0;
-    top_ = 0;
 }
 
 NativeTextFieldObject::~NativeTextFieldObject()
@@ -36,16 +34,22 @@ NativeTextFieldObject* NativeTextFieldObject::createTextField()
 int NativeTextFieldObject::initialize(TiEventContainerFactory* containerFactory)
 {
     textField_ = bb::cascades::TextField::create();
-    setControl(textField_);
+    setTextControl(textField_);
     eventFieldChanged_ = containerFactory->createEventContainer();
     eventFieldChanged_->setDataProperty("type", "change");
     eventHandler_ = new TextFieldEventHandler(eventFieldChanged_);
     return NATIVE_ERROR_OK;
 }
 
-int NativeTextFieldObject::setHintText(const char* hintText)
+int NativeTextFieldObject::setHintText(TiObject* obj)
 {
-    textField_->setHintText(hintText);
+    QString strHint;
+    int error = NativeControlObject::getString(obj, strHint);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    textField_->setHintText(strHint);
     return NATIVE_ERROR_OK;
 }
 

@@ -37,6 +37,11 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "bottom", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_BOTTOM
+    },
+
+    {
         "backgroundDisableColor", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_BACKGROUND_DISABLED_COLOR
     },
@@ -44,6 +49,31 @@ const static TiProperty g_tiProperties[] =
     {
         "color", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_COLOR
+    },
+
+    {
+        "font", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_FONT
+    },
+
+    {
+        "height", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_HEIGHT
+    },
+
+    {
+        "hintText", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_HINT_TEXT
+    },
+
+    {
+        "image", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_IMAGE
+    },
+
+    {
+        "data", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_DATA
     },
 
     {
@@ -57,6 +87,11 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "left", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_LEFT
+    },
+
+    {
         "max", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_MAX
     },
@@ -64,6 +99,21 @@ const static TiProperty g_tiProperties[] =
     {
         "min", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_MIN
+    },
+
+    {
+        "options", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_OPTIONS
+    },
+
+    {
+        "right", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_RIGHT
+    },
+
+    {
+        "selectedIndex", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_SELECTED_INDEX
     },
 
     {
@@ -102,18 +152,8 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
-        "options", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_OPTIONS
-    },
-
-    {
-        "selectedIndex", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_SELECTED_INDEX
-    },
-
-    {
-        "image", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_IMAGE
+        "width", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_WIDTH
     },
 
     {
@@ -247,16 +287,14 @@ void TiUIBase::setParametersFromObject(Local<Object> obj)
     Handle<Array> propNames = obj->GetPropertyNames();
     uint32_t props = propNames->Length();
     Local<Value> propValue;
-    Handle<String> propString;
-    TiObject* foundProp;
     for (uint32_t i = 0; i < props; i++)
     {
-        propString = Handle<String>::Cast(propNames->Get(Integer::New(i)));
+        Handle<String> propString = Handle<String>::Cast(propNames->Get(Integer::New(i)));
         String::Utf8Value propNameUTF(propString);
-        foundProp = onLookupMember(*propNameUTF);
+        TiObject* foundProp = onLookupMember(*propNameUTF);
         if (foundProp != NULL)
         {
-            propValue = obj->Get(propString);
+            Local<Value> propValue = obj->Get(propString);
             foundProp->setValue(propValue);
         }
     }

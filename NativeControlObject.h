@@ -32,10 +32,14 @@ public:
     virtual int setBackgroundColor(TiObject* obj);
     virtual int setBackgroundDisableColor(TiObject* obj);
     virtual int setColor(TiObject* obj);
+    virtual int setData(TiObject* obj);
     virtual int setEnabled(TiObject* obj);
+    virtual int setFont(TiObject* obj);
     virtual int setHeight(TiObject* obj);
+    virtual int setHintText(TiObject* obj);
     virtual int setImage(TiObject* obj);
     virtual int setLabel(TiObject* obj);
+    virtual int setLeft(TiObject* obj);
     virtual int setMax(TiObject* obj);
     virtual int setMin(TiObject* obj);
     virtual int setOpacity(TiObject* obj);
@@ -43,8 +47,8 @@ public:
     virtual int setSelectedIndex(TiObject* obj);
     virtual int setText(TiObject* obj);
     virtual int setTextAlign(TiObject* obj);
-    virtual int setTop(TiObject* obj);
     virtual int setTitle(TiObject* obj);
+    virtual int setTop(TiObject* obj);
     virtual int setValue(TiObject* obj);
     virtual int setVisible(TiObject* obj);
     virtual int setWidth(TiObject* obj);
@@ -54,7 +58,11 @@ public:
     static int getFloat(TiObject* obj, float* value);
     static int getInteger(TiObject* obj, int* value);
     static int getStringArray(TiObject* obj, QVector<QString>& value);
+    static int getMapObject(TiObject* obj, QMap<QString, QString>& props);
     static int getPoint(TiObject* obj, float* x, float* y);
+    //obtain java script dictionary object and keep it in the multimap
+    static int getDictionaryData(TiObject* obj, QVector<QPair<QString, QString> >& dictionary);
+
 protected:
     NativeControlObject();
     virtual ~NativeControlObject();
