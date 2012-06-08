@@ -160,12 +160,6 @@ int NativeControlObject::setTop(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-PROP_SETTER(setLeft)
-int NativeControlObject::setLeft(TiObject* obj)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
 PROP_SETTER(setValue)
 int NativeControlObject::setValue(TiObject* obj)
 {
@@ -294,7 +288,7 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_IMAGE]                             = PROP_SETTING_FUNCTION(setImage);
     vect[N_PROP_KEEP_SCREEN_ON]                    = NULL;
     vect[N_PROP_LABEL]                             = PROP_SETTING_FUNCTION(setLabel);
-    vect[N_PROP_LAYOUT]                            = PROP_SETTING_FUNCTION(setLeft);
+    vect[N_PROP_LAYOUT]                            = NULL;
     vect[N_PROP_LEFT]                              = PROP_SETTING_FUNCTION(setLeft);
     vect[N_PROP_MAX]                               = PROP_SETTING_FUNCTION(setMax);
     vect[N_PROP_MIN]                               = PROP_SETTING_FUNCTION(setMin);

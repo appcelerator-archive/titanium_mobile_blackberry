@@ -68,7 +68,7 @@ void TiUIObject::onCreateStaticMembers()
     ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_RIGHT", Number::New(Ti::UI::TEXT_ALIGNMENT_RIGHT), this);
 }
 
-Handle<Value> TiUIObject::createControlHelper_(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args)
+Handle<Value> TiUIObject::_createControlHelper(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args)
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
@@ -86,51 +86,50 @@ Handle<Value> TiUIObject::createControlHelper_(void* userContext, CREATEOBJECTCA
     return handleScope.Close(result);
 }
 
-Handle<Value> TiUIObject::createTabGroup_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIObject::_createTabGroup(void* userContext, TiObject* caller, const Arguments& args)
 {
     // TODO: finish this
     return Undefined();
 }
 
-Handle<Value> TiUIObject::createWindow_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIObject::_createWindow(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return createControlHelper_(userContext, TiUIWindow::createWindow, args);
+    return _createControlHelper(userContext, TiUIWindow::createWindow, args);
 }
 
-Handle<Value> TiUIObject::createLabel_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIObject::_createLabel(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return createControlHelper_(userContext, TiUILabel::createLabel, args);
+    return _createControlHelper(userContext, TiUILabel::createLabel, args);
 }
 
 Handle<Value> TiUIObject::_createButton(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return createControlHelper_(userContext, TiUIButton::createButton, args);
+    return _createControlHelper(userContext, TiUIButton::createButton, args);
 }
 
 Handle<Value> TiUIObject::_createSlider(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return createControlHelper_(userContext, TiUISlider::createSlider, args);
+    return _createControlHelper(userContext, TiUISlider::createSlider, args);
 }
 
 Handle<Value> TiUIObject::_createProgressBar(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return createControlHelper_(userContext, TiUIProgressBar::createProgressBar, args);
+    return _createControlHelper(userContext, TiUIProgressBar::createProgressBar, args);
 }
 
 Handle<Value> TiUIObject::_createTextField(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return createControlHelper_(userContext, TiUITextField::createTextField, args);
-    HandleScope handleScope;
+    return _createControlHelper(userContext, TiUITextField::createTextField, args);
 }
 
 Handle<Value> TiUIObject::_createImageView(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return createControlHelper_(userContext, TiUIImageView::createImageView, args);
+    return _createControlHelper(userContext, TiUIImageView::createImageView, args);
 }
 
 Handle<Value> TiUIObject::_createActivityIndicator(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return createControlHelper_(userContext, TiUIActivityIndicator::createActivityIndicator, args);
+    return _createControlHelper(userContext, TiUIActivityIndicator::createActivityIndicator, args);
 }
 
 Handle<Value> TiUIObject::_createOptionDialog(void* userContext, TiObject* caller, const Arguments& args)

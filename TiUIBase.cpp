@@ -96,49 +96,50 @@ const static TiProperty g_tiProperties[] =
         N_PROP_OPTIONS
     },
 
-    "right", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-    N_PROP_RIGHT
-},
+    {
+        "right", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_RIGHT
+    },
 
-{
-    "selectedIndex", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-    N_PROP_SELECTED_INDEX
-},
+    {
+        "selectedIndex", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_SELECTED_INDEX
+    },
 
-{
-    "text", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-    N_PROP_TEXT
-},
+    {
+        "text", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_TEXT
+    },
 
-{
-    "textAlign", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-    N_PROP_TEXT_ALIGN
-},
+    {
+        "textAlign", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_TEXT_ALIGN
+    },
 
-{
-    "title", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-    N_PROP_TITLE
-},
+    {
+        "title", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_TITLE
+    },
 
-{
-    "top", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-    N_PROP_TOP
-},
+    {
+        "top", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_TOP
+    },
 
-{
-    "value", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-    N_PROP_VALUE
-},
+    {
+        "value", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_VALUE
+    },
 
-{
-    "visible", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-    N_PROP_VISIBLE
-},
+    {
+        "visible", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_VISIBLE
+    },
 
-{
-    "width", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-    N_PROP_WIDTH
-}
+    {
+        "width", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_WIDTH
+    }
 };
 
 TiUIBase::TiUIBase()
