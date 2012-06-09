@@ -68,6 +68,24 @@ void TiUIObject::onCreateStaticMembers()
     ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_RIGHT", Number::New(Ti::UI::TEXT_ALIGNMENT_RIGHT), this);
 }
 
+Handle<Value> TiUIObject::_createControlHelper(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args)
+{
+    HandleScope handleScope;
+    TiUIObject* obj = (TiUIObject*) userContext;
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result;
+    result = global->NewInstance();
+    TiUIBase* newControl = (createCallback)(obj->objectFactory_);
+    newControl->setValue(result);
+    if ((args.Length() > 0) && (args[0]->IsObject()))
+    {
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
+        newControl->setParametersFromObject(settingsObj);
+    }
+    setTiObjectToJsObject(result, newControl);
+    return handleScope.Close(result);
+}
+
 Handle<Value> TiUIObject::_createTabGroup(void* userContext, TiObject* caller, const Arguments& args)
 {
     // TODO: finish this
@@ -76,146 +94,42 @@ Handle<Value> TiUIObject::_createTabGroup(void* userContext, TiObject* caller, c
 
 Handle<Value> TiUIObject::_createWindow(void* userContext, TiObject* caller, const Arguments& args)
 {
-    HandleScope handleScope;
-    TiUIObject* obj = (TiUIObject*) userContext;
-    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
-    Handle<Object> result;
-    result = global->NewInstance();
-    TiUIWindow* wnd = TiUIWindow::createWindow(obj->objectFactory_, "");
-    wnd->setValue(result);
-    if ((args.Length() > 0) && (args[0]->IsObject()))
-    {
-        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
-        wnd->setParametersFromObject(settingsObj);
-    }
-    setTiObjectToJsObject(result, wnd);
-    return handleScope.Close(result);
+    return _createControlHelper(userContext, TiUIWindow::createWindow, args);
 }
 
 Handle<Value> TiUIObject::_createLabel(void* userContext, TiObject* caller, const Arguments& args)
 {
-    HandleScope handleScope;
-    TiUIObject* obj = (TiUIObject*) userContext;
-    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
-    Handle<Object> result;
-    result = global->NewInstance();
-    TiUILabel* label = TiUILabel::createLabel(obj->objectFactory_);
-    label->setValue(result);
-    if ((args.Length() > 0) && (args[0]->IsObject()))
-    {
-        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
-        label->setParametersFromObject(settingsObj);
-    }
-    setTiObjectToJsObject(result, label);
-    return handleScope.Close(result);
+    return _createControlHelper(userContext, TiUILabel::createLabel, args);
 }
 
 Handle<Value> TiUIObject::_createButton(void* userContext, TiObject* caller, const Arguments& args)
 {
-    HandleScope handleScope;
-    TiUIObject* obj = (TiUIObject*) userContext;
-    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
-    Handle<Object> result;
-    result = global->NewInstance();
-    TiUIButton* button = TiUIButton::createButton(obj->objectFactory_);
-    button->setValue(result);
-    if ((args.Length() > 0) && (args[0]->IsObject()))
-    {
-        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
-        button->setParametersFromObject(settingsObj);
-    }
-    setTiObjectToJsObject(result, button);
-    return handleScope.Close(result);
+    return _createControlHelper(userContext, TiUIButton::createButton, args);
 }
 
 Handle<Value> TiUIObject::_createSlider(void* userContext, TiObject* caller, const Arguments& args)
 {
-    HandleScope handleScope;
-    TiUIObject* obj = (TiUIObject*) userContext;
-    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
-    Handle<Object> result;
-    result = global->NewInstance();
-    TiUISlider* slider = TiUISlider::createSlider(obj->objectFactory_);
-    slider->setValue(result);
-    if ((args.Length() > 0) && (args[0]->IsObject()))
-    {
-        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
-        slider->setParametersFromObject(settingsObj);
-    }
-    setTiObjectToJsObject(result, slider);
-    return handleScope.Close(result);
+    return _createControlHelper(userContext, TiUISlider::createSlider, args);
 }
 
 Handle<Value> TiUIObject::_createProgressBar(void* userContext, TiObject* caller, const Arguments& args)
 {
-    HandleScope handleScope;
-    TiUIObject* obj = (TiUIObject*) userContext;
-    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
-    Handle<Object> result;
-    result = global->NewInstance();
-    TiUIProgressBar* progressBar = TiUIProgressBar::createProgressBar(obj->objectFactory_);
-    progressBar->setValue(result);
-    if ((args.Length() > 0) && (args[0]->IsObject()))
-    {
-        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
-        progressBar->setParametersFromObject(settingsObj);
-    }
-    setTiObjectToJsObject(result, progressBar);
-    return handleScope.Close(result);
+    return _createControlHelper(userContext, TiUIProgressBar::createProgressBar, args);
 }
 
 Handle<Value> TiUIObject::_createTextField(void* userContext, TiObject* caller, const Arguments& args)
 {
-    HandleScope handleScope;
-    TiUIObject* obj = (TiUIObject*) userContext;
-    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
-    Handle<Object> result;
-    result = global->NewInstance();
-    TiUITextField* textField = TiUITextField::createTextField(obj->objectFactory_);
-    textField->setValue(result);
-    if ((args.Length() > 0) && (args[0]->IsObject()))
-    {
-        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
-        textField->setParametersFromObject(settingsObj);
-    }
-    setTiObjectToJsObject(result, textField);
-    return handleScope.Close(result);
+    return _createControlHelper(userContext, TiUITextField::createTextField, args);
 }
 
 Handle<Value> TiUIObject::_createImageView(void* userContext, TiObject* caller, const Arguments& args)
 {
-    HandleScope handleScope;
-    TiUIObject* obj = (TiUIObject*) userContext;
-    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
-    Handle<Object> result;
-    result = global->NewInstance();
-    TiUIImageView* imageView = TiUIImageView::createImageView(obj->objectFactory_);
-    imageView->setValue(result);
-    if ((args.Length() > 0) && (args[0]->IsObject()))
-    {
-        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
-        imageView->setParametersFromObject(settingsObj);
-    }
-    setTiObjectToJsObject(result, imageView);
-    return handleScope.Close(result);
+    return _createControlHelper(userContext, TiUIImageView::createImageView, args);
 }
 
 Handle<Value> TiUIObject::_createActivityIndicator(void* userContext, TiObject* caller, const Arguments& args)
 {
-    HandleScope handleScope;
-    TiUIObject* obj = (TiUIObject*) userContext;
-    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
-    Handle<Object> result;
-    result = global->NewInstance();
-    TiUIActivityIndicator* activityIndicator = TiUIActivityIndicator::createActivityIndicator(obj->objectFactory_);
-    activityIndicator->setValue(result);
-    if ((args.Length() > 0) && (args[0]->IsObject()))
-    {
-        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
-        activityIndicator->setParametersFromObject(settingsObj);
-    }
-    setTiObjectToJsObject(result, activityIndicator);
-    return handleScope.Close(result);
+    return _createControlHelper(userContext, TiUIActivityIndicator::createActivityIndicator, args);
 }
 
 Handle<Value> TiUIObject::_createOptionDialog(void* userContext, TiObject* caller, const Arguments& args)

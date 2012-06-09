@@ -17,7 +17,7 @@ TiUILabel::~TiUILabel()
 {
 }
 
-TiUILabel* TiUILabel::createLabel(NativeObjectFactory* nativeObjectFactory)
+TiUIBase* TiUILabel::createLabel(NativeObjectFactory* nativeObjectFactory)
 {
     TiUILabel* obj = new TiUILabel(nativeObjectFactory);
     obj->initializeTiObject(NULL);

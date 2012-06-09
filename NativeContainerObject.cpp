@@ -63,6 +63,10 @@ NAHANDLE NativeContainerObject::getNativeHandle() const
 
 int NativeContainerObject::initialize(TiEventContainerFactory* containerFactory)
 {
+    if (container_ != NULL)
+    {
+        return NATIVE_ERROR_OK;
+    }
     container_ = Container::create();
     if (container_ == NULL)
     {

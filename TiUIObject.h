@@ -10,6 +10,9 @@
 
 #include "TiObject.h"
 
+class TiUIBase;
+
+typedef TiUIBase* (*CREATEOBJECTCALLBACK)(NativeObjectFactory*);
 
 /*
  * TiUIObject
@@ -28,7 +31,7 @@ protected:
 private:
     TiUIObject();
     TiUIObject(NativeObjectFactory* objectFactory);
-
+    static Handle<Value> _createControlHelper(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args);
     static Handle<Value> _createTabGroup(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createWindow(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createLabel(void* userContext, TiObject* caller, const Arguments& args);

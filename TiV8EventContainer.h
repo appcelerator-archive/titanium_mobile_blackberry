@@ -37,6 +37,21 @@ public:
     virtual void setComplexDataProperty(const char* complexPropertyName, const char* propertyName, const char* value);
 
 private:
+    class TiInternalEventListener
+    {
+    public:
+        TiInternalEventListener();
+        TiInternalEventListener(const TiInternalEventListener& listener);
+        TiInternalEventListener(TiEvent* listener);
+        ~TiInternalEventListener();
+        const TiInternalEventListener& operator =(const TiInternalEventListener& listener);
+        TiEvent* operator ->() const;
+        TiEvent* getListener() const;
+
+    private:
+        TiEvent* listener_;
+    };
+
     Persistent<Object> eventData_;
     vector<TiInternalEventListener> listeners_;
 };
@@ -48,20 +63,5 @@ private:
  * for using the vector template class
  *
  */
-
-class TiInternalEventListener
-{
-public:
-    TiInternalEventListener();
-    TiInternalEventListener(const TiInternalEventListener& listener);
-    TiInternalEventListener(TiEvent* listener);
-    ~TiInternalEventListener();
-    const TiInternalEventListener& operator =(const TiInternalEventListener& listener);
-    TiEvent* operator ->() const;
-    TiEvent* getListener() const;
-
-private:
-    TiEvent* listener_;
-};
 
 #endif /* TIV8EVENTCONTAINER_H_ */

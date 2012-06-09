@@ -21,7 +21,7 @@
 class TiUITextField : public TiUIBase
 {
 public:
-    static TiUITextField* createTextField(NativeObjectFactory* nativeObjectFactory);
+    static TiUIBase* createTextField(NativeObjectFactory* nativeObjectFactory);
 
 protected:
     virtual ~TiUITextField();

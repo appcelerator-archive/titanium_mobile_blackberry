@@ -62,6 +62,19 @@ int NativeControlObject::setBackgroundColor(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETTER(setBottom)
+int NativeControlObject::setBottom(TiObject* obj)
+{
+    float bottom;
+    int error = getFloat(obj, &bottom);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    ((bb::cascades::Control*)getNativeHandle())->setBottomMargin(bottom);
+    return NATIVE_ERROR_OK;
+}
+
 PROP_SETTER(setColor)
 int NativeControlObject::setColor(TiObject* obj)
 {
@@ -74,6 +87,19 @@ int NativeControlObject::setLabel(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETTER(setLeft)
+int NativeControlObject::setLeft(TiObject* obj)
+{
+    float left;
+    int error = getFloat(obj, &left);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    ((bb::cascades::Control*)getNativeHandle())->setLeftMargin(left);
+    return NATIVE_ERROR_OK;
+}
+
 PROP_SETTER(setMax)
 int NativeControlObject::setMax(TiObject* obj)
 {
@@ -84,6 +110,19 @@ PROP_SETTER(setMin)
 int NativeControlObject::setMin(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setRight)
+int NativeControlObject::setRight(TiObject* obj)
+{
+    float right;
+    int error = getFloat(obj, &right);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    ((bb::cascades::Control*)getNativeHandle())->setRightMargin(right);
+    return NATIVE_ERROR_OK;
 }
 
 PROP_SETTER(setText)
@@ -119,12 +158,6 @@ int NativeControlObject::setTop(TiObject* obj)
     control_->setLayoutProperties(pProp);
 
     return NATIVE_ERROR_OK;
-}
-
-PROP_SETTER(setLeft)
-int NativeControlObject::setLeft(TiObject* obj)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETTER(setValue)
@@ -241,7 +274,7 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_BORDER_COLOR]                      = NULL;
     vect[N_PROP_BORDER_RADIUS]                     = NULL;
     vect[N_PROP_BORDER_WIDTH]                      = NULL;
-    vect[N_PROP_BOTTOM]                            = NULL;
+    vect[N_PROP_BOTTOM]                            = PROP_SETTING_FUNCTION(setBottom);
     vect[N_PROP_CENTER]                            = NULL;
     vect[N_PROP_CHILDREN]                          = NULL;
     vect[N_PROP_COLOR]                             = PROP_SETTING_FUNCTION(setColor);

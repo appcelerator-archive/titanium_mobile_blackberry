@@ -24,7 +24,7 @@ void TiUIProgressBar::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "hide", this, _hide);
 }
 
-TiUIProgressBar* TiUIProgressBar::createProgressBar(NativeObjectFactory* nativeObjectFactory)
+TiUIBase* TiUIProgressBar::createProgressBar(NativeObjectFactory* nativeObjectFactory)
 {
     TiUIProgressBar* obj = new TiUIProgressBar(nativeObjectFactory);
     obj->initializeTiObject(NULL);

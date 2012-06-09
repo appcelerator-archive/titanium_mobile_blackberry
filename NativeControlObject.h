@@ -26,14 +26,16 @@ public:
     virtual int setPropertyValue(size_t propertyNumber, TiObject* obj);
 
     virtual int setBackgroundColor(TiObject* obj);
+    virtual int setBottom(TiObject* obj);
     virtual int setColor(TiObject* obj);
     virtual int setLabel(TiObject* obj);
+    virtual int setLeft(TiObject* obj);
     virtual int setMax(TiObject* obj);
     virtual int setMin(TiObject* obj);
+    virtual int setRight(TiObject* obj);
     virtual int setText(TiObject* obj);
     virtual int setTextAlign(TiObject* obj);
     virtual int setTop(TiObject* obj);
-    virtual int setLeft(TiObject* obj);
     virtual int setTitle(TiObject* obj);
     virtual int setValue(TiObject* obj);
     virtual int setVisible(TiObject* obj);

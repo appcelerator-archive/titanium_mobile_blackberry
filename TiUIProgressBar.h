@@ -19,7 +19,7 @@
 class TiUIProgressBar : public TiUIBase
 {
 public:
-    static TiUIProgressBar* createProgressBar(NativeObjectFactory* nativeObjectFactory);
+    static TiUIBase* createProgressBar(NativeObjectFactory* nativeObjectFactory);
     virtual void initializeTiObject(TiObject* parentContext);
     virtual void onCreateStaticMembers();
 
