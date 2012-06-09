@@ -9,9 +9,13 @@
 
 #include "TiGenericFunctionObject.h"
 #include "TiJSONObject.h"
+#include "TiMessageStrings.h"
 #include "TiStringObject.h"
 #include "TiTitaniumObject.h"
 #include "TiV8EventContainerFactory.h"
+
+#include <QString>
+#include <QUrl>
 
 TiRootObject::TiRootObject()
     : TiObject("")
@@ -116,14 +120,34 @@ Handle<Value> TiRootObject::_clearTimeout(void* userContext, TiObject* caller, c
 
 Handle<Value> TiRootObject::_decodeURIComponent(void* userContext, TiObject* caller, const Arguments& args)
 {
-    // TODO: finish this
-    return Undefined();
+    if (args.Length() < 1 || (!args[0]->IsString() && !args[0]->IsStringObject()))
+    {
+        ThrowException(String::New(Ti::Msg::Expected_argument_of_type_string));
+        return Undefined();
+    }
+
+    const String::Utf8Value v8UtfString(Handle<String>::Cast(args[0]));
+    QString encoded = QString::fromUtf8(*v8UtfString);
+    QString decoded = QUrl::fromPercentEncoding(encoded.toAscii());
+
+    Handle<String> result = String::New(decoded.toUtf8());
+    return result;
 }
 
 Handle<Value> TiRootObject::_encodeURIComponent(void* userContext, TiObject* caller, const Arguments& args)
 {
-    // TODO: finish this
-    return Undefined();
+    if (args.Length() < 1 || (!args[0]->IsString() && !args[0]->IsStringObject()))
+    {
+        ThrowException(String::New(Ti::Msg::Expected_argument_of_type_string));
+        return Undefined();
+    }
+
+    const String::Utf8Value v8UtfString(Handle<String>::Cast(args[0]));
+    QUrl url(QString::fromUtf8(*v8UtfString));
+    QString encoded = url.toEncoded();
+
+    Handle<String> result = String::New(encoded.toUtf8());
+    return result;
 }
 
 Handle<Value> TiRootObject::_require(void* userContext, TiObject* caller, const Arguments& args)
