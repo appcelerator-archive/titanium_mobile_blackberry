@@ -22,6 +22,14 @@ enum N_TEXT_ALIGNMENT
     TEXT_ALIGNMENT_RIGHT
 };
 
+// Locale format constants
+enum N_DATE_FORMAT_TYPE
+{
+    DATE_FORMAT_LONG,
+    DATE_FORMAT_MEDIUM,
+    DATE_FORMAT_SHORT
+};
+
 }
 
 }

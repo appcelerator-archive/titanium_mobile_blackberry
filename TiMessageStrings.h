@@ -25,6 +25,7 @@ TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_double, "Expected ar
 TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_integer, "Expected argument of type integer");
 TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_object_or_external, "Expected argument of type object or external");
 TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_string, "Expected argument of type string");
+TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_date, "Expected argument of type date");
 TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_unsigned_integer, "Expected argument of type unsigned integer");
 TIMESSAGESTRINGS_CONST_DEF(char*, INTERNAL__An_error_occurred_while_parsing_the_format_string, "INTERNAL: An error occurred while parsing the format string");
 
