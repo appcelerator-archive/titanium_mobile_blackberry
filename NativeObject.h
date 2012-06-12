@@ -137,6 +137,7 @@ class NativeObject :
 public:
     virtual int getObjectType() const = 0;
     virtual int setPropertyValue(std::size_t propertyNumber, TiObject* obj);
+    virtual int getPropertyValue(std::size_t propertyNumber, TiObject* obj);
     virtual int addChildNativeObject(NativeObject* obj);
     virtual NAHANDLE getNativeHandle() const;
     virtual int open();

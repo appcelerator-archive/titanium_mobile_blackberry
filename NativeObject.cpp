@@ -22,6 +22,11 @@ int NativeObject::setPropertyValue(size_t propertyNumber, TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+int NativeObject::getPropertyValue(size_t propertyNumber, TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 int NativeObject::addChildNativeObject(NativeObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;

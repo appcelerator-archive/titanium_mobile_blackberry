@@ -74,7 +74,7 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     if (compiledScript.IsEmpty())
     {
         String::Utf8Value error(tryCatch.Exception());
-        printf("%s\n", *error);
+        fprintf(stderr, "%s\n", *error);
         // TODO: log
         return -1;
     }
@@ -82,7 +82,7 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     if (result.IsEmpty())
     {
         String::Utf8Value error(tryCatch.Exception());
-        printf("%s\n", *error);
+        fprintf(stderr, "%s\n", *error);
         return -1;
     }
     onStartMessagePump();
