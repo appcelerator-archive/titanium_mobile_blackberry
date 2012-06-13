@@ -10,11 +10,11 @@
 #include "TiGenericFunctionObject.h"
 #include "TiMessageStrings.h"
 #include <QDate>
-#include <QDateTime>
 #include <QLocale>
 #include <QRegExp>
 #include <QString>
 #include <QTextStream>
+#include <QTime>
 
 // Prototypes
 static QString formatInt(QString s, Local<Value> arg);
@@ -171,7 +171,7 @@ Handle<Value> TiStringObject::_formatDate(void* userContext, TiObject* caller, c
 
     Local<Object> obj = Object::Cast(*value);
     // Get year property
-    Local<Value> getYear_prop = (Object::Cast(*value)->Get(String::New("getFullYear")));
+    Local<Value> getYear_prop = (obj->Get(String::New("getFullYear")));
     if (getYear_prop->IsFunction())
     {
         Local<Function> getYear_func = Function::Cast(*getYear_prop);
@@ -179,7 +179,7 @@ Handle<Value> TiStringObject::_formatDate(void* userContext, TiObject* caller, c
         year = yearValue->NumberValue();
     }
     // Get month property
-    Local<Value> getMonth_prop = (Object::Cast(*value)->Get(String::New("getMonth")));
+    Local<Value> getMonth_prop = (obj->Get(String::New("getMonth")));
     if (getMonth_prop->IsFunction())
     {
         Local<Function> getMonth_func = Function::Cast(*getMonth_prop);
@@ -187,7 +187,7 @@ Handle<Value> TiStringObject::_formatDate(void* userContext, TiObject* caller, c
         month = monthValue->NumberValue();
     }
     // Get day property
-    Local<Value> getDay_prop = (Object::Cast(*value)->Get(String::New("getDate")));
+    Local<Value> getDay_prop = (obj->Get(String::New("getDate")));
     if (getDay_prop->IsFunction())
     {
         Local<Function> getDay_func = Function::Cast(*getDay_prop);
@@ -199,7 +199,7 @@ Handle<Value> TiStringObject::_formatDate(void* userContext, TiObject* caller, c
     QLocale::FormatType fType = QLocale::NarrowFormat;
 
     // Try to parse optional format argument
-    if (args.Length() == 2 && args[1]->IsString())
+    if (args.Length() == 2 && (args[1]->IsString() || args[1]->IsStringObject()))
     {
         const String::Utf8Value utf8(args[1]);
         QString strFormat = QString::fromUtf8(*utf8);
@@ -252,23 +252,47 @@ Handle<Value> TiStringObject::_formatTime(void* userContext, TiObject* caller, c
     }
 
     Local<Value> value = args[0];
-    uint64_t msecs = 0;
+    int hours = 0, minutes = 0, seconds = 0, msecs = 0;
 
     Local<Object> obj = Object::Cast(*value);
-    // Get time property
-    Local<Value> getTime_prop = (Object::Cast(*value)->Get(String::New("getTime")));
-    if (getTime_prop->IsFunction())
+    // Get hours property
+    Local<Value> getHours_prop = (obj->Get(String::New("getHours")));
+    if (getHours_prop->IsFunction())
     {
-        Local<Function> getTime_func = Function::Cast(*getTime_prop);
-        Local<Value> timeValue = getTime_func->Call(obj, 0, NULL);
-        msecs = timeValue->NumberValue();
+        Local<Function> getHours_func = Function::Cast(*getHours_prop);
+        Local<Value> hoursValue = getHours_func->Call(obj, 0, NULL);
+        hours = hoursValue->NumberValue();
+    }
+    // Get minute property
+    Local<Value> getMinutes_prop = (obj->Get(String::New("getMinutes")));
+    if (getMinutes_prop->IsFunction())
+    {
+        Local<Function> getMinutes_func = Function::Cast(*getMinutes_prop);
+        Local<Value> minutesValue = getMinutes_func->Call(obj, 0, NULL);
+        minutes = minutesValue->NumberValue();
+    }
+    // Get seconds property
+    Local<Value> getSeconds_prop = (obj->Get(String::New("getSeconds")));
+    if (getSeconds_prop->IsFunction())
+    {
+        Local<Function> getSeconds_func = Function::Cast(*getSeconds_prop);
+        Local<Value> secondsValue = getSeconds_func->Call(obj, 0, NULL);
+        seconds = secondsValue->NumberValue();
+    }
+    // Get milliseconds property
+    Local<Value> getMsecs_prop = (obj->Get(String::New("getMilliseconds")));
+    if (getMsecs_prop->IsFunction())
+    {
+        Local<Function> getMsecs_func = Function::Cast(*getMsecs_prop);
+        Local<Value> msecsValue = getMsecs_func->Call(obj, 0, NULL);
+        msecs = msecsValue->NumberValue();
     }
 
     // Defaults to NarrowFormat
     QLocale::FormatType fType = QLocale::NarrowFormat;
 
     // Try to parse optional format argument
-    if (args.Length() == 2 && args[1]->IsString())
+    if (args.Length() == 2 && (args[1]->IsString() || args[1]->IsStringObject()))
     {
         const String::Utf8Value utf8(args[1]);
         QString strFormat = QString::fromUtf8(*utf8);
@@ -286,7 +310,7 @@ Handle<Value> TiStringObject::_formatTime(void* userContext, TiObject* caller, c
         }
     }
 
-    QDateTime time = QDateTime::fromMSecsSinceEpoch(msecs);
+    QTime time = QTime(hours, minutes, seconds, msecs);
     QString strRes = QLocale().toString(time, fType);
 
     Handle<String> result = String::New(strRes.toUtf8());
