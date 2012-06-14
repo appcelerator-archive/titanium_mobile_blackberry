@@ -54,15 +54,27 @@ bool TiStringObject::canAddMembers() const
 
 Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const Arguments& args)
 {
-    if (args.Length() < 1 || !args[0]->IsString())   // TODO: support StringObject
+    if (args.Length() < 1)
     {
         ThrowException(String::New(Ti::Msg::Expected_argument_of_type_string));
         return Undefined();
     }
 
-    const String::Utf8Value utf8(args[0]);
+    Local<Value> format = args[0];
+    if (!(format->IsString() || format->IsStringObject()))
+    {
+        format = format->ToString();
+    }
+
+    const String::Utf8Value utf8(format);
     QString str = QString::fromUtf8(*utf8);
-    QRegExp rx("%.*([diouxXfFeEgGaAcspCSn%])");
+    /* Define a regex to match the % tokens of the format string
+     *    cap(0): the whole matched token
+     *    cap(1): the 'n$' token if present (numbered args)
+     *    cap(2): the 'n' token from the above 'n$' token
+     *    cap(3): the specifier char
+     */
+    QRegExp rx("%((\\d+)\\$)?.*([diouxXfFeEgGaAcspCSn%])");
     rx.setMinimal(true);
     QString res;
     QTextStream ts(&res);
@@ -71,7 +83,33 @@ Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const
     while ((end = rx.indexIn(str, end)) != -1 && ++i < args.Length())
     {
         end += rx.matchedLength();
-        switch (rx.cap(1).at(0).toAscii())
+        QString tmp = str.mid(start, end - start);
+        int argN = i;
+
+        /* Look for numbered argument */
+        if (!rx.cap(2).isEmpty())
+        {
+            bool ok;
+            argN = rx.cap(2).toInt(&ok);
+            if (!ok)
+            {
+                ThrowException(String::New(Ti::Msg::An_error_occurred_converting_to_int));
+                return Undefined();
+            }
+            if (argN >= args.Length() || argN <= 0)
+            {
+                ThrowException(String::New(Ti::Msg::Numbered_argument_exceeds_the_length_of_provided_arguments));
+                return Undefined();
+            }
+
+            /* Remove the 'n$' token from the string as qt doesn't do numbered args */
+            tmp.remove(rx.cap(1));
+            /* Don't consume an argument as with numbered args there can be less args than placeholders
+               due to args being allowed to be used more than once */
+            --i;
+        }
+
+        switch (rx.cap(3).at(0).toAscii())
         {
             /* Specifiers that don't take an argument */
         case '%':
@@ -90,7 +128,7 @@ Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const
         case 'i':
         case 'c':
         case 'C':       // same as %lc
-            ts << formatInt(str.mid(start, end - start), args[i]);
+            ts << formatInt(tmp, args[argN]);
             break;
 
             /* Unsigned int */
@@ -98,7 +136,7 @@ Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const
         case 'u':
         case 'x':
         case 'X':
-            ts << formatUInt(str.mid(start, end - start), args[i]);
+            ts << formatUInt(tmp, args[argN]);
             break;
 
             /* Double */
@@ -110,18 +148,18 @@ Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const
         case 'G':
         case 'a':
         case 'A':
-            ts << formatDouble(str.mid(start, end - start), args[i]);
+            ts << formatDouble(tmp, args[argN]);
             break;
 
             /* String */
         case 's':
         case 'S':       // same as %ls
-            ts << formatString(str.mid(start, end - start), args[i]);
+            ts << formatString(tmp, args[argN]);
             break;
 
             /* Pointer */
         case 'p':
-            ts << formatPointer(str.mid(start, end - start), args[i]);
+            ts << formatPointer(tmp, args[argN]);
             break;
 
         default:
@@ -227,25 +265,20 @@ static QString formatString(QString s, Local<Value> arg)
     }
     bool longChar = s.endsWith("ls");
 
-    if (arg->IsString())
+    if (!(arg->IsString() || arg->IsStringObject()))
     {
-        if (longChar)
-        {
-            String::Value utf16(arg);
-            return s.sprintf(s.toLatin1().constData(), *utf16);
-        }
-        else
-        {
-            String::Utf8Value utf8(arg);
-            return s.sprintf(s.toLatin1().constData(), *utf8);
-        }
+        arg = arg->ToString();
     }
-    else if (arg->IsStringObject())
+    if (longChar)
     {
-        printf("\t%s (%d): NYI arg is StringObject\n", __FUNCTION__, __LINE__);
+        String::Value utf16(arg);
+        return s.sprintf(s.toLatin1().constData(), *utf16);
     }
-    ThrowException(String::New(Ti::Msg::Expected_argument_of_type_string));
-    return QString();
+    else
+    {
+        String::Utf8Value utf8(arg);
+        return s.sprintf(s.toLatin1().constData(), *utf8);
+    }
 }
 
 static QString formatPointer(QString s, Local<Value> arg)

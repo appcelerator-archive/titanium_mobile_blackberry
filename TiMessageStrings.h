@@ -21,6 +21,7 @@ namespace Ti
 namespace Msg
 {
 
+TIMESSAGESTRINGS_CONST_DEF(char*, An_error_occurred_converting_to_int, "An error occurred converting to int");
 TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_double, "Expected argument of type double");
 TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_integer, "Expected argument of type integer");
 TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_object_or_external, "Expected argument of type object or external");
@@ -29,6 +30,7 @@ TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_unsigned_integer, "E
 TIMESSAGESTRINGS_CONST_DEF(char*, INTERNAL__An_error_occurred_while_parsing_the_format_string, "INTERNAL: An error occurred while parsing the format string");
 
 TIMESSAGESTRINGS_CONST_DEF(char*, Missing_argument, "Missing argument");
+TIMESSAGESTRINGS_CONST_DEF(char*, Numbered_argument_exceeds_the_length_of_provided_arguments, "Numbered argument exceeds the length of provided arguments");
 TIMESSAGESTRINGS_CONST_DEF(char*, Too_many_arguments, "Too many arguments");
 
 }
