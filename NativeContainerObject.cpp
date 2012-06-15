@@ -12,6 +12,7 @@
 #include <bb/cascades/Button>
 #include <bb/cascades/Color>
 #include <bb/cascades/Container>
+#include <bb/cascades/DateTimePicker>
 #include <bb/cascades/DockLayout>
 #include <bb/cascades/DockLayoutProperties>
 #include <bb/cascades/ImageView>
@@ -166,6 +167,13 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
         bb::cascades::ListView* listView = (bb::cascades::ListView*) obj->getNativeHandle();
         container_->add(listView);
         return NATIVE_ERROR_OK;
+    }
+
+    case N_TYPE_DATE_TIME_PICKER:
+    {
+       bb::cascades::DateTimePicker* dateTimePicker = (bb::cascades::DateTimePicker*) obj->getNativeHandle();
+       container_->add(dateTimePicker);
+       return NATIVE_ERROR_OK;
     }
 
     }

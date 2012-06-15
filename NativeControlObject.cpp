@@ -166,6 +166,18 @@ int NativeControlObject::setValue(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETTER(setMinDate)
+int NativeControlObject::setMinDate(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setMaxDate)
+int NativeControlObject::setMaxDate(TiObject* obj)
+{
+	return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 PROP_SETTER(setData)
 int NativeControlObject::setData(TiObject* obj)
 {
@@ -243,6 +255,12 @@ int NativeControlObject::setHintText(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETTER(setType)
+int NativeControlObject::setType(TiObject* obj)
+{
+   return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
@@ -292,6 +310,8 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_LEFT]                              = PROP_SETTING_FUNCTION(setLeft);
     vect[N_PROP_MAX]                               = PROP_SETTING_FUNCTION(setMax);
     vect[N_PROP_MIN]                               = PROP_SETTING_FUNCTION(setMin);
+    vect[N_PROP_MINDATE]                           = PROP_SETTING_FUNCTION(setMinDate);
+    vect[N_PROP_MAXDATE]                           = PROP_SETTING_FUNCTION(setMaxDate);
     vect[N_PROP_MINIMUM_FONT_SIZE]                 = NULL;
     vect[N_PROP_OPACITY]                           = NULL;
     vect[N_PROP_OPTIONS]                           = PROP_SETTING_FUNCTION(setOptions);
@@ -306,6 +326,7 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_TEXT_ID]                           = NULL;
     vect[N_PROP_TITLE]                             = PROP_SETTING_FUNCTION(setTitle);
     vect[N_PROP_TOP]                               = PROP_SETTING_FUNCTION(setTop);
+    vect[N_PROP_TYPE]                              = PROP_SETTING_FUNCTION(setType);
     vect[N_PROP_TOUCH_ENABLED]                     = NULL;
     vect[N_PROP_TRANSFORM]                         = NULL;
     vect[N_PROP_VALUE]                             = PROP_SETTING_FUNCTION(setValue);
