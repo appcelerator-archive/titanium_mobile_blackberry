@@ -330,18 +330,17 @@ int NativeControlObject::setPropertyValue(size_t propertyNumber, TiObject* obj)
 
 int NativeControlObject::getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a)
 {
-    Handle<Value> value = obj->getValue();
-    if ((value.IsEmpty()) || (!value->IsString()))
+    QString qcolorString;
+    int error = getString(obj, qcolorString);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    if (!QColor::isValidColor(qcolorString))
     {
         return NATIVE_ERROR_INVALID_ARG;
     }
-    Handle<String> v8color = Handle<String>::Cast(value);
-    String::Utf8Value v8colorString(v8color);
-    if (!QColor::isValidColor(*v8colorString))
-    {
-        return NATIVE_ERROR_INVALID_ARG;
-    }
-    QColor qcolor(*v8colorString);
+    QColor qcolor(qcolorString);
     qreal qr, qg, qb, qa;
     qcolor.getRgbF(&qr, &qg, &qb, &qa);
     *r = qr;
@@ -366,9 +365,13 @@ int NativeControlObject::getBoolean(TiObject* obj, bool* value)
 int NativeControlObject::getString(TiObject* obj, QString& str)
 {
     Handle<Value> value = obj->getValue();
-    if ((value.IsEmpty()) || (!value->IsString()))
+    if (value.IsEmpty())
     {
         return NATIVE_ERROR_INVALID_ARG;
+    }
+    if (!value->IsString())
+    {
+        value = obj->getValue()->ToString();
     }
     Handle<String> v8string = Handle<String>::Cast(value);
     String::Utf8Value v8UtfString(v8string);

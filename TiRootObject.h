@@ -31,6 +31,8 @@ public:
 protected:
     virtual ~TiRootObject();
     virtual void onCreateStaticMembers();
+    virtual VALUE_MODIFY onChildValueChange(TiObject* childObject, Handle<Value> oldValue, Handle<Value> newValue);
+    virtual void addMember(TiObject* object, const char* name = NULL);
 
 private:
     TiRootObject();
