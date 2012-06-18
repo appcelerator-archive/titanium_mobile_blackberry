@@ -7,7 +7,6 @@
 
 #include "TiRootObject.h"
 
-#include "TiDateObject.h"
 #include "TiGenericFunctionObject.h"
 #include "TiJSONObject.h"
 #include "TiMessageStrings.h"
@@ -39,6 +38,7 @@ void TiRootObject::onCreateStaticMembers()
     addMember(ti);
     addMember(ti, "Ti");
 
+    TiStringObject::addObjectToParent(this, objectFactory_);
     TiJSONObject::addObjectToParent(this, objectFactory_);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "L", this, _L);   // TODO: use the same object as Ti.Locale.getString
     TiGenericFunctionObject::addGenericFunctionToParent(this, "alert", this, _alert);

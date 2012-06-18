@@ -199,9 +199,9 @@ Handle<Value> TiStringObject::_formatDate(void* userContext, TiObject* caller, c
     QLocale::FormatType fType = QLocale::NarrowFormat;
 
     // Try to parse optional format argument
-    if (args.Length() == 2 && (args[1]->IsString() || args[1]->IsStringObject()))
+    if (args.Length() > 1 && (args[1]->IsString() || args[1]->IsStringObject()))
     {
-        const String::Utf8Value utf8(args[1]);
+        const String::Utf8Value utf8(args[1]->ToString());
         QString strFormat = QString::fromUtf8(*utf8);
         if (strFormat.compare(DATE_FORMAT_MEDIUM) == 0)
         {
@@ -292,9 +292,9 @@ Handle<Value> TiStringObject::_formatTime(void* userContext, TiObject* caller, c
     QLocale::FormatType fType = QLocale::NarrowFormat;
 
     // Try to parse optional format argument
-    if (args.Length() == 2 && (args[1]->IsString() || args[1]->IsStringObject()))
+    if (args.Length() > 1 && (args[1]->IsString() || args[1]->IsStringObject()))
     {
-        const String::Utf8Value utf8(args[1]);
+        const String::Utf8Value utf8(args[1]->ToString());
         QString strFormat = QString::fromUtf8(*utf8);
         if (strFormat.compare(DATE_FORMAT_MEDIUM) == 0)
         {
