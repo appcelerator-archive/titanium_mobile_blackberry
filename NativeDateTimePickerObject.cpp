@@ -27,8 +27,11 @@ NativeDateTimePickerObject::NativeDateTimePickerObject() :
 NativeDateTimePickerObject::~NativeDateTimePickerObject()
 {
    delete dateTimePicker_;
+   dateTimePicker_ = NULL;
    delete eventChange_;
+   eventChange_ = NULL;
    delete eventHandler_;
+   eventHandler_ = NULL;
 }
 
 NativeDateTimePickerObject* NativeDateTimePickerObject::createDateTimePicker()
@@ -162,8 +165,8 @@ int NativeDateTimePickerObject::setType(TiObject* obj)
         break;
     case Ti::UI::PICKER_TYPE_PLAIN:
     case Ti::UI::PICKER_TYPE_COUNT_DOWN_TIMER:
-        //for other (not supported by bb) values default to Date and Time picker
-        //dateTimePicker_->setMode(bb::cascades::DateTimePickerMode::DateTime);
+        //for other (not supported by bb) values default to Date picker
+        dateTimePicker_->setMode(bb::cascades::DateTimePickerMode::Date);
     	break;
     default:
         Ti_DEBUG("Unknown value received:  ", value);

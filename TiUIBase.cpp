@@ -87,13 +87,13 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
-        "min", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_MIN
+        "maxDate", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_MAXDATE
     },
 
     {
-        "maxDate", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_MAXDATE
+        "min", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_MIN
     },
 
     {

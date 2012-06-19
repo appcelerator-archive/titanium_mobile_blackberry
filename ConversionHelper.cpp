@@ -8,9 +8,10 @@
 #include "ConversionHelper.h"
 
 #include "TiObject.h"
+#include <QDateTime>
 
 void ConversionHelper::V8ToNative::
-retrieveDate(v8::Handle<v8::Value>& value, QDateTime& dt)
+retrieveDate(const v8::Handle<v8::Value>& value, QDateTime& dt)
 {
    unsigned int year = 0, month = 0, day = 0;
 

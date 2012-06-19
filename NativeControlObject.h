@@ -31,8 +31,8 @@ public:
     virtual int setLabel(TiObject* obj);
     virtual int setLeft(TiObject* obj);
     virtual int setMax(TiObject* obj);
-    virtual int setMin(TiObject* obj);
     virtual int setMaxDate(TiObject* obj);
+    virtual int setMin(TiObject* obj);
     virtual int setMinDate(TiObject* obj);
     virtual int setRight(TiObject* obj);
     virtual int setText(TiObject* obj);

@@ -296,6 +296,7 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_CENTER]                            = NULL;
     vect[N_PROP_CHILDREN]                          = NULL;
     vect[N_PROP_COLOR]                             = PROP_SETTING_FUNCTION(setColor);
+    vect[N_PROP_DATA]                              = PROP_SETTING_FUNCTION(setData);
     vect[N_PROP_ELLIPSIZE]                         = NULL;
     vect[N_PROP_FOCUSABLE]                         = NULL;
     vect[N_PROP_FONT]                              = PROP_SETTING_FUNCTION(setFont);
@@ -309,8 +310,8 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_LAYOUT]                            = NULL;
     vect[N_PROP_LEFT]                              = PROP_SETTING_FUNCTION(setLeft);
     vect[N_PROP_MAX]                               = PROP_SETTING_FUNCTION(setMax);
-    vect[N_PROP_MIN]                               = PROP_SETTING_FUNCTION(setMin);
     vect[N_PROP_MAXDATE]                           = PROP_SETTING_FUNCTION(setMaxDate);
+    vect[N_PROP_MIN]                               = PROP_SETTING_FUNCTION(setMin);
     vect[N_PROP_MINDATE]                           = PROP_SETTING_FUNCTION(setMinDate);
     vect[N_PROP_MINIMUM_FONT_SIZE]                 = NULL;
     vect[N_PROP_OPACITY]                           = NULL;
@@ -326,15 +327,14 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_TEXT_ID]                           = NULL;
     vect[N_PROP_TITLE]                             = PROP_SETTING_FUNCTION(setTitle);
     vect[N_PROP_TOP]                               = PROP_SETTING_FUNCTION(setTop);
-    vect[N_PROP_TYPE]                              = PROP_SETTING_FUNCTION(setType);
     vect[N_PROP_TOUCH_ENABLED]                     = NULL;
     vect[N_PROP_TRANSFORM]                         = NULL;
+    vect[N_PROP_TYPE]                              = PROP_SETTING_FUNCTION(setType);
     vect[N_PROP_VALUE]                             = PROP_SETTING_FUNCTION(setValue);
     vect[N_PROP_VISIBLE]                           = PROP_SETTING_FUNCTION(setVisible);
     vect[N_PROP_WIDTH]                             = PROP_SETTING_FUNCTION(setWidth);
     vect[N_PROP_WORD_WRAP]                         = NULL;
     vect[N_PROP_ZINDEX]                            = NULL;
-    vect[N_PROP_DATA]                              = PROP_SETTING_FUNCTION(setData);
     return vect;
 }
 
