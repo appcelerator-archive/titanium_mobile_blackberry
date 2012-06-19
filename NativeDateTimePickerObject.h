@@ -9,7 +9,6 @@
 #define NATIVEDATETIMEPICKER_H_
 
 #include "NativeControlObject.h"
-#include <v8.h>
 
 /*
  * NativeDateTimePicker
@@ -55,8 +54,6 @@ private:
     NativeDateTimePickerObject(const NativeDateTimePickerObject& obj);
     NativeDateTimePickerObject& operator=(const NativeDateTimePickerObject& obj);
 
-    void retrieveDate(v8::Handle<v8::Value>& value, QDateTime& dt);
-
     bb::cascades::DateTimePicker* dateTimePicker_;
     TiEventContainer* eventChange_;
     DateTimePickerEventHandler* eventHandler_;
@@ -77,7 +74,7 @@ public:
     virtual ~DateTimePickerEventHandler() {}
 
 public slots:
-   void valueChanged(QDateTime value)
+   void setValue(QDateTime value)
    {
 	   eventContainer_->setDataProperty("value", value.toString().toUtf8().constData());
 	   eventContainer_->fireEvent();

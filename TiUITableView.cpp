@@ -17,7 +17,7 @@ TiUITableView::~TiUITableView()
 {
 }
 
-TiUITableView* TiUITableView::createTableView(NativeObjectFactory* nativeObjectFactory)
+TiUIBase* TiUITableView::createTableView(NativeObjectFactory* nativeObjectFactory)
 {
     TiUITableView* obj = new TiUITableView(nativeObjectFactory);
     obj->initializeTiObject(NULL);

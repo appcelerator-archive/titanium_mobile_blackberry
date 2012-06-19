@@ -38,7 +38,7 @@ static const uint qt_meta_data_DateTimePickerEventHandler[] = {
 
 static const char qt_meta_stringdata_DateTimePickerEventHandler[] = {
     "DateTimePickerEventHandler\0\0value\0"
-    "valueChanged(QDateTime)\0"
+    "setValue(QDateTime)\0"
 };
 
 void DateTimePickerEventHandler::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -47,7 +47,7 @@ void DateTimePickerEventHandler::qt_static_metacall(QObject *_o, QMetaObject::Ca
         Q_ASSERT(staticMetaObject.cast(_o));
         DateTimePickerEventHandler *_t = static_cast<DateTimePickerEventHandler *>(_o);
         switch (_id) {
-        case 0: _t->valueChanged((*reinterpret_cast< QDateTime(*)>(_a[1]))); break;
+        case 0: _t->setValue((*reinterpret_cast< QDateTime(*)>(_a[1]))); break;
         default: ;
         }
     }

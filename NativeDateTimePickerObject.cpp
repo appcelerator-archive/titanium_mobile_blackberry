@@ -5,23 +5,30 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include <bb/cascades/AbsoluteLayoutProperties>
-#include <bb/cascades/DateTimePIcker>
-#include <qdatetime.h>
 #include "NativeDateTimePickerObject.h"
+
+#include "ConversionHelper.h"
 #include "TiConstants.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
+#include <bb/cascades/AbsoluteLayoutProperties>
+#include <bb/cascades/DateTimePIcker>
+#include <QDateTime>
 
-NativeDateTimePickerObject::NativeDateTimePickerObject()
+NativeDateTimePickerObject::NativeDateTimePickerObject() :
+   dateTimePicker_(NULL),
+   eventChange_(NULL),
+   eventHandler_(NULL),
+   left_(0),
+   top_(0)
 {
-    dateTimePicker_ = NULL;
-    top_ = 0;
-    left_ = 0;
 }
 
 NativeDateTimePickerObject::~NativeDateTimePickerObject()
 {
+   delete dateTimePicker_;
+   delete eventChange_;
+   delete eventHandler_;
 }
 
 NativeDateTimePickerObject* NativeDateTimePickerObject::createDateTimePicker()
@@ -40,6 +47,7 @@ int NativeDateTimePickerObject::initialize(TiEventContainerFactory* containerFac
 
 int NativeDateTimePickerObject::setWidth(TiObject* obj)
 {
+    //TODO need to implemented in UI.View
     float width;
     int error = NativeControlObject::getFloat(obj, &width);
     if (!N_SUCCEEDED(error))
@@ -53,6 +61,7 @@ int NativeDateTimePickerObject::setWidth(TiObject* obj)
 
 int NativeDateTimePickerObject::setLeft(TiObject* obj)
 {
+    //TODO need to implemented in UI.View
     bb::cascades::AbsoluteLayoutProperties* pProp = new bb::cascades::AbsoluteLayoutProperties;
     float left;
     int error = NativeControlObject::getFloat(obj, &left);
@@ -69,6 +78,7 @@ int NativeDateTimePickerObject::setLeft(TiObject* obj)
 
 int NativeDateTimePickerObject::setTop(TiObject* obj)
 {
+    //TODO need to implemented in UI.View
     bb::cascades::AbsoluteLayoutProperties* pProp = new bb::cascades::AbsoluteLayoutProperties;
     float top;
     int error = NativeControlObject::getFloat(obj, &top);
@@ -83,42 +93,6 @@ int NativeDateTimePickerObject::setTop(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-void NativeDateTimePickerObject::retrieveDate(Handle<Value>& value, QDateTime& dt)
-{
-   unsigned int year = 0, month = 0, day = 0;
-
-   Local<Object> object = Object::Cast(*value);
-
-   // Get year from date
-   Local<Value> getYear_prop = (object->Get(String::New("getFullYear")));
-   if (getYear_prop->IsFunction())
-   {
-      Local<Function> getYear_func = Function::Cast(*getYear_prop);
-      Local<Value> yearValue = getYear_func->Call(object, 0, NULL);
-      year = yearValue->NumberValue();
-   }
-
-   // Get month from date
-   Local<Value> getMonth_prop = (object->Get(String::New("getMonth")));
-   if (getMonth_prop->IsFunction())
-   {
-      Local<Function> getMonth_func = Function::Cast(*getMonth_prop);
-      Local<Value> monthValue = getMonth_func->Call(object, 0, NULL);
-      month = monthValue->NumberValue();
-   }
-
-   // Get day property
-   Local<Value> getDay_prop = (object->Get(String::New("getDate")));
-   if (getDay_prop->IsFunction())
-   {
-      Local<Function> getDay_func = Function::Cast(*getDay_prop);
-      Local<Value> dayValue = getDay_func->Call(object, 0, NULL);
-      day = dayValue->NumberValue();
-   }
-
-   dt.setDate(QDate(year, month, day));
-}
-
 int NativeDateTimePickerObject::setValue(TiObject* obj)
 {
    Handle<Value> value = obj->getValue();
@@ -128,7 +102,7 @@ int NativeDateTimePickerObject::setValue(TiObject* obj)
    }
 
    QDateTime dateTime;
-   retrieveDate(value, dateTime);
+   ConversionHelper::V8ToNative::retrieveDate(value, dateTime);
 
    dateTimePicker_->setValue(dateTime);
 
@@ -144,7 +118,7 @@ int NativeDateTimePickerObject::setMinDate(TiObject* obj)
    }
 
    QDateTime dateTime;
-   retrieveDate(value, dateTime);
+   ConversionHelper::V8ToNative::retrieveDate(value, dateTime);
 
    dateTimePicker_->setMinimum(dateTime);
 
@@ -160,7 +134,7 @@ int NativeDateTimePickerObject::setMaxDate(TiObject* obj)
    }
 
    QDateTime dateTime;
-   retrieveDate(value, dateTime);
+   ConversionHelper::V8ToNative::retrieveDate(value, dateTime);
 
    dateTimePicker_->setMaximum(dateTime);
    return NATIVE_ERROR_OK;
@@ -188,12 +162,12 @@ int NativeDateTimePickerObject::setType(TiObject* obj)
         break;
     case Ti::UI::PICKER_TYPE_PLAIN:
     case Ti::UI::PICKER_TYPE_COUNT_DOWN_TIMER:
-    	//for other (not supported by bb) values default to Date and Time picker
-        dateTimePicker_->setMode(bb::cascades::DateTimePickerMode::DateTime);
+        //for other (not supported by bb) values default to Date and Time picker
+        //dateTimePicker_->setMode(bb::cascades::DateTimePickerMode::DateTime);
     	break;
     default:
         Ti_DEBUG("Unknown value received:  ", value);
-        break;
+        return NATIVE_ERROR_NOTSUPPORTED;
     }
 
     return NATIVE_ERROR_OK;
@@ -212,14 +186,17 @@ NAHANDLE NativeDateTimePickerObject::getNativeHandle() const
 void NativeDateTimePickerObject::completeInitialization()
 {
     NativeControlObject::completeInitialization();
-    QObject::connect(dateTimePicker_, SIGNAL(valueChanged(QDateTime)), eventHandler_, SLOT(valueChanged(QDateTime)));
+    QObject::connect(dateTimePicker_, SIGNAL(valueChanged(QDateTime)), eventHandler_, SLOT(setValue(QDateTime)));
 }
 
 int NativeDateTimePickerObject::setEventHandler(const char* eventName, TiEvent* event)
 {
     if (strcmp(eventName, "change") == 0)
     {
-    	eventChange_->addListener(event);
+        if (eventChange_)
+        {
+           eventChange_->addListener(event);
+        }
     }
     return NATIVE_ERROR_OK;
 }

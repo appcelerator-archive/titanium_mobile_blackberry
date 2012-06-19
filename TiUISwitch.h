@@ -21,7 +21,7 @@
 class TiUISwitch : public TiUIBase
 {
 public:
-    static TiUISwitch* createSwitch(NativeObjectFactory* nativeObjectFactory);
+    static TiUIBase* createSwitch(NativeObjectFactory* nativeObjectFactory);
 
 protected:
     virtual ~TiUISwitch();

@@ -310,8 +310,8 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_LEFT]                              = PROP_SETTING_FUNCTION(setLeft);
     vect[N_PROP_MAX]                               = PROP_SETTING_FUNCTION(setMax);
     vect[N_PROP_MIN]                               = PROP_SETTING_FUNCTION(setMin);
-    vect[N_PROP_MINDATE]                           = PROP_SETTING_FUNCTION(setMinDate);
     vect[N_PROP_MAXDATE]                           = PROP_SETTING_FUNCTION(setMaxDate);
+    vect[N_PROP_MINDATE]                           = PROP_SETTING_FUNCTION(setMinDate);
     vect[N_PROP_MINIMUM_FONT_SIZE]                 = NULL;
     vect[N_PROP_OPACITY]                           = NULL;
     vect[N_PROP_OPTIONS]                           = PROP_SETTING_FUNCTION(setOptions);

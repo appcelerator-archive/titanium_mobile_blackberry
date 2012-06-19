@@ -67,6 +67,7 @@ void TiUIObject::onCreateStaticMembers()
     // Adding javascript constants from Ti.UI
     ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_LEFT", Number::New(Ti::UI::TEXT_ALIGNMENT_LEFT), this);
     ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_CENTER", Number::New(Ti::UI::TEXT_ALIGNMENT_CENTER), this);
+    ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_RIGHT", Number::New(Ti::UI::TEXT_ALIGNMENT_RIGHT), this);
     ADD_STATIC_TI_VALUE("PICKER_TYPE_PLAIN", Number::New(Ti::UI::PICKER_TYPE_PLAIN), this);
     ADD_STATIC_TI_VALUE("PICKER_TYPE_DATE", Number::New(Ti::UI::PICKER_TYPE_DATE), this);
     ADD_STATIC_TI_VALUE("PICKER_TYPE_TIME", Number::New(Ti::UI::PICKER_TYPE_TIME), this);
@@ -140,72 +141,20 @@ Handle<Value> TiUIObject::_createActivityIndicator(void* userContext, TiObject* 
 
 Handle<Value> TiUIObject::_createOptionDialog(void* userContext, TiObject* caller, const Arguments& args)
 {
-    HandleScope handleScope;
-    TiUIObject* obj = (TiUIObject*) userContext;
-    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
-    Handle<Object> result;
-    result = global->NewInstance();
-    TiUIOptionDialog* optionDialog = TiUIOptionDialog::createOptionDialog(obj->objectFactory_);
-    optionDialog->setValue(result);
-    if ((args.Length() > 0) && (args[0]->IsObject()))
-    {
-        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
-        optionDialog->setParametersFromObject(settingsObj);
-    }
-    setTiObjectToJsObject(result, optionDialog);
-    return handleScope.Close(result);
+    return _createControlHelper(userContext, TiUIOptionDialog::createOptionDialog, args);
 }
 
 Handle<Value> TiUIObject::_createTableView(void* userContext, TiObject* caller, const Arguments& args)
 {
-    HandleScope handleScope;
-    TiUIObject* obj = (TiUIObject*) userContext;
-    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
-    Handle < Object > result;
-    result = global->NewInstance();
-    TiUITableView* tableView = TiUITableView::createTableView(obj->objectFactory_);
-    tableView->setValue(result);
-    if ((args.Length() > 0) && (args[0]->IsObject()))
-    {
-        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
-        tableView->setParametersFromObject(settingsObj);
-    }
-    setTiObjectToJsObject(result, tableView);
-    return handleScope.Close(result);
+    return _createControlHelper(userContext, TiUITableView::createTableView, args);
 }
 
 Handle<Value> TiUIObject::_createSwitch(void* userContext, TiObject* caller, const Arguments& args)
 {
-    HandleScope handleScope;
-    TiUIObject* obj = (TiUIObject*) userContext;
-    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
-    Handle<Object> result;
-    result = global->NewInstance();
-    TiUISwitch* switchObj = TiUISwitch::createSwitch(obj->objectFactory_);
-    switchObj->setValue(result);
-    if ((args.Length() > 0) && (args[0]->IsObject()))
-    {
-        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
-        switchObj->setParametersFromObject(settingsObj);
-    }
-    setTiObjectToJsObject(result, switchObj);
-    return handleScope.Close(result);
+    return _createControlHelper(userContext, TiUISwitch::createSwitch, args);
 }
 
 Handle<Value> TiUIObject::_createPicker(void* userContext, TiObject* caller, const Arguments& args)
 {
-    HandleScope handleScope;
-    TiUIObject* obj = (TiUIObject*) userContext;
-    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
-    Handle<Object> result;
-    result = global->NewInstance();
-    TiUIPicker* pickerObj = TiUIPicker::createPicker(obj->objectFactory_);
-    pickerObj->setValue(result);
-    if ((args.Length() > 0) && (args[0]->IsObject()))
-    {
-        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
-        pickerObj->setParametersFromObject(settingsObj);
-    }
-    setTiObjectToJsObject(result, pickerObj);
-    return handleScope.Close(result);
+    return _createControlHelper(userContext, TiUIPicker::createPicker, args);
 }

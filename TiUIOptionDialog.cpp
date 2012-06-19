@@ -17,7 +17,7 @@ TiUIOptionDialog::~TiUIOptionDialog()
 {
 }
 
-TiUIOptionDialog* TiUIOptionDialog::createOptionDialog(NativeObjectFactory* nativeObjectFactory)
+TiUIBase* TiUIOptionDialog::createOptionDialog(NativeObjectFactory* nativeObjectFactory)
 {
     TiUIOptionDialog* obj = new TiUIOptionDialog(nativeObjectFactory);
     obj->initializeTiObject(NULL);
