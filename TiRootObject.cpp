@@ -7,9 +7,9 @@
 
 #include "TiRootObject.h"
 
+#include "NativeStringInterface.h"
 #include "TiGenericFunctionObject.h"
-#include "TiJSONObject.h"
-#include "TiStringObject.h"
+#include "TiMessageStrings.h"
 #include "TiTitaniumObject.h"
 #include "TiV8EventContainerFactory.h"
 
@@ -34,20 +34,20 @@ void TiRootObject::onCreateStaticMembers()
     addMember(ti);
     addMember(ti, "Ti");
 
-    TiJSONObject::addObjectToParent(this, objectFactory_);
+    createStringMethods();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "L", this, _L);   // TODO: use the same object as Ti.Locale.getString
     TiGenericFunctionObject::addGenericFunctionToParent(this, "alert", this, _alert);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "clearInterval", this, _clearInterval);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "clearTimeout", this, _clearTimeout);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "decodeURIComponent", this, _decodeURIComponent);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "encodeURIComponent", this, _encodeURIComponent);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "require", this, _require);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setInterval", this, _setInterval);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setTimeout", this, _setTimeout);
+
 }
 
 VALUE_MODIFY TiRootObject::onChildValueChange(TiObject* childObject, Handle<Value> oldValue, Handle<Value> newValue)
 {
+    (void)oldValue;
     Local<Object> obj = getValue()->ToObject();
     obj->Set(String::New(childObject->getName()), newValue);
     return VALUE_MODIFY_ALLOW;
@@ -116,58 +116,84 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     return (messageLoopEntry)(context);
 }
 
+void TiRootObject::createStringMethods()
+{
+    Local<Value> str = context_->Global()->Get(String::New("String"));
+    if (!str->IsObject())
+    {
+        // This should never happen
+        ThrowException(String::New(Ti::Msg::INTERNAL__Global_String_symbol_is_not_an_object));
+    }
+    Local<Object> strObj = str->ToObject();
+    const NativeStringInterface* nsi = objectFactory_->getNativeStringInterface();
+    strObj->Set(String::New("format"), FunctionTemplate::New(nsi->format)->GetFunction());
+    strObj->Set(String::New("formatCurrency"), FunctionTemplate::New(nsi->formatCurrency)->GetFunction());
+    strObj->Set(String::New("formatDate"), FunctionTemplate::New(nsi->formatDate)->GetFunction());
+    strObj->Set(String::New("formatDecimal"), FunctionTemplate::New(nsi->formatDecimal)->GetFunction());
+    strObj->Set(String::New("formatTime"), FunctionTemplate::New(nsi->formatTime)->GetFunction());
+}
+
 /* Methods defined by Global */
 Handle<Value> TiRootObject::_L(void* userContext, TiObject* caller, const Arguments& args)
 {
     // TODO: finish this
+    (void)userContext;
+    (void)caller;
+    (void)args;
     return Undefined();
 }
 
 Handle<Value> TiRootObject::_alert(void* userContext, TiObject* caller, const Arguments& args)
 {
     // TODO: finish this
+    (void)userContext;
+    (void)caller;
+    (void)args;
     return Undefined();
 }
 
 Handle<Value> TiRootObject::_clearInterval(void* userContext, TiObject* caller, const Arguments& args)
 {
     // TODO: finish this
+    (void)userContext;
+    (void)caller;
+    (void)args;
     return Undefined();
 }
 
 Handle<Value> TiRootObject::_clearTimeout(void* userContext, TiObject* caller, const Arguments& args)
 {
     // TODO: finish this
-    return Undefined();
-}
-
-Handle<Value> TiRootObject::_decodeURIComponent(void* userContext, TiObject* caller, const Arguments& args)
-{
-    // TODO: finish this
-    return Undefined();
-}
-
-Handle<Value> TiRootObject::_encodeURIComponent(void* userContext, TiObject* caller, const Arguments& args)
-{
-    // TODO: finish this
+    (void)userContext;
+    (void)caller;
+    (void)args;
     return Undefined();
 }
 
 Handle<Value> TiRootObject::_require(void* userContext, TiObject* caller, const Arguments& args)
 {
     // TODO: finish this
+    (void)userContext;
+    (void)caller;
+    (void)args;
     return Undefined();
 }
 
 Handle<Value> TiRootObject::_setInterval(void* userContext, TiObject* caller, const Arguments& args)
 {
     // TODO: finish this
+    (void)userContext;
+    (void)caller;
+    (void)args;
     return Undefined();
 }
 
 Handle<Value> TiRootObject::_setTimeout(void* userContext, TiObject* caller, const Arguments& args)
 {
     // TODO: finish this
+    (void)userContext;
+    (void)caller;
+    (void)args;
     return Undefined();
 }
 

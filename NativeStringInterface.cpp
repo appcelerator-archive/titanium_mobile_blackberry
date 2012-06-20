@@ -5,13 +5,14 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "TiStringObject.h"
+#include "NativeStringInterface.h"
 
-#include "TiGenericFunctionObject.h"
 #include "TiMessageStrings.h"
 #include <QRegExp>
 #include <QString>
 #include <QTextStream>
+
+using namespace v8;
 
 // Prototypes
 static QString formatInt(QString s, Local<Value> arg);
@@ -21,38 +22,18 @@ static QString formatString(QString s, Local<Value> arg);
 static QString formatPointer(QString s, Local<Value> arg);
 
 
-TiStringObject::TiStringObject(NativeObjectFactory* objectFactory)
-    : TiObject("String")
+static NativeStringInterface* s_theInstance = NULL;
+
+const NativeStringInterface* NativeStringInterface::instance()
 {
-    objectFactory_ = objectFactory;
+    if (s_theInstance == NULL)
+    {
+        s_theInstance = new NativeStringInterface;
+    }
+    return s_theInstance;
 }
 
-TiStringObject::~TiStringObject()
-{
-}
-
-void TiStringObject::addObjectToParent(TiObject* parent, NativeObjectFactory* objectFactory)
-{
-    TiStringObject* obj = new TiStringObject(objectFactory);
-    parent->addMember(obj);
-    obj->release();
-}
-
-void TiStringObject::onCreateStaticMembers()
-{
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "format", this, _format);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "formatCurrency", this, _formatCurrency);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "formatDate", this, _formatDate);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "formatDecimal", this, _formatDecimal);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "formatTime", this, _formatTime);
-}
-
-bool TiStringObject::canAddMembers() const
-{
-    return false;
-}
-
-Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> NativeStringInterface::format(const Arguments& args)
 {
     if (args.Length() < 1)
     {
@@ -175,27 +156,31 @@ Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const
     return (result);
 }
 
-Handle<Value> TiStringObject::_formatCurrency(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> NativeStringInterface::formatCurrency(const Arguments& args)
 {
     // TODO: Implement
+    Q_UNUSED(args);
     return Undefined();
 }
 
-Handle<Value> TiStringObject::_formatDate(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> NativeStringInterface::formatDate(const Arguments& args)
 {
     // TODO: Implement
+    Q_UNUSED(args);
     return Undefined();
 }
 
-Handle<Value> TiStringObject::_formatDecimal(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> NativeStringInterface::formatDecimal(const Arguments& args)
 {
     // TODO: Implement
+    Q_UNUSED(args);
     return Undefined();
 }
 
-Handle<Value> TiStringObject::_formatTime(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> NativeStringInterface::formatTime(const Arguments& args)
 {
     // TODO: Implement
+    Q_UNUSED(args);
     return Undefined();
 }
 

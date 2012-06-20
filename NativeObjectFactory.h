@@ -12,6 +12,7 @@
 
 class NativeObject;
 class NativeContainerObject;
+class NativeStringInterface;
 class TiCascadesApp;
 
 /*
@@ -31,6 +32,8 @@ public:
     void setRootContainer(NativeObject* container);
     void setEventContainerFactory(TiEventContainerFactory* eventContainerFactory);
     TiEventContainerFactory* getEventContainerFactory() const;
+
+    static const NativeStringInterface* getNativeStringInterface();
 
 private:
     TiCascadesApp* cascadesApp_;

@@ -28,7 +28,7 @@ TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_object_or_external, 
 TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_string, "Expected argument of type string");
 TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_unsigned_integer, "Expected argument of type unsigned integer");
 TIMESSAGESTRINGS_CONST_DEF(char*, INTERNAL__An_error_occurred_while_parsing_the_format_string, "INTERNAL: An error occurred while parsing the format string");
-
+TIMESSAGESTRINGS_CONST_DEF(char*, INTERNAL__Global_String_symbol_is_not_an_object, "INTERNAL: Global String symbol is not an object");
 TIMESSAGESTRINGS_CONST_DEF(char*, Missing_argument, "Missing argument");
 TIMESSAGESTRINGS_CONST_DEF(char*, Numbered_argument_exceeds_the_length_of_provided_arguments, "Numbered argument exceeds the length of provided arguments");
 TIMESSAGESTRINGS_CONST_DEF(char*, Too_many_arguments, "Too many arguments");
