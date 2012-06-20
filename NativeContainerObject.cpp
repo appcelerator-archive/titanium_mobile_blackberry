@@ -77,6 +77,7 @@ int NativeContainerObject::initialize(TiEventContainerFactory* containerFactory)
 
 int NativeContainerObject::addChildNativeObject(NativeObject* obj)
 {
+    obj->completeInitialization();
     switch (obj->getObjectType())
     {
     case N_TYPE_CONTAINER:

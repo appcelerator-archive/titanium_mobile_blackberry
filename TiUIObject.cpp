@@ -154,14 +154,14 @@ Handle<Value> TiUIObject::_createTableView(void* userContext, TiObject* caller, 
 {
     HandleScope handleScope;
     TiUIObject* obj = (TiUIObject*) userContext;
-    Handle < ObjectTemplate > global = getObjectTemplateFromJsObject(args.Holder());
-    Handle < Object > result;
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result;
     result = global->NewInstance();
     TiUITableView* tableView = TiUITableView::createTableView(obj->objectFactory_);
     tableView->setValue(result);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
-        Local < Object > settingsObj = Local < Object > ::Cast(args[0]);
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
         tableView->setParametersFromObject(settingsObj);
     }
     setTiObjectToJsObject(result, tableView);
