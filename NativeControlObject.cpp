@@ -37,12 +37,9 @@ NativeControlObject::NativeControlObject() :
     container_(NULL),
     control_(NULL),
     layout_(NULL),
-    backgroundColor_(bb::cascades::Color::Transparent),
-    disabledBackgroundColor_(bb::cascades::Color::Transparent),
     left_(0),
     top_(0),
-    nextEventId_(1),
-    controlEnabled_(true)
+    nextEventId_(1)
 {
 }
 
@@ -121,7 +118,7 @@ int NativeControlObject::setBackgroundColor(TiObject* obj)
         return error;
     }
     backgroundColor_ = bb::cascades::Color::fromRGBA(r, g, b, a);
-    if (controlEnabled_)
+    if (container_->isEnabled())
     {
         container_->setBackground(backgroundColor_);
     }
@@ -142,7 +139,7 @@ int NativeControlObject::setBackgroundDisableColor(TiObject* obj)
         return error;
     }
     disabledBackgroundColor_ = bb::cascades::Color::fromRGBA(r, g, b, a);
-    if (!controlEnabled_)
+    if (!container_->isEnabled())
     {
         container_->setBackground(disabledBackgroundColor_);
     }
@@ -173,11 +170,17 @@ int NativeControlObject::setEnabled(TiObject* obj)
     container_->setEnabled(enabled);
     if (enabled)
     {
-        container_->setBackground(backgroundColor_);
+        if (backgroundColor_.isValid())
+        {
+            container_->setBackground(backgroundColor_);
+        }
     }
     else
     {
-        container_->setBackground(disabledBackgroundColor_);
+        if (disabledBackgroundColor_.isValid())
+        {
+            container_->setBackground(disabledBackgroundColor_);
+        }
     }
     return NATIVE_ERROR_OK;
 }

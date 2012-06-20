@@ -78,7 +78,6 @@ private:
     float left_;
     float top_;
     int nextEventId_;
-    bool controlEnabled_;
 };
 
 #endif /* NATIVECONTROLOBJECT_H_ */
