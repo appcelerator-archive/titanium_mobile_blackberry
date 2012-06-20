@@ -22,7 +22,7 @@
 class TiUITableView : public TiUIBase
 {
 public:
-    static TiUIBase* createTableView(NativeObjectFactory* nativeObjectFactory);
+    static TiUITableView* createTableView(NativeObjectFactory* nativeObjectFactory);
 
 protected:
     virtual ~TiUITableView();

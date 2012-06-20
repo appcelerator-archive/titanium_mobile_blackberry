@@ -17,7 +17,7 @@ TiUIPicker::~TiUIPicker()
 {
 }
 
-TiUIBase* TiUIPicker::createPicker(NativeObjectFactory* nativeObjectFactory)
+TiUIPicker* TiUIPicker::createPicker(NativeObjectFactory* nativeObjectFactory)
 {
     TiUIPicker* obj = new TiUIPicker(nativeObjectFactory);
     obj->initializeTiObject(NULL);

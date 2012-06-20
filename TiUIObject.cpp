@@ -141,20 +141,20 @@ Handle<Value> TiUIObject::_createActivityIndicator(void* userContext, TiObject* 
 
 Handle<Value> TiUIObject::_createOptionDialog(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return _createControlHelper(userContext, TiUIOptionDialog::createOptionDialog, args);
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIOptionDialog::createOptionDialog), args);
 }
 
 Handle<Value> TiUIObject::_createTableView(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return _createControlHelper(userContext, TiUITableView::createTableView, args);
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUITableView::createTableView), args);
 }
 
 Handle<Value> TiUIObject::_createSwitch(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return _createControlHelper(userContext, TiUISwitch::createSwitch, args);
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUISwitch::createSwitch), args);
 }
 
 Handle<Value> TiUIObject::_createPicker(void* userContext, TiObject* caller, const Arguments& args)
 {
-    return _createControlHelper(userContext, TiUIPicker::createPicker, args);
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIPicker::createPicker), args);
 }

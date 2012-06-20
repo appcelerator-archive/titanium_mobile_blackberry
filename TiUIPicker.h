@@ -21,7 +21,7 @@
 class TiUIPicker : public TiUIBase
 {
 public:
-    static TiUIBase* createPicker(NativeObjectFactory* nativeObjectFactory);
+    static TiUIPicker* createPicker(NativeObjectFactory* nativeObjectFactory);
 
 protected:
     virtual ~TiUIPicker();

@@ -16,7 +16,7 @@ TiUISwitch::~TiUISwitch()
 {
 }
 
-TiUIBase* TiUISwitch::createSwitch(NativeObjectFactory* nativeObjectFactory)
+TiUISwitch* TiUISwitch::createSwitch(NativeObjectFactory* nativeObjectFactory)
 {
     TiUISwitch* obj = new TiUISwitch(nativeObjectFactory);
     obj->initializeTiObject(NULL);

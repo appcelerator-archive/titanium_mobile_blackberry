@@ -19,7 +19,7 @@
 class TiUIOptionDialog : public TiUIBase
 {
 public:
-    static TiUIBase* createOptionDialog(NativeObjectFactory* nativeObjectFactory);
+    static TiUIOptionDialog* createOptionDialog(NativeObjectFactory* nativeObjectFactory);
 
 protected:
     virtual ~TiUIOptionDialog();

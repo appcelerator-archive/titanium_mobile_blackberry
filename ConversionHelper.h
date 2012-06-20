@@ -8,7 +8,6 @@
 #ifndef CONVERSIONHELPER_H_
 #define CONVERSIONHELPER_H_
 
-//#include <QDateTime>
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #include <v8.h>
 #pragma GCC diagnostic warning "-Wunused-parameter"
