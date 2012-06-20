@@ -46,6 +46,7 @@ Handle<Value> TiUIWindow::open_(void* userContext, TiObject* caller, const Argum
     HandleScope handleScope;
     TiUIWindow* obj = (TiUIWindow*) userContext;
     NativeObject* no = obj->getNativeObject();
+    no->completeInitialization();
     no->open();
     no->release();
     return Undefined();

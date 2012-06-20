@@ -10,7 +10,9 @@
 
 #include "TiEvent.h"
 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 #include <v8.h>
+#pragma GCC diagnostic warning "-Wunused-parameter"
 
 using namespace v8;
 
