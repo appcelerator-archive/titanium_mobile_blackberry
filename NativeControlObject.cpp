@@ -320,7 +320,7 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
 
 int NativeControlObject::setPropertyValue(size_t propertyNumber, TiObject* obj)
 {
-    if ((propertyNumber < 0) || (propertyNumber >= s_functionMap.size())
+    if ((propertyNumber >= s_functionMap.size())
             || (s_functionMap[propertyNumber] == NULL))
     {
         return NATIVE_ERROR_NOTSUPPORTED;
