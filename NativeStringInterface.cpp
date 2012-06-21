@@ -8,9 +8,12 @@
 #include "NativeStringInterface.h"
 
 #include "TiMessageStrings.h"
+#include <QDate>
+#include <QLocale>
 #include <QRegExp>
 #include <QString>
 #include <QTextStream>
+#include <QTime>
 
 using namespace v8;
 
@@ -21,6 +24,9 @@ static QString formatDouble(QString s, Local<Value> arg);
 static QString formatString(QString s, Local<Value> arg);
 static QString formatPointer(QString s, Local<Value> arg);
 
+static const char* DATE_FORMAT_SHORT       = "short";
+static const char* DATE_FORMAT_MEDIUM      = "medium";
+static const char* DATE_FORMAT_LONG        = "long";
 
 static NativeStringInterface* s_theInstance = NULL;
 
@@ -158,30 +164,193 @@ Handle<Value> NativeStringInterface::format(const Arguments& args)
 
 Handle<Value> NativeStringInterface::formatCurrency(const Arguments& args)
 {
-    // TODO: Implement
-    Q_UNUSED(args);
-    return Undefined();
+    if (args.Length() < 1 || (!args[0]->IsNumber() && !args[0]->IsNumberObject()))
+    {
+        ThrowException(String::New(Ti::Msg::Expected_argument_of_type_integer));
+        return Undefined();
+    }
+
+    Handle<Number> num = Handle<Number>::Cast(args[0]);
+    QString strRes = QLocale().toCurrencyString(num->Value());
+
+    Handle<String> result = String::New(strRes.toUtf8());
+    return (result);
 }
 
 Handle<Value> NativeStringInterface::formatDate(const Arguments& args)
 {
-    // TODO: Implement
-    Q_UNUSED(args);
-    return Undefined();
+    // TODO: Reiterate through the code when R6 available
+    // JIRA TASK: https://jira.appcelerator.org/browse/TIMOB-9686
+    if (args.Length() < 1 || !args[0]->IsDate() || !args[0]->IsObject())
+    {
+        ThrowException(String::New(Ti::Msg::Expected_argument_of_type_date));
+        return Undefined();
+    }
+
+    Local<Value> value = args[0];
+    unsigned int year = 0, month = 0, day = 0;
+
+    Local<Object> obj = Object::Cast(*value);
+    // Get year property
+    Local<Value> getYear_prop = (obj->Get(String::New("getFullYear")));
+    if (getYear_prop->IsFunction())
+    {
+        Local<Function> getYear_func = Function::Cast(*getYear_prop);
+        Local<Value> yearValue = getYear_func->Call(obj, 0, NULL);
+        year = yearValue->NumberValue();
+    }
+    // Get month property
+    Local<Value> getMonth_prop = (obj->Get(String::New("getMonth")));
+    if (getMonth_prop->IsFunction())
+    {
+        Local<Function> getMonth_func = Function::Cast(*getMonth_prop);
+        Local<Value> monthValue = getMonth_func->Call(obj, 0, NULL);
+        month = monthValue->NumberValue();
+    }
+    // Get day property
+    Local<Value> getDay_prop = (obj->Get(String::New("getDate")));
+    if (getDay_prop->IsFunction())
+    {
+        Local<Function> getDay_func = Function::Cast(*getDay_prop);
+        Local<Value> dayValue = getDay_func->Call(obj, 0, NULL);
+        day = dayValue->NumberValue();
+    }
+
+    // Defaults to NarrowFormat
+    QLocale::FormatType fType = QLocale::NarrowFormat;
+
+    // Try to parse optional format argument
+    if (args.Length() > 1)
+    {
+        Local<Value> format = args[1];
+        if (!(format->IsString() || format->IsStringObject()))
+        {
+            format = format->ToString();
+        }
+
+        const String::Utf8Value utf8(format);
+        QString strFormat = QString::fromUtf8(*utf8);
+        if (strFormat.compare(DATE_FORMAT_MEDIUM) == 0)
+        {
+            fType = QLocale::ShortFormat;
+        }
+        else if (strFormat.compare(DATE_FORMAT_LONG) == 0)
+        {
+            fType = QLocale::LongFormat;
+        }
+        else
+        {
+            fType = QLocale::NarrowFormat;
+        }
+    }
+
+    // Adding +1 to month, since it starting from 0
+    QDate date(year, month + 1, day);
+    QString strRes = QLocale().toString(date, fType);
+
+    Handle<String> result = String::New(strRes.toUtf8());
+    return (result);
 }
 
 Handle<Value> NativeStringInterface::formatDecimal(const Arguments& args)
 {
-    // TODO: Implement
-    Q_UNUSED(args);
-    return Undefined();
+    if (args.Length() < 1 || (!args[0]->IsNumber() && !args[0]->IsNumberObject()))
+    {
+        ThrowException(String::New(Ti::Msg::Expected_argument_of_type_integer));
+        return Undefined();
+    }
+
+    Handle<Number> num = Handle<Number>::Cast(args[0]);
+    QString strRes = QLocale().toString(num->Value());
+
+    // TODO: parse optional parameters: locale & pattern
+    // JIRA TASK: https://jira.appcelerator.org/browse/TIMOB-9600
+    // See: http://docs.appcelerator.com/titanium/2.0/index.html#!/api/Global.String
+
+    Handle<String> result = String::New(strRes.toUtf8());
+    return (result);
 }
 
 Handle<Value> NativeStringInterface::formatTime(const Arguments& args)
 {
-    // TODO: Implement
-    Q_UNUSED(args);
-    return Undefined();
+    // TODO: Reiterate through the code when R6 available
+    // JIRA TASK: https://jira.appcelerator.org/browse/TIMOB-9686
+    if (args.Length() < 1 || !args[0]->IsDate() || !args[0]->IsObject())
+    {
+        ThrowException(String::New(Ti::Msg::Expected_argument_of_type_date));
+        return Undefined();
+    }
+
+    Local<Value> value = args[0];
+    int hours = 0, minutes = 0, seconds = 0, msecs = 0;
+
+    Local<Object> obj = Object::Cast(*value);
+    // Get hours property
+    Local<Value> getHours_prop = (obj->Get(String::New("getHours")));
+    if (getHours_prop->IsFunction())
+    {
+        Local<Function> getHours_func = Function::Cast(*getHours_prop);
+        Local<Value> hoursValue = getHours_func->Call(obj, 0, NULL);
+        hours = hoursValue->NumberValue();
+    }
+    // Get minute property
+    Local<Value> getMinutes_prop = (obj->Get(String::New("getMinutes")));
+    if (getMinutes_prop->IsFunction())
+    {
+        Local<Function> getMinutes_func = Function::Cast(*getMinutes_prop);
+        Local<Value> minutesValue = getMinutes_func->Call(obj, 0, NULL);
+        minutes = minutesValue->NumberValue();
+    }
+    // Get seconds property
+    Local<Value> getSeconds_prop = (obj->Get(String::New("getSeconds")));
+    if (getSeconds_prop->IsFunction())
+    {
+        Local<Function> getSeconds_func = Function::Cast(*getSeconds_prop);
+        Local<Value> secondsValue = getSeconds_func->Call(obj, 0, NULL);
+        seconds = secondsValue->NumberValue();
+    }
+    // Get milliseconds property
+    Local<Value> getMsecs_prop = (obj->Get(String::New("getMilliseconds")));
+    if (getMsecs_prop->IsFunction())
+    {
+        Local<Function> getMsecs_func = Function::Cast(*getMsecs_prop);
+        Local<Value> msecsValue = getMsecs_func->Call(obj, 0, NULL);
+        msecs = msecsValue->NumberValue();
+    }
+
+    // Defaults to NarrowFormat
+    QLocale::FormatType fType = QLocale::NarrowFormat;
+
+    // Try to parse optional format argument
+    if (args.Length() > 1)
+    {
+        Local<Value> format = args[1];
+        if (!(format->IsString() || format->IsStringObject()))
+        {
+            format = format->ToString();
+        }
+
+        const String::Utf8Value utf8(format);
+        QString strFormat = QString::fromUtf8(*utf8);
+        if (strFormat.compare(DATE_FORMAT_MEDIUM) == 0)
+        {
+            fType = QLocale::ShortFormat;
+        }
+        else if (strFormat.compare(DATE_FORMAT_LONG) == 0)
+        {
+            fType = QLocale::LongFormat;
+        }
+        else
+        {
+            fType = QLocale::NarrowFormat;
+        }
+    }
+
+    QTime time = QTime(hours, minutes, seconds, msecs);
+    QString strRes = QLocale().toString(time, fType);
+
+    Handle<String> result = String::New(strRes.toUtf8());
+    return (result);
 }
 
 
