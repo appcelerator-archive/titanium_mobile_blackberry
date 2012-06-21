@@ -5,19 +5,21 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "TiCascadesApp.h"
 #include "NativeObjectFactory.h"
-#include "NativeContainerObject.h"
-#include "NativeLabelObject.h"
-#include "NativeButtonObject.h"
-#include "NativeSliderObject.h"
-#include "NativeProgressBarObject.h"
-#include "NativeTextFieldObject.h"
-#include "NativeImageViewObject.h"
-#include "NativeListViewObject.h"
+
 #include "NativeActivityIndicatorObject.h"
-#include "NativeToggleButtonObject.h"
+#include "NativeButtonObject.h"
+#include "NativeContainerObject.h"
 #include "NativeDropDownObject.h"
+#include "NativeImageViewObject.h"
+#include "NativeLabelObject.h"
+#include "NativeListViewObject.h"
+#include "NativeProgressBarObject.h"
+#include "NativeSliderObject.h"
+#include "NativeStringInterface.h"
+#include "NativeTextFieldObject.h"
+#include "NativeToggleButtonObject.h"
+#include "TiCascadesApp.h"
 #include <bb/cascades/Container>
 
 using namespace bb::cascades;
@@ -133,4 +135,9 @@ NativeObject* NativeObjectFactory::getRootContainer() const
         rootContainer_->addRef();
     }
     return rootContainer_;
+}
+
+const NativeStringInterface* NativeObjectFactory::getNativeStringInterface()
+{
+    return NativeStringInterface::instance();
 }
