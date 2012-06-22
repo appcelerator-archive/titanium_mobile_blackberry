@@ -41,11 +41,7 @@ Handle<Value> NativeStringInterface::format(const Arguments& args)
         return Undefined();
     }
 
-    Local<Value> format = args[0];
-    if (!(format->IsString() || format->IsStringObject()))
-    {
-        format = format->ToString();
-    }
+    Local<Value> format = args[0]->ToString();
 
     const String::Utf8Value utf8(format);
     QString str = QString::fromUtf8(*utf8);
@@ -189,7 +185,7 @@ Handle<Value> NativeStringInterface::formatTime(const Arguments& args)
 
 static QString formatInt(QString s, Local<Value> arg)
 {
-    if (arg->IsNumber())
+    if (arg->IsNumber() || arg->IsNumberObject())
     {
         if (s.endsWith('C'))
         {
@@ -210,7 +206,7 @@ static QString formatInt(QString s, Local<Value> arg)
 
 static QString formatUInt(QString s, Local<Value> arg)
 {
-    if (arg->IsNumber())
+    if (arg->IsNumber() || arg->IsNumberObject())
     {
         if (s.right(3).startsWith("ll"))
         {
@@ -226,7 +222,7 @@ static QString formatUInt(QString s, Local<Value> arg)
 
 static QString formatDouble(QString s, Local<Value> arg)
 {
-    if (arg->IsNumber())
+    if (arg->IsNumber() || arg->IsNumberObject())
     {
         if (s.right(2).startsWith('L'))
         {
@@ -250,10 +246,7 @@ static QString formatString(QString s, Local<Value> arg)
     }
     bool longChar = s.endsWith("ls");
 
-    if (!(arg->IsString() || arg->IsStringObject()))
-    {
-        arg = arg->ToString();
-    }
+    arg = arg->ToString();
     if (longChar)
     {
         String::Value utf16(arg);
