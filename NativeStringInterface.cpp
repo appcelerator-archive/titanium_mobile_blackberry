@@ -24,6 +24,9 @@ static QString formatDouble(QString s, Local<Value> arg);
 static QString formatString(QString s, Local<Value> arg);
 static QString formatPointer(QString s, Local<Value> arg);
 
+// Helper function
+static QLocale::FormatType parseFormat(Local<Value> format);
+
 static const char* DATE_FORMAT_SHORT       = "short";
 static const char* DATE_FORMAT_MEDIUM      = "medium";
 static const char* DATE_FORMAT_LONG        = "long";
@@ -179,9 +182,8 @@ Handle<Value> NativeStringInterface::formatCurrency(const Arguments& args)
 
 Handle<Value> NativeStringInterface::formatDate(const Arguments& args)
 {
-    // TODO: Reiterate through the code when R6 available
-    // JIRA TASK: https://jira.appcelerator.org/browse/TIMOB-9686
-    if (args.Length() < 1 || !args[0]->IsDate() || !args[0]->IsObject())
+    // TODO: Revisit format part when R6 available
+    if (args.Length() < 1 || !args[0]->IsDate())
     {
         ThrowException(String::New(Ti::Msg::Expected_argument_of_type_date));
         return Undefined();
@@ -222,26 +224,7 @@ Handle<Value> NativeStringInterface::formatDate(const Arguments& args)
     // Try to parse optional format argument
     if (args.Length() > 1)
     {
-        Local<Value> format = args[1];
-        if (!(format->IsString() || format->IsStringObject()))
-        {
-            format = format->ToString();
-        }
-
-        const String::Utf8Value utf8(format);
-        QString strFormat = QString::fromUtf8(*utf8);
-        if (strFormat.compare(DATE_FORMAT_MEDIUM) == 0)
-        {
-            fType = QLocale::ShortFormat;
-        }
-        else if (strFormat.compare(DATE_FORMAT_LONG) == 0)
-        {
-            fType = QLocale::LongFormat;
-        }
-        else
-        {
-            fType = QLocale::NarrowFormat;
-        }
+        fType = parseFormat(args[1]);
     }
 
     // Adding +1 to month, since it starting from 0
@@ -264,8 +247,6 @@ Handle<Value> NativeStringInterface::formatDecimal(const Arguments& args)
     QString strRes = QLocale().toString(num->Value());
 
     // TODO: parse optional parameters: locale & pattern
-    // JIRA TASK: https://jira.appcelerator.org/browse/TIMOB-9600
-    // See: http://docs.appcelerator.com/titanium/2.0/index.html#!/api/Global.String
 
     Handle<String> result = String::New(strRes.toUtf8());
     return (result);
@@ -273,9 +254,8 @@ Handle<Value> NativeStringInterface::formatDecimal(const Arguments& args)
 
 Handle<Value> NativeStringInterface::formatTime(const Arguments& args)
 {
-    // TODO: Reiterate through the code when R6 available
-    // JIRA TASK: https://jira.appcelerator.org/browse/TIMOB-9686
-    if (args.Length() < 1 || !args[0]->IsDate() || !args[0]->IsObject())
+    // TODO: Revisit format part when R6 available
+    if (args.Length() < 1 || !args[0]->IsDate())
     {
         ThrowException(String::New(Ti::Msg::Expected_argument_of_type_date));
         return Undefined();
@@ -324,26 +304,7 @@ Handle<Value> NativeStringInterface::formatTime(const Arguments& args)
     // Try to parse optional format argument
     if (args.Length() > 1)
     {
-        Local<Value> format = args[1];
-        if (!(format->IsString() || format->IsStringObject()))
-        {
-            format = format->ToString();
-        }
-
-        const String::Utf8Value utf8(format);
-        QString strFormat = QString::fromUtf8(*utf8);
-        if (strFormat.compare(DATE_FORMAT_MEDIUM) == 0)
-        {
-            fType = QLocale::ShortFormat;
-        }
-        else if (strFormat.compare(DATE_FORMAT_LONG) == 0)
-        {
-            fType = QLocale::LongFormat;
-        }
-        else
-        {
-            fType = QLocale::NarrowFormat;
-        }
+        fType = parseFormat(args[1]);
     }
 
     QTime time = QTime(hours, minutes, seconds, msecs);
@@ -448,4 +409,26 @@ static QString formatPointer(QString s, Local<Value> arg)
     }
     ThrowException(String::New(Ti::Msg::Expected_argument_of_type_object_or_external));
     return QString();
+}
+
+static QLocale::FormatType parseFormat(Local<Value> format)
+{
+    QLocale::FormatType fType = QLocale::NarrowFormat;
+    if (!format->IsString())
+    {
+        format = format->ToString();
+    }
+
+    const String::Utf8Value utf8(format);
+    QString strFormat = QString::fromUtf8(*utf8);
+    if (strFormat.compare(DATE_FORMAT_MEDIUM) == 0)
+    {
+        fType = QLocale::ShortFormat;
+    }
+    else if (strFormat.compare(DATE_FORMAT_LONG) == 0)
+    {
+        fType = QLocale::LongFormat;
+    }
+
+    return fType;
 }
