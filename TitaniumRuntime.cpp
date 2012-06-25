@@ -6,21 +6,22 @@
  */
 
 #include "TitaniumRuntime.h"
-#include <stdio.h>
-#include <string.h>
-#include <QtCore/QObject>
-#include <QtCore/QMetaType>
 
-#include <bb/cascades/Event>
-#include <bb/cascades/UiObject>
-#include <bb/cascades/Control>
-
-#include <bb/cascades/Application>
+#include "NativeObject.h"
+#include "NativeObjectFactory.h"
+#include "TiCascadesApp.h"
+#include "TiLogger.h"
 #include "TiRootObject.h"
 #include "TiTitaniumObject.h"
-#include "TiCascadesApp.h"
-#include "NativeObjectFactory.h"
-#include "NativeObject.h"
+
+#include <bb/cascades/Application>
+#include <bb/cascades/Control>
+#include <bb/cascades/Event>
+#include <bb/cascades/UiObject>
+#include <QtCore/QMetaType>
+#include <QtCore/QObject>
+#include <stdio.h>
+#include <string.h>
 
 TitaniumRuntime::TitaniumRuntime()
 {
@@ -58,6 +59,7 @@ int TitaniumRuntime::internalRun(int argc, char** argv)
     NativeObjectFactory objFactory(&mainApp);
     objectFactory_ = &objFactory;
     mainApp_ = &mainApp;
+    TiLogger::initialize(&objFactory);
     int ret = obj->executeScript(&objFactory, javaScript_, messageLoop, this);
     // TODO: handle non-zero return code here
     return ret;

@@ -25,6 +25,7 @@ enum NATIVE_TYPE
     , N_TYPE_IMAGEVIEW
     , N_TYPE_LABEL
     , N_TYPE_LIST_VIEW
+    , N_TYPE_LOGGER
     , N_TYPE_OPTION
     , N_TYPE_PROGRESSBAR
     , N_TYPE_SLIDER
@@ -104,12 +105,6 @@ enum NATIVE_PROP
     /* This MUST be the last element */
     , N_PROP_LAST
 };
-
-#define Ti_DEBUG(msg, ...) \
-    do { \
-        qDebug() << __PRETTY_FUNCTION__; \
-        qDebug() << msg << __VA_ARGS__;  \
-    } while (0)
 
 
 #include "TiBase.h"

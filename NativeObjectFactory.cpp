@@ -9,6 +9,7 @@
 #include "NativeObjectFactory.h"
 #include "NativeContainerObject.h"
 #include "NativeLabelObject.h"
+#include "NativeLoggerObject.h"
 #include "NativeButtonObject.h"
 #include "NativeSliderObject.h"
 #include "NativeProgressBarObject.h"
@@ -53,6 +54,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
 
     case N_TYPE_LABEL:
         obj = NativeLabelObject::createLabel();
+        break;
+
+    case N_TYPE_LOGGER:
+        obj = &NativeLoggerObject::getInstance();
         break;
 
     case N_TYPE_BUTTON:
