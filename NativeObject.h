@@ -65,6 +65,7 @@ enum NATIVE_PROP
     , N_PROP_COLOR
     , N_PROP_DATA
     , N_PROP_ELLIPSIZE
+    , N_PROP_ENABLED
     , N_PROP_FOCUSABLE
     , N_PROP_FONT
     , N_PROP_HEIGHT
@@ -145,6 +146,8 @@ public:
     virtual bool isInitializationComplete() const;
     virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual int scrollToIndex(int index);
+    virtual int removeEventHandler(int eventId);
+    virtual int setVisibility(bool visible);
 
 protected:
     NativeObject();

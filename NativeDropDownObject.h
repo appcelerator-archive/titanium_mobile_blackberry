@@ -33,7 +33,6 @@ public:
     static NativeDropDownObject* createDropDown();
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
-    virtual NAHANDLE getNativeHandle() const;
     virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual int setTitle(TiObject* obj);
     virtual int setOptions(TiObject* obj);

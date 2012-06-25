@@ -23,7 +23,6 @@ public:
     static NativeLabelObject* createLabel();
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
-    virtual NAHANDLE getNativeHandle() const;
 
 protected:
     virtual ~NativeLabelObject();
