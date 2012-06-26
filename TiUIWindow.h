@@ -27,9 +27,10 @@ protected:
     virtual ~TiUIWindow();
     virtual void initializeTiObject(TiObject* parentContext);
     virtual void onCreateStaticMembers();
+    virtual void onSetupEvents();
 
 private:
-    TiUIWindow(NativeObjectFactory* objectFactory, const char* name);
+    TiUIWindow(const char* name);
     static Handle<Value> open_(void* userContext, TiObject* caller, const Arguments& args);
 };
 

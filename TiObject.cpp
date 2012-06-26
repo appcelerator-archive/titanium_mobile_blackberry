@@ -16,6 +16,9 @@ TiObject::TiObject()
     isInitialized_ = false;
     parentObject_ = NULL;
     name_ = "";
+    nativeObject_ = NULL;
+    nativeObjectFactory_ = NULL;
+    areEventsInitialized_ = false;
 #ifdef _TI_DEBUG_
     cstrName_ = name_.c_str();
     debugMembers_ = "";
@@ -28,6 +31,9 @@ TiObject::TiObject(const char* objectName)
     , parentObject_(NULL)
 {
     name_ = objectName;
+    nativeObject_ = NULL;
+    nativeObjectFactory_ = NULL;
+    areEventsInitialized_ = false;
 #ifdef _TI_DEBUG_
     cstrName_ = name_.c_str();
     debugMembers_ = "";
@@ -40,6 +46,9 @@ TiObject::TiObject(const char* objectName, Handle<Value> value)
     name_ = objectName;
     value_ = Persistent<Value>::New(value);
     parentObject_ = NULL;
+    nativeObject_ = NULL;
+    nativeObjectFactory_ = NULL;
+    areEventsInitialized_ = false;
 #ifdef _TI_DEBUG_
     cstrName_ = name_.c_str();
     debugMembers_ = "";
@@ -52,6 +61,11 @@ TiObject::~TiObject()
     if (!value_.IsEmpty())
     {
         value_.Dispose();
+    }
+    if (nativeObject_ != NULL)
+    {
+        nativeObject_->release();
+        nativeObject_ = NULL;
     }
 }
 
@@ -427,6 +441,57 @@ TiObject* TiObject::getParentObject() const
     return parentObject_;
 }
 
+NativeObjectFactory* TiObject::getNativeObjectFactory() const
+{
+    return nativeObjectFactory_;
+}
+
+NativeObject* TiObject::getNativeObject() const
+{
+    if (nativeObject_ != NULL)
+    {
+        nativeObject_->addRef();
+    }
+    return nativeObject_;
+}
+
+void TiObject::setNativeObject(NativeObject* nativeObject)
+{
+    if (nativeObject != NULL)
+    {
+        nativeObject->addRef();
+    }
+    if (nativeObject_ != NULL)
+    {
+        nativeObject_->release();
+    }
+    nativeObject_ = nativeObject;
+}
+
+void TiObject::setupEvents()
+{
+    if (!areEventsInitialized_)
+    {
+        onSetupEvents();
+        areEventsInitialized_ = true;
+    }
+}
+
+void TiObject::onSetupEvents()
+{
+    NativeObject* nativeObject = getNativeObject();
+    if (nativeObject != NULL)
+    {
+        nativeObject->completeInitialization();
+        nativeObject->release();
+    }
+}
+
+void TiObject::setNativeObjectFactory(NativeObjectFactory* objectFactory)
+{
+    nativeObjectFactory_ = objectFactory;
+}
+
 ObjectEntry::ObjectEntry()
 {
     obj_ = NULL;
@@ -480,5 +545,10 @@ TiObject* ObjectEntry::getObject() const
     {
         obj_->addRef();
     }
+    return obj_;
+}
+
+TiObject* ObjectEntry::operator -> () const
+{
     return obj_;
 }

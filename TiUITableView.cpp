@@ -8,8 +8,8 @@
 #include "TiUITableView.h"
 #include "TiGenericFunctionObject.h"
 
-TiUITableView::TiUITableView(NativeObjectFactory* nativeObjectFactory)
-    : TiUIBase(nativeObjectFactory, "")
+TiUITableView::TiUITableView()
+    : TiUIBase("")
 {
 }
 
@@ -19,7 +19,8 @@ TiUITableView::~TiUITableView()
 
 TiUITableView* TiUITableView::createTableView(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUITableView* obj = new TiUITableView(nativeObjectFactory);
+    TiUITableView* obj = new TiUITableView;
+    obj->setNativeObjectFactory(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }
@@ -53,7 +54,7 @@ Handle<Value> TiUITableView::_scrollToIndex(void* userContext, TiObject* caller,
     }
     else
     {
-        qDebug() << "TiUITableView::_scrollToIndex - args[0] is not a number.";
+        //qDebug() << "TiUITableView::_scrollToIndex - args[0] is not a number.";
     }
 
     return Undefined();

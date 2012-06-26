@@ -8,8 +8,8 @@
 #include "TiUIWindow.h"
 #include "TiGenericFunctionObject.h"
 
-TiUIWindow::TiUIWindow(NativeObjectFactory* objectFactory, const char* name)
-    : TiUIBase(objectFactory, name)
+TiUIWindow::TiUIWindow(const char* name)
+    : TiUIBase(name)
 {
 }
 
@@ -19,7 +19,8 @@ TiUIWindow::~TiUIWindow()
 
 TiUIBase* TiUIWindow::createWindow(NativeObjectFactory* objectFactory)
 {
-    TiUIWindow* obj = new TiUIWindow(objectFactory, "");
+    TiUIWindow* obj = new TiUIWindow("");
+    obj->setNativeObjectFactory(objectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }
@@ -41,12 +42,22 @@ void TiUIWindow::initializeTiObject(TiObject* parentContext)
     }
 }
 
+void TiUIWindow::onSetupEvents()
+{
+    TiUIBase::onSetupEvents();
+}
+
 Handle<Value> TiUIWindow::open_(void* userContext, TiObject* caller, const Arguments& args)
 {
     HandleScope handleScope;
     TiUIWindow* obj = (TiUIWindow*) userContext;
     NativeObject* no = obj->getNativeObject();
     no->completeInitialization();
+    vector<ObjectEntry>::iterator it;
+    for (it = obj->childControls_.begin(); it != obj->childControls_.end(); it++)
+    {
+        (*it)->setupEvents();
+    }
     no->open();
     no->release();
     return Undefined();

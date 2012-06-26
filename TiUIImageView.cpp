@@ -7,8 +7,8 @@
 
 #include "TiUIImageView.h"
 
-TiUIImageView::TiUIImageView(NativeObjectFactory* nativeObjectFactory)
-    : TiUIBase(nativeObjectFactory, "")
+TiUIImageView::TiUIImageView()
+    : TiUIBase("")
 {
 }
 
@@ -18,7 +18,8 @@ TiUIImageView::~TiUIImageView()
 
 TiUIBase* TiUIImageView::createImageView(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUIImageView* obj = new TiUIImageView(nativeObjectFactory);
+    TiUIImageView* obj = new TiUIImageView;
+    obj->setNativeObjectFactory(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }

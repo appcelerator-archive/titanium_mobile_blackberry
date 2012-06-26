@@ -10,6 +10,7 @@
 #include "TiPropertySetFunctionObject.h"
 #include "TiPropertyGetFunctionObject.h"
 #include "TiPropertyMapObject.h"
+#include "TiPropertyGetObject.h"
 #include "TiV8Event.h"
 #include <string>
 #include <ctype.h>
@@ -164,8 +165,6 @@ const static TiProperty g_tiProperties[] =
 
 TiUIBase::TiUIBase()
 {
-    nativeObjectFactory_ = NULL;
-    nativeObject_ = NULL;
 }
 
 TiUIBase::~TiUIBase()
@@ -174,27 +173,11 @@ TiUIBase::~TiUIBase()
     {
         createConfig_.Dispose();
     }
-    if (nativeObject_ != NULL)
-    {
-        nativeObject_->release();
-        nativeObject_ = NULL;
-    }
 }
 
-TiUIBase::TiUIBase(NativeObjectFactory* nativeObjectFactory, const char* name)
+TiUIBase::TiUIBase(const char* name)
     : TiObject(name)
 {
-    nativeObjectFactory_ = nativeObjectFactory;
-    nativeObject_ = NULL;
-}
-
-void TiUIBase::onStartMessagePump()
-{
-    if (nativeObject_ != NULL)
-    {
-        nativeObject_->completeInitialization();
-    }
-    TiObject::onStartMessagePump();
 }
 
 bool TiUIBase::isUIObject() const
@@ -202,23 +185,9 @@ bool TiUIBase::isUIObject() const
     return true;
 }
 
-NativeObjectFactory* TiUIBase::getNativeObjectFactory() const
-{
-    return nativeObjectFactory_;
-}
-
 bool TiUIBase::canAddMembers() const
 {
     return true;
-}
-
-NativeObject* TiUIBase::getNativeObject() const
-{
-    if (nativeObject_ != NULL)
-    {
-        nativeObject_->addRef();
-    }
-    return nativeObject_;
 }
 
 void TiUIBase::setTiMappingProperties(const TiProperty* props, int propertyCount)
@@ -252,19 +221,6 @@ void TiUIBase::setTiMappingProperties(const TiProperty* props, int propertyCount
     }
 }
 
-void TiUIBase::setNativeObject(NativeObject* nativeObject)
-{
-    if (nativeObject != NULL)
-    {
-        nativeObject->addRef();
-    }
-    if (nativeObject_ != NULL)
-    {
-        nativeObject_->release();
-    }
-    nativeObject_ = nativeObject;
-}
-
 void TiUIBase::onCreateStaticMembers()
 {
     TiObject::onCreateStaticMembers();
@@ -273,6 +229,9 @@ void TiUIBase::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "hide", this, _hide);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "removeEventListener", this, _removeEventListener);
     setTiMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
+    TiObject* value = TiPropertyGetObject::createGetProperty(this, "children", this, _getChildren);
+    TiPropertyGetFunctionObject::addPropertyGetter(this, value, "getChildren");
+    value->release();
 }
 
 void TiUIBase::setParametersFromObject(Local<Object> obj)
@@ -386,7 +345,11 @@ Handle<Value> TiUIBase::_add(void* userContext, TiObject* caller, const Argument
         TiUIBase* uiObj = (TiUIBase*) addObj;
         NativeObject* childNO = uiObj->getNativeObject();
         NativeObject* parentNO = obj->getNativeObject();
-        parentNO->addChildNativeObject(childNO);
+        if (N_SUCCEEDED(parentNO->addChildNativeObject(childNO)))
+        {
+            ObjectEntry entry = addObj;
+            obj->childControls_.push_back(entry);
+        }
         childNO->release();
         parentNO->release();
     }
@@ -448,4 +411,17 @@ Handle<Value> TiUIBase::_removeEventListener(void* userContext, TiObject* caller
     String::Utf8Value eventNameUTF(eventName);
     obj->onRemoveEventListener(*eventNameUTF, func);
     return Undefined();
+}
+
+Handle<Value> TiUIBase::_getChildren(void* userContext)
+{
+    TiUIBase* obj = (TiUIBase*) userContext;
+    Handle<Array> array = Array::New();
+    int i = 0;
+    vector<ObjectEntry>::iterator it;
+    for (it = obj->childControls_.begin(); it != obj->childControls_.end(); it++)
+    {
+        array->Set(Integer::New(i++), (*it)->getValue());
+    }
+    return array;
 }
