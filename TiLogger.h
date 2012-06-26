@@ -39,7 +39,11 @@ protected:
     virtual ~TiLogger();
 
 private:
+    // Disable ctor, copy ctor, and assignment operator
     TiLogger();
+    TiLogger(const TiLogger&);
+    TiLogger& operator=(const TiLogger&);
+
     static NativeLoggerInterface* nativeLogger_;
 };
 
