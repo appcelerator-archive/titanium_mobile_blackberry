@@ -1,7 +1,7 @@
 QMAKE_TARGET  = tibb
 QMAKE         = $(QNX_HOST)/usr/bin/qmake
 TARGET        = $(QMAKE_TARGET)
-J_OPTION      = -j $(firstword $(NUM_CPUS) 1)
+J_OPTION      = $(if $(NUM_CPUS), -j $(NUM_CPUS), )
 
 .PHONY: all
 all: Makefile device simulator
