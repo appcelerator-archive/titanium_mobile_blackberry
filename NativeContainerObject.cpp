@@ -171,9 +171,9 @@ int NativeContainerObject::addChildNativeObject(NativeObject* obj)
 
     case N_TYPE_DATE_TIME_PICKER:
     {
-       bb::cascades::DateTimePicker* dateTimePicker = (bb::cascades::DateTimePicker*) obj->getNativeHandle();
-       container_->add(dateTimePicker);
-       return NATIVE_ERROR_OK;
+        bb::cascades::DateTimePicker* dateTimePicker = (bb::cascades::DateTimePicker*) obj->getNativeHandle();
+        container_->add(dateTimePicker);
+        return NATIVE_ERROR_OK;
     }
 
     }

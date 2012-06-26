@@ -175,7 +175,7 @@ int NativeControlObject::setMinDate(TiObject* obj)
 PROP_SETTER(setMaxDate)
 int NativeControlObject::setMaxDate(TiObject* obj)
 {
-	return NATIVE_ERROR_NOTSUPPORTED;
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETTER(setData)
@@ -258,7 +258,7 @@ int NativeControlObject::setHintText(TiObject* obj)
 PROP_SETTER(setType)
 int NativeControlObject::setType(TiObject* obj)
 {
-   return NATIVE_ERROR_NOTSUPPORTED;
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,

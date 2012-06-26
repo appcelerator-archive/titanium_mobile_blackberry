@@ -21,8 +21,8 @@ namespace V8ToNative
 {
 //utility functions to convert V8 values into Native
 
-   //retrieve QDateTime value from the v8::Value object
-   void retrieveDate(const v8::Handle<v8::Value>& value, QDateTime& dt);
+//retrieve QDateTime value from the v8::Value object
+void retrieveDate(const v8::Handle<v8::Value>& value, QDateTime& dt);
 }
 
 namespace NativeToV8

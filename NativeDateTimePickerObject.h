@@ -33,9 +33,6 @@ class NativeDateTimePickerObject : public NativeControlObject
 public:
     static NativeDateTimePickerObject* createDateTimePicker();
     virtual int getObjectType() const;
-    virtual int setTop(TiObject* obj);
-    virtual int setLeft(TiObject* obj);
-    virtual int setWidth(TiObject* obj);
     virtual int setValue(TiObject* obj);
     virtual int setType(TiObject* obj);
     virtual int setMinDate(TiObject* obj);
@@ -74,11 +71,11 @@ public:
     virtual ~DateTimePickerEventHandler() {}
 
 public slots:
-   void setValue(QDateTime value)
-   {
-	   eventContainer_->setDataProperty("value", value.toString().toUtf8().constData());
-	   eventContainer_->fireEvent();
-   }
+    void setValue(QDateTime value)
+    {
+        eventContainer_->setDataProperty("value", value.toString().toUtf8().constData());
+        eventContainer_->fireEvent();
+    }
 
 private:
     TiEventContainer* eventContainer_;

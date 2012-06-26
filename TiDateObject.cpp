@@ -6,7 +6,7 @@
  * Pleasesee the LICENSE included with this distribution for details.
  */
 
-	 	
+
 #include "TiDateObject.h"
 
 TiDateObject::TiDateObject(NativeObjectFactory* objectFactory)
