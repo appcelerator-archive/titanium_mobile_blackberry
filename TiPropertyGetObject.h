@@ -24,12 +24,9 @@ protected:
 
 private:
     TiPropertyGetObject(const char* propertyName);
-    TiPropertyGetObject() {};
-    explicit TiPropertyGetObject(const TiPropertyGetObject& obj);
-    const TiPropertyGetObject& operator = (const TiPropertyGetObject& obj)
-    {
-        return(*this);
-    };
+    /* Not copiable; Not assignable */
+    TiPropertyGetObject(const TiPropertyGetObject&);
+    const TiPropertyGetObject& operator = (const TiPropertyGetObject&);
 
     void* context_;
     GET_PROPERTY_CALLBACK getCallback_;

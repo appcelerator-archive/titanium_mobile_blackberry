@@ -416,9 +416,9 @@ Handle<Value> TiUIBase::_removeEventListener(void* userContext, TiObject* caller
 Handle<Value> TiUIBase::_getChildren(void* userContext)
 {
     TiUIBase* obj = (TiUIBase*) userContext;
-    Handle<Array> array = Array::New();
+    Handle<Array> array = Array::New(obj->childControls_.size());
     int i = 0;
-    vector<ObjectEntry>::iterator it;
+    vector<ObjectEntry>::const_iterator it;
     for (it = obj->childControls_.begin(); it != obj->childControls_.end(); it++)
     {
         array->Set(Integer::New(i++), (*it)->getValue());

@@ -12,13 +12,13 @@
 #define HIDDEN_TEMP_OBJECT_PROPERTY         "globalTemplate_"
 
 TiObject::TiObject()
+    : name_(""),
+      isInitialized_(false),
+      parentObject_(NULL),
+      nativeObject_(NULL),
+      nativeObjectFactory_(NULL),
+      areEventsInitialized_(false)
 {
-    isInitialized_ = false;
-    parentObject_ = NULL;
-    name_ = "";
-    nativeObject_ = NULL;
-    nativeObjectFactory_ = NULL;
-    areEventsInitialized_ = false;
 #ifdef _TI_DEBUG_
     cstrName_ = name_.c_str();
     debugMembers_ = "";
@@ -27,13 +27,13 @@ TiObject::TiObject()
 }
 
 TiObject::TiObject(const char* objectName)
-    : isInitialized_(false)
-    , parentObject_(NULL)
+    : name_(objectName),
+      isInitialized_(false),
+      parentObject_(NULL),
+      nativeObject_(NULL),
+      nativeObjectFactory_(NULL),
+      areEventsInitialized_(false)
 {
-    name_ = objectName;
-    nativeObject_ = NULL;
-    nativeObjectFactory_ = NULL;
-    areEventsInitialized_ = false;
 #ifdef _TI_DEBUG_
     cstrName_ = name_.c_str();
     debugMembers_ = "";
@@ -42,13 +42,14 @@ TiObject::TiObject(const char* objectName)
 }
 
 TiObject::TiObject(const char* objectName, Handle<Value> value)
+    : value_(Persistent<Value>::New(value)),
+      name_(objectName),
+      isInitialized_(false),
+      parentObject_(NULL),
+      nativeObject_(NULL),
+      nativeObjectFactory_(NULL),
+      areEventsInitialized_(false)
 {
-    name_ = objectName;
-    value_ = Persistent<Value>::New(value);
-    parentObject_ = NULL;
-    nativeObject_ = NULL;
-    nativeObjectFactory_ = NULL;
-    areEventsInitialized_ = false;
 #ifdef _TI_DEBUG_
     cstrName_ = name_.c_str();
     debugMembers_ = "";
@@ -548,7 +549,7 @@ TiObject* ObjectEntry::getObject() const
     return obj_;
 }
 
-TiObject* ObjectEntry::operator -> () const
+TiObject* ObjectEntry::operator ->() const
 {
     return obj_;
 }

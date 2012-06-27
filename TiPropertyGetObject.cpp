@@ -8,10 +8,10 @@
 #include "TiPropertyGetObject.h"
 
 TiPropertyGetObject::TiPropertyGetObject(const char* propertyName) :
-    TiObject(propertyName)
+    TiObject(propertyName),
+    context_(NULL),
+    getCallback_(NULL)
 {
-    context_ = NULL;
-    getCallback_ = NULL;
 }
 
 TiPropertyGetObject::~TiPropertyGetObject()

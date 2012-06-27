@@ -46,7 +46,7 @@ public:
     ~ObjectEntry();
     const ObjectEntry& operator =(const ObjectEntry& entry);
     TiObject* getObject() const;
-    TiObject* operator -> () const;
+    TiObject* operator ->() const;
 private:
     TiObject* obj_;
     void* userContext_;

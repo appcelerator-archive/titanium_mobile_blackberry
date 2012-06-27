@@ -27,7 +27,6 @@ protected:
     virtual ~TiUIWindow();
     virtual void initializeTiObject(TiObject* parentContext);
     virtual void onCreateStaticMembers();
-    virtual void onSetupEvents();
 
 private:
     TiUIWindow(const char* name);
