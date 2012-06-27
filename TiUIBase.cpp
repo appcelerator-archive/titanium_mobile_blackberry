@@ -287,6 +287,7 @@ void TiUIBase::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "addEventListener", this, _addEventListener);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "hide", this, _hide);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "removeEventListener", this, _removeEventListener);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "show", this, _show);
     setTiMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
 }
 
@@ -356,7 +357,7 @@ void TiUIBase::onAddEventListener(const char* eventName, Handle<Function> eventF
     eventFunction->SetHiddenValue(String::New("_event_id_"), Integer::New(id));
 }
 
-void TiUIBase::onRemoveEventListener(const char* eventName, Handle<Function> eventFunction)
+void TiUIBase::onRemoveEventListener(const char*, Handle<Function> eventFunction)
 {
     HandleScope handleScope;
     NativeObject* no = getNativeObject();
@@ -387,7 +388,7 @@ void TiUIBase::onRemoveEventListener(const char* eventName, Handle<Function> eve
     no->removeEventHandler(v8id->Value());
 }
 
-Handle<Value> TiUIBase::_add(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIBase::_add(void* userContext, TiObject*, const Arguments& args)
 {
     HandleScope handleScope;
     TiUIBase* obj = (TiUIBase*) userContext;
@@ -412,7 +413,7 @@ Handle<Value> TiUIBase::_add(void* userContext, TiObject* caller, const Argument
     return Undefined();
 }
 
-Handle<Value> TiUIBase::_addEventListener(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIBase::_addEventListener(void* userContext, TiObject*, const Arguments& args)
 {
     HandleScope handleScope;
     // JavaScript usage:
@@ -434,7 +435,7 @@ Handle<Value> TiUIBase::_addEventListener(void* userContext, TiObject* caller, c
     return Undefined();
 }
 
-Handle<Value> TiUIBase::_hide(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIBase::_hide(void* userContext, TiObject*, const Arguments&)
 {
     HandleScope handleScope;
     TiUIBase* obj = (TiUIBase*) userContext;
@@ -443,7 +444,7 @@ Handle<Value> TiUIBase::_hide(void* userContext, TiObject* caller, const Argumen
     return Undefined();
 }
 
-Handle<Value> TiUIBase::_removeEventListener(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIBase::_removeEventListener(void* userContext, TiObject*, const Arguments& args)
 {
     HandleScope handleScope;
     // JavaScript usage:
@@ -462,5 +463,13 @@ Handle<Value> TiUIBase::_removeEventListener(void* userContext, TiObject* caller
     Handle<Function> func = Handle<Function>::Cast(args[1]);
     String::Utf8Value eventNameUTF(eventName);
     obj->onRemoveEventListener(*eventNameUTF, func);
+    return Undefined();
+}
+
+Handle<Value> TiUIBase::_show(void* userContext, TiObject*, const Arguments&)
+{
+    TiUIBase* obj = (TiUIBase*) userContext;
+    NativeObject* no = obj->getNativeObject();
+    no->setVisibility(true);
     return Undefined();
 }

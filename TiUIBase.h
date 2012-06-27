@@ -50,6 +50,7 @@ private:
     static Handle<Value> _addEventListener(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _hide(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _removeEventListener(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _show(void* userContext, TiObject* caller, const Arguments& args);
 
     // fields
     NativeObject* nativeObject_;
