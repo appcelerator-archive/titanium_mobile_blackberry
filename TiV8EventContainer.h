@@ -9,7 +9,7 @@
 #define TIV8EVENTCONTAINER_H_
 
 #include "TiEventContainer.h"
-#include <vector>
+#include <map>
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #include <v8.h>
@@ -33,6 +33,7 @@ public:
     TiV8EventContainer(Handle<Object> eventData);
     virtual ~TiV8EventContainer();
     virtual void addListener(TiEvent* listener);
+    virtual void removeListener(int id);
     virtual void fireEvent();
     virtual void setDataProperty(const char* propertyName, const char* value);
     virtual void setDataProperty(const char* propertyName, int value);
@@ -56,7 +57,7 @@ private:
     };
 
     Persistent<Object> eventData_;
-    vector<TiInternalEventListener> listeners_;
+    map<int, TiInternalEventListener> listeners_;
 };
 
 /*

@@ -10,6 +10,7 @@
 #include "NativeActivityIndicatorObject.h"
 #include "NativeButtonObject.h"
 #include "NativeContainerObject.h"
+#include "NativeDateTimePickerObject.h"
 #include "NativeDropDownObject.h"
 #include "NativeImageViewObject.h"
 #include "NativeLabelObject.h"
@@ -91,6 +92,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
 
     case N_TYPE_LIST_VIEW:
         obj = NativeListViewObject::createListView();
+        break;
+
+    case N_TYPE_DATE_TIME_PICKER:
+        obj = NativeDateTimePickerObject::createDateTimePicker();
         break;
 
     }

@@ -21,6 +21,7 @@ enum NATIVE_TYPE
     , N_TYPE_ACTIVITYINDICATOR
     , N_TYPE_BUTTON
     , N_TYPE_CONTAINER
+    , N_TYPE_DATE_TIME_PICKER
     , N_TYPE_DROPDOWN
     , N_TYPE_IMAGEVIEW
     , N_TYPE_LABEL
@@ -31,7 +32,6 @@ enum NATIVE_TYPE
     , N_TYPE_TEXT_FIELD
     , N_TYPE_TOGGLEBUTTON
     , N_TYPE_WINDOW
-
 };
 
 enum NATIVE_PROP
@@ -65,6 +65,7 @@ enum NATIVE_PROP
     , N_PROP_COLOR
     , N_PROP_DATA
     , N_PROP_ELLIPSIZE
+    , N_PROP_ENABLED
     , N_PROP_FOCUSABLE
     , N_PROP_FONT
     , N_PROP_HEIGHT
@@ -77,7 +78,9 @@ enum NATIVE_PROP
     , N_PROP_LAYOUT
     , N_PROP_LEFT
     , N_PROP_MAX
+    , N_PROP_MAXDATE
     , N_PROP_MIN
+    , N_PROP_MINDATE
     , N_PROP_MINIMUM_FONT_SIZE
     , N_PROP_OPACITY
     , N_PROP_OPTIONS
@@ -94,6 +97,7 @@ enum NATIVE_PROP
     , N_PROP_TOP
     , N_PROP_TOUCH_ENABLED
     , N_PROP_TRANSFORM
+    , N_PROP_TYPE
     , N_PROP_VALUE
     , N_PROP_VISIBLE
     , N_PROP_WIDTH
@@ -145,6 +149,8 @@ public:
     virtual bool isInitializationComplete() const;
     virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual int scrollToIndex(int index);
+    virtual int removeEventHandler(int eventId);
+    virtual int setVisibility(bool visible);
 
 protected:
     NativeObject();

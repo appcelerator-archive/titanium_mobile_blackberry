@@ -24,15 +24,21 @@ TiV8EventContainer::~TiV8EventContainer()
 void TiV8EventContainer::addListener(TiEvent* listener)
 {
     TiInternalEventListener ctnListener(listener);
-    listeners_.push_back(ctnListener);
+    int id = listener->getId();
+    listeners_[id] = ctnListener;
+}
+
+void TiV8EventContainer::removeListener(int id)
+{
+    listeners_.erase(id);
 }
 
 void TiV8EventContainer::fireEvent()
 {
-    vector<TiInternalEventListener>::iterator it;
+    map<int, TiInternalEventListener>::const_iterator it;
     for (it = listeners_.begin(); it != listeners_.end(); it++)
     {
-        it->getListener()->fire(&eventData_);
+        it->second.getListener()->fire(&eventData_);
     }
 }
 
@@ -67,6 +73,7 @@ TiV8EventContainer::TiInternalEventListener::TiInternalEventListener()
 {
     listener_ = NULL;
 }
+
 TiV8EventContainer::TiInternalEventListener::TiInternalEventListener(const TiInternalEventListener& listener)
 {
     listener_ = listener.listener_;
@@ -75,6 +82,7 @@ TiV8EventContainer::TiInternalEventListener::TiInternalEventListener(const TiInt
         listener_->addRef();
     }
 }
+
 TiV8EventContainer::TiInternalEventListener::TiInternalEventListener(TiEvent* listener)
 {
     listener_ = listener;
@@ -83,6 +91,7 @@ TiV8EventContainer::TiInternalEventListener::TiInternalEventListener(TiEvent* li
         listener_->addRef();
     }
 }
+
 TiV8EventContainer::TiInternalEventListener::~TiInternalEventListener()
 {
     if (listener_ != NULL)
@@ -91,8 +100,9 @@ TiV8EventContainer::TiInternalEventListener::~TiInternalEventListener()
         listener_ = NULL;
     }
 }
-const TiV8EventContainer::TiInternalEventListener&
-TiV8EventContainer::TiInternalEventListener::operator =(const TiV8EventContainer::TiInternalEventListener& listener)
+
+const TiV8EventContainer::TiInternalEventListener& TiV8EventContainer::TiInternalEventListener::operator =
+(const TiV8EventContainer::TiInternalEventListener& listener)
 {
     if (listener.listener_ != NULL)
     {
@@ -105,6 +115,7 @@ TiV8EventContainer::TiInternalEventListener::operator =(const TiV8EventContainer
     listener_ = listener.listener_;
     return (*this);
 }
+
 TiEvent* TiV8EventContainer::TiInternalEventListener::operator ->() const
 {
     return listener_;
