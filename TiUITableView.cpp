@@ -55,7 +55,7 @@ Handle<Value> TiUITableView::_scrollToIndex(void* userContext, TiObject* caller,
     }
     else
     {
-        Ti_DEBUG("TiUITableView::_scrollToIndex - args[0] is not a number.");
+        TI_DEBUG("TiUITableView::_scrollToIndex - args[0] is not a number.");
     }
 
     return Undefined();

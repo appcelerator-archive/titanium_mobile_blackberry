@@ -24,17 +24,17 @@ TiLogger& TiLogger::getInstance()
     return tiLogger;
 }
 
-NativeLoggerInterface* TiLogger::nativeLogger_ = NULL;
+NativeLoggerInterface* TiLogger::s_nativeLogger = NULL;
 
 void TiLogger::initialize(NativeObjectFactory* nativeObjectFactory)
 {
-    if (nativeLogger_ == NULL)
+    if (s_nativeLogger == NULL)
     {
-        nativeLogger_ = (NativeLoggerInterface*)nativeObjectFactory->createNativeObject(N_TYPE_LOGGER);
+        s_nativeLogger = (NativeLoggerInterface*)nativeObjectFactory->createNativeObject(N_TYPE_LOGGER);
     }
 }
 
 void TiLogger::log(std::string msg)
 {
-    nativeLogger_->log(msg.c_str());
+    s_nativeLogger->log(msg.c_str());
 }

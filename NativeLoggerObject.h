@@ -12,15 +12,32 @@
 
 class NativeLoggerWorker;
 
+#include <QTextStream>
 #include <QThread>
 
 class QString;
 
 
-#define N_DEBUG(msg) \
+#define N_TAGGED_LOG(tag, msg) \
     do { \
-        NativeLoggerObject::getInstance().log(QString("[N_DEBUG] ") + __PRETTY_FUNCTION__ + " Line " + __LINE__ + ": " + msg + "\n"); \
+        QString s; \
+        QTextStream ts(&s); \
+        ts << tag " " << __PRETTY_FUNCTION__ << " Line "  << __LINE__ << ": " << msg << "\n"; \
+        NativeLoggerObject::getInstance().log(s); \
     } while(0)
+
+#define N_TAG_INTERNAL "[N_INTERNAL]"
+#define N_TAG_ERROR    "[N_ERROR]"
+#define N_TAG_WARNING  "[N_WARNING]"
+#define N_TAG_DEBUG    "[N_DEBUG]"
+#define N_TAG_INFO     "[N_INFO]"
+
+#define N_INTERNAL(msg) N_TAGGED_LOG(N_TAG_INTERNAL, msg)
+#define N_ERROR(msg)    N_TAGGED_LOG(N_TAG_ERROR, msg)
+#define N_WARNING(msg)  N_TAGGED_LOG(N_TAG_WARNING, msg)
+#define N_DEBUG(msg)    N_TAGGED_LOG(N_TAG_DEBUG, msg)
+#define N_INFO(msg)     N_TAGGED_LOG(N_TAG_INFO, msg)
+
 
 /*
  * NativeLoggerObject

@@ -15,12 +15,24 @@ class NativeObjectFactory;
 #include <string>
 
 
-#define Ti_DEBUG(msg) \
+#define TI_TAGGED_LOG(tag, msg) \
     do { \
         stringstream ss; \
-        ss << __LINE__; \
-        TiLogger::getInstance().log(std::string("[Ti_DEBUG] ") + __PRETTY_FUNCTION__ + " Line " + ss.str() + ": " + msg + "\n"); \
+        ss << tag " " << __PRETTY_FUNCTION__ << " Line " << __LINE__ << ": " << msg << "\n"; \
+        TiLogger::getInstance().log(ss.str()); \
     } while(0)
+
+#define TI_TAG_INTERNAL "[TI_INTERNAL]"
+#define TI_TAG_ERROR    "[TI_ERROR]"
+#define TI_TAG_WARNING  "[TI_WARNING]"
+#define TI_TAG_DEBUG    "[TI_DEBUG]"
+#define TI_TAG_INFO     "[TI_INFO]"
+
+#define TI_INTERNAL(msg) TI_TAGGED_LOG(TI_TAG_INTERNAL, msg)
+#define TI_ERROR(msg)    TI_TAGGED_LOG(TI_TAG_ERROR, msg)
+#define TI_WARNING(msg)  TI_TAGGED_LOG(TI_TAG_WARNING, msg)
+#define TI_DEBUG(msg)    TI_TAGGED_LOG(TI_TAG_DEBUG, msg)
+#define TI_INFO(msg)     TI_TAGGED_LOG(TI_TAG_INFO, msg)
 
 
 /*
@@ -44,7 +56,7 @@ private:
     TiLogger(const TiLogger&);
     TiLogger& operator=(const TiLogger&);
 
-    static NativeLoggerInterface* nativeLogger_;
+    static NativeLoggerInterface* s_nativeLogger;
 };
 
 #endif /* TILOGGER_H_ */
