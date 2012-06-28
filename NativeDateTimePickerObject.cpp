@@ -42,6 +42,7 @@ NativeDateTimePickerObject* NativeDateTimePickerObject::createDateTimePicker()
 int NativeDateTimePickerObject::initialize(TiEventContainerFactory* containerFactory)
 {
     dateTimePicker_ = bb::cascades::DateTimePicker::create();
+    setControl(dateTimePicker_);
     eventChange_ = containerFactory->createEventContainer();
     eventChange_->setDataProperty("type", "change");
     eventHandler_ = new DateTimePickerEventHandler(eventChange_);

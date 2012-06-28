@@ -29,13 +29,8 @@ public:
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual int setImage(const char* image);
-    virtual int setWidth(float width);
-    virtual int setHeight(float height);
-    virtual int setLeft(float left);
-    virtual int setTop(float top);
     virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual void completeInitialization();
-    virtual NAHANDLE getNativeHandle() const;
 
 protected:
     virtual ~NativeImageViewObject();

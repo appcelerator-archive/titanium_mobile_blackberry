@@ -35,7 +35,6 @@ public:
     virtual ~NativeButtonObject();
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
-    virtual NAHANDLE getNativeHandle() const;
     virtual int setTitle(TiObject* obj);
     virtual int setImage(TiObject* obj);
     virtual int setEventHandler(const char* eventName, TiEvent* event);

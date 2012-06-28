@@ -40,11 +40,6 @@ int NativeProgressBarObject::initialize(TiEventContainerFactory* containerFactor
     return NATIVE_ERROR_OK;
 }
 
-NAHANDLE NativeProgressBarObject::getNativeHandle() const
-{
-    return progressIndicator_;
-}
-
 int NativeProgressBarObject::setMax(TiObject* obj)
 {
     float value;

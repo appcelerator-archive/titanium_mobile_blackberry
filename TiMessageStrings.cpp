@@ -5,23 +5,5 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "TiEvent.h"
-
-TiEvent::TiEvent()
-{
-    id_ = 0;
-}
-
-TiEvent::~TiEvent()
-{
-}
-
-void TiEvent::setId(int id)
-{
-    id_ = id;
-}
-
-int TiEvent::getId() const
-{
-    return id_;
-}
+#define TIMESSAGESTRINGS_DEF_VALUE
+#include "TiMessageStrings.h"

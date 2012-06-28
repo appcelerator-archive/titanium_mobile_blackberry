@@ -31,7 +31,6 @@ public:
     virtual int setHintText(TiObject* obj);
     virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual void completeInitialization();
-    virtual NAHANDLE getNativeHandle() const;
 
 protected:
     virtual ~NativeTextFieldObject();
