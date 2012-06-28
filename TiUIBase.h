@@ -33,18 +33,14 @@ protected:
     virtual ~TiUIBase();
     virtual bool canAddMembers() const;
     virtual void onCreateStaticMembers();
-    virtual void onAddEventListener(const char* eventName, Handle<Function> eventFunction);
-    virtual void onRemoveEventListener(const char* eventName, Handle<Function> eventFunction);
     Persistent<Object> createConfig_;
     vector<ObjectEntry> childControls_;
 
 private:
     static VALUE_MODIFY _valueModify(int propertyNumber, TiObject* value, void* context);
-    static Handle<Value> _addEventListener(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _getChildren(void* userContext);
     static Handle<Value> _hide(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _remove(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> _removeEventListener(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _show(void* userContext, TiObject* caller, const Arguments& args);
 
 protected:

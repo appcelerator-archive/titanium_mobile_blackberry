@@ -19,8 +19,6 @@ class Button;
 }
 }
 
-class TiEventContainer;
-class ButtonEventHandler;
 
 /*
  * NativeButtonObject
@@ -37,13 +35,10 @@ public:
     virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual int setTitle(TiObject* obj);
     virtual int setImage(TiObject* obj);
-    virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual void completeInitialization();
 
 private:
     bb::cascades::Button* button_;
-    TiEventContainer* eventClick_;
-    ButtonEventHandler* eventHandler_;
 };
 
 

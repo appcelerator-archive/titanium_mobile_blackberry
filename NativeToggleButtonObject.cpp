@@ -32,8 +32,8 @@ int NativeToggleButtonObject::initialize(TiEventContainerFactory* containerFacto
 {
     toggleButton_ = bb::cascades::ToggleButton::create();
     setControl(toggleButton_);
-    eventStateChanged_ = containerFactory->createEventContainer();
-    eventHandler_ = new ToggleButtonEventHandler(eventStateChanged_);
+    TiEventContainer* eventStateChanged = containerFactory->createEventContainer();
+    events_.insert(tetCHANGE, new EventPair(eventStateChanged, new ToggleButtonEventHandler(eventStateChanged)));
     return NATIVE_ERROR_OK;
 }
 
@@ -49,18 +49,9 @@ int NativeToggleButtonObject::setValue(TiObject* value)
     return NATIVE_ERROR_OK;
 }
 
-int NativeToggleButtonObject::setEventHandler(const char* eventName, TiEvent* event)
-{
-    if (strcmp(eventName, "change") == 0)
-    {
-        eventStateChanged_->addListener(event);
-    }
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
 void NativeToggleButtonObject::completeInitialization()
 {
     NativeControlObject::completeInitialization();
     //TODO: commented below line, because checkedChanged signal is not implemented for the toggleButton
-    //QObject::connect(toggleButton_, SIGNAL(checkedChanged(bool checked)), eventHandler_, SLOT(checkedChanged(bool checked)));
+    //QObject::connect(toggleButton_, SIGNAL(checkedChanged(bool checked)), events_[tetCHANGE]->handler, SLOT(checkedChanged(bool checked)));
 }

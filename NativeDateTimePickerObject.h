@@ -24,9 +24,6 @@ class DateTimePicker;
 };
 };
 
-class TiEventContainer;
-class TiCascadesEventHandler;
-class DateTimePickerEventHandler;
 
 class NativeDateTimePickerObject : public NativeControlObject
 {
@@ -39,7 +36,6 @@ public:
     virtual int setMaxDate(TiObject* obj);
     virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual void completeInitialization();
-    virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual NAHANDLE getNativeHandle() const;
 
 protected:
@@ -52,8 +48,6 @@ private:
     NativeDateTimePickerObject& operator=(const NativeDateTimePickerObject& obj);
 
     bb::cascades::DateTimePicker* dateTimePicker_;
-    TiEventContainer* eventChange_;
-    DateTimePickerEventHandler* eventHandler_;
     float left_;
     float top_;
 };

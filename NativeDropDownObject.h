@@ -19,8 +19,6 @@ class DropDown;
 }
 }
 
-class TiEventContainer;
-class DropDownEventHandler;
 
 /*
  * NativeDropDownObject
@@ -33,7 +31,6 @@ public:
     static NativeDropDownObject* createDropDown();
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
-    virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual int setTitle(TiObject* obj);
     virtual int setOptions(TiObject* obj);
     virtual int setSelectedIndex(TiObject* obj);
@@ -49,8 +46,6 @@ private:
     NativeDropDownObject& operator=(const NativeDropDownObject& dropdown);
     // Class members
     bb::cascades::DropDown* dropdown_;
-    TiEventContainer* eventClick_;
-    DropDownEventHandler* eventHandler_;
 };
 
 //Event handler for button object

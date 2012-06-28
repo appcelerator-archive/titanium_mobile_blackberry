@@ -31,6 +31,7 @@ public:
     virtual void addListener(TiEvent* listener);
     virtual void removeListener(int id);
     virtual void fireEvent();
+    virtual void fireEvent(const TiObject* eventData) const;
     virtual void setDataProperty(const char* propertyName, const char* value);
     virtual void setDataProperty(const char* propertyName, int value);
     virtual void setDataProperty(const char* propertyName, float value);

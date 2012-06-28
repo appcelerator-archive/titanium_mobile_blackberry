@@ -34,8 +34,8 @@ int NativeDropDownObject::initialize(TiEventContainerFactory* containerFactory)
 {
     dropdown_ = bb::cascades::DropDown::create();
     setControl(dropdown_);
-    eventClick_ = containerFactory->createEventContainer();
-    eventHandler_ = new DropDownEventHandler(eventClick_);
+    TiEventContainer* eventClick = containerFactory->createEventContainer();
+    events_.insert(tetCLICK, new EventPair(eventClick, new DropDownEventHandler(eventClick)));
     return NATIVE_ERROR_OK;
 }
 
@@ -83,17 +83,8 @@ int NativeDropDownObject::setSelectedIndex(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-int NativeDropDownObject::setEventHandler(const char* eventName, TiEvent* event)
-{
-    if (strcmp(eventName, "click") == 0)
-    {
-        eventClick_->addListener(event);
-    }
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
 void NativeDropDownObject::completeInitialization()
 {
     NativeControlObject::completeInitialization();
-    QObject::connect(dropdown_, SIGNAL(selectedIndexChanged(int selectedIndex)), eventHandler_, SLOT(selectedIndexChanged(int selectedIndex)));
+    QObject::connect(dropdown_, SIGNAL(selectedIndexChanged(int selectedIndex)), events_[tetCLICK]->handler, SLOT(selectedIndexChanged(int selectedIndex)));
 }

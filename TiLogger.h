@@ -43,6 +43,7 @@ class TiLogger
 {
 public:
     static TiLogger& getInstance();
+    static void deleteInstance();
     static void initialize(NativeObjectFactory* nativeObjectFactory);
 
     void log(std::string msg);

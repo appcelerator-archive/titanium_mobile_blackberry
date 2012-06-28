@@ -21,6 +21,7 @@ class NativeLoggerInterface : public NativeObject
 {
 public:
     virtual void log(const char* msg) = 0;
+    virtual void deleteInstance() = 0;
 
 protected:
     NativeLoggerInterface() {};

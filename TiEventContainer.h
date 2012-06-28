@@ -8,7 +8,12 @@
 #ifndef TIEVENTCONTAINER_H_
 #define TIEVENTCONTAINER_H_
 
+//#pragma GCC diagnostic ignored "-Wunused-parameter"
+//#include <v8.h>
+//#pragma GCC diagnostic warning "-Wunused-parameter"
+
 class TiEvent;
+class TiObject;
 
 /*
  * TiEvent
@@ -23,6 +28,7 @@ public:
     virtual void addListener(TiEvent* listener) = 0;
     virtual void removeListener(int id) = 0;
     virtual void fireEvent() = 0;
+    virtual void fireEvent(const TiObject* eventData) const = 0;
     virtual void setDataProperty(const char* propertyName, const char* value) = 0;
     virtual void setDataProperty(const char* propertyName, int value) = 0;
     virtual void setDataProperty(const char* propertyName, float value) = 0;

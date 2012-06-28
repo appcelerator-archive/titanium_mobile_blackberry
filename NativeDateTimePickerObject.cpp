@@ -11,15 +11,11 @@
 #include "NativeMessageStrings.h"
 #include "TiConstants.h"
 #include "TiEventContainerFactory.h"
-#include "TiObject.h"
-#include <bb/cascades/AbsoluteLayoutProperties>
-#include <bb/cascades/DateTimePIcker>
+#include <bb/cascades/DateTimePicker>
 #include <QDateTime>
 
 NativeDateTimePickerObject::NativeDateTimePickerObject() :
     dateTimePicker_(NULL),
-    eventChange_(NULL),
-    eventHandler_(NULL),
     left_(0),
     top_(0)
 {
@@ -29,10 +25,6 @@ NativeDateTimePickerObject::~NativeDateTimePickerObject()
 {
     delete dateTimePicker_;
     dateTimePicker_ = NULL;
-    delete eventChange_;
-    eventChange_ = NULL;
-    delete eventHandler_;
-    eventHandler_ = NULL;
 }
 
 NativeDateTimePickerObject* NativeDateTimePickerObject::createDateTimePicker()
@@ -44,9 +36,9 @@ int NativeDateTimePickerObject::initialize(TiEventContainerFactory* containerFac
 {
     dateTimePicker_ = bb::cascades::DateTimePicker::create();
     setControl(dateTimePicker_);
-    eventChange_ = containerFactory->createEventContainer();
-    eventChange_->setDataProperty("type", "change");
-    eventHandler_ = new DateTimePickerEventHandler(eventChange_);
+    TiEventContainer* eventChange = containerFactory->createEventContainer();
+    eventChange->setDataProperty("type", tetCHANGE);
+    events_.insert(tetCHANGE, new EventPair(eventChange, new DateTimePickerEventHandler(eventChange)));
     return NATIVE_ERROR_OK;
 }
 
@@ -134,17 +126,5 @@ NAHANDLE NativeDateTimePickerObject::getNativeHandle() const
 void NativeDateTimePickerObject::completeInitialization()
 {
     NativeControlObject::completeInitialization();
-    QObject::connect(dateTimePicker_, SIGNAL(valueChanged(QDateTime)), eventHandler_, SLOT(setValue(QDateTime)));
-}
-
-int NativeDateTimePickerObject::setEventHandler(const char* eventName, TiEvent* event)
-{
-    if (strcmp(eventName, "change") == 0)
-    {
-        if (eventChange_)
-        {
-            eventChange_->addListener(event);
-        }
-    }
-    return NATIVE_ERROR_OK;
+    QObject::connect(dateTimePicker_, SIGNAL(valueChanged(QDateTime)), events_[tetCHANGE]->handler, SLOT(setValue(QDateTime)));
 }

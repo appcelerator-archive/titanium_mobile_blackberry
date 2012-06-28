@@ -35,9 +35,9 @@ int NativeButtonObject::initialize(TiEventContainerFactory* containerFactory)
     properties->setVerticalAlignment(bb::cascades::VerticalAlignment::Top);
     button_->setLayoutProperties(properties);
     setControl(button_);
-    eventClick_ = containerFactory->createEventContainer();
-    eventClick_->setDataProperty("type", "click");
-    eventHandler_ = new ButtonEventHandler(eventClick_);
+    TiEventContainer* eventClick = containerFactory->createEventContainer();
+    eventClick->setDataProperty("type", tetCLICK);
+    events_.insert(tetCLICK, new EventPair(eventClick, new ButtonEventHandler(eventClick)));
     return NATIVE_ERROR_OK;
 }
 
@@ -67,18 +67,7 @@ int NativeButtonObject::setImage(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-int NativeButtonObject::setEventHandler(const char* eventName, TiEvent* event)
-{
-    event->setId(getNextEventId());
-    if (strcmp(eventName, "click") == 0)
-    {
-        eventClick_->addListener(event);
-        return NATIVE_ERROR_OK;
-    }
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
 void NativeButtonObject::completeInitialization()
 {
-    QObject::connect(button_, SIGNAL(clicked()), eventHandler_, SLOT(clicked(void)));
+    QObject::connect(button_, SIGNAL(clicked()), events_[tetCLICK]->handler, SLOT(clicked(void)));
 }

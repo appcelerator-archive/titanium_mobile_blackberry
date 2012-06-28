@@ -65,7 +65,7 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
         break;
 
     case N_TYPE_LOGGER:
-        obj = &NativeLoggerObject::getInstance();
+        obj = NativeLoggerObject::getInstance();
         break;
 
     case N_TYPE_BUTTON:

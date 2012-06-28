@@ -12,6 +12,8 @@
 #include <QString>
 
 
+static NativeLoggerObject* s_logger;
+
 NativeLoggerObject::NativeLoggerObject()
     : nativeLoggerWorker_(new NativeLoggerWorker)
 {
@@ -27,10 +29,19 @@ NativeLoggerObject::~NativeLoggerObject()
     nativeLoggerWorker_ = NULL;
 }
 
-NativeLoggerObject& NativeLoggerObject::getInstance()
+NativeLoggerObject* NativeLoggerObject::getInstance()
 {
-    static NativeLoggerObject logger;
-    return logger;
+    if (s_logger == NULL)
+    {
+        s_logger = new NativeLoggerObject;
+    }
+    return s_logger;
+}
+
+void NativeLoggerObject::deleteInstance()
+{
+    delete s_logger;
+    s_logger = NULL;
 }
 
 int NativeLoggerObject::getObjectType() const
