@@ -33,6 +33,20 @@ enum TI_PICKER_TYPE
 
 }
 
+namespace Platform
+{
+
+// Battery states constants
+enum N_BATTERY_STATE
+{
+    BATTERY_STATE_UNKNOWN,
+    BATTERY_STATE_CHARGING,
+    BATTERY_STATE_UNPLUGGED,
+    BATTERY_STATE_FULL
+};
+
+}
+
 }
 
 

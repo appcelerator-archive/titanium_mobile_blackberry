@@ -8,6 +8,7 @@
 #include "TiTitaniumObject.h"
 #include "TiUIObject.h"
 #include "TiAPIObject.h"
+#include "TiPlatform.h"
 
 TiTitaniumObject::TiTitaniumObject()
     : TiObject("Titanium")
@@ -33,6 +34,7 @@ void TiTitaniumObject::onCreateStaticMembers()
     // TODO: remove hard coded version number
     TiUIObject::addObjectToParent(this, objectFactory_);
     TiAPIObject::addObjectToParent(this);
+    TiPlatform::addObjectToParent(this);
 }
 
 bool TiTitaniumObject::canAddMembers() const
