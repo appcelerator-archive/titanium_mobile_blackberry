@@ -45,9 +45,8 @@ void TiRootObject::onCreateStaticMembers()
 
 }
 
-VALUE_MODIFY TiRootObject::onChildValueChange(TiObject* childObject, Handle<Value> oldValue, Handle<Value> newValue)
+VALUE_MODIFY TiRootObject::onChildValueChange(TiObject* childObject, Handle<Value>, Handle<Value> newValue)
 {
-    (void)oldValue;
     Local<Object> obj = getValue()->ToObject();
     obj->Set(String::New(childObject->getName()), newValue);
     return VALUE_MODIFY_ALLOW;
@@ -134,65 +133,51 @@ void TiRootObject::createStringMethods()
 }
 
 /* Methods defined by Global */
-Handle<Value> TiRootObject::_L(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiRootObject::_L(void*, TiObject*, const Arguments& args)
 {
     // TODO: finish this
-    (void)userContext;
-    (void)caller;
     (void)args;
     return Undefined();
 }
 
-Handle<Value> TiRootObject::_alert(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiRootObject::_alert(void*, TiObject*, const Arguments& args)
 {
     // TODO: finish this
-    (void)userContext;
-    (void)caller;
     (void)args;
     return Undefined();
 }
 
-Handle<Value> TiRootObject::_clearInterval(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiRootObject::_clearInterval(void*, TiObject*, const Arguments& args)
 {
     // TODO: finish this
-    (void)userContext;
-    (void)caller;
     (void)args;
     return Undefined();
 }
 
-Handle<Value> TiRootObject::_clearTimeout(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiRootObject::_clearTimeout(void*, TiObject*, const Arguments& args)
 {
     // TODO: finish this
-    (void)userContext;
-    (void)caller;
     (void)args;
     return Undefined();
 }
 
-Handle<Value> TiRootObject::_require(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiRootObject::_require(void*, TiObject*, const Arguments& args)
 {
     // TODO: finish this
-    (void)userContext;
-    (void)caller;
     (void)args;
     return Undefined();
 }
 
-Handle<Value> TiRootObject::_setInterval(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiRootObject::_setInterval(void*, TiObject*, const Arguments& args)
 {
     // TODO: finish this
-    (void)userContext;
-    (void)caller;
     (void)args;
     return Undefined();
 }
 
-Handle<Value> TiRootObject::_setTimeout(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiRootObject::_setTimeout(void*, TiObject*, const Arguments& args)
 {
     // TODO: finish this
-    (void)userContext;
-    (void)caller;
     (void)args;
     return Undefined();
 }
