@@ -41,13 +41,17 @@ public:
     virtual int setLabel(TiObject* obj);
     virtual int setLeft(TiObject* obj);
     virtual int setMax(TiObject* obj);
+    virtual int setMaxDate(TiObject* obj);
     virtual int setMin(TiObject* obj);
+    virtual int setMinDate(TiObject* obj);
     virtual int setOpacity(TiObject* obj);
     virtual int setOptions(TiObject* obj);
+    virtual int setRight(TiObject* obj);
     virtual int setSelectedIndex(TiObject* obj);
     virtual int setText(TiObject* obj);
     virtual int setTextAlign(TiObject* obj);
     virtual int setTitle(TiObject* obj);
+    virtual int setType(TiObject* obj);
     virtual int setTop(TiObject* obj);
     virtual int setValue(TiObject* obj);
     virtual int setVisible(TiObject* obj);

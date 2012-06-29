@@ -5,14 +5,15 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "TiStringObject.h"
+#include "NativeStringInterface.h"
 
-#include "TiGenericFunctionObject.h"
-#include "TiLogger.h"
-#include "TiMessageStrings.h"
+#include "NativeMessageStrings.h"
+
 #include <QRegExp>
 #include <QString>
 #include <QTextStream>
+
+using namespace v8;
 
 // Prototypes
 static QString formatInt(QString s, Local<Value> arg);
@@ -22,48 +23,36 @@ static QString formatString(QString s, Local<Value> arg);
 static QString formatPointer(QString s, Local<Value> arg);
 
 
-TiStringObject::TiStringObject(NativeObjectFactory* objectFactory)
-    : TiObject("String")
-{
-    objectFactory_ = objectFactory;
-}
+static NativeStringInterface* s_theInstance = NULL;
 
-TiStringObject::~TiStringObject()
+const NativeStringInterface* NativeStringInterface::instance()
 {
-}
-
-void TiStringObject::addObjectToParent(TiObject* parent, NativeObjectFactory* objectFactory)
-{
-    TiStringObject* obj = new TiStringObject(objectFactory);
-    parent->addMember(obj);
-    obj->release();
-}
-
-void TiStringObject::onCreateStaticMembers()
-{
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "format", this, _format);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "formatCurrency", this, _formatCurrency);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "formatDate", this, _formatDate);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "formatDecimal", this, _formatDecimal);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "formatTime", this, _formatTime);
-}
-
-bool TiStringObject::canAddMembers() const
-{
-    return false;
-}
-
-Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const Arguments& args)
-{
-    if (args.Length() < 1 || !args[0]->IsString())   // TODO: support StringObject
+    if (s_theInstance == NULL)
     {
-        ThrowException(String::New(Ti::Msg::Expected_argument_of_type_string));
+        s_theInstance = new NativeStringInterface;
+    }
+    return s_theInstance;
+}
+
+Handle<Value> NativeStringInterface::format(const Arguments& args)
+{
+    if (args.Length() < 1)
+    {
+        ThrowException(String::New(Native::Msg::Expected_argument_of_type_string));
         return Undefined();
     }
 
-    const String::Utf8Value utf8(args[0]);
+    Local<Value> format = args[0]->ToString();
+
+    const String::Utf8Value utf8(format);
     QString str = QString::fromUtf8(*utf8);
-    QRegExp rx("%.*([diouxXfFeEgGaAcspCSn%])");
+    /* Define a regex to match the % tokens of the format string
+     *    cap(0): the whole matched token
+     *    cap(1): the 'n$' token if present (numbered args)
+     *    cap(2): the 'n' token from the above 'n$' token
+     *    cap(3): the specifier char
+     */
+    QRegExp rx("%((\\d+)\\$)?.*([diouxXfFeEgGaAcspCSn%])");
     rx.setMinimal(true);
     QString res;
     QTextStream ts(&res);
@@ -72,7 +61,33 @@ Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const
     while ((end = rx.indexIn(str, end)) != -1 && ++i < args.Length())
     {
         end += rx.matchedLength();
-        switch (rx.cap(1).at(0).toAscii())
+        QString tmp = str.mid(start, end - start);
+        int argN = i;
+
+        /* Look for numbered argument */
+        if (!rx.cap(2).isEmpty())
+        {
+            bool ok;
+            argN = rx.cap(2).toInt(&ok);
+            if (!ok)
+            {
+                ThrowException(String::New(Native::Msg::An_error_occurred_converting_to_int));
+                return Undefined();
+            }
+            if (argN >= args.Length() || argN <= 0)
+            {
+                ThrowException(String::New(Native::Msg::Numbered_argument_exceeds_the_length_of_provided_arguments));
+                return Undefined();
+            }
+
+            /* Remove the 'n$' token from the string as qt doesn't do numbered args */
+            tmp.remove(rx.cap(1));
+            /* Don't consume an argument as with numbered args there can be less args than placeholders
+               due to args being allowed to be used more than once */
+            --i;
+        }
+
+        switch (rx.cap(3).at(0).toAscii())
         {
             /* Specifiers that don't take an argument */
         case '%':
@@ -91,7 +106,7 @@ Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const
         case 'i':
         case 'c':
         case 'C':       // same as %lc
-            ts << formatInt(str.mid(start, end - start), args[i]);
+            ts << formatInt(tmp, args[argN]);
             break;
 
             /* Unsigned int */
@@ -99,7 +114,7 @@ Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const
         case 'u':
         case 'x':
         case 'X':
-            ts << formatUInt(str.mid(start, end - start), args[i]);
+            ts << formatUInt(tmp, args[argN]);
             break;
 
             /* Double */
@@ -111,22 +126,22 @@ Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const
         case 'G':
         case 'a':
         case 'A':
-            ts << formatDouble(str.mid(start, end - start), args[i]);
+            ts << formatDouble(tmp, args[argN]);
             break;
 
             /* String */
         case 's':
         case 'S':       // same as %ls
-            ts << formatString(str.mid(start, end - start), args[i]);
+            ts << formatString(tmp, args[argN]);
             break;
 
             /* Pointer */
         case 'p':
-            ts << formatPointer(str.mid(start, end - start), args[i]);
+            ts << formatPointer(tmp, args[argN]);
             break;
 
         default:
-            ThrowException(String::New(Ti::Msg::INTERNAL__An_error_occurred_while_parsing_the_format_string));
+            ThrowException(String::New(Native::Msg::INTERNAL__An_error_occurred_while_parsing_the_format_string));
             break;
         }
         start = end;
@@ -138,27 +153,31 @@ Handle<Value> TiStringObject::_format(void* userContext, TiObject* caller, const
     return (result);
 }
 
-Handle<Value> TiStringObject::_formatCurrency(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> NativeStringInterface::formatCurrency(const Arguments& args)
 {
     // TODO: Implement
+    Q_UNUSED(args);
     return Undefined();
 }
 
-Handle<Value> TiStringObject::_formatDate(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> NativeStringInterface::formatDate(const Arguments& args)
 {
     // TODO: Implement
+    Q_UNUSED(args);
     return Undefined();
 }
 
-Handle<Value> TiStringObject::_formatDecimal(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> NativeStringInterface::formatDecimal(const Arguments& args)
 {
     // TODO: Implement
+    Q_UNUSED(args);
     return Undefined();
 }
 
-Handle<Value> TiStringObject::_formatTime(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> NativeStringInterface::formatTime(const Arguments& args)
 {
     // TODO: Implement
+    Q_UNUSED(args);
     return Undefined();
 }
 
@@ -167,7 +186,7 @@ Handle<Value> TiStringObject::_formatTime(void* userContext, TiObject* caller, c
 
 static QString formatInt(QString s, Local<Value> arg)
 {
-    if (arg->IsNumber())
+    if (arg->IsNumber() || arg->IsNumberObject())
     {
         if (s.endsWith('C'))
         {
@@ -182,13 +201,13 @@ static QString formatInt(QString s, Local<Value> arg)
         int v = arg->Int32Value();
         return s.sprintf(s.toLatin1().constData(), v);
     }
-    ThrowException(String::New(Ti::Msg::Expected_argument_of_type_integer));
+    ThrowException(String::New(Native::Msg::Expected_argument_of_type_integer));
     return QString();
 }
 
 static QString formatUInt(QString s, Local<Value> arg)
 {
-    if (arg->IsNumber())
+    if (arg->IsNumber() || arg->IsNumberObject())
     {
         if (s.right(3).startsWith("ll"))
         {
@@ -198,13 +217,13 @@ static QString formatUInt(QString s, Local<Value> arg)
         unsigned int v = arg->Uint32Value();
         return s.sprintf(s.toLatin1().constData(), v);
     }
-    ThrowException(String::New(Ti::Msg::Expected_argument_of_type_unsigned_integer));
+    ThrowException(String::New(Native::Msg::Expected_argument_of_type_unsigned_integer));
     return QString();
 }
 
 static QString formatDouble(QString s, Local<Value> arg)
 {
-    if (arg->IsNumber())
+    if (arg->IsNumber() || arg->IsNumberObject())
     {
         if (s.right(2).startsWith('L'))
         {
@@ -215,7 +234,7 @@ static QString formatDouble(QString s, Local<Value> arg)
         double v = arg->NumberValue();
         return s.sprintf(s.toLatin1().constData(), v);
     }
-    ThrowException(String::New(Ti::Msg::Expected_argument_of_type_double));
+    ThrowException(String::New(Native::Msg::Expected_argument_of_type_double));
     return QString();
 }
 
@@ -228,25 +247,17 @@ static QString formatString(QString s, Local<Value> arg)
     }
     bool longChar = s.endsWith("ls");
 
-    if (arg->IsString())
+    arg = arg->ToString();
+    if (longChar)
     {
-        if (longChar)
-        {
-            String::Value utf16(arg);
-            return s.sprintf(s.toLatin1().constData(), *utf16);
-        }
-        else
-        {
-            String::Utf8Value utf8(arg);
-            return s.sprintf(s.toLatin1().constData(), *utf8);
-        }
+        String::Value utf16(arg);
+        return s.sprintf(s.toLatin1().constData(), *utf16);
     }
-    else if (arg->IsStringObject())
+    else
     {
-        TI_DEBUG(Ti::Msg::INTERNAL__NYI_arg_is_StringObject);
+        String::Utf8Value utf8(arg);
+        return s.sprintf(s.toLatin1().constData(), *utf8);
     }
-    ThrowException(String::New(Ti::Msg::Expected_argument_of_type_string));
-    return QString();
 }
 
 static QString formatPointer(QString s, Local<Value> arg)
@@ -260,6 +271,6 @@ static QString formatPointer(QString s, Local<Value> arg)
     {
         return s.sprintf(s.toLatin1().constData(), External::Unwrap(arg));
     }
-    ThrowException(String::New(Ti::Msg::Expected_argument_of_type_object_or_external));
+    ThrowException(String::New(Native::Msg::Expected_argument_of_type_object_or_external));
     return QString();
 }

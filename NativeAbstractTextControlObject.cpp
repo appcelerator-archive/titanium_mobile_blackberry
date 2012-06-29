@@ -93,7 +93,7 @@ int NativeAbstractTextControlObject::setTextAlign(TiObject* obj)
         textControl_->textStyle()->setAlignment(bb::cascades::TextAlignment::ForceRight);
         break;
     default:
-        N_DEBUG(Native::Msg::Unknown_value_received << ":  " << value);
+        N_DEBUG(Native::Msg::Unknown_value_received << ": " << value);
         break;
     }
 
