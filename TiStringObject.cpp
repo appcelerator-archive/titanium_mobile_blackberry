@@ -8,6 +8,7 @@
 #include "TiStringObject.h"
 
 #include "TiGenericFunctionObject.h"
+#include "TiLogger.h"
 #include "TiMessageStrings.h"
 #include <QRegExp>
 #include <QString>
@@ -242,7 +243,7 @@ static QString formatString(QString s, Local<Value> arg)
     }
     else if (arg->IsStringObject())
     {
-        printf("\t%s (%d): NYI arg is StringObject\n", __FUNCTION__, __LINE__);
+        TI_DEBUG(Ti::Msg::INTERNAL__NYI_arg_is_StringObject);
     }
     ThrowException(String::New(Ti::Msg::Expected_argument_of_type_string));
     return QString();

@@ -65,11 +65,6 @@ int TitaniumRuntime::internalRun(int argc, char** argv)
     return ret;
 }
 
-void TitaniumRuntime::Log(const char* msg)
-{
-    fprintf(stderr, "%s\n", msg);
-}
-
 int TitaniumRuntime::messageLoop(void* context)
 {
     TitaniumRuntime* self = (TitaniumRuntime*)context;

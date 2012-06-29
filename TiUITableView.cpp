@@ -9,6 +9,7 @@
 
 #include "TiGenericFunctionObject.h"
 #include "TiLogger.h"
+#include "TiMessageStrings.h"
 
 TiUITableView::TiUITableView(NativeObjectFactory* nativeObjectFactory)
     : TiUIBase(nativeObjectFactory, "")
@@ -55,7 +56,7 @@ Handle<Value> TiUITableView::_scrollToIndex(void* userContext, TiObject* caller,
     }
     else
     {
-        TI_DEBUG("TiUITableView::_scrollToIndex - args[0] is not a number.");
+        TI_DEBUG(Ti::Msg::INTERNAL__args0_is_not_a_number);
     }
 
     return Undefined();
