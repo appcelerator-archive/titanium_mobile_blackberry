@@ -243,6 +243,18 @@ int NativeControlObject::setHintText(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETTER(setWindow)
+int NativeControlObject::setWindow(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setIcon)
+int NativeControlObject::setIcon(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
@@ -285,6 +297,7 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_HIGHLIGHTED_COLOR]                 = NULL;
     vect[N_PROP_HINT_TEXT]                         = PROP_SETTING_FUNCTION(setHintText);
     vect[N_PROP_HTML]                              = NULL;
+    vect[N_PROP_ICON]                              = PROP_SETTING_FUNCTION(setIcon);
     vect[N_PROP_IMAGE]                             = PROP_SETTING_FUNCTION(setImage);
     vect[N_PROP_KEEP_SCREEN_ON]                    = NULL;
     vect[N_PROP_LABEL]                             = PROP_SETTING_FUNCTION(setLabel);
@@ -311,6 +324,7 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_VALUE]                             = PROP_SETTING_FUNCTION(setValue);
     vect[N_PROP_VISIBLE]                           = PROP_SETTING_FUNCTION(setVisible);
     vect[N_PROP_WIDTH]                             = PROP_SETTING_FUNCTION(setWidth);
+    vect[N_PROP_WINDOW]                             = PROP_SETTING_FUNCTION(setWindow);
     vect[N_PROP_WORD_WRAP]                         = NULL;
     vect[N_PROP_ZINDEX]                            = NULL;
     vect[N_PROP_DATA]                              = PROP_SETTING_FUNCTION(setData);

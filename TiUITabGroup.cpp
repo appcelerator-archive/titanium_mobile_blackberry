@@ -6,15 +6,86 @@
  */
 
 #include "TiUITabGroup.h"
+#include "TiGenericFunctionObject.h"
 
-TiUITabGroup::TiUITabGroup()
+TiUITabGroup::TiUITabGroup(NativeObjectFactory* objectFactory)
+    : TiUIBase(objectFactory, "")
 {
-    // TODO Auto-generated constructor stub
-
 }
 
 TiUITabGroup::~TiUITabGroup()
 {
-    // TODO Auto-generated destructor stub
 }
 
+TiUIBase* TiUITabGroup::createTabGroup(NativeObjectFactory* objectFactory)
+{
+    TiUITabGroup* obj = new TiUITabGroup(objectFactory);
+    obj->initializeTiObject(NULL);
+    return obj;
+}
+
+void TiUITabGroup::onCreateStaticMembers()
+{
+    TiUIBase::onCreateStaticMembers();
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "open", this, open_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "addTab", this, addTab_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "setActiveTab", this, setActiveTab_);
+}
+
+void TiUITabGroup::initializeTiObject(TiObject* parentContext)
+{
+    if (!isInitialized())
+    {
+        TiUIBase::initializeTiObject(parentContext);
+        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_TABGROUP);
+        setNativeObject(obj);
+        obj->release();
+    }
+}
+
+Handle<Value> TiUITabGroup::open_(void* userContext, TiObject* caller, const Arguments& args)
+{
+    HandleScope handleScope;
+    TiUITabGroup* obj = (TiUITabGroup*) userContext;
+    NativeObject* no = obj->getNativeObject();
+    no->completeInitialization();
+    no->open();
+    no->release();
+    return Undefined();
+}
+
+Handle<Value> TiUITabGroup::addTab_(void* userContext, TiObject* caller, const Arguments& args)
+{
+    TiUIBase::add_(userContext, caller, args);
+    return Undefined();
+}
+
+Handle<Value> TiUITabGroup::setActiveTab_(void* userContext, TiObject* caller, const Arguments& args)
+{
+    HandleScope handleScope;
+    TiUITabGroup* obj = (TiUITabGroup*) userContext;
+    NativeObject* no = obj->getNativeObject();
+    if (args[0]->IsNumber())
+    {
+        Local<Integer> index = args[0]->ToInteger();
+        no->setActiveTab(index->Value());
+    }
+    else
+    {
+        HandleScope handleScope;
+        if ((args.Length() > 0) && (args[0]->IsObject()))
+        {
+            TiObject* addObj = getTiObjectFromJsObject(args[0]);
+            if ((addObj == NULL) || (!addObj->isUIObject()))
+            {
+                return Undefined();
+            }
+            TiUIBase* uiObj = (TiUIBase*) addObj;
+            NativeObject* childNO = uiObj->getNativeObject();
+            no->setActiveTab(childNO);
+            childNO->release();
+        }
+    }
+    no->release();
+    return Undefined();
+}

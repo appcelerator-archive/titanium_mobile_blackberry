@@ -40,10 +40,12 @@ public:
     virtual int setValue(TiObject* obj);
     virtual int setVisible(TiObject* obj);
     virtual int setWidth(TiObject* obj);
+    virtual int setWindow(TiObject* obj);
     virtual int setHeight(TiObject* obj);
     virtual int setData(TiObject* obj);
     virtual int setOptions(TiObject* obj);
     virtual int setSelectedIndex(TiObject* obj);
+    virtual int setIcon(TiObject* obj);
     virtual int setImage(TiObject* obj);
     virtual int setFont(TiObject* obj);
     virtual int setHintText(TiObject* obj);

@@ -6,18 +6,20 @@
  */
 
 #include "TiCascadesApp.h"
-#include "NativeObjectFactory.h"
-#include "NativeContainerObject.h"
-#include "NativeLabelObject.h"
+#include "NativeActivityIndicatorObject.h"
 #include "NativeButtonObject.h"
-#include "NativeSliderObject.h"
-#include "NativeProgressBarObject.h"
-#include "NativeTextFieldObject.h"
+#include "NativeDropDownObject.h"
 #include "NativeImageViewObject.h"
 #include "NativeListViewObject.h"
-#include "NativeActivityIndicatorObject.h"
+#include "NativeLabelObject.h"
+#include "NativeObjectFactory.h"
+#include "NativePageObject.h"
+#include "NativeProgressBarObject.h"
+#include "NativeSliderObject.h"
+#include "NativeTabObject.h"
+#include "NativeTabGroupObject.h"
+#include "NativeTextFieldObject.h"
 #include "NativeToggleButtonObject.h"
-#include "NativeDropDownObject.h"
 #include <bb/cascades/Container>
 
 using namespace bb::cascades;
@@ -48,7 +50,7 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
     case N_TYPE_CONTAINER:
 
     case N_TYPE_WINDOW:
-        obj = NativeContainerObject::createContainer(this);
+        obj = NativePageObject::createPage(this);
         break;
 
     case N_TYPE_LABEL:
@@ -91,6 +93,13 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
         obj = NativeListViewObject::createListView();
         break;
 
+    case N_TYPE_TAB:
+        obj = NativeTabObject::createTab();
+        break;
+
+    case N_TYPE_TABGROUP:
+        obj = NativeTabGroupObject::createTabGroup(this);
+        break;
     }
     if (obj != NULL)
     {
