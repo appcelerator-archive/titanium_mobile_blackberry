@@ -65,7 +65,7 @@ Handle<Value> TiUITabGroup::setActiveTab_(void* userContext, TiObject* caller, c
     HandleScope handleScope;
     TiUITabGroup* obj = (TiUITabGroup*) userContext;
     NativeObject* no = obj->getNativeObject();
-    if (args[0]->IsNumber())
+    if ((args.Length() > 0) && args[0]->IsNumber())
     {
         Local<Integer> index = args[0]->ToInteger();
         no->setActiveTab(index->Value());

@@ -19,8 +19,8 @@ NativeTabGroupObject::NativeTabGroupObject() :
 
 NativeTabGroupObject::~NativeTabGroupObject()
 {
-    NativeObjectFactory* nativeObjectFactory_;
     delete tabGroup_;
+    tabGroup_ = NULL;
 }
 
 NativeObject* NativeTabGroupObject::createTabGroup(NativeObjectFactory* nativeObjectFactory)
@@ -58,7 +58,7 @@ int NativeTabGroupObject::initialize(TiEventContainerFactory* containerFactory)
 
 int NativeTabGroupObject::addChildNativeObject(NativeObject* obj)
 {
-    if (obj->getObjectType() == N_TYPE_TAB)
+    if (obj && obj->getObjectType() == N_TYPE_TAB)
     {
         if (obj->getNativeHandle())
         {
@@ -71,7 +71,7 @@ int NativeTabGroupObject::addChildNativeObject(NativeObject* obj)
 
 int NativeTabGroupObject::setActiveTab(NativeObject* tab)
 {
-    if (tab->getObjectType() == N_TYPE_TAB)
+    if (tab && tab->getObjectType() == N_TYPE_TAB)
     {
         if (tab->getNativeHandle())
         {
