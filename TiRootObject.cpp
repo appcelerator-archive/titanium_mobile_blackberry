@@ -13,6 +13,7 @@
 #include "TiLogger.h"
 #include "TiTitaniumObject.h"
 #include "TiV8EventContainerFactory.h"
+#include <fstream>
 
 static Handle<ObjectTemplate> g_rootTemplate;
 
@@ -96,7 +97,34 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     Context::Scope context_scope(context_);
     initializeTiObject(NULL);
 
+    string bootstrapJavascript;
+    {
+        ifstream ifs("app/native/framework/bootstrap.js");
+        if (ifs.bad())
+        {
+            TiLogger::getInstance().log(Ti::Msg::ERROR__Cannot_load_bootstrap_js);
+            return -1;
+        }
+        getline(ifs, bootstrapJavascript, string::traits_type::to_char_type(string::traits_type::eof()));
+        ifs.close();
+    }
+
     TryCatch tryCatch;
+    Handle<Script> compiledBootstrapScript = Script::Compile(String::New(bootstrapJavascript.c_str()));
+    if (compiledBootstrapScript.IsEmpty())
+    {
+        String::Utf8Value error(tryCatch.Exception());
+        TiLogger::getInstance().log(string(*error) + "\n");
+        return -1;
+    }
+    Handle<Value>bootstrapResult = compiledBootstrapScript->Run();
+    if (bootstrapResult.IsEmpty())
+    {
+        String::Utf8Value error(tryCatch.Exception());
+        TiLogger::getInstance().log(string(*error) + "\n");
+        return -1;
+    }
+
     Handle<Script> compiledScript = Script::Compile(String::New(javaScript));
     if (compiledScript.IsEmpty())
     {
