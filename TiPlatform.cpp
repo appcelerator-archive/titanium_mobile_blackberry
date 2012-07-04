@@ -7,7 +7,6 @@
 
 #include "TiPlatform.h"
 
-#include "NativeObject.h"
 #include "NativePlatformInterface.h"
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
@@ -146,6 +145,5 @@ Handle<Value> TiPlatform::_valueGetter(int propertyNumber, void* context)
 
 Handle<Value> TiPlatform::getPropertyValue(int propertyNumber)
 {
-    const NativePlatformInterface* platformInterface = NativePlatformInterface::instance();
-    return platformInterface->getPropertyValue(propertyNumber);
+    return NativePlatformInterface::getPropertyValue(propertyNumber);
 }

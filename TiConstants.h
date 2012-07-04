@@ -37,7 +37,7 @@ namespace Platform
 {
 
 // Battery states constants
-enum N_BATTERY_STATE
+enum TI_BATTERY_STATE
 {
     BATTERY_STATE_UNKNOWN,
     BATTERY_STATE_CHARGING,

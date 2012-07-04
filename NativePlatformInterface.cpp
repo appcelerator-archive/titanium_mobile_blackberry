@@ -6,7 +6,6 @@
  */
 
 #include "NativePlatformInterface.h"
-#include "NativeObject.h"
 #include "TiConstants.h"
 #include <vector>
 
@@ -27,15 +26,10 @@ static vector<NATIVE_PROPGET_CALLBACK> initFunctionMap();
 // Statics
 static const vector<NATIVE_PROPGET_CALLBACK> s_functionMap = initFunctionMap();
 
-static NativePlatformInterface* s_theInstance = NULL;
-
 const NativePlatformInterface* NativePlatformInterface::instance()
 {
-    if (s_theInstance == NULL)
-    {
-        s_theInstance = new NativePlatformInterface;
-    }
-    return s_theInstance;
+    static NativePlatformInterface s_theInstance;
+    return &s_theInstance;
 }
 
 NativePlatformInterface::NativePlatformInterface()
@@ -82,7 +76,7 @@ Handle<Value> NativePlatformInterface::getBatteryState()
 {
     bb::device::BatteryInfo bInfo;
     bb::device::BatteryInfo::ChargingState bState = bInfo.chargingState();
-    Ti::Platform::N_BATTERY_STATE tiState = Ti::Platform::BATTERY_STATE_UNKNOWN;
+    Ti::Platform::TI_BATTERY_STATE tiState = Ti::Platform::BATTERY_STATE_UNKNOWN;
     switch (bState)
     {
     case bb::device::BatteryInfo::UnknownChargingState:
