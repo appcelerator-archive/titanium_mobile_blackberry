@@ -9,6 +9,7 @@
 #include "TiAPIObject.h"
 #include "TiGenericFunctionObject.h"
 #include "TiLogger.h"
+#include "TiMessageStrings.h"
 #include "TiUIObject.h"
 
 #include <fstream>
@@ -32,10 +33,10 @@ TiObject* TiTitaniumObject::createObject(NativeObjectFactory* objectFactory)
 
 void TiTitaniumObject::onCreateStaticMembers()
 {
+    // TODO: remove hard coded version number
     ADD_STATIC_TI_VALUE("buildDate", String::New(__DATE__), this);
     ADD_STATIC_TI_VALUE("version", Number::New(2.0), this);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "include", this, _include);
-    // TODO: remove hard coded version number
     TiUIObject::addObjectToParent(this, objectFactory_);
     TiAPIObject::addObjectToParent(this);
 }
@@ -49,7 +50,7 @@ Handle<Value> TiTitaniumObject::_include(void* userContext, TiObject* caller, co
 {
     if (args.Length() < 1)
     {
-        return Undefined();
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
 
     Local<Value> javaScript = args[0];
@@ -58,14 +59,25 @@ Handle<Value> TiTitaniumObject::_include(void* userContext, TiObject* caller, co
         javaScript = javaScript->ToString();
     }
 
-    string fileName = "app/native/assets/";
-    fileName += *String::Utf8Value(javaScript);
+    static string sRelDir = "";
 
-    ifstream ifs(fileName.c_str());
+    string base = "app/native/assets/";
+    string fullPath = base + sRelDir + *String::Utf8Value(javaScript);
+    string filename = *String::Utf8Value(javaScript);
+
+    // Get the directory before slash
+    std::string::size_type slash_pos = filename.rfind("/");
+    if (slash_pos != std::string::npos)
+    {
+        slash_pos++;
+        sRelDir += filename.substr(0, slash_pos);
+    }
+
+    ifstream ifs(fullPath.c_str());
 
     if (ifs.bad())
     {
-        return Undefined();
+        return ThrowException(String::New(Ti::Msg::Include_file_not_found));
     }
 
     string buffer;
@@ -78,15 +90,18 @@ Handle<Value> TiTitaniumObject::_include(void* userContext, TiObject* caller, co
     {
         String::Utf8Value error(tryCatch.Exception());
         TiLogger::getInstance().log(string(*error) + "\n");
-        return Undefined();
+        return ThrowException(tryCatch.Exception());
     }
     Handle<Value>result = compiledScript->Run();
     if (result.IsEmpty())
     {
         String::Utf8Value error(tryCatch.Exception());
         TiLogger::getInstance().log(string(*error) + "\n");
-        return Undefined();
+        return ThrowException(tryCatch.Exception());
     }
+
+    // Reset relative path
+    sRelDir = "";
 
     return Undefined();
 }
