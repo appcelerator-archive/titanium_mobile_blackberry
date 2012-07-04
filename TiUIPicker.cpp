@@ -9,7 +9,7 @@
 #include "TiGenericFunctionObject.h"
 
 TiUIPicker::TiUIPicker(NativeObjectFactory* nativeObjectFactory)
-    : TiUIBase(nativeObjectFactory, "")
+    : TiUIBase("")
 {
 }
 
