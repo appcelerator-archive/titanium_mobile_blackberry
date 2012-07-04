@@ -6,7 +6,10 @@
  */
 
 #include "TiUITableView.h"
+
 #include "TiGenericFunctionObject.h"
+#include "TiLogger.h"
+#include "TiMessageStrings.h"
 
 TiUITableView::TiUITableView()
     : TiUIBase("")
@@ -54,7 +57,7 @@ Handle<Value> TiUITableView::_scrollToIndex(void* userContext, TiObject* caller,
     }
     else
     {
-        //qDebug() << "TiUITableView::_scrollToIndex - args[0] is not a number.";
+        TI_DEBUG(Ti::Msg::INTERNAL__args0_is_not_a_number);
     }
 
     return Undefined();

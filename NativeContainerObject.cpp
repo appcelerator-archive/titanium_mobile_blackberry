@@ -12,6 +12,7 @@
 #include <bb/cascades/Button>
 #include <bb/cascades/Color>
 #include <bb/cascades/Container>
+#include <bb/cascades/DateTimePicker>
 #include <bb/cascades/DockLayout>
 #include <bb/cascades/DockLayoutProperties>
 #include <bb/cascades/ImageView>
