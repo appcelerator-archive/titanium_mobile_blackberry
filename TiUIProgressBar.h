@@ -27,7 +27,7 @@ protected:
     virtual ~TiUIProgressBar();
 
 private:
-    explicit TiUIProgressBar(NativeObjectFactory* nativeObjectFactory);
+    explicit TiUIProgressBar();
     // Disable copy ctor & assignment operator
     TiUIProgressBar(const TiUIProgressBar& progressBar);
     TiUIProgressBar& operator=(const TiUIProgressBar& progressBar);

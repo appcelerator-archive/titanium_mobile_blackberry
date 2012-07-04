@@ -29,7 +29,7 @@ protected:
     virtual void onCreateStaticMembers();
 
 private:
-    explicit TiUIPicker(NativeObjectFactory* nativeObjectFactory);
+    TiUIPicker();
 
     // Disable copy ctor & assignment operator
     TiUIPicker(const TiUIPicker& obj);

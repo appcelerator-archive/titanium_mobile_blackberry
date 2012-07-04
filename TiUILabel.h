@@ -28,7 +28,7 @@ protected:
     virtual void initializeTiObject(TiObject* parentContext);
 
 private:
-    TiUILabel(NativeObjectFactory* nativeObjectFactory);
+    TiUILabel();
 };
 
 #endif /* TIUILABEL_H_ */
