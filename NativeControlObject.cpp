@@ -24,6 +24,8 @@
         return object->NAME(obj);\
     }
 
+#define GET_ARRAY_SIZE(ARRAY)           (int)(sizeof(ARRAY)/sizeof(*(ARRAY)))
+
 typedef int (*NATIVE_PROPSETGET_CALLBACK)(NativeControlObject*, TiObject*);
 
 struct NATIVE_PROPSETGET_SETTING
@@ -33,22 +35,22 @@ struct NATIVE_PROPSETGET_SETTING
     NATIVE_PROPSETGET_CALLBACK getter;
 };
 
-class GetSetProperties
+class SetGetProperties
 {
 public:
-    GetSetProperties(const NATIVE_PROPSETGET_SETTING* map, int mapEntries)
+    SetGetProperties(const NATIVE_PROPSETGET_SETTING* map, int mapEntries)
     {
         setters_ = new NATIVE_PROPSETGET_CALLBACK[N_PROP_LAST];
-        memset(setters_, 0, sizeof(NATIVE_PROPSETGET_CALLBACK)*N_PROP_LAST);
+        memset(setters_, 0, sizeof(NATIVE_PROPSETGET_CALLBACK) * N_PROP_LAST);
         getters_ = new NATIVE_PROPSETGET_CALLBACK[N_PROP_LAST];
-        memset(getters_, 0, sizeof(NATIVE_PROPSETGET_CALLBACK)*N_PROP_LAST);
+        memset(getters_, 0, sizeof(NATIVE_PROPSETGET_CALLBACK) * N_PROP_LAST);
         for (int i = 0; i < mapEntries; i++)
         {
             setters_[map[i].propNumber] = map[i].setter;
             getters_[map[i].propNumber] = map[i].getter;
         }
     }
-    ~GetSetProperties()
+    ~SetGetProperties()
     {
         if (setters_ != NULL)
         {
@@ -78,18 +80,11 @@ public:
         return getters_[prop];
     }
 private:
-    GetSetProperties()
-    {
-    }
-    GetSetProperties(const GetSetProperties& prop)
-    {
-    }
-    const GetSetProperties& operator = (const GetSetProperties& prop)
-    {
-        return(*this);
-    }
-    NATIVE_PROPSETGET_CALLBACK* getters_;
+    SetGetProperties();
+    SetGetProperties(const SetGetProperties& prop);
+    const SetGetProperties& operator = (const SetGetProperties& prop);
     NATIVE_PROPSETGET_CALLBACK* setters_;
+    NATIVE_PROPSETGET_CALLBACK* getters_;
 };
 
 // Unit types
@@ -459,7 +454,7 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), NULL}
 };
 
-static GetSetProperties g_props(g_propSetGet, sizeof(g_propSetGet) / sizeof(*g_propSetGet));
+static SetGetProperties g_props(g_propSetGet, sizeof(g_propSetGet) / sizeof(*g_propSetGet));
 
 int NativeControlObject::setPropertyValue(size_t propertyNumber, TiObject* obj)
 {
@@ -675,7 +670,7 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float max,
         float* calculatedValue)
 {
     UnitType unitType = UnitTypeDefault;
-    if (!obj->getValue()->IsString())
+    if ((!obj->getValue()->IsString()) && (!obj->getValue()->IsStringObject()))
     {
         float value;
         int error = getFloat(obj, &value);
@@ -699,7 +694,7 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float max,
     int measurementLen = strlen(measurement);
     char* num = new char[measurementLen + 1];
     strcpy(num, measurement);
-    for (int i = 0; i < (int)(sizeof(g_unitTypes) / sizeof(*g_unitTypes)); i++)
+    for (int i = 0; i < GET_ARRAY_SIZE(g_unitTypes); i++)
     {
         int unitLen = strlen(g_unitTypes[i].postfix);
         if ((measurementLen >= unitLen) &&
@@ -745,7 +740,7 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float max,
         }
         else
         {
-            *calculatedValue = (numberPart * 100.0f) / max;
+            *calculatedValue = max * numberPart / max;
         }
         break;
     case UnitTypeDIP:

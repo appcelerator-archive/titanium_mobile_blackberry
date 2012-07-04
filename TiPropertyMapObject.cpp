@@ -70,6 +70,10 @@ Handle<Value> TiPropertyMapObject::getValue() const
             return Undefined();
         }
     }
+    else
+    {
+        nativeObject->addRef();
+    }
     int error = nativeObject->getPropertyValue(propertyNumber_, value);
     nativeObject->release();
     if (error != NATIVE_ERROR_OK)
