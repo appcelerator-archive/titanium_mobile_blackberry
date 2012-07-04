@@ -8,7 +8,7 @@
 #include "TiUIPicker.h"
 #include "TiGenericFunctionObject.h"
 
-TiUIPicker::TiUIPicker(NativeObjectFactory* nativeObjectFactory)
+TiUIPicker::TiUIPicker()
     : TiUIBase("")
 {
 }
@@ -19,7 +19,8 @@ TiUIPicker::~TiUIPicker()
 
 TiUIPicker* TiUIPicker::createPicker(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUIPicker* obj = new TiUIPicker(nativeObjectFactory);
+    TiUIPicker* obj = new TiUIPicker;
+    obj->setNativeObjectFactory(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }
