@@ -22,7 +22,7 @@ class QString;
     do { \
         QString s; \
         QTextStream ts(&s); \
-        ts << tag " " << __PRETTY_FUNCTION__ << " Line "  << __LINE__ << ": " << msg << "\n"; \
+        ts << tag " " << __PRETTY_FUNCTION__ << " Line "  << __LINE__ << ": " << msg; \
         NativeLoggerObject::getInstance().log(s); \
     } while(0)
 

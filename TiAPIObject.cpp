@@ -8,18 +8,7 @@
 #include "TiAPIObject.h"
 #include "TiGenericFunctionObject.h"
 #include "TiLogger.h"
-
-typedef enum TiSeverityLevel_
-{
-    Ti_DEBUG,
-    Ti_INFO,
-    Ti_ERROR,
-    Ti_WARN,
-    Ti_TRACE
-} TiSeverityLevel;
-
-// Helper method
-static void toSystemLog(Local<Value> message, const TiSeverityLevel sLevel);
+#include "TiMessageStrings.h"
 
 TiAPIObject::TiAPIObject()
     : TiObject("API")
@@ -51,11 +40,12 @@ Handle<Value> TiAPIObject::_debug(void* userContext, TiObject* caller, const Arg
 {
     if (args.Length() < 1)
     {
-        return Undefined();
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
 
     // Log message with DEBUG severity-level
-    toSystemLog(args[0], Ti_DEBUG);
+    Local<Value> taggedMessage = String::Concat(String::New("[DEBUG]:"), args[0]->ToString());
+    TiLogger::getInstance().log(*String::Utf8Value(taggedMessage));
     return Undefined();
 }
 
@@ -63,11 +53,12 @@ Handle<Value> TiAPIObject::_info(void* userContext, TiObject* caller, const Argu
 {
     if (args.Length() < 1)
     {
-        return Undefined();
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
 
     // Log message with INFO severity-level
-    toSystemLog(args[0], Ti_INFO);
+    Local<Value> taggedMessage = String::Concat(String::New("[INFO]:"), args[0]->ToString());
+    TiLogger::getInstance().log(*String::Utf8Value(taggedMessage));
     return Undefined();
 }
 
@@ -75,11 +66,12 @@ Handle<Value> TiAPIObject::_warn(void* userContext, TiObject* caller, const Argu
 {
     if (args.Length() < 1)
     {
-        return Undefined();
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
 
     // Log message with WARNING severity-level
-    toSystemLog(args[0], Ti_WARN);
+    Local<Value> taggedMessage = String::Concat(String::New("[WARNING]:"), args[0]->ToString());
+    TiLogger::getInstance().log(*String::Utf8Value(taggedMessage));
     return Undefined();
 }
 
@@ -87,56 +79,18 @@ Handle<Value> TiAPIObject::_error(void* userContext, TiObject* caller, const Arg
 {
     if (args.Length() < 1)
     {
-        return Undefined();
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
 
     // Log message with ERROR severity-level
-    toSystemLog(args[0], Ti_ERROR);
+    Local<Value> taggedMessage = String::Concat(String::New("[ERROR]:"), args[0]->ToString());
+    TiLogger::getInstance().log(*String::Utf8Value(taggedMessage));
     return Undefined();
 }
 
 Handle<Value> TiAPIObject::_log(void* userContext, TiObject* caller, const Arguments& args)
 {
-    if (args.Length() < 2)
-    {
-        return Undefined();
-    }
-
-    Local<Value> sLevel = args[0];
-    if (!sLevel->IsString())
-    {
-        sLevel = sLevel->ToString();
-    }
-
-    // Check the log level
-    String::Utf8Value v8UtfLevel(sLevel);
-    const char* cLevel = *v8UtfLevel;
-    Local<Value> message = args[1];
-    if (strcmp(cLevel, "debug") == 0)
-    {
-        toSystemLog(message, Ti_DEBUG);
-    }
-    else if (strcmp(cLevel, "error") == 0)
-    {
-        toSystemLog(message, Ti_ERROR);
-    }
-    else if (strcmp(cLevel, "info") == 0)
-    {
-        toSystemLog(message, Ti_INFO);
-    }
-    else if (strcmp(cLevel, "warn") == 0)
-    {
-        toSystemLog(message, Ti_WARN);
-    }
-    else if (strcmp(cLevel, "trace") == 0)
-    {
-        toSystemLog(message, Ti_TRACE);
-    }
-    else
-    {
-        toSystemLog(message, Ti_INFO);
-    }
-
+    // TODO: Implement this later
     return Undefined();
 }
 
@@ -148,36 +102,13 @@ Handle<Value> TiAPIObject::_timestamp(void* userContext, TiObject* caller, const
 
 Handle<Value> TiAPIObject::_trace(void* userContext, TiObject* caller, const Arguments& args)
 {
-    // TODO: Implement this later
+    if (args.Length() < 1)
+    {
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
+    }
+
+    // Log message with ERROR severity-level
+    Local<Value> taggedMessage = String::Concat(String::New("[TRACE]:"), args[0]->ToString());
+    TiLogger::getInstance().log(*String::Utf8Value(taggedMessage));
     return Undefined();
-}
-
-static void toSystemLog(Local<Value> message, const TiSeverityLevel sLevel)
-{
-    if (!message->IsString())
-    {
-        message = message->ToString();
-    }
-
-    switch (sLevel)
-    {
-    case Ti_DEBUG:
-        TI_DEBUG(*String::Utf8Value(message));
-        break;
-    case Ti_INFO:
-        TI_INFO(*String::Utf8Value(message));
-        break;
-    case Ti_WARN:
-        TI_WARNING(*String::Utf8Value(message));
-        break;
-    case Ti_ERROR:
-        TI_ERROR(*String::Utf8Value(message));
-        break;
-    case Ti_TRACE:
-        // TODO: Implement this
-        break;
-    default:
-        TI_INFO(*String::Utf8Value(message));
-        break;
-    }
 }

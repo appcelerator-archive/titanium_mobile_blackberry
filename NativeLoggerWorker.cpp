@@ -13,5 +13,5 @@ using namespace std;
 
 void NativeLoggerWorker::log(const QString& t)
 {
-    fprintf(stderr, "%s", t.toStdString().c_str());
+    fprintf(stderr, "%s\n", t.toStdString().c_str());
 }
