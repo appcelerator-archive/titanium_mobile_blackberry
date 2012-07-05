@@ -80,8 +80,10 @@ public:
         return getters_[prop];
     }
 private:
+    // Disabled default and copy constructors
     SetGetProperties();
     SetGetProperties(const SetGetProperties& prop);
+    // Disabled assignment operator
     const SetGetProperties& operator = (const SetGetProperties& prop);
     NATIVE_PROPSETGET_CALLBACK* setters_;
     NATIVE_PROPSETGET_CALLBACK* getters_;
@@ -454,7 +456,7 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), NULL}
 };
 
-static SetGetProperties g_props(g_propSetGet, sizeof(g_propSetGet) / sizeof(*g_propSetGet));
+static SetGetProperties g_props(g_propSetGet, GET_ARRAY_SIZE(g_propSetGet));
 
 int NativeControlObject::setPropertyValue(size_t propertyNumber, TiObject* obj)
 {
@@ -690,23 +692,15 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float max,
         return NATIVE_ERROR_OK;
     }
     v8::String::Utf8Value myString(obj->getValue()->ToString());
-    const char* measurement = *myString;
-    int measurementLen = strlen(measurement);
-    char* num = new char[measurementLen + 1];
-    strcpy(num, measurement);
+    QString measurement = (const char*)(*myString);
+    float numberPart = (float)atof(*myString);
     for (int i = 0; i < GET_ARRAY_SIZE(g_unitTypes); i++)
     {
-        int unitLen = strlen(g_unitTypes[i].postfix);
-        if ((measurementLen >= unitLen) &&
-                (memcmp(measurement + measurementLen - unitLen,
-                        g_unitTypes[i].postfix, unitLen) == 0))
+        if (measurement.endsWith(QString(g_unitTypes[i].postfix)))
         {
-            num[measurementLen - unitLen] = 0;
             unitType = g_unitTypes[i].unitType;
         }
     }
-    float numberPart = (float)atof(num);
-    delete[] num;
     if (unitType == UnitTypeDefault)
     {
         // Default to 'pixels'
@@ -740,7 +734,7 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float max,
         }
         else
         {
-            *calculatedValue = max * numberPart / max;
+            *calculatedValue = max * numberPart / 100;
         }
         break;
     case UnitTypeDIP:
