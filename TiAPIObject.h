@@ -27,7 +27,15 @@ protected:
 
 private:
     TiAPIObject();
-    static Handle<Value> debug_(void* userContext, TiObject* caller, const Arguments& args);
+    TiAPIObject(const TiAPIObject&);
+    TiAPIObject& operator=(const TiAPIObject&);
+    static Handle<Value> _debug(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _info(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _warn(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _error(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _log(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _timestamp(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _trace(void* userContext, TiObject* caller, const Arguments& args);
 };
 
 #endif /* TIAPIOBJECT_H_ */
