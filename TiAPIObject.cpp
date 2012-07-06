@@ -107,7 +107,7 @@ Handle<Value> TiAPIObject::_trace(void* userContext, TiObject* caller, const Arg
         return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
 
-    // Log message with ERROR severity-level
+    // Log message with TRACE severity-level
     Local<Value> taggedMessage = String::Concat(String::New("[TRACE]:"), args[0]->ToString());
     TiLogger::getInstance().log(*String::Utf8Value(taggedMessage));
     return Undefined();
