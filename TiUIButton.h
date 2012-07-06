@@ -27,7 +27,7 @@ protected:
     virtual void initializeTiObject(TiObject* parentContext);
 
 private:
-    TiUIButton(NativeObjectFactory* nativeObjectFactory);
+    TiUIButton();
 };
 
 #endif /* TIUIBUTTON_H_ */

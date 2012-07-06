@@ -152,12 +152,6 @@ int NativeControlObject::setColor(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setData)
-int NativeControlObject::setData(TiObject* obj)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
 PROP_SETTER(setEnabled)
 int NativeControlObject::setEnabled(TiObject* obj)
 {
@@ -244,6 +238,24 @@ int NativeControlObject::setLeft(TiObject* obj)
 
 PROP_SETTER(setMax)
 int NativeControlObject::setMax(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setMinDate)
+int NativeControlObject::setMinDate(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setMaxDate)
+int NativeControlObject::setMaxDate(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setData)
+int NativeControlObject::setData(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -353,6 +365,18 @@ int NativeControlObject::setWidth(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+PROP_SETTER(setType)
+int NativeControlObject::setType(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETTER(setRight)
+int NativeControlObject::setRight(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
@@ -388,6 +412,7 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_CENTER]                            = NULL;
     vect[N_PROP_CHILDREN]                          = NULL;
     vect[N_PROP_COLOR]                             = PROP_SETTING_FUNCTION(setColor);
+    vect[N_PROP_DATA]                              = PROP_SETTING_FUNCTION(setData);
     vect[N_PROP_ENABLED]                           = PROP_SETTING_FUNCTION(setEnabled);
     vect[N_PROP_ELLIPSIZE]                         = NULL;
     vect[N_PROP_FOCUSABLE]                         = NULL;
@@ -402,7 +427,9 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_LAYOUT]                            = NULL;
     vect[N_PROP_LEFT]                              = PROP_SETTING_FUNCTION(setLeft);
     vect[N_PROP_MAX]                               = PROP_SETTING_FUNCTION(setMax);
+    vect[N_PROP_MAXDATE]                           = PROP_SETTING_FUNCTION(setMaxDate);
     vect[N_PROP_MIN]                               = PROP_SETTING_FUNCTION(setMin);
+    vect[N_PROP_MINDATE]                           = PROP_SETTING_FUNCTION(setMinDate);
     vect[N_PROP_MINIMUM_FONT_SIZE]                 = NULL;
     vect[N_PROP_OPACITY]                           = PROP_SETTING_FUNCTION(setOpacity);
     vect[N_PROP_OPTIONS]                           = PROP_SETTING_FUNCTION(setOptions);
@@ -419,12 +446,12 @@ static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
     vect[N_PROP_TOP]                               = PROP_SETTING_FUNCTION(setTop);
     vect[N_PROP_TOUCH_ENABLED]                     = NULL;
     vect[N_PROP_TRANSFORM]                         = NULL;
+    vect[N_PROP_TYPE]                              = PROP_SETTING_FUNCTION(setType);
     vect[N_PROP_VALUE]                             = PROP_SETTING_FUNCTION(setValue);
     vect[N_PROP_VISIBLE]                           = PROP_SETTING_FUNCTION(setVisible);
     vect[N_PROP_WIDTH]                             = PROP_SETTING_FUNCTION(setWidth);
     vect[N_PROP_WORD_WRAP]                         = NULL;
     vect[N_PROP_ZINDEX]                            = NULL;
-    vect[N_PROP_DATA]                              = PROP_SETTING_FUNCTION(setData);
     return vect;
 }
 

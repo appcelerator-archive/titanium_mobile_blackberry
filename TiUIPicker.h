@@ -5,35 +5,35 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef TIUISWITCH_H_
-#define TIUISWITCH_H_
+#ifndef TIUIPICKER_H_
+#define TIUIPICKER_H_
 
 #include "TiUIBase.h"
 
 /*
- * TiUISwitch
+ * TiUIPicker
  *
- * Represents a Titanium Switch object
+ * Represents a Titanium Picker object
  *
  * This object can be created by:
- * Titanium.UI.createSwitch({...});
+ * Titanium.UI.createPicker({...});
  */
-class TiUISwitch : public TiUIBase
+class TiUIPicker : public TiUIBase
 {
 public:
-    static TiUISwitch* createSwitch(NativeObjectFactory* nativeObjectFactory);
+    static TiUIPicker* createPicker(NativeObjectFactory* nativeObjectFactory);
 
 protected:
-    virtual ~TiUISwitch();
+    virtual ~TiUIPicker();
     virtual void initializeTiObject(TiObject* parentContext);
+    virtual void onCreateStaticMembers();
 
 private:
-    TiUISwitch();
+    TiUIPicker();
 
     // Disable copy ctor & assignment operator
-    TiUISwitch(const TiUISwitch& switchObj);
-    TiUISwitch& operator=(const TiUISwitch& switchObj);
+    TiUIPicker(const TiUIPicker& obj);
+    TiUIPicker& operator=(const TiUIPicker& obj);
 };
 
-
-#endif /* TIUISWITCH_H_ */
+#endif /* TIUIPICKER_H_ */

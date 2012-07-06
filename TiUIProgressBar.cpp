@@ -8,8 +8,8 @@
 #include "TiUIProgressBar.h"
 #include "TiGenericFunctionObject.h"
 
-TiUIProgressBar::TiUIProgressBar(NativeObjectFactory* nativeObjectFactory)
-    : TiUIBase(nativeObjectFactory, "")
+TiUIProgressBar::TiUIProgressBar()
+    : TiUIBase("")
 {
 }
 
@@ -26,7 +26,8 @@ void TiUIProgressBar::onCreateStaticMembers()
 
 TiUIBase* TiUIProgressBar::createProgressBar(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUIProgressBar* obj = new TiUIProgressBar(nativeObjectFactory);
+    TiUIProgressBar* obj = new TiUIProgressBar;
+    obj->setNativeObjectFactory(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }

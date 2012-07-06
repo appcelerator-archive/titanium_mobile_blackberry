@@ -7,6 +7,7 @@
 
 #include "NativeStringInterface.h"
 
+#include "NativeMessageStrings.h"
 #include "TiMessageStrings.h"
 #include <QDate>
 #include <QLocale>
@@ -46,15 +47,11 @@ Handle<Value> NativeStringInterface::format(const Arguments& args)
 {
     if (args.Length() < 1)
     {
-        ThrowException(String::New(Ti::Msg::Expected_argument_of_type_string));
+        ThrowException(String::New(Native::Msg::Expected_argument_of_type_string));
         return Undefined();
     }
 
-    Local<Value> format = args[0];
-    if (!(format->IsString() || format->IsStringObject()))
-    {
-        format = format->ToString();
-    }
+    Local<Value> format = args[0]->ToString();
 
     const String::Utf8Value utf8(format);
     QString str = QString::fromUtf8(*utf8);
@@ -83,12 +80,12 @@ Handle<Value> NativeStringInterface::format(const Arguments& args)
             argN = rx.cap(2).toInt(&ok);
             if (!ok)
             {
-                ThrowException(String::New(Ti::Msg::An_error_occurred_converting_to_int));
+                ThrowException(String::New(Native::Msg::An_error_occurred_converting_to_int));
                 return Undefined();
             }
             if (argN >= args.Length() || argN <= 0)
             {
-                ThrowException(String::New(Ti::Msg::Numbered_argument_exceeds_the_length_of_provided_arguments));
+                ThrowException(String::New(Native::Msg::Numbered_argument_exceeds_the_length_of_provided_arguments));
                 return Undefined();
             }
 
@@ -153,7 +150,7 @@ Handle<Value> NativeStringInterface::format(const Arguments& args)
             break;
 
         default:
-            ThrowException(String::New(Ti::Msg::INTERNAL__An_error_occurred_while_parsing_the_format_string));
+            ThrowException(String::New(Native::Msg::INTERNAL__An_error_occurred_while_parsing_the_format_string));
             break;
         }
         start = end;
@@ -169,7 +166,7 @@ Handle<Value> NativeStringInterface::formatCurrency(const Arguments& args)
 {
     if (args.Length() < 1 || (!args[0]->IsNumber() && !args[0]->IsNumberObject()))
     {
-        ThrowException(String::New(Ti::Msg::Expected_argument_of_type_integer));
+        ThrowException(String::New(Native::Msg::Expected_argument_of_type_integer));
         return Undefined();
     }
 
@@ -185,7 +182,7 @@ Handle<Value> NativeStringInterface::formatDate(const Arguments& args)
     // TODO: Revisit format part when R6 available
     if (args.Length() < 1 || !args[0]->IsDate())
     {
-        ThrowException(String::New(Ti::Msg::Expected_argument_of_type_date));
+        ThrowException(String::New(Native::Msg::Expected_argument_of_type_date));
         return Undefined();
     }
 
@@ -239,7 +236,7 @@ Handle<Value> NativeStringInterface::formatDecimal(const Arguments& args)
 {
     if (args.Length() < 1 || (!args[0]->IsNumber() && !args[0]->IsNumberObject()))
     {
-        ThrowException(String::New(Ti::Msg::Expected_argument_of_type_integer));
+        ThrowException(String::New(Native::Msg::Expected_argument_of_type_integer));
         return Undefined();
     }
 
@@ -257,7 +254,7 @@ Handle<Value> NativeStringInterface::formatTime(const Arguments& args)
     // TODO: Revisit format part when R6 available
     if (args.Length() < 1 || !args[0]->IsDate())
     {
-        ThrowException(String::New(Ti::Msg::Expected_argument_of_type_date));
+        ThrowException(String::New(Native::Msg::Expected_argument_of_type_date));
         return Undefined();
     }
 
@@ -319,7 +316,7 @@ Handle<Value> NativeStringInterface::formatTime(const Arguments& args)
 
 static QString formatInt(QString s, Local<Value> arg)
 {
-    if (arg->IsNumber())
+    if (arg->IsNumber() || arg->IsNumberObject())
     {
         if (s.endsWith('C'))
         {
@@ -334,13 +331,13 @@ static QString formatInt(QString s, Local<Value> arg)
         int v = arg->Int32Value();
         return s.sprintf(s.toLatin1().constData(), v);
     }
-    ThrowException(String::New(Ti::Msg::Expected_argument_of_type_integer));
+    ThrowException(String::New(Native::Msg::Expected_argument_of_type_integer));
     return QString();
 }
 
 static QString formatUInt(QString s, Local<Value> arg)
 {
-    if (arg->IsNumber())
+    if (arg->IsNumber() || arg->IsNumberObject())
     {
         if (s.right(3).startsWith("ll"))
         {
@@ -350,13 +347,13 @@ static QString formatUInt(QString s, Local<Value> arg)
         unsigned int v = arg->Uint32Value();
         return s.sprintf(s.toLatin1().constData(), v);
     }
-    ThrowException(String::New(Ti::Msg::Expected_argument_of_type_unsigned_integer));
+    ThrowException(String::New(Native::Msg::Expected_argument_of_type_unsigned_integer));
     return QString();
 }
 
 static QString formatDouble(QString s, Local<Value> arg)
 {
-    if (arg->IsNumber())
+    if (arg->IsNumber() || arg->IsNumberObject())
     {
         if (s.right(2).startsWith('L'))
         {
@@ -367,7 +364,7 @@ static QString formatDouble(QString s, Local<Value> arg)
         double v = arg->NumberValue();
         return s.sprintf(s.toLatin1().constData(), v);
     }
-    ThrowException(String::New(Ti::Msg::Expected_argument_of_type_double));
+    ThrowException(String::New(Native::Msg::Expected_argument_of_type_double));
     return QString();
 }
 
@@ -380,10 +377,7 @@ static QString formatString(QString s, Local<Value> arg)
     }
     bool longChar = s.endsWith("ls");
 
-    if (!(arg->IsString() || arg->IsStringObject()))
-    {
-        arg = arg->ToString();
-    }
+    arg = arg->ToString();
     if (longChar)
     {
         String::Value utf16(arg);
@@ -407,7 +401,7 @@ static QString formatPointer(QString s, Local<Value> arg)
     {
         return s.sprintf(s.toLatin1().constData(), External::Unwrap(arg));
     }
-    ThrowException(String::New(Ti::Msg::Expected_argument_of_type_object_or_external));
+    ThrowException(String::New(Native::Msg::Expected_argument_of_type_object_or_external));
     return QString();
 }
 
