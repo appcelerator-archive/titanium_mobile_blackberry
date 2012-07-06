@@ -46,6 +46,8 @@ NativeObjectFactory::~NativeObjectFactory()
 
 NativeObject* NativeObjectFactory::createNativeObject(int type)
 {
+    /* The NativeObject instances created here live in their TiObject counterpart
+       The TiObject takes care of deleting them. */
     NativeObject* obj = NULL;
     switch (type)
     {

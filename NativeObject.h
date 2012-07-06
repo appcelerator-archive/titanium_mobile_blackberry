@@ -10,10 +10,13 @@
 
 typedef void* NAHANDLE;
 
-#define NATIVE_ERROR_OK                         0
-#define NATIVE_ERROR_NOTSUPPORTED               1
-#define NATIVE_ERROR_OUTOFMEMORY                2
-#define NATIVE_ERROR_INVALID_ARG                3
+enum NATIVE_ERROR
+{
+    NATIVE_ERROR_OK
+    , NATIVE_ERROR_NOTSUPPORTED
+    , NATIVE_ERROR_OUTOFMEMORY
+    , NATIVE_ERROR_INVALID_ARG
+};
 
 enum NATIVE_TYPE
 {

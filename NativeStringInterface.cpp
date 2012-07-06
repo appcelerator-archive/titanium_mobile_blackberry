@@ -34,6 +34,12 @@ const NativeStringInterface* NativeStringInterface::instance()
     return s_theInstance;
 }
 
+void NativeStringInterface::deleteInstance()
+{
+    delete s_theInstance;
+    s_theInstance = NULL;
+}
+
 Handle<Value> NativeStringInterface::format(const Arguments& args)
 {
     if (args.Length() < 1)
