@@ -100,7 +100,7 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     string bootstrapJavascript;
     {
         ifstream ifs("app/native/framework/bootstrap.js");
-        if (ifs.bad())
+        if (!ifs)
         {
             TiLogger::getInstance().log(Ti::Msg::ERROR__Cannot_load_bootstrap_js);
             return -1;
@@ -114,14 +114,14 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     if (compiledBootstrapScript.IsEmpty())
     {
         String::Utf8Value error(tryCatch.Exception());
-        TiLogger::getInstance().log(string(*error) + "\n");
+        TiLogger::getInstance().log(*error);
         return -1;
     }
-    Handle<Value>bootstrapResult = compiledBootstrapScript->Run();
+    Handle<Value> bootstrapResult = compiledBootstrapScript->Run();
     if (bootstrapResult.IsEmpty())
     {
         String::Utf8Value error(tryCatch.Exception());
-        TiLogger::getInstance().log(string(*error) + "\n");
+        TiLogger::getInstance().log(*error);
         return -1;
     }
 
@@ -129,14 +129,14 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     if (compiledScript.IsEmpty())
     {
         String::Utf8Value error(tryCatch.Exception());
-        TiLogger::getInstance().log(string(*error) + "\n");
+        TiLogger::getInstance().log(*error);
         return -1;
     }
-    Handle<Value>result = compiledScript->Run();
+    Handle<Value> result = compiledScript->Run();
     if (result.IsEmpty())
     {
         String::Utf8Value error(tryCatch.Exception());
-        TiLogger::getInstance().log(string(*error) + "\n");
+        TiLogger::getInstance().log(*error);
         return -1;
     }
     onStartMessagePump();
