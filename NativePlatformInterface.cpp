@@ -58,7 +58,7 @@ Handle<Value> NativePlatformInterface::getAvailableMemory()
 PROP_GETTER(getBatteryLevel)
 Handle<Value> NativePlatformInterface::getBatteryLevel()
 {
-    return v8::Integer::New(NativePlatformInterface::instance()->batteryInfo_.level());
+    return v8::Integer::New(instance()->batteryInfo_.level());
 }
 
 PROP_GETTER(getBatteryMonitoring)
@@ -71,7 +71,7 @@ Handle<Value> NativePlatformInterface::getBatteryMonitoring()
 PROP_GETTER(getBatteryState)
 Handle<Value> NativePlatformInterface::getBatteryState()
 {
-    bb::device::BatteryInfo::ChargingState bState = NativePlatformInterface::instance()->batteryInfo_.chargingState();
+    bb::device::BatteryInfo::ChargingState bState = instance()->batteryInfo_.chargingState();
     Ti::Platform::TI_BATTERY_STATE tiState = Ti::Platform::BATTERY_STATE_UNKNOWN;
     switch (bState)
     {
@@ -188,7 +188,7 @@ Handle<Value> NativePlatformInterface::getPropertyValue(int propertyNumber)
     {
         return Undefined();
     }
-    Handle<Value> result = (s_functionMap[propertyNumber])(NativePlatformInterface::instance());
+    Handle<Value> result = (s_functionMap[propertyNumber])(instance());
     return result;
 }
 
