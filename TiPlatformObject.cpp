@@ -5,7 +5,7 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "TiPlatform.h"
+#include "TiPlatformObject.h"
 
 #include "NativePlatformInterface.h"
 #include "TiConstants.h"
@@ -92,23 +92,23 @@ const static TiProperty g_tiProperties[] =
     }
 };
 
-TiPlatform::TiPlatform()
+TiPlatformObject::TiPlatformObject()
     : TiObject("Platform")
 {
 }
 
-TiPlatform::~TiPlatform()
+TiPlatformObject::~TiPlatformObject()
 {
 }
 
-void TiPlatform::addObjectToParent(TiObject* parent)
+void TiPlatformObject::addObjectToParent(TiObject* parent)
 {
-    TiPlatform* obj = new TiPlatform();
+    TiPlatformObject* obj = new TiPlatformObject();
     parent->addMember(obj);
     obj->release();
 }
 
-void TiPlatform::onCreateStaticMembers()
+void TiPlatformObject::onCreateStaticMembers()
 {
     TiObject::onCreateStaticMembers();
     setTiPlatformMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
@@ -120,7 +120,7 @@ void TiPlatform::onCreateStaticMembers()
     ADD_STATIC_TI_VALUE("BATTERY_STATE_UNPLUGGED", Number::New(Ti::Platform::BATTERY_STATE_UNPLUGGED), this);
 }
 
-void TiPlatform::setTiPlatformMappingProperties(const TiProperty* props, int propertyCount)
+void TiPlatformObject::setTiPlatformMappingProperties(const TiProperty* props, int propertyCount)
 {
     string name;
     char c[2];
@@ -137,13 +137,13 @@ void TiPlatform::setTiPlatformMappingProperties(const TiProperty* props, int pro
     }
 }
 
-Handle<Value> TiPlatform::_valueGetter(int propertyNumber, void* context)
+Handle<Value> TiPlatformObject::_valueGetter(int propertyNumber, void* context)
 {
-    TiPlatform* self = (TiPlatform*) context;
+    TiPlatformObject* self = (TiPlatformObject*) context;
     return self->getPropertyValue(propertyNumber);
 }
 
-Handle<Value> TiPlatform::getPropertyValue(int propertyNumber)
+Handle<Value> TiPlatformObject::getPropertyValue(int propertyNumber)
 {
     return NativePlatformInterface::getPropertyValue(propertyNumber);
 }

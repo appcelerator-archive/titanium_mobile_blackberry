@@ -12,6 +12,8 @@
 #include <v8.h>
 #pragma GCC diagnostic warning "-Wunused-parameter"
 
+#include <bb/device/BatteryInfo>
+
 using namespace v8;
 using namespace std;
 
@@ -76,6 +78,8 @@ private:
     explicit NativePlatformInterface();
     NativePlatformInterface(const NativePlatformInterface&);
     NativePlatformInterface& operator=(const NativePlatformInterface&);
+    // Native elements
+    bb::device::BatteryInfo batteryInfo_;
 };
 
 #endif /* NATIVEPLATFORMINTERFACE_H_ */

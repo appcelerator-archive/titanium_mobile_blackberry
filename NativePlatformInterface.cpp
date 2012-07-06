@@ -9,8 +9,6 @@
 #include "TiConstants.h"
 #include <vector>
 
-#include <bb/device/BatteryInfo>
-
 #define PROP_GETTING_FUNCTION(NAME)     prop_##NAME
 
 #define PROP_GETTER(NAME)               static Handle<Value> prop_##NAME(const NativePlatformInterface* instance) \
@@ -60,8 +58,7 @@ Handle<Value> NativePlatformInterface::getAvailableMemory()
 PROP_GETTER(getBatteryLevel)
 Handle<Value> NativePlatformInterface::getBatteryLevel()
 {
-    bb::device::BatteryInfo bInfo;
-    return v8::Integer::New(bInfo.level());
+    return v8::Integer::New(NativePlatformInterface::instance()->batteryInfo_.level());
 }
 
 PROP_GETTER(getBatteryMonitoring)
@@ -74,8 +71,7 @@ Handle<Value> NativePlatformInterface::getBatteryMonitoring()
 PROP_GETTER(getBatteryState)
 Handle<Value> NativePlatformInterface::getBatteryState()
 {
-    bb::device::BatteryInfo bInfo;
-    bb::device::BatteryInfo::ChargingState bState = bInfo.chargingState();
+    bb::device::BatteryInfo::ChargingState bState = NativePlatformInterface::instance()->batteryInfo_.chargingState();
     Ti::Platform::TI_BATTERY_STATE tiState = Ti::Platform::BATTERY_STATE_UNKNOWN;
     switch (bState)
     {
@@ -218,7 +214,7 @@ static vector<NATIVE_PROPGET_CALLBACK> initFunctionMap()
     vect[N_PLATFORM_PROP_OSNAME]                   = PROP_GETTING_FUNCTION(getOsname);
     vect[N_PLATFORM_PROP_OSTYPE]                   = NULL;
     vect[N_PLATFORM_PROP_PROCESSORCOUNT]           = NULL;
-    vect[N_PLATFORM_PROP_RUNTIME]                  = NULL;
+    vect[N_PLATFORM_PROP_RUNTIME]                  = PROP_GETTING_FUNCTION(getRuntime);
     vect[N_PLATFORM_PROP_USERNAME]                 = NULL;
     vect[N_PLATFORM_PROP_VERSION]                  = NULL;
     return vect;

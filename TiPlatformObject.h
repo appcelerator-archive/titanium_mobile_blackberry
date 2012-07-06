@@ -11,25 +11,25 @@
 #include "TiObject.h"
 
 /*
- * TiPlatform
+ * TiPlatformObject
  *
  * Titanium.Platform namespace
  */
-class TiPlatform : public TiObject
+class TiPlatformObject : public TiObject
 {
 public:
     static void addObjectToParent(TiObject* parent);
     void setTiPlatformMappingProperties(const TiProperty* props, int propertyCount);
 protected:
-    virtual ~TiPlatform();
+    virtual ~TiPlatformObject();
     virtual void onCreateStaticMembers();
 
 private:
     static Handle<Value> _valueGetter(int propertyNumber, void* context);
     Handle<Value> getPropertyValue(int propertyNumber);
-    explicit TiPlatform();
-    TiPlatform(const TiPlatform&);
-    TiPlatform& operator=(const TiPlatform&);
+    explicit TiPlatformObject();
+    TiPlatformObject(const TiPlatformObject&);
+    TiPlatformObject& operator=(const TiPlatformObject&);
 };
 
 

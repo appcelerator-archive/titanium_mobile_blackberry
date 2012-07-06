@@ -9,9 +9,9 @@
 
 TiPropertyMapObject::TiPropertyMapObject(const char* name)
     : TiObject(name)
+    , getCallback_(NULL)
+    , callback_(NULL)
 {
-    getCallback_ = NULL;
-    callback_ = NULL;
 }
 
 TiPropertyMapObject::~TiPropertyMapObject()
