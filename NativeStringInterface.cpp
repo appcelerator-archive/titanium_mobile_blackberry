@@ -24,8 +24,6 @@ static QString formatUInt(QString s, Local<Value> arg);
 static QString formatDouble(QString s, Local<Value> arg);
 static QString formatString(QString s, Local<Value> arg);
 static QString formatPointer(QString s, Local<Value> arg);
-
-// Helper function
 static QLocale::FormatType parseFormat(Local<Value> format);
 
 static const char* DATE_FORMAT_SHORT       = "short";
