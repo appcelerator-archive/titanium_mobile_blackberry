@@ -194,8 +194,7 @@ Handle<Value> NativePlatformInterface::getPropertyValue(int propertyNumber)
 
 static vector<NATIVE_PROPGET_CALLBACK> initFunctionMap()
 {
-    vector<NATIVE_PROPGET_CALLBACK> vect;
-    vect.resize(N_PLATFORM_PROP_LAST);
+    vector<NATIVE_PROPGET_CALLBACK> vect(N_PLATFORM_PROP_LAST);
 
     vect[N_PLATFORM_PROP_UNDEFINED]                = NULL;
     vect[N_PLATFORM_PROP_ADDRESS]                  = NULL;
