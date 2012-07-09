@@ -10,8 +10,8 @@
 
 TiPropertyMapObject::TiPropertyMapObject(const char* name)
     : TiObject(name)
-    , getCallback_(NULL)
     , callback_(NULL)
+    , getCallback_(NULL)
 {
     nativeObject_ = NULL;
     parentObject_ = NULL;
