@@ -78,32 +78,3 @@ VALUE_MODIFY TiPropertyMapObject::onValueChange(Handle<Value> oldValue, Handle<V
     value->release();
     return modify;
 }
-
-Handle<Value> TiPropertyMapObject::getValue() const
-{
-
-    TiObject* value = new TiObject;
-    NativeObject* nativeObject = nativeObject_;
-    if (nativeObject == NULL)
-    {
-        nativeObject = parentObject_->getNativeObject();
-        if (nativeObject == NULL)
-        {
-            return Undefined();
-        }
-    }
-    else
-    {
-        nativeObject->addRef();
-    }
-    int error = nativeObject->getPropertyValue(propertyNumber_, value);
-    nativeObject->release();
-    if (error != NATIVE_ERROR_OK)
-    {
-        value->release();
-        return Undefined();
-    }
-    Handle<Value> v8val = value->getValue();
-    value->release();
-    return v8val;
-}

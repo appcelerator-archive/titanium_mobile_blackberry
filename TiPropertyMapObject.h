@@ -34,7 +34,6 @@ public:
 protected:
     virtual ~TiPropertyMapObject();
     virtual VALUE_MODIFY onValueChange(Handle<Value> oldValue, Handle<Value> newValue);
-    virtual Handle<Value> getValue() const;
 private:
     TiPropertyMapObject(const char* name);
     int propertyNumber_;
