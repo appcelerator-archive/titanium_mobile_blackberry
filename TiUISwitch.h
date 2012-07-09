@@ -28,7 +28,7 @@ protected:
     virtual void initializeTiObject(TiObject* parentContext);
 
 private:
-    TiUISwitch(NativeObjectFactory* nativeObjectFactory);
+    TiUISwitch();
 
     // Disable copy ctor & assignment operator
     TiUISwitch(const TiUISwitch& switchObj);

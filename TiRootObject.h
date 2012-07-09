@@ -31,9 +31,12 @@ public:
 protected:
     virtual ~TiRootObject();
     virtual void onCreateStaticMembers();
+    virtual VALUE_MODIFY onChildValueChange(TiObject* childObject, Handle<Value> oldValue, Handle<Value> newValue);
+    virtual void addMember(TiObject* object, const char* name = NULL);
 
 private:
     TiRootObject();
+    void createStringMethods();
 
     static Handle<Value> _L(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _alert(void* userContext, TiObject* caller, const Arguments& args);

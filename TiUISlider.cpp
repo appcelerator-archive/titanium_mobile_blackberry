@@ -7,8 +7,8 @@
 
 #include "TiUISlider.h"
 
-TiUISlider::TiUISlider(NativeObjectFactory* nativeObjectFactory)
-    : TiUIBase(nativeObjectFactory, "")
+TiUISlider::TiUISlider()
+    : TiUIBase("")
 {
 }
 
@@ -18,7 +18,8 @@ TiUISlider::~TiUISlider()
 
 TiUIBase* TiUISlider::createSlider(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUISlider* obj = new TiUISlider(nativeObjectFactory);
+    TiUISlider* obj = new TiUISlider;
+    obj->setNativeObjectFactory(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }

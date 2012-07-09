@@ -7,8 +7,8 @@
 
 #include "TiUISwitch.h"
 
-TiUISwitch::TiUISwitch(NativeObjectFactory* nativeObjectFactory)
-    : TiUIBase(nativeObjectFactory, "")
+TiUISwitch::TiUISwitch()
+    : TiUIBase("")
 {
 }
 
@@ -18,7 +18,8 @@ TiUISwitch::~TiUISwitch()
 
 TiUISwitch* TiUISwitch::createSwitch(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUISwitch* obj = new TiUISwitch(nativeObjectFactory);
+    TiUISwitch* obj = new TiUISwitch;
+    obj->setNativeObjectFactory(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }

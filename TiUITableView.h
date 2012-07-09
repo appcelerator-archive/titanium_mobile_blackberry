@@ -31,7 +31,7 @@ protected:
     static Handle<Value> _scrollToIndex(void* userContext, TiObject* caller, const Arguments& args);
 
 private:
-    explicit TiUITableView(NativeObjectFactory* nativeObjectFactory);
+    explicit TiUITableView();
 
     // Disable copy ctor & assignment operator
     TiUITableView(const TiUITableView& obj);

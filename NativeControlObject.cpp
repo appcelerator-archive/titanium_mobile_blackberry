@@ -65,7 +65,7 @@ public:
     }
     NATIVE_PROPSETGET_CALLBACK GetSetterCallback(size_t prop)
     {
-        if ((prop >= (std::size_t)N_PROP_LAST) || (prop < 0))
+        if (prop >= (std::size_t)N_PROP_LAST)
         {
             return NULL;
         }
@@ -73,7 +73,7 @@ public:
     }
     NATIVE_PROPSETGET_CALLBACK GetGetterCallback(size_t prop)
     {
-        if ((prop >= (std::size_t)N_PROP_LAST) || (prop < 0))
+        if (prop >= (std::size_t)N_PROP_LAST)
         {
             return NULL;
         }
@@ -111,12 +111,9 @@ NativeControlObject::NativeControlObject() :
     container_(NULL),
     control_(NULL),
     layout_(NULL),
-    backgroundColor_(bb::cascades::Color::Transparent),
-    disabledBackgroundColor_(bb::cascades::Color::Transparent),
     left_(0),
     top_(0),
-    nextEventId_(1),
-    controlEnabled_(true)
+    nextEventId_(1)
 {
 }
 
@@ -195,7 +192,7 @@ int NativeControlObject::setBackgroundColor(TiObject* obj)
         return error;
     }
     backgroundColor_ = bb::cascades::Color::fromRGBA(r, g, b, a);
-    if (controlEnabled_)
+    if (container_->isEnabled())
     {
         container_->setBackground(backgroundColor_);
     }
@@ -216,7 +213,7 @@ int NativeControlObject::setBackgroundDisableColor(TiObject* obj)
         return error;
     }
     disabledBackgroundColor_ = bb::cascades::Color::fromRGBA(r, g, b, a);
-    if (!controlEnabled_)
+    if (!container_->isEnabled())
     {
         container_->setBackground(disabledBackgroundColor_);
     }
@@ -247,11 +244,17 @@ int NativeControlObject::setEnabled(TiObject* obj)
     container_->setEnabled(enabled);
     if (enabled)
     {
-        container_->setBackground(backgroundColor_);
+        if (backgroundColor_.isValid())
+        {
+            container_->setBackground(backgroundColor_);
+        }
     }
     else
     {
-        container_->setBackground(disabledBackgroundColor_);
+        if (disabledBackgroundColor_.isValid())
+        {
+            container_->setBackground(disabledBackgroundColor_);
+        }
     }
     return NATIVE_ERROR_OK;
 }
@@ -316,6 +319,18 @@ int NativeControlObject::setLeft(TiObject* obj)
 
 PROP_SETGET(setMax)
 int NativeControlObject::setMax(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setMinDate)
+int NativeControlObject::setMinDate(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setMaxDate)
+int NativeControlObject::setMaxDate(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -428,6 +443,21 @@ int NativeControlObject::setWidth(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+PROP_SETGET(setType)
+int NativeControlObject::setType(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setRight)
+int NativeControlObject::setRight(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+// PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
+// PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
+
 const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
 {
     {N_PROP_ANCHOR_POINT, PROP_SETGET_FUNCTION(setAnchorPoint), NULL},
@@ -443,7 +473,9 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_LABEL, PROP_SETGET_FUNCTION(setLabel), NULL},
     {N_PROP_LEFT, PROP_SETGET_FUNCTION(setLeft), NULL},
     {N_PROP_MAX, PROP_SETGET_FUNCTION(setMax), NULL},
+    {N_PROP_MAXDATE, PROP_SETGET_FUNCTION(setMaxDate), NULL},
     {N_PROP_MIN, PROP_SETGET_FUNCTION(setMin), NULL},
+    {N_PROP_MINDATE, PROP_SETGET_FUNCTION(setMinDate), NULL},
     {N_PROP_OPACITY, PROP_SETGET_FUNCTION(setOpacity), NULL},
     {N_PROP_OPTIONS, PROP_SETGET_FUNCTION(setOptions), NULL},
     {N_PROP_SELECTED_INDEX, PROP_SETGET_FUNCTION(setSelectedIndex), NULL},
@@ -451,6 +483,7 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_TEXT_ALIGN, PROP_SETGET_FUNCTION(setTextAlign), NULL},
     {N_PROP_TITLE, PROP_SETGET_FUNCTION(setTitle), NULL},
     {N_PROP_TOP, PROP_SETGET_FUNCTION(setTop), NULL},
+    {N_PROP_TYPE, PROP_SETGET_FUNCTION(setType), NULL},
     {N_PROP_VALUE, PROP_SETGET_FUNCTION(setValue), NULL},
     {N_PROP_VISIBLE, PROP_SETGET_FUNCTION(setVisible), PROP_SETGET_FUNCTION(getVisible)},
     {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), NULL}
@@ -480,18 +513,17 @@ int NativeControlObject::getPropertyValue(size_t propertyNumber, TiObject* obj)
 
 int NativeControlObject::getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a)
 {
-    Handle<Value> value = obj->getValue();
-    if ((value.IsEmpty()) || (!value->IsString()))
+    QString qcolorString;
+    int error = getString(obj, qcolorString);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    if (!QColor::isValidColor(qcolorString))
     {
         return NATIVE_ERROR_INVALID_ARG;
     }
-    Handle<String> v8color = Handle<String>::Cast(value);
-    String::Utf8Value v8colorString(v8color);
-    if (!QColor::isValidColor(*v8colorString))
-    {
-        return NATIVE_ERROR_INVALID_ARG;
-    }
-    QColor qcolor(*v8colorString);
+    QColor qcolor(qcolorString);
     qreal qr, qg, qb, qa;
     qcolor.getRgbF(&qr, &qg, &qb, &qa);
     *r = qr;
@@ -516,9 +548,13 @@ int NativeControlObject::getBoolean(TiObject* obj, bool* value)
 int NativeControlObject::getString(TiObject* obj, QString& str)
 {
     Handle<Value> value = obj->getValue();
-    if ((value.IsEmpty()) || (!value->IsString()))
+    if (value.IsEmpty())
     {
         return NATIVE_ERROR_INVALID_ARG;
+    }
+    if (!value->IsString())
+    {
+        value = obj->getValue()->ToString();
     }
     Handle<String> v8string = Handle<String>::Cast(value);
     String::Utf8Value v8UtfString(v8string);

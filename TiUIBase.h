@@ -9,12 +9,9 @@
 #define TIUIBASE_H_
 
 #include "TiObject.h"
+#include <vector>
 
-#ifndef _WIN32
-#include <bb/cascades/Application>
-#include <bb/cascades/QmlDocument>
-#include <bb/cascades/Control>
-#endif
+using namespace std;
 
 class TiCascadesApp;
 
@@ -28,32 +25,27 @@ class TiUIBase : public TiObject
 public:
     virtual void setParametersFromObject(Local<Object> obj);
     virtual bool isUIObject() const;
-    virtual NativeObjectFactory* getNativeObjectFactory() const;
-    virtual NativeObject* getNativeObject() const;
     virtual void setTiMappingProperties(const TiProperty* props, int propertyCount);
 
 protected:
-    TiUIBase(NativeObjectFactory* nativeObjectFactory, const char* name);
+    TiUIBase(const char* name);
     TiUIBase();
     virtual ~TiUIBase();
-    virtual void onStartMessagePump();
     virtual bool canAddMembers() const;
-    virtual void setNativeObject(NativeObject* nativeObject);
     virtual void onCreateStaticMembers();
     virtual void onAddEventListener(const char* eventName, Handle<Function> eventFunction);
     virtual void onRemoveEventListener(const char* eventName, Handle<Function> eventFunction);
     Persistent<Object> createConfig_;
+    vector<ObjectEntry> childControls_;
 
 private:
     static VALUE_MODIFY _valueModify(int propertyNumber, TiObject* value, void* context);
     static Handle<Value> _add(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _addEventListener(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _getChildren(void* userContext);
     static Handle<Value> _hide(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _removeEventListener(void* userContext, TiObject* caller, const Arguments& args);
-
-    // fields
-    NativeObject* nativeObject_;
-    NativeObjectFactory* nativeObjectFactory_;
+    static Handle<Value> _show(void* userContext, TiObject* caller, const Arguments& args);
 };
 
 #endif /* TIUIBASE_H_ */

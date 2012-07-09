@@ -6,6 +6,9 @@
  */
 
 #include "NativeAbstractTextControlObject.h"
+
+#include "NativeLoggerObject.h"
+#include "NativeMessageStrings.h"
 #include "TiConstants.h"
 #include <bb/cascades/controls/abstracttextcontrol.h>
 #include <QMap>
@@ -90,7 +93,7 @@ int NativeAbstractTextControlObject::setTextAlign(TiObject* obj)
         textControl_->textStyle()->setAlignment(bb::cascades::TextAlignment::ForceRight);
         break;
     default:
-        Ti_DEBUG("Unknown value received:  ", value);
+        N_DEBUG(Native::Msg::Unknown_value_received << ": " << value);
         break;
     }
 
@@ -123,7 +126,7 @@ int NativeAbstractTextControlObject::setFont(TiObject* obj)
             }
             else
             {
-                Ti_DEBUG("Failed to convert font size to float with value: ", it.value());
+                N_DEBUG(Native::Msg::Failed_to_convert_font_size_to_float_with_value << ": " << it.value());
             }
         }
         else if (it.key().compare(FONT_STYLE) == 0)
@@ -138,7 +141,7 @@ int NativeAbstractTextControlObject::setFont(TiObject* obj)
             }
             else
             {
-                Ti_DEBUG("Unknown value received: ", it.value());
+                N_DEBUG(Native::Msg::Unknown_value_received << ": " << it.value());
             }
         }
         else if (it.key().compare(FONT_WEIGHT) == 0)
@@ -153,12 +156,12 @@ int NativeAbstractTextControlObject::setFont(TiObject* obj)
             }
             else
             {
-                Ti_DEBUG("Unknown value received: ", it.value());
+                N_DEBUG(Native::Msg::Unknown_value_received << ": " << it.value());
             }
         }
         else
         {
-            Ti_DEBUG("Unknown key:value received: ", it.key(), it.value());
+            N_DEBUG(Native::Msg::Unknown_key_value_received << ": " << it.key() << ":" << it.value());
         }
     }
 
