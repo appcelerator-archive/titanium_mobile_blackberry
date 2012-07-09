@@ -130,6 +130,7 @@ protected:
     virtual void onSetGetPropertyCallback(Handle<ObjectTemplate>* objTemplate);
     virtual void onSetFunctionCallback(Handle<ObjectTemplate>* objTemplate);
     virtual bool userCanAddMember(const char* propertyName) const;
+    /* Override onSetProperty to be notified when a property is set */
     virtual void onSetProperty(const char* propertyName, Local<Value> value);
     virtual void onStartMessagePump();
     virtual VALUE_MODIFY onValueChange(Handle<Value> oldValue, Handle<Value> newValue);
