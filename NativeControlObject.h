@@ -66,6 +66,7 @@ public:
     static int getPoint(TiObject* obj, float* x, float* y);
     //obtain java script dictionary object and keep it in the multimap
     static int getDictionaryData(TiObject* obj, QVector<QPair<QString, QString> >& dictionary);
+    static int getDateTime(TiObject* obj, QDateTime& dt);
 
 protected:
     NativeControlObject();

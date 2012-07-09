@@ -7,7 +7,7 @@
 
 #include "NativeDateTimePickerObject.h"
 
-#include "ConversionHelper.h"
+#include "NativeControlObject.h"
 #include "NativeLoggerObject.h"
 #include "NativeMessageStrings.h"
 #include "TiConstants.h"
@@ -53,46 +53,36 @@ int NativeDateTimePickerObject::initialize(TiEventContainerFactory* containerFac
 
 int NativeDateTimePickerObject::setValue(TiObject* obj)
 {
-    Handle<Value> value = obj->getValue();
-    if ((value.IsEmpty()) || (!value->IsDate()))
-    {
-        return NATIVE_ERROR_INVALID_ARG;
-    }
-
     QDateTime dateTime;
-    ConversionHelper::V8ToNative::retrieveDate(value, dateTime);
-
+    int error = NativeControlObject::getDateTime(obj, dateTime);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
     dateTimePicker_->setValue(dateTime);
-
     return NATIVE_ERROR_OK;
 }
 
 int NativeDateTimePickerObject::setMinDate(TiObject* obj)
 {
-    Handle<Value> value = obj->getValue();
-    if ((value.IsEmpty()) || (!value->IsDate()))
-    {
-        return NATIVE_ERROR_INVALID_ARG;
-    }
-
     QDateTime dateTime;
-    ConversionHelper::V8ToNative::retrieveDate(value, dateTime);
-
+    int error = NativeControlObject::getDateTime(obj, dateTime);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
     dateTimePicker_->setMinimum(dateTime);
-
     return NATIVE_ERROR_OK;
 }
 
 int NativeDateTimePickerObject::setMaxDate(TiObject* obj)
 {
-    Handle<Value> value = obj->getValue();
-    if ((value.IsEmpty()) || (!value->IsDate()))
-    {
-        return NATIVE_ERROR_INVALID_ARG;
-    }
-
     QDateTime dateTime;
-    ConversionHelper::V8ToNative::retrieveDate(value, dateTime);
+    int error = NativeControlObject::getDateTime(obj, dateTime);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
 
     dateTimePicker_->setMaximum(dateTime);
     return NATIVE_ERROR_OK;

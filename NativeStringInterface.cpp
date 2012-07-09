@@ -180,7 +180,7 @@ Handle<Value> NativeStringInterface::formatDate(const Arguments& args)
     // TODO: Revisit format part when R6 available
     if (args.Length() < 1 || !args[0]->IsDate())
     {
-        ThrowException(String::New(Native::Msg::Expected_argument_of_type_date));
+        ThrowException(String::New(Native::Msg::Expected_argument_of_type_Date));
         return Undefined();
     }
 
@@ -252,7 +252,7 @@ Handle<Value> NativeStringInterface::formatTime(const Arguments& args)
     // TODO: Revisit format part when R6 available
     if (args.Length() < 1 || !args[0]->IsDate())
     {
-        ThrowException(String::New(Native::Msg::Expected_argument_of_type_date));
+        ThrowException(String::New(Native::Msg::Expected_argument_of_type_Date));
         return Undefined();
     }
 
