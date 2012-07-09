@@ -30,7 +30,7 @@ TiPropertyMapObject* TiPropertyMapObject::addProperty(TiObject* parent, const ch
 }
 
 TiPropertyMapObject* TiPropertyMapObject::addProperty(TiObject* parent, const char* name, int propertyNumber,
-        GET_PROPERTY_CALLBACK cb, void* context)
+        GET_PROPERTY_VALUE_CALLBACK cb, void* context)
 {
     TiPropertyMapObject* object = new TiPropertyMapObject(name);
     object->propertyNumber_ = propertyNumber;

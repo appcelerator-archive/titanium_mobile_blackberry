@@ -11,7 +11,7 @@
 #include "TiObject.h"
 
 typedef VALUE_MODIFY(*MODIFY_VALUE_CALLBACK)(int, TiObject*, void*);
-typedef Handle<Value>(*GET_PROPERTY_CALLBACK)(int, void*);
+typedef Handle<Value>(*GET_PROPERTY_VALUE_CALLBACK)(int, void*);
 
 /*
  * TiPropertyMapObject
@@ -26,7 +26,7 @@ public:
     static TiPropertyMapObject* addProperty(TiObject* parent, const char* name, int propertyNumber,
                                             MODIFY_VALUE_CALLBACK cb, void* context);
     static TiPropertyMapObject* addProperty(TiObject* parent, const char* name, int propertyNumber,
-                                            GET_PROPERTY_CALLBACK cb, void* context);
+                                            GET_PROPERTY_VALUE_CALLBACK cb, void* context);
     virtual Handle<Value> getValue() const;
 protected:
     virtual ~TiPropertyMapObject();
@@ -36,7 +36,7 @@ private:
     TiPropertyMapObject(const char* name);
     int propertyNumber_;
     MODIFY_VALUE_CALLBACK callback_;
-    GET_PROPERTY_CALLBACK getCallback_;
+    GET_PROPERTY_VALUE_CALLBACK getCallback_;
     void* context_;
 
 };
