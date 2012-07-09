@@ -8,8 +8,8 @@
 #include "TiUILabel.h"
 #include <string.h>
 
-TiUILabel::TiUILabel(NativeObjectFactory* nativeObjectFactory)
-    : TiUIBase(nativeObjectFactory, "")
+TiUILabel::TiUILabel()
+    : TiUIBase("")
 {
 }
 
@@ -19,7 +19,8 @@ TiUILabel::~TiUILabel()
 
 TiUIBase* TiUILabel::createLabel(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUILabel* obj = new TiUILabel(nativeObjectFactory);
+    TiUILabel* obj = new TiUILabel;
+    obj->setNativeObjectFactory(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }

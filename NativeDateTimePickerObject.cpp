@@ -8,6 +8,8 @@
 #include "NativeDateTimePickerObject.h"
 
 #include "ConversionHelper.h"
+#include "NativeLoggerObject.h"
+#include "NativeMessageStrings.h"
 #include "TiConstants.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
@@ -123,7 +125,7 @@ int NativeDateTimePickerObject::setType(TiObject* obj)
         dateTimePicker_->setMode(bb::cascades::DateTimePickerMode::Date);
         break;
     default:
-        Ti_DEBUG("Unknown value received:  ", value);
+        N_DEBUG(Native::Msg::Unknown_value_received << ": " << value);
         return NATIVE_ERROR_NOTSUPPORTED;
     }
 

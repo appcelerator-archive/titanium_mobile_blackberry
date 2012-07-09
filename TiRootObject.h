@@ -36,6 +36,7 @@ protected:
 
 private:
     TiRootObject();
+    void createStringMethods();
 
     static Handle<Value> _L(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _alert(void* userContext, TiObject* caller, const Arguments& args);

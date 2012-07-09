@@ -29,7 +29,7 @@ protected:
     virtual void onCreateStaticMembers();
 
 private:
-    TiUIWindow(NativeObjectFactory* objectFactory, const char* name);
+    TiUIWindow(const char* name);
     static Handle<Value> open_(void* userContext, TiObject* caller, const Arguments& args);
 };
 

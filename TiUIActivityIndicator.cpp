@@ -8,8 +8,8 @@
 #include "TiUIActivityIndicator.h"
 #include "TiGenericFunctionObject.h"
 
-TiUIActivityIndicator::TiUIActivityIndicator(NativeObjectFactory* nativeObjectFactory)
-    : TiUIBase(nativeObjectFactory, "")
+TiUIActivityIndicator::TiUIActivityIndicator()
+    : TiUIBase("")
 {
 }
 
@@ -19,7 +19,8 @@ TiUIActivityIndicator::~TiUIActivityIndicator()
 
 TiUIBase* TiUIActivityIndicator::createActivityIndicator(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUIActivityIndicator* obj = new TiUIActivityIndicator(nativeObjectFactory);
+    TiUIActivityIndicator* obj = new TiUIActivityIndicator;
+    obj->setNativeObjectFactory(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }

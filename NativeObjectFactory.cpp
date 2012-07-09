@@ -5,20 +5,23 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "TiCascadesApp.h"
 #include "NativeObjectFactory.h"
-#include "NativeContainerObject.h"
-#include "NativeLabelObject.h"
-#include "NativeButtonObject.h"
-#include "NativeDateTimePickerObject.h"
-#include "NativeSliderObject.h"
-#include "NativeProgressBarObject.h"
-#include "NativeTextFieldObject.h"
-#include "NativeImageViewObject.h"
-#include "NativeListViewObject.h"
+
 #include "NativeActivityIndicatorObject.h"
-#include "NativeToggleButtonObject.h"
+#include "NativeButtonObject.h"
+#include "NativeContainerObject.h"
+#include "NativeDateTimePickerObject.h"
 #include "NativeDropDownObject.h"
+#include "NativeImageViewObject.h"
+#include "NativeLabelObject.h"
+#include "NativeListViewObject.h"
+#include "NativeLoggerObject.h"
+#include "NativeProgressBarObject.h"
+#include "NativeSliderObject.h"
+#include "NativeStringInterface.h"
+#include "NativeTextFieldObject.h"
+#include "NativeToggleButtonObject.h"
+#include "TiCascadesApp.h"
 #include <bb/cascades/Container>
 
 using namespace bb::cascades;
@@ -54,6 +57,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
 
     case N_TYPE_LABEL:
         obj = NativeLabelObject::createLabel();
+        break;
+
+    case N_TYPE_LOGGER:
+        obj = &NativeLoggerObject::getInstance();
         break;
 
     case N_TYPE_BUTTON:
@@ -138,4 +145,9 @@ NativeObject* NativeObjectFactory::getRootContainer() const
         rootContainer_->addRef();
     }
     return rootContainer_;
+}
+
+const NativeStringInterface* NativeObjectFactory::getNativeStringInterface()
+{
+    return NativeStringInterface::instance();
 }

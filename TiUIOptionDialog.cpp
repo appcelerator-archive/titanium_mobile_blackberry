@@ -8,8 +8,8 @@
 #include "TiUIOptionDialog.h"
 #include "TiGenericFunctionObject.h"
 
-TiUIOptionDialog::TiUIOptionDialog(NativeObjectFactory* nativeObjectFactory)
-    : TiUIBase(nativeObjectFactory, "")
+TiUIOptionDialog::TiUIOptionDialog()
+    : TiUIBase("")
 {
 }
 
@@ -19,7 +19,8 @@ TiUIOptionDialog::~TiUIOptionDialog()
 
 TiUIOptionDialog* TiUIOptionDialog::createOptionDialog(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUIOptionDialog* obj = new TiUIOptionDialog(nativeObjectFactory);
+    TiUIOptionDialog* obj = new TiUIOptionDialog;
+    obj->setNativeObjectFactory(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }
