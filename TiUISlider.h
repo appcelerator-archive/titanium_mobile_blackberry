@@ -26,7 +26,7 @@ protected:
     virtual void initializeTiObject(TiObject* parentContext);
 
 private:
-    TiUISlider(NativeObjectFactory* nativeObjectFactory);
+    TiUISlider();
 };
 
 #endif /* TIUISLIDER_H_ */

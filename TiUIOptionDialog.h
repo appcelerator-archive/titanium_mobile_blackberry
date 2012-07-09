@@ -27,7 +27,7 @@ protected:
     virtual void onCreateStaticMembers();
 
 private:
-    explicit TiUIOptionDialog(NativeObjectFactory* nativeObjectFactory);
+    explicit TiUIOptionDialog();
     static Handle<Value> _show(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _hide(void* userContext, TiObject* caller, const Arguments& args);
     // Disable copy ctor & assignment operator

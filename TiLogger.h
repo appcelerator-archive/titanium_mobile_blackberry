@@ -18,7 +18,7 @@ class NativeObjectFactory;
 #define TI_TAGGED_LOG(tag, msg) \
     do { \
         stringstream ss; \
-        ss << tag " " << __PRETTY_FUNCTION__ << " Line " << __LINE__ << ": " << msg << "\n"; \
+        ss << tag " " << __PRETTY_FUNCTION__ << " Line " << __LINE__ << ": " << msg; \
         TiLogger::getInstance().log(ss.str()); \
     } while(0)
 

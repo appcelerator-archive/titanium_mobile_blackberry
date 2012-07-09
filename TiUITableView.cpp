@@ -11,8 +11,8 @@
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
 
-TiUITableView::TiUITableView(NativeObjectFactory* nativeObjectFactory)
-    : TiUIBase(nativeObjectFactory, "")
+TiUITableView::TiUITableView()
+    : TiUIBase("")
 {
 }
 
@@ -22,7 +22,8 @@ TiUITableView::~TiUITableView()
 
 TiUITableView* TiUITableView::createTableView(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUITableView* obj = new TiUITableView(nativeObjectFactory);
+    TiUITableView* obj = new TiUITableView;
+    obj->setNativeObjectFactory(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }

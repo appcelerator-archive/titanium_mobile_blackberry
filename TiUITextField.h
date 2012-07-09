@@ -28,7 +28,7 @@ protected:
     virtual void initializeTiObject(TiObject* parentContext);
 
 private:
-    TiUITextField(NativeObjectFactory* nativeObjectFactory);
+    TiUITextField();
 
     //This class is neither copy-constructible nor assignable
     TiUITextField(const TiUITextField& obj);

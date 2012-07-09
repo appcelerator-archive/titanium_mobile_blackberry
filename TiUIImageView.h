@@ -28,7 +28,7 @@ protected:
     virtual void initializeTiObject(TiObject* parentContext);
 
 private:
-    TiUIImageView(NativeObjectFactory* nativeObjectFactory);
+    TiUIImageView();
 };
 
 
