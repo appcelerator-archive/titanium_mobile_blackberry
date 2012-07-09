@@ -161,6 +161,7 @@ Handle<Value> TiObject::onFunctionCall(const Arguments& args)
 
 void TiObject::onCreateStaticMembers()
 {
+    /* Nothing to do in the base class */
 }
 
 const char* TiObject::getName() const
@@ -232,6 +233,7 @@ void TiObject::onSetFunctionCallback(Handle<ObjectTemplate>* objTemplate)
 
 void TiObject::onSetProperty(const char* propertyName, Local<Value> value)
 {
+    /* Nothing to do in the base class */
 }
 
 void TiObject::onStartMessagePump()

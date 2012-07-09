@@ -22,6 +22,7 @@ class NativeStringInterface
 {
 public:
     static const NativeStringInterface* instance();
+    static void deleteInstance();
 
     static v8::Handle<v8::Value> format(const v8::Arguments& args);
     static v8::Handle<v8::Value> formatCurrency(const v8::Arguments& args);
