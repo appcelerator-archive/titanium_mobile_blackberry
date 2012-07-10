@@ -34,7 +34,7 @@ private:
     static Handle<Value> addTab_(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> setActiveTab_(void* userContext, TiObject* caller, const Arguments& args);
 
-    explicit TiUITabGroup(NativeObjectFactory* objectFactory);
+    TiUITabGroup();
     //This class is neither copy-constructible nor assignable
     TiUITabGroup(const TiUITabGroup& obj);
     TiUITabGroup& operator=(const TiUITabGroup& obj);

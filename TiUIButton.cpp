@@ -7,8 +7,8 @@
 
 #include "TiUIButton.h"
 
-TiUIButton::TiUIButton(NativeObjectFactory* nativeObjectFactory)
-    : TiUIBase(nativeObjectFactory, "")
+TiUIButton::TiUIButton()
+    : TiUIBase("")
 {
 }
 
@@ -18,7 +18,8 @@ TiUIButton::~TiUIButton()
 
 TiUIBase* TiUIButton::createButton(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUIButton* obj = new TiUIButton(nativeObjectFactory);
+    TiUIButton* obj = new TiUIButton;
+    obj->setNativeObjectFactory(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }

@@ -7,8 +7,8 @@
 
 #include "TiUITab.h"
 
-TiUITab::TiUITab(NativeObjectFactory* nativeObjectFactory)
-    : TiUIBase(nativeObjectFactory, "")
+TiUITab::TiUITab()
+    : TiUIBase("")
 {
 }
 
@@ -18,7 +18,8 @@ TiUITab::~TiUITab()
 
 TiUIBase* TiUITab::createTab(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUITab* obj = new TiUITab(nativeObjectFactory);
+    TiUITab* obj = new TiUITab;
+    obj->setNativeObjectFactory(nativeObjectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }

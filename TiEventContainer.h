@@ -21,6 +21,7 @@ class TiEventContainer
 {
 public:
     virtual void addListener(TiEvent* listener) = 0;
+    virtual void removeListener(int id) = 0;
     virtual void fireEvent() = 0;
     virtual void setDataProperty(const char* propertyName, const char* value) = 0;
     virtual void setDataProperty(const char* propertyName, int value) = 0;

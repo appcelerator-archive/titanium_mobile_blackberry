@@ -36,8 +36,3 @@ int NativeLabelObject::initialize(TiEventContainerFactory*)
     // TODO: Set label layout here
     return NATIVE_ERROR_OK;
 }
-
-NAHANDLE NativeLabelObject::getNativeHandle() const
-{
-    return label_;
-}

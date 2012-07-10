@@ -7,9 +7,10 @@
 
 #include "TiUITabGroup.h"
 #include "TiGenericFunctionObject.h"
+#include "NativeMessageStrings.h"
 
-TiUITabGroup::TiUITabGroup(NativeObjectFactory* objectFactory)
-    : TiUIBase(objectFactory, "")
+TiUITabGroup::TiUITabGroup()
+    : TiUIBase("")
 {
 }
 
@@ -19,7 +20,8 @@ TiUITabGroup::~TiUITabGroup()
 
 TiUIBase* TiUITabGroup::createTabGroup(NativeObjectFactory* objectFactory)
 {
-    TiUITabGroup* obj = new TiUITabGroup(objectFactory);
+    TiUITabGroup* obj = new TiUITabGroup;
+    obj->setNativeObjectFactory(objectFactory);
     obj->initializeTiObject(NULL);
     return obj;
 }
@@ -56,7 +58,7 @@ Handle<Value> TiUITabGroup::open_(void* userContext, TiObject* caller, const Arg
 
 Handle<Value> TiUITabGroup::addTab_(void* userContext, TiObject* caller, const Arguments& args)
 {
-    TiUIBase::add_(userContext, caller, args);
+    TiUIBase::_add(userContext, caller, args);
     return Undefined();
 }
 
@@ -84,6 +86,10 @@ Handle<Value> TiUITabGroup::setActiveTab_(void* userContext, TiObject* caller, c
             NativeObject* childNO = uiObj->getNativeObject();
             no->setActiveTab(childNO);
             childNO->release();
+        }
+        else
+        {
+            ThrowException(String::New(Native::Msg::Expected_argument_of_type_object_or_external));
         }
     }
     no->release();

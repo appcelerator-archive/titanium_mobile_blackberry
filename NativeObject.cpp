@@ -22,6 +22,11 @@ int NativeObject::setPropertyValue(size_t propertyNumber, TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+int NativeObject::getPropertyValue(size_t propertyNumber, TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 int NativeObject::addChildNativeObject(NativeObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
@@ -78,6 +83,16 @@ bool NativeObject::isInitializationComplete() const
 }
 
 int NativeObject::setEventHandler(const char* eventName, TiEvent* event)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+int NativeObject::removeEventHandler(int eventId)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+int NativeObject::setVisibility(bool visible)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }

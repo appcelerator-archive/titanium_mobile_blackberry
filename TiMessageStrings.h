@@ -21,13 +21,10 @@ namespace Ti
 namespace Msg
 {
 
-TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_double, "Expected argument of type double");
-TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_integer, "Expected argument of type integer");
-TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_object_or_external, "Expected argument of type object or external");
-TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_string, "Expected argument of type string");
-TIMESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_unsigned_integer, "Expected argument of type unsigned integer");
-TIMESSAGESTRINGS_CONST_DEF(char*, INTERNAL__An_error_occurred_while_parsing_the_format_string, "INTERNAL: An error occurred while parsing the format string");
-
+TIMESSAGESTRINGS_CONST_DEF(char*, ERROR__Cannot_load_bootstrap_js, "ERROR: Cannot load bootstrap.js");
+TIMESSAGESTRINGS_CONST_DEF(char*, Include_file_not_found, "Include file not found");
+TIMESSAGESTRINGS_CONST_DEF(char*, INTERNAL__Global_String_symbol_is_not_an_object, "INTERNAL: Global String symbol is not an object");
+TIMESSAGESTRINGS_CONST_DEF(char*, INTERNAL__args0_is_not_a_number, "args[0] is not a number.");
 TIMESSAGESTRINGS_CONST_DEF(char*, Missing_argument, "Missing argument");
 TIMESSAGESTRINGS_CONST_DEF(char*, Too_many_arguments, "Too many arguments");
 

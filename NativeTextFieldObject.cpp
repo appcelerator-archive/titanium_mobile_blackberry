@@ -53,11 +53,6 @@ int NativeTextFieldObject::setHintText(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-NAHANDLE NativeTextFieldObject::getNativeHandle() const
-{
-    return textField_;
-}
-
 void NativeTextFieldObject::completeInitialization()
 {
     NativeControlObject::completeInitialization();

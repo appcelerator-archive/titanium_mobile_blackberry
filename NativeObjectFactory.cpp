@@ -5,21 +5,26 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "TiCascadesApp.h"
+#include "NativeObjectFactory.h"
+
 #include "NativeActivityIndicatorObject.h"
 #include "NativeButtonObject.h"
+#include "NativeDateTimePickerObject.h"
 #include "NativeDropDownObject.h"
 #include "NativeImageViewObject.h"
 #include "NativeLabelObject.h"
 #include "NativeListViewObject.h"
-#include "NativeObjectFactory.h"
+#include "NativeLoggerObject.h"
 #include "NativePageObject.h"
 #include "NativeProgressBarObject.h"
-#include "NativeSliderObject.h"
 #include "NativeTabObject.h"
 #include "NativeTabGroupObject.h"
+#include "NativeSliderObject.h"
+#include "NativeStringInterface.h"
 #include "NativeTextFieldObject.h"
 #include "NativeToggleButtonObject.h"
+#include "TiCascadesApp.h"
+
 #include <bb/cascades/Container>
 
 using namespace bb::cascades;
@@ -44,6 +49,8 @@ NativeObjectFactory::~NativeObjectFactory()
 
 NativeObject* NativeObjectFactory::createNativeObject(int type)
 {
+    /* The NativeObject instances created here live in their TiObject counterpart
+       The TiObject takes care of deleting them. */
     NativeObject* obj = NULL;
     switch (type)
     {
@@ -55,6 +62,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
 
     case N_TYPE_LABEL:
         obj = NativeLabelObject::createLabel();
+        break;
+
+    case N_TYPE_LOGGER:
+        obj = &NativeLoggerObject::getInstance();
         break;
 
     case N_TYPE_BUTTON:
@@ -100,6 +111,11 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
     case N_TYPE_TABGROUP:
         obj = NativeTabGroupObject::createTabGroup(this);
         break;
+
+    case N_TYPE_DATE_TIME_PICKER:
+        obj = NativeDateTimePickerObject::createDateTimePicker();
+        break;
+
     }
     if (obj != NULL)
     {
@@ -142,4 +158,9 @@ NativeObject* NativeObjectFactory::getRootContainer() const
         rootContainer_->addRef();
     }
     return rootContainer_;
+}
+
+const NativeStringInterface* NativeObjectFactory::getNativeStringInterface()
+{
+    return NativeStringInterface::instance();
 }

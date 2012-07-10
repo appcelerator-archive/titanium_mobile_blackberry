@@ -39,11 +39,6 @@ int NativeDropDownObject::initialize(TiEventContainerFactory* containerFactory)
     return NATIVE_ERROR_OK;
 }
 
-NAHANDLE NativeDropDownObject::getNativeHandle() const
-{
-    return dropdown_;
-}
-
 int NativeDropDownObject::setTitle(TiObject* obj)
 {
     QString title;

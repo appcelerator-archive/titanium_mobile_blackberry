@@ -46,6 +46,7 @@ public:
     ~ObjectEntry();
     const ObjectEntry& operator =(const ObjectEntry& entry);
     TiObject* getObject() const;
+    TiObject* operator ->() const;
 private:
     TiObject* obj_;
     void* userContext_;
@@ -116,6 +117,10 @@ public:
     virtual bool isUIObject() const;
     virtual void setTiMappingProperties(const TiProperty* prop, int propertyCount);
     virtual TiObject* getParentObject() const;
+    virtual NativeObjectFactory* getNativeObjectFactory() const;
+    virtual void setNativeObjectFactory(NativeObjectFactory* objectFactory);
+    virtual NativeObject* getNativeObject() const;
+    virtual void setupEvents();
 
 protected:
     virtual void initializeTiObject(TiObject* parentObject);
@@ -125,10 +130,13 @@ protected:
     virtual void onSetGetPropertyCallback(Handle<ObjectTemplate>* objTemplate);
     virtual void onSetFunctionCallback(Handle<ObjectTemplate>* objTemplate);
     virtual bool userCanAddMember(const char* propertyName) const;
+    /* Override onSetProperty to be notified when a property is set */
     virtual void onSetProperty(const char* propertyName, Local<Value> value);
     virtual void onStartMessagePump();
     virtual VALUE_MODIFY onValueChange(Handle<Value> oldValue, Handle<Value> newValue);
     virtual VALUE_MODIFY onChildValueChange(TiObject* childObject, Handle<Value> oldValue, Handle<Value> newValue);
+    virtual void setNativeObject(NativeObject* nativeObject);
+    virtual void onSetupEvents();
 
 private:
     static Handle<Value> propGetter_(Local<String> prop, const AccessorInfo& info);
@@ -140,6 +148,10 @@ private:
     bool isInitialized_;
     TiObject* parentObject_;
     map<string, ObjectEntry> childObjectMap_;
+    NativeObject* nativeObject_;
+    NativeObjectFactory* nativeObjectFactory_;
+    bool areEventsInitialized_;
+
 #ifdef _TI_DEBUG_
     const char* cstrName_;
     string debugMembers_;

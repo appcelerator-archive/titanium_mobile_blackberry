@@ -34,7 +34,6 @@ public:
     static NativeToggleButtonObject* createToggleButton();
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
-    virtual NAHANDLE getNativeHandle() const;
     virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual void completeInitialization();
     virtual int setValue(TiObject* value);

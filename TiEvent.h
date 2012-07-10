@@ -21,10 +21,13 @@ class TiEvent : public TiBase
 {
 public:
     virtual void fire(void* fireDataObject) = 0;
+    virtual void setId(int id);
+    virtual int getId() const;
 
 protected:
     virtual ~TiEvent();
     TiEvent();
+    int id_;
 };
 
 #endif /* TIEVENT_H_ */

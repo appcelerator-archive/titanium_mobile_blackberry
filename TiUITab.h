@@ -28,7 +28,7 @@ protected:
     virtual void initializeTiObject(TiObject* parentContext);
 
 private:
-    explicit TiUITab(NativeObjectFactory* nativeObjectFactory);
+    TiUITab();
 
     //This class is neither copy-constructible nor assignable
     TiUITab(const TiUITab& obj);

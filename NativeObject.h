@@ -10,10 +10,13 @@
 
 typedef void* NAHANDLE;
 
-#define NATIVE_ERROR_OK                         0
-#define NATIVE_ERROR_NOTSUPPORTED               1
-#define NATIVE_ERROR_OUTOFMEMORY                2
-#define NATIVE_ERROR_INVALID_ARG                3
+enum NATIVE_ERROR
+{
+    NATIVE_ERROR_OK
+    , NATIVE_ERROR_NOTSUPPORTED
+    , NATIVE_ERROR_OUTOFMEMORY
+    , NATIVE_ERROR_INVALID_ARG
+};
 
 enum NATIVE_TYPE
 {
@@ -21,10 +24,12 @@ enum NATIVE_TYPE
     , N_TYPE_ACTIVITYINDICATOR
     , N_TYPE_BUTTON
     , N_TYPE_CONTAINER
+    , N_TYPE_DATE_TIME_PICKER
     , N_TYPE_DROPDOWN
     , N_TYPE_IMAGEVIEW
     , N_TYPE_LABEL
     , N_TYPE_LIST_VIEW
+    , N_TYPE_LOGGER
     , N_TYPE_OPTION
     , N_TYPE_PROGRESSBAR
     , N_TYPE_SLIDER
@@ -33,7 +38,6 @@ enum NATIVE_TYPE
     , N_TYPE_TEXT_FIELD
     , N_TYPE_TOGGLEBUTTON
     , N_TYPE_WINDOW
-
 };
 
 enum NATIVE_PROP
@@ -67,6 +71,7 @@ enum NATIVE_PROP
     , N_PROP_COLOR
     , N_PROP_DATA
     , N_PROP_ELLIPSIZE
+    , N_PROP_ENABLED
     , N_PROP_FOCUSABLE
     , N_PROP_FONT
     , N_PROP_HEIGHT
@@ -80,7 +85,9 @@ enum NATIVE_PROP
     , N_PROP_LAYOUT
     , N_PROP_LEFT
     , N_PROP_MAX
+    , N_PROP_MAXDATE
     , N_PROP_MIN
+    , N_PROP_MINDATE
     , N_PROP_MINIMUM_FONT_SIZE
     , N_PROP_OPACITY
     , N_PROP_OPTIONS
@@ -97,6 +104,7 @@ enum NATIVE_PROP
     , N_PROP_TOP
     , N_PROP_TOUCH_ENABLED
     , N_PROP_TRANSFORM
+    , N_PROP_TYPE
     , N_PROP_VALUE
     , N_PROP_VISIBLE
     , N_PROP_WIDTH
@@ -107,12 +115,6 @@ enum NATIVE_PROP
     /* This MUST be the last element */
     , N_PROP_LAST
 };
-
-#define Ti_DEBUG(msg, ...) \
-    do { \
-        qDebug() << __PRETTY_FUNCTION__; \
-        qDebug() << msg << __VA_ARGS__;  \
-    } while (0)
 
 
 #include "TiBase.h"
@@ -140,6 +142,7 @@ class NativeObject :
 public:
     virtual int getObjectType() const = 0;
     virtual int setPropertyValue(std::size_t propertyNumber, TiObject* obj);
+    virtual int getPropertyValue(std::size_t propertyNumber, TiObject* obj);
     virtual int addChildNativeObject(NativeObject* obj);
     virtual NAHANDLE getNativeHandle() const;
     virtual int open();
@@ -151,6 +154,8 @@ public:
     virtual int scrollToIndex(int index);
     virtual int setActiveTab(NativeObject* tab);
     virtual int setActiveTab(int index);
+    virtual int removeEventHandler(int eventId);
+    virtual int setVisibility(bool visible);
 
 protected:
     NativeObject();
