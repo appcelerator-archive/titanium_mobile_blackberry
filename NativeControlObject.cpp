@@ -16,6 +16,16 @@
 #include <bb/cascades/Color>
 #include <bb/cascades/Container>
 #include <qtgui/QColor>
+#include <bb/device/DisplayManager>
+#include <bb/device/Display>
+
+#define INCHES_TO_MM_MUL				25.4f
+#define CM_TO_MM_MUL					10.0f
+
+static int g_width = 0;
+static int g_height = 0;
+static float g_physicalWidth = 0.0f;
+static float g_physicalHeight = 0.0f;
 
 #define PROP_SETGET_FUNCTION(NAME)      prop_##NAME
 
@@ -115,6 +125,26 @@ NativeControlObject::NativeControlObject() :
     top_(0),
     nextEventId_(1)
 {
+	if((g_width<=0) || (g_height<=0))
+	{
+		bb::device::DisplayManager displayManager;
+		bb::device::Display& display = displayManager.getDisplay(displayManager.primaryDisplayId());
+		QSize size = display.pixelSize();
+		g_width = size.width();
+		g_height = size.height();
+		QSizeF phySize = display.physicalSize();
+		// Get size of screen if mm
+		g_physicalWidth = (float)phySize.width();
+		g_physicalHeight = (float)phySize.height();
+		// NOTE: the previous functions do not work on the simulator
+		if((g_physicalWidth == 0.0f) || (g_physicalHeight == 0.0f))
+		{
+			// For now, set the size to the pixel dimentions to preserve
+			// aspect ratio.
+			g_physicalWidth=(float)g_width;
+			g_physicalHeight=(float)g_height;
+		}
+	}
 }
 
 NativeControlObject::~NativeControlObject()
@@ -269,16 +299,13 @@ PROP_SETGET(setHeight)
 int NativeControlObject::setHeight(TiObject* obj)
 {
     float height;
-    int error = getFloat(obj, &height);
+    // TODO: get the current width of the parent control
+    float max = g_height; // TODO: Remove this
+    int error = getMeasurementInfo(obj, max,
+    		(float)g_height / g_physicalHeight, &height);
     if (error != NATIVE_ERROR_OK)
     {
-        Handle<String> v8str = obj->getValue()->ToString();
-        if (v8str.IsEmpty())
-        {
-            return NATIVE_ERROR_INVALID_ARG;
-        }
-        // TODO: parse height string, e.g., height='100%' height='22px' etc...
-        return NATIVE_ERROR_INVALID_ARG;
+        return error;
     }
     container_->setMaxHeight(height);
     container_->setMinHeight(height);
@@ -432,8 +459,9 @@ int NativeControlObject::setWidth(TiObject* obj)
 {
     float width;
     // TODO: get the current width of the parent control
-    float max = 1024.0f; // TODO: Remove this
-    int error = getMeasurementInfo(obj, max, &width);
+    float max = g_width; // TODO: Remove this
+    int error = getMeasurementInfo(obj, max,
+    		(float)g_width / g_physicalWidth, &width);
     if (error != NATIVE_ERROR_OK)
     {
         return error;
@@ -704,7 +732,7 @@ int NativeControlObject::getDictionaryData(TiObject* obj, QVector<QPair<QString,
     return NATIVE_ERROR_OK;
 }
 
-int NativeControlObject::getMeasurementInfo(TiObject* obj, float max,
+int NativeControlObject::getMeasurementInfo(TiObject* obj, float maxPixels, float dpMM,
         float* calculatedValue)
 {
     UnitType unitType = UnitTypeDefault;
@@ -720,9 +748,9 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float max,
         {
             value = 0.0f;
         }
-        else if (value > max)
+        else if (value > maxPixels)
         {
-            value = max;
+            value = maxPixels;
         }
         *calculatedValue = value;
         return NATIVE_ERROR_OK;
@@ -749,9 +777,9 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float max,
         {
             numberPart = 0.0f;
         }
-        else if (numberPart > max)
+        else if (numberPart > maxPixels)
         {
-            numberPart = max;
+            numberPart = maxPixels;
         }
         *calculatedValue = numberPart;
         break;
@@ -764,26 +792,38 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float max,
         {
             numberPart = 100.0f;
         }
-        if (max <= 0.0f)
+        if (maxPixels <= 0.0f)
         {
             *calculatedValue = 0;
         }
         else
         {
-            *calculatedValue = max * numberPart / 100;
+            *calculatedValue = maxPixels * numberPart / 100;
         }
         break;
     case UnitTypeDIP:
         // TODO: complete (NOTE: DPI is required)
         break;
     case UnitTypeInches:
-        // TODO: complete (NOTE: DPI is required)
+        if (numberPart < 0.0f)
+        {
+            numberPart = 0.0f;
+        }
+        *calculatedValue = dpMM * numberPart * INCHES_TO_MM_MUL;
         break;
     case UnitTypeMM:
-        // TODO: complete (NOTE: DPI is required)
+        if (numberPart < 0.0f)
+        {
+            numberPart = 0.0f;
+        }
+        *calculatedValue = dpMM * numberPart;
         break;
     case UnitTypeCM:
-        // TODO: complete (NOTE: DPI is required)
+        if (numberPart < 0.0f)
+        {
+            numberPart = 0.0f;
+        }
+        *calculatedValue = dpMM * numberPart * CM_TO_MM_MUL;
         break;
     case UnitTypePT:
         // TODO: complete (NOTE: DPI is required)
