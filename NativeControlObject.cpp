@@ -19,8 +19,9 @@
 #include <bb/device/DisplayManager>
 #include <bb/device/Display>
 
-#define INCHES_TO_MM_MUL				25.4f
-#define CM_TO_MM_MUL					10.0f
+#define INCHES_TO_MM_MUL                25.4f
+#define CM_TO_MM_MUL                    10.0f
+#define PT_TO_MM_MUL                    (INCHES_TO_MM_MUL / 72.0f)
 
 static int g_width = 0;
 static int g_height = 0;
@@ -125,26 +126,26 @@ NativeControlObject::NativeControlObject() :
     top_(0),
     nextEventId_(1)
 {
-	if((g_width<=0) || (g_height<=0))
-	{
-		bb::device::DisplayManager displayManager;
-		bb::device::Display& display = displayManager.getDisplay(displayManager.primaryDisplayId());
-		QSize size = display.pixelSize();
-		g_width = size.width();
-		g_height = size.height();
-		QSizeF phySize = display.physicalSize();
-		// Get size of screen if mm
-		g_physicalWidth = (float)phySize.width();
-		g_physicalHeight = (float)phySize.height();
-		// NOTE: the previous functions do not work on the simulator
-		if((g_physicalWidth == 0.0f) || (g_physicalHeight == 0.0f))
-		{
-			// For now, set the size to the pixel dimentions to preserve
-			// aspect ratio.
-			g_physicalWidth=(float)g_width;
-			g_physicalHeight=(float)g_height;
-		}
-	}
+    if ((g_width <= 0) || (g_height <= 0))
+    {
+        bb::device::DisplayManager displayManager;
+        bb::device::Display& display = displayManager.getDisplay(displayManager.primaryDisplayId());
+        QSize size = display.pixelSize();
+        g_width = size.width();
+        g_height = size.height();
+        QSizeF phySize = display.physicalSize();
+        // Get size of screen if mm
+        g_physicalWidth = (float)phySize.width();
+        g_physicalHeight = (float)phySize.height();
+        // NOTE: the previous functions do not work on the simulator
+        if ((g_physicalWidth == 0.0f) || (g_physicalHeight == 0.0f))
+        {
+            // For now, set the size to the pixel dimentions to preserve
+            // aspect ratio.
+            g_physicalWidth = (float)g_width;
+            g_physicalHeight = (float)g_height;
+        }
+    }
 }
 
 NativeControlObject::~NativeControlObject()
@@ -302,7 +303,7 @@ int NativeControlObject::setHeight(TiObject* obj)
     // TODO: get the current width of the parent control
     float max = g_height; // TODO: Remove this
     int error = getMeasurementInfo(obj, max,
-    		(float)g_height / g_physicalHeight, &height);
+                                   (float)g_height / g_physicalHeight, &height);
     if (error != NATIVE_ERROR_OK)
     {
         return error;
@@ -461,7 +462,7 @@ int NativeControlObject::setWidth(TiObject* obj)
     // TODO: get the current width of the parent control
     float max = g_width; // TODO: Remove this
     int error = getMeasurementInfo(obj, max,
-    		(float)g_width / g_physicalWidth, &width);
+                                   (float)g_width / g_physicalWidth, &width);
     if (error != NATIVE_ERROR_OK)
     {
         return error;
@@ -763,6 +764,7 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float maxPixels, floa
         if (measurement.endsWith(QString(g_unitTypes[i].postfix)))
         {
             unitType = g_unitTypes[i].unitType;
+            break;
         }
     }
     if (unitType == UnitTypeDefault)
@@ -826,7 +828,11 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float maxPixels, floa
         *calculatedValue = dpMM * numberPart * CM_TO_MM_MUL;
         break;
     case UnitTypePT:
-        // TODO: complete (NOTE: DPI is required)
+        if (numberPart < 0.0f)
+        {
+            numberPart = 0.0f;
+        }
+        *calculatedValue = dpMM * numberPart * PT_TO_MM_MUL;
         break;
     default:
         return NATIVE_ERROR_NOTSUPPORTED;
