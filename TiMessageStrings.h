@@ -26,6 +26,7 @@ TIMESSAGESTRINGS_CONST_DEF(char*, Include_file_not_found, "Include file not foun
 TIMESSAGESTRINGS_CONST_DEF(char*, INTERNAL__Global_String_symbol_is_not_an_object, "INTERNAL: Global String symbol is not an object");
 TIMESSAGESTRINGS_CONST_DEF(char*, INTERNAL__args0_is_not_a_number, "args[0] is not a number.");
 TIMESSAGESTRINGS_CONST_DEF(char*, Missing_argument, "Missing argument");
+TIMESSAGESTRINGS_CONST_DEF(char*, No_such_native_module, "No such native module");
 TIMESSAGESTRINGS_CONST_DEF(char*, Too_many_arguments, "Too many arguments");
 
 }

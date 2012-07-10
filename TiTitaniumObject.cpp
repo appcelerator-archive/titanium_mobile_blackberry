@@ -81,7 +81,7 @@ Handle<Value> TiTitaniumObject::_include(void*, TiObject*, const Arguments& args
 
     if (!ifs)
     {
-        return ThrowException(String::Concat(String::New(fullPath.c_str()), String::New(Ti::Msg::Include_file_not_found)));
+        return ThrowException(String::Concat(String::New((fullPath + " ").c_str()), String::New(Ti::Msg::Include_file_not_found)));
     }
 
     string buffer;
@@ -99,9 +99,17 @@ Handle<Value> TiTitaniumObject::_include(void*, TiObject*, const Arguments& args
     {
         Handle<Message> msg = tryCatch.Message();
         stringstream ss;
-        ss << filename << " line " << msg->GetLineNumber() << ": ";
-        Local<String> exceptionString = String::Concat(String::New(ss.str().c_str()), tryCatch.Exception()->ToString());
-        return ThrowException(exceptionString);
+        ss << filename << " line ";
+        if (msg.IsEmpty())
+        {
+            ss << "?";
+        }
+        else
+        {
+            ss << msg->GetLineNumber();
+        }
+        ss << ": " << *String::Utf8Value(tryCatch.Exception());
+        return ThrowException(String::New(ss.str().c_str()));
     }
 
     // Reset relative path

@@ -13,7 +13,6 @@
 #include "TiLogger.h"
 #include "TiTitaniumObject.h"
 #include "TiV8EventContainerFactory.h"
-#include <fstream>
 
 #include <fstream>
 #include <sstream>
@@ -126,17 +125,20 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     if (bootstrapResult.IsEmpty())
     {
         Local<Value> exception = tryCatch.Exception();
-        if (exception->IsString())
+        // FIXME: need a way to prevent double "filename + line" output
+        Handle<Message> msg = tryCatch.Message();
+        stringstream ss;
+        ss << bootstrapFilename << " line ";
+        if (msg.IsEmpty())
         {
-            TiLogger::getInstance().log(*String::Utf8Value(exception));
+            ss << "?";
         }
         else
         {
-            Handle<Message> msg = tryCatch.Message();
-            stringstream ss;
-            ss << bootstrapFilename << " line " << msg->GetLineNumber() << ": " << *String::Utf8Value(exception);
-            TiLogger::getInstance().log(ss.str());
+            ss << msg->GetLineNumber();
         }
+        ss << ": " << *String::Utf8Value(exception);
+        TiLogger::getInstance().log(ss.str());
         return -1;
     }
 
@@ -152,17 +154,20 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     if (result.IsEmpty())
     {
         Local<Value> exception = tryCatch.Exception();
-        if (exception->IsString())
+        // FIXME: need a way to prevent double "filename + line" output
+        Handle<Message> msg = tryCatch.Message();
+        stringstream ss;
+        ss << filename << " line ";
+        if (msg.IsEmpty())
         {
-            TiLogger::getInstance().log(*String::Utf8Value(exception));
+            ss << "?";
         }
         else
         {
-            Handle<Message> msg = tryCatch.Message();
-            stringstream ss;
-            ss << filename << " line " << msg->GetLineNumber() << ": " << *String::Utf8Value(exception);
-            TiLogger::getInstance().log(ss.str());
+            ss << msg->GetLineNumber();
         }
+        ss << ": " << *String::Utf8Value(exception);
+        TiLogger::getInstance().log(ss.str());
         return -1;
     }
     onStartMessagePump();
@@ -222,8 +227,8 @@ Handle<Value> TiRootObject::_require(void*, TiObject*, const Arguments& args)
         return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
 
-    Handle<String> v8Filename = args[0]->ToString();
-    string id = *String::Utf8Value(v8Filename);
+    Handle<String> v8Id = args[0]->ToString();
+    string id = *String::Utf8Value(v8Id);
 
     // check if cached
     static map<string, Persistent<Value> > cache;
@@ -241,7 +246,7 @@ Handle<Value> TiRootObject::_require(void*, TiObject*, const Arguments& args)
         ifstream ifs((baseFolder + filename).c_str());
         if (!ifs)
         {
-            Local<Value> taggedMessage = String::Concat(String::New("No such native module "), v8Filename);
+            Local<Value> taggedMessage = String::New((string(Ti::Msg::No_such_native_module) + " " + id).c_str());
             return ThrowException(taggedMessage);
         }
         getline(ifs, javascript, string::traits_type::to_char_type(string::traits_type::eof()));
@@ -258,7 +263,7 @@ Handle<Value> TiRootObject::_require(void*, TiObject*, const Arguments& args)
     // TODO: set the correct context
 
     TryCatch tryCatch;
-    Handle<Script> compiledScript = Script::Compile(String::New(javascript.c_str()), v8Filename);
+    Handle<Script> compiledScript = Script::Compile(String::New(javascript.c_str()), String::New(filename.c_str()));
     if (compiledScript.IsEmpty())
     {
         return ThrowException(tryCatch.Exception());
@@ -267,11 +272,18 @@ Handle<Value> TiRootObject::_require(void*, TiObject*, const Arguments& args)
     if (result.IsEmpty())
     {
         Handle<Message> msg = tryCatch.Message();
-        int lineNumber = msg->GetLineNumber() - 1; // -1 for the wrapper
         stringstream ss;
-        ss << filename << " line " << lineNumber << ": ";
-        Local<String> exceptionString = String::Concat(String::New(ss.str().c_str()), tryCatch.Exception()->ToString());
-        return ThrowException(exceptionString);
+        ss << filename << " line ";
+        if (msg.IsEmpty())
+        {
+            ss << "?";
+        }
+        else
+        {
+            ss << msg->GetLineNumber() - 1; // -1 for the wrapper
+        }
+        ss << ": " << *String::Utf8Value(tryCatch.Exception());
+        return ThrowException(String::New(ss.str().c_str()));
     }
 
     // cache result
