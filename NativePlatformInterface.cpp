@@ -9,6 +9,10 @@
 #include "TiConstants.h"
 #include <vector>
 
+#include <bps/deviceinfo.h>
+
+#pragma GCC diagnostic ignored "-Wunused-function"
+
 #define PROP_GETTING_FUNCTION(NAME)     prop_##NAME
 
 #define PROP_GETTER(NAME)               static Handle<Value> prop_##NAME(const NativePlatformInterface* instance) \
@@ -97,8 +101,20 @@ Handle<Value> NativePlatformInterface::getBatteryState()
 PROP_GETTER(getDisplayCaps)
 Handle<Value> NativePlatformInterface::getDisplayCaps()
 {
-    // TODO: Finish this when will be available in SDK
-    return Undefined();
+    HandleScope scope;
+    Local<Object> dCapsObject = Object::New();
+    // TODO: Implement way to retrieve correct values for properties.
+    // Add getters/setters for newly created object.
+    // Hardcoded values for BB10 Dev Alpha
+    dCapsObject->Set(String::NewSymbol("density"), String::New("high"));
+    dCapsObject->Set(String::NewSymbol("dpi"), Number::New(356));
+    dCapsObject->Set(String::NewSymbol("logicalDensityFactor"), Number::New(1.0));
+    dCapsObject->Set(String::NewSymbol("platformHeight"), Number::New(1280)); // TODO: UI orientation-related
+    dCapsObject->Set(String::NewSymbol("platformWidth"), Number::New(768)); // TODO: UI orientation-related
+    dCapsObject->Set(String::NewSymbol("xdpi"), Number::New(299));
+    dCapsObject->Set(String::NewSymbol("ydpi"), Number::New(256));
+
+    return scope.Close(dCapsObject);
 }
 
 PROP_GETTER(getId)
@@ -178,7 +194,13 @@ Handle<Value> NativePlatformInterface::getUsername()
 PROP_GETTER(getVersion)
 Handle<Value> NativePlatformInterface::getVersion()
 {
-    // TODO: Finish this when will be available in SDK
+    deviceinfo_data_t deviceInfo;
+    if (BPS_SUCCESS == deviceinfo_get_data(&deviceInfo))
+    {
+        string deviceOsVersion(deviceInfo.scm_bundle);
+        deviceinfo_free_data(&deviceInfo);
+        return String::New(deviceOsVersion.c_str());
+    }
     return Undefined();
 }
 
@@ -203,7 +225,7 @@ static vector<NATIVE_PROPGET_CALLBACK> initFunctionMap()
     vect[N_PLATFORM_PROP_BATTERYLEVEL]             = PROP_GETTING_FUNCTION(getBatteryLevel);
     vect[N_PLATFORM_PROP_BATTERYMONITORING]        = NULL;
     vect[N_PLATFORM_PROP_BATTERYSTATE]             = PROP_GETTING_FUNCTION(getBatteryState);
-    vect[N_PLATFORM_PROP_DISPLAYCAPS]              = NULL;
+    vect[N_PLATFORM_PROP_DISPLAYCAPS]              = PROP_GETTING_FUNCTION(getDisplayCaps);
     vect[N_PLATFORM_PROP_ID]                       = NULL;
     vect[N_PLATFORM_PROP_LOCALE]                   = NULL;
     vect[N_PLATFORM_PROP_MACADDRESS]               = NULL;
@@ -215,6 +237,6 @@ static vector<NATIVE_PROPGET_CALLBACK> initFunctionMap()
     vect[N_PLATFORM_PROP_PROCESSORCOUNT]           = NULL;
     vect[N_PLATFORM_PROP_RUNTIME]                  = PROP_GETTING_FUNCTION(getRuntime);
     vect[N_PLATFORM_PROP_USERNAME]                 = NULL;
-    vect[N_PLATFORM_PROP_VERSION]                  = NULL;
+    vect[N_PLATFORM_PROP_VERSION]                  = PROP_GETTING_FUNCTION(getVersion);
     return vect;
 }
