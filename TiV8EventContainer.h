@@ -15,10 +15,6 @@
 #include <v8.h>
 #pragma GCC diagnostic warning "-Wunused-parameter"
 
-using namespace v8;
-using namespace std;
-
-class TiInternalEventListener;
 
 /*
  * TiV8EventContainer
@@ -30,7 +26,7 @@ class TiInternalEventListener;
 class TiV8EventContainer : public TiEventContainer
 {
 public:
-    TiV8EventContainer(Handle<Object> eventData);
+    TiV8EventContainer(v8::Handle<v8::Object> eventData);
     virtual ~TiV8EventContainer();
     virtual void addListener(TiEvent* listener);
     virtual void removeListener(int id);
@@ -41,6 +37,13 @@ public:
     virtual void setComplexDataProperty(const char* complexPropertyName, const char* propertyName, const char* value);
 
 private:
+
+    /*
+     * TiInternalEventListener
+     *
+     * Wrapper for scrope management and reference counting
+     * for using the vector template class
+     */
     class TiInternalEventListener
     {
     public:
@@ -56,16 +59,8 @@ private:
         TiEvent* listener_;
     };
 
-    Persistent<Object> eventData_;
-    map<int, TiInternalEventListener> listeners_;
+    v8::Persistent<v8::Object> eventData_;
+    std::map<int, TiInternalEventListener> listeners_;
 };
-
-/*
- * TiInternalEventListener
- *
- * Wrapper for scrope management and reference counting
- * for using the vector template class
- *
- */
 
 #endif /* TIV8EVENTCONTAINER_H_ */

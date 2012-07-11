@@ -8,6 +8,9 @@
 #include "TiV8EventContainer.h"
 #include "TiEvent.h"
 
+using namespace v8;
+using namespace std;
+
 TiV8EventContainer::TiV8EventContainer(Handle<Object> eventData)
 {
     eventData_ = Persistent<Object>::New(eventData);

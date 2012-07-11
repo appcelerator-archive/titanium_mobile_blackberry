@@ -31,6 +31,7 @@ TiRootObject::~TiRootObject()
     {
         context_.Dispose();
     }
+    NativeStringInterface::deleteInstance();
 }
 
 void TiRootObject::onCreateStaticMembers()

@@ -19,6 +19,18 @@
  * Base class for all UI controls
  */
 
+enum UnitType
+{
+    UnitTypeDefault,
+    UnitTypePixels,
+    UnitTypePercent,
+    UnitTypeDIP,
+    UnitTypeInches,
+    UnitTypeMM,
+    UnitTypeCM,
+    UnitTypePT
+};
+
 class TiObject;
 class QString;
 
@@ -27,6 +39,7 @@ class NativeControlObject : public NativeObject
 public:
     virtual NAHANDLE getNativeHandle() const;
     virtual int setPropertyValue(size_t propertyNumber, TiObject* obj);
+    virtual int getPropertyValue(size_t propertyNumber, TiObject* obj);
     virtual int setVisibility(bool visible);
     virtual int setAnchorPoint(TiObject* obj);
     virtual int setBackgroundColor(TiObject* obj);
@@ -37,6 +50,7 @@ public:
     virtual int setFont(TiObject* obj);
     virtual int setHeight(TiObject* obj);
     virtual int setHintText(TiObject* obj);
+    virtual int setIcon(TiObject* obj);
     virtual int setImage(TiObject* obj);
     virtual int setLabel(TiObject* obj);
     virtual int setLeft(TiObject* obj);
@@ -55,7 +69,10 @@ public:
     virtual int setTop(TiObject* obj);
     virtual int setValue(TiObject* obj);
     virtual int setVisible(TiObject* obj);
+    virtual int getVisible(TiObject* obj);
     virtual int setWidth(TiObject* obj);
+    virtual int setWindow(TiObject* obj);
+
     static int getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a);
     static int getBoolean(TiObject* obj, bool* value);
     static int getString(TiObject* obj, QString& str);
@@ -75,6 +92,9 @@ protected:
     int getNextEventId();
 
 private:
+    static int getMeasurementInfo(TiObject* obj, float max,
+                                  float* calculatedValue);
+
     bb::cascades::Container* container_;
     bb::cascades::Control* control_;
     bb::cascades::AbsoluteLayoutProperties* layout_;
