@@ -7,7 +7,6 @@
 
 #include "NativeDateTimePickerObject.h"
 
-#include "NativeControlObject.h"
 #include "NativeLoggerObject.h"
 #include "NativeMessageStrings.h"
 #include "TiConstants.h"
