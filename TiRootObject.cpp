@@ -9,11 +9,14 @@
 
 #include "NativeStringInterface.h"
 #include "TiGenericFunctionObject.h"
-#include "TiMessageStrings.h"
 #include "TiLogger.h"
+#include "TiMessageStrings.h"
 #include "TiTitaniumObject.h"
 #include "TiV8EventContainerFactory.h"
 #include <fstream>
+
+#include <QString>
+#include <QUrl>
 
 static Handle<ObjectTemplate> g_rootTemplate;
 
