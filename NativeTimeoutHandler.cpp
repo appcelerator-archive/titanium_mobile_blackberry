@@ -29,7 +29,7 @@ NativeTimeoutHandler::NativeTimeoutHandler(Handle<Number> number, Handle<Functio
 
 void NativeTimeoutHandler::clearTimeout()
 {
-    if (timer_)
+    if (timer_ != NULL)
     {
         timer_->stop();
     }
@@ -37,7 +37,7 @@ void NativeTimeoutHandler::clearTimeout()
 
 void NativeTimeoutHandler::onEventFired()
 {
-    if (event_)
+    if (event_ != NULL)
     {
         event_->fire();
     }
@@ -45,7 +45,7 @@ void NativeTimeoutHandler::onEventFired()
 
 int NativeTimeoutHandler::getId()
 {
-    if (event_)
+    if (event_ != NULL)
     {
         return event_->getId();
     }

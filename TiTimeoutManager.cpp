@@ -30,7 +30,7 @@ int TiTimeoutManager::createTimeout(Handle<Number> number, Handle<Function> even
 void TiTimeoutManager::clearTimeout(int id, bool interval)
 {
     std::map<std::pair<int, bool>, NativeTimeoutHandler*>::iterator itr = timeoutList_.find(std::make_pair(id, interval));
-    if (itr != timeoutList_.end() && itr->second)
+    if (itr != timeoutList_.end() && itr->second != NULL)
     {
         if (itr->first.second == interval)
         {
