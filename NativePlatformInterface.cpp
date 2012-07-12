@@ -9,8 +9,13 @@
 #include "TiConstants.h"
 #include <vector>
 
-#include <bps/deviceinfo.h>
+#include <qsize.h>
 
+#include <bps/deviceinfo.h>
+#include <bb/device/Display>
+#include <bb/device/DisplayManager>
+
+// TODO: Remove once all functions implemented
 #pragma GCC diagnostic ignored "-Wunused-function"
 
 #define PROP_GETTING_FUNCTION(NAME)     prop_##NAME
@@ -103,16 +108,31 @@ Handle<Value> NativePlatformInterface::getDisplayCaps()
 {
     HandleScope scope;
     Local<Object> dCapsObject = Object::New();
-    // TODO: Implement way to retrieve correct values for properties.
-    // Add getters/setters for newly created object.
-    // Hardcoded values for BB10 Dev Alpha
+
+    bb::device::DisplayManager displayManager;
+    bb::device::Display& display = displayManager.getDisplay(displayManager.primaryDisplayId());
+
+    // Constants from BB10 Dev Alpha specification
+    // bb10ydpi = 1280 / 4.2" (display height)=~304.76
+    // bb10xdpi = 768 / 2.57" (display width) =~298.83
+    const float bb10ydpi = 305.0f;
+    const float bb10xdpi = 229.0f;
+    const float mmPerInch = 25.4f;
+    const float bb10dpi = 356.0f;
+
+    QSize size = display.pixelSize();
+    QSizeF physicalSize = display.physicalSize();
+
+    float physicalWidth = (physicalSize.width() == 0.0f) ? bb10xdpi : ((float)size.width() / ((float)physicalSize.width() * mmPerInch));
+    float physicalHeight = (physicalSize.height() == 0.0f) ? bb10ydpi : ((float)size.height() / ((float)physicalSize.height() * mmPerInch));
+
     dCapsObject->Set(String::NewSymbol("density"), String::New("high"));
-    dCapsObject->Set(String::NewSymbol("dpi"), Number::New(356));
+    dCapsObject->Set(String::NewSymbol("dpi"), Number::New(bb10dpi));
     dCapsObject->Set(String::NewSymbol("logicalDensityFactor"), Number::New(1.0));
-    dCapsObject->Set(String::NewSymbol("platformHeight"), Number::New(1280)); // TODO: UI orientation-related
-    dCapsObject->Set(String::NewSymbol("platformWidth"), Number::New(768)); // TODO: UI orientation-related
-    dCapsObject->Set(String::NewSymbol("xdpi"), Number::New(299));
-    dCapsObject->Set(String::NewSymbol("ydpi"), Number::New(256));
+    dCapsObject->Set(String::NewSymbol("platformWidth"), Number::New(size.width()));
+    dCapsObject->Set(String::NewSymbol("platformHeight"), Number::New(size.height()));
+    dCapsObject->Set(String::NewSymbol("xdpi"), Number::New(physicalWidth));
+    dCapsObject->Set(String::NewSymbol("ydpi"), Number::New(physicalHeight));
 
     return scope.Close(dCapsObject);
 }
@@ -197,16 +217,16 @@ Handle<Value> NativePlatformInterface::getVersion()
     deviceinfo_data_t deviceInfo;
     if (BPS_SUCCESS == deviceinfo_get_data(&deviceInfo))
     {
-        string deviceOsVersion(deviceInfo.scm_bundle);
+        QString deviceOsVersion(deviceInfo.scm_bundle);
         deviceinfo_free_data(&deviceInfo);
-        return String::New(deviceOsVersion.c_str());
+        return String::New(deviceOsVersion.toUtf8());
     }
     return Undefined();
 }
 
 Handle<Value> NativePlatformInterface::getPropertyValue(int propertyNumber)
 {
-    if ((propertyNumber >= s_functionMap.size()) || (s_functionMap[propertyNumber] == NULL))
+    if ((propertyNumber >= (int)s_functionMap.size()) || (s_functionMap[propertyNumber] == NULL))
     {
         return Undefined();
     }
