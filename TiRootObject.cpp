@@ -239,7 +239,7 @@ Handle<Value> TiRootObject::_require(void*, TiObject*, const Arguments& args)
     }
 
     string filename = id + ".js";
-    // TODO: need to make this relative
+    // TODO: need to make this relative and support com.example.module
     static const string baseFolder = "app/native/assets/";
     string javascript;
     {
