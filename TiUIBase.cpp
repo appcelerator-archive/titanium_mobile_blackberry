@@ -108,6 +108,11 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "message", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_MESSAGE
+    },
+
+    {
         "min", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_MIN
     },

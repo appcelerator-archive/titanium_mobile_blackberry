@@ -17,6 +17,7 @@
 
 #include <QString>
 #include <QUrl>
+#include <bps/dialog.h>
 
 static Handle<ObjectTemplate> g_rootTemplate;
 
@@ -174,8 +175,29 @@ Handle<Value> TiRootObject::_L(void*, TiObject*, const Arguments& args)
 
 Handle<Value> TiRootObject::_alert(void*, TiObject*, const Arguments& args)
 {
-    // TODO: finish this
-    (void)args;
+    if (args.Length() < 1)
+    {
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
+    }
+
+    Local<String> v8Message = args[0]->ToString();
+    string message = *String::Utf8Value(v8Message);
+
+    // TODO: Displays a pop-up alert dialog with the passed message using cascades
+    dialog_instance_t dialog = 0;
+    dialog_create_alert(&dialog);
+    dialog_set_alert_message_text(dialog, message.c_str());
+    dialog_set_background_alpha(dialog, 0.0);
+    dialog_set_cover_sensitivity(dialog, DIALOG_COVER_SENSITIVITY_ALPHA_TEST);
+
+    dialog_add_button(dialog, DIALOG_CANCEL_LABEL, true, NULL, true);
+    dialog_add_button(dialog, DIALOG_OK_LABEL, true, NULL, true);
+    dialog_show(dialog);
+
+    // TODO: Remove once implemented using cascades
+    Local<Value> alertMessage = String::Concat(String::New("[ALERT]:"), v8Message);
+    TiLogger::getInstance().log(*String::Utf8Value(alertMessage));
+
     return Undefined();
 }
 

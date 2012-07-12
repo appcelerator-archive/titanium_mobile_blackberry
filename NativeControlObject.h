@@ -56,6 +56,7 @@ public:
     virtual int setLeft(TiObject* obj);
     virtual int setMax(TiObject* obj);
     virtual int setMaxDate(TiObject* obj);
+    virtual int setMessage(TiObject* obj);
     virtual int setMin(TiObject* obj);
     virtual int setMinDate(TiObject* obj);
     virtual int setOpacity(TiObject* obj);

@@ -96,3 +96,13 @@ int NativeObject::setVisibility(bool visible)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
+
+int NativeObject::show()
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+int NativeObject::hide()
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}

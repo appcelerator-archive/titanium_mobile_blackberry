@@ -23,6 +23,7 @@
 #include "TiUITableView.h"
 #include "TiUISwitch.h"
 #include "TiUIOptionDialog.h"
+#include "TiUIAlertDialog.h"
 #include <string.h>
 
 TiUIObject::TiUIObject()
@@ -66,6 +67,7 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createOptionDialog", this, _createOptionDialog);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTab", this, _createTab);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createPicker", this, _createPicker);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createAlertDialog", this, _createAlertDialog);
 
     // Adding javascript constants from Ti.UI
     ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_LEFT", Number::New(Ti::UI::TEXT_ALIGNMENT_LEFT), this);
@@ -164,4 +166,9 @@ Handle<Value> TiUIObject::_createSwitch(void* userContext, TiObject* caller, con
 Handle<Value> TiUIObject::_createPicker(void* userContext, TiObject* caller, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIPicker::createPicker), args);
+}
+
+Handle<Value> TiUIObject::_createAlertDialog(void* userContext, TiObject* caller, const Arguments& args)
+{
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIAlertDialog::createAlertDialog), args);
 }
