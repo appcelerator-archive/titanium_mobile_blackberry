@@ -33,6 +33,8 @@ enum NATIVE_TYPE
     , N_TYPE_OPTION
     , N_TYPE_PROGRESSBAR
     , N_TYPE_SLIDER
+    , N_TYPE_TAB
+    , N_TYPE_TABGROUP
     , N_TYPE_TEXT_FIELD
     , N_TYPE_TOGGLEBUTTON
     , N_TYPE_WINDOW
@@ -76,6 +78,7 @@ enum NATIVE_PROP
     , N_PROP_HIGHLIGHTED_COLOR
     , N_PROP_HINT_TEXT
     , N_PROP_HTML
+    , N_PROP_ICON
     , N_PROP_IMAGE
     , N_PROP_KEEP_SCREEN_ON
     , N_PROP_LABEL
@@ -105,6 +108,7 @@ enum NATIVE_PROP
     , N_PROP_VALUE
     , N_PROP_VISIBLE
     , N_PROP_WIDTH
+    , N_PROP_WINDOW
     , N_PROP_WORD_WRAP
     , N_PROP_ZINDEX
 
@@ -138,6 +142,7 @@ class NativeObject :
 public:
     virtual int getObjectType() const = 0;
     virtual int setPropertyValue(std::size_t propertyNumber, TiObject* obj);
+    virtual int getPropertyValue(std::size_t propertyNumber, TiObject* obj);
     virtual int addChildNativeObject(NativeObject* obj);
     virtual NAHANDLE getNativeHandle() const;
     virtual int open();
@@ -147,6 +152,8 @@ public:
     virtual bool isInitializationComplete() const;
     virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual int scrollToIndex(int index);
+    virtual int setActiveTab(NativeObject* tab);
+    virtual int setActiveTab(int index);
     virtual int removeEventHandler(int eventId);
     virtual int setVisibility(bool visible);
 

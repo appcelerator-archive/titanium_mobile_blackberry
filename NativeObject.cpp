@@ -22,6 +22,11 @@ int NativeObject::setPropertyValue(size_t propertyNumber, TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+int NativeObject::getPropertyValue(size_t propertyNumber, TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 int NativeObject::addChildNativeObject(NativeObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
@@ -58,6 +63,16 @@ void NativeObject::completeInitialization()
 }
 
 int NativeObject::scrollToIndex(int index)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+int NativeObject::setActiveTab(NativeObject* tab)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+int NativeObject::setActiveTab(int index)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }

@@ -5,7 +5,7 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "NativeContainerObject.h"
+#include "NativePageObject.h"
 #include "NativeObjectFactory.h"
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/ActivityIndicator>
@@ -15,6 +15,7 @@
 #include <bb/cascades/DateTimePicker>
 #include <bb/cascades/DockLayout>
 #include <bb/cascades/DockLayoutProperties>
+#include <bb/cascades/DropDown>
 #include <bb/cascades/ImageView>
 #include <bb/cascades/Label>
 #include <bb/cascades/ListView>
@@ -23,74 +24,72 @@
 #include <bb/cascades/Stacklayout>
 #include <bb/cascades/TextField>
 #include <bb/cascades/ToggleButton>
-#include <bb/cascades/ActivityIndicator>
-#include <bb/cascades/DropDown>
 #include <qtgui/QColor>
 
 using namespace bb::cascades;
 
-NativeContainerObject::NativeContainerObject()
+NativePageObject::NativePageObject()
 {
     container_ = NULL;
     nativeObjectFactory_ = NULL;
+    page_ = NULL;
 }
 
-NativeContainerObject::NativeContainerObject(Container* container)
-{
-    container_ = container;
-    nativeObjectFactory_ = NULL;
-}
-
-NativeContainerObject::~NativeContainerObject()
+NativePageObject::~NativePageObject()
 {
 }
 
-NativeObject* NativeContainerObject::createContainer(NativeObjectFactory* nativeObjectFactory)
+NativeObject* NativePageObject::createPage(NativeObjectFactory* nativeObjectFactory)
 {
-    NativeContainerObject* obj = new NativeContainerObject;
+    NativePageObject* obj = new NativePageObject;
     obj->nativeObjectFactory_ = nativeObjectFactory;
     return obj;
 }
 
-int NativeContainerObject::getObjectType() const
+int NativePageObject::getObjectType() const
 {
-    return N_TYPE_CONTAINER;
+    return N_TYPE_WINDOW;
 }
 
-NAHANDLE NativeContainerObject::getNativeHandle() const
+NAHANDLE NativePageObject::getNativeHandle() const
 {
-    return container_;
+    return page_;
 }
 
-int NativeContainerObject::initialize(TiEventContainerFactory* containerFactory)
+int NativePageObject::initialize(TiEventContainerFactory* containerFactory)
 {
-    if (container_ != NULL)
+    if (container_ != NULL || page_ != NULL)
     {
         return NATIVE_ERROR_OK;
     }
+
+    //TODO separate the logic of container and page in different classes
     container_ = Container::create();
-    if (container_ == NULL)
+    page_ = Page::create();
+    page_->setContent(container_);
+
+    if (container_ == NULL || page_ == NULL)
     {
         return NATIVE_ERROR_OUTOFMEMORY;
     }
     return NATIVE_ERROR_OK;
 }
 
-int NativeContainerObject::addChildNativeObject(NativeObject* obj)
+int NativePageObject::addChildNativeObject(NativeObject* obj)
 {
     bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
     container_->add(control);
     return NATIVE_ERROR_OK;
 }
 
-int NativeContainerObject::open()
+int NativePageObject::open()
 {
     container_->setLayout(new AbsoluteLayout());
     nativeObjectFactory_->setRootContainer(this);
     return NATIVE_ERROR_OK;
 }
 
-int NativeContainerObject::setBackgroundColor(TiObject* obj)
+int NativePageObject::setBackgroundColor(TiObject* obj)
 {
     float r;
     float g;

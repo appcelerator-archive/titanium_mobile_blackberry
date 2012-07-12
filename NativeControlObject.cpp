@@ -17,21 +17,95 @@
 #include <bb/cascades/Container>
 #include <qtgui/QColor>
 
-#define PROP_SETTING_FUNCTION(NAME)     prop_##NAME
+#define PROP_SETGET_FUNCTION(NAME)      prop_##NAME
 
-#define PROP_SETTER(NAME)               static int prop_##NAME(NativeControlObject* object, TiObject* obj) \
+#define PROP_SETGET(NAME)               static int prop_##NAME(NativeControlObject* object, TiObject* obj) \
     {\
         return object->NAME(obj);\
     }
 
-typedef int (*NATIVE_PROPSET_CALLBACK)(NativeControlObject*, TiObject*);
+#define GET_ARRAY_SIZE(ARRAY)           (int)(sizeof(ARRAY)/sizeof(*(ARRAY)))
 
-// Prototypes
-static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap();
+typedef int (*NATIVE_PROPSETGET_CALLBACK)(NativeControlObject*, TiObject*);
 
-// Statics
-static const vector<NATIVE_PROPSET_CALLBACK> s_functionMap = initFunctionMap();
+struct NATIVE_PROPSETGET_SETTING
+{
+    NATIVE_PROP propNumber;
+    NATIVE_PROPSETGET_CALLBACK setter;
+    NATIVE_PROPSETGET_CALLBACK getter;
+};
 
+class SetGetProperties
+{
+public:
+    SetGetProperties(const NATIVE_PROPSETGET_SETTING* map, int mapEntries)
+    {
+        setters_ = new NATIVE_PROPSETGET_CALLBACK[N_PROP_LAST];
+        memset(setters_, 0, sizeof(NATIVE_PROPSETGET_CALLBACK) * N_PROP_LAST);
+        getters_ = new NATIVE_PROPSETGET_CALLBACK[N_PROP_LAST];
+        memset(getters_, 0, sizeof(NATIVE_PROPSETGET_CALLBACK) * N_PROP_LAST);
+        for (int i = 0; i < mapEntries; i++)
+        {
+            setters_[map[i].propNumber] = map[i].setter;
+            getters_[map[i].propNumber] = map[i].getter;
+        }
+    }
+    ~SetGetProperties()
+    {
+        if (setters_ != NULL)
+        {
+            delete[] setters_;
+            setters_ = NULL;
+        }
+        if (getters_ != NULL)
+        {
+            delete[] getters_;
+            getters_ = NULL;
+        }
+    }
+    NATIVE_PROPSETGET_CALLBACK GetSetterCallback(size_t prop)
+    {
+        if (prop >= (std::size_t)N_PROP_LAST)
+        {
+            return NULL;
+        }
+        return setters_[prop];
+    }
+    NATIVE_PROPSETGET_CALLBACK GetGetterCallback(size_t prop)
+    {
+        if (prop >= (std::size_t)N_PROP_LAST)
+        {
+            return NULL;
+        }
+        return getters_[prop];
+    }
+private:
+    // Disabled default and copy constructors
+    SetGetProperties();
+    SetGetProperties(const SetGetProperties& prop);
+    // Disabled assignment operator
+    const SetGetProperties& operator = (const SetGetProperties& prop);
+    NATIVE_PROPSETGET_CALLBACK* setters_;
+    NATIVE_PROPSETGET_CALLBACK* getters_;
+};
+
+// Unit types
+struct UnitTypeData
+{
+    UnitType unitType;
+    const char* postfix;
+};
+
+const static UnitTypeData g_unitTypes[] =
+{
+    {UnitTypePixels, "px"},
+    {UnitTypePercent, "%"},
+    {UnitTypeDIP, "dip"},
+    {UnitTypeInches, "in"},
+    {UnitTypeMM, "mm"},
+    {UnitTypeCM, "cm"},
+    {UnitTypePT, "pt"}
+};
 
 NativeControlObject::NativeControlObject() :
     container_(NULL),
@@ -88,7 +162,7 @@ int NativeControlObject::setVisibility(bool visible)
 // calls the non-static on method on the NativeControlObject
 // class.
 
-PROP_SETTER(setAnchorPoint)
+PROP_SETGET(setAnchorPoint)
 int NativeControlObject::setAnchorPoint(TiObject* obj)
 {
     float x;
@@ -104,7 +178,7 @@ int NativeControlObject::setAnchorPoint(TiObject* obj)
 }
 
 
-PROP_SETTER(setBackgroundColor)
+PROP_SETGET(setBackgroundColor)
 int NativeControlObject::setBackgroundColor(TiObject* obj)
 {
     float r;
@@ -125,7 +199,7 @@ int NativeControlObject::setBackgroundColor(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-PROP_SETTER(setBackgroundDisableColor)
+PROP_SETGET(setBackgroundDisableColor)
 int NativeControlObject::setBackgroundDisableColor(TiObject* obj)
 {
     float r;
@@ -146,13 +220,19 @@ int NativeControlObject::setBackgroundDisableColor(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-PROP_SETTER(setColor)
+PROP_SETGET(setColor)
 int NativeControlObject::setColor(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setEnabled)
+PROP_SETGET(setData)
+int NativeControlObject::setData(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setEnabled)
 int NativeControlObject::setEnabled(TiObject* obj)
 {
     bool enabled;
@@ -179,13 +259,13 @@ int NativeControlObject::setEnabled(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-PROP_SETTER(setFont)
+PROP_SETGET(setFont)
 int NativeControlObject::setFont(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setHeight)
+PROP_SETGET(setHeight)
 int NativeControlObject::setHeight(TiObject* obj)
 {
     float height;
@@ -205,68 +285,63 @@ int NativeControlObject::setHeight(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-PROP_SETTER(setHintText)
+PROP_SETGET(setHintText)
 int NativeControlObject::setHintText(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setImage)
+PROP_SETGET(setImage)
 int NativeControlObject::setImage(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setLabel)
+PROP_SETGET(setLabel)
 int NativeControlObject::setLabel(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setLeft)
+PROP_SETGET(setLeft)
 int NativeControlObject::setLeft(TiObject* obj)
 {
-    float left;
-    int error = getFloat(obj, &left);
-    if (error != NATIVE_ERROR_OK)
+    float value = 0;
+    int error = NativeControlObject::getFloat(obj, &value);
+    if (!N_SUCCEEDED(error))
     {
         return error;
     }
-    ((bb::cascades::Control*)getNativeHandle())->setLeftMargin(left);
+    layout_->setPositionX(value);
+    container_->setLayoutProperties(layout_);
     return NATIVE_ERROR_OK;
 }
 
-PROP_SETTER(setMax)
+PROP_SETGET(setMax)
 int NativeControlObject::setMax(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setMinDate)
+PROP_SETGET(setMinDate)
 int NativeControlObject::setMinDate(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setMaxDate)
+PROP_SETGET(setMaxDate)
 int NativeControlObject::setMaxDate(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setData)
-int NativeControlObject::setData(TiObject* obj)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
-PROP_SETTER(setMin)
+PROP_SETGET(setMin)
 int NativeControlObject::setMin(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setOpacity)
+PROP_SETGET(setOpacity)
 int NativeControlObject::setOpacity(TiObject* obj)
 {
     float value = 0;
@@ -283,37 +358,37 @@ int NativeControlObject::setOpacity(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-PROP_SETTER(setOptions)
+PROP_SETGET(setOptions)
 int NativeControlObject::setOptions(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setSelectedIndex)
+PROP_SETGET(setSelectedIndex)
 int NativeControlObject::setSelectedIndex(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setText)
+PROP_SETGET(setText)
 int NativeControlObject::setText(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setTextAlign)
+PROP_SETGET(setTextAlign)
 int NativeControlObject::setTextAlign(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setTitle)
+PROP_SETGET(setTitle)
 int NativeControlObject::setTitle(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setTop)
+PROP_SETGET(setTop)
 int NativeControlObject::setTop(TiObject* obj)
 {
     float value = 0;
@@ -327,13 +402,13 @@ int NativeControlObject::setTop(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-PROP_SETTER(setValue)
+PROP_SETGET(setValue)
 int NativeControlObject::setValue(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setVisible)
+PROP_SETGET(setVisible)
 int NativeControlObject::setVisible(TiObject* obj)
 {
     bool visible;
@@ -345,34 +420,49 @@ int NativeControlObject::setVisible(TiObject* obj)
     return setVisibility(visible);
 }
 
-PROP_SETTER(setWidth)
+PROP_SETGET(getVisible)
+int NativeControlObject::getVisible(TiObject* obj)
+{
+    obj->setValue(Boolean::New(container_->isVisible()));
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
     float width;
-    int error = getFloat(obj, &width);
+    // TODO: get the current width of the parent control
+    float max = 1024.0f; // TODO: Remove this
+    int error = getMeasurementInfo(obj, max, &width);
     if (error != NATIVE_ERROR_OK)
     {
-        Handle<String> v8str = obj->getValue()->ToString();
-        if (v8str.IsEmpty())
-        {
-            return NATIVE_ERROR_INVALID_ARG;
-        }
-        // TODO: parse width string, e.g., width='100%' width='22px' etc...
-        return NATIVE_ERROR_INVALID_ARG;
+        return error;
     }
     container_->setMaxWidth(width);
     container_->setMinWidth(width);
     return NATIVE_ERROR_OK;
 }
 
-PROP_SETTER(setType)
+PROP_SETGET(setType)
 int NativeControlObject::setType(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETTER(setRight)
+PROP_SETGET(setRight)
 int NativeControlObject::setRight(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setWindow)
+int NativeControlObject::setWindow(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setIcon)
+int NativeControlObject::setIcon(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -380,90 +470,60 @@ int NativeControlObject::setRight(TiObject* obj)
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
-static vector<NATIVE_PROPSET_CALLBACK> initFunctionMap()
+const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
 {
-    vector<NATIVE_PROPSET_CALLBACK> vect;
-    vect.resize(N_PROP_LAST);
+    {N_PROP_ANCHOR_POINT, PROP_SETGET_FUNCTION(setAnchorPoint), NULL},
+    {N_PROP_BACKGROUND_COLOR, PROP_SETGET_FUNCTION(setBackgroundColor), NULL},
+    {N_PROP_BACKGROUND_DISABLED_COLOR, PROP_SETGET_FUNCTION(setBackgroundDisableColor), NULL},
+    {N_PROP_COLOR, PROP_SETGET_FUNCTION(setColor), NULL},
+    {N_PROP_DATA, PROP_SETGET_FUNCTION(setData), NULL},
+    {N_PROP_ENABLED, PROP_SETGET_FUNCTION(setEnabled), NULL},
+    {N_PROP_FONT, PROP_SETGET_FUNCTION(setFont), NULL},
+    {N_PROP_HEIGHT, PROP_SETGET_FUNCTION(setHeight), NULL},
+    {N_PROP_HINT_TEXT, PROP_SETGET_FUNCTION(setHintText), NULL},
+    {N_PROP_ICON, PROP_SETGET_FUNCTION(setIcon), NULL},
+    {N_PROP_IMAGE, PROP_SETGET_FUNCTION(setImage), NULL},
+    {N_PROP_LABEL, PROP_SETGET_FUNCTION(setLabel), NULL},
+    {N_PROP_LEFT, PROP_SETGET_FUNCTION(setLeft), NULL},
+    {N_PROP_MAX, PROP_SETGET_FUNCTION(setMax), NULL},
+    {N_PROP_MAXDATE, PROP_SETGET_FUNCTION(setMaxDate), NULL},
+    {N_PROP_MIN, PROP_SETGET_FUNCTION(setMin), NULL},
+    {N_PROP_MINDATE, PROP_SETGET_FUNCTION(setMinDate), NULL},
+    {N_PROP_OPACITY, PROP_SETGET_FUNCTION(setOpacity), NULL},
+    {N_PROP_OPTIONS, PROP_SETGET_FUNCTION(setOptions), NULL},
+    {N_PROP_SELECTED_INDEX, PROP_SETGET_FUNCTION(setSelectedIndex), NULL},
+    {N_PROP_TEXT, PROP_SETGET_FUNCTION(setText), NULL},
+    {N_PROP_TEXT_ALIGN, PROP_SETGET_FUNCTION(setTextAlign), NULL},
+    {N_PROP_TITLE, PROP_SETGET_FUNCTION(setTitle), NULL},
+    {N_PROP_TOP, PROP_SETGET_FUNCTION(setTop), NULL},
+    {N_PROP_TYPE, PROP_SETGET_FUNCTION(setType), NULL},
+    {N_PROP_VALUE, PROP_SETGET_FUNCTION(setValue), NULL},
+    {N_PROP_VISIBLE, PROP_SETGET_FUNCTION(setVisible), PROP_SETGET_FUNCTION(getVisible)},
+    {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), NULL},
+    {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setWindow), NULL}
+};
 
-    vect[N_PROP_UNDEFINED]                         = NULL;
-    vect[N_PROP_ANCHOR_POINT]                      = PROP_SETTING_FUNCTION(setAnchorPoint);
-    vect[N_PROP_ANIMATED_CENTER_POINT]             = NULL;
-    vect[N_PROP_AUTO_LINK]                         = NULL;
-    vect[N_PROP_BACKGROUND_COLOR]                  = PROP_SETTING_FUNCTION(setBackgroundColor);
-    vect[N_PROP_BACKGROUND_DISABLED_COLOR]         = PROP_SETTING_FUNCTION(setBackgroundDisableColor);
-    vect[N_PROP_BACKGROUND_DISABLED_IMAGE]         = NULL;
-    vect[N_PROP_BACKGROUND_FOCUSED_COLOR]          = NULL;
-    vect[N_PROP_BACKGROUND_FOCUSED_IMAGE]          = NULL;
-    vect[N_PROP_BACKGROUND_GRADIANT]               = NULL;
-    vect[N_PROP_BACKGROUND_IMAGE]                  = NULL;
-    vect[N_PROP_BACKGROUND_LEFT_CAP]               = NULL;
-    vect[N_PROP_BACKGROUND_PADDING_BOTTOM]         = NULL;
-    vect[N_PROP_BACKGROUND_PADDING_LEFT]           = NULL;
-    vect[N_PROP_BACKGROUND_PADDING_RIGHT]          = NULL;
-    vect[N_PROP_BACKGROUND_PADDING_TOP]            = NULL;
-    vect[N_PROP_BACKGROUND_REPEAT]                 = NULL;
-    vect[N_PROP_BACKGROUND_SELECTED_COLOR]         = NULL;
-    vect[N_PROP_BACKGROUND_SELECTED_IMAGE]         = NULL;
-    vect[N_PROP_BACKGROUND_TOP_CAP]                = NULL;
-    vect[N_PROP_BORDER_COLOR]                      = NULL;
-    vect[N_PROP_BORDER_RADIUS]                     = NULL;
-    vect[N_PROP_BORDER_WIDTH]                      = NULL;
-    vect[N_PROP_BOTTOM]                            = NULL;
-    vect[N_PROP_CENTER]                            = NULL;
-    vect[N_PROP_CHILDREN]                          = NULL;
-    vect[N_PROP_COLOR]                             = PROP_SETTING_FUNCTION(setColor);
-    vect[N_PROP_DATA]                              = PROP_SETTING_FUNCTION(setData);
-    vect[N_PROP_ENABLED]                           = PROP_SETTING_FUNCTION(setEnabled);
-    vect[N_PROP_ELLIPSIZE]                         = NULL;
-    vect[N_PROP_FOCUSABLE]                         = NULL;
-    vect[N_PROP_FONT]                              = PROP_SETTING_FUNCTION(setFont);
-    vect[N_PROP_HEIGHT]                            = PROP_SETTING_FUNCTION(setHeight);
-    vect[N_PROP_HIGHLIGHTED_COLOR]                 = NULL;
-    vect[N_PROP_HINT_TEXT]                         = PROP_SETTING_FUNCTION(setHintText);
-    vect[N_PROP_HTML]                              = NULL;
-    vect[N_PROP_IMAGE]                             = PROP_SETTING_FUNCTION(setImage);
-    vect[N_PROP_KEEP_SCREEN_ON]                    = NULL;
-    vect[N_PROP_LABEL]                             = PROP_SETTING_FUNCTION(setLabel);
-    vect[N_PROP_LAYOUT]                            = NULL;
-    vect[N_PROP_LEFT]                              = PROP_SETTING_FUNCTION(setLeft);
-    vect[N_PROP_MAX]                               = PROP_SETTING_FUNCTION(setMax);
-    vect[N_PROP_MAXDATE]                           = PROP_SETTING_FUNCTION(setMaxDate);
-    vect[N_PROP_MIN]                               = PROP_SETTING_FUNCTION(setMin);
-    vect[N_PROP_MINDATE]                           = PROP_SETTING_FUNCTION(setMinDate);
-    vect[N_PROP_MINIMUM_FONT_SIZE]                 = NULL;
-    vect[N_PROP_OPACITY]                           = PROP_SETTING_FUNCTION(setOpacity);
-    vect[N_PROP_OPTIONS]                           = PROP_SETTING_FUNCTION(setOptions);
-    vect[N_PROP_RIGHT]                             = NULL;
-    vect[N_PROP_SELECTED_INDEX]                    = PROP_SETTING_FUNCTION(setSelectedIndex);
-    vect[N_PROP_SHADOW_COLOR]                      = NULL;
-    vect[N_PROP_SHADOW_OFFSET]                     = NULL;
-    vect[N_PROP_SIZE]                              = NULL;
-    vect[N_PROP_SOFT_KEYBOARD_ON_FOCUS]            = NULL;
-    vect[N_PROP_TEXT]                              = PROP_SETTING_FUNCTION(setText);
-    vect[N_PROP_TEXT_ALIGN]                        = PROP_SETTING_FUNCTION(setTextAlign);
-    vect[N_PROP_TEXT_ID]                           = NULL;
-    vect[N_PROP_TITLE]                             = PROP_SETTING_FUNCTION(setTitle);
-    vect[N_PROP_TOP]                               = PROP_SETTING_FUNCTION(setTop);
-    vect[N_PROP_TOUCH_ENABLED]                     = NULL;
-    vect[N_PROP_TRANSFORM]                         = NULL;
-    vect[N_PROP_TYPE]                              = PROP_SETTING_FUNCTION(setType);
-    vect[N_PROP_VALUE]                             = PROP_SETTING_FUNCTION(setValue);
-    vect[N_PROP_VISIBLE]                           = PROP_SETTING_FUNCTION(setVisible);
-    vect[N_PROP_WIDTH]                             = PROP_SETTING_FUNCTION(setWidth);
-    vect[N_PROP_WORD_WRAP]                         = NULL;
-    vect[N_PROP_ZINDEX]                            = NULL;
-    return vect;
-}
+static SetGetProperties g_props(g_propSetGet, GET_ARRAY_SIZE(g_propSetGet));
 
 
 int NativeControlObject::setPropertyValue(size_t propertyNumber, TiObject* obj)
 {
-    if ((propertyNumber >= s_functionMap.size())
-            || (s_functionMap[propertyNumber] == NULL))
+    NATIVE_PROPSETGET_CALLBACK cb = g_props.GetSetterCallback(propertyNumber);
+    if (cb == NULL)
     {
         return NATIVE_ERROR_NOTSUPPORTED;
     }
-    return (s_functionMap[propertyNumber])(this, obj);
+    return (cb)(this, obj);
+}
+
+int NativeControlObject::getPropertyValue(size_t propertyNumber, TiObject* obj)
+{
+    NATIVE_PROPSETGET_CALLBACK cb = g_props.GetGetterCallback(propertyNumber);
+    if (cb == NULL)
+    {
+        return NATIVE_ERROR_NOTSUPPORTED;
+    }
+    return (cb)(this, obj);
 }
 
 int NativeControlObject::getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a)
@@ -655,6 +715,137 @@ int NativeControlObject::getDictionaryData(TiObject* obj, QVector<QPair<QString,
             //if the element of the dictionary is not object, it means dictionary contains invalid data
             return NATIVE_ERROR_INVALID_ARG;
         }
+    }
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::getDateTime(TiObject* obj, QDateTime& dt)
+{
+    Handle<Value> value = obj->getValue();
+    if ((value.IsEmpty()) || (!value->IsDate()))
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+
+    unsigned int year = 0, month = 0, day = 0;
+    Local<Object> object = Object::Cast(*value);
+
+    // Get year from date
+    Local<Value> getYear_prop = (object->Get(String::New("getFullYear")));
+    if (getYear_prop->IsFunction())
+    {
+        Local<Function> getYear_func = Function::Cast(*getYear_prop);
+        Local<Value> yearValue = getYear_func->Call(object, 0, NULL);
+        year = yearValue->NumberValue();
+    }
+
+    // Get month from date
+    Local<Value> getMonth_prop = (object->Get(String::New("getMonth")));
+    if (getMonth_prop->IsFunction())
+    {
+        Local<Function> getMonth_func = Function::Cast(*getMonth_prop);
+        Local<Value> monthValue = getMonth_func->Call(object, 0, NULL);
+        month = monthValue->NumberValue();
+    }
+
+    // Get day property
+    Local<Value> getDay_prop = (object->Get(String::New("getDate")));
+    if (getDay_prop->IsFunction())
+    {
+        Local<Function> getDay_func = Function::Cast(*getDay_prop);
+        Local<Value> dayValue = getDay_func->Call(object, 0, NULL);
+        day = dayValue->NumberValue();
+    }
+    dt.setDate(QDate(year, month, day));
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::getMeasurementInfo(TiObject* obj, float max,
+        float* calculatedValue)
+{
+    UnitType unitType = UnitTypeDefault;
+    if ((!obj->getValue()->IsString()) && (!obj->getValue()->IsStringObject()))
+    {
+        float value;
+        int error = getFloat(obj, &value);
+        if (error != NATIVE_ERROR_OK)
+        {
+            return error;
+        }
+        if (value < 0.0f)
+        {
+            value = 0.0f;
+        }
+        else if (value > max)
+        {
+            value = max;
+        }
+        *calculatedValue = value;
+        return NATIVE_ERROR_OK;
+    }
+    v8::String::Utf8Value myString(obj->getValue()->ToString());
+    QString measurement = (const char*)(*myString);
+    float numberPart = (float)atof(*myString);
+    for (int i = 0; i < GET_ARRAY_SIZE(g_unitTypes); i++)
+    {
+        if (measurement.endsWith(QString(g_unitTypes[i].postfix)))
+        {
+            unitType = g_unitTypes[i].unitType;
+        }
+    }
+    if (unitType == UnitTypeDefault)
+    {
+        // Default to 'pixels'
+        unitType = UnitTypePixels;
+    }
+    switch (unitType)
+    {
+    case UnitTypePixels:
+        if (numberPart < 0.0f)
+        {
+            numberPart = 0.0f;
+        }
+        else if (numberPart > max)
+        {
+            numberPart = max;
+        }
+        *calculatedValue = numberPart;
+        break;
+    case UnitTypePercent:
+        if (numberPart < 0.0f)
+        {
+            numberPart = 0.0f;
+        }
+        else if (numberPart > 100.0f)
+        {
+            numberPart = 100.0f;
+        }
+        if (max <= 0.0f)
+        {
+            *calculatedValue = 0;
+        }
+        else
+        {
+            *calculatedValue = max * numberPart / 100;
+        }
+        break;
+    case UnitTypeDIP:
+        // TODO: complete (NOTE: DPI is required)
+        break;
+    case UnitTypeInches:
+        // TODO: complete (NOTE: DPI is required)
+        break;
+    case UnitTypeMM:
+        // TODO: complete (NOTE: DPI is required)
+        break;
+    case UnitTypeCM:
+        // TODO: complete (NOTE: DPI is required)
+        break;
+    case UnitTypePT:
+        // TODO: complete (NOTE: DPI is required)
+        break;
+    default:
+        return NATIVE_ERROR_NOTSUPPORTED;
     }
     return NATIVE_ERROR_OK;
 }
