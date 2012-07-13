@@ -124,13 +124,14 @@ Handle<Value> NativePlatformInterface::getDisplayCaps()
 
     float xdpi = 0.0f, ydpi = 0.0f;
     // Calculate pixel per inch in x/y dimensions
-    if (physicalSize != QSizeF(0.0f, 0.0f))
+    if (physicalWidth != 0.0f && physicalHeight != 0.0f)
     {
         xdpi = (pixelWidth / physicalWidth) * MMPERINCH;
         ydpi = (pixelHeight / physicalHeight) * MMPERINCH;
     }
 
     // Calculate pixels density
+    // TODO: Use the supplied one if it ever becomes available.
     const float diagonalWidth = sqrtf(physicalWidth * physicalWidth + physicalHeight * physicalHeight) / MMPERINCH;
     const float diagonalPixels = sqrtf(pixelWidth * pixelWidth + pixelHeight * pixelHeight);
 
