@@ -33,7 +33,7 @@ protected:
     virtual ~NativeAlertDialogObject();
 
 private:
-    explicit NativeAlertDialogObject();
+    NativeAlertDialogObject();
     // Disable copy ctor & assignment operator
     NativeAlertDialogObject(const NativeAlertDialogObject& alertDialog);
     NativeAlertDialogObject& operator=(const NativeAlertDialogObject& alertDialog);

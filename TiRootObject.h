@@ -39,7 +39,6 @@ private:
     void createStringMethods();
 
     static Handle<Value> _L(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> _alert(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _clearInterval(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _clearTimeout(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _decodeURIComponent(void* userContext, TiObject* caller, const Arguments& args);

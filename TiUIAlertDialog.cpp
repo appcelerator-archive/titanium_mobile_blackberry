@@ -6,6 +6,7 @@
  */
 
 #include "TiUIAlertDialog.h"
+
 #include "TiGenericFunctionObject.h"
 
 TiUIAlertDialog::TiUIAlertDialog()
