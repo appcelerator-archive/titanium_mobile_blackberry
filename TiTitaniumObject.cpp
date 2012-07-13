@@ -48,7 +48,7 @@ bool TiTitaniumObject::canAddMembers() const
     return false;
 }
 
-Handle<Value> TiTitaniumObject::_include(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiTitaniumObject::_include(void*, TiObject*, const Arguments& args)
 {
     if (args.Length() < 1)
     {
@@ -81,7 +81,7 @@ Handle<Value> TiTitaniumObject::_include(void* userContext, TiObject* caller, co
 
     if (!ifs)
     {
-        return ThrowException(String::Concat(String::New(fullPath.c_str()), String::New(Ti::Msg::Include_file_not_found)));
+        return ThrowException(String::Concat(String::New((fullPath + " ").c_str()), String::New(Ti::Msg::Include_file_not_found)));
     }
 
     string buffer;
@@ -94,10 +94,22 @@ Handle<Value> TiTitaniumObject::_include(void* userContext, TiObject* caller, co
     {
         return ThrowException(tryCatch.Exception());
     }
-    Handle<Value>result = compiledScript->Run();
+    Handle<Value> result = compiledScript->Run();
     if (result.IsEmpty())
     {
-        return ThrowException(tryCatch.Exception());
+        Handle<Message> msg = tryCatch.Message();
+        stringstream ss;
+        ss << filename << " line ";
+        if (msg.IsEmpty())
+        {
+            ss << "?";
+        }
+        else
+        {
+            ss << msg->GetLineNumber();
+        }
+        ss << ": " << *String::Utf8Value(tryCatch.Exception());
+        return ThrowException(String::New(ss.str().c_str()));
     }
 
     // Reset relative path

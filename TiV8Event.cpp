@@ -6,6 +6,7 @@
  */
 
 #include "TiV8Event.h"
+#include "TiLogger.h"
 
 TiV8Event::TiV8Event()
 {
@@ -36,7 +37,13 @@ void TiV8Event::fire(void* fireDataObject)
     // are passed the the Javascript function. In this case there is one
     // argument: "e". The argument is an object with properties relating
     // to the event that was triggered.
-    function_->CallAsFunction(context->Global(), 1, (Handle<Value>*) &dataObject);
+    TryCatch tryCatch;
+    Handle<Value> result = function_->Call(context->Global(), 1, (Handle<Value>*) &dataObject);
+    if (result.IsEmpty())
+    {
+        String::Utf8Value error(tryCatch.Exception());
+        TiLogger::getInstance().log(*error);
+    }
 }
 
 void TiV8Event::fire()
