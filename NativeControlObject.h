@@ -88,7 +88,7 @@ protected:
     int getNextEventId();
 
 private:
-    static int getMeasurementInfo(TiObject* obj, float maxPixels, float dpMM,
+    static int getMeasurementInfo(TiObject* obj, float maxPixels, float dotsPerMillimeter,
                                   float* calculatedValue);
 
     bb::cascades::Container* container_;

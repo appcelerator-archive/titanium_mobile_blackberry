@@ -15,17 +15,26 @@
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/Color>
 #include <bb/cascades/Container>
-#include <qtgui/QColor>
-#include <bb/device/DisplayManager>
 #include <bb/device/Display>
+#include <bb/device/DisplayManager>
+#include <QColor>
 
+// 25.4mm in 1"
 #define INCHES_TO_MM_MUL                25.4f
+// 10mm in 1cm
 #define CM_TO_MM_MUL                    10.0f
+// 72 points = 1" = 25.4mm
 #define PT_TO_MM_MUL                    (INCHES_TO_MM_MUL / 72.0f)
+// Default dots per mm
+#define DPMM                            19.2f
 
+// Width in pixels
 static int g_width = 0;
+// Height in pixels
 static int g_height = 0;
+// Width in mm
 static float g_physicalWidth = 0.0f;
+// Height in mm
 static float g_physicalHeight = 0.0f;
 
 #define PROP_SETGET_FUNCTION(NAME)      prop_##NAME
@@ -140,10 +149,9 @@ NativeControlObject::NativeControlObject() :
         // NOTE: the previous functions do not work on the simulator
         if ((g_physicalWidth == 0.0f) || (g_physicalHeight == 0.0f))
         {
-            // For now, set the size to the pixel dimentions to preserve
-            // aspect ratio.
-            g_physicalWidth = (float)g_width;
-            g_physicalHeight = (float)g_height;
+            // For now, try to guess what the physical size is.
+            g_physicalWidth = (float)g_width / DPMM;
+            g_physicalHeight = (float)g_height / DPMM;
         }
     }
 }
@@ -733,9 +741,10 @@ int NativeControlObject::getDictionaryData(TiObject* obj, QVector<QPair<QString,
     return NATIVE_ERROR_OK;
 }
 
-int NativeControlObject::getMeasurementInfo(TiObject* obj, float maxPixels, float dpMM,
+int NativeControlObject::getMeasurementInfo(TiObject* obj, float maxPixels, float dotsPerMillimeter,
         float* calculatedValue)
 {
+    Q_ASSERT(calculatedValue != NULL);
     UnitType unitType = UnitTypeDefault;
     if ((!obj->getValue()->IsString()) && (!obj->getValue()->IsStringObject()))
     {
@@ -811,28 +820,28 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float maxPixels, floa
         {
             numberPart = 0.0f;
         }
-        *calculatedValue = dpMM * numberPart * INCHES_TO_MM_MUL;
+        *calculatedValue = dotsPerMillimeter * numberPart * INCHES_TO_MM_MUL;
         break;
     case UnitTypeMM:
         if (numberPart < 0.0f)
         {
             numberPart = 0.0f;
         }
-        *calculatedValue = dpMM * numberPart;
+        *calculatedValue = dotsPerMillimeter * numberPart;
         break;
     case UnitTypeCM:
         if (numberPart < 0.0f)
         {
             numberPart = 0.0f;
         }
-        *calculatedValue = dpMM * numberPart * CM_TO_MM_MUL;
+        *calculatedValue = dotsPerMillimeter * numberPart * CM_TO_MM_MUL;
         break;
     case UnitTypePT:
         if (numberPart < 0.0f)
         {
             numberPart = 0.0f;
         }
-        *calculatedValue = dpMM * numberPart * PT_TO_MM_MUL;
+        *calculatedValue = dotsPerMillimeter * numberPart * PT_TO_MM_MUL;
         break;
     default:
         return NATIVE_ERROR_NOTSUPPORTED;
