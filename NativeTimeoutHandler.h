@@ -16,8 +16,8 @@
 
 using namespace v8;
 
-class TiV8Event;
 class QTimer;
+class TiV8Event;
 
 /**
  * NativeTimeoutHandler
@@ -27,7 +27,7 @@ class NativeTimeoutHandler : public QObject
     Q_OBJECT
 
 public:
-    NativeTimeoutHandler(Handle<Number> number, Handle<Function> eventFunction,
+    NativeTimeoutHandler(int number, Handle<Function> eventFunction,
                          bool interval);
     ~NativeTimeoutHandler();
     int getId();

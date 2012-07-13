@@ -212,13 +212,13 @@ Handle<Value> TiRootObject::_alert(void*, TiObject*, const Arguments& args)
 
 Handle<Value> TiRootObject::_clearInterval(void*, TiObject*, const Arguments& args)
 {
-    TiRootObject::clearTimeoutHelper(args, true);
+    clearTimeoutHelper(args, true);
     return Undefined();
 }
 
 Handle<Value> TiRootObject::_clearTimeout(void*, TiObject*, const Arguments& args)
 {
-    TiRootObject::clearTimeoutHelper(args, false);
+    clearTimeoutHelper(args, false);
     return Undefined();
 }
 
@@ -226,7 +226,7 @@ void TiRootObject::clearTimeoutHelper(const Arguments& args, bool interval)
 {
     if ((args.Length() != 1) || (!args[0]->IsNumber()))
     {
-        return;
+        ThrowException(String::New(Ti::Msg::INTERNAL__args0_is_not_a_number));
     }
     Handle<Number> number = Handle<Number>::Cast(args[0]);
     TiTimeoutManager* timeoutManager = TiTimeoutManager::instance();
@@ -307,12 +307,12 @@ Handle<Value> TiRootObject::_require(void*, TiObject*, const Arguments& args)
 
 Handle<Value> TiRootObject::_setInterval(void*, TiObject*, const Arguments& args)
 {
-    return TiRootObject::setTimeoutHelper(args, true);
+    return setTimeoutHelper(args, true);
 }
 
 Handle<Value> TiRootObject::_setTimeout(void*, TiObject*, const Arguments& args)
 {
-    return TiRootObject::setTimeoutHelper(args, false);
+    return setTimeoutHelper(args, false);
 }
 
 Handle<Value> TiRootObject::setTimeoutHelper(const Arguments& args, bool interval)
@@ -320,12 +320,12 @@ Handle<Value> TiRootObject::setTimeoutHelper(const Arguments& args, bool interva
     HandleScope handleScope;
     if ((args.Length() != 2) || (!args[0]->IsFunction()) || (!args[1]->IsNumber()))
     {
-        return Undefined();
+        ThrowException(String::New(Ti::Msg::Invalid_arguments));
     }
     Handle<Function> function = Handle<Function>::Cast(args[0]);
     Handle<Number> number = Handle<Number>::Cast(args[1]);
     TiTimeoutManager* timeoutManager = TiTimeoutManager::instance();
-    int id = timeoutManager->createTimeout(number, function, interval);
+    int id = timeoutManager->createTimeout((int)number->Value(), function, interval);
     Handle<Number> timerId = Number::New(id);
     return timerId;
 }

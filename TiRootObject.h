@@ -12,8 +12,6 @@
 
 using namespace std;
 
-class TiTimeoutManager;
-
 struct FUNCTION_ENTRY;
 /*
  * TiRootObject

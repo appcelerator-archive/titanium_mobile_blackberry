@@ -26,13 +26,12 @@ class TiTimeoutManager
 public:
     static TiTimeoutManager* instance();
     void clearTimeout(int id, bool interval);
-    int createTimeout(Handle<Number> number, Handle<Function> eventFunction, bool interval = false);
+    int createTimeout(int number, Handle<Function> eventFunction, bool interval = false);
     ~TiTimeoutManager();
 
 private:
     TiTimeoutManager();
     std::map<std::pair<int, bool>, NativeTimeoutHandler*> timeoutList_;
-    unsigned int id_;
     static TiTimeoutManager* timeoutManager_;
 };
 

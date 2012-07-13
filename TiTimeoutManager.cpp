@@ -13,14 +13,11 @@ TiTimeoutManager* TiTimeoutManager::timeoutManager_ = NULL;
 
 TiTimeoutManager* TiTimeoutManager::instance()
 {
-    if (!timeoutManager_)
-    {
-        timeoutManager_ = new TiTimeoutManager;
-    }
-    return timeoutManager_;
+    static TiTimeoutManager instance;
+    return &instance;
 }
 
-int TiTimeoutManager::createTimeout(Handle<Number> number, Handle<Function> eventFunction, bool interval)
+int TiTimeoutManager::createTimeout(int number, Handle<Function> eventFunction, bool interval)
 {
     NativeTimeoutHandler* timeout = new NativeTimeoutHandler(number, eventFunction, interval);
     timeoutList_.insert(std::make_pair(std::make_pair(timeout->getId(), interval), timeout));
@@ -46,7 +43,7 @@ TiTimeoutManager::~TiTimeoutManager()
     std::map<std::pair<int, bool>, NativeTimeoutHandler*>::iterator itr = timeoutList_.begin();
     for (; itr != timeoutList_.end(); itr++)
     {
-        if (itr != timeoutList_.end() && itr->second)
+        if (itr != timeoutList_.end() && itr->second != NULL)
         {
             itr->second->clearTimeout();
             delete itr->second;

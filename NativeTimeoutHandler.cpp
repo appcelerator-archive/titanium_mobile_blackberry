@@ -12,7 +12,7 @@
 
 int NativeTimeoutHandler::idGenerator = 0;
 
-NativeTimeoutHandler::NativeTimeoutHandler(Handle<Number> number, Handle<Function> eventFunction, bool interval)
+NativeTimeoutHandler::NativeTimeoutHandler(int number, Handle<Function> eventFunction, bool interval)
 {
     Handle<Object> source;
     event_ = TiV8Event::createEvent("", eventFunction, source);
@@ -24,7 +24,7 @@ NativeTimeoutHandler::NativeTimeoutHandler(Handle<Number> number, Handle<Functio
     {
         timer_->setSingleShot(true);
     }
-    timer_->start((int)number->Value());
+    timer_->start(number);
 }
 
 void NativeTimeoutHandler::clearTimeout()
