@@ -8,12 +8,12 @@
 #include "NativePlatformInterface.h"
 #include "TiConstants.h"
 #include <vector>
-
+#include <math.h>
 #include <qsize.h>
 
-#include <bps/deviceinfo.h>
 #include <bb/device/Display>
 #include <bb/device/DisplayManager>
+#include <bps/deviceinfo.h>
 
 // TODO: Remove once all functions implemented
 #pragma GCC diagnostic ignored "-Wunused-function"
@@ -112,27 +112,36 @@ Handle<Value> NativePlatformInterface::getDisplayCaps()
     bb::device::DisplayManager displayManager;
     bb::device::Display& display = displayManager.getDisplay(displayManager.primaryDisplayId());
 
-    // Constants from BB10 Dev Alpha specification
-    // bb10ydpi = 1280 / 4.2" (display height)=~304.76
-    // bb10xdpi = 768 / 2.57" (display width) =~298.83
-    const float bb10ydpi = 305.0f;
-    const float bb10xdpi = 229.0f;
-    const float mmPerInch = 25.4f;
-    const float bb10dpi = 356.0f;
+    const float MMPERINCH = 25.4f;
 
-    QSize size = display.pixelSize();
+    QSize pixelSize = display.pixelSize();
     QSizeF physicalSize = display.physicalSize();
 
-    float physicalWidth = (physicalSize.width() == 0.0f) ? bb10xdpi : ((float)size.width() / ((float)physicalSize.width() * mmPerInch));
-    float physicalHeight = (physicalSize.height() == 0.0f) ? bb10ydpi : ((float)size.height() / ((float)physicalSize.height() * mmPerInch));
+    const float physicalWidth = physicalSize.width();
+    const float physicalHeight = physicalSize.height();
+    const float pixelWidth = pixelSize.width();
+    const float pixelHeight = pixelSize.height();
+
+    float xdpi = 0.0f, ydpi = 0.0f;
+    // Calculate pixel per inch in x/y dimensions
+    if (physicalSize != QSizeF(0.0f, 0.0f))
+    {
+        xdpi = (pixelWidth / physicalWidth) * MMPERINCH;
+        ydpi = (pixelHeight / physicalHeight) * MMPERINCH;
+    }
+
+    // Calculate pixels density
+    const float diagonalWidth = sqrtf(physicalWidth * physicalWidth + physicalHeight * physicalHeight) / MMPERINCH;
+    const float diagonalPixels = sqrtf(pixelWidth * pixelWidth + pixelHeight * pixelHeight);
 
     dCapsObject->Set(String::NewSymbol("density"), String::New("high"));
-    dCapsObject->Set(String::NewSymbol("dpi"), Number::New(bb10dpi));
+    dCapsObject->Set(String::NewSymbol("dpi"), Number::New(diagonalPixels / diagonalWidth));
+    // TODO: Find out do we need this 'logicalDensityFactor' for BB. Defaulting to 1.0 for now
     dCapsObject->Set(String::NewSymbol("logicalDensityFactor"), Number::New(1.0));
-    dCapsObject->Set(String::NewSymbol("platformWidth"), Number::New(size.width()));
-    dCapsObject->Set(String::NewSymbol("platformHeight"), Number::New(size.height()));
-    dCapsObject->Set(String::NewSymbol("xdpi"), Number::New(physicalWidth));
-    dCapsObject->Set(String::NewSymbol("ydpi"), Number::New(physicalHeight));
+    dCapsObject->Set(String::NewSymbol("platformWidth"), Number::New(pixelWidth));
+    dCapsObject->Set(String::NewSymbol("platformHeight"), Number::New(pixelHeight));
+    dCapsObject->Set(String::NewSymbol("xdpi"), Number::New(xdpi));
+    dCapsObject->Set(String::NewSymbol("ydpi"), Number::New(ydpi));
 
     return scope.Close(dCapsObject);
 }
