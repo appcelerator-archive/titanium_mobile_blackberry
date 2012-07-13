@@ -258,8 +258,8 @@ Handle<Value> TiRootObject::_require(void*, TiObject*, const Arguments& args)
 
     // wrap the module
     {
-        static const string preWrap = "(function () { var exports = {};\n";
-        static const string postWrap = "\nreturn exports; })();";
+        static const string preWrap = "(function () { var module = { exports: {} }; var exports = module.exports;\n";
+        static const string postWrap = "\nreturn module.exports; })();";
         javascript = preWrap + javascript + postWrap;
     }
 
