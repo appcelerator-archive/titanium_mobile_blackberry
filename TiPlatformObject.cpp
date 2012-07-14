@@ -88,7 +88,7 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
-        "version", TI_PROP_PERMISSION_READ, N_PLATFORM_PROP_USERNAME
+        "version", TI_PROP_PERMISSION_READ, N_PLATFORM_PROP_VERSION
     }
 };
 
