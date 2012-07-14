@@ -6,24 +6,26 @@
  */
 
 #include "TiUIObject.h"
-#include "TiGenericFunctionObject.h"
+
 #include "TiCascadesApp.h"
 #include "TiConstants.h"
-#include "TiUIWindow.h"
-#include "TiUILabel.h"
+#include "TiGenericFunctionObject.h"
+#include "TiUIActivityIndicator.h"
+#include "TiUIAlertDialog.h"
 #include "TiUIButton.h"
-#include "TiUISlider.h"
+#include "TiUIImageView.h"
+#include "TiUILabel.h"
+#include "TiUIOptionDialog.h"
 #include "TiUIPicker.h"
 #include "TiUIProgressBar.h"
-#include "TiUIImageView.h"
+#include "TiUISlider.h"
+#include "TiUISwitch.h"
 #include "TiUITab.h"
 #include "TiUITabGroup.h"
-#include "TiUITextField.h"
-#include "TiUIActivityIndicator.h"
 #include "TiUITableView.h"
-#include "TiUISwitch.h"
-#include "TiUIOptionDialog.h"
-#include "TiUIAlertDialog.h"
+#include "TiUITextField.h"
+#include "TiUIWindow.h"
+
 #include <string.h>
 
 TiUIObject::TiUIObject()
