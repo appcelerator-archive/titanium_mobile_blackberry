@@ -65,6 +65,7 @@ int NativePageObject::initialize(TiEventContainerFactory* containerFactory)
 
     //TODO separate the logic of container and page in different classes
     container_ = Container::create();
+    setContainer(container_);
     page_ = Page::create();
     page_->setContent(container_);
 

@@ -65,7 +65,8 @@ int NativeTabObject::setIcon(TiObject* obj)
     {
         return error;
     }
-    const bb::cascades::Image image = bb::cascades::Image(QUrl(str));
+    // TODO: fix path
+    const bb::cascades::Image image = bb::cascades::Image(QUrl("assets" + str));
     tabProperties_->setImage(image);
     return NATIVE_ERROR_OK;
 }
