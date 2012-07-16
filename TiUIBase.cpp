@@ -12,6 +12,7 @@
 #include "TiPropertyMapObject.h"
 #include "TiPropertyGetObject.h"
 #include "TiV8Event.h"
+#include "TiMessageStrings.h"
 #include <string>
 #include <ctype.h>
 
@@ -197,7 +198,7 @@ TiUIBase::~TiUIBase()
 }
 
 TiUIBase::TiUIBase(const char* name)
-    : TiObject(name)
+    : TiProxy(name)
 {
 }
 
@@ -244,10 +245,11 @@ void TiUIBase::setTiMappingProperties(const TiProperty* props, int propertyCount
 
 void TiUIBase::onCreateStaticMembers()
 {
-    TiObject::onCreateStaticMembers();
+    TiProxy::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "add", this, _add);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "addEventListener", this, _addEventListener);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "hide", this, _hide);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "remove", this, _remove);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "removeEventListener", this, _removeEventListener);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "show", this, _show);
     setTiMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
@@ -423,6 +425,54 @@ Handle<Value> TiUIBase::_hide(void* userContext, TiObject*, const Arguments&)
     TiUIBase* obj = (TiUIBase*) userContext;
     NativeObject* no = obj->getNativeObject();
     no->setVisibility(false);
+    no->release();
+    return Undefined();
+}
+
+Handle<Value> TiUIBase::_remove(void* userContext, TiObject*, const Arguments& args)
+{
+    HandleScope handleScope;
+    // JavaScript usage:
+    //
+    // arg[0] = Titanium.UI.View
+    //
+    if (args.Length() < 1)
+    {
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
+    }
+    if (!args[0]->IsObject())
+    {
+        return ThrowException(String::New(Ti::Msg::Invalid_remove_argument));
+    }
+
+    TiUIBase* obj = (TiUIBase*) userContext;
+    TiObject* removeObject = TiObject::getTiObjectFromJsObject(args[0]);
+    if (removeObject == NULL)
+    {
+        return ThrowException(String::New(Ti::Msg::Invalid_remove_argument));
+    }
+    vector<ObjectEntry>::const_iterator it;
+    for (it = obj->childControls_.begin(); it != obj->childControls_.end(); it++)
+    {
+        if ((*it).isSameInstance(removeObject))
+        {
+            NativeObject* parentControl = obj->getNativeObject();
+            if (parentControl == NULL)
+            {
+                break;
+            }
+            NativeObject* childControl = (*it)->getNativeObject();
+            if (childControl == NULL)
+            {
+                parentControl->release();
+                break;
+            }
+            parentControl->removeChildNativeObject(childControl);
+            childControl->release();
+            parentControl->release();
+            break;
+        }
+    }
     return Undefined();
 }
 

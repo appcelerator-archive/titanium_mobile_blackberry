@@ -154,6 +154,7 @@ public:
     virtual int scrollToIndex(int index);
     virtual int setActiveTab(NativeObject* tab);
     virtual int setActiveTab(int index);
+    virtual int removeChildNativeObject(NativeObject* obj);
     virtual int removeEventHandler(int eventId);
     virtual int setVisibility(bool visible);
 

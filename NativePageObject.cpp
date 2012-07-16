@@ -89,6 +89,13 @@ int NativePageObject::open()
     return NATIVE_ERROR_OK;
 }
 
+int NativePageObject::removeChildNativeObject(NativeObject* obj)
+{
+    bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
+    container_->remove(control);
+    return NATIVE_ERROR_OK;
+}
+
 int NativePageObject::setBackgroundColor(TiObject* obj)
 {
     float r;
