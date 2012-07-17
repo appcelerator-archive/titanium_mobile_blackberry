@@ -36,7 +36,7 @@ void TiUIOptionDialog::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
-        TiUIBase::initializeTiObject(parentContext);
+        TiProxy::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_DROPDOWN);
         setNativeObject(obj);
         obj->release();

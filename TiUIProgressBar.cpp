@@ -22,7 +22,7 @@ void TiUIProgressBar::onCreateStaticMembers()
     TiUIBase::onCreateStaticMembers();
 }
 
-TiUIBase* TiUIProgressBar::createProgressBar(NativeObjectFactory* nativeObjectFactory)
+TiUIProgressBar* TiUIProgressBar::createProgressBar(NativeObjectFactory* nativeObjectFactory)
 {
     TiUIProgressBar* obj = new TiUIProgressBar;
     obj->setNativeObjectFactory(nativeObjectFactory);
@@ -34,7 +34,7 @@ void TiUIProgressBar::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
-        TiUIBase::initializeTiObject(parentContext);
+        TiProxy::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_PROGRESSBAR);
         setNativeObject(obj);
         obj->release();

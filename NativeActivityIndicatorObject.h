@@ -8,7 +8,7 @@
 #ifndef NATIVEACTIVITYINDICATOROBJECT_H_
 #define NATIVEACTIVITYINDICATOROBJECT_H_
 
-#include "NativeControlObject.h"
+#include "NativeProxyObject.h"
 
 //forward declaration
 namespace bb
@@ -25,7 +25,7 @@ class ActivityIndicator;
  * UI: Activity Indicator
  */
 
-class NativeActivityIndicatorObject : public NativeControlObject
+class NativeActivityIndicatorObject : public NativeProxyObject
 {
 public:
     static NativeActivityIndicatorObject* createActivityIndicator();

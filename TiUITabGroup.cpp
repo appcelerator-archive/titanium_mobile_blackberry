@@ -18,7 +18,7 @@ TiUITabGroup::~TiUITabGroup()
 {
 }
 
-TiUIBase* TiUITabGroup::createTabGroup(NativeObjectFactory* objectFactory)
+TiUITabGroup* TiUITabGroup::createTabGroup(NativeObjectFactory* objectFactory)
 {
     TiUITabGroup* obj = new TiUITabGroup;
     obj->setNativeObjectFactory(objectFactory);
@@ -38,7 +38,7 @@ void TiUITabGroup::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
-        TiUIBase::initializeTiObject(parentContext);
+        TiProxy::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_TABGROUP);
         setNativeObject(obj);
         obj->release();

@@ -23,7 +23,8 @@ class TiCascadesApp;
 class TiUIBase : public TiProxy
 {
 public:
-    virtual void setParametersFromObject(void* userContext, Local<Object> obj);
+    static TiUIBase* createView(NativeObjectFactory* nativeObjectFactory);
+    virtual void initializeTiObject(TiObject* parentContext);
     virtual bool isUIObject() const;
     virtual void setTiMappingProperties(const TiProperty* props, int propertyCount);
 
@@ -31,8 +32,12 @@ protected:
     TiUIBase(const char* name);
     TiUIBase();
     virtual ~TiUIBase();
+
     virtual bool canAddMembers() const;
     virtual void onCreateStaticMembers();
+    // FIXME move back to private once TiUITabGroup has been modified to not abuse it for addTab
+    static Handle<Value> _add(void* userContext, TiObject* caller, const Arguments& args);
+
     Persistent<Object> createConfig_;
     vector<ObjectEntry> childControls_;
 
@@ -43,10 +48,6 @@ private:
     static Handle<Value> _remove(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _show(void* userContext, TiObject* caller, const Arguments& args);
 
-protected:
-    static Handle<Value> _add(void* userContext, TiObject* caller, const Arguments& args);
-
-private:
     // fields
     NativeObject* nativeObject_;
     NativeObjectFactory* nativeObjectFactory_;

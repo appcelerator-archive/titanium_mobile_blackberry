@@ -6,10 +6,11 @@
  */
 
 #include "TiUIActivityIndicator.h"
+
 #include "TiGenericFunctionObject.h"
 
 TiUIActivityIndicator::TiUIActivityIndicator()
-    : TiUIBase("")
+    : TiProxy("")
 {
 }
 
@@ -17,7 +18,7 @@ TiUIActivityIndicator::~TiUIActivityIndicator()
 {
 }
 
-TiUIBase* TiUIActivityIndicator::createActivityIndicator(NativeObjectFactory* nativeObjectFactory)
+TiUIActivityIndicator* TiUIActivityIndicator::createActivityIndicator(NativeObjectFactory* nativeObjectFactory)
 {
     TiUIActivityIndicator* obj = new TiUIActivityIndicator;
     obj->setNativeObjectFactory(nativeObjectFactory);
@@ -27,7 +28,7 @@ TiUIBase* TiUIActivityIndicator::createActivityIndicator(NativeObjectFactory* na
 
 void TiUIActivityIndicator::onCreateStaticMembers()
 {
-    TiUIBase::onCreateStaticMembers();
+    TiProxy::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "show", this, show_);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "hide", this, hide_);
 }
@@ -36,7 +37,7 @@ void TiUIActivityIndicator::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
-        TiUIBase::initializeTiObject(parentContext);
+        TiProxy::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_ACTIVITYINDICATOR);
         setNativeObject(obj);
         obj->release();

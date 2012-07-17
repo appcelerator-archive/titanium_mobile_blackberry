@@ -48,9 +48,13 @@ int NativeProxyObject::setEventHandler(const char* eventName, TiEvent* event)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-int NativeProxyObject::removeEventHandler(int)
+int NativeProxyObject::removeEventHandler(const char* eventName, int eventId)
 {
-    // FIXME: implement
+    if (events_.contains(eventName))
+    {
+        events_[eventName]->container->removeListener(eventId);
+        return NATIVE_ERROR_OK;
+    }
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 

@@ -121,6 +121,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
         obj = NativeAlertDialogObject::createAlertDialog();
         break;
 
+    case N_TYPE_VIEW:
+        obj = NativeControlObject::createView();
+        break;
+
     }
     if (obj != NULL)
     {

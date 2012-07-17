@@ -38,6 +38,7 @@ enum NATIVE_TYPE
     , N_TYPE_TABGROUP
     , N_TYPE_TEXT_FIELD
     , N_TYPE_TOGGLEBUTTON
+    , N_TYPE_VIEW
     , N_TYPE_WINDOW
 };
 
@@ -159,7 +160,7 @@ public:
     virtual int setActiveTab(NativeObject* tab);
     virtual int setActiveTab(int index);
     virtual int removeChildNativeObject(NativeObject* obj);
-    virtual int removeEventHandler(int eventId);
+    virtual int removeEventHandler(const char* eventName, int eventId);
     virtual int setVisibility(bool visible);
     virtual int fireEvent(const char* name, const TiObject* event) const;
 

@@ -97,7 +97,7 @@ int NativeObject::setEventHandler(const char*, TiEvent*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-int NativeObject::removeEventHandler(int)
+int NativeObject::removeEventHandler(const char*, int)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }

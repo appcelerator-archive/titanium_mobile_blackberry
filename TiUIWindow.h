@@ -21,7 +21,7 @@
 class TiUIWindow : public TiUIBase
 {
 public:
-    static TiUIBase* createWindow(NativeObjectFactory* objectFactory);
+    static TiUIWindow* createWindow(NativeObjectFactory* objectFactory);
 
 protected:
     virtual ~TiUIWindow();

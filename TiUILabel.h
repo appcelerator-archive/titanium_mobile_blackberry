@@ -21,7 +21,7 @@
 class TiUILabel : public TiUIBase
 {
 public:
-    static TiUIBase* createLabel(NativeObjectFactory* nativeObjectFactory);
+    static TiUILabel* createLabel(NativeObjectFactory* nativeObjectFactory);
 
 protected:
     virtual ~TiUILabel();

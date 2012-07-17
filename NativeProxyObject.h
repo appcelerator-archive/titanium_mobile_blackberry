@@ -83,7 +83,7 @@ class NativeProxyObject: public NativeObject
 {
 public:
     virtual int fireEvent(const char* name, const TiObject* event) const;
-    virtual int removeEventHandler(int eventId);
+    virtual int removeEventHandler(const char* eventName, int eventId);
     virtual int setEventHandler(const char* eventName, TiEvent* event);
 
     // Ti event types (tet)

@@ -16,7 +16,7 @@ TiUIButton::~TiUIButton()
 {
 }
 
-TiUIBase* TiUIButton::createButton(NativeObjectFactory* nativeObjectFactory)
+TiUIButton* TiUIButton::createButton(NativeObjectFactory* nativeObjectFactory)
 {
     TiUIButton* obj = new TiUIButton;
     obj->setNativeObjectFactory(nativeObjectFactory);
@@ -28,7 +28,7 @@ void TiUIButton::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
-        TiUIBase::initializeTiObject(parentContext);
+        TiProxy::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_BUTTON);
         setNativeObject(obj);
         obj->release();

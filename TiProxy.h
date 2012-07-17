@@ -23,14 +23,15 @@ class TiProxy : public TiObject
 {
 public:
     virtual void onCreateStaticMembers();
+    virtual void setParametersFromObject(void* userContext, Local<Object> obj);
 
 protected:
     TiProxy();
     explicit TiProxy(const char* name);
     virtual ~TiProxy();
 
-    virtual void onAddEventListener(const char* eventName, Handle<Function> eventFunction) const;
-    virtual void onRemoveEventListener(const char* eventName, Handle<Function> eventFunction) const;
+    virtual void onAddEventListener(const char* eventName, Handle<Function> eventFunction);
+    virtual void onRemoveEventListener(const char* eventName, Handle<Function> eventFunction);
 
 private:
     // Disable copy ctor & assignment operator

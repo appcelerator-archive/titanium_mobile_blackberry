@@ -8,7 +8,7 @@
 #ifndef TIUIACTIVITYINDICATOR_H_
 #define TIUIACTIVITYINDICATOR_H_
 
-#include "TiUIBase.h"
+#include "TiProxy.h"
 
 /*
  * TiUIActivityIndicator
@@ -17,10 +17,10 @@
  *
  */
 
-class TiUIActivityIndicator : public TiUIBase
+class TiUIActivityIndicator : public TiProxy
 {
 public:
-    static TiUIBase* createActivityIndicator(NativeObjectFactory* nativeObjectFactory);
+    static TiUIActivityIndicator* createActivityIndicator(NativeObjectFactory* nativeObjectFactory);
 
 protected:
     virtual ~TiUIActivityIndicator();
