@@ -32,7 +32,6 @@ public:
 private:
     TiTimeoutManager();
     std::map<std::pair<int, bool>, NativeTimeoutHandler*> timeoutList_;
-    static TiTimeoutManager* timeoutManager_;
 };
 
 

@@ -226,7 +226,7 @@ void TiRootObject::clearTimeoutHelper(const Arguments& args, bool interval)
 {
     if ((args.Length() != 1) || (!args[0]->IsNumber()))
     {
-        ThrowException(String::New(Ti::Msg::INTERNAL__args0_is_not_a_number));
+        ThrowException(String::New(Ti::Msg::Invalid_arguments));
     }
     Handle<Number> number = Handle<Number>::Cast(args[0]);
     TiTimeoutManager* timeoutManager = TiTimeoutManager::instance();

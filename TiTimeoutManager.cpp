@@ -9,8 +9,6 @@
 
 #include "NativeTimeoutHandler.h"
 
-TiTimeoutManager* TiTimeoutManager::timeoutManager_ = NULL;
-
 TiTimeoutManager* TiTimeoutManager::instance()
 {
     static TiTimeoutManager instance;
