@@ -378,10 +378,14 @@ Handle<Value> TiUIBase::_add(void* userContext, TiObject*, const Arguments& args
         TiObject* addObj = getTiObjectFromJsObject(args[0]);
         if ((addObj == NULL) || (!addObj->isUIObject()))
         {
-            return Undefined();
+            return ThrowException(String::New(Ti::Msg::Invalid_add_argument));
         }
         TiUIBase* uiObj = (TiUIBase*) addObj;
         NativeObject* childNO = uiObj->getNativeObject();
+        if (childNO == NULL)
+        {
+            return ThrowException(String::New(Ti::Msg::Invalid_add_argument));
+        }
         NativeObject* parentNO = obj->getNativeObject();
         if (N_SUCCEEDED(parentNO->addChildNativeObject(childNO)))
         {
@@ -466,8 +470,8 @@ Handle<Value> TiUIBase::_remove(void* userContext, TiObject*, const Arguments& a
             NativeObject* childControl = (*it)->getNativeObject();
             if (childControl == NULL)
             {
-                TI_INTERNAL(Ti::Msg::INTERNAL__Missing_native_object);
-                break;
+                parentControl->release();
+                return ThrowException(String::New(Ti::Msg::INTERNAL__Missing_native_object));
             }
             parentControl->removeChildNativeObject(childControl);
             childControl->release();
