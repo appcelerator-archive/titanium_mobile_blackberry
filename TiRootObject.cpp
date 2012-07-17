@@ -12,6 +12,7 @@
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
 #include "TiTitaniumObject.h"
+#include "TiTimeoutManager.h"
 #include "TiV8EventContainerFactory.h"
 
 #include <fstream>
@@ -211,16 +212,25 @@ Handle<Value> TiRootObject::_alert(void*, TiObject*, const Arguments& args)
 
 Handle<Value> TiRootObject::_clearInterval(void*, TiObject*, const Arguments& args)
 {
-    // TODO: finish this
-    (void)args;
+    clearTimeoutHelper(args, true);
     return Undefined();
 }
 
 Handle<Value> TiRootObject::_clearTimeout(void*, TiObject*, const Arguments& args)
 {
-    // TODO: finish this
-    (void)args;
+    clearTimeoutHelper(args, false);
     return Undefined();
+}
+
+void TiRootObject::clearTimeoutHelper(const Arguments& args, bool interval)
+{
+    if ((args.Length() != 1) || (!args[0]->IsNumber()))
+    {
+        ThrowException(String::New(Ti::Msg::Invalid_arguments));
+    }
+    Handle<Number> number = Handle<Number>::Cast(args[0]);
+    TiTimeoutManager* timeoutManager = TiTimeoutManager::instance();
+    timeoutManager->clearTimeout((int)number->Value(), interval);
 }
 
 Handle<Value> TiRootObject::_require(void*, TiObject*, const Arguments& args)
@@ -297,15 +307,27 @@ Handle<Value> TiRootObject::_require(void*, TiObject*, const Arguments& args)
 
 Handle<Value> TiRootObject::_setInterval(void*, TiObject*, const Arguments& args)
 {
-    // TODO: finish this
-    (void)args;
-    return Undefined();
+    return setTimeoutHelper(args, true);
 }
 
 Handle<Value> TiRootObject::_setTimeout(void*, TiObject*, const Arguments& args)
 {
-    // TODO: finish this
-    (void)args;
-    return Undefined();
+    return setTimeoutHelper(args, false);
 }
+
+Handle<Value> TiRootObject::setTimeoutHelper(const Arguments& args, bool interval)
+{
+    HandleScope handleScope;
+    if ((args.Length() != 2) || (!args[0]->IsFunction()) || (!args[1]->IsNumber()))
+    {
+        ThrowException(String::New(Ti::Msg::Invalid_arguments));
+    }
+    Handle<Function> function = Handle<Function>::Cast(args[0]);
+    Handle<Number> number = Handle<Number>::Cast(args[1]);
+    TiTimeoutManager* timeoutManager = TiTimeoutManager::instance();
+    int id = timeoutManager->createTimeout((int)number->Value(), function, interval);
+    Handle<Number> timerId = Number::New(id);
+    return timerId;
+}
+
 
