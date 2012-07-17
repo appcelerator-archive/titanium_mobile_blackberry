@@ -77,6 +77,11 @@ int NativeObject::setActiveTab(int index)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+int NativeObject::removeChildNativeObject(NativeObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 bool NativeObject::isInitializationComplete() const
 {
     return isInitializationComplete_;

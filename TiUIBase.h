@@ -8,7 +8,7 @@
 #ifndef TIUIBASE_H_
 #define TIUIBASE_H_
 
-#include "TiObject.h"
+#include "TiProxy.h"
 #include <vector>
 
 using namespace std;
@@ -20,7 +20,7 @@ class TiCascadesApp;
  *
  * Titanium base class for all UI objects such as windows, labels, buttons, etc...
  */
-class TiUIBase : public TiObject
+class TiUIBase : public TiProxy
 {
 public:
     virtual void setParametersFromObject(void* userContext, Local<Object> obj);
@@ -43,6 +43,7 @@ private:
     static Handle<Value> _addEventListener(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _getChildren(void* userContext);
     static Handle<Value> _hide(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _remove(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _removeEventListener(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _show(void* userContext, TiObject* caller, const Arguments& args);
 

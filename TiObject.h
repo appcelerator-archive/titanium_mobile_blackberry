@@ -47,6 +47,7 @@ public:
     const ObjectEntry& operator =(const ObjectEntry& entry);
     TiObject* getObject() const;
     TiObject* operator ->() const;
+    bool isSameInstance(const TiObject* obj) const;
 private:
     TiObject* obj_;
     void* userContext_;

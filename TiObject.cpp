@@ -555,3 +555,8 @@ TiObject* ObjectEntry::operator ->() const
 {
     return obj_;
 }
+
+bool ObjectEntry::isSameInstance(const TiObject* obj) const
+{
+    return obj == obj_;
+}

@@ -6,12 +6,14 @@
  */
 
 #include "TiUIBase.h"
+#include "TiLogger.h"
 #include "TiGenericFunctionObject.h"
 #include "TiPropertySetFunctionObject.h"
 #include "TiPropertyGetFunctionObject.h"
 #include "TiPropertyMapObject.h"
 #include "TiPropertyGetObject.h"
 #include "TiV8Event.h"
+#include "TiMessageStrings.h"
 #include <string>
 #include <ctype.h>
 
@@ -202,7 +204,7 @@ TiUIBase::~TiUIBase()
 }
 
 TiUIBase::TiUIBase(const char* name)
-    : TiObject(name)
+    : TiProxy(name)
 {
 }
 
@@ -249,10 +251,11 @@ void TiUIBase::setTiMappingProperties(const TiProperty* props, int propertyCount
 
 void TiUIBase::onCreateStaticMembers()
 {
-    TiObject::onCreateStaticMembers();
+    TiProxy::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "add", this, _add);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "addEventListener", this, _addEventListener);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "hide", this, _hide);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "remove", this, _remove);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "removeEventListener", this, _removeEventListener);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "show", this, _show);
     setTiMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
@@ -380,10 +383,14 @@ Handle<Value> TiUIBase::_add(void* userContext, TiObject*, const Arguments& args
         TiObject* addObj = getTiObjectFromJsObject(args[0]);
         if ((addObj == NULL) || (!addObj->isUIObject()))
         {
-            return Undefined();
+            return ThrowException(String::New(Ti::Msg::Invalid_add_argument));
         }
         TiUIBase* uiObj = (TiUIBase*) addObj;
         NativeObject* childNO = uiObj->getNativeObject();
+        if (childNO == NULL)
+        {
+            return ThrowException(String::New(Ti::Msg::Invalid_add_argument));
+        }
         NativeObject* parentNO = obj->getNativeObject();
         if (N_SUCCEEDED(parentNO->addChildNativeObject(childNO)))
         {
@@ -428,6 +435,60 @@ Handle<Value> TiUIBase::_hide(void* userContext, TiObject*, const Arguments&)
     TiUIBase* obj = (TiUIBase*) userContext;
     NativeObject* no = obj->getNativeObject();
     no->setVisibility(false);
+    no->release();
+    return Undefined();
+}
+
+Handle<Value> TiUIBase::_remove(void* userContext, TiObject*, const Arguments& args)
+{
+    HandleScope handleScope;
+    // JavaScript usage:
+    //
+    // arg[0] = Titanium.UI.View
+    //
+    if (args.Length() < 1)
+    {
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
+    }
+    if (!args[0]->IsObject())
+    {
+        return ThrowException(String::New(Ti::Msg::Invalid_remove_argument));
+    }
+
+    TiUIBase* obj = (TiUIBase*) userContext;
+    TiObject* removeObject = TiObject::getTiObjectFromJsObject(args[0]);
+    if (removeObject == NULL)
+    {
+        return ThrowException(String::New(Ti::Msg::Invalid_remove_argument));
+    }
+    NativeObject* parentControl = obj->getNativeObject();
+    if (parentControl == NULL)
+    {
+        return ThrowException(String::New(Ti::Msg::INTERNAL__Missing_native_object));
+    }
+    vector<ObjectEntry>::const_iterator it;
+    bool foundChild = false;
+    for (it = obj->childControls_.begin(); it != obj->childControls_.end(); it++)
+    {
+        if ((*it).isSameInstance(removeObject))
+        {
+            NativeObject* childControl = (*it)->getNativeObject();
+            if (childControl == NULL)
+            {
+                parentControl->release();
+                return ThrowException(String::New(Ti::Msg::INTERNAL__Missing_native_object));
+            }
+            parentControl->removeChildNativeObject(childControl);
+            childControl->release();
+            foundChild = true;
+            break;
+        }
+    }
+    parentControl->release();
+    if (!foundChild)
+    {
+        TI_WARNING(Ti::Msg::Remove_child_warning);
+    }
     return Undefined();
 }
 
