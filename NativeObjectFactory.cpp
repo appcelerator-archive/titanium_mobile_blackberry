@@ -8,20 +8,24 @@
 #include "NativeObjectFactory.h"
 
 #include "NativeActivityIndicatorObject.h"
+#include "NativeAlertDialogObject.h"
 #include "NativeButtonObject.h"
-#include "NativeContainerObject.h"
 #include "NativeDateTimePickerObject.h"
 #include "NativeDropDownObject.h"
 #include "NativeImageViewObject.h"
 #include "NativeLabelObject.h"
 #include "NativeListViewObject.h"
 #include "NativeLoggerObject.h"
+#include "NativePageObject.h"
 #include "NativeProgressBarObject.h"
+#include "NativeTabObject.h"
+#include "NativeTabGroupObject.h"
 #include "NativeSliderObject.h"
 #include "NativeStringInterface.h"
 #include "NativeTextFieldObject.h"
 #include "NativeToggleButtonObject.h"
 #include "TiCascadesApp.h"
+
 #include <bb/cascades/Container>
 
 using namespace bb::cascades;
@@ -54,7 +58,7 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
     case N_TYPE_CONTAINER:
 
     case N_TYPE_WINDOW:
-        obj = NativeContainerObject::createContainer(this);
+        obj = NativePageObject::createPage(this);
         break;
 
     case N_TYPE_LABEL:
@@ -101,8 +105,20 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
         obj = NativeListViewObject::createListView();
         break;
 
+    case N_TYPE_TAB:
+        obj = NativeTabObject::createTab();
+        break;
+
+    case N_TYPE_TABGROUP:
+        obj = NativeTabGroupObject::createTabGroup(this);
+        break;
+
     case N_TYPE_DATE_TIME_PICKER:
         obj = NativeDateTimePickerObject::createDateTimePicker();
+        break;
+
+    case N_TYPE_ALERTDIALOG:
+        obj = NativeAlertDialogObject::createAlertDialog();
         break;
 
     }

@@ -68,6 +68,11 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "icon", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_ICON
+    },
+
+    {
         "image", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_IMAGE
     },
@@ -100,6 +105,11 @@ const static TiProperty g_tiProperties[] =
     {
         "maxDate", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_MAXDATE
+    },
+
+    {
+        "message", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_MESSAGE
     },
 
     {
@@ -173,9 +183,10 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
-        "width", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_WIDTH
-    }
+        "window", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_WINDOW
+    },
+
 };
 
 TiUIBase::TiUIBase()
@@ -250,7 +261,7 @@ void TiUIBase::onCreateStaticMembers()
     value->release();
 }
 
-void TiUIBase::setParametersFromObject(Local<Object> obj)
+void TiUIBase::setParametersFromObject(void* userContext, Local<Object> obj)
 {
     HandleScope handleScope;
     Handle<Value> value;
@@ -270,7 +281,20 @@ void TiUIBase::setParametersFromObject(Local<Object> obj)
         if (foundProp != NULL)
         {
             Local<Value> propValue = obj->Get(propString);
-            foundProp->setValue(propValue);
+            TiObject* addObj = getTiObjectFromJsObject(propValue);
+            if (addObj)
+            {
+                TiUIBase* obj = (TiUIBase*) userContext;
+                TiUIBase* uiObj = (TiUIBase*) addObj;
+                NativeObject* childNO = uiObj->getNativeObject();
+                NativeObject* parentNO = obj->getNativeObject();
+                parentNO->addChildNativeObject(childNO);
+                parentNO->release();
+            }
+            else
+            {
+                foundProp->setValue(propValue);
+            }
         }
     }
 }

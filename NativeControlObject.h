@@ -50,11 +50,13 @@ public:
     virtual int setFont(TiObject* obj);
     virtual int setHeight(TiObject* obj);
     virtual int setHintText(TiObject* obj);
+    virtual int setIcon(TiObject* obj);
     virtual int setImage(TiObject* obj);
     virtual int setLabel(TiObject* obj);
     virtual int setLeft(TiObject* obj);
     virtual int setMax(TiObject* obj);
     virtual int setMaxDate(TiObject* obj);
+    virtual int setMessage(TiObject* obj);
     virtual int setMin(TiObject* obj);
     virtual int setMinDate(TiObject* obj);
     virtual int setOpacity(TiObject* obj);
@@ -70,6 +72,8 @@ public:
     virtual int setVisible(TiObject* obj);
     virtual int getVisible(TiObject* obj);
     virtual int setWidth(TiObject* obj);
+    virtual int setWindow(TiObject* obj);
+
     static int getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a);
     static int getBoolean(TiObject* obj, bool* value);
     static int getString(TiObject* obj, QString& str);
@@ -80,6 +84,12 @@ public:
     static int getPoint(TiObject* obj, float* x, float* y);
     //obtain java script dictionary object and keep it in the multimap
     static int getDictionaryData(TiObject* obj, QVector<QPair<QString, QString> >& dictionary);
+    static int getDateTime(TiObject* obj, QDateTime& dt);
+    // TODO: Need to handle container_ more correctly
+    void setContainer(bb::cascades::Container* c)
+    {
+        container_ = c;
+    }
 
 protected:
     NativeControlObject();

@@ -22,6 +22,7 @@ enum NATIVE_TYPE
 {
     N_TYPE_UNDEFINED
     , N_TYPE_ACTIVITYINDICATOR
+    , N_TYPE_ALERTDIALOG
     , N_TYPE_BUTTON
     , N_TYPE_CONTAINER
     , N_TYPE_DATE_TIME_PICKER
@@ -33,6 +34,8 @@ enum NATIVE_TYPE
     , N_TYPE_OPTION
     , N_TYPE_PROGRESSBAR
     , N_TYPE_SLIDER
+    , N_TYPE_TAB
+    , N_TYPE_TABGROUP
     , N_TYPE_TEXT_FIELD
     , N_TYPE_TOGGLEBUTTON
     , N_TYPE_WINDOW
@@ -76,6 +79,7 @@ enum NATIVE_PROP
     , N_PROP_HIGHLIGHTED_COLOR
     , N_PROP_HINT_TEXT
     , N_PROP_HTML
+    , N_PROP_ICON
     , N_PROP_IMAGE
     , N_PROP_KEEP_SCREEN_ON
     , N_PROP_LABEL
@@ -83,6 +87,7 @@ enum NATIVE_PROP
     , N_PROP_LEFT
     , N_PROP_MAX
     , N_PROP_MAXDATE
+    , N_PROP_MESSAGE
     , N_PROP_MIN
     , N_PROP_MINDATE
     , N_PROP_MINIMUM_FONT_SIZE
@@ -105,6 +110,7 @@ enum NATIVE_PROP
     , N_PROP_VALUE
     , N_PROP_VISIBLE
     , N_PROP_WIDTH
+    , N_PROP_WINDOW
     , N_PROP_WORD_WRAP
     , N_PROP_ZINDEX
 
@@ -144,10 +150,14 @@ public:
     virtual int open();
     virtual int start();
     virtual int stop();
+    virtual int show();
+    virtual int hide();
     virtual void completeInitialization();
     virtual bool isInitializationComplete() const;
     virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual int scrollToIndex(int index);
+    virtual int setActiveTab(NativeObject* tab);
+    virtual int setActiveTab(int index);
     virtual int removeEventHandler(int eventId);
     virtual int setVisibility(bool visible);
 

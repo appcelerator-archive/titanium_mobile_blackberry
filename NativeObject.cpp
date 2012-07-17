@@ -67,6 +67,16 @@ int NativeObject::scrollToIndex(int index)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+int NativeObject::setActiveTab(NativeObject* tab)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+int NativeObject::setActiveTab(int index)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 bool NativeObject::isInitializationComplete() const
 {
     return isInitializationComplete_;
@@ -83,6 +93,16 @@ int NativeObject::removeEventHandler(int eventId)
 }
 
 int NativeObject::setVisibility(bool visible)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+int NativeObject::show()
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+int NativeObject::hide()
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }

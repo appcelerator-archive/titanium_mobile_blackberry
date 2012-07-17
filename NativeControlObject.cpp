@@ -492,6 +492,24 @@ int NativeControlObject::setRight(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setWindow)
+int NativeControlObject::setWindow(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setIcon)
+int NativeControlObject::setIcon(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setMessage)
+int NativeControlObject::setMessage(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
@@ -506,11 +524,13 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_FONT, PROP_SETGET_FUNCTION(setFont), NULL},
     {N_PROP_HEIGHT, PROP_SETGET_FUNCTION(setHeight), NULL},
     {N_PROP_HINT_TEXT, PROP_SETGET_FUNCTION(setHintText), NULL},
+    {N_PROP_ICON, PROP_SETGET_FUNCTION(setIcon), NULL},
     {N_PROP_IMAGE, PROP_SETGET_FUNCTION(setImage), NULL},
     {N_PROP_LABEL, PROP_SETGET_FUNCTION(setLabel), NULL},
     {N_PROP_LEFT, PROP_SETGET_FUNCTION(setLeft), NULL},
     {N_PROP_MAX, PROP_SETGET_FUNCTION(setMax), NULL},
     {N_PROP_MAXDATE, PROP_SETGET_FUNCTION(setMaxDate), NULL},
+    {N_PROP_MESSAGE, PROP_SETGET_FUNCTION(setMessage), NULL},
     {N_PROP_MIN, PROP_SETGET_FUNCTION(setMin), NULL},
     {N_PROP_MINDATE, PROP_SETGET_FUNCTION(setMinDate), NULL},
     {N_PROP_OPACITY, PROP_SETGET_FUNCTION(setOpacity), NULL},
@@ -523,10 +543,12 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_TYPE, PROP_SETGET_FUNCTION(setType), NULL},
     {N_PROP_VALUE, PROP_SETGET_FUNCTION(setValue), NULL},
     {N_PROP_VISIBLE, PROP_SETGET_FUNCTION(setVisible), PROP_SETGET_FUNCTION(getVisible)},
-    {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), NULL}
+    {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), NULL},
+    {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setWindow), NULL}
 };
 
 static SetGetProperties g_props(g_propSetGet, GET_ARRAY_SIZE(g_propSetGet));
+
 
 int NativeControlObject::setPropertyValue(size_t propertyNumber, TiObject* obj)
 {
@@ -738,6 +760,47 @@ int NativeControlObject::getDictionaryData(TiObject* obj, QVector<QPair<QString,
             return NATIVE_ERROR_INVALID_ARG;
         }
     }
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::getDateTime(TiObject* obj, QDateTime& dt)
+{
+    Handle<Value> value = obj->getValue();
+    if ((value.IsEmpty()) || (!value->IsDate()))
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+
+    unsigned int year = 0, month = 0, day = 0;
+    Local<Object> object = Object::Cast(*value);
+
+    // Get year from date
+    Local<Value> getYear_prop = (object->Get(String::New("getFullYear")));
+    if (getYear_prop->IsFunction())
+    {
+        Local<Function> getYear_func = Function::Cast(*getYear_prop);
+        Local<Value> yearValue = getYear_func->Call(object, 0, NULL);
+        year = yearValue->NumberValue();
+    }
+
+    // Get month from date
+    Local<Value> getMonth_prop = (object->Get(String::New("getMonth")));
+    if (getMonth_prop->IsFunction())
+    {
+        Local<Function> getMonth_func = Function::Cast(*getMonth_prop);
+        Local<Value> monthValue = getMonth_func->Call(object, 0, NULL);
+        month = monthValue->NumberValue();
+    }
+
+    // Get day property
+    Local<Value> getDay_prop = (object->Get(String::New("getDate")));
+    if (getDay_prop->IsFunction())
+    {
+        Local<Function> getDay_func = Function::Cast(*getDay_prop);
+        Local<Value> dayValue = getDay_func->Call(object, 0, NULL);
+        day = dayValue->NumberValue();
+    }
+    dt.setDate(QDate(year, month, day));
     return NATIVE_ERROR_OK;
 }
 

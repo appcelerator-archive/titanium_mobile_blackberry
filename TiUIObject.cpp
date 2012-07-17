@@ -6,21 +6,26 @@
  */
 
 #include "TiUIObject.h"
-#include "TiGenericFunctionObject.h"
+
 #include "TiCascadesApp.h"
 #include "TiConstants.h"
-#include "TiUIWindow.h"
-#include "TiUILabel.h"
-#include "TiUIButton.h"
-#include "TiUISlider.h"
-#include "TiUIProgressBar.h"
-#include "TiUIImageView.h"
-#include "TiUIPicker.h"
-#include "TiUITextField.h"
+#include "TiGenericFunctionObject.h"
 #include "TiUIActivityIndicator.h"
-#include "TiUITableView.h"
-#include "TiUISwitch.h"
+#include "TiUIAlertDialog.h"
+#include "TiUIButton.h"
+#include "TiUIImageView.h"
+#include "TiUILabel.h"
 #include "TiUIOptionDialog.h"
+#include "TiUIPicker.h"
+#include "TiUIProgressBar.h"
+#include "TiUISlider.h"
+#include "TiUISwitch.h"
+#include "TiUITab.h"
+#include "TiUITabGroup.h"
+#include "TiUITableView.h"
+#include "TiUITextField.h"
+#include "TiUIWindow.h"
+
 #include <string.h>
 
 TiUIObject::TiUIObject()
@@ -62,7 +67,9 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createActivityIndicator", this, _createActivityIndicator);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSwitch", this, _createSwitch);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createOptionDialog", this, _createOptionDialog);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTab", this, _createTab);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createPicker", this, _createPicker);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createAlertDialog", this, _createAlertDialog);
 
     // Adding javascript constants from Ti.UI
     ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_LEFT", Number::New(Ti::UI::TEXT_ALIGNMENT_LEFT), this);
@@ -87,16 +94,10 @@ Handle<Value> TiUIObject::_createControlHelper(void* userContext, CREATEOBJECTCA
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
         Local<Object> settingsObj = Local<Object>::Cast(args[0]);
-        newControl->setParametersFromObject(settingsObj);
+        newControl->setParametersFromObject(newControl, settingsObj);
     }
     setTiObjectToJsObject(result, newControl);
     return handleScope.Close(result);
-}
-
-Handle<Value> TiUIObject::_createTabGroup(void* userContext, TiObject* caller, const Arguments& args)
-{
-    // TODO: finish this
-    return Undefined();
 }
 
 Handle<Value> TiUIObject::_createWindow(void* userContext, TiObject* caller, const Arguments& args)
@@ -139,6 +140,16 @@ Handle<Value> TiUIObject::_createActivityIndicator(void* userContext, TiObject* 
     return _createControlHelper(userContext, TiUIActivityIndicator::createActivityIndicator, args);
 }
 
+Handle<Value> TiUIObject::_createTab(void* userContext, TiObject* caller, const Arguments& args)
+{
+    return _createControlHelper(userContext, TiUITab::createTab, args);
+}
+
+Handle<Value> TiUIObject::_createTabGroup(void* userContext, TiObject* caller, const Arguments& args)
+{
+    return _createControlHelper(userContext, TiUITabGroup::createTabGroup, args);
+}
+
 Handle<Value> TiUIObject::_createOptionDialog(void* userContext, TiObject* caller, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIOptionDialog::createOptionDialog), args);
@@ -157,4 +168,9 @@ Handle<Value> TiUIObject::_createSwitch(void* userContext, TiObject* caller, con
 Handle<Value> TiUIObject::_createPicker(void* userContext, TiObject* caller, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIPicker::createPicker), args);
+}
+
+Handle<Value> TiUIObject::_createAlertDialog(void* userContext, TiObject* caller, const Arguments& args)
+{
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIAlertDialog::createAlertDialog), args);
 }

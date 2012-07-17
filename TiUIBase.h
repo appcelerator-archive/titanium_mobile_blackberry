@@ -23,7 +23,7 @@ class TiCascadesApp;
 class TiUIBase : public TiObject
 {
 public:
-    virtual void setParametersFromObject(Local<Object> obj);
+    virtual void setParametersFromObject(void* userContext, Local<Object> obj);
     virtual bool isUIObject() const;
     virtual void setTiMappingProperties(const TiProperty* props, int propertyCount);
 
@@ -40,12 +40,20 @@ protected:
 
 private:
     static VALUE_MODIFY _valueModify(int propertyNumber, TiObject* value, void* context);
-    static Handle<Value> _add(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _addEventListener(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _getChildren(void* userContext);
     static Handle<Value> _hide(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _removeEventListener(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _show(void* userContext, TiObject* caller, const Arguments& args);
+
+protected:
+    static Handle<Value> _add(void* userContext, TiObject* caller, const Arguments& args);
+
+private:
+    // fields
+    NativeObject* nativeObject_;
+    NativeObjectFactory* nativeObjectFactory_;
+
 };
 
 #endif /* TIUIBASE_H_ */

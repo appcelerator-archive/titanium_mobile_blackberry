@@ -11,7 +11,7 @@
 #include "TiEventContainerFactory.h"
 
 class NativeObject;
-class NativeContainerObject;
+class NativePageObject;
 class NativeStringInterface;
 class TiCascadesApp;
 
