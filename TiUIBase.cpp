@@ -6,6 +6,7 @@
  */
 
 #include "TiUIBase.h"
+#include "TiLogger.h"
 #include "TiGenericFunctionObject.h"
 #include "TiPropertySetFunctionObject.h"
 #include "TiPropertyGetFunctionObject.h"
@@ -451,27 +452,33 @@ Handle<Value> TiUIBase::_remove(void* userContext, TiObject*, const Arguments& a
     {
         return ThrowException(String::New(Ti::Msg::Invalid_remove_argument));
     }
+    NativeObject* parentControl = obj->getNativeObject();
+    if (parentControl == NULL)
+    {
+        return ThrowException(String::New(Ti::Msg::INTERNAL__Missing_native_object));
+    }
     vector<ObjectEntry>::const_iterator it;
+    bool foundChild = false;
     for (it = obj->childControls_.begin(); it != obj->childControls_.end(); it++)
     {
         if ((*it).isSameInstance(removeObject))
         {
-            NativeObject* parentControl = obj->getNativeObject();
-            if (parentControl == NULL)
-            {
-                break;
-            }
             NativeObject* childControl = (*it)->getNativeObject();
             if (childControl == NULL)
             {
-                parentControl->release();
+                TI_INTERNAL(Ti::Msg::INTERNAL__Missing_native_object);
                 break;
             }
             parentControl->removeChildNativeObject(childControl);
             childControl->release();
-            parentControl->release();
+            foundChild = true;
             break;
         }
+    }
+    parentControl->release();
+    if (!foundChild)
+    {
+        TI_WARNING(Ti::Msg::Remove_child_warning);
     }
     return Undefined();
 }
