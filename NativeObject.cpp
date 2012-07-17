@@ -133,6 +133,16 @@ int NativeObject::fireEvent(const char* name, const TiObject* event) const
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+int NativeObject::show()
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+int NativeObject::hide()
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 int NativeObject::getNextEventId()
 {
     static int s_nextEventId = 1;

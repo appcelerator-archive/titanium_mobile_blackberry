@@ -6,6 +6,7 @@
  */
 
 #include "TiUIBase.h"
+#include "TiLogger.h"
 #include "TiGenericFunctionObject.h"
 #include "TiPropertySetFunctionObject.h"
 #include "TiPropertyGetFunctionObject.h"
@@ -106,6 +107,11 @@ const static TiProperty g_tiProperties[] =
     {
         "maxDate", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_MAXDATE
+    },
+
+    {
+        "message", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_MESSAGE
     },
 
     {
@@ -328,10 +334,14 @@ Handle<Value> TiUIBase::_add(void* userContext, TiObject*, const Arguments& args
         TiObject* addObj = getTiObjectFromJsObject(args[0]);
         if ((addObj == NULL) || (!addObj->isUIObject()))
         {
-            return Undefined();
+            return ThrowException(String::New(Ti::Msg::Invalid_add_argument));
         }
         TiUIBase* uiObj = (TiUIBase*) addObj;
         NativeObject* childNO = uiObj->getNativeObject();
+        if (childNO == NULL)
+        {
+            return ThrowException(String::New(Ti::Msg::Invalid_add_argument));
+        }
         NativeObject* parentNO = obj->getNativeObject();
         if (N_SUCCEEDED(parentNO->addChildNativeObject(childNO)))
         {
@@ -379,27 +389,33 @@ Handle<Value> TiUIBase::_remove(void* userContext, TiObject*, const Arguments& a
     {
         return ThrowException(String::New(Ti::Msg::Invalid_remove_argument));
     }
+    NativeObject* parentControl = obj->getNativeObject();
+    if (parentControl == NULL)
+    {
+        return ThrowException(String::New(Ti::Msg::INTERNAL__Missing_native_object));
+    }
     vector<ObjectEntry>::const_iterator it;
+    bool foundChild = false;
     for (it = obj->childControls_.begin(); it != obj->childControls_.end(); it++)
     {
         if ((*it).isSameInstance(removeObject))
         {
-            NativeObject* parentControl = obj->getNativeObject();
-            if (parentControl == NULL)
-            {
-                break;
-            }
             NativeObject* childControl = (*it)->getNativeObject();
             if (childControl == NULL)
             {
                 parentControl->release();
-                break;
+                return ThrowException(String::New(Ti::Msg::INTERNAL__Missing_native_object));
             }
             parentControl->removeChildNativeObject(childControl);
             childControl->release();
-            parentControl->release();
+            foundChild = true;
             break;
         }
+    }
+    parentControl->release();
+    if (!foundChild)
+    {
+        TI_WARNING(Ti::Msg::Remove_child_warning);
     }
     return Undefined();
 }

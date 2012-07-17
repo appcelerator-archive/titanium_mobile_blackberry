@@ -12,6 +12,7 @@
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
 #include "TiTitaniumObject.h"
+#include "TiTimeoutManager.h"
 #include "TiV8EventContainerFactory.h"
 
 #include <fstream>
@@ -44,13 +45,11 @@ void TiRootObject::onCreateStaticMembers()
 
     createStringMethods();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "L", this, _L);   // TODO: use the same object as Ti.Locale.getString
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "alert", this, _alert);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "clearInterval", this, _clearInterval);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "clearTimeout", this, _clearTimeout);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "require", this, _require);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setInterval", this, _setInterval);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setTimeout", this, _setTimeout);
-
 }
 
 VALUE_MODIFY TiRootObject::onChildValueChange(TiObject* childObject, Handle<Value>, Handle<Value> newValue)
@@ -202,25 +201,27 @@ Handle<Value> TiRootObject::_L(void*, TiObject*, const Arguments& args)
     return Undefined();
 }
 
-Handle<Value> TiRootObject::_alert(void*, TiObject*, const Arguments& args)
-{
-    // TODO: finish this
-    (void)args;
-    return Undefined();
-}
-
 Handle<Value> TiRootObject::_clearInterval(void*, TiObject*, const Arguments& args)
 {
-    // TODO: finish this
-    (void)args;
+    clearTimeoutHelper(args, true);
     return Undefined();
 }
 
 Handle<Value> TiRootObject::_clearTimeout(void*, TiObject*, const Arguments& args)
 {
-    // TODO: finish this
-    (void)args;
+    clearTimeoutHelper(args, false);
     return Undefined();
+}
+
+void TiRootObject::clearTimeoutHelper(const Arguments& args, bool interval)
+{
+    if ((args.Length() != 1) || (!args[0]->IsNumber()))
+    {
+        ThrowException(String::New(Ti::Msg::Invalid_arguments));
+    }
+    Handle<Number> number = Handle<Number>::Cast(args[0]);
+    TiTimeoutManager* timeoutManager = TiTimeoutManager::instance();
+    timeoutManager->clearTimeout((int)number->Value(), interval);
 }
 
 Handle<Value> TiRootObject::_require(void*, TiObject*, const Arguments& args)
@@ -258,8 +259,8 @@ Handle<Value> TiRootObject::_require(void*, TiObject*, const Arguments& args)
 
     // wrap the module
     {
-        static const string preWrap = "(function () { var exports = {};\n";
-        static const string postWrap = "\nreturn exports; })();";
+        static const string preWrap = "(function () { var module = { exports: {} }; var exports = module.exports;\n";
+        static const string postWrap = "\nreturn module.exports; })();";
         javascript = preWrap + javascript + postWrap;
     }
 
@@ -297,15 +298,25 @@ Handle<Value> TiRootObject::_require(void*, TiObject*, const Arguments& args)
 
 Handle<Value> TiRootObject::_setInterval(void*, TiObject*, const Arguments& args)
 {
-    // TODO: finish this
-    (void)args;
-    return Undefined();
+    return setTimeoutHelper(args, true);
 }
 
 Handle<Value> TiRootObject::_setTimeout(void*, TiObject*, const Arguments& args)
 {
-    // TODO: finish this
-    (void)args;
-    return Undefined();
+    return setTimeoutHelper(args, false);
 }
 
+Handle<Value> TiRootObject::setTimeoutHelper(const Arguments& args, bool interval)
+{
+    HandleScope handleScope;
+    if ((args.Length() != 2) || (!args[0]->IsFunction()) || (!args[1]->IsNumber()))
+    {
+        ThrowException(String::New(Ti::Msg::Invalid_arguments));
+    }
+    Handle<Function> function = Handle<Function>::Cast(args[0]);
+    Handle<Number> number = Handle<Number>::Cast(args[1]);
+    TiTimeoutManager* timeoutManager = TiTimeoutManager::instance();
+    int id = timeoutManager->createTimeout((int)number->Value(), function, interval);
+    Handle<Number> timerId = Number::New(id);
+    return timerId;
+}

@@ -57,6 +57,7 @@ public:
     virtual int setLeft(TiObject* obj);
     virtual int setMax(TiObject* obj);
     virtual int setMaxDate(TiObject* obj);
+    virtual int setMessage(TiObject* obj);
     virtual int setMin(TiObject* obj);
     virtual int setMinDate(TiObject* obj);
     virtual int setOpacity(TiObject* obj);
@@ -85,6 +86,11 @@ public:
     //obtain java script dictionary object and keep it in the multimap
     static int getDictionaryData(TiObject* obj, QVector<QPair<QString, QString> >& dictionary);
     static int getDateTime(TiObject* obj, QDateTime& dt);
+    // TODO: Need to handle container_ more correctly
+    void setContainer(bb::cascades::Container* c)
+    {
+        container_ = c;
+    }
 
 protected:
     NativeControlObject();
@@ -92,7 +98,7 @@ protected:
     virtual void setControl(bb::cascades::Control* control);
 
 private:
-    static int getMeasurementInfo(TiObject* obj, float max,
+    static int getMeasurementInfo(TiObject* obj, float maxPixels, float dotsPerMillimeter,
                                   float* calculatedValue);
 
     bb::cascades::Container* container_;

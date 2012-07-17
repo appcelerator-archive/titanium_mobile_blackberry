@@ -22,6 +22,7 @@ enum NATIVE_TYPE
 {
     N_TYPE_UNDEFINED
     , N_TYPE_ACTIVITYINDICATOR
+    , N_TYPE_ALERTDIALOG
     , N_TYPE_BUTTON
     , N_TYPE_CONTAINER
     , N_TYPE_DATE_TIME_PICKER
@@ -86,6 +87,7 @@ enum NATIVE_PROP
     , N_PROP_LEFT
     , N_PROP_MAX
     , N_PROP_MAXDATE
+    , N_PROP_MESSAGE
     , N_PROP_MIN
     , N_PROP_MINDATE
     , N_PROP_MINIMUM_FONT_SIZE
@@ -184,6 +186,8 @@ public:
     virtual int open();
     virtual int start();
     virtual int stop();
+    virtual int show();
+    virtual int hide();
     virtual void completeInitialization();
     virtual bool isInitializationComplete() const;
     virtual int setEventHandler(const char* eventName, TiEvent* event);

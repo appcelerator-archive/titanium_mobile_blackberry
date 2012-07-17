@@ -27,9 +27,7 @@ class TiV8Event : public TiEvent
 {
 public:
     static TiV8Event* createEvent(const char* eventName, Handle<Function> eventScript, Handle<Object> source);
-    virtual void fire(void* fireDataObject);
-
-protected:
+    virtual void fire(void* fireDataObject = NULL);
     virtual ~TiV8Event();
 
 private:
