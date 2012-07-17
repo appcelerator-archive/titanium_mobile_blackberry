@@ -8,6 +8,15 @@
 #include "NativePlatformInterface.h"
 #include "TiConstants.h"
 #include <vector>
+#include <math.h>
+#include <qsize.h>
+
+#include <bb/device/Display>
+#include <bb/device/DisplayManager>
+#include <bps/deviceinfo.h>
+
+// TODO: Remove once all functions implemented
+#pragma GCC diagnostic ignored "-Wunused-function"
 
 #define PROP_GETTING_FUNCTION(NAME)     prop_##NAME
 
@@ -97,8 +106,45 @@ Handle<Value> NativePlatformInterface::getBatteryState()
 PROP_GETTER(getDisplayCaps)
 Handle<Value> NativePlatformInterface::getDisplayCaps()
 {
-    // TODO: Finish this when will be available in SDK
-    return Undefined();
+    HandleScope scope;
+    Local<Object> dCapsObject = Object::New();
+
+    bb::device::DisplayManager displayManager;
+    bb::device::Display& display = displayManager.getDisplay(displayManager.primaryDisplayId());
+
+    const float MMPERINCH = 25.4f;
+
+    QSize pixelSize = display.pixelSize();
+    QSizeF physicalSize = display.physicalSize();
+
+    const float physicalWidth = physicalSize.width();
+    const float physicalHeight = physicalSize.height();
+    const float pixelWidth = pixelSize.width();
+    const float pixelHeight = pixelSize.height();
+
+    float xdpi = 0.0f, ydpi = 0.0f;
+    // Calculate pixel per inch in x/y dimensions
+    if (physicalWidth != 0.0f && physicalHeight != 0.0f)
+    {
+        xdpi = (pixelWidth / physicalWidth) * MMPERINCH;
+        ydpi = (pixelHeight / physicalHeight) * MMPERINCH;
+    }
+
+    // Calculate pixels density
+    // TODO: Use the supplied one if it ever becomes available.
+    const float diagonalWidth = sqrtf(physicalWidth * physicalWidth + physicalHeight * physicalHeight) / MMPERINCH;
+    const float diagonalPixels = sqrtf(pixelWidth * pixelWidth + pixelHeight * pixelHeight);
+
+    dCapsObject->Set(String::NewSymbol("density"), String::New("high"));
+    dCapsObject->Set(String::NewSymbol("dpi"), Number::New(diagonalPixels / diagonalWidth));
+    // TODO: Find out do we need this 'logicalDensityFactor' for BB. Defaulting to 1.0 for now
+    dCapsObject->Set(String::NewSymbol("logicalDensityFactor"), Number::New(1.0));
+    dCapsObject->Set(String::NewSymbol("platformWidth"), Number::New(pixelWidth));
+    dCapsObject->Set(String::NewSymbol("platformHeight"), Number::New(pixelHeight));
+    dCapsObject->Set(String::NewSymbol("xdpi"), Number::New(xdpi));
+    dCapsObject->Set(String::NewSymbol("ydpi"), Number::New(ydpi));
+
+    return scope.Close(dCapsObject);
 }
 
 PROP_GETTER(getId)
@@ -178,13 +224,19 @@ Handle<Value> NativePlatformInterface::getUsername()
 PROP_GETTER(getVersion)
 Handle<Value> NativePlatformInterface::getVersion()
 {
-    // TODO: Finish this when will be available in SDK
+    deviceinfo_data_t deviceInfo;
+    if (BPS_SUCCESS == deviceinfo_get_data(&deviceInfo))
+    {
+        QString deviceOsVersion(deviceInfo.scm_bundle);
+        deviceinfo_free_data(&deviceInfo);
+        return String::New(deviceOsVersion.toUtf8());
+    }
     return Undefined();
 }
 
 Handle<Value> NativePlatformInterface::getPropertyValue(int propertyNumber)
 {
-    if ((propertyNumber >= s_functionMap.size()) || (s_functionMap[propertyNumber] == NULL))
+    if ((propertyNumber >= (int)s_functionMap.size()) || (s_functionMap[propertyNumber] == NULL))
     {
         return Undefined();
     }
@@ -203,7 +255,7 @@ static vector<NATIVE_PROPGET_CALLBACK> initFunctionMap()
     vect[N_PLATFORM_PROP_BATTERYLEVEL]             = PROP_GETTING_FUNCTION(getBatteryLevel);
     vect[N_PLATFORM_PROP_BATTERYMONITORING]        = NULL;
     vect[N_PLATFORM_PROP_BATTERYSTATE]             = PROP_GETTING_FUNCTION(getBatteryState);
-    vect[N_PLATFORM_PROP_DISPLAYCAPS]              = NULL;
+    vect[N_PLATFORM_PROP_DISPLAYCAPS]              = PROP_GETTING_FUNCTION(getDisplayCaps);
     vect[N_PLATFORM_PROP_ID]                       = NULL;
     vect[N_PLATFORM_PROP_LOCALE]                   = NULL;
     vect[N_PLATFORM_PROP_MACADDRESS]               = NULL;
@@ -215,6 +267,6 @@ static vector<NATIVE_PROPGET_CALLBACK> initFunctionMap()
     vect[N_PLATFORM_PROP_PROCESSORCOUNT]           = NULL;
     vect[N_PLATFORM_PROP_RUNTIME]                  = PROP_GETTING_FUNCTION(getRuntime);
     vect[N_PLATFORM_PROP_USERNAME]                 = NULL;
-    vect[N_PLATFORM_PROP_VERSION]                  = NULL;
+    vect[N_PLATFORM_PROP_VERSION]                  = PROP_GETTING_FUNCTION(getVersion);
     return vect;
 }

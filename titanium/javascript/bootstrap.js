@@ -9,3 +9,8 @@ alert = function(msg)
 {
     Ti.UI.createAlertDialog({message: msg}).show();
 }
+
+L = function(key, hint)
+{
+	return key;
+}
