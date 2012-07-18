@@ -5,6 +5,9 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
+#include "NativeMessageStrings.h"
+#include "TiCascadesApp.h"
+#include "TiGenericFunctionObject.h"
 #include "TiUITab.h"
 
 TiUITab::TiUITab()
@@ -24,6 +27,12 @@ TiUIBase* TiUITab::createTab(NativeObjectFactory* nativeObjectFactory)
     return obj;
 }
 
+void TiUITab::onCreateStaticMembers()
+{
+    TiUIBase::onCreateStaticMembers();
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "open", this, open_);
+}
+
 void TiUITab::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
@@ -33,4 +42,29 @@ void TiUITab::initializeTiObject(TiObject* parentContext)
         setNativeObject(obj);
         obj->release();
     }
+}
+
+Handle<Value> TiUITab::open_(void* userContext, TiObject* caller, const Arguments& args)
+{
+    HandleScope handleScope;
+    if ((args.Length() > 0) && (args[0]->IsObject()))
+    {
+        TiObject* addObj = getTiObjectFromJsObject(args[0]);
+        if ((addObj == NULL) || (!addObj->isUIObject()))
+        {
+            return Undefined();
+        }
+        TiUIBase* uiObj = (TiUIBase*) addObj;
+        NativeObject* win = uiObj->getNativeObject();
+        TiUITab* obj = (TiUITab*) userContext;
+        NativeObject* tab = obj->getNativeObject();
+        tab->openWindowOnTab(win);
+        tab->release();
+        win->release();
+    }
+    else
+    {
+        ThrowException(String::New(Native::Msg::Expected_argument_of_type_object_or_external));
+    }
+    return Undefined();
 }

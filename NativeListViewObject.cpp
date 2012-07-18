@@ -35,6 +35,7 @@ int NativeListViewObject::initialize(TiEventContainerFactory* containerFactory)
     eventClicked_ = containerFactory->createEventContainer();
     eventClicked_->setDataProperty("type", "click");
     eventHandler_ = new ListViewEventHandler(eventClicked_, this);
+    QObject::connect(listView_, SIGNAL(selectionChanged(QVariantList, bool)), eventHandler_, SLOT(selectionChanged(QVariantList, bool)));
     return NATIVE_ERROR_OK;
 }
 
@@ -117,7 +118,6 @@ NAHANDLE NativeListViewObject::getNativeHandle() const
 void NativeListViewObject::completeInitialization()
 {
     NativeControlObject::completeInitialization();
-    QObject::connect(listView_, SIGNAL(selectionChanged(QVariantList, bool)), eventHandler_, SLOT(selectionChanged(QVariantList, bool)));
 }
 
 QString NativeListViewObject::getListViewElementFromIndex(QVariantList var)

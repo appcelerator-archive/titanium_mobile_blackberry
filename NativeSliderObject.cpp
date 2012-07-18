@@ -35,6 +35,7 @@ int NativeSliderObject::initialize(TiEventContainerFactory* containerFactory)
     setControl(slider_);
     eventChange_ = containerFactory->createEventContainer();
     eventChangeHandler_ = new SliderEventHandler(eventChange_);
+    QObject::connect(slider_, SIGNAL(valueChanging(float)), eventChangeHandler_, SLOT(valueChanging(float)));
     return NATIVE_ERROR_OK;
 }
 
@@ -85,5 +86,4 @@ int NativeSliderObject::setEventHandler(const char* eventName, TiEvent* event)
 
 void NativeSliderObject::completeInitialization()
 {
-    QObject::connect(slider_, SIGNAL(valueChanging(float)), eventChangeHandler_, SLOT(valueChanging(float)));
 }

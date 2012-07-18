@@ -39,6 +39,7 @@ int NativeImageViewObject::initialize(TiEventContainerFactory* containerFactory)
     eventImageChanged_ = containerFactory->createEventContainer();
     eventImageChanged_->setDataProperty("type", "change");
     eventHandler_ = new ImageViewEventHandler(eventImageChanged_);
+    QObject::connect(imageView_, SIGNAL(imageChanged(const bb::cascades::Image)), eventHandler_, SLOT(imageChanged(const bb::cascades::Image)));
     return NATIVE_ERROR_OK;
 }
 
@@ -52,7 +53,6 @@ int NativeImageViewObject::setImage(const char* image)
 void NativeImageViewObject::completeInitialization()
 {
     NativeControlObject::completeInitialization();
-    QObject::connect(imageView_, SIGNAL(imageChanged(const bb::cascades::Image)), eventHandler_, SLOT(imageChanged(const bb::cascades::Image)));
 }
 
 int NativeImageViewObject::setEventHandler(const char* eventName, TiEvent* event)

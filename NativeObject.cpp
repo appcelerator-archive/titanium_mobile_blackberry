@@ -57,6 +57,11 @@ int NativeObject::stop()
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+int NativeObject::openWindowOnTab(NativeObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 void NativeObject::completeInitialization()
 {
     isInitializationComplete_ = true;

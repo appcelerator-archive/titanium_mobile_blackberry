@@ -7,25 +7,27 @@
 
 #include "NativeTabObject.h"
 
+#include <bb/cascades/ActionItem>
 #include <bb/cascades/Image>
+#include <bb/cascades/NavigationPane>
+#include <bb/cascades/NavigationPaneProperties>
 #include <bb/cascades/Page>
 #include <bb/cascades/TabbedPaneProperties>
-
 
 using namespace bb::cascades;
 
 NativeTabObject::NativeTabObject() :
-    page_(NULL),
-    tabProperties_(NULL)
+    tabProperties_(NULL),
+    navigationPane_(NULL)
 {
 }
 
 NativeTabObject::~NativeTabObject()
 {
-    delete page_;
-    page_ = NULL;
     delete tabProperties_;
     tabProperties_ = NULL;
+    delete navigationPane_;
+    navigationPane_ = NULL;
 }
 
 NativeObject* NativeTabObject::createTab()
@@ -41,7 +43,7 @@ int NativeTabObject::getObjectType() const
 
 NAHANDLE NativeTabObject::getNativeHandle() const
 {
-    return page_;
+    return navigationPane_;
 }
 
 int NativeTabObject::setTitle(TiObject* obj)
@@ -75,23 +77,32 @@ int NativeTabObject::addChildNativeObject(NativeObject* obj)
 {
     if (obj->getObjectType() == N_TYPE_WINDOW)
     {
-        page_ = (bb::cascades::Page*) obj->getNativeHandle();
-        page_->setPaneProperties(tabProperties_);
+        bb::cascades::Page* page = (bb::cascades::Page*)obj->getNativeHandle();
+        navigationPane_->setPaneProperties(tabProperties_);
+        navigationPane_->push(page);
         return NATIVE_ERROR_OK;
     }
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+int NativeTabObject::openWindowOnTab(NativeObject* obj)
+{
+    if (obj->getObjectType() == N_TYPE_WINDOW)
+    {
+        bb::cascades::Page* page = (bb::cascades::Page*)obj->getNativeHandle();
+        ActionItem* backAction = ActionItem::create();
+        QObject::connect(backAction, SIGNAL(triggered()), navigationPane_, SLOT(pop()));
+        page->setPaneProperties(NavigationPaneProperties::create().backButton(backAction));
+        navigationPane_->push(page);
+    }
+}
+
 int NativeTabObject::initialize(TiEventContainerFactory* containerFactory)
 {
-    if (page_ != NULL)
-    {
-        return NATIVE_ERROR_OK;
-    }
-
     tabProperties_ = TabbedPaneProperties::create();
+    navigationPane_ = NavigationPane::create();
 
-    if (tabProperties_ == NULL)
+    if (tabProperties_ == NULL || navigationPane_ == NULL)
     {
         return NATIVE_ERROR_OUTOFMEMORY;
     }

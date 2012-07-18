@@ -38,6 +38,7 @@ int NativeButtonObject::initialize(TiEventContainerFactory* containerFactory)
     eventClick_ = containerFactory->createEventContainer();
     eventClick_->setDataProperty("type", "click");
     eventHandler_ = new ButtonEventHandler(eventClick_);
+    QObject::connect(button_, SIGNAL(clicked()), eventHandler_, SLOT(clicked(void)));
     return NATIVE_ERROR_OK;
 }
 
@@ -80,5 +81,5 @@ int NativeButtonObject::setEventHandler(const char* eventName, TiEvent* event)
 
 void NativeButtonObject::completeInitialization()
 {
-    QObject::connect(button_, SIGNAL(clicked()), eventHandler_, SLOT(clicked(void)));
+
 }

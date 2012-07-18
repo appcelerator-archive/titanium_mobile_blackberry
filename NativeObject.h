@@ -148,6 +148,7 @@ public:
     virtual int open();
     virtual int start();
     virtual int stop();
+    virtual int openWindowOnTab(NativeObject* obj);
     virtual void completeInitialization();
     virtual bool isInitializationComplete() const;
     virtual int setEventHandler(const char* eventName, TiEvent* event);

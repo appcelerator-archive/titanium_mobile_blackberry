@@ -17,6 +17,7 @@ namespace cascades
 {
 class Page;
 class TabbedPaneProperties;
+class NavigationPane;
 }
 }
 
@@ -35,6 +36,7 @@ public:
     virtual int setTitle(TiObject* obj);
     virtual int setIcon(TiObject* obj);
     virtual int addChildNativeObject(NativeObject* obj);
+    virtual int openWindowOnTab(NativeObject* obj);
     virtual NAHANDLE getNativeHandle() const;
 
 protected:
@@ -43,6 +45,7 @@ protected:
 private:
     bb::cascades::Page* page_;
     bb::cascades::TabbedPaneProperties* tabProperties_;
+    bb::cascades::NavigationPane* navigationPane_;
 
     NativeTabObject();
     // Disable copy ctor & assignment operator

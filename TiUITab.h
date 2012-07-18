@@ -26,6 +26,10 @@ public:
 protected:
     virtual ~TiUITab();
     virtual void initializeTiObject(TiObject* parentContext);
+    virtual void onCreateStaticMembers();
+
+private:
+    static Handle<Value> open_(void* userContext, TiObject* caller, const Arguments& args);
 
 private:
     TiUITab();
