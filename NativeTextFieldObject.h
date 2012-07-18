@@ -19,8 +19,6 @@ class TextField;
 }
 }
 
-class TiEventContainer;
-class TextFieldEventHandler;
 
 class NativeTextFieldObject : public NativeAbstractTextControlObject
 {
@@ -29,7 +27,6 @@ public:
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual int setHintText(TiObject* obj);
-    virtual int setEventHandler(const char* eventName, TiEvent* event);
 
 protected:
     virtual ~NativeTextFieldObject();
@@ -41,8 +38,6 @@ private:
     NativeTextFieldObject& operator=(const NativeTextFieldObject& textField);
 
     bb::cascades::TextField* textField_;
-    TiEventContainer* eventFieldChanged_;
-    TextFieldEventHandler* eventHandler_;
 };
 
 //Event handler for textField object

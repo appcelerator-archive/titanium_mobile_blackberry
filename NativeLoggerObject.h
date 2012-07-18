@@ -23,7 +23,7 @@ class QString;
         QString s; \
         QTextStream ts(&s); \
         ts << tag " " << __PRETTY_FUNCTION__ << " Line "  << __LINE__ << ": " << msg; \
-        NativeLoggerObject::getInstance().log(s); \
+        NativeLoggerObject::getInstance()->log(s); \
     } while(0)
 
 #define N_TAG_INTERNAL "[N_INTERNAL]"
@@ -48,7 +48,8 @@ class QString;
 class NativeLoggerObject : public NativeLoggerInterface
 {
 public:
-    static NativeLoggerObject& getInstance();
+    static NativeLoggerObject* getInstance();
+    virtual void deleteInstance();
     virtual int getObjectType() const;
 
     void log(const char* msg);

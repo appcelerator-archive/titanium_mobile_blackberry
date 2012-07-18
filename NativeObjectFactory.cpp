@@ -8,6 +8,7 @@
 #include "NativeObjectFactory.h"
 
 #include "NativeActivityIndicatorObject.h"
+#include "NativeAlertDialogObject.h"
 #include "NativeButtonObject.h"
 #include "NativeDateTimePickerObject.h"
 #include "NativeDropDownObject.h"
@@ -65,7 +66,7 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
         break;
 
     case N_TYPE_LOGGER:
-        obj = &NativeLoggerObject::getInstance();
+        obj = NativeLoggerObject::getInstance();
         break;
 
     case N_TYPE_BUTTON:
@@ -114,6 +115,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
 
     case N_TYPE_DATE_TIME_PICKER:
         obj = NativeDateTimePickerObject::createDateTimePicker();
+        break;
+
+    case N_TYPE_ALERTDIALOG:
+        obj = NativeAlertDialogObject::createAlertDialog();
         break;
 
     }

@@ -24,9 +24,6 @@ class ListView;
 };
 };
 
-class TiEventContainer;
-class TiCascadesEventHandler;
-class ListViewEventHandler;
 
 class NativeListViewObject : public NativeControlObject
 {
@@ -38,7 +35,6 @@ public:
     virtual int setWidth(TiObject* obj);
     virtual int setData(TiObject* obj);
     virtual int initialize(TiEventContainerFactory* containerFactory);
-    virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual QString getListViewElementFromIndex(QVariantList var);
     virtual NAHANDLE getNativeHandle() const;
     virtual int scrollToIndex(int index);
@@ -53,8 +49,6 @@ private:
     NativeListViewObject& operator=(const NativeListViewObject& obj);
 
     bb::cascades::ListView* listView_;
-    TiEventContainer* eventClicked_;
-    ListViewEventHandler* eventHandler_;
     float left_;
     float top_;
 };
@@ -73,7 +67,7 @@ public:
     virtual ~ListViewEventHandler() {}
 
 public slots:
-    void selectionChanged(QVariantList var, bool b)
+    void selectionChanged(QVariantList var, bool)
     {
         eventContainer_->setDataProperty("index", var[0].toString().toStdString().c_str());
         QString str;

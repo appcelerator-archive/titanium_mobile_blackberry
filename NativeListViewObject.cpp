@@ -5,11 +5,12 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
+#include "NativeListViewObject.h"
+
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/DataModel>
 #include <bb/cascades/ListView>
 #include <bb/cascades/QListDataModel>
-#include "NativeListViewObject.h"
 #include "TiEventContainerFactory.h"
 
 NativeListViewObject::NativeListViewObject()
@@ -32,10 +33,10 @@ int NativeListViewObject::initialize(TiEventContainerFactory* containerFactory)
 {
     listView_ = bb::cascades::ListView::create();
     setControl(listView_);
-    eventClicked_ = containerFactory->createEventContainer();
-    eventClicked_->setDataProperty("type", "click");
-    eventHandler_ = new ListViewEventHandler(eventClicked_, this);
-    QObject::connect(listView_, SIGNAL(selectionChanged(QVariantList, bool)), eventHandler_, SLOT(selectionChanged(QVariantList, bool)));
+    TiEventContainer* eventClicked = containerFactory->createEventContainer();
+    eventClicked->setDataProperty("type", tetCLICK);
+    events_.insert(tetCLICK, new EventPair(eventClicked, new ListViewEventHandler(eventClicked, this)));
+    QObject::connect(listView_, SIGNAL(selectionChanged(QVariantList, bool)), events_[tetCLICK]->handler, SLOT(selectionChanged(QVariantList, bool)));
     return NATIVE_ERROR_OK;
 }
 
@@ -121,16 +122,6 @@ QString NativeListViewObject::getListViewElementFromIndex(QVariantList var)
     QVariant tmp = dataM->data(var);
     QString str = tmp.toString();
     return str;
-}
-
-int NativeListViewObject::setEventHandler(const char* eventName, TiEvent* event)
-{
-    //TODO define const var instead of using string value
-    if (strcmp(eventName, "click") == 0)
-    {
-        eventClicked_->addListener(event);
-    }
-    return NATIVE_ERROR_OK;
 }
 
 int NativeListViewObject::scrollToIndex(int index)

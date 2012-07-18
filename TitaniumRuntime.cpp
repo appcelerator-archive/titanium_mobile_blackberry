@@ -62,6 +62,7 @@ int TitaniumRuntime::internalRun(int argc, char** argv)
     TiLogger::initialize(&objFactory);
     int ret = obj->executeScript(&objFactory, javaScript_, messageLoop, this);
     // TODO: handle non-zero return code here
+    TiLogger::deleteInstance();
     obj->release();
     return ret;
 }

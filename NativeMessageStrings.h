@@ -22,6 +22,7 @@ namespace Msg
 {
 
 N_MESSAGESTRINGS_CONST_DEF(char*, An_error_occurred_converting_to_int, "An error occurred converting to int");
+N_MESSAGESTRINGS_CONST_DEF(char*, Event_handlers_for_are_invalid_for_event_named__, "Event handlers for are invalid for event named: ");
 N_MESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_Date, "Expected argument of type Date");
 N_MESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_double, "Expected argument of type double");
 N_MESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_integer, "Expected argument of type integer");

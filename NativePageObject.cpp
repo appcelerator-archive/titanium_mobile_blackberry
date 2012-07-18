@@ -78,6 +78,7 @@ int NativePageObject::initialize(TiEventContainerFactory* containerFactory)
 
 int NativePageObject::addChildNativeObject(NativeObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
     container_->add(control);
     return NATIVE_ERROR_OK;
@@ -85,8 +86,17 @@ int NativePageObject::addChildNativeObject(NativeObject* obj)
 
 int NativePageObject::open()
 {
+    Q_ASSERT(container_ != NULL);
     container_->setLayout(new AbsoluteLayout());
     nativeObjectFactory_->setRootContainer(this);
+    return NATIVE_ERROR_OK;
+}
+
+int NativePageObject::removeChildNativeObject(NativeObject* obj)
+{
+    Q_ASSERT(container_ != NULL);
+    bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
+    container_->remove(control);
     return NATIVE_ERROR_OK;
 }
 
@@ -103,6 +113,7 @@ int NativePageObject::setBackgroundColor(TiObject* obj)
         return error;
     }
     bb::cascades::Color cscolor = bb::cascades::Color::fromRGBA(r, g, b, a);
+    Q_ASSERT(container_ != NULL);
     container_->setBackground(cscolor);
     return NATIVE_ERROR_OK;
 }

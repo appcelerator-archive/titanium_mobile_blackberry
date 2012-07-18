@@ -19,8 +19,6 @@ class ToggleButton;
 }
 }
 
-class TiEventContainer;
-class ToggleButtonEventHandler;
 
 /*
  * NativeToggleButtonObject
@@ -34,7 +32,6 @@ public:
     static NativeToggleButtonObject* createToggleButton();
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
-    virtual int setEventHandler(const char* eventName, TiEvent* event);
     virtual void completeInitialization();
     virtual int setValue(TiObject* value);
 
@@ -46,10 +43,8 @@ private:
     // Disable copy ctor & assignment operator
     NativeToggleButtonObject(const NativeToggleButtonObject& toggleButton);
     NativeToggleButtonObject& operator=(const NativeToggleButtonObject& toggleButton);
-    bb::cascades::ToggleButton* toggleButton_;
 
-    TiEventContainer* eventStateChanged_;
-    ToggleButtonEventHandler* eventHandler_;
+    bb::cascades::ToggleButton* toggleButton_;
 };
 
 //Event handler for toggleButton object

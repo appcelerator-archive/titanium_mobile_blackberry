@@ -18,8 +18,6 @@ class Slider;
 }
 }
 
-class TiEventContainer;
-class SliderEventHandler;
 
 /*
  * NativeSliderObject
@@ -37,12 +35,9 @@ public:
     virtual int setMax(TiObject* obj);
     virtual int setMin(TiObject* obj);
     virtual int setValue(TiObject* obj);
-    virtual int setEventHandler(const char* eventName, TiEvent* event);
 
 private:
     bb::cascades::Slider* slider_;
-    TiEventContainer* eventChange_;
-    SliderEventHandler* eventChangeHandler_;
 };
 
 //Event handler for slider object

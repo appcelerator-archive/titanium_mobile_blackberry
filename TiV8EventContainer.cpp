@@ -6,7 +6,9 @@
  */
 
 #include "TiV8EventContainer.h"
+
 #include "TiEvent.h"
+#include "TiObject.h"
 
 using namespace v8;
 using namespace std;
@@ -42,6 +44,16 @@ void TiV8EventContainer::fireEvent()
     for (it = listeners_.begin(); it != listeners_.end(); it++)
     {
         it->second.getListener()->fire(&eventData_);
+    }
+}
+
+void TiV8EventContainer::fireEvent(const TiObject* eventData) const
+{
+    map<int, TiInternalEventListener>::const_iterator it;
+    Handle<Object> ed(eventData->getValue()->ToObject());
+    for (it = listeners_.begin(); it != listeners_.end(); it++)
+    {
+        it->second.getListener()->fire(&ed);
     }
 }
 

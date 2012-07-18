@@ -35,10 +35,10 @@ int NativeTextFieldObject::initialize(TiEventContainerFactory* containerFactory)
 {
     textField_ = bb::cascades::TextField::create();
     setTextControl(textField_);
-    eventFieldChanged_ = containerFactory->createEventContainer();
-    eventFieldChanged_->setDataProperty("type", "change");
-    eventHandler_ = new TextFieldEventHandler(eventFieldChanged_);
-    QObject::connect(textField_, SIGNAL(textChanging(QString)), eventHandler_, SLOT(textChanging(QString)));
+    TiEventContainer* eventFieldChanged = containerFactory->createEventContainer();
+    eventFieldChanged->setDataProperty("type", tetCHANGE);
+    events_.insert(tetCHANGE, new EventPair(eventFieldChanged, new TextFieldEventHandler(eventFieldChanged)));
+    QObject::connect(textField_, SIGNAL(textChanging(QString)), events_[tetCHANGE]->handler, SLOT(textChanging(QString)));
     return NATIVE_ERROR_OK;
 }
 
@@ -52,13 +52,4 @@ int NativeTextFieldObject::setHintText(TiObject* obj)
     }
     textField_->setHintText(strHint);
     return NATIVE_ERROR_OK;
-}
-
-int NativeTextFieldObject::setEventHandler(const char* eventName, TiEvent* event)
-{
-    if (strcmp(eventName, "change") == 0)
-    {
-        eventFieldChanged_->addListener(event);
-    }
-    return NATIVE_ERROR_NOTSUPPORTED;
 }

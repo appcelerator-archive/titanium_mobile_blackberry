@@ -7,6 +7,7 @@
 
 #include "NativeControlObject.h"
 
+#include "TiEventContainer.h"
 #include "TiObject.h"
 #include <stdlib.h>
 #include <string.h>
@@ -15,7 +16,27 @@
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/Color>
 #include <bb/cascades/Container>
-#include <qtgui/QColor>
+#include <bb/device/Display>
+#include <bb/device/DisplayManager>
+#include <QColor>
+
+// 25.4mm in 1"
+#define INCHES_TO_MM_MUL                25.4f
+// 10mm in 1cm
+#define CM_TO_MM_MUL                    10.0f
+// 72 points = 1" = 25.4mm
+#define PT_TO_MM_MUL                    (INCHES_TO_MM_MUL / 72.0f)
+// Default dots per mm
+#define DPMM                            19.2f
+
+// Width in pixels
+static int g_width = 0;
+// Height in pixels
+static int g_height = 0;
+// Width in mm
+static float g_physicalWidth = 0.0f;
+// Height in mm
+static float g_physicalHeight = 0.0f;
 
 #define PROP_SETGET_FUNCTION(NAME)      prop_##NAME
 
@@ -112,9 +133,27 @@ NativeControlObject::NativeControlObject() :
     control_(NULL),
     layout_(NULL),
     left_(0),
-    top_(0),
-    nextEventId_(1)
+    top_(0)
 {
+    if ((g_width <= 0) || (g_height <= 0))
+    {
+        bb::device::DisplayManager displayManager;
+        bb::device::Display& display = displayManager.getDisplay(displayManager.primaryDisplayId());
+        QSize size = display.pixelSize();
+        g_width = size.width();
+        g_height = size.height();
+        QSizeF phySize = display.physicalSize();
+        // Get size of screen if mm
+        g_physicalWidth = (float)phySize.width();
+        g_physicalHeight = (float)phySize.height();
+        // NOTE: the previous functions do not work on the simulator
+        if ((g_physicalWidth == 0.0f) || (g_physicalHeight == 0.0f))
+        {
+            // For now, try to guess what the physical size is.
+            g_physicalWidth = (float)g_width / DPMM;
+            g_physicalHeight = (float)g_height / DPMM;
+        }
+    }
 }
 
 NativeControlObject::~NativeControlObject()
@@ -137,18 +176,6 @@ void NativeControlObject::setControl(bb::cascades::Control* control)
     }
     container_->add(control);
     control_ = control;
-}
-
-int NativeControlObject::getNextEventId()
-{
-    // Account for overflow.
-    if (nextEventId_ < 1)
-    {
-        // This event id must start at 1 because 0 is reserved. Since
-        // V8 will always cast a value of undefined to zero.
-        nextEventId_ = 1;
-    }
-    return nextEventId_++;
 }
 
 int NativeControlObject::setVisibility(bool visible)
@@ -221,13 +248,13 @@ int NativeControlObject::setBackgroundDisableColor(TiObject* obj)
 }
 
 PROP_SETGET(setColor)
-int NativeControlObject::setColor(TiObject* obj)
+int NativeControlObject::setColor(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setData)
-int NativeControlObject::setData(TiObject* obj)
+int NativeControlObject::setData(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -260,7 +287,7 @@ int NativeControlObject::setEnabled(TiObject* obj)
 }
 
 PROP_SETGET(setFont)
-int NativeControlObject::setFont(TiObject* obj)
+int NativeControlObject::setFont(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -269,16 +296,13 @@ PROP_SETGET(setHeight)
 int NativeControlObject::setHeight(TiObject* obj)
 {
     float height;
-    int error = getFloat(obj, &height);
+    // TODO: get the current width of the parent control
+    float max = g_height; // TODO: Remove this
+    int error = getMeasurementInfo(obj, max,
+                                   (float)g_height / g_physicalHeight, &height);
     if (error != NATIVE_ERROR_OK)
     {
-        Handle<String> v8str = obj->getValue()->ToString();
-        if (v8str.IsEmpty())
-        {
-            return NATIVE_ERROR_INVALID_ARG;
-        }
-        // TODO: parse height string, e.g., height='100%' height='22px' etc...
-        return NATIVE_ERROR_INVALID_ARG;
+        return error;
     }
     container_->setMaxHeight(height);
     container_->setMinHeight(height);
@@ -286,19 +310,19 @@ int NativeControlObject::setHeight(TiObject* obj)
 }
 
 PROP_SETGET(setHintText)
-int NativeControlObject::setHintText(TiObject* obj)
+int NativeControlObject::setHintText(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setImage)
-int NativeControlObject::setImage(TiObject* obj)
+int NativeControlObject::setImage(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setLabel)
-int NativeControlObject::setLabel(TiObject* obj)
+int NativeControlObject::setLabel(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -318,25 +342,25 @@ int NativeControlObject::setLeft(TiObject* obj)
 }
 
 PROP_SETGET(setMax)
-int NativeControlObject::setMax(TiObject* obj)
+int NativeControlObject::setMax(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setMinDate)
-int NativeControlObject::setMinDate(TiObject* obj)
+int NativeControlObject::setMinDate(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setMaxDate)
-int NativeControlObject::setMaxDate(TiObject* obj)
+int NativeControlObject::setMaxDate(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setMin)
-int NativeControlObject::setMin(TiObject* obj)
+int NativeControlObject::setMin(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -359,31 +383,31 @@ int NativeControlObject::setOpacity(TiObject* obj)
 }
 
 PROP_SETGET(setOptions)
-int NativeControlObject::setOptions(TiObject* obj)
+int NativeControlObject::setOptions(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setSelectedIndex)
-int NativeControlObject::setSelectedIndex(TiObject* obj)
+int NativeControlObject::setSelectedIndex(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setText)
-int NativeControlObject::setText(TiObject* obj)
+int NativeControlObject::setText(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setTextAlign)
-int NativeControlObject::setTextAlign(TiObject* obj)
+int NativeControlObject::setTextAlign(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setTitle)
-int NativeControlObject::setTitle(TiObject* obj)
+int NativeControlObject::setTitle(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -403,7 +427,7 @@ int NativeControlObject::setTop(TiObject* obj)
 }
 
 PROP_SETGET(setValue)
-int NativeControlObject::setValue(TiObject* obj)
+int NativeControlObject::setValue(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -432,8 +456,9 @@ int NativeControlObject::setWidth(TiObject* obj)
 {
     float width;
     // TODO: get the current width of the parent control
-    float max = 1024.0f; // TODO: Remove this
-    int error = getMeasurementInfo(obj, max, &width);
+    float max = g_width; // TODO: Remove this
+    int error = getMeasurementInfo(obj, max,
+                                   (float)g_width / g_physicalWidth, &width);
     if (error != NATIVE_ERROR_OK)
     {
         return error;
@@ -444,13 +469,13 @@ int NativeControlObject::setWidth(TiObject* obj)
 }
 
 PROP_SETGET(setType)
-int NativeControlObject::setType(TiObject* obj)
+int NativeControlObject::setType(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setRight)
-int NativeControlObject::setRight(TiObject* obj)
+int NativeControlObject::setRight(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -463,6 +488,12 @@ int NativeControlObject::setWindow(TiObject* obj)
 
 PROP_SETGET(setIcon)
 int NativeControlObject::setIcon(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setMessage)
+int NativeControlObject::setMessage(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -487,6 +518,7 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_LEFT, PROP_SETGET_FUNCTION(setLeft), NULL},
     {N_PROP_MAX, PROP_SETGET_FUNCTION(setMax), NULL},
     {N_PROP_MAXDATE, PROP_SETGET_FUNCTION(setMaxDate), NULL},
+    {N_PROP_MESSAGE, PROP_SETGET_FUNCTION(setMessage), NULL},
     {N_PROP_MIN, PROP_SETGET_FUNCTION(setMin), NULL},
     {N_PROP_MINDATE, PROP_SETGET_FUNCTION(setMinDate), NULL},
     {N_PROP_OPACITY, PROP_SETGET_FUNCTION(setOpacity), NULL},
@@ -760,9 +792,10 @@ int NativeControlObject::getDateTime(TiObject* obj, QDateTime& dt)
     return NATIVE_ERROR_OK;
 }
 
-int NativeControlObject::getMeasurementInfo(TiObject* obj, float max,
+int NativeControlObject::getMeasurementInfo(TiObject* obj, float maxPixels, float dotsPerMillimeter,
         float* calculatedValue)
 {
+    Q_ASSERT(calculatedValue != NULL);
     UnitType unitType = UnitTypeDefault;
     if ((!obj->getValue()->IsString()) && (!obj->getValue()->IsStringObject()))
     {
@@ -776,9 +809,9 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float max,
         {
             value = 0.0f;
         }
-        else if (value > max)
+        else if (value > maxPixels)
         {
-            value = max;
+            value = maxPixels;
         }
         *calculatedValue = value;
         return NATIVE_ERROR_OK;
@@ -791,6 +824,7 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float max,
         if (measurement.endsWith(QString(g_unitTypes[i].postfix)))
         {
             unitType = g_unitTypes[i].unitType;
+            break;
         }
     }
     if (unitType == UnitTypeDefault)
@@ -805,9 +839,9 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float max,
         {
             numberPart = 0.0f;
         }
-        else if (numberPart > max)
+        else if (numberPart > maxPixels)
         {
-            numberPart = max;
+            numberPart = maxPixels;
         }
         *calculatedValue = numberPart;
         break;
@@ -820,29 +854,45 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float max,
         {
             numberPart = 100.0f;
         }
-        if (max <= 0.0f)
+        if (maxPixels <= 0.0f)
         {
             *calculatedValue = 0;
         }
         else
         {
-            *calculatedValue = max * numberPart / 100;
+            *calculatedValue = maxPixels * numberPart / 100;
         }
         break;
     case UnitTypeDIP:
         // TODO: complete (NOTE: DPI is required)
         break;
     case UnitTypeInches:
-        // TODO: complete (NOTE: DPI is required)
+        if (numberPart < 0.0f)
+        {
+            numberPart = 0.0f;
+        }
+        *calculatedValue = dotsPerMillimeter * numberPart * INCHES_TO_MM_MUL;
         break;
     case UnitTypeMM:
-        // TODO: complete (NOTE: DPI is required)
+        if (numberPart < 0.0f)
+        {
+            numberPart = 0.0f;
+        }
+        *calculatedValue = dotsPerMillimeter * numberPart;
         break;
     case UnitTypeCM:
-        // TODO: complete (NOTE: DPI is required)
+        if (numberPart < 0.0f)
+        {
+            numberPart = 0.0f;
+        }
+        *calculatedValue = dotsPerMillimeter * numberPart * CM_TO_MM_MUL;
         break;
     case UnitTypePT:
-        // TODO: complete (NOTE: DPI is required)
+        if (numberPart < 0.0f)
+        {
+            numberPart = 0.0f;
+        }
+        *calculatedValue = dotsPerMillimeter * numberPart * PT_TO_MM_MUL;
         break;
     default:
         return NATIVE_ERROR_NOTSUPPORTED;

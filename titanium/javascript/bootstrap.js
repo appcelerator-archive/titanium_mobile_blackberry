@@ -5,6 +5,10 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
+alert = function(msg)
+{
+    Ti.UI.createAlertDialog({message: msg}).show();
+}
 
 L = function(key, hint)
 {

@@ -9,6 +9,10 @@
 
 #include "NativeLoggerInterface.h"
 #include "NativeObjectFactory.h"
+#include <cassert>
+
+NativeLoggerInterface* TiLogger::s_nativeLogger = NULL;
+static TiLogger* s_tiLogger = NULL;
 
 TiLogger::TiLogger()
 {
@@ -20,11 +24,20 @@ TiLogger::~TiLogger()
 
 TiLogger& TiLogger::getInstance()
 {
-    static TiLogger tiLogger;
-    return tiLogger;
+    if (s_tiLogger == NULL)
+    {
+        s_tiLogger = new TiLogger;
+    }
+    return *s_tiLogger;
 }
 
-NativeLoggerInterface* TiLogger::s_nativeLogger = NULL;
+void TiLogger::deleteInstance()
+{
+    delete s_tiLogger;
+    s_tiLogger = NULL;
+    s_nativeLogger->deleteInstance();
+    s_nativeLogger = NULL;
+}
 
 void TiLogger::initialize(NativeObjectFactory* nativeObjectFactory)
 {
@@ -36,5 +49,6 @@ void TiLogger::initialize(NativeObjectFactory* nativeObjectFactory)
 
 void TiLogger::log(std::string msg)
 {
+    assert(s_nativeLogger);
     s_nativeLogger->log(msg.c_str());
 }

@@ -20,7 +20,6 @@ class ImageView;
 }
 }
 
-class ImageViewEventHandler;
 
 class NativeImageViewObject : public NativeControlObject
 {
@@ -29,7 +28,6 @@ public:
     virtual int getObjectType() const;
     virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual int setImage(const char* image);
-    virtual int setEventHandler(const char* eventName, TiEvent* event);
 
 protected:
     virtual ~NativeImageViewObject();
@@ -39,9 +37,8 @@ private:
     // Disable copy ctor and assignment operator
     NativeImageViewObject(const NativeImageViewObject& obj);
     NativeImageViewObject& operator=(const NativeImageViewObject& obj);
+
     bb::cascades::ImageView* imageView_;
-    TiEventContainer* eventImageChanged_;
-    ImageViewEventHandler* eventHandler_;
     float left_;
     float top_;
 };
@@ -59,7 +56,7 @@ public:
     virtual ~ImageViewEventHandler() {}
 
 public slots:
-    void imageChanged(const bb::cascades::Image image)
+    void imageChanged(const bb::cascades::Image/* image*/)
     {
         // TODO: add x, y coordinates
         eventContainer_->fireEvent();

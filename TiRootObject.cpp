@@ -45,13 +45,11 @@ void TiRootObject::onCreateStaticMembers()
 
     createStringMethods();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "L", this, _L);   // TODO: use the same object as Ti.Locale.getString
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "alert", this, _alert);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "clearInterval", this, _clearInterval);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "clearTimeout", this, _clearTimeout);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "require", this, _require);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setInterval", this, _setInterval);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setTimeout", this, _setTimeout);
-
 }
 
 VALUE_MODIFY TiRootObject::onChildValueChange(TiObject* childObject, Handle<Value>, Handle<Value> newValue)
@@ -203,13 +201,6 @@ Handle<Value> TiRootObject::_L(void*, TiObject*, const Arguments& args)
     return Undefined();
 }
 
-Handle<Value> TiRootObject::_alert(void*, TiObject*, const Arguments& args)
-{
-    // TODO: finish this
-    (void)args;
-    return Undefined();
-}
-
 Handle<Value> TiRootObject::_clearInterval(void*, TiObject*, const Arguments& args)
 {
     clearTimeoutHelper(args, true);
@@ -329,5 +320,3 @@ Handle<Value> TiRootObject::setTimeoutHelper(const Arguments& args, bool interva
     Handle<Number> timerId = Number::New(id);
     return timerId;
 }
-
-

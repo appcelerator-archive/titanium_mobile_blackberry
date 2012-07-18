@@ -29,6 +29,7 @@ public:
     virtual NAHANDLE getNativeHandle() const;
     virtual int addChildNativeObject(NativeObject* obj);
     virtual int open();
+    virtual int removeChildNativeObject(NativeObject* obj);
     virtual int setBackgroundColor(TiObject* obj);
 
 protected:
