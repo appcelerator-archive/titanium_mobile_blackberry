@@ -30,7 +30,6 @@ public:
     virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual int setImage(const char* image);
     virtual int setEventHandler(const char* eventName, TiEvent* event);
-    virtual void completeInitialization();
 
 protected:
     virtual ~NativeImageViewObject();

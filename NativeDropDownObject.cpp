@@ -92,8 +92,3 @@ int NativeDropDownObject::setEventHandler(const char* eventName, TiEvent* event)
     }
     return NATIVE_ERROR_NOTSUPPORTED;
 }
-
-void NativeDropDownObject::completeInitialization()
-{
-    NativeControlObject::completeInitialization();
-}

@@ -50,11 +50,6 @@ int NativeImageViewObject::setImage(const char* image)
     return NATIVE_ERROR_OK;
 }
 
-void NativeImageViewObject::completeInitialization()
-{
-    NativeControlObject::completeInitialization();
-}
-
 int NativeImageViewObject::setEventHandler(const char* eventName, TiEvent* event)
 {
     if (strcmp(eventName, "change") == 0)

@@ -54,11 +54,6 @@ int NativeTextFieldObject::setHintText(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-void NativeTextFieldObject::completeInitialization()
-{
-    NativeControlObject::completeInitialization();
-}
-
 int NativeTextFieldObject::setEventHandler(const char* eventName, TiEvent* event)
 {
     if (strcmp(eventName, "change") == 0)

@@ -38,7 +38,6 @@ public:
     virtual int setMin(TiObject* obj);
     virtual int setValue(TiObject* obj);
     virtual int setEventHandler(const char* eventName, TiEvent* event);
-    virtual void completeInitialization();
 
 private:
     bb::cascades::Slider* slider_;

@@ -64,7 +64,7 @@ Handle<Value> TiUITab::open_(void* userContext, TiObject* caller, const Argument
     }
     else
     {
-        ThrowException(String::New(Native::Msg::Expected_argument_of_type_object_or_external));
+        return ThrowException(String::New(Native::Msg::Expected_argument_of_type_object_or_external));
     }
     return Undefined();
 }

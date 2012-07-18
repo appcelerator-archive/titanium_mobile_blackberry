@@ -94,7 +94,9 @@ int NativeTabObject::openWindowOnTab(NativeObject* obj)
         QObject::connect(backAction, SIGNAL(triggered()), navigationPane_, SLOT(pop()));
         page->setPaneProperties(NavigationPaneProperties::create().backButton(backAction));
         navigationPane_->push(page);
+        return NATIVE_ERROR_OK;
     }
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 int NativeTabObject::initialize(TiEventContainerFactory* containerFactory)

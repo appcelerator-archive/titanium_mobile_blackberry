@@ -37,7 +37,6 @@ public:
     virtual int setTitle(TiObject* obj);
     virtual int setOptions(TiObject* obj);
     virtual int setSelectedIndex(TiObject* obj);
-    virtual void completeInitialization();
 
 protected:
     virtual ~NativeDropDownObject();

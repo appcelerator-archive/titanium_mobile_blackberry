@@ -31,9 +31,7 @@ protected:
 private:
     static Handle<Value> open_(void* userContext, TiObject* caller, const Arguments& args);
 
-private:
     TiUITab();
-
     //This class is neither copy-constructible nor assignable
     TiUITab(const TiUITab& obj);
     TiUITab& operator=(const TiUITab& obj);

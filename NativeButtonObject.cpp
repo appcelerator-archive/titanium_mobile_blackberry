@@ -78,8 +78,3 @@ int NativeButtonObject::setEventHandler(const char* eventName, TiEvent* event)
     }
     return NATIVE_ERROR_NOTSUPPORTED;
 }
-
-void NativeButtonObject::completeInitialization()
-{
-
-}

@@ -115,11 +115,6 @@ NAHANDLE NativeListViewObject::getNativeHandle() const
     return listView_;
 }
 
-void NativeListViewObject::completeInitialization()
-{
-    NativeControlObject::completeInitialization();
-}
-
 QString NativeListViewObject::getListViewElementFromIndex(QVariantList var)
 {
     bb::cascades::DataModel* dataM = listView_->dataModel();

@@ -38,7 +38,6 @@ public:
     virtual int setTitle(TiObject* obj);
     virtual int setImage(TiObject* obj);
     virtual int setEventHandler(const char* eventName, TiEvent* event);
-    virtual void completeInitialization();
 
 private:
     bb::cascades::Button* button_;

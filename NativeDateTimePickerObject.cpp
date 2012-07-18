@@ -132,11 +132,6 @@ NAHANDLE NativeDateTimePickerObject::getNativeHandle() const
     return dateTimePicker_;
 }
 
-void NativeDateTimePickerObject::completeInitialization()
-{
-    NativeControlObject::completeInitialization();
-}
-
 int NativeDateTimePickerObject::setEventHandler(const char* eventName, TiEvent* event)
 {
     if (strcmp(eventName, "change") == 0)
