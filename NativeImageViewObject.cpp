@@ -48,7 +48,7 @@ int NativeImageViewObject::setImage(const char* /*image*/)
 
 void NativeImageViewObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
-	NativeControlObject::setupEvents(containerFactory);
+    NativeControlObject::setupEvents(containerFactory);
     TiEventContainer* eventImageChanged = containerFactory->createEventContainer();
     eventImageChanged->setDataProperty("type", tetCHANGE);
     events_.insert(tetCHANGE, EventPairSmartPtr(eventImageChanged, new ImageViewEventHandler(eventImageChanged)));

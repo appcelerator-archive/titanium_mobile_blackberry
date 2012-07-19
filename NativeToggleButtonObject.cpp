@@ -56,7 +56,7 @@ void NativeToggleButtonObject::completeInitialization()
 
 void NativeToggleButtonObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
-	NativeControlObject::setupEvents(containerFactory);
+    NativeControlObject::setupEvents(containerFactory);
     TiEventContainer* eventStateChanged = containerFactory->createEventContainer();
     events_.insert(tetCHANGE, EventPairSmartPtr(eventStateChanged, new ToggleButtonEventHandler(eventStateChanged)));
 }

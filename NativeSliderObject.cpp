@@ -68,7 +68,7 @@ int NativeSliderObject::setValue(TiObject* obj)
 
 void NativeSliderObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
-	NativeControlObject::setupEvents(containerFactory);
+    NativeControlObject::setupEvents(containerFactory);
     TiEventContainer* eventChange = containerFactory->createEventContainer();
     events_.insert(tetCHANGE, EventPairSmartPtr(eventChange, new SliderEventHandler(eventChange)));
     QObject::connect(slider_, SIGNAL(valueChanging(float)), events_[tetCHANGE]->handler, SLOT(valueChanging(float)));

@@ -122,7 +122,7 @@ NAHANDLE NativeDateTimePickerObject::getNativeHandle() const
 
 void NativeDateTimePickerObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
-	NativeControlObject::setupEvents(containerFactory);
+    NativeControlObject::setupEvents(containerFactory);
     TiEventContainer* eventChange = containerFactory->createEventContainer();
     eventChange->setDataProperty("type", tetCHANGE);
     events_.insert(tetCHANGE, EventPairSmartPtr(eventChange, new DateTimePickerEventHandler(eventChange)));

@@ -52,7 +52,7 @@ int NativeTextFieldObject::setHintText(TiObject* obj)
 
 void NativeTextFieldObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
-	NativeControlObject::setupEvents(containerFactory);
+    NativeControlObject::setupEvents(containerFactory);
     TiEventContainer* eventFieldChanged = containerFactory->createEventContainer();
     eventFieldChanged->setDataProperty("type", tetCHANGE);
     events_.insert(tetCHANGE, EventPairSmartPtr(eventFieldChanged, new TextFieldEventHandler(eventFieldChanged)));

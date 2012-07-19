@@ -35,8 +35,10 @@ public:
     virtual int initialize();
     virtual int setTitle(TiObject* obj);
     virtual int setImage(TiObject* obj);
+
 protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
+
 private:
     bb::cascades::Button* button_;
 };

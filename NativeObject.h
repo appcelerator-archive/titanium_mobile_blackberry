@@ -120,7 +120,6 @@ enum NATIVE_PROP
 
 
 #include "TiBase.h"
-#include "TiEventContainer.h"
 #include <cstddef>
 
 class NativeObjectFactory;
@@ -130,6 +129,7 @@ class TiObject;
 
 #define N_SUCCEEDED(x)          ((x)==NATIVE_ERROR_OK)
 
+
 /*
  * NativeObject
  *
@@ -138,8 +138,7 @@ class TiObject;
  * implemented for a specific platform
  * such as a button, label, file, etc...
  */
-class NativeObject :
-    public TiBase
+class NativeObject : public TiBase
 {
 public:
     virtual int getObjectType() const = 0;
@@ -164,15 +163,11 @@ public:
     virtual int setVisibility(bool visible);
     virtual int fireEvent(const char* name, const TiObject* event) const;
 
-    // Ti event types (tet)
-    static const char* tetCHANGE;
-    static const char* tetCLICK;
-
 protected:
     NativeObject();
     virtual ~NativeObject();
+
     virtual int initialize();
-    int getNextEventId();
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
     friend class NativeObjectFactory;
 

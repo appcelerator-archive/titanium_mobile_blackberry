@@ -8,7 +8,7 @@
 #ifndef NATIVEOPTIONOBJECT_H_
 #define NATIVEOPTIONOBJECT_H_
 
-#include "NativeObject.h"
+#include "NativeProxyObject.h"
 
 //forward declaration
 namespace bb
@@ -24,7 +24,7 @@ class Option;
  *
  * UI: Option
  */
-class NativeOptionObject : public NativeObject
+class NativeOptionObject : public NativeProxyObject
 {
 public:
     static NativeOptionObject* createOption();

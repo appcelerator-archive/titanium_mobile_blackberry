@@ -131,7 +131,7 @@ int NativeListViewObject::scrollToIndex(int index)
 
 void NativeListViewObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
-	NativeControlObject::setupEvents(containerFactory);
+    NativeControlObject::setupEvents(containerFactory);
     TiEventContainer* eventClicked = containerFactory->createEventContainer();
     eventClicked->setDataProperty("type", tetCLICK);
     events_.insert(tetCLICK, EventPairSmartPtr(eventClicked, new ListViewEventHandler(eventClicked, this)));
