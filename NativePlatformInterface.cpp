@@ -12,7 +12,6 @@
 #include <qsize.h>
 
 #include <bb/device/Display>
-#include <bb/device/DisplayManager>
 #include <bps/deviceinfo.h>
 
 // TODO: Remove once all functions implemented
@@ -109,8 +108,7 @@ Handle<Value> NativePlatformInterface::getDisplayCaps()
     HandleScope scope;
     Local<Object> dCapsObject = Object::New();
 
-    bb::device::DisplayManager displayManager;
-    bb::device::Display& display = displayManager.getDisplay(displayManager.primaryDisplayId());
+    bb::device::Display display;
 
     const float MMPERINCH = 25.4f;
 
