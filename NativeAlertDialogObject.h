@@ -22,7 +22,7 @@ class NativeAlertDialogObject : public NativeControlObject
 public:
     static NativeAlertDialogObject* createAlertDialog();
     virtual int getObjectType() const;
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
     virtual NAHANDLE getNativeHandle() const;
     virtual int show();
     virtual int hide();

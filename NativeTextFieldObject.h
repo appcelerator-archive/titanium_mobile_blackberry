@@ -25,11 +25,12 @@ class NativeTextFieldObject : public NativeAbstractTextControlObject
 public:
     static NativeTextFieldObject* createTextField();
     virtual int getObjectType() const;
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
     virtual int setHintText(TiObject* obj);
 
 protected:
     virtual ~NativeTextFieldObject();
+    virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
     explicit NativeTextFieldObject();

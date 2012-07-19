@@ -38,7 +38,7 @@ public:
     virtual int open();
 
 protected:
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
 
 private:
     NativeObjectFactory* nativeObjectFactory_;

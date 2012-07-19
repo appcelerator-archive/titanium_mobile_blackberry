@@ -9,13 +9,13 @@
 
 #include "NativeLoggerObject.h"
 #include "NativeMessageStrings.h"
-#include "TiEvent.h"
 #include <stdio.h>
 
 
 const char* NativeObject::tetCHANGE = "change";
 const char* NativeObject::tetCLICK = "click";
 
+// NativeObject
 
 NativeObject::NativeObject()
 {
@@ -24,10 +24,6 @@ NativeObject::NativeObject()
 
 NativeObject::~NativeObject()
 {
-    foreach(EventPair * ep, events_)
-    {
-        delete ep;
-    }
 }
 
 int NativeObject::setPropertyValue(size_t, TiObject*)
@@ -45,7 +41,7 @@ int NativeObject::addChildNativeObject(NativeObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-int NativeObject::initialize(TiEventContainerFactory*)
+int NativeObject::initialize()
 {
     return NATIVE_ERROR_OK;
 }
@@ -70,7 +66,7 @@ int NativeObject::stop()
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-int NativeObject::openWindowOnTab(NativeObject* obj)
+int NativeObject::openWindowOnTab(NativeObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -85,7 +81,7 @@ int NativeObject::scrollToIndex(int)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-int NativeObject::setActiveTab(NativeObject* tab)
+int NativeObject::setActiveTab(NativeObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -95,7 +91,7 @@ int NativeObject::setActiveTab(int index)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-int NativeObject::removeChildNativeObject(NativeObject* obj)
+int NativeObject::removeChildNativeObject(NativeObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -105,14 +101,8 @@ bool NativeObject::isInitializationComplete() const
     return isInitializationComplete_;
 }
 
-int NativeObject::setEventHandler(const char* eventName, TiEvent* event)
+int NativeObject::setEventHandler(const char*, TiEvent*)
 {
-    if (events_.contains(eventName))
-    {
-        event->setId(getNextEventId());
-        events_[eventName]->container->addListener(event);
-        return NATIVE_ERROR_OK;
-    }
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
@@ -126,14 +116,8 @@ int NativeObject::setVisibility(bool)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-int NativeObject::fireEvent(const char* name, const TiObject* event) const
+int NativeObject::fireEvent(const char* name, const TiObject*) const
 {
-    EventPair* ep = events_.value(name);
-    if (ep != NULL && ep->isValid())
-    {
-        ep->container->fireEvent(event);
-        return NATIVE_ERROR_OK;
-    }
     N_WARNING(Native::Msg::Event_handlers_for_are_invalid_for_event_named__ << name);
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -160,4 +144,9 @@ int NativeObject::getNextEventId()
         s_nextEventId = 1;
     }
     return s_nextEventId++;
+}
+
+void NativeObject::setupEvents(TiEventContainerFactory*)
+{
+	// Do nothing in the base class
 }

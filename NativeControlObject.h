@@ -8,11 +8,12 @@
 #ifndef NATIVECONTROLOBJECT_H_
 #define NATIVECONTROLOBJECT_H_
 
-#include "NativeObject.h"
+#include "NativeProxyObject.h"
 
 #include <bb/cascades/Container>
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/Color>
+#include <bb/cascades/TouchEvent>
 
 /*
  * NativeControlObject
@@ -34,8 +35,9 @@ enum UnitType
 
 class TiObject;
 class QString;
+class UIViewEventHandler;
 
-class NativeControlObject : public NativeObject
+class NativeControlObject : public NativeProxyObject
 {
 public:
     virtual NAHANDLE getNativeHandle() const;
@@ -96,6 +98,7 @@ protected:
     NativeControlObject();
     virtual ~NativeControlObject();
     virtual void setControl(bb::cascades::Control* control);
+    virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
     static int getMeasurementInfo(TiObject* obj, float maxPixels, float dotsPerMillimeter,
@@ -108,6 +111,32 @@ private:
     bb::cascades::Color disabledBackgroundColor_;
     float left_;
     float top_;
+    UIViewEventHandler* eventHandler_;
+};
+
+// Event handler for Ti.UI.View
+class UIViewEventHandler : public QObject
+{
+    Q_OBJECT
+public:
+    explicit UIViewEventHandler(TiEventContainer* eventContainer)
+    {
+        eventContainer_ = eventContainer;
+    }
+    virtual ~UIViewEventHandler() {}
+
+public slots:
+    void touch(bb::cascades::TouchEvent*)
+    {
+        eventContainer_->fireEvent();
+    }
+
+private:
+    TiEventContainer* eventContainer_;
+
+    // Disable copy ctor & assignment operator
+    UIViewEventHandler(const UIViewEventHandler& eHandler);
+    UIViewEventHandler& operator=(const UIViewEventHandler& eHandler);
 };
 
 #endif /* NATIVECONTROLOBJECT_H_ */

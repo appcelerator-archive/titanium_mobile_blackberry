@@ -29,7 +29,7 @@ NativeProgressBarObject* NativeProgressBarObject::createProgressBar()
     return new NativeProgressBarObject();
 }
 
-int NativeProgressBarObject::initialize(TiEventContainerFactory* containerFactory)
+int NativeProgressBarObject::initialize()
 {
     progressIndicator_ = bb::cascades::ProgressIndicator::create();
     bb::cascades::DockLayoutProperties* properties = bb::cascades::DockLayoutProperties::create();
@@ -75,4 +75,3 @@ int NativeProgressBarObject::setValue(TiObject* obj)
     progressIndicator_->setValue(value);
     return NATIVE_ERROR_OK;
 }
-

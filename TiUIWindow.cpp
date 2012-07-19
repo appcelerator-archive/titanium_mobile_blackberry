@@ -42,7 +42,7 @@ void TiUIWindow::initializeTiObject(TiObject* parentContext)
     }
 }
 
-Handle<Value> TiUIWindow::open_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIWindow::open_(void* userContext, TiObject*, const Arguments&)
 {
     HandleScope handleScope;
     TiUIWindow* obj = (TiUIWindow*) userContext;

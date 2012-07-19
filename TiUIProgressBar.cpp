@@ -43,13 +43,13 @@ void TiUIProgressBar::initializeTiObject(TiObject* parentContext)
     }
 }
 
-Handle<Value> TiUIProgressBar::_show(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIProgressBar::_show(void*, TiObject*, const Arguments&)
 {
     // TODO: Implement this
     return Undefined();
 }
 
-Handle<Value> TiUIProgressBar::_hide(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIProgressBar::_hide(void*, TiObject*, const Arguments&)
 {
     // TODO: Implement this
     return Undefined();

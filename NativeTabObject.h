@@ -40,7 +40,7 @@ public:
     virtual NAHANDLE getNativeHandle() const;
 
 protected:
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
 
 private:
     bb::cascades::Page* page_;

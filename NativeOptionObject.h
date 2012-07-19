@@ -29,7 +29,7 @@ class NativeOptionObject : public NativeObject
 public:
     static NativeOptionObject* createOption();
     virtual int getObjectType() const;
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
     virtual NAHANDLE getNativeHandle() const;
     virtual int setText(const char* text);
 

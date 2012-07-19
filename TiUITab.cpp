@@ -44,7 +44,7 @@ void TiUITab::initializeTiObject(TiObject* parentContext)
     }
 }
 
-Handle<Value> TiUITab::open_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUITab::open_(void* userContext, TiObject*, const Arguments& args)
 {
     HandleScope handleScope;
     if ((args.Length() > 0) && (args[0]->IsObject()))

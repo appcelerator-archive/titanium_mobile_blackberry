@@ -153,7 +153,7 @@ void TiObject::initializeTiObject(TiObject* parentContext)
     }
 }
 
-Handle<Value> TiObject::onFunctionCall(const Arguments& args)
+Handle<Value> TiObject::onFunctionCall(const Arguments&)
 {
     // Default function call returns "Undefined"
     return Undefined();
@@ -231,7 +231,7 @@ void TiObject::onSetFunctionCallback(Handle<ObjectTemplate>* objTemplate)
     (*objTemplate)->SetCallAsFunctionHandler(functCallback_);
 }
 
-void TiObject::onSetProperty(const char* propertyName, Local<Value> value)
+void TiObject::onSetProperty(const char*, Local<Value>)
 {
     /* Nothing to do in the base class */
 }
@@ -250,12 +250,12 @@ void TiObject::onStartMessagePump()
     }
 }
 
-VALUE_MODIFY TiObject::onValueChange(Handle<Value> oldValue, Handle<Value> newValue)
+VALUE_MODIFY TiObject::onValueChange(Handle<Value>, Handle<Value>)
 {
     return VALUE_MODIFY_ALLOW;
 }
 
-VALUE_MODIFY TiObject::onChildValueChange(TiObject* childObject, Handle<Value> oldValue, Handle<Value> newValue)
+VALUE_MODIFY TiObject::onChildValueChange(TiObject*, Handle<Value>, Handle<Value>)
 {
     return VALUE_MODIFY_ALLOW;
 }
@@ -302,7 +302,7 @@ void TiObject::forceSetValue(Handle<Value> value)
     value_ = Persistent<Value>::New(value);
 }
 
-bool TiObject::userCanAddMember(const char* propertyName) const
+bool TiObject::userCanAddMember(const char*) const
 
 {
     return true;
@@ -431,7 +431,7 @@ bool TiObject::isUIObject() const
     return false;
 }
 
-void TiObject::setTiMappingProperties(const TiProperty* prop, int propertyCount)
+void TiObject::setTiMappingProperties(const TiProperty*, int)
 {
 }
 

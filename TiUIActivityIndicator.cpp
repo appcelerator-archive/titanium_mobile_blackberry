@@ -43,7 +43,7 @@ void TiUIActivityIndicator::initializeTiObject(TiObject* parentContext)
     }
 }
 
-Handle<Value> TiUIActivityIndicator::show_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIActivityIndicator::show_(void* userContext, TiObject*, const Arguments&)
 {
     HandleScope handleScope;
     TiUIActivityIndicator* obj = (TiUIActivityIndicator*) userContext;
@@ -53,7 +53,7 @@ Handle<Value> TiUIActivityIndicator::show_(void* userContext, TiObject* caller, 
     return Undefined();
 }
 
-Handle<Value> TiUIActivityIndicator::hide_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIActivityIndicator::hide_(void* userContext, TiObject*, const Arguments&)
 {
     HandleScope handleScope;
     TiUIActivityIndicator* obj = (TiUIActivityIndicator*) userContext;

@@ -33,7 +33,7 @@ public:
     virtual int setBackgroundColor(TiObject* obj);
 
 protected:
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
 
 private:
     bb::cascades::Container* container_;
