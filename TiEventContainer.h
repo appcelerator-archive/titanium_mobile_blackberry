@@ -15,6 +15,9 @@
 class TiEvent;
 class TiObject;
 
+#include <qmap.h>
+#include <qvariant.h>
+
 /*
  * TiEvent
  *
@@ -33,6 +36,7 @@ public:
     virtual void setDataProperty(const char* propertyName, int value) = 0;
     virtual void setDataProperty(const char* propertyName, float value) = 0;
     virtual void setComplexDataProperty(const char* complexPropertyName, const char* propertyName, const char* value) = 0;
+    virtual void setDataModelProperty(const char* propertyName, QMap<QString, QVariant> data) = 0;
     virtual ~TiEventContainer()
     {
     }

@@ -36,6 +36,7 @@ public:
     virtual void setDataProperty(const char* propertyName, int value);
     virtual void setDataProperty(const char* propertyName, float value);
     virtual void setComplexDataProperty(const char* complexPropertyName, const char* propertyName, const char* value);
+    virtual void setDataModelProperty(const char* propertyName, QMap<QString, QVariant> data);
 
 private:
 

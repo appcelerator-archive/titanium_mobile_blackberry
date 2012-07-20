@@ -11,6 +11,9 @@
 #include <bb/cascades/DataModel>
 #include <bb/cascades/ListView>
 #include <bb/cascades/QListDataModel>
+#include <bb/cascades/ListItemManager>
+#include <bb/cascades/VisualNode>
+#include "NativeListViewObject.h"
 #include "TiEventContainerFactory.h"
 
 NativeListViewObject::NativeListViewObject()
@@ -37,6 +40,7 @@ int NativeListViewObject::initialize(TiEventContainerFactory* containerFactory)
     eventClicked->setDataProperty("type", tetCLICK);
     events_.insert(tetCLICK, new EventPair(eventClicked, new ListViewEventHandler(eventClicked, this)));
     QObject::connect(listView_, SIGNAL(selectionChanged(QVariantList, bool)), events_[tetCLICK]->handler, SLOT(selectionChanged(QVariantList, bool)));
+    listView_->setListItemManager(new ListViewItemFactory());
     return NATIVE_ERROR_OK;
 }
 
@@ -87,22 +91,18 @@ int NativeListViewObject::setTop(TiObject* obj)
 
 int NativeListViewObject::setData(TiObject* obj)
 {
-    QVector<QPair<QString, QString> > dictionary;
-    int error = NativeControlObject::getDictionaryData(obj, dictionary);
+    QVector<QMap<QString, QVariant> > dataModel;
+    int error = NativeControlObject::getDataModel(obj, dataModel);
     if (!N_SUCCEEDED(error))
     {
         return error;
     }
-    QList<QString> dataList;
-    for (int i = 0; i < dictionary.size(); ++i)
+    QList<QMap<QString, QVariant> > dataList;
+    for (int i = 0; i < dataModel.size(); ++i)
     {
-        //TODO define const var, for title string
-        if (dictionary[i].first == "title")
-        {
-            dataList.append(dictionary[i].second);
-        }
+        dataList.append(dataModel[i]);
     }
-    listView_->setDataModel(new bb::cascades::QListDataModel<QString>(dataList));
+    listView_->setDataModel(new bb::cascades::QListDataModel<QMap<QString, QVariant> >(dataList));
     return NATIVE_ERROR_OK;
 }
 
@@ -116,12 +116,11 @@ NAHANDLE NativeListViewObject::getNativeHandle() const
     return listView_;
 }
 
-QString NativeListViewObject::getListViewElementFromIndex(QVariantList var)
+QMap<QString, QVariant> NativeListViewObject::getListViewElementFromIndex(QVariantList var)
 {
     bb::cascades::DataModel* dataM = listView_->dataModel();
-    QVariant tmp = dataM->data(var);
-    QString str = tmp.toString();
-    return str;
+    QMap<QString, QVariant> property = dataM->data(var).toMap();
+    return property;
 }
 
 int NativeListViewObject::scrollToIndex(int index)

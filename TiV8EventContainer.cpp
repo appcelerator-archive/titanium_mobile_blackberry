@@ -83,6 +83,38 @@ void TiV8EventContainer::setComplexDataProperty(const char* complexPropertyName,
     eventData_->Set(String::New(complexPropertyName), complex);
 }
 
+void TiV8EventContainer::setDataModelProperty(const char* propertyName, QMap<QString, QVariant> data)
+{
+    HandleScope handleScope;
+    Handle<Array> array = Array::New(data.size());
+    QMap<QString, QVariant>::const_iterator i;
+    int j = 0;
+    for (i = data.constBegin(); i != data.constEnd(); ++i, ++j)
+    {
+        QVariant value = i.value();
+        if (value.type() == QVariant::String)
+        {
+            array->Set(String::New(i.key().toStdString().c_str()), String::New(i.value().toString().toStdString().c_str()));
+        }
+        else if (value.type() == QVariant::Double)
+        {
+            bool b;
+            array->Set(String::New(i.key().toStdString().c_str()), Number::New(i.value().toDouble(&b)));
+        }
+        else if (value.type() == QVariant::Int)
+        {
+            bool b;
+            array->Set(String::New(i.key().toStdString().c_str()), Number::New(i.value().toInt(&b)));
+        }
+        else if (value.type() == QVariant::Bool)
+        {
+            array->Set(String::New(i.key().toStdString().c_str()), Boolean::New(i.value().toBool()));
+        }
+        // TODO: Implement elements adding for other types
+    }
+    eventData_->Set(String::New(propertyName), array);
+}
+
 // TiInternalEventListener
 TiV8EventContainer::TiInternalEventListener::TiInternalEventListener()
 {

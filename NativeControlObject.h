@@ -85,6 +85,7 @@ public:
     static int getPoint(TiObject* obj, float* x, float* y);
     //obtain java script dictionary object and keep it in the multimap
     static int getDictionaryData(TiObject* obj, QVector<QPair<QString, QString> >& dictionary);
+    static int getDataModel(TiObject* obj, QVector<QMap<QString, QVariant> >& dataModel);
     static int getDateTime(TiObject* obj, QDateTime& dt);
     // TODO: Need to handle container_ more correctly
     void setContainer(bb::cascades::Container* c)

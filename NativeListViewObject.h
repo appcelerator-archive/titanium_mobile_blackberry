@@ -9,6 +9,8 @@
 #define NATIVELISTVIEWOBJECT_H_
 
 #include "NativeControlObject.h"
+#include "TiObject.h"
+#include <QtCore/qobject.h>
 
 /*
  * NativeListView
@@ -21,9 +23,16 @@ namespace bb
 namespace cascades
 {
 class ListView;
+class VisualNode;
 };
 };
 
+#include <bb/cascades/ListItemManager>
+#include <bb/cascades/StandardListItem>
+
+class TiEventContainer;
+class TiCascadesEventHandler;
+class ListViewEventHandler;
 
 class NativeListViewObject : public NativeControlObject
 {
@@ -35,7 +44,7 @@ public:
     virtual int setWidth(TiObject* obj);
     virtual int setData(TiObject* obj);
     virtual int initialize(TiEventContainerFactory* containerFactory);
-    virtual QString getListViewElementFromIndex(QVariantList var);
+    virtual QMap<QString, QVariant> getListViewElementFromIndex(QVariantList var);
     virtual NAHANDLE getNativeHandle() const;
     virtual int scrollToIndex(int index);
 
@@ -51,6 +60,34 @@ private:
     bb::cascades::ListView* listView_;
     float left_;
     float top_;
+};
+
+class ListViewItemFactory: public bb::cascades::ListItemManager
+{
+public:
+    ListViewItemFactory() {};
+
+    bb::cascades::VisualNode* createItem(bb::cascades::ListView* list, const QString& type)
+    {
+        bb::cascades::StandardListItem* item = new bb::cascades::StandardListItem();
+        return item;
+    }
+
+    void updateItem(bb::cascades::ListView* list, bb::cascades::VisualNode* listItem, const QString& type,
+                    const QVariantList& indexPath, const QVariant& data)
+    {
+        QMap<QString, QVariant> dataMap = data.toMap();
+        QMap<QString, QVariant>::const_iterator i;
+        for (i = dataMap.constBegin(); i != dataMap.constEnd(); ++i)
+        {
+            QString key = i.key();
+            if (key.compare("title") == 0 && (i.value().type() == QVariant::String))
+            {
+                QString title = i.value().toString();
+                ((bb::cascades::StandardListItem*)listItem)->setTitleText(title);
+            }
+        }
+    }
 };
 
 //Event handler for button object
@@ -69,14 +106,14 @@ public:
 public slots:
     void selectionChanged(QVariantList var, bool)
     {
+        QString strIndex = var[0].toString().toStdString().c_str();
         eventContainer_->setDataProperty("index", var[0].toString().toStdString().c_str());
-        QString str;
+        QMap<QString, QVariant> property;
         if (owner_)
         {
-            str = owner_->getListViewElementFromIndex(var);
+            property = owner_->getListViewElementFromIndex(var);
         }
-        //TODO later we may need to implement all complex data types instead of using just names, but for now it is fine
-        eventContainer_->setComplexDataProperty("rowData", "title", str.toUtf8().constData());
+        eventContainer_->setDataModelProperty("rowData", property);
         eventContainer_->fireEvent();
     }
 
