@@ -62,8 +62,7 @@ int NativeTabGroupObject::addChildNativeObject(NativeObject* obj)
     {
         if (obj->getNativeHandle())
         {
-        	// TODO: fix this
-            //tabGroup_->add((bb::cascades::TabbedPane*) obj->getNativeHandle());
+            tabGroup_->add((bb::cascades::Tab*) obj->getNativeHandle());
             return NATIVE_ERROR_OK;
         }
     }
@@ -76,8 +75,7 @@ int NativeTabGroupObject::setActiveTab(NativeObject* tab)
     {
         if (tab->getNativeHandle())
         {
-        	// TODO: fix for R6
-            //tabGroup_->setActiveTabPane((bb::cascades::TabbedPane*) tab->getNativeHandle());
+            tabGroup_->setActiveTab((bb::cascades::Tab*) tab->getNativeHandle());
             return NATIVE_ERROR_OK;
         }
     }
@@ -88,8 +86,7 @@ int NativeTabGroupObject::setActiveTab(int index)
 {
     if (tabGroup_->at(index) != 0)
     {
-    	// TODO: fix for R6
-        //tabGroup_->setActiveTabPane(tabGroup_->at(index));
+        tabGroup_->setActiveTab(tabGroup_->at(index));
         return NATIVE_ERROR_OK;
     }
     return NATIVE_ERROR_NOTSUPPORTED;
