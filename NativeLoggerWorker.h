@@ -27,6 +27,7 @@ class NativeLoggerWorker : public QObject
 public slots:
 
     void log(const QString& t);
+    void flush();
 };
 
 #endif /* NATIVELOGGERWORKER_H_ */

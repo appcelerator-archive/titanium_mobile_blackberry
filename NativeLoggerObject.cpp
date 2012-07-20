@@ -23,6 +23,9 @@ NativeLoggerObject::NativeLoggerObject()
 
 NativeLoggerObject::~NativeLoggerObject()
 {
+    // block until the logger queue is flushed
+    QMetaObject::invokeMethod(nativeLoggerWorker_, "flush", Qt::BlockingQueuedConnection);
+
     nativeLoggerThread_.quit();
     nativeLoggerThread_.wait();
     delete nativeLoggerWorker_;
