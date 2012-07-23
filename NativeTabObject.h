@@ -15,10 +15,10 @@ namespace bb
 {
 namespace cascades
 {
+class ActionItem;
+class NavigationPane;
 class Page;
 class Tab;
-class NavigationPane;
-class ActionItem;
 }
 }
 

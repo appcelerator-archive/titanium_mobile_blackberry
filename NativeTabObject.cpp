@@ -11,15 +11,16 @@
 #include <bb/cascades/Image>
 #include <bb/cascades/NavigationPane>
 #include <bb/cascades/NavigationPaneProperties>
-#include <bb/cascades/Tab>
 #include <bb/cascades/Page>
+#include <bb/cascades/Tab>
 
 using namespace bb::cascades;
 
 NativeTabObject::NativeTabObject() :
+    backAction_(NULL),
     navigationPane_(NULL),
-    tab_(NULL),
-    backAction_(NULL)
+    page_(NULL),
+    tab_(NULL)
 {
 }
 
@@ -68,6 +69,7 @@ int NativeTabObject::setIcon(TiObject* obj)
     {
         return error;
     }
+    //TODO: fix path
     const bb::cascades::Image image = bb::cascades::Image(QUrl("assets" + str));
     tab_->setImage(image);
     return NATIVE_ERROR_OK;
