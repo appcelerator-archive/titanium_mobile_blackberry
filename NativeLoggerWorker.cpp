@@ -15,3 +15,8 @@ void NativeLoggerWorker::log(const QString& t)
 {
     fprintf(stderr, "%s", (t + "\n").toStdString().c_str());
 }
+
+void NativeLoggerWorker::flush()
+{
+    fflush(stderr);
+}
