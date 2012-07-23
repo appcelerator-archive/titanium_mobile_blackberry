@@ -26,12 +26,12 @@ public:
     NativeSimpleDBInterface(std::string dbPath, std::string table);
     virtual ~NativeSimpleDBInterface();
 
-    std::string get(std::string key);
-    void set(std::string key, std::string value);
+    std::string get(const std::string& key);
+    void set(const std::string& key, const std::string& value);
 
-    bool contains(std::string key);
+    bool contains(const std::string& key);
     std::list<std::string> keys();
-    void remove(std::string key);
+    void remove(const std::string& key);
 
 private:
     // Disable copy ctor & assignment operator

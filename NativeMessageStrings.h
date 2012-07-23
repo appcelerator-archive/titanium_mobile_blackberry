@@ -30,7 +30,13 @@ N_MESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_integer, "Expected a
 N_MESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_object_or_external, "Expected argument of type object or external");
 N_MESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_string, "Expected argument of type string");
 N_MESSAGESTRINGS_CONST_DEF(char*, Expected_argument_of_type_unsigned_integer, "Expected argument of type unsigned integer");
+N_MESSAGESTRINGS_CONST_DEF(char*, Failed_to_check_for_key, "Failed to check for key (%1, %2): %3");
 N_MESSAGESTRINGS_CONST_DEF(char*, Failed_to_convert_font_size_to_float_with_value, "Failed to convert font size to float with value");
+N_MESSAGESTRINGS_CONST_DEF(char*, Failed_to_get_key, "Failed to get key (%1, %2): %3");
+N_MESSAGESTRINGS_CONST_DEF(char*, Failed_to_get_keys, "Failed to get keys (%1): %2");
+N_MESSAGESTRINGS_CONST_DEF(char*, Failed_to_open_database, "Failed to open database (%1): %2");
+N_MESSAGESTRINGS_CONST_DEF(char*, Failed_to_remove_key, "Failed to remove key (%1, %2): %3");
+N_MESSAGESTRINGS_CONST_DEF(char*, Failed_to_set_key, "Failed to set key (%1, %2): %3");
 N_MESSAGESTRINGS_CONST_DEF(char*, INTERNAL__An_error_occurred_while_parsing_the_format_string, "INTERNAL: An error occurred while parsing the format string");
 N_MESSAGESTRINGS_CONST_DEF(char*, Numbered_argument_exceeds_the_length_of_provided_arguments, "Numbered argument exceeds the length of provided arguments");
 N_MESSAGESTRINGS_CONST_DEF(char*, Unknown_key_value_received, "Unknown key:value received");

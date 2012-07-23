@@ -7,6 +7,7 @@
 
 #include "TiAppPropertiesObject.h"
 
+#include "NativeException.h"
 #include "TiGenericFunctionObject.h"
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
@@ -66,23 +67,31 @@ static string stringify(Handle<Value> object)
     return *String::Utf8Value(JSON_stringify->Call(JSON, 1, &object));
 }
 
-static Local<Value> parseJson(string json)
+static Local<Value> parseJson(const string& json)
 {
     Handle<Context> context = Context::GetCurrent();
     Handle<Object> global = context->Global();
 
     Handle<Object> JSON = global->Get(String::New("JSON"))->ToObject();
-    Handle<Function> JSON_parse =
-        Handle<Function>::Cast(JSON->Get(String::New("parse")));
+    Handle<Function> JSON_parse = Handle<Function>::Cast(JSON->Get(String::New("parse")));
 
     Handle<Value> value = String::New(json.c_str());
 
     return JSON_parse->Call(JSON, 1, &value);
 }
 
-Handle<Value> TiAppPropertiesObject::_get(string key, const char* type, Handle<Value> defaultValue)
+Handle<Value> TiAppPropertiesObject::_get(const string& key, const char* type, Handle<Value> defaultValue)
 {
-    string typeValueString = db.get(key);
+    string typeValueString;
+    try
+    {
+        typeValueString = db.get(key);
+    }
+    catch (NativeException& ne)
+    {
+        return ThrowException(String::New(ne.what()));
+    }
+
     if (typeValueString.empty())
     {
         return defaultValue;
@@ -102,14 +111,21 @@ Handle<Value> TiAppPropertiesObject::_get(string key, const char* type, Handle<V
     }
 }
 
-Handle<Value> TiAppPropertiesObject::_set(string key, const char* type, Handle<Value> value)
+Handle<Value> TiAppPropertiesObject::_set(const string& key, const char* type, Handle<Value> value)
 {
     HandleScope scope;
     Local<Object> typeValue = Object::New();
     typeValue->Set(String::New("type"), String::New(type));
     typeValue->Set(String::New("value"), value);
     string typeValueString = stringify(typeValue);
-    db.set(key, typeValueString);
+    try
+    {
+        db.set(key, typeValueString);
+    }
+    catch (NativeException& ne)
+    {
+        return ThrowException(String::New(ne.what()));
+    }
     return Undefined();
 }
 
@@ -402,12 +418,28 @@ Handle<Value> TiAppPropertiesObject::_hasProperty(void* /*userContext*/, TiObjec
     }
 
     string key = *String::Utf8Value(args[0]);
-    return db.contains(key) ? True() : False();
+    try
+    {
+        return db.contains(key) ? True() : False();
+    }
+    catch (NativeException& ne)
+    {
+        return ThrowException(String::New(ne.what()));
+    }
 }
 
-Handle<Value> TiAppPropertiesObject::_listProperties(void* /*userContext*/, TiObject* /*caller*/, const Arguments& args)
+Handle<Value> TiAppPropertiesObject::_listProperties(void* /*userContext*/, TiObject* /*caller*/, const Arguments& /*args*/)
 {
-    list<string> keys = db.keys();
+    list<string> keys;
+    try
+    {
+        keys = db.keys();
+    }
+    catch (NativeException& ne)
+    {
+        return ThrowException(String::New(ne.what()));
+    }
+
     HandleScope scope;
     Local<Array> properties = Array::New(keys.size());
     uint32_t index = 0;
@@ -430,6 +462,13 @@ Handle<Value> TiAppPropertiesObject::_removeProperty(void* /*userContext*/, TiOb
     }
 
     string key = *String::Utf8Value(args[0]);
-    db.remove(key);
+    try
+    {
+        db.remove(key);
+    }
+    catch (NativeException& ne)
+    {
+        return ThrowException(String::New(ne.what()));
+    }
     return Undefined();
 }

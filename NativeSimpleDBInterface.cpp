@@ -7,6 +7,7 @@
 
 #include "NativeSimpleDBInterface.h"
 
+#include "NativeException.h"
 #include "NativeLoggerObject.h"
 #include "NativeMessageStrings.h"
 
@@ -39,24 +40,33 @@ void NativeSimpleDBInterface::open()
         return;
     }
 
-    db_.open();
-    Q_ASSERT(db_.isOpen());
+    if (!db_.open())
+    {
+        throw NativeException(QString(Native::Msg::Failed_to_open_database).arg(dbPath_, db_.lastError().text()).toStdString());
+    }
+
     QSqlQuery query(db_);
-    query.exec("CREATE TABLE IF NOT EXISTS " + table_ + " (simpleKey CHAR(10) PRIMARY KEY, simpleValue TEXT)");
+    query.exec("CREATE TABLE IF NOT EXISTS " + table_ + " (simpleKey VARCHAR(255) PRIMARY KEY, simpleValue TEXT)");
     QSqlError sqlError = query.lastError();
     if (sqlError.isValid())
     {
-        NativeLoggerObject::getInstance()->log(QString(Native::Msg::Create_table_failed).arg(dbPath_, table_, sqlError.text()));
+        throw NativeException(QString(Native::Msg::Create_table_failed).arg(dbPath_, table_, sqlError.text()).toStdString());
     }
 }
 
-string NativeSimpleDBInterface::get(string key)
+string NativeSimpleDBInterface::get(const string& key)
 {
     open();
     QSqlQuery query(db_);
     query.prepare("SELECT simpleValue FROM " + table_ + " WHERE simpleKey = :simpleKey");
-    query.bindValue(":simpleKey", QString::fromUtf8(key.c_str()));
+    QString keyQString = QString::fromUtf8(key.c_str());
+    query.bindValue(":simpleKey", keyQString);
     query.exec();
+    QSqlError sqlError = query.lastError();
+    if (sqlError.isValid())
+    {
+        throw NativeException(QString(Native::Msg::Failed_to_get_key).arg(dbPath_, keyQString, sqlError.text()).toStdString());
+    }
 
     if (query.next())
     {
@@ -65,23 +75,35 @@ string NativeSimpleDBInterface::get(string key)
     return "";
 }
 
-void NativeSimpleDBInterface::set(string key, string value)
+void NativeSimpleDBInterface::set(const string& key, const string& value)
 {
     open();
     QSqlQuery query(db_);
     query.prepare("INSERT INTO " + table_ + " (simpleKey, simpleValue) VALUES (:simpleKey, :simpleValue)");
-    query.bindValue(":simpleKey", QString::fromUtf8(key.c_str()));
+    QString keyQString = QString::fromUtf8(key.c_str());
+    query.bindValue(":simpleKey", keyQString);
     query.bindValue(":simpleValue", QString::fromUtf8(value.c_str()));
     query.exec();
+    QSqlError sqlError = query.lastError();
+    if (sqlError.isValid())
+    {
+        throw NativeException(QString(Native::Msg::Failed_to_set_key).arg(dbPath_, keyQString, sqlError.text()).toStdString());
+    }
 }
 
-bool NativeSimpleDBInterface::contains(string key)
+bool NativeSimpleDBInterface::contains(const string& key)
 {
     open();
     QSqlQuery query(db_);
     query.prepare("SELECT simpleValue FROM " + table_ + " WHERE simpleKey = :simpleKey");
-    query.bindValue(":simpleKey", QString::fromUtf8(key.c_str()));
+    QString keyQString = QString::fromUtf8(key.c_str());
+    query.bindValue(":simpleKey", keyQString);
     query.exec();
+    QSqlError sqlError = query.lastError();
+    if (sqlError.isValid())
+    {
+        throw NativeException(QString(Native::Msg::Failed_to_check_for_key).arg(dbPath_, keyQString, sqlError.text()).toStdString());
+    }
 
     if (query.next())
     {
@@ -97,6 +119,11 @@ list<string> NativeSimpleDBInterface::keys()
     QSqlQuery query(db_);
     query.prepare("SELECT simpleKey FROM " + table_);
     query.exec();
+    QSqlError sqlError = query.lastError();
+    if (sqlError.isValid())
+    {
+        throw NativeException(QString(Native::Msg::Failed_to_get_keys).arg(dbPath_, sqlError.text()).toStdString());
+    }
 
     while (query.next())
     {
@@ -105,11 +132,17 @@ list<string> NativeSimpleDBInterface::keys()
     return ret;
 }
 
-void NativeSimpleDBInterface::remove(string key)
+void NativeSimpleDBInterface::remove(const string& key)
 {
     open();
     QSqlQuery query(db_);
     query.prepare("DELETE FROM " + table_ + " WHERE simpleKey = :simpleKey");
-    query.bindValue(":simpleKey", QString::fromUtf8(key.c_str()));
+    QString keyQString = QString::fromUtf8(key.c_str());
+    query.bindValue(":simpleKey", keyQString);
     query.exec();
+    QSqlError sqlError = query.lastError();
+    if (sqlError.isValid())
+    {
+        throw NativeException(QString(Native::Msg::Failed_to_remove_key).arg(dbPath_, keyQString, sqlError.text()).toStdString());
+    }
 }

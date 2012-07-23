@@ -34,8 +34,8 @@ private:
 
     static NativeSimpleDBInterface db;
 
-    static Handle<Value> _get(string key, const char* type, Handle<Value> defaultValue);
-    static Handle<Value> _set(string key, const char* type, Handle<Value> value);
+    static Handle<Value> _get(const string& key, const char* type, Handle<Value> defaultValue);
+    static Handle<Value> _set(const string& key, const char* type, Handle<Value> value);
     static Handle<Value> _nullOrDefaultValue(Handle<Value> defaultValue);
 
     static Handle<Value> _getBool(void* userContext, TiObject* caller, const Arguments& args);
