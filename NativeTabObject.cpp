@@ -12,7 +12,7 @@
 #include <bb/cascades/NavigationPane>
 #include <bb/cascades/NavigationPaneProperties>
 #include <bb/cascades/Page>
-#include <bb/cascades/TabbedPaneProperties>
+//#include <bb/cascades/TabbedPaneProperties>
 
 using namespace bb::cascades;
 
@@ -55,7 +55,8 @@ int NativeTabObject::setTitle(TiObject* obj)
     {
         return error;
     }
-    tabProperties_->setTitle(str);
+    // TODO: fix for R6
+    //tabProperties_->setTitle(str);
     return NATIVE_ERROR_OK;
 }
 
@@ -69,7 +70,8 @@ int NativeTabObject::setIcon(TiObject* obj)
     }
     // TODO: fix path
     const bb::cascades::Image image = bb::cascades::Image(QUrl("assets" + str));
-    tabProperties_->setImage(image);
+    // TODO: fix for R6
+    //tabProperties_->setImage(image);
     return NATIVE_ERROR_OK;
 }
 
@@ -78,7 +80,8 @@ int NativeTabObject::addChildNativeObject(NativeObject* obj)
     if (obj->getObjectType() == N_TYPE_WINDOW)
     {
         bb::cascades::Page* page = (bb::cascades::Page*)obj->getNativeHandle();
-        navigationPane_->setPaneProperties(tabProperties_);
+        // TODO: fix for R6
+        //navigationPane_->setPaneProperties(tabProperties_);
         navigationPane_->push(page);
         return NATIVE_ERROR_OK;
     }
@@ -101,7 +104,8 @@ int NativeTabObject::openWindowOnTab(NativeObject* obj)
 
 int NativeTabObject::initialize()
 {
-    tabProperties_ = TabbedPaneProperties::create();
+    // TODO: fix for R6
+    //tabProperties_ = TabbedPaneProperties::create();
     navigationPane_ = NavigationPane::create();
 
     if (tabProperties_ == NULL || navigationPane_ == NULL)

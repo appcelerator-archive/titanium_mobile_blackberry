@@ -17,7 +17,6 @@
 #include <bb/cascades/Color>
 #include <bb/cascades/Container>
 #include <bb/device/Display>
-#include <bb/device/DisplayManager>
 #include <QColor>
 
 // 25.4mm in 1"
@@ -138,8 +137,7 @@ NativeControlObject::NativeControlObject() :
 {
     if ((g_width <= 0) || (g_height <= 0))
     {
-        bb::device::DisplayManager displayManager;
-        bb::device::Display& display = displayManager.getDisplay(displayManager.primaryDisplayId());
+        bb::device::Display display;
         QSize size = display.pixelSize();
         g_width = size.width();
         g_height = size.height();
@@ -287,17 +285,11 @@ int NativeControlObject::setEnabled(TiObject* obj)
     container_->setEnabled(enabled);
     if (enabled)
     {
-        if (backgroundColor_.isValid())
-        {
-            container_->setBackground(backgroundColor_);
-        }
+        container_->setBackground(backgroundColor_);
     }
     else
     {
-        if (disabledBackgroundColor_.isValid())
-        {
-            container_->setBackground(disabledBackgroundColor_);
-        }
+        container_->setBackground(disabledBackgroundColor_);
     }
     return NATIVE_ERROR_OK;
 }
