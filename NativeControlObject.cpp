@@ -751,7 +751,7 @@ int NativeControlObject::getDictionaryData(TiObject* obj, QVector<QPair<QString,
     return NATIVE_ERROR_OK;
 }
 
-int NativeControlObject::getDataModel(TiObject* obj, QVector<QMap<QString, QVariant> >& dataModel)
+int NativeControlObject::getDataModel(TiObject* obj, QVector<QVariant>& dataModel)
 {
     Handle<Value> value = obj->getValue();
     if (value.IsEmpty() || (!value->IsArray()))
@@ -764,58 +764,11 @@ int NativeControlObject::getDataModel(TiObject* obj, QVector<QMap<QString, QVari
     dataModel.reserve(length);
     for (uint32_t i = 0; i < length; ++i)
     {
-        Local<Value> el = array->Get(i);
-        if (el->IsObject())
-        {
-            Local<Array> propAr = el->ToObject()->GetPropertyNames();
-            uint32_t arLenght = propAr->Length();
-            QMap<QString, QVariant> dataRow;
-            for (uint32_t j = 0; j < arLenght; ++j)
-            {
-                Handle<String> propString = Handle<String>::Cast(propAr->Get(j));
-                String::Utf8Value propNameUTF(propString);
-                QString key = QString::fromUtf8(*propNameUTF);
-                Local<Value> propValue = el->ToObject()->Get(propString);
-                QVariant varValue;
-                // String
-                if (propValue->IsString() || propValue->IsStringObject())
-                {
-                    Local<String> valueStr = propValue->ToString();
-                    String::Utf8Value valueUTF(valueStr);
-                    QString val = QString::fromUtf8(*valueUTF);
-                    varValue = QVariant(val);
-                }
-                // Number
-                else if (propValue->IsNumber())
-                {
-                    if (propValue->IsInt32())
-                    {
-                        int val = propValue->ToNumber()->Value();
-                        varValue = QVariant(val);
-                    }
-                    else
-                    {
-                        double val = propValue->ToNumber()->Value();
-                        varValue = QVariant(val);
-                    }
-                }
-                // Boolean
-                else if (propValue->IsBoolean())
-                {
-                    bool val = propValue->ToBoolean()->Value();
-                    varValue = QVariant(val);
-                }
-                // TODO: Implement for other types
+        Handle<Value> row = array->Get(i);
 
-                dataRow[key] = varValue;
-            }
-            dataModel.push_back(dataRow);
-        }
-        else
-        {
-            //if the element of the dictionary is not object, it means dictionary contains invalid data
-            return NATIVE_ERROR_INVALID_ARG;
-        }
+        v8ToNativeBridge* v8bridge = new v8ToNativeBridge(row);
+        QVariant vRow = QVariant::fromValue(v8bridge);
+        dataModel.push_back(vRow);
     }
 
     return NATIVE_ERROR_OK;

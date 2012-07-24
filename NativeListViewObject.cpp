@@ -91,18 +91,18 @@ int NativeListViewObject::setTop(TiObject* obj)
 
 int NativeListViewObject::setData(TiObject* obj)
 {
-    QVector<QMap<QString, QVariant> > dataModel;
+    QVector<QVariant> dataModel;
     int error = NativeControlObject::getDataModel(obj, dataModel);
     if (!N_SUCCEEDED(error))
     {
         return error;
     }
-    QList<QMap<QString, QVariant> > dataList;
+    QList<QVariant> dataList;
     for (int i = 0; i < dataModel.size(); ++i)
     {
         dataList.append(dataModel[i]);
     }
-    listView_->setDataModel(new bb::cascades::QListDataModel<QMap<QString, QVariant> >(dataList));
+    listView_->setDataModel(new bb::cascades::QListDataModel<QVariant>(dataList));
     return NATIVE_ERROR_OK;
 }
 
@@ -116,10 +116,10 @@ NAHANDLE NativeListViewObject::getNativeHandle() const
     return listView_;
 }
 
-QMap<QString, QVariant> NativeListViewObject::getListViewElementFromIndex(QVariantList var)
+QVariant NativeListViewObject::getListViewElementFromIndex(QVariantList var)
 {
     bb::cascades::DataModel* dataM = listView_->dataModel();
-    QMap<QString, QVariant> property = dataM->data(var).toMap();
+    QVariant property = dataM->data(var);
     return property;
 }
 

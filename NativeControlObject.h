@@ -35,6 +35,28 @@ enum UnitType
 class TiObject;
 class QString;
 
+class v8ToNativeBridge : public QObject
+{
+    Q_OBJECT
+public:
+    explicit v8ToNativeBridge(v8::Handle<v8::Value> value)
+    {
+        value_ = v8::Persistent<v8::Value>::New(value);
+    }
+    ~v8ToNativeBridge()
+    {
+        value_.Dispose();
+    }
+    const v8::Persistent<v8::Value> getValue() const
+    {
+        return value_;
+    }
+private:
+    v8::Persistent<v8::Value> value_;
+};
+
+Q_DECLARE_METATYPE(v8ToNativeBridge*);
+
 class NativeControlObject : public NativeObject
 {
 public:
@@ -85,7 +107,7 @@ public:
     static int getPoint(TiObject* obj, float* x, float* y);
     //obtain java script dictionary object and keep it in the multimap
     static int getDictionaryData(TiObject* obj, QVector<QPair<QString, QString> >& dictionary);
-    static int getDataModel(TiObject* obj, QVector<QMap<QString, QVariant> >& dataModel);
+    static int getDataModel(TiObject* obj, QVector<QVariant>& dataModel);
     static int getDateTime(TiObject* obj, QDateTime& dt);
     // TODO: Need to handle container_ more correctly
     void setContainer(bb::cascades::Container* c)

@@ -44,7 +44,7 @@ public:
     virtual int setWidth(TiObject* obj);
     virtual int setData(TiObject* obj);
     virtual int initialize(TiEventContainerFactory* containerFactory);
-    virtual QMap<QString, QVariant> getListViewElementFromIndex(QVariantList var);
+    virtual QVariant getListViewElementFromIndex(QVariantList var);
     virtual NAHANDLE getNativeHandle() const;
     virtual int scrollToIndex(int index);
 
@@ -76,15 +76,28 @@ public:
     void updateItem(bb::cascades::ListView* list, bb::cascades::VisualNode* listItem, const QString& type,
                     const QVariantList& indexPath, const QVariant& data)
     {
-        QMap<QString, QVariant> dataMap = data.toMap();
-        QMap<QString, QVariant>::const_iterator i;
-        for (i = dataMap.constBegin(); i != dataMap.constEnd(); ++i)
+        // Trying to parse the title from v8 object
+        if (data.canConvert<v8ToNativeBridge*>())
         {
-            QString key = i.key();
-            if (key.compare("title") == 0 && (i.value().type() == QVariant::String))
+            v8ToNativeBridge* v8Bridge = data.value<v8ToNativeBridge*>();
+            Persistent<Value> propValue = v8Bridge->getValue();
+            if (propValue->IsObject())
             {
-                QString title = i.value().toString();
-                ((bb::cascades::StandardListItem*)listItem)->setTitleText(title);
+                Local<Array> propAr = propValue->ToObject()->GetPropertyNames();
+                uint32_t arLenght = propAr->Length();
+                for (uint32_t j = 0; j < arLenght; ++j)
+                {
+                    Handle<String> propString = Handle<String>::Cast(propAr->Get(j));
+                    String::Utf8Value propNameUTF(propString);
+                    if (strcmp(*propNameUTF, "title") == 0)
+                    {
+                        Local<Value> titleValue = propValue->ToObject()->Get(propString);
+                        Local<String> valueStr = titleValue->ToString();
+                        String::Utf8Value valueUTF(valueStr);
+                        ((bb::cascades::StandardListItem*)listItem)->setTitleText(*valueUTF);
+                        break;
+                    }
+                }
             }
         }
     }
@@ -108,12 +121,18 @@ public slots:
     {
         QString strIndex = var[0].toString().toStdString().c_str();
         eventContainer_->setDataProperty("index", var[0].toString().toStdString().c_str());
-        QMap<QString, QVariant> property;
+        QVariant property;
+        Persistent<Value> propValue;
         if (owner_)
         {
             property = owner_->getListViewElementFromIndex(var);
+            if (property.canConvert<v8ToNativeBridge*>())
+            {
+                v8ToNativeBridge* v8Bridge = property.value<v8ToNativeBridge*>();
+                propValue = v8Bridge->getValue();
+            }
         }
-        eventContainer_->setDataModelProperty("rowData", property);
+        eventContainer_->setDataModelProperty("rowData", propValue);
         eventContainer_->fireEvent();
     }
 
