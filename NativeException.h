@@ -21,8 +21,8 @@
 class NativeException : public std::exception
 {
 public:
-    NativeException(const char* msg);
-    NativeException(const std::string& msg);
+    explicit NativeException(const char* msg);
+    explicit NativeException(const std::string& msg);
     virtual const char* what();
 
 private:
