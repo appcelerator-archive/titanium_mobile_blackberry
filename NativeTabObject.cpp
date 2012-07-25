@@ -12,20 +12,22 @@
 #include <bb/cascades/NavigationPane>
 #include <bb/cascades/NavigationPaneProperties>
 #include <bb/cascades/Page>
-//#include <bb/cascades/TabbedPaneProperties>
+#include <bb/cascades/Tab>
 
 using namespace bb::cascades;
 
 NativeTabObject::NativeTabObject() :
-    tabProperties_(NULL),
-    navigationPane_(NULL)
+    backAction_(NULL),
+    navigationPane_(NULL),
+    page_(NULL),
+    tab_(NULL)
 {
 }
 
 NativeTabObject::~NativeTabObject()
 {
-    delete tabProperties_;
-    tabProperties_ = NULL;
+    delete tab_;
+    tab_ = NULL;
     delete navigationPane_;
     navigationPane_ = NULL;
 }
@@ -43,7 +45,7 @@ int NativeTabObject::getObjectType() const
 
 NAHANDLE NativeTabObject::getNativeHandle() const
 {
-    return navigationPane_;
+    return tab_;
 }
 
 int NativeTabObject::setTitle(TiObject* obj)
@@ -55,8 +57,7 @@ int NativeTabObject::setTitle(TiObject* obj)
     {
         return error;
     }
-    // TODO: fix for R6
-    //tabProperties_->setTitle(str);
+    tab_->setTitle(str);
     return NATIVE_ERROR_OK;
 }
 
@@ -68,10 +69,9 @@ int NativeTabObject::setIcon(TiObject* obj)
     {
         return error;
     }
-    // TODO: fix path
+    //TODO: fix path
     const bb::cascades::Image image = bb::cascades::Image(QUrl("assets" + str));
-    // TODO: fix for R6
-    //tabProperties_->setImage(image);
+    tab_->setImage(image);
     return NATIVE_ERROR_OK;
 }
 
@@ -80,9 +80,8 @@ int NativeTabObject::addChildNativeObject(NativeObject* obj)
     if (obj->getObjectType() == N_TYPE_WINDOW)
     {
         bb::cascades::Page* page = (bb::cascades::Page*)obj->getNativeHandle();
-        // TODO: fix for R6
-        //navigationPane_->setPaneProperties(tabProperties_);
         navigationPane_->push(page);
+        tab_->setContent(navigationPane_);
         return NATIVE_ERROR_OK;
     }
     return NATIVE_ERROR_NOTSUPPORTED;
@@ -93,9 +92,7 @@ int NativeTabObject::openWindowOnTab(NativeObject* obj)
     if (obj->getObjectType() == N_TYPE_WINDOW)
     {
         bb::cascades::Page* page = (bb::cascades::Page*)obj->getNativeHandle();
-        ActionItem* backAction = ActionItem::create();
-        QObject::connect(backAction, SIGNAL(triggered()), navigationPane_, SLOT(pop()));
-        page->setPaneProperties(NavigationPaneProperties::create().backButton(backAction));
+        page->setPaneProperties(NavigationPaneProperties::create().backButton(backAction_));
         navigationPane_->push(page);
         return NATIVE_ERROR_OK;
     }
@@ -104,12 +101,15 @@ int NativeTabObject::openWindowOnTab(NativeObject* obj)
 
 int NativeTabObject::initialize()
 {
-    // TODO: fix for R6
-    //tabProperties_ = TabbedPaneProperties::create();
+    tab_ = Tab::create();
     navigationPane_ = NavigationPane::create();
+    backAction_ = ActionItem::create();
+    QObject::connect(backAction_, SIGNAL(triggered()), navigationPane_, SLOT(pop()));
 
-    if (tabProperties_ == NULL || navigationPane_ == NULL)
+    if (backAction_ == NULL || tab_ == NULL || navigationPane_ == NULL)
     {
+        //if one of the tab_, navigationPane_ or backAction_ pointers is NULL,
+        //it means that create function couldn't allocate enough memory for at least one of these objects
         return NATIVE_ERROR_OUTOFMEMORY;
     }
     return NATIVE_ERROR_OK;
