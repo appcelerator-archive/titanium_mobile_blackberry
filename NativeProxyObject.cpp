@@ -107,7 +107,7 @@ EventPairSmartPtr::~EventPairSmartPtr()
     }
 }
 
-const EventPairSmartPtr& EventPairSmartPtr::operator=(const EventPairSmartPtr& eventPtr)
+EventPairSmartPtr& EventPairSmartPtr::operator=(const EventPairSmartPtr& eventPtr)
 {
     if (eventPtr.eventPtr_ != NULL)
     {
@@ -118,7 +118,7 @@ const EventPairSmartPtr& EventPairSmartPtr::operator=(const EventPairSmartPtr& e
         eventPtr_->release();
     }
     eventPtr_ = eventPtr.eventPtr_;
-    return(*this);
+    return *this;
 }
 
 EventPair* EventPairSmartPtr::operator->() const

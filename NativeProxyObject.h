@@ -59,7 +59,7 @@ public:
     EventPairSmartPtr(TiEventContainer* c, QObject* h);
     ~EventPairSmartPtr();
 
-    const EventPairSmartPtr& operator=(const EventPairSmartPtr& eventPtr);
+    EventPairSmartPtr& operator=(const EventPairSmartPtr& eventPtr);
     EventPair* operator->() const;
     EventPair* get() const;
 
