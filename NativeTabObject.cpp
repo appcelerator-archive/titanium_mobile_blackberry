@@ -108,6 +108,8 @@ int NativeTabObject::initialize(TiEventContainerFactory* containerFactory)
 
     if (backAction_ == NULL || tab_ == NULL || navigationPane_ == NULL)
     {
+        //if one of the tab_, navigationPane_ or backAction_ pointers is NULL,
+        //it means that create function couldn't allocate enough memory for at least one of these objects
         return NATIVE_ERROR_OUTOFMEMORY;
     }
     return NATIVE_ERROR_OK;
