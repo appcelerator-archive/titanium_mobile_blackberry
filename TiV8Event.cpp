@@ -55,7 +55,7 @@ void TiV8Event::fire(void* fireDataObject)
     }
 }
 
-TiV8Event* TiV8Event::createEvent(const char* eventName, Handle<Function> eventScript, Handle<Object> source)
+TiV8Event* TiV8Event::createEvent(const char*, Handle<Function> eventScript, Handle<Object> source)
 {
     HandleScope handleScope;
     TiV8Event* obj = new TiV8Event();

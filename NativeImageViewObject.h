@@ -26,11 +26,12 @@ class NativeImageViewObject : public NativeControlObject
 public:
     static NativeImageViewObject* createImageView();
     virtual int getObjectType() const;
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
     virtual int setImage(const char* image);
 
 protected:
     virtual ~NativeImageViewObject();
+    virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
     NativeImageViewObject();

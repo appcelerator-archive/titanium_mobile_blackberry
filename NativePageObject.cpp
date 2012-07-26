@@ -56,7 +56,7 @@ NAHANDLE NativePageObject::getNativeHandle() const
     return page_;
 }
 
-int NativePageObject::initialize(TiEventContainerFactory* containerFactory)
+int NativePageObject::initialize()
 {
     if (container_ != NULL || page_ != NULL)
     {

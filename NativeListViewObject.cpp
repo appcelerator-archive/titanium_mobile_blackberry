@@ -32,14 +32,10 @@ NativeListViewObject* NativeListViewObject::createListView()
     return new NativeListViewObject;
 }
 
-int NativeListViewObject::initialize(TiEventContainerFactory* containerFactory)
+int NativeListViewObject::initialize()
 {
     listView_ = bb::cascades::ListView::create();
     setControl(listView_);
-    TiEventContainer* eventClicked = containerFactory->createEventContainer();
-    eventClicked->setDataProperty("type", tetCLICK);
-    events_.insert(tetCLICK, new EventPair(eventClicked, new ListViewEventHandler(eventClicked, this)));
-    QObject::connect(listView_, SIGNAL(selectionChanged(QVariantList, bool)), events_[tetCLICK]->handler, SLOT(selectionChanged(QVariantList, bool)));
     listView_->setListItemManager(new ListViewItemFactory());
     return NATIVE_ERROR_OK;
 }
@@ -130,4 +126,13 @@ int NativeListViewObject::scrollToIndex(int index)
     scroll.append(variant);
     listView_->scrollToItem(scroll);
     return NATIVE_ERROR_OK;
+}
+
+void NativeListViewObject::setupEvents(TiEventContainerFactory* containerFactory)
+{
+    NativeControlObject::setupEvents(containerFactory);
+    TiEventContainer* eventClicked = containerFactory->createEventContainer();
+    eventClicked->setDataProperty("type", tetCLICK);
+    events_.insert(tetCLICK, EventPairSmartPtr(eventClicked, new ListViewEventHandler(eventClicked, this)));
+    QObject::connect(listView_, SIGNAL(selectionChanged(QVariantList, bool)), events_[tetCLICK]->handler, SLOT(selectionChanged(QVariantList, bool)));
 }

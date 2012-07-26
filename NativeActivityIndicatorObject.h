@@ -30,7 +30,7 @@ class NativeActivityIndicatorObject : public NativeControlObject
 public:
     static NativeActivityIndicatorObject* createActivityIndicator();
     virtual int getObjectType() const;
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
     virtual NAHANDLE getNativeHandle() const;
     virtual int start();
     virtual int stop();

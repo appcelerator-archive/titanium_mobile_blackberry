@@ -31,8 +31,6 @@ private:
     // Disable copy ctor & assignment operator
     TiUIProgressBar(const TiUIProgressBar& progressBar);
     TiUIProgressBar& operator=(const TiUIProgressBar& progressBar);
-    static Handle<Value> _show(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> _hide(void* userContext, TiObject* caller, const Arguments& args);
 };
 
 #endif /* TIUIPROGRESSBAR_H_ */

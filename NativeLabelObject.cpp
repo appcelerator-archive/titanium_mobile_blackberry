@@ -29,7 +29,7 @@ int NativeLabelObject::getObjectType() const
     return N_TYPE_LABEL;
 }
 
-int NativeLabelObject::initialize(TiEventContainerFactory*)
+int NativeLabelObject::initialize()
 {
     label_ = bb::cascades::Label::create();
     setTextControl(label_);

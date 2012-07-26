@@ -22,7 +22,7 @@ class NativeLabelObject : public NativeAbstractTextControlObject
 public:
     static NativeLabelObject* createLabel();
     virtual int getObjectType() const;
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
 
 protected:
     virtual ~NativeLabelObject();

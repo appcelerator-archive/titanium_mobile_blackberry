@@ -15,9 +15,10 @@ namespace bb
 {
 namespace cascades
 {
-class Page;
-class TabbedPaneProperties;
+class ActionItem;
 class NavigationPane;
+class Page;
+class Tab;
 }
 }
 
@@ -40,12 +41,13 @@ public:
     virtual NAHANDLE getNativeHandle() const;
 
 protected:
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
 
 private:
-    bb::cascades::Page* page_;
-    bb::cascades::TabbedPaneProperties* tabProperties_;
+    bb::cascades::ActionItem* backAction_;
     bb::cascades::NavigationPane* navigationPane_;
+    bb::cascades::Page* page_;
+    bb::cascades::Tab* tab_;
 
     NativeTabObject();
     // Disable copy ctor & assignment operator

@@ -50,6 +50,7 @@ public:
 
 protected:
     virtual ~NativeListViewObject();
+    virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
     explicit NativeListViewObject();

@@ -44,7 +44,7 @@ void TiUIAlertDialog::initializeTiObject(TiObject* parentContext)
     }
 }
 
-Handle<Value> TiUIAlertDialog::show_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIAlertDialog::show_(void* userContext, TiObject*, const Arguments&)
 {
     HandleScope handleScope;
     TiUIAlertDialog* obj = (TiUIAlertDialog*) userContext;
@@ -54,7 +54,7 @@ Handle<Value> TiUIAlertDialog::show_(void* userContext, TiObject* caller, const 
     return Undefined();
 }
 
-Handle<Value> TiUIAlertDialog::hide_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIAlertDialog::hide_(void* userContext, TiObject*, const Arguments&)
 {
     HandleScope handleScope;
     TiUIAlertDialog* obj = (TiUIAlertDialog*) userContext;

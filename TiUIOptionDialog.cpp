@@ -43,7 +43,7 @@ void TiUIOptionDialog::initializeTiObject(TiObject* parentContext)
     }
 }
 
-Handle<Value> TiUIOptionDialog::_show(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIOptionDialog::_show(void* userContext, TiObject*, const Arguments&)
 {
     TiUIOptionDialog* obj = (TiUIOptionDialog*)userContext;
     NativeObject* rootContainer = obj->getNativeObjectFactory()->getRootContainer();
@@ -54,7 +54,7 @@ Handle<Value> TiUIOptionDialog::_show(void* userContext, TiObject* caller, const
     return Undefined();
 }
 
-Handle<Value> TiUIOptionDialog::_hide(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIOptionDialog::_hide(void*, TiObject*, const Arguments&)
 {
     // TODO: Remove from container
     return Undefined();

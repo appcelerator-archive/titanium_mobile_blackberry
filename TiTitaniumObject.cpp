@@ -7,6 +7,7 @@
 
 #include "TiTitaniumObject.h"
 #include "TiAPIObject.h"
+#include "TiAppObject.h"
 #include "TiPlatformObject.h"
 #include "TiGenericFunctionObject.h"
 #include "TiLogger.h"
@@ -40,6 +41,7 @@ void TiTitaniumObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "include", this, _include);
     TiUIObject::addObjectToParent(this, objectFactory_);
     TiAPIObject::addObjectToParent(this);
+    TiAppObject::addObjectToParent(this);
     TiPlatformObject::addObjectToParent(this);
 }
 

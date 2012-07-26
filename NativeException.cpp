@@ -5,18 +5,19 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "NativeLoggerWorker.h"
+#include "NativeException.h"
 
-#include <QString>
-
-using namespace std;
-
-void NativeLoggerWorker::log(const QString& t)
+NativeException::NativeException(const char* msg)
+    : msg_(msg)
 {
-    fprintf(stderr, "%s", (t + "\n").toStdString().c_str());
 }
 
-void NativeLoggerWorker::flush()
+NativeException::NativeException(const std::string& msg)
+    : msg_(msg)
 {
-    fflush(stderr);
+}
+
+const char* NativeException::what()
+{
+    return msg_.c_str();
 }
