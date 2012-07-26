@@ -83,9 +83,8 @@ void TiV8EventContainer::setComplexDataProperty(const char* complexPropertyName,
     eventData_->Set(String::New(complexPropertyName), complex);
 }
 
-void TiV8EventContainer::setDataModelProperty(const char* propertyName, Persistent<Value> data)
+void TiV8EventContainer::setV8ValueProperty(const char* propertyName, Handle<Value> data)
 {
-    HandleScope handleScope;
     eventData_->Set(String::New(propertyName), data);
 }
 

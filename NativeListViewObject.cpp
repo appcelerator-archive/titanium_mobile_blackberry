@@ -14,7 +14,9 @@
 #include <bb/cascades/ListItemManager>
 #include <bb/cascades/VisualNode>
 #include "NativeListViewObject.h"
+#include "PersistentV8Value.h"
 #include "TiEventContainerFactory.h"
+#include "TiObject.h"
 
 NativeListViewObject::NativeListViewObject()
 {
@@ -135,4 +137,47 @@ void NativeListViewObject::setupEvents(TiEventContainerFactory* containerFactory
     eventClicked->setDataProperty("type", tetCLICK);
     events_.insert(tetCLICK, EventPairSmartPtr(eventClicked, new ListViewEventHandler(eventClicked, this)));
     QObject::connect(listView_, SIGNAL(selectionChanged(QVariantList, bool)), events_[tetCLICK]->handler, SLOT(selectionChanged(QVariantList, bool)));
+}
+
+/*********** ListViewItemFactory class *************/
+bb::cascades::VisualNode* ListViewItemFactory::createItem(bb::cascades::ListView*, const QString&)
+{
+    bb::cascades::StandardListItem* item = new bb::cascades::StandardListItem();
+    return item;
+}
+
+void ListViewItemFactory::updateItem(bb::cascades::ListView*, bb::cascades::VisualNode* listItem, const QString&,
+                                     const QVariantList&, const QVariant& data)
+{
+    // Trying to parse the title from v8 object
+    if (data.canConvert<PersistentV8Value>())
+    {
+        PersistentV8Value v8Value = data.value<PersistentV8Value>();
+        Persistent<Value> propValue = v8Value.getValue();
+        if (propValue->IsObject())
+        {
+            Local<Value> titleValue = propValue->ToObject()->Get(String::New("title"));
+            Local<String> valueStr = titleValue->ToString();
+            String::Utf8Value valueUTF(valueStr);
+            ((bb::cascades::StandardListItem*)listItem)->setTitle(*valueUTF);
+        }
+    }
+}
+
+/*********** ListViewEventHandler class *************/
+void ListViewEventHandler::selectionChanged(QVariantList var, bool)
+{
+    eventContainer_->setDataProperty("index", var[0].toString().toStdString().c_str());
+    Persistent<Value> propValue;
+    if (owner_)
+    {
+        QVariant property = owner_->getListViewElementFromIndex(var);
+        if (property.canConvert<PersistentV8Value>())
+        {
+            PersistentV8Value v8Value = property.value<PersistentV8Value>();
+            propValue = v8Value.getValue();
+        }
+    }
+    eventContainer_->setV8ValueProperty("rowData", propValue);
+    eventContainer_->fireEvent();
 }

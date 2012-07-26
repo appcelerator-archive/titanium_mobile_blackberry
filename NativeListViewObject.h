@@ -9,7 +9,6 @@
 #define NATIVELISTVIEWOBJECT_H_
 
 #include "NativeControlObject.h"
-#include "TiObject.h"
 #include <QtCore/qobject.h>
 
 /*
@@ -43,7 +42,7 @@ public:
     virtual int setLeft(TiObject* obj);
     virtual int setWidth(TiObject* obj);
     virtual int setData(TiObject* obj);
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
     virtual QVariant getListViewElementFromIndex(QVariantList var);
     virtual NAHANDLE getNativeHandle() const;
     virtual int scrollToIndex(int index);
@@ -67,48 +66,15 @@ class ListViewItemFactory: public bb::cascades::ListItemManager
 {
 public:
     ListViewItemFactory() {};
-
-    bb::cascades::VisualNode* createItem(bb::cascades::ListView* list, const QString& type)
-    {
-        bb::cascades::StandardListItem* item = new bb::cascades::StandardListItem();
-        return item;
-    }
-
+    bb::cascades::VisualNode* createItem(bb::cascades::ListView* list, const QString& type);
     void updateItem(bb::cascades::ListView* list, bb::cascades::VisualNode* listItem, const QString& type,
-                    const QVariantList& indexPath, const QVariant& data)
-    {
-        // Trying to parse the title from v8 object
-        if (data.canConvert<v8ToNativeBridge*>())
-        {
-            v8ToNativeBridge* v8Bridge = data.value<v8ToNativeBridge*>();
-            Persistent<Value> propValue = v8Bridge->getValue();
-            if (propValue->IsObject())
-            {
-                Local<Array> propAr = propValue->ToObject()->GetPropertyNames();
-                uint32_t arLenght = propAr->Length();
-                for (uint32_t j = 0; j < arLenght; ++j)
-                {
-                    Handle<String> propString = Handle<String>::Cast(propAr->Get(j));
-                    String::Utf8Value propNameUTF(propString);
-                    if (strcmp(*propNameUTF, "title") == 0)
-                    {
-                        Local<Value> titleValue = propValue->ToObject()->Get(propString);
-                        Local<String> valueStr = titleValue->ToString();
-                        String::Utf8Value valueUTF(valueStr);
-                        ((bb::cascades::StandardListItem*)listItem)->setTitleText(*valueUTF);
-                        break;
-                    }
-                }
-            }
-        }
-    }
+                    const QVariantList& indexPath, const QVariant& data);
 };
 
 //Event handler for button object
 class ListViewEventHandler : public QObject
 {
     Q_OBJECT
-
 public:
     explicit ListViewEventHandler(TiEventContainer* eventContainer, NativeListViewObject* owner)
     {
@@ -118,25 +84,7 @@ public:
     virtual ~ListViewEventHandler() {}
 
 public slots:
-    void selectionChanged(QVariantList var, bool)
-    {
-        QString strIndex = var[0].toString().toStdString().c_str();
-        eventContainer_->setDataProperty("index", var[0].toString().toStdString().c_str());
-        QVariant property;
-        Persistent<Value> propValue;
-        if (owner_)
-        {
-            property = owner_->getListViewElementFromIndex(var);
-            if (property.canConvert<v8ToNativeBridge*>())
-            {
-                v8ToNativeBridge* v8Bridge = property.value<v8ToNativeBridge*>();
-                propValue = v8Bridge->getValue();
-            }
-        }
-        eventContainer_->setDataModelProperty("rowData", propValue);
-        eventContainer_->fireEvent();
-    }
-
+    void selectionChanged(QVariantList var, bool);
 private:
     TiEventContainer* eventContainer_;
     NativeListViewObject* owner_;

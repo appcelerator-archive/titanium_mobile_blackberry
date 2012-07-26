@@ -7,6 +7,7 @@
 
 #include "NativeControlObject.h"
 
+#include "PersistentV8Value.h"
 #include "TiEventContainer.h"
 #include "TiObject.h"
 #include <stdlib.h>
@@ -719,46 +720,6 @@ int NativeControlObject::getMapObject(TiObject* obj, QMap<QString, QString>& pro
     return NATIVE_ERROR_OK;
 }
 
-int NativeControlObject::getDictionaryData(TiObject* obj, QVector<QPair<QString, QString> >& dictionary)
-{
-    Handle<Value> value = obj->getValue();
-    if (value.IsEmpty() || (!value->IsArray()))
-    {
-        return NATIVE_ERROR_INVALID_ARG;
-    }
-
-    Handle<Array> array = Handle<Array>::Cast(value);
-    uint32_t length = array->Length();
-    dictionary.reserve(length);
-    //traverse through the dictionary elements
-    for (uint32_t i = 0; i < length; ++i)
-    {
-        Local<Value> el = array->Get(i);
-        if (el->IsObject())
-        {
-            Local<Array> propAr = el->ToObject()->GetPropertyNames();
-            uint32_t arLenght = propAr->Length();
-            for (uint32_t j = 0; j < arLenght; ++j)
-            {
-                Handle<String> propString = Handle<String>::Cast(propAr->Get(j));
-                String::Utf8Value propNameUTF(propString);
-                QString key = QString::fromUtf8(*propNameUTF);
-                Local<Value> propValue = el->ToObject()->Get(propString);
-                Local<String> valueStr = propValue->ToString();
-                String::Utf8Value valueUTF(valueStr);
-                QString val = QString::fromUtf8(*valueUTF);
-                dictionary.push_back(QPair<QString, QString>(key, val));
-            }
-        }
-        else
-        {
-            //if the element of the dictionary is not object, it means dictionary contains invalid data
-            return NATIVE_ERROR_INVALID_ARG;
-        }
-    }
-    return NATIVE_ERROR_OK;
-}
-
 int NativeControlObject::getDataModel(TiObject* obj, QVector<QVariant>& dataModel)
 {
     Handle<Value> value = obj->getValue();
@@ -773,9 +734,8 @@ int NativeControlObject::getDataModel(TiObject* obj, QVector<QVariant>& dataMode
     for (uint32_t i = 0; i < length; ++i)
     {
         Handle<Value> row = array->Get(i);
-
-        v8ToNativeBridge* v8bridge = new v8ToNativeBridge(row);
-        QVariant vRow = QVariant::fromValue(v8bridge);
+        PersistentV8Value v8Value(row);
+        QVariant vRow = QVariant::fromValue(v8Value);
         dataModel.push_back(vRow);
     }
 

@@ -37,7 +37,7 @@ public:
     virtual void setDataProperty(const char* propertyName, int value) = 0;
     virtual void setDataProperty(const char* propertyName, float value) = 0;
     virtual void setComplexDataProperty(const char* complexPropertyName, const char* propertyName, const char* value) = 0;
-    virtual void setDataModelProperty(const char* propertyName, v8::Persistent<v8::Value> data) = 0;
+    virtual void setV8ValueProperty(const char* propertyName, v8::Handle<v8::Value> data) = 0;
     virtual ~TiEventContainer()
     {
     }
