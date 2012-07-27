@@ -8,6 +8,12 @@
 #ifndef PERSISTENTV8VALUE_H_
 #define PERSISTENTV8VALUE_H_
 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#include <v8.h>
+#pragma GCC diagnostic warning "-Wunused-parameter"
+
+using namespace v8;
+
 class PersistentV8Value
 {
 public:

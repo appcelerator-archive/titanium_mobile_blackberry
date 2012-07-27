@@ -8,10 +8,6 @@
 #ifndef TIEVENTCONTAINER_H_
 #define TIEVENTCONTAINER_H_
 
-//#pragma GCC diagnostic ignored "-Wunused-parameter"
-//#include <v8.h>
-//#pragma GCC diagnostic warning "-Wunused-parameter"
-
 class TiEvent;
 class TiObject;
 
