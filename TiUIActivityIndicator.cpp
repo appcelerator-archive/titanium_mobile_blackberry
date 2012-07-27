@@ -6,11 +6,10 @@
  */
 
 #include "TiUIActivityIndicator.h"
-
 #include "TiGenericFunctionObject.h"
 
 TiUIActivityIndicator::TiUIActivityIndicator()
-    : TiProxy("")
+    : TiUIBase("")
 {
 }
 
@@ -28,7 +27,7 @@ TiUIActivityIndicator* TiUIActivityIndicator::createActivityIndicator(NativeObje
 
 void TiUIActivityIndicator::onCreateStaticMembers()
 {
-    TiProxy::onCreateStaticMembers();
+    TiUIBase::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "show", this, show_);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "hide", this, hide_);
 }

@@ -31,6 +31,7 @@ int NativeActivityIndicatorObject::getObjectType() const
 int NativeActivityIndicatorObject::initialize()
 {
     indicator_ = bb::cascades::ActivityIndicator::create();
+    setControl(indicator_);
     return NATIVE_ERROR_OK;
 }
 
