@@ -27,7 +27,7 @@ class TiPropertyMapObject : public TiObject
 {
 public:
     static TiPropertyMapObject* addProperty(TiUIBase* parent, const char* name, int propertyNumber,
-                                            MODIFY_VALUE_CALLBACK cb, void* context);
+                                            MODIFY_VALUE_CALLBACK cb, GET_PROPERTY_VALUE_CALLBACK gcb, void* context);
     static TiPropertyMapObject* addProperty(TiObject* parent, const char* name, int propertyNumber,
                                             GET_PROPERTY_VALUE_CALLBACK cb, void* context);
     virtual Handle<Value> getValue() const;

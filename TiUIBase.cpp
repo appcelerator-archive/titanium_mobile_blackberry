@@ -226,7 +226,7 @@ void TiUIBase::setTiMappingProperties(const TiProperty* props, int propertyCount
     for (int i = 0; i < propertyCount; i++)
     {
         TiObject* value = TiPropertyMapObject::addProperty(this, props[i].propertyName, props[i].nativePropertyNumber,
-                          _valueModify, this);
+                          _valueModify, _getValue, this);
         // For all properties that have write permissions, add a setter method, e.g., myLabel.text=<my text>; myLabel.setText(<my text>);
         if (props[i].permissions & TI_PROP_PERMISSION_WRITE)
         {
@@ -298,6 +298,19 @@ void TiUIBase::setParametersFromObject(void* userContext, Local<Object> obj)
             }
         }
     }
+}
+
+Handle<Value> TiUIBase::_getValue(int propertyNumber, void* context)
+{
+
+    TiUIBase* self = (TiUIBase*) context;
+    NativeObject* object = self->getNativeObject();
+    TiObject* value = new TiObject;
+    if (object != NULL)
+    {
+        object->getPropertyValue(propertyNumber, value);
+    }
+    return value->getValue();
 }
 
 VALUE_MODIFY TiUIBase::_valueModify(int propertyNumber, TiObject* value, void* context)

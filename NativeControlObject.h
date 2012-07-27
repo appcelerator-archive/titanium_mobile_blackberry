@@ -34,14 +34,18 @@ enum UnitType
 
 class TiObject;
 class QString;
+class ControlLayoutHandler;
 
 class NativeControlObject : public NativeObject
 {
 public:
     virtual NAHANDLE getNativeHandle() const;
-    virtual int setPropertyValue(size_t propertyNumber, TiObject* obj);
     virtual int getPropertyValue(size_t propertyNumber, TiObject* obj);
-    virtual int setVisibility(bool visible);
+    virtual int getHeight(TiObject* obj);
+    virtual int getLeft(TiObject* obj);
+    virtual int getTop(TiObject* obj);
+    virtual int getVisible(TiObject* obj);
+    virtual int getWidth(TiObject* obj);
     virtual int setAnchorPoint(TiObject* obj);
     virtual int setBackgroundColor(TiObject* obj);
     virtual int setBackgroundDisableColor(TiObject* obj);
@@ -62,6 +66,7 @@ public:
     virtual int setMinDate(TiObject* obj);
     virtual int setOpacity(TiObject* obj);
     virtual int setOptions(TiObject* obj);
+    virtual int setPropertyValue(size_t propertyNumber, TiObject* obj);
     virtual int setRight(TiObject* obj);
     virtual int setSelectedIndex(TiObject* obj);
     virtual int setText(TiObject* obj);
@@ -71,7 +76,7 @@ public:
     virtual int setTop(TiObject* obj);
     virtual int setValue(TiObject* obj);
     virtual int setVisible(TiObject* obj);
-    virtual int getVisible(TiObject* obj);
+    virtual int setVisibility(bool visible);
     virtual int setWidth(TiObject* obj);
     virtual int setWindow(TiObject* obj);
 
@@ -91,6 +96,7 @@ public:
     {
         container_ = c;
     }
+    void updateLayout(QRectF rect);
 
 protected:
     NativeControlObject();
@@ -106,8 +112,11 @@ private:
     bb::cascades::AbsoluteLayoutProperties* layout_;
     bb::cascades::Color backgroundColor_;
     bb::cascades::Color disabledBackgroundColor_;
+    ControlLayoutHandler* layoutHandler_;
+    QMutex mutex_;
     float left_;
     float top_;
+    QRectF rect_;
 };
 
 #endif /* NATIVECONTROLOBJECT_H_ */

@@ -27,11 +27,12 @@ TiPropertyMapObject::~TiPropertyMapObject()
 }
 
 TiPropertyMapObject* TiPropertyMapObject::addProperty(TiUIBase* parent, const char* name, int propertyNumber,
-        MODIFY_VALUE_CALLBACK cb, void* context)
+        MODIFY_VALUE_CALLBACK cb, GET_PROPERTY_VALUE_CALLBACK gcb, void* context)
 {
     TiPropertyMapObject* object = new TiPropertyMapObject(name);
     object->propertyNumber_ = propertyNumber;
     object->callback_ = cb;
+    object->getCallback_ = gcb;
     object->context_ = context;
     parent->addMember(object);
     object->parentObject_ = parent;

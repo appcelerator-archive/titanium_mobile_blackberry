@@ -38,6 +38,7 @@ protected:
 
 private:
     static VALUE_MODIFY _valueModify(int propertyNumber, TiObject* value, void* context);
+    static Handle<Value> _getValue(int propertyNumber, void* context);
     static Handle<Value> _getChildren(void* userContext);
     static Handle<Value> _hide(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _remove(void* userContext, TiObject* caller, const Arguments& args);

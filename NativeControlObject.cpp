@@ -7,6 +7,7 @@
 
 #include "NativeControlObject.h"
 
+#include "ControlLayoutHandler.h"
 #include "TiEventContainer.h"
 #include "TiObject.h"
 #include <stdlib.h>
@@ -16,8 +17,11 @@
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/Color>
 #include <bb/cascades/Container>
+#include <bb/cascades/LayoutUpdateHandler>
 #include <bb/device/Display>
 #include <QColor>
+#include <QMutexLocker>
+#include <QRectF>
 
 // 25.4mm in 1"
 #define INCHES_TO_MM_MUL                25.4f
@@ -132,7 +136,8 @@ NativeControlObject::NativeControlObject() :
     control_(NULL),
     layout_(NULL),
     left_(0),
-    top_(0)
+    top_(0),
+    layoutHandler_(0)
 {
     if ((g_width <= 0) || (g_height <= 0))
     {
@@ -163,6 +168,14 @@ NAHANDLE NativeControlObject::getNativeHandle() const
     return container_;
 }
 
+void NativeControlObject::updateLayout(QRectF rect)
+{
+    //this function is called from UI thread, so we need to lock rect_ from accessing through application thread
+    QMutexLocker locker(&mutex_);
+
+    rect_ = rect;
+}
+
 void NativeControlObject::setControl(bb::cascades::Control* control)
 {
     if (container_ == NULL)
@@ -173,6 +186,8 @@ void NativeControlObject::setControl(bb::cascades::Control* control)
         container_->setLayoutProperties(layout_);
     }
     container_->add(control);
+    layoutHandler_ = new ControlLayoutHandler(this);
+    bb::cascades::LayoutUpdateHandler::create(container_).onLayoutFrameChanged(layoutHandler_, SLOT(handleLayoutFrameUpdated(QRectF)));
     control_ = control;
 }
 
@@ -443,6 +458,42 @@ int NativeControlObject::getVisible(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+PROP_SETGET(getWidth)
+int NativeControlObject::getWidth(TiObject* obj)
+{
+    QMutexLocker locker(&mutex_);
+
+    obj->setValue(Number::New(rect_.width()));
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(getHeight)
+int NativeControlObject::getHeight(TiObject* obj)
+{
+    QMutexLocker locker(&mutex_);
+
+    obj->setValue(Number::New(rect_.height()));
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(getTop)
+int NativeControlObject::getTop(TiObject* obj)
+{
+    QMutexLocker locker(&mutex_);
+
+    obj->setValue(Number::New(rect_.top()));
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(getLeft)
+int NativeControlObject::getLeft(TiObject* obj)
+{
+    QMutexLocker locker(&mutex_);
+
+    obj->setValue(Number::New(rect_.left()));
+    return NATIVE_ERROR_OK;
+}
+
 PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
@@ -502,12 +553,12 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_DATA, PROP_SETGET_FUNCTION(setData), NULL},
     {N_PROP_ENABLED, PROP_SETGET_FUNCTION(setEnabled), NULL},
     {N_PROP_FONT, PROP_SETGET_FUNCTION(setFont), NULL},
-    {N_PROP_HEIGHT, PROP_SETGET_FUNCTION(setHeight), NULL},
+    {N_PROP_HEIGHT, PROP_SETGET_FUNCTION(setHeight), PROP_SETGET_FUNCTION(getHeight)},
     {N_PROP_HINT_TEXT, PROP_SETGET_FUNCTION(setHintText), NULL},
     {N_PROP_ICON, PROP_SETGET_FUNCTION(setIcon), NULL},
     {N_PROP_IMAGE, PROP_SETGET_FUNCTION(setImage), NULL},
     {N_PROP_LABEL, PROP_SETGET_FUNCTION(setLabel), NULL},
-    {N_PROP_LEFT, PROP_SETGET_FUNCTION(setLeft), NULL},
+    {N_PROP_LEFT, PROP_SETGET_FUNCTION(setLeft), PROP_SETGET_FUNCTION(getLeft)},
     {N_PROP_MAX, PROP_SETGET_FUNCTION(setMax), NULL},
     {N_PROP_MAXDATE, PROP_SETGET_FUNCTION(setMaxDate), NULL},
     {N_PROP_MESSAGE, PROP_SETGET_FUNCTION(setMessage), NULL},
@@ -519,11 +570,11 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_TEXT, PROP_SETGET_FUNCTION(setText), NULL},
     {N_PROP_TEXT_ALIGN, PROP_SETGET_FUNCTION(setTextAlign), NULL},
     {N_PROP_TITLE, PROP_SETGET_FUNCTION(setTitle), NULL},
-    {N_PROP_TOP, PROP_SETGET_FUNCTION(setTop), NULL},
+    {N_PROP_TOP, PROP_SETGET_FUNCTION(setTop), PROP_SETGET_FUNCTION(getTop)},
     {N_PROP_TYPE, PROP_SETGET_FUNCTION(setType), NULL},
     {N_PROP_VALUE, PROP_SETGET_FUNCTION(setValue), NULL},
     {N_PROP_VISIBLE, PROP_SETGET_FUNCTION(setVisible), PROP_SETGET_FUNCTION(getVisible)},
-    {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), NULL},
+    {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), PROP_SETGET_FUNCTION(getWidth)},
     {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setWindow), NULL}
 };
 
