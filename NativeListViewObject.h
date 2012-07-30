@@ -33,6 +33,7 @@ public:
     virtual int setData(TiObject* obj);
     virtual int initialize(TiEventContainerFactory* containerFactory);
     virtual QString getListViewElementFromIndex(QVariantList var);
+    virtual NAHANDLE getNativeHandle() const;
     virtual int scrollToIndex(int index);
 
 protected:

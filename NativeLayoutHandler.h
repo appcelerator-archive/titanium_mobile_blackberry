@@ -5,26 +5,26 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef CONTROLLAYOUTHANDLER_H_
-#define CONTROLLAYOUTHANDLER_H_
+#ifndef NATIVELAYOUTHANDLER_H_
+#define NATIVELAYOUTHANDLER_H_
 
 #include <NativeControlObject.h>
 
 #include <QtCore/QObject>
 
 /**
- * ControlLayoutHandler
+ * NativeLayoutHandler
  */
-class ControlLayoutHandler : public QObject
+class NativeLayoutHandler : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit ControlLayoutHandler(NativeControlObject* owner)
+    explicit NativeLayoutHandler(NativeControlObject* owner)
     {
         owner_ = owner;
     }
-    virtual ~ControlLayoutHandler() {}
+    virtual ~NativeLayoutHandler() {}
 
 public slots:
     void handleLayoutFrameUpdated(QRectF rect)
@@ -36,9 +36,9 @@ private:
     NativeControlObject* owner_;
 
     // Disable copy ctor & assignment operator
-    ControlLayoutHandler(const ControlLayoutHandler& eHandler);
-    ControlLayoutHandler& operator=(const ControlLayoutHandler& eHandler);
+    NativeLayoutHandler(const NativeLayoutHandler& eHandler);
+    NativeLayoutHandler& operator=(const NativeLayoutHandler& eHandler);
 };
 
 
-#endif /* CONTROLLAYOUTHANDLER_H_ */
+#endif /* NATIVELAYOUTHANDLER_H_ */

@@ -66,6 +66,11 @@ int NativeListViewObject::getObjectType() const
     return N_TYPE_LIST_VIEW;
 }
 
+NAHANDLE NativeListViewObject::getNativeHandle() const
+{
+    return listView_;
+}
+
 QString NativeListViewObject::getListViewElementFromIndex(QVariantList var)
 {
     bb::cascades::DataModel* dataM = listView_->dataModel();

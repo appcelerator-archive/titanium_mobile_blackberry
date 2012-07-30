@@ -34,7 +34,7 @@ enum UnitType
 
 class TiObject;
 class QString;
-class ControlLayoutHandler;
+class NativeLayoutHandler;
 
 class NativeControlObject : public NativeObject
 {
@@ -75,8 +75,8 @@ public:
     virtual int setType(TiObject* obj);
     virtual int setTop(TiObject* obj);
     virtual int setValue(TiObject* obj);
-    virtual int setVisible(TiObject* obj);
     virtual int setVisibility(bool visible);
+    virtual int setVisible(TiObject* obj);
     virtual int setWidth(TiObject* obj);
     virtual int setWindow(TiObject* obj);
 
@@ -112,8 +112,7 @@ private:
     bb::cascades::AbsoluteLayoutProperties* layout_;
     bb::cascades::Color backgroundColor_;
     bb::cascades::Color disabledBackgroundColor_;
-    ControlLayoutHandler* layoutHandler_;
-    QMutex mutex_;
+    NativeLayoutHandler* layoutHandler_;
     float left_;
     float top_;
     QRectF rect_;

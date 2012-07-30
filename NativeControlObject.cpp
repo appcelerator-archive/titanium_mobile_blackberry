@@ -7,7 +7,7 @@
 
 #include "NativeControlObject.h"
 
-#include "ControlLayoutHandler.h"
+#include "NativeLayoutHandler.h"
 #include "TiEventContainer.h"
 #include "TiObject.h"
 #include <stdlib.h>
@@ -20,7 +20,6 @@
 #include <bb/cascades/LayoutUpdateHandler>
 #include <bb/device/Display>
 #include <QColor>
-#include <QMutexLocker>
 #include <QRectF>
 
 // 25.4mm in 1"
@@ -135,9 +134,9 @@ NativeControlObject::NativeControlObject() :
     container_(NULL),
     control_(NULL),
     layout_(NULL),
+    layoutHandler_(0),
     left_(0),
-    top_(0),
-    layoutHandler_(0)
+    top_(0)
 {
     if ((g_width <= 0) || (g_height <= 0))
     {
@@ -170,9 +169,6 @@ NAHANDLE NativeControlObject::getNativeHandle() const
 
 void NativeControlObject::updateLayout(QRectF rect)
 {
-    //this function is called from UI thread, so we need to lock rect_ from accessing through application thread
-    QMutexLocker locker(&mutex_);
-
     rect_ = rect;
 }
 
@@ -186,7 +182,7 @@ void NativeControlObject::setControl(bb::cascades::Control* control)
         container_->setLayoutProperties(layout_);
     }
     container_->add(control);
-    layoutHandler_ = new ControlLayoutHandler(this);
+    layoutHandler_ = new NativeLayoutHandler(this);
     bb::cascades::LayoutUpdateHandler::create(container_).onLayoutFrameChanged(layoutHandler_, SLOT(handleLayoutFrameUpdated(QRectF)));
     control_ = control;
 }
@@ -461,8 +457,6 @@ int NativeControlObject::getVisible(TiObject* obj)
 PROP_SETGET(getWidth)
 int NativeControlObject::getWidth(TiObject* obj)
 {
-    QMutexLocker locker(&mutex_);
-
     obj->setValue(Number::New(rect_.width()));
     return NATIVE_ERROR_OK;
 }
@@ -470,8 +464,6 @@ int NativeControlObject::getWidth(TiObject* obj)
 PROP_SETGET(getHeight)
 int NativeControlObject::getHeight(TiObject* obj)
 {
-    QMutexLocker locker(&mutex_);
-
     obj->setValue(Number::New(rect_.height()));
     return NATIVE_ERROR_OK;
 }
@@ -479,8 +471,6 @@ int NativeControlObject::getHeight(TiObject* obj)
 PROP_SETGET(getTop)
 int NativeControlObject::getTop(TiObject* obj)
 {
-    QMutexLocker locker(&mutex_);
-
     obj->setValue(Number::New(rect_.top()));
     return NATIVE_ERROR_OK;
 }
@@ -488,8 +478,6 @@ int NativeControlObject::getTop(TiObject* obj)
 PROP_SETGET(getLeft)
 int NativeControlObject::getLeft(TiObject* obj)
 {
-    QMutexLocker locker(&mutex_);
-
     obj->setValue(Number::New(rect_.left()));
     return NATIVE_ERROR_OK;
 }

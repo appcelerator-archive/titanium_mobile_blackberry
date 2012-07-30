@@ -305,12 +305,12 @@ Handle<Value> TiUIBase::_getValue(int propertyNumber, void* context)
 
     TiUIBase* self = (TiUIBase*) context;
     NativeObject* object = self->getNativeObject();
-    TiObject* value = new TiObject;
+    TiObject value;
     if (object != NULL)
     {
-        object->getPropertyValue(propertyNumber, value);
+        object->getPropertyValue(propertyNumber, &value);
     }
-    return value->getValue();
+    return value.getValue();
 }
 
 VALUE_MODIFY TiUIBase::_valueModify(int propertyNumber, TiObject* value, void* context)
