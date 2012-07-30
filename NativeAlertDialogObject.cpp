@@ -6,6 +6,8 @@
  */
 
 #include "NativeAlertDialogObject.h"
+
+#include "NativeControlObject.h"
 #include "TiEventContainerFactory.h"
 
 NativeAlertDialogObject::NativeAlertDialogObject()

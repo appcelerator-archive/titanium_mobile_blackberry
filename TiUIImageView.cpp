@@ -16,7 +16,7 @@ TiUIImageView::~TiUIImageView()
 {
 }
 
-TiUIBase* TiUIImageView::createImageView(NativeObjectFactory* nativeObjectFactory)
+TiUIImageView* TiUIImageView::createImageView(NativeObjectFactory* nativeObjectFactory)
 {
     TiUIImageView* obj = new TiUIImageView;
     obj->setNativeObjectFactory(nativeObjectFactory);
@@ -28,7 +28,7 @@ void TiUIImageView::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
-        TiUIBase::initializeTiObject(parentContext);
+        TiProxy::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_IMAGEVIEW);
         setNativeObject(obj);
         obj->release();

@@ -70,6 +70,7 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTab", this, _createTab);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createPicker", this, _createPicker);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createAlertDialog", this, _createAlertDialog);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createView", this, _createView);
 
     // Adding javascript constants from Ti.UI
     ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_LEFT", Number::New(Ti::UI::TEXT_ALIGNMENT_LEFT), this);
@@ -89,7 +90,7 @@ Handle<Value> TiUIObject::_createControlHelper(void* userContext, CREATEOBJECTCA
     Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
     Handle<Object> result;
     result = global->NewInstance();
-    TiUIBase* newControl = (createCallback)(obj->objectFactory_);
+    TiProxy* newControl = (createCallback)(obj->objectFactory_);
     newControl->setValue(result);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
@@ -102,52 +103,52 @@ Handle<Value> TiUIObject::_createControlHelper(void* userContext, CREATEOBJECTCA
 
 Handle<Value> TiUIObject::_createWindow(void* userContext, TiObject*, const Arguments& args)
 {
-    return _createControlHelper(userContext, TiUIWindow::createWindow, args);
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUIWindow::createWindow, args);
 }
 
 Handle<Value> TiUIObject::_createLabel(void* userContext, TiObject*, const Arguments& args)
 {
-    return _createControlHelper(userContext, TiUILabel::createLabel, args);
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUILabel::createLabel, args);
 }
 
 Handle<Value> TiUIObject::_createButton(void* userContext, TiObject*, const Arguments& args)
 {
-    return _createControlHelper(userContext, TiUIButton::createButton, args);
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUIButton::createButton, args);
 }
 
 Handle<Value> TiUIObject::_createSlider(void* userContext, TiObject*, const Arguments& args)
 {
-    return _createControlHelper(userContext, TiUISlider::createSlider, args);
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUISlider::createSlider, args);
 }
 
 Handle<Value> TiUIObject::_createProgressBar(void* userContext, TiObject*, const Arguments& args)
 {
-    return _createControlHelper(userContext, TiUIProgressBar::createProgressBar, args);
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUIProgressBar::createProgressBar, args);
 }
 
 Handle<Value> TiUIObject::_createTextField(void* userContext, TiObject*, const Arguments& args)
 {
-    return _createControlHelper(userContext, TiUITextField::createTextField, args);
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUITextField::createTextField, args);
 }
 
 Handle<Value> TiUIObject::_createImageView(void* userContext, TiObject*, const Arguments& args)
 {
-    return _createControlHelper(userContext, TiUIImageView::createImageView, args);
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUIImageView::createImageView, args);
 }
 
 Handle<Value> TiUIObject::_createActivityIndicator(void* userContext, TiObject*, const Arguments& args)
 {
-    return _createControlHelper(userContext, TiUIActivityIndicator::createActivityIndicator, args);
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUIActivityIndicator::createActivityIndicator, args);
 }
 
 Handle<Value> TiUIObject::_createTab(void* userContext, TiObject*, const Arguments& args)
 {
-    return _createControlHelper(userContext, TiUITab::createTab, args);
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUITab::createTab, args);
 }
 
 Handle<Value> TiUIObject::_createTabGroup(void* userContext, TiObject*, const Arguments& args)
 {
-    return _createControlHelper(userContext, TiUITabGroup::createTabGroup, args);
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUITabGroup::createTabGroup, args);
 }
 
 Handle<Value> TiUIObject::_createOptionDialog(void* userContext, TiObject*, const Arguments& args)
@@ -173,4 +174,9 @@ Handle<Value> TiUIObject::_createPicker(void* userContext, TiObject*, const Argu
 Handle<Value> TiUIObject::_createAlertDialog(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIAlertDialog::createAlertDialog), args);
+}
+
+Handle<Value> TiUIObject::_createView(void* userContext, TiObject*, const Arguments& args)
+{
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIBase::createView), args);
 }

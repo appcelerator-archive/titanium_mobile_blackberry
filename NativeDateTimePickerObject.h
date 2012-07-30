@@ -10,6 +10,9 @@
 
 #include "NativeControlObject.h"
 
+#include <QDateTime>
+
+
 /*
  * NativeDateTimePicker
  *

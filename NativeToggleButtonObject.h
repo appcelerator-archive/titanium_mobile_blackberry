@@ -32,7 +32,6 @@ public:
     static NativeToggleButtonObject* createToggleButton();
     virtual int getObjectType() const;
     virtual int initialize();
-    virtual void completeInitialization();
     virtual int setValue(TiObject* value);
 
 protected:

@@ -133,8 +133,7 @@ NativeControlObject::NativeControlObject() :
     control_(NULL),
     layout_(NULL),
     left_(0),
-    top_(0),
-    eventHandler_(NULL)
+    top_(0)
 {
     if ((g_width <= 0) || (g_height <= 0))
     {
@@ -158,16 +157,28 @@ NativeControlObject::NativeControlObject() :
 
 NativeControlObject::~NativeControlObject()
 {
-    if (eventHandler_ != NULL)
-    {
-        delete eventHandler_;
-        eventHandler_ = NULL;
-    }
+}
+
+NativeControlObject* NativeControlObject::createView()
+{
+    return new NativeControlObject;
+}
+
+int NativeControlObject::getObjectType() const
+{
+    return N_TYPE_VIEW;
 }
 
 NAHANDLE NativeControlObject::getNativeHandle() const
 {
     return container_;
+}
+
+int NativeControlObject::initialize()
+{
+    /* Special case: UI.View only needs the container */
+    setControl(NULL);
+    return NATIVE_ERROR_OK;
 }
 
 void NativeControlObject::setControl(bb::cascades::Control* control)
@@ -189,12 +200,52 @@ void NativeControlObject::setupEvents(TiEventContainerFactory* containerFactory)
     TiEventContainer* eventClick = containerFactory->createEventContainer();
     eventClick->setDataProperty("type", tetCLICK);
     events_.insert(tetCLICK, EventPairSmartPtr(eventClick, new UIViewEventHandler(eventClick)));
-    QObject::connect(control_, SIGNAL(touch(bb::cascades::TouchEvent*)),
+
+    /* For pure containers connect the container signals, otherwise connect the control signals */
+    bb::cascades::Control* connectCtrl = (control_ != NULL) ? control_ : container_;
+    QObject::connect(connectCtrl, SIGNAL(touch(bb::cascades::TouchEvent*)),
                      events_[tetCLICK]->handler, SLOT(touch(bb::cascades::TouchEvent*)));
+}
+
+int NativeControlObject::addChildNativeObject(NativeObject* obj)
+{
+    if (getObjectType() != N_TYPE_VIEW)
+    {
+        /* add not supported for children types */
+        return NativeObject::addChildNativeObject(obj);
+    }
+    return addChildImpl(obj);
+}
+
+int NativeControlObject::addChildImpl(NativeObject* obj)
+{
+    Q_ASSERT(container_ != NULL);
+    bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
+    container_->add(control);
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::removeChildNativeObject(NativeObject* obj)
+{
+    if (getObjectType() != N_TYPE_VIEW)
+    {
+        /* remove not supported for children types */
+        return NativeObject::addChildNativeObject(obj);
+    }
+    return removeChildImpl(obj);
+}
+
+int NativeControlObject::removeChildImpl(NativeObject* obj)
+{
+    Q_ASSERT(container_ != NULL);
+    bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
+    container_->remove(control);
+    return NATIVE_ERROR_OK;
 }
 
 int NativeControlObject::setVisibility(bool visible)
 {
+    Q_ASSERT(container_ != NULL);
     container_->setVisible(visible);
     return NATIVE_ERROR_OK;
 }
@@ -207,6 +258,7 @@ int NativeControlObject::setVisibility(bool visible)
 PROP_SETGET(setAnchorPoint)
 int NativeControlObject::setAnchorPoint(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     float x;
     float y;
     int error = NativeControlObject::getPoint(obj, &x, &y);
@@ -223,6 +275,7 @@ int NativeControlObject::setAnchorPoint(TiObject* obj)
 PROP_SETGET(setBackgroundColor)
 int NativeControlObject::setBackgroundColor(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     float r;
     float g;
     float b;
@@ -244,6 +297,7 @@ int NativeControlObject::setBackgroundColor(TiObject* obj)
 PROP_SETGET(setBackgroundDisableColor)
 int NativeControlObject::setBackgroundDisableColor(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     float r;
     float g;
     float b;
@@ -277,6 +331,7 @@ int NativeControlObject::setData(TiObject*)
 PROP_SETGET(setEnabled)
 int NativeControlObject::setEnabled(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     bool enabled;
     int error = getBoolean(obj, &enabled);
     if (error != NATIVE_ERROR_OK)
@@ -304,6 +359,7 @@ int NativeControlObject::setFont(TiObject*)
 PROP_SETGET(setHeight)
 int NativeControlObject::setHeight(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     float height;
     // TODO: get the current width of the parent control
     float max = g_height; // TODO: Remove this
@@ -339,6 +395,7 @@ int NativeControlObject::setLabel(TiObject*)
 PROP_SETGET(setLeft)
 int NativeControlObject::setLeft(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     float value = 0;
     int error = NativeControlObject::getFloat(obj, &value);
     if (!N_SUCCEEDED(error))
@@ -377,6 +434,7 @@ int NativeControlObject::setMin(TiObject*)
 PROP_SETGET(setOpacity)
 int NativeControlObject::setOpacity(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     float value = 0;
     int error = NativeControlObject::getFloat(obj, &value);
     if (!N_SUCCEEDED(error))
@@ -387,7 +445,7 @@ int NativeControlObject::setOpacity(TiObject* obj)
     {
         return NATIVE_ERROR_INVALID_ARG;
     }
-    control_->setOpacity(value);
+    container_->setOpacity(value);
     return NATIVE_ERROR_OK;
 }
 
@@ -424,6 +482,7 @@ int NativeControlObject::setTitle(TiObject*)
 PROP_SETGET(setTop)
 int NativeControlObject::setTop(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     float value = 0;
     int error = NativeControlObject::getFloat(obj, &value);
     if (!N_SUCCEEDED(error))
@@ -456,6 +515,7 @@ int NativeControlObject::setVisible(TiObject* obj)
 PROP_SETGET(getVisible)
 int NativeControlObject::getVisible(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     obj->setValue(Boolean::New(container_->isVisible()));
     return NATIVE_ERROR_OK;
 }
@@ -463,6 +523,7 @@ int NativeControlObject::getVisible(TiObject* obj)
 PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     float width;
     // TODO: get the current width of the parent control
     float max = g_width; // TODO: Remove this

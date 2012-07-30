@@ -22,7 +22,7 @@
 class TiUITabGroup : public TiUIBase
 {
 public:
-    static TiUIBase* createTabGroup(NativeObjectFactory* objectFactory);
+    static TiUITabGroup* createTabGroup(NativeObjectFactory* objectFactory);
 
 protected:
     virtual ~TiUITabGroup();
