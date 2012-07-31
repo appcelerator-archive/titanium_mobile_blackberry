@@ -115,6 +115,8 @@ private:
     NativeLayoutHandler* layoutHandler_;
     float left_;
     float top_;
+    float width_;
+    float height_;
     QRectF rect_;
 };
 

@@ -136,7 +136,9 @@ NativeControlObject::NativeControlObject() :
     layout_(NULL),
     layoutHandler_(0),
     left_(0),
-    top_(0)
+    top_(0),
+    width_(0),
+    height_(0)
 {
     if ((g_width <= 0) || (g_height <= 0))
     {
@@ -298,17 +300,16 @@ int NativeControlObject::setFont(TiObject*)
 PROP_SETGET(setHeight)
 int NativeControlObject::setHeight(TiObject* obj)
 {
-    float height;
     // TODO: get the current width of the parent control
     float max = g_height; // TODO: Remove this
     int error = getMeasurementInfo(obj, max,
-                                   (float)g_height / g_physicalHeight, &height);
+                                   (float)g_height / g_physicalHeight, &height_);
     if (error != NATIVE_ERROR_OK)
     {
         return error;
     }
-    container_->setMaxHeight(height);
-    container_->setMinHeight(height);
+    container_->setMaxHeight(height_);
+    container_->setMinHeight(height_);
     return NATIVE_ERROR_OK;
 }
 
@@ -333,13 +334,12 @@ int NativeControlObject::setLabel(TiObject*)
 PROP_SETGET(setLeft)
 int NativeControlObject::setLeft(TiObject* obj)
 {
-    float value = 0;
-    int error = NativeControlObject::getFloat(obj, &value);
+    int error = NativeControlObject::getFloat(obj, &left_);
     if (!N_SUCCEEDED(error))
     {
         return error;
     }
-    layout_->setPositionX(value);
+    layout_->setPositionX(left_);
     container_->setLayoutProperties(layout_);
     return NATIVE_ERROR_OK;
 }
@@ -418,13 +418,12 @@ int NativeControlObject::setTitle(TiObject*)
 PROP_SETGET(setTop)
 int NativeControlObject::setTop(TiObject* obj)
 {
-    float value = 0;
-    int error = NativeControlObject::getFloat(obj, &value);
+    int error = NativeControlObject::getFloat(obj, &top_);
     if (!N_SUCCEEDED(error))
     {
         return error;
     }
-    layout_->setPositionY(value);
+    layout_->setPositionY(top_);
     container_->setLayoutProperties(layout_);
     return NATIVE_ERROR_OK;
 }
@@ -457,45 +456,44 @@ int NativeControlObject::getVisible(TiObject* obj)
 PROP_SETGET(getWidth)
 int NativeControlObject::getWidth(TiObject* obj)
 {
-    obj->setValue(Number::New(rect_.width()));
+    obj->setValue(Number::New(width_));
     return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(getHeight)
 int NativeControlObject::getHeight(TiObject* obj)
 {
-    obj->setValue(Number::New(rect_.height()));
+    obj->setValue(Number::New(height_));
     return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(getTop)
 int NativeControlObject::getTop(TiObject* obj)
 {
-    obj->setValue(Number::New(rect_.top()));
+    obj->setValue(Number::New(top_));
     return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(getLeft)
 int NativeControlObject::getLeft(TiObject* obj)
 {
-    obj->setValue(Number::New(rect_.left()));
+    obj->setValue(Number::New(left_));
     return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
-    float width;
     // TODO: get the current width of the parent control
     float max = g_width; // TODO: Remove this
     int error = getMeasurementInfo(obj, max,
-                                   (float)g_width / g_physicalWidth, &width);
+                                   (float)g_width / g_physicalWidth, &width_);
     if (error != NATIVE_ERROR_OK)
     {
         return error;
     }
-    container_->setMaxWidth(width);
-    container_->setMinWidth(width);
+    container_->setMaxWidth(width_);
+    container_->setMinWidth(width_);
     return NATIVE_ERROR_OK;
 }
 
