@@ -32,9 +32,12 @@ public:
     NativeButtonObject();
     virtual ~NativeButtonObject();
     virtual int getObjectType() const;
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
     virtual int setTitle(TiObject* obj);
     virtual int setImage(TiObject* obj);
+
+protected:
+    virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
     bb::cascades::Button* button_;

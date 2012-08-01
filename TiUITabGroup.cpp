@@ -18,7 +18,7 @@ TiUITabGroup::~TiUITabGroup()
 {
 }
 
-TiUIBase* TiUITabGroup::createTabGroup(NativeObjectFactory* objectFactory)
+TiUITabGroup* TiUITabGroup::createTabGroup(NativeObjectFactory* objectFactory)
 {
     TiUITabGroup* obj = new TiUITabGroup;
     obj->setNativeObjectFactory(objectFactory);
@@ -38,14 +38,14 @@ void TiUITabGroup::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
-        TiUIBase::initializeTiObject(parentContext);
+        TiProxy::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_TABGROUP);
         setNativeObject(obj);
         obj->release();
     }
 }
 
-Handle<Value> TiUITabGroup::open_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUITabGroup::open_(void* userContext, TiObject*, const Arguments&)
 {
     HandleScope handleScope;
     TiUITabGroup* obj = (TiUITabGroup*) userContext;
@@ -62,7 +62,7 @@ Handle<Value> TiUITabGroup::addTab_(void* userContext, TiObject* caller, const A
     return Undefined();
 }
 
-Handle<Value> TiUITabGroup::setActiveTab_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUITabGroup::setActiveTab_(void* userContext, TiObject*, const Arguments& args)
 {
     HandleScope handleScope;
     TiUITabGroup* obj = (TiUITabGroup*) userContext;

@@ -17,7 +17,7 @@ TiUIWindow::~TiUIWindow()
 {
 }
 
-TiUIBase* TiUIWindow::createWindow(NativeObjectFactory* objectFactory)
+TiUIWindow* TiUIWindow::createWindow(NativeObjectFactory* objectFactory)
 {
     TiUIWindow* obj = new TiUIWindow("");
     obj->setNativeObjectFactory(objectFactory);
@@ -35,14 +35,14 @@ void TiUIWindow::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
-        TiUIBase::initializeTiObject(parentContext);
+        TiProxy::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_WINDOW);
         setNativeObject(obj);
         obj->release();
     }
 }
 
-Handle<Value> TiUIWindow::open_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIWindow::open_(void* userContext, TiObject*, const Arguments&)
 {
     HandleScope handleScope;
     TiUIWindow* obj = (TiUIWindow*) userContext;

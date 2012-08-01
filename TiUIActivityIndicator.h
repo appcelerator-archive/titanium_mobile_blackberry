@@ -20,7 +20,7 @@
 class TiUIActivityIndicator : public TiUIBase
 {
 public:
-    static TiUIBase* createActivityIndicator(NativeObjectFactory* nativeObjectFactory);
+    static TiUIActivityIndicator* createActivityIndicator(NativeObjectFactory* nativeObjectFactory);
 
 protected:
     virtual ~TiUIActivityIndicator();

@@ -11,6 +11,10 @@
 #include "TiV8Event.h"
 
 
+const char* POINTER = "_event_ptr_";
+const char* OWNER   = "_event_owner_";
+const char* ID      = "_event_id_";
+
 TiProxy::TiProxy()
 {
 }
@@ -45,7 +49,7 @@ Handle<Value> TiProxy::_addEventListener(void* userContext, TiObject*, const Arg
     {
         return Undefined();
     }
-    const TiProxy* obj = (TiProxy*) userContext;
+    TiProxy* obj = (TiProxy*) userContext;
     Handle<String> eventName = Handle<String>::Cast(args[0]);
     Handle<Function> func = Handle<Function>::Cast(args[1]);
     String::Utf8Value eventNameUTF(eventName);
@@ -64,6 +68,8 @@ Handle<Value> TiProxy::_fireEvent(void* userContext, TiObject*, const Arguments&
     const String::Utf8Value name(args[0]->ToString());
     const TiObject event("", args[1]);
     no->fireEvent(*name, &event);
+    no->release();
+    no = NULL;
     return Undefined();
 }
 
@@ -76,11 +82,11 @@ Handle<Value> TiProxy::_removeEventListener(void* userContext, TiObject*, const 
     //
     // myobject.removeEventListener('myevent',function(e) {...});
     //
-    if ((args.Length() != 2) || (!args[0]->IsString()) || (!args[1]->IsFunction()))
+    if ((args.Length() < 2) || (!args[0]->IsString()) || (!args[1]->IsFunction()))
     {
         return Undefined();
     }
-    const TiProxy* obj = (TiProxy*) userContext;
+    TiProxy* obj = (TiProxy*) userContext;
     Handle<String> eventName = Handle<String>::Cast(args[0]);
     Handle<Function> func = Handle<Function>::Cast(args[1]);
     String::Utf8Value eventNameUTF(eventName);
@@ -88,9 +94,8 @@ Handle<Value> TiProxy::_removeEventListener(void* userContext, TiObject*, const 
     return Undefined();
 }
 
-void TiProxy::onAddEventListener(const char* eventName, Handle<Function> eventFunction) const
+void TiProxy::onAddEventListener(const char* eventName, Handle<Function> eventFunction)
 {
-    HandleScope handleScope;
     NativeObject* no = getNativeObject();
     if (no == NULL)
     {
@@ -100,28 +105,29 @@ void TiProxy::onAddEventListener(const char* eventName, Handle<Function> eventFu
     TiV8Event* event = TiV8Event::createEvent(eventName, eventFunction, source);
     no->setEventHandler(eventName, event);
     no->release();
+    no = NULL;
     int id = event->getId();
-    eventFunction->SetHiddenValue(String::New("_event_ptr_"), External::New(event));
-    eventFunction->SetHiddenValue(String::New("_event_id_"), Integer::New(id));
+    eventFunction->SetHiddenValue(String::New("POINTER"), External::New(event));
+    eventFunction->SetHiddenValue(String::New("OWNER"), External::New(this));
+    eventFunction->SetHiddenValue(String::New("ID"), Integer::New(id));
 }
 
-void TiProxy::onRemoveEventListener(const char*, Handle<Function> eventFunction) const
+void TiProxy::onRemoveEventListener(const char* eventName, Handle<Function> eventFunction)
 {
-    HandleScope handleScope;
     NativeObject* no = getNativeObject();
     if (no == NULL)
     {
         return;
     }
     // Get the event subscriber's id so we know which to remove from the event container.
-    Handle<Int32> v8id = eventFunction->GetHiddenValue(String::New("_event_id_"))->ToInt32();
+    Handle<Int32> v8id = eventFunction->GetHiddenValue(String::New("ID"))->ToInt32();
     if ((v8id.IsEmpty()) || (v8id->Value() == 0))
     {
         return;
     }
     // Make sure that the function being removed has been added to this event container.
-    Handle<Value> v8extValue = eventFunction->GetHiddenValue(String::New("_event_ptr_"));
-    if ((!v8extValue.IsEmpty()) || (!v8extValue->IsExternal()))
+    Handle<Value> v8extValue = eventFunction->GetHiddenValue(String::New("OWNER"));
+    if ((v8extValue.IsEmpty()) || (!v8extValue->IsExternal()))
     {
         return;
     }
@@ -133,5 +139,54 @@ void TiProxy::onRemoveEventListener(const char*, Handle<Function> eventFunction)
         // doesn't belong to.
         return;
     }
-    no->removeEventHandler(v8id->Value());
+    no->removeEventHandler(eventName, v8id->Value());
+    no->release();
+    no = NULL;
+
+    // Free up the memory used by the TiV8Event
+    Handle<Value> v8evtValue = eventFunction->GetHiddenValue(String::New("POINTER"));
+    if ((v8evtValue.IsEmpty()) || (!v8evtValue->IsExternal()))
+    {
+        return;
+    }
+    Handle<External> v8evt = Handle<External>::Cast(v8evtValue);
+    delete(TiV8Event*)v8evt->Value();
+}
+
+void TiProxy::setParametersFromObject(void* userContext, Local<Object> obj)
+{
+    HandleScope handleScope;
+    Handle<Value> value;
+    Handle<Value> controlValue = getValue();
+    if (!controlValue->IsObject())
+    {
+        return;
+    }
+    Handle<Array> propNames = obj->GetPropertyNames();
+    uint32_t props = propNames->Length();
+    Local<Value> propValue;
+    for (uint32_t i = 0; i < props; i++)
+    {
+        Handle<String> propString = Handle<String>::Cast(propNames->Get(Integer::New(i)));
+        String::Utf8Value propNameUTF(propString);
+        TiObject* foundProp = onLookupMember(*propNameUTF);
+        if (foundProp != NULL)
+        {
+            Local<Value> propValue = obj->Get(propString);
+            TiObject* addObj = getTiObjectFromJsObject(propValue);
+            if (addObj)
+            {
+                TiProxy* obj = (TiProxy*) userContext;
+                TiProxy* uiObj = (TiProxy*) addObj;
+                NativeObject* childNO = uiObj->getNativeObject();
+                NativeObject* parentNO = obj->getNativeObject();
+                parentNO->addChildNativeObject(childNO);
+                parentNO->release();
+            }
+            else
+            {
+                foundProp->setValue(propValue);
+            }
+        }
+    }
 }

@@ -29,7 +29,7 @@ void TiUIPicker::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
-        TiUIBase::initializeTiObject(parentContext);
+        TiProxy::initializeTiObject(parentContext);
         //currently cascades only supports date/time picker that is why we should create native DateTimePicker object here
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_DATE_TIME_PICKER);
         setNativeObject(obj);

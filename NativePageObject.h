@@ -9,10 +9,16 @@
 #define NativePageObject_H_
 
 #include "NativeControlObject.h"
-#include <bb/cascades/Container>
-#include <bb/cascades/Page>
 
 class NativeObjectFactory;
+
+namespace bb
+{
+namespace cascades
+{
+class Page;
+}
+}
 
 /*
  * NativePageObject
@@ -30,13 +36,11 @@ public:
     virtual int addChildNativeObject(NativeObject* obj);
     virtual int open();
     virtual int removeChildNativeObject(NativeObject* obj);
-    virtual int setBackgroundColor(TiObject* obj);
 
 protected:
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
 
 private:
-    bb::cascades::Container* container_;
     NativeObjectFactory* nativeObjectFactory_;
     bb::cascades::Page* page_;
 

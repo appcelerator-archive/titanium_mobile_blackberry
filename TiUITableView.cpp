@@ -32,7 +32,7 @@ void TiUITableView::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
-        TiUIBase::initializeTiObject(parentContext);
+        TiProxy::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_LIST_VIEW);
         setNativeObject(obj);
         obj->release();
@@ -45,7 +45,7 @@ void TiUITableView::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "scrollToIndex", this, _scrollToIndex);
 }
 
-Handle<Value> TiUITableView::_scrollToIndex(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUITableView::_scrollToIndex(void* userContext, TiObject*, const Arguments& args)
 {
     HandleScope handleScope;
     TiUITableView* obj = (TiUITableView*) userContext;

@@ -32,14 +32,10 @@ int NativeImageViewObject::getObjectType() const
     return N_TYPE_IMAGEVIEW;
 }
 
-int NativeImageViewObject::initialize(TiEventContainerFactory* containerFactory)
+int NativeImageViewObject::initialize()
 {
     imageView_ = bb::cascades::ImageView::create();
     setControl(imageView_);
-    TiEventContainer* eventImageChanged = containerFactory->createEventContainer();
-    eventImageChanged->setDataProperty("type", tetCHANGE);
-    events_.insert(tetCHANGE, new EventPair(eventImageChanged, new ImageViewEventHandler(eventImageChanged)));
-    QObject::connect(imageView_, SIGNAL(imageChanged(const bb::cascades::Image)), events_[tetCHANGE]->handler, SLOT(imageChanged(const bb::cascades::Image)));
     return NATIVE_ERROR_OK;
 }
 
@@ -48,4 +44,13 @@ int NativeImageViewObject::setImage(const char* /*image*/)
     // FIXME: following call fails to compile on R4
     //imageView_->setImage(bb::cascades::Image(image));
     return NATIVE_ERROR_OK;
+}
+
+void NativeImageViewObject::setupEvents(TiEventContainerFactory* containerFactory)
+{
+    NativeControlObject::setupEvents(containerFactory);
+    TiEventContainer* eventImageChanged = containerFactory->createEventContainer();
+    eventImageChanged->setDataProperty("type", tetCHANGE);
+    events_.insert(tetCHANGE, EventPairSmartPtr(eventImageChanged, new ImageViewEventHandler(eventImageChanged)));
+    QObject::connect(imageView_, SIGNAL(imageChanged(const bb::cascades::Image)), events_[tetCHANGE]->handler, SLOT(imageChanged(const bb::cascades::Image)));
 }

@@ -40,7 +40,7 @@ NAHANDLE NativeTabGroupObject::getNativeHandle() const
     return tabGroup_;
 }
 
-int NativeTabGroupObject::initialize(TiEventContainerFactory* containerFactory)
+int NativeTabGroupObject::initialize()
 {
     if (tabGroup_ != NULL)
     {

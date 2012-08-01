@@ -21,7 +21,7 @@
 class TiUITab : public TiUIBase
 {
 public:
-    static TiUIBase* createTab(NativeObjectFactory* nativeObjectFactory);
+    static TiUITab* createTab(NativeObjectFactory* nativeObjectFactory);
 
 protected:
     virtual ~TiUITab();

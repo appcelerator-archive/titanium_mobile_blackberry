@@ -27,7 +27,7 @@ int NativeButtonObject::getObjectType() const
     return N_TYPE_BUTTON;
 }
 
-int NativeButtonObject::initialize(TiEventContainerFactory* containerFactory)
+int NativeButtonObject::initialize()
 {
     button_ = bb::cascades::Button::create();
     bb::cascades::DockLayoutProperties* properties = bb::cascades::DockLayoutProperties::create();
@@ -35,10 +35,6 @@ int NativeButtonObject::initialize(TiEventContainerFactory* containerFactory)
     properties->setVerticalAlignment(bb::cascades::VerticalAlignment::Top);
     button_->setLayoutProperties(properties);
     setControl(button_);
-    TiEventContainer* eventClick = containerFactory->createEventContainer();
-    eventClick->setDataProperty("type", tetCLICK);
-    events_.insert(tetCLICK, new EventPair(eventClick, new ButtonEventHandler(eventClick)));
-    QObject::connect(button_, SIGNAL(clicked()), events_[tetCLICK]->handler, SLOT(clicked(void)));
     return NATIVE_ERROR_OK;
 }
 
@@ -66,4 +62,13 @@ int NativeButtonObject::setImage(TiObject* obj)
     const bb::cascades::Image image = bb::cascades::Image(QUrl(str));
     button_->setImage(image);
     return NATIVE_ERROR_OK;
+}
+
+void NativeButtonObject::setupEvents(TiEventContainerFactory* containerFactory)
+{
+    NativeControlObject::setupEvents(containerFactory);
+    TiEventContainer* eventClick = containerFactory->createEventContainer();
+    eventClick->setDataProperty("type", tetCLICK);
+    events_.insert(tetCLICK, EventPairSmartPtr(eventClick, new ButtonEventHandler(eventClick)));
+    QObject::connect(button_, SIGNAL(clicked()), events_[tetCLICK]->handler, SLOT(clicked(void)));
 }

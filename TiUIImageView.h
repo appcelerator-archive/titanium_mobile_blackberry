@@ -21,7 +21,7 @@
 class TiUIImageView : public TiUIBase
 {
 public:
-    static TiUIBase* createImageView(NativeObjectFactory* nativeObjectFactory);
+    static TiUIImageView* createImageView(NativeObjectFactory* nativeObjectFactory);
 
 protected:
     virtual ~TiUIImageView();

@@ -8,6 +8,7 @@
 #include "NativeControlObject.h"
 
 #include "NativeLayoutHandler.h"
+#include "PersistentV8Value.h"
 #include "TiEventContainer.h"
 #include "TiObject.h"
 #include <stdlib.h>
@@ -164,6 +165,16 @@ NativeControlObject::~NativeControlObject()
 {
 }
 
+NativeControlObject* NativeControlObject::createView()
+{
+    return new NativeControlObject;
+}
+
+int NativeControlObject::getObjectType() const
+{
+    return N_TYPE_VIEW;
+}
+
 NAHANDLE NativeControlObject::getNativeHandle() const
 {
     return container_;
@@ -172,6 +183,13 @@ NAHANDLE NativeControlObject::getNativeHandle() const
 void NativeControlObject::updateLayout(QRectF rect)
 {
     rect_ = rect;
+}
+
+int NativeControlObject::initialize()
+{
+    /* Special case: UI.View only needs the container */
+    setControl(NULL);
+    return NATIVE_ERROR_OK;
 }
 
 void NativeControlObject::setControl(bb::cascades::Control* control)
@@ -189,8 +207,58 @@ void NativeControlObject::setControl(bb::cascades::Control* control)
     control_ = control;
 }
 
+void NativeControlObject::setupEvents(TiEventContainerFactory* containerFactory)
+{
+    NativeProxyObject::setupEvents(containerFactory);
+    TiEventContainer* eventClick = containerFactory->createEventContainer();
+    eventClick->setDataProperty("type", tetCLICK);
+    events_.insert(tetCLICK, EventPairSmartPtr(eventClick, new UIViewEventHandler(eventClick)));
+
+    /* For pure containers connect the container signals, otherwise connect the control signals */
+    bb::cascades::Control* connectCtrl = (control_ != NULL) ? control_ : container_;
+    QObject::connect(connectCtrl, SIGNAL(touch(bb::cascades::TouchEvent*)),
+                     events_[tetCLICK]->handler, SLOT(touch(bb::cascades::TouchEvent*)));
+}
+
+int NativeControlObject::addChildNativeObject(NativeObject* obj)
+{
+    if (getObjectType() != N_TYPE_VIEW)
+    {
+        /* add not supported for children types */
+        return NativeObject::addChildNativeObject(obj);
+    }
+    return addChildImpl(obj);
+}
+
+int NativeControlObject::addChildImpl(NativeObject* obj)
+{
+    Q_ASSERT(container_ != NULL);
+    bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
+    container_->add(control);
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::removeChildNativeObject(NativeObject* obj)
+{
+    if (getObjectType() != N_TYPE_VIEW)
+    {
+        /* remove not supported for children types */
+        return NativeObject::addChildNativeObject(obj);
+    }
+    return removeChildImpl(obj);
+}
+
+int NativeControlObject::removeChildImpl(NativeObject* obj)
+{
+    Q_ASSERT(container_ != NULL);
+    bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
+    container_->remove(control);
+    return NATIVE_ERROR_OK;
+}
+
 int NativeControlObject::setVisibility(bool visible)
 {
+    Q_ASSERT(container_ != NULL);
     container_->setVisible(visible);
     return NATIVE_ERROR_OK;
 }
@@ -203,6 +271,7 @@ int NativeControlObject::setVisibility(bool visible)
 PROP_SETGET(setAnchorPoint)
 int NativeControlObject::setAnchorPoint(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     float x;
     float y;
     int error = NativeControlObject::getPoint(obj, &x, &y);
@@ -219,6 +288,7 @@ int NativeControlObject::setAnchorPoint(TiObject* obj)
 PROP_SETGET(setBackgroundColor)
 int NativeControlObject::setBackgroundColor(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     float r;
     float g;
     float b;
@@ -240,6 +310,7 @@ int NativeControlObject::setBackgroundColor(TiObject* obj)
 PROP_SETGET(setBackgroundDisableColor)
 int NativeControlObject::setBackgroundDisableColor(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     float r;
     float g;
     float b;
@@ -273,6 +344,7 @@ int NativeControlObject::setData(TiObject*)
 PROP_SETGET(setEnabled)
 int NativeControlObject::setEnabled(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     bool enabled;
     int error = getBoolean(obj, &enabled);
     if (error != NATIVE_ERROR_OK)
@@ -300,7 +372,9 @@ int NativeControlObject::setFont(TiObject*)
 PROP_SETGET(setHeight)
 int NativeControlObject::setHeight(TiObject* obj)
 {
-    // TODO: get the current width of the parent control
+    Q_ASSERT(container_ != NULL);
+    // TODO:we need the parent height to calculate percentage values and
+    // to use that value as max instead of g_height
     float max = g_height; // TODO: Remove this
     int error = getMeasurementInfo(obj, max,
                                    (float)g_height / g_physicalHeight, &height_);
@@ -334,6 +408,7 @@ int NativeControlObject::setLabel(TiObject*)
 PROP_SETGET(setLeft)
 int NativeControlObject::setLeft(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     int error = NativeControlObject::getFloat(obj, &left_);
     if (!N_SUCCEEDED(error))
     {
@@ -371,6 +446,7 @@ int NativeControlObject::setMin(TiObject*)
 PROP_SETGET(setOpacity)
 int NativeControlObject::setOpacity(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     float value = 0;
     int error = NativeControlObject::getFloat(obj, &value);
     if (!N_SUCCEEDED(error))
@@ -381,7 +457,7 @@ int NativeControlObject::setOpacity(TiObject* obj)
     {
         return NATIVE_ERROR_INVALID_ARG;
     }
-    control_->setOpacity(value);
+    container_->setOpacity(value);
     return NATIVE_ERROR_OK;
 }
 
@@ -418,6 +494,7 @@ int NativeControlObject::setTitle(TiObject*)
 PROP_SETGET(setTop)
 int NativeControlObject::setTop(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     int error = NativeControlObject::getFloat(obj, &top_);
     if (!N_SUCCEEDED(error))
     {
@@ -449,6 +526,7 @@ int NativeControlObject::setVisible(TiObject* obj)
 PROP_SETGET(getVisible)
 int NativeControlObject::getVisible(TiObject* obj)
 {
+    Q_ASSERT(container_ != NULL);
     obj->setValue(Boolean::New(container_->isVisible()));
     return NATIVE_ERROR_OK;
 }
@@ -484,7 +562,9 @@ int NativeControlObject::getLeft(TiObject* obj)
 PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
-    // TODO: get the current width of the parent control
+    Q_ASSERT(container_ != NULL);
+    // TODO:we need the parent width to calculate percentage values and
+    // to use that value as max instead of g_height
     float max = g_width; // TODO: Remove this
     int error = getMeasurementInfo(obj, max,
                                    (float)g_width / g_physicalWidth, &width_);
@@ -503,26 +583,26 @@ int NativeControlObject::setType(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETGET(setRight)
+//PROP_SETGET(setRight)         // Commented to stop compiler from complaining
 int NativeControlObject::setRight(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setWindow)
-int NativeControlObject::setWindow(TiObject* obj)
+int NativeControlObject::setWindow(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setIcon)
-int NativeControlObject::setIcon(TiObject* obj)
+int NativeControlObject::setIcon(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setMessage)
-int NativeControlObject::setMessage(TiObject* obj)
+int NativeControlObject::setMessage(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -740,7 +820,7 @@ int NativeControlObject::getMapObject(TiObject* obj, QMap<QString, QString>& pro
     return NATIVE_ERROR_OK;
 }
 
-int NativeControlObject::getDictionaryData(TiObject* obj, QVector<QPair<QString, QString> >& dictionary)
+int NativeControlObject::getDataModel(TiObject* obj, QVector<QVariant>& dataModel)
 {
     Handle<Value> value = obj->getValue();
     if (value.IsEmpty() || (!value->IsArray()))
@@ -750,33 +830,15 @@ int NativeControlObject::getDictionaryData(TiObject* obj, QVector<QPair<QString,
 
     Handle<Array> array = Handle<Array>::Cast(value);
     uint32_t length = array->Length();
-    dictionary.reserve(length);
-    //traverse through the dictionary elements
+    dataModel.reserve(length);
     for (uint32_t i = 0; i < length; ++i)
     {
-        Local<Value> el = array->Get(i);
-        if (el->IsObject())
-        {
-            Local<Array> propAr = el->ToObject()->GetPropertyNames();
-            uint32_t arLenght = propAr->Length();
-            for (uint32_t j = 0; j < arLenght; ++j)
-            {
-                Handle<String> propString = Handle<String>::Cast(propAr->Get(j));
-                String::Utf8Value propNameUTF(propString);
-                QString key = QString::fromUtf8(*propNameUTF);
-                Local<Value> propValue = el->ToObject()->Get(propString);
-                Local<String> valueStr = propValue->ToString();
-                String::Utf8Value valueUTF(valueStr);
-                QString val = QString::fromUtf8(*valueUTF);
-                dictionary.push_back(QPair<QString, QString>(key, val));
-            }
-        }
-        else
-        {
-            //if the element of the dictionary is not object, it means dictionary contains invalid data
-            return NATIVE_ERROR_INVALID_ARG;
-        }
+        Handle<Value> row = array->Get(i);
+        PersistentV8Value v8Value(row);
+        QVariant vRow = QVariant::fromValue(v8Value);
+        dataModel.push_back(vRow);
     }
+
     return NATIVE_ERROR_OK;
 }
 

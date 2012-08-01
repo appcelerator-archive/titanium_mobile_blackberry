@@ -31,12 +31,12 @@ class NativeToggleButtonObject : public NativeControlObject
 public:
     static NativeToggleButtonObject* createToggleButton();
     virtual int getObjectType() const;
-    virtual int initialize(TiEventContainerFactory* containerFactory);
-    virtual void completeInitialization();
+    virtual int initialize();
     virtual int setValue(TiObject* value);
 
 protected:
     virtual ~NativeToggleButtonObject();
+    virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
     explicit NativeToggleButtonObject();

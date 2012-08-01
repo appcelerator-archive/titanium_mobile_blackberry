@@ -30,7 +30,7 @@
 
 using namespace bb::cascades;
 
-NativeObjectFactory::NativeObjectFactory(TiCascadesApp* cascadesApp)
+NativeObjectFactory::NativeObjectFactory(TiCascadesApp*)
 {
     cascadesApp_ = NULL;
     eventContainerFactory_ = NULL;
@@ -121,10 +121,15 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
         obj = NativeAlertDialogObject::createAlertDialog();
         break;
 
+    case N_TYPE_VIEW:
+        obj = NativeControlObject::createView();
+        break;
+
     }
     if (obj != NULL)
     {
-        obj->initialize(eventContainerFactory_);
+        obj->initialize();
+        obj->setupEvents(eventContainerFactory_);
     }
     return obj;
 }

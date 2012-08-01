@@ -28,7 +28,7 @@ int NativeActivityIndicatorObject::getObjectType() const
     return N_TYPE_ACTIVITYINDICATOR;
 }
 
-int NativeActivityIndicatorObject::initialize(TiEventContainerFactory* containerFactory)
+int NativeActivityIndicatorObject::initialize()
 {
     indicator_ = bb::cascades::ActivityIndicator::create();
     setControl(indicator_);

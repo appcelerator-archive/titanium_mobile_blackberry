@@ -30,13 +30,10 @@ int NativeDropDownObject::getObjectType() const
     return N_TYPE_DROPDOWN;
 }
 
-int NativeDropDownObject::initialize(TiEventContainerFactory* containerFactory)
+int NativeDropDownObject::initialize()
 {
     dropdown_ = bb::cascades::DropDown::create();
     setControl(dropdown_);
-    TiEventContainer* eventClick = containerFactory->createEventContainer();
-    events_.insert(tetCLICK, new EventPair(eventClick, new DropDownEventHandler(eventClick)));
-    QObject::connect(dropdown_, SIGNAL(selectedIndexChanged(int selectedIndex)), events_[tetCLICK]->handler, SLOT(selectedIndexChanged(int selectedIndex)));
     return NATIVE_ERROR_OK;
 }
 
@@ -63,7 +60,7 @@ int NativeDropDownObject::setOptions(TiObject* obj)
     for (int i = 0; i < options.size(); ++i)
     {
         NativeOptionObject* option = NativeOptionObject::createOption();
-        option->initialize(NULL);
+        option->initialize();
         option->setText(options[i].toStdString().c_str());
         dropdown_->add((bb::cascades::Option*)option->getNativeHandle());
         option->release();
@@ -82,4 +79,12 @@ int NativeDropDownObject::setSelectedIndex(TiObject* obj)
     }
     dropdown_->setSelectedIndex(value);
     return NATIVE_ERROR_OK;
+}
+
+void NativeDropDownObject::setupEvents(TiEventContainerFactory* containerFactory)
+{
+    NativeControlObject::setupEvents(containerFactory);
+    TiEventContainer* eventClick = containerFactory->createEventContainer();
+    events_.insert(tetCLICK, EventPairSmartPtr(eventClick, new DropDownEventHandler(eventClick)));
+    QObject::connect(dropdown_, SIGNAL(selectedIndexChanged(int selectedIndex)), events_[tetCLICK]->handler, SLOT(selectedIndexChanged(int selectedIndex)));
 }

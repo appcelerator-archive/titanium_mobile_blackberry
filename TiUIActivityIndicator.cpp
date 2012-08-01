@@ -17,7 +17,7 @@ TiUIActivityIndicator::~TiUIActivityIndicator()
 {
 }
 
-TiUIBase* TiUIActivityIndicator::createActivityIndicator(NativeObjectFactory* nativeObjectFactory)
+TiUIActivityIndicator* TiUIActivityIndicator::createActivityIndicator(NativeObjectFactory* nativeObjectFactory)
 {
     TiUIActivityIndicator* obj = new TiUIActivityIndicator;
     obj->setNativeObjectFactory(nativeObjectFactory);
@@ -36,14 +36,14 @@ void TiUIActivityIndicator::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
-        TiUIBase::initializeTiObject(parentContext);
+        TiProxy::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_ACTIVITYINDICATOR);
         setNativeObject(obj);
         obj->release();
     }
 }
 
-Handle<Value> TiUIActivityIndicator::show_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIActivityIndicator::show_(void* userContext, TiObject*, const Arguments&)
 {
     HandleScope handleScope;
     TiUIActivityIndicator* obj = (TiUIActivityIndicator*) userContext;
@@ -53,7 +53,7 @@ Handle<Value> TiUIActivityIndicator::show_(void* userContext, TiObject* caller, 
     return Undefined();
 }
 
-Handle<Value> TiUIActivityIndicator::hide_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIActivityIndicator::hide_(void* userContext, TiObject*, const Arguments&)
 {
     HandleScope handleScope;
     TiUIActivityIndicator* obj = (TiUIActivityIndicator*) userContext;

@@ -8,16 +8,45 @@
 #ifndef NATIVECONTROLOBJECT_H_
 #define NATIVECONTROLOBJECT_H_
 
-#include "NativeObject.h"
+#include "NativeProxyObject.h"
 
-#include <bb/cascades/Container>
-#include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/Color>
+#include <QRect>
+
+
+class QString;
+class TiObject;
+class UIViewEventHandler;
+class NativeLayoutHandler;
+
+namespace bb
+{
+namespace cascades
+{
+class AbsoluteLayoutProperties;
+class Container;
+class Control;
+class TouchEvent;
+}
+}
 
 /*
  * NativeControlObject
  *
- * Base class for all UI controls
+ * Base class for all UI controls that are not dialogs, this class implements
+ * the Native functionality of Ti.UI.View
+ *
+ * This class has dual functionality.
+ *
+ * 1. It implements the native View functionality inherited by all Ti classes
+ * that extend UI.VIew.  This is done by managing an internal Container that
+ * contains the control actual control of the derived class.
+ *
+ * 2. It also can be instanciated on it's own when using Ti.UI.createView
+ * In this case it's a pure container and the control_ member remains NULL
+ * Ti.UI.Window is another such pure container case where the NativePageObject
+ * has a Page instance that has the container_ from this class as content and
+ * also a NULL control_.
  */
 
 enum UnitType
@@ -32,14 +61,15 @@ enum UnitType
     UnitTypePT
 };
 
-class TiObject;
-class QString;
-class NativeLayoutHandler;
-
-class NativeControlObject : public NativeObject
+class NativeControlObject : public NativeProxyObject
 {
 public:
+    static NativeControlObject* createView();
+    virtual int getObjectType() const;
     virtual NAHANDLE getNativeHandle() const;
+    virtual int initialize();
+    virtual int addChildNativeObject(NativeObject* obj);
+    virtual int removeChildNativeObject(NativeObject* obj);
     virtual int getPropertyValue(size_t propertyNumber, TiObject* obj);
     virtual int getHeight(TiObject* obj);
     virtual int getLeft(TiObject* obj);
@@ -88,22 +118,20 @@ public:
     static int getStringArray(TiObject* obj, QVector<QString>& value);
     static int getMapObject(TiObject* obj, QMap<QString, QString>& props);
     static int getPoint(TiObject* obj, float* x, float* y);
-    //obtain java script dictionary object and keep it in the multimap
-    static int getDictionaryData(TiObject* obj, QVector<QPair<QString, QString> >& dictionary);
+    static int getDataModel(TiObject* obj, QVector<QVariant>& dataModel);
     static int getDateTime(TiObject* obj, QDateTime& dt);
-    // TODO: Need to handle container_ more correctly
-    void setContainer(bb::cascades::Container* c)
-    {
-        container_ = c;
-    }
     void updateLayout(QRectF rect);
 
 protected:
     NativeControlObject();
     virtual ~NativeControlObject();
     virtual void setControl(bb::cascades::Control* control);
+    virtual void setupEvents(TiEventContainerFactory* containerFactory);
+    int addChildImpl(NativeObject* obj);
+    int removeChildImpl(NativeObject* obj);
 
 private:
+    friend class NativePageObject;
     static int getMeasurementInfo(TiObject* obj, float maxPixels, float dotsPerMillimeter,
                                   float* calculatedValue);
 
@@ -118,6 +146,31 @@ private:
     float width_;
     float height_;
     QRectF rect_;
+};
+
+// Event handler for Ti.UI.View
+class UIViewEventHandler : public QObject
+{
+    Q_OBJECT
+public:
+    explicit UIViewEventHandler(TiEventContainer* eventContainer)
+    {
+        eventContainer_ = eventContainer;
+    }
+    virtual ~UIViewEventHandler() {}
+
+public slots:
+    void touch(bb::cascades::TouchEvent*)
+    {
+        eventContainer_->fireEvent();
+    }
+
+private:
+    TiEventContainer* eventContainer_;
+
+    // Disable copy ctor & assignment operator
+    UIViewEventHandler(const UIViewEventHandler& eHandler);
+    UIViewEventHandler& operator=(const UIViewEventHandler& eHandler);
 };
 
 #endif /* NATIVECONTROLOBJECT_H_ */

@@ -8,12 +8,12 @@
 #ifndef TIEVENTCONTAINER_H_
 #define TIEVENTCONTAINER_H_
 
-//#pragma GCC diagnostic ignored "-Wunused-parameter"
-//#include <v8.h>
-//#pragma GCC diagnostic warning "-Wunused-parameter"
-
 class TiEvent;
 class TiObject;
+
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#include <v8.h>
+#pragma GCC diagnostic warning "-Wunused-parameter"
 
 /*
  * TiEvent
@@ -33,6 +33,7 @@ public:
     virtual void setDataProperty(const char* propertyName, int value) = 0;
     virtual void setDataProperty(const char* propertyName, float value) = 0;
     virtual void setComplexDataProperty(const char* complexPropertyName, const char* propertyName, const char* value) = 0;
+    virtual void setV8ValueProperty(const char* propertyName, v8::Handle<v8::Value> data) = 0;
     virtual ~TiEventContainer()
     {
     }

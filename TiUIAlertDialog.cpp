@@ -10,7 +10,7 @@
 #include "TiGenericFunctionObject.h"
 
 TiUIAlertDialog::TiUIAlertDialog()
-    : TiUIBase("")
+    : TiProxy("")
 {
 }
 
@@ -18,7 +18,7 @@ TiUIAlertDialog::~TiUIAlertDialog()
 {
 }
 
-TiUIBase* TiUIAlertDialog::createAlertDialog(NativeObjectFactory* nativeObjectFactory)
+TiUIAlertDialog* TiUIAlertDialog::createAlertDialog(NativeObjectFactory* nativeObjectFactory)
 {
     TiUIAlertDialog* obj = new TiUIAlertDialog;
     obj->setNativeObjectFactory(nativeObjectFactory);
@@ -28,7 +28,7 @@ TiUIBase* TiUIAlertDialog::createAlertDialog(NativeObjectFactory* nativeObjectFa
 
 void TiUIAlertDialog::onCreateStaticMembers()
 {
-    TiUIBase::onCreateStaticMembers();
+    TiProxy::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "show", this, show_);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "hide", this, hide_);
 }
@@ -37,14 +37,14 @@ void TiUIAlertDialog::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
-        TiUIBase::initializeTiObject(parentContext);
+        TiProxy::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_ALERTDIALOG);
         setNativeObject(obj);
         obj->release();
     }
 }
 
-Handle<Value> TiUIAlertDialog::show_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIAlertDialog::show_(void* userContext, TiObject*, const Arguments&)
 {
     HandleScope handleScope;
     TiUIAlertDialog* obj = (TiUIAlertDialog*) userContext;
@@ -54,7 +54,7 @@ Handle<Value> TiUIAlertDialog::show_(void* userContext, TiObject* caller, const 
     return Undefined();
 }
 
-Handle<Value> TiUIAlertDialog::hide_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIAlertDialog::hide_(void* userContext, TiObject*, const Arguments&)
 {
     HandleScope handleScope;
     TiUIAlertDialog* obj = (TiUIAlertDialog*) userContext;

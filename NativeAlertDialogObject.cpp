@@ -6,6 +6,8 @@
  */
 
 #include "NativeAlertDialogObject.h"
+
+#include "NativeControlObject.h"
 #include "TiEventContainerFactory.h"
 
 NativeAlertDialogObject::NativeAlertDialogObject()
@@ -26,7 +28,7 @@ int NativeAlertDialogObject::getObjectType() const
     return N_TYPE_ALERTDIALOG;
 }
 
-int NativeAlertDialogObject::initialize(TiEventContainerFactory* containerFactory)
+int NativeAlertDialogObject::initialize()
 {
     return NATIVE_ERROR_OK;
 }

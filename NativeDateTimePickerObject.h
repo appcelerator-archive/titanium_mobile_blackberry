@@ -10,6 +10,9 @@
 
 #include "NativeControlObject.h"
 
+#include <QDateTime>
+
+
 /*
  * NativeDateTimePicker
  *
@@ -34,11 +37,12 @@ public:
     virtual int setType(TiObject* obj);
     virtual int setMinDate(TiObject* obj);
     virtual int setMaxDate(TiObject* obj);
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
     virtual NAHANDLE getNativeHandle() const;
 
 protected:
     virtual ~NativeDateTimePickerObject();
+    virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
     explicit NativeDateTimePickerObject();

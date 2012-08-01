@@ -8,7 +8,7 @@
 #ifndef NATIVEOPTIONOBJECT_H_
 #define NATIVEOPTIONOBJECT_H_
 
-#include "NativeObject.h"
+#include "NativeProxyObject.h"
 
 //forward declaration
 namespace bb
@@ -24,12 +24,12 @@ class Option;
  *
  * UI: Option
  */
-class NativeOptionObject : public NativeObject
+class NativeOptionObject : public NativeProxyObject
 {
 public:
     static NativeOptionObject* createOption();
     virtual int getObjectType() const;
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
     virtual NAHANDLE getNativeHandle() const;
     virtual int setText(const char* text);
 

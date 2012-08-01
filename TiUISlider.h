@@ -19,7 +19,7 @@
 class TiUISlider : public TiUIBase
 {
 public:
-    static TiUIBase* createSlider(NativeObjectFactory* nativeObjectFactory);
+    static TiUISlider* createSlider(NativeObjectFactory* nativeObjectFactory);
 
 protected:
     virtual ~TiUISlider();

@@ -37,7 +37,7 @@ Handle<Value> TiPropertyGetObject::getValue() const
     return (getCallback_)(context_);
 }
 
-VALUE_MODIFY TiPropertyGetObject::onValueChange(Handle<Value> oldValue, Handle<Value> newValue)
+VALUE_MODIFY TiPropertyGetObject::onValueChange(Handle<Value>, Handle<Value>)
 {
     // Read only
     return VALUE_MODIFY_DENY;

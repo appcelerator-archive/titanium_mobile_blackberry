@@ -28,7 +28,7 @@ void TiUISwitch::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
-        TiUIBase::initializeTiObject(parentContext);
+        TiProxy::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_TOGGLEBUTTON);
         setNativeObject(obj);
         obj->release();

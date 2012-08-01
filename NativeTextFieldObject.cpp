@@ -31,14 +31,10 @@ NativeTextFieldObject* NativeTextFieldObject::createTextField()
     return new NativeTextFieldObject;
 }
 
-int NativeTextFieldObject::initialize(TiEventContainerFactory* containerFactory)
+int NativeTextFieldObject::initialize()
 {
     textField_ = bb::cascades::TextField::create();
     setTextControl(textField_);
-    TiEventContainer* eventFieldChanged = containerFactory->createEventContainer();
-    eventFieldChanged->setDataProperty("type", tetCHANGE);
-    events_.insert(tetCHANGE, new EventPair(eventFieldChanged, new TextFieldEventHandler(eventFieldChanged)));
-    QObject::connect(textField_, SIGNAL(textChanging(QString)), events_[tetCHANGE]->handler, SLOT(textChanging(QString)));
     return NATIVE_ERROR_OK;
 }
 
@@ -52,4 +48,13 @@ int NativeTextFieldObject::setHintText(TiObject* obj)
     }
     textField_->setHintText(strHint);
     return NATIVE_ERROR_OK;
+}
+
+void NativeTextFieldObject::setupEvents(TiEventContainerFactory* containerFactory)
+{
+    NativeControlObject::setupEvents(containerFactory);
+    TiEventContainer* eventFieldChanged = containerFactory->createEventContainer();
+    eventFieldChanged->setDataProperty("type", tetCHANGE);
+    events_.insert(tetCHANGE, EventPairSmartPtr(eventFieldChanged, new TextFieldEventHandler(eventFieldChanged)));
+    QObject::connect(textField_, SIGNAL(textChanging(QString)), events_[tetCHANGE]->handler, SLOT(textChanging(QString)));
 }

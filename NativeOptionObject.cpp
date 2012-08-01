@@ -28,7 +28,7 @@ int NativeOptionObject::getObjectType() const
     return N_TYPE_OPTION;
 }
 
-int NativeOptionObject::initialize(TiEventContainerFactory* containerFactory)
+int NativeOptionObject::initialize()
 {
     option_ = bb::cascades::Option::create();
     return NATIVE_ERROR_OK;

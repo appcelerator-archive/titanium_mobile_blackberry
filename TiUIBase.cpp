@@ -208,6 +208,26 @@ TiUIBase::TiUIBase(const char* name)
 {
 }
 
+TiUIBase* TiUIBase::createView(NativeObjectFactory* nativeObjectFactory)
+{
+    TiUIBase* obj = new TiUIBase;
+    obj->setNativeObjectFactory(nativeObjectFactory);
+    obj->initializeTiObject(NULL);
+    return obj;
+}
+
+void TiUIBase::initializeTiObject(TiObject* parentContext)
+{
+    if (!isInitialized())
+    {
+        TiProxy::initializeTiObject(parentContext);
+        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_VIEW);
+        setNativeObject(obj);
+        obj->release();
+    }
+}
+
+
 bool TiUIBase::isUIObject() const
 {
     return true;
@@ -260,44 +280,6 @@ void TiUIBase::onCreateStaticMembers()
     TiObject* value = TiPropertyGetObject::createGetProperty(this, "children", this, _getChildren);
     TiPropertyGetFunctionObject::addPropertyGetter(this, value, "getChildren");
     value->release();
-}
-
-void TiUIBase::setParametersFromObject(void* userContext, Local<Object> obj)
-{
-    HandleScope handleScope;
-    Handle<Value> value;
-    Handle<Value> controlValue = getValue();
-    if (!controlValue->IsObject())
-    {
-        return;
-    }
-    Handle<Array> propNames = obj->GetPropertyNames();
-    uint32_t props = propNames->Length();
-    Local<Value> propValue;
-    for (uint32_t i = 0; i < props; i++)
-    {
-        Handle<String> propString = Handle<String>::Cast(propNames->Get(Integer::New(i)));
-        String::Utf8Value propNameUTF(propString);
-        TiObject* foundProp = onLookupMember(*propNameUTF);
-        if (foundProp != NULL)
-        {
-            Local<Value> propValue = obj->Get(propString);
-            TiObject* addObj = getTiObjectFromJsObject(propValue);
-            if (addObj)
-            {
-                TiUIBase* obj = (TiUIBase*) userContext;
-                TiUIBase* uiObj = (TiUIBase*) addObj;
-                NativeObject* childNO = uiObj->getNativeObject();
-                NativeObject* parentNO = obj->getNativeObject();
-                parentNO->addChildNativeObject(childNO);
-                parentNO->release();
-            }
-            else
-            {
-                foundProp->setValue(propValue);
-            }
-        }
-    }
 }
 
 Handle<Value> TiUIBase::_getValue(int propertyNumber, void* context)

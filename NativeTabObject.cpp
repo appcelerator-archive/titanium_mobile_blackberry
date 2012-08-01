@@ -99,7 +99,7 @@ int NativeTabObject::openWindowOnTab(NativeObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-int NativeTabObject::initialize(TiEventContainerFactory* containerFactory)
+int NativeTabObject::initialize()
 {
     tab_ = Tab::create();
     navigationPane_ = NavigationPane::create();

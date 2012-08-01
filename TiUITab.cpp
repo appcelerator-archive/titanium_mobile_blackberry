@@ -19,7 +19,7 @@ TiUITab::~TiUITab()
 {
 }
 
-TiUIBase* TiUITab::createTab(NativeObjectFactory* nativeObjectFactory)
+TiUITab* TiUITab::createTab(NativeObjectFactory* nativeObjectFactory)
 {
     TiUITab* obj = new TiUITab;
     obj->setNativeObjectFactory(nativeObjectFactory);
@@ -37,14 +37,14 @@ void TiUITab::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
-        TiUIBase::initializeTiObject(parentContext);
+        TiProxy::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_TAB);
         setNativeObject(obj);
         obj->release();
     }
 }
 
-Handle<Value> TiUITab::open_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUITab::open_(void* userContext, TiObject*, const Arguments& args)
 {
     HandleScope handleScope;
     if ((args.Length() > 0) && (args[0]->IsObject()))

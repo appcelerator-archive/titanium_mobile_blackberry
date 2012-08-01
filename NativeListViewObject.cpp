@@ -11,7 +11,12 @@
 #include <bb/cascades/DataModel>
 #include <bb/cascades/ListView>
 #include <bb/cascades/QListDataModel>
+#include <bb/cascades/ListItemManager>
+#include <bb/cascades/VisualNode>
+#include "NativeListViewObject.h"
+#include "PersistentV8Value.h"
 #include "TiEventContainerFactory.h"
+#include "TiObject.h"
 
 NativeListViewObject::NativeListViewObject()
 {
@@ -29,35 +34,28 @@ NativeListViewObject* NativeListViewObject::createListView()
     return new NativeListViewObject;
 }
 
-int NativeListViewObject::initialize(TiEventContainerFactory* containerFactory)
+int NativeListViewObject::initialize()
 {
     listView_ = bb::cascades::ListView::create();
     setControl(listView_);
-    TiEventContainer* eventClicked = containerFactory->createEventContainer();
-    eventClicked->setDataProperty("type", tetCLICK);
-    events_.insert(tetCLICK, new EventPair(eventClicked, new ListViewEventHandler(eventClicked, this)));
-    QObject::connect(listView_, SIGNAL(selectionChanged(QVariantList, bool)), events_[tetCLICK]->handler, SLOT(selectionChanged(QVariantList, bool)));
+    listView_->setListItemManager(new ListViewItemFactory());
     return NATIVE_ERROR_OK;
 }
 
 int NativeListViewObject::setData(TiObject* obj)
 {
-    QVector<QPair<QString, QString> > dictionary;
-    int error = NativeControlObject::getDictionaryData(obj, dictionary);
+    QVector<QVariant> dataModel;
+    int error = NativeControlObject::getDataModel(obj, dataModel);
     if (!N_SUCCEEDED(error))
     {
         return error;
     }
-    QList<QString> dataList;
-    for (int i = 0; i < dictionary.size(); ++i)
+    QList<QVariant> dataList;
+    for (int i = 0; i < dataModel.size(); ++i)
     {
-        //TODO define const var, for title string
-        if (dictionary[i].first == "title")
-        {
-            dataList.append(dictionary[i].second);
-        }
+        dataList.append(dataModel[i]);
     }
-    listView_->setDataModel(new bb::cascades::QListDataModel<QString>(dataList));
+    listView_->setDataModel(new bb::cascades::QListDataModel<QVariant>(dataList));
     return NATIVE_ERROR_OK;
 }
 
@@ -71,12 +69,11 @@ NAHANDLE NativeListViewObject::getNativeHandle() const
     return listView_;
 }
 
-QString NativeListViewObject::getListViewElementFromIndex(QVariantList var)
+QVariant NativeListViewObject::getListViewElementFromIndex(QVariantList var)
 {
     bb::cascades::DataModel* dataM = listView_->dataModel();
-    QVariant tmp = dataM->data(var);
-    QString str = tmp.toString();
-    return str;
+    QVariant property = dataM->data(var);
+    return property;
 }
 
 int NativeListViewObject::scrollToIndex(int index)
@@ -86,4 +83,56 @@ int NativeListViewObject::scrollToIndex(int index)
     scroll.append(variant);
     listView_->scrollToItem(scroll);
     return NATIVE_ERROR_OK;
+}
+
+void NativeListViewObject::setupEvents(TiEventContainerFactory* containerFactory)
+{
+    NativeControlObject::setupEvents(containerFactory);
+    TiEventContainer* eventClicked = containerFactory->createEventContainer();
+    eventClicked->setDataProperty("type", tetCLICK);
+    events_.insert(tetCLICK, EventPairSmartPtr(eventClicked, new ListViewEventHandler(eventClicked, this)));
+    QObject::connect(listView_, SIGNAL(selectionChanged(QVariantList, bool)), events_[tetCLICK]->handler, SLOT(selectionChanged(QVariantList, bool)));
+}
+
+/*********** ListViewItemFactory class *************/
+bb::cascades::VisualNode* ListViewItemFactory::createItem(bb::cascades::ListView*, const QString&)
+{
+    bb::cascades::StandardListItem* item = new bb::cascades::StandardListItem();
+    return item;
+}
+
+void ListViewItemFactory::updateItem(bb::cascades::ListView*, bb::cascades::VisualNode* listItem, const QString&,
+                                     const QVariantList&, const QVariant& data)
+{
+    // Trying to parse the title from v8 object
+    if (data.canConvert<PersistentV8Value>())
+    {
+        PersistentV8Value v8Value = data.value<PersistentV8Value>();
+        Persistent<Value> propValue = v8Value.getValue();
+        if (propValue->IsObject())
+        {
+            Local<Value> titleValue = propValue->ToObject()->Get(String::New("title"));
+            Local<String> valueStr = titleValue->ToString();
+            String::Utf8Value valueUTF(valueStr);
+            ((bb::cascades::StandardListItem*)listItem)->setTitle(*valueUTF);
+        }
+    }
+}
+
+/*********** ListViewEventHandler class *************/
+void ListViewEventHandler::selectionChanged(QVariantList var, bool)
+{
+    eventContainer_->setDataProperty("index", var[0].toString().toStdString().c_str());
+    Persistent<Value> propValue;
+    if (owner_)
+    {
+        QVariant property = owner_->getListViewElementFromIndex(var);
+        if (property.canConvert<PersistentV8Value>())
+        {
+            PersistentV8Value v8Value = property.value<PersistentV8Value>();
+            propValue = v8Value.getValue();
+        }
+    }
+    eventContainer_->setV8ValueProperty("rowData", propValue);
+    eventContainer_->fireEvent();
 }

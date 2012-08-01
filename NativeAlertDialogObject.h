@@ -8,7 +8,7 @@
 #ifndef NATIVEALERTDIALOGOBJECT_H_
 #define NATIVEALERTDIALOGOBJECT_H_
 
-#include "NativeControlObject.h"
+#include "NativeProxyObject.h"
 #include <bps/dialog.h>
 
 /*
@@ -17,12 +17,12 @@
  * UI: Alert Dialog
  */
 
-class NativeAlertDialogObject : public NativeControlObject
+class NativeAlertDialogObject : public NativeProxyObject
 {
 public:
     static NativeAlertDialogObject* createAlertDialog();
     virtual int getObjectType() const;
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
     virtual NAHANDLE getNativeHandle() const;
     virtual int show();
     virtual int hide();

@@ -22,7 +22,7 @@ class NativeProgressBarObject : public NativeControlObject
 public:
     static NativeProgressBarObject* createProgressBar();
     virtual int getObjectType() const;
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
     virtual int setMax(TiObject* obj);
     virtual int setMin(TiObject* obj);
     virtual int setValue(TiObject* obj);

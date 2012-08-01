@@ -36,7 +36,7 @@ void TiAPIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "trace", this, _trace);
 }
 
-Handle<Value> TiAPIObject::_debug(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiAPIObject::_debug(void*, TiObject*, const Arguments& args)
 {
     if (args.Length() < 1)
     {
@@ -49,7 +49,7 @@ Handle<Value> TiAPIObject::_debug(void* userContext, TiObject* caller, const Arg
     return Undefined();
 }
 
-Handle<Value> TiAPIObject::_info(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiAPIObject::_info(void*, TiObject*, const Arguments& args)
 {
     if (args.Length() < 1)
     {
@@ -62,7 +62,7 @@ Handle<Value> TiAPIObject::_info(void* userContext, TiObject* caller, const Argu
     return Undefined();
 }
 
-Handle<Value> TiAPIObject::_warn(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiAPIObject::_warn(void*, TiObject*, const Arguments& args)
 {
     if (args.Length() < 1)
     {
@@ -75,7 +75,7 @@ Handle<Value> TiAPIObject::_warn(void* userContext, TiObject* caller, const Argu
     return Undefined();
 }
 
-Handle<Value> TiAPIObject::_error(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiAPIObject::_error(void*, TiObject*, const Arguments& args)
 {
     if (args.Length() < 1)
     {
@@ -88,19 +88,19 @@ Handle<Value> TiAPIObject::_error(void* userContext, TiObject* caller, const Arg
     return Undefined();
 }
 
-Handle<Value> TiAPIObject::_log(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiAPIObject::_log(void*, TiObject*, const Arguments&)
 {
     // TODO: Implement this later
     return Undefined();
 }
 
-Handle<Value> TiAPIObject::_timestamp(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiAPIObject::_timestamp(void*, TiObject*, const Arguments&)
 {
     // TODO: Implement this later
     return Undefined();
 }
 
-Handle<Value> TiAPIObject::_trace(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiAPIObject::_trace(void*, TiObject*, const Arguments& args)
 {
     if (args.Length() < 1)
     {

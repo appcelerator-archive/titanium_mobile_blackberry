@@ -38,6 +38,7 @@ enum NATIVE_TYPE
     , N_TYPE_TABGROUP
     , N_TYPE_TEXT_FIELD
     , N_TYPE_TOGGLEBUTTON
+    , N_TYPE_VIEW
     , N_TYPE_WINDOW
 };
 
@@ -120,9 +121,7 @@ enum NATIVE_PROP
 
 
 #include "TiBase.h"
-#include "TiEventContainer.h"
 #include <cstddef>
-#include <QHash>
 
 class NativeObjectFactory;
 class TiEvent;
@@ -131,40 +130,6 @@ class TiObject;
 
 #define N_SUCCEEDED(x)          ((x)==NATIVE_ERROR_OK)
 
-struct EventPair
-{
-    EventPair(TiEventContainer* c, QObject* h)
-        : container(c)
-        , handler(h)
-    {}
-
-    ~EventPair()
-    {
-        delete container;
-        delete handler;
-    }
-
-    bool isValid()
-    {
-        return container != NULL && handler != NULL;
-    }
-
-    TiEventContainer* container;
-    QObject* handler;
-
-private:
-    EventPair()
-        : container(NULL)
-        , handler(NULL)
-    {
-        /* Default ctor must not be used */
-        Q_ASSERT(false);
-    }
-
-    /* Disable copy ctor and assignment */
-    EventPair(const EventPair&);
-    EventPair& operator=(const EventPair&);
-};
 
 /*
  * NativeObject
@@ -174,8 +139,7 @@ private:
  * implemented for a specific platform
  * such as a button, label, file, etc...
  */
-class NativeObject :
-    public TiBase
+class NativeObject : public TiBase
 {
 public:
     virtual int getObjectType() const = 0;
@@ -196,22 +160,17 @@ public:
     virtual int setActiveTab(NativeObject* tab);
     virtual int setActiveTab(int index);
     virtual int removeChildNativeObject(NativeObject* obj);
-    virtual int removeEventHandler(int eventId);
+    virtual int removeEventHandler(const char* eventName, int eventId);
     virtual int setVisibility(bool visible);
     virtual int fireEvent(const char* name, const TiObject* event) const;
-
-    // Ti event types (tet)
-    static const char* tetCHANGE;
-    static const char* tetCLICK;
 
 protected:
     NativeObject();
     virtual ~NativeObject();
-    virtual int initialize(TiEventContainerFactory* containerFactory);
-    int getNextEventId();
-    friend class NativeObjectFactory;
 
-    QHash<QString, EventPair*> events_;
+    virtual int initialize();
+    virtual void setupEvents(TiEventContainerFactory* containerFactory);
+    friend class NativeObjectFactory;
 
 private:
     bool isInitializationComplete_;

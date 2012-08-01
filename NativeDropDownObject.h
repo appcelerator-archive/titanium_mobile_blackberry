@@ -30,13 +30,14 @@ class NativeDropDownObject : public NativeControlObject
 public:
     static NativeDropDownObject* createDropDown();
     virtual int getObjectType() const;
-    virtual int initialize(TiEventContainerFactory* containerFactory);
+    virtual int initialize();
     virtual int setTitle(TiObject* obj);
     virtual int setOptions(TiObject* obj);
     virtual int setSelectedIndex(TiObject* obj);
 
 protected:
     virtual ~NativeDropDownObject();
+    virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
     explicit NativeDropDownObject();
