@@ -6,16 +6,17 @@
  */
 
 #include "TiUIBase.h"
-#include "TiLogger.h"
+
 #include "TiGenericFunctionObject.h"
-#include "TiPropertySetFunctionObject.h"
-#include "TiPropertyGetFunctionObject.h"
-#include "TiPropertyMapObject.h"
-#include "TiPropertyGetObject.h"
-#include "TiV8Event.h"
+#include "TiLogger.h"
 #include "TiMessageStrings.h"
-#include <string>
+#include "TiPropertyGetFunctionObject.h"
+#include "TiPropertyGetObject.h"
+#include "TiPropertyMapObject.h"
+#include "TiPropertySetFunctionObject.h"
+#include "TiV8Event.h"
 #include <ctype.h>
+#include <string>
 
 const static TiProperty g_tiProperties[] =
 {
@@ -210,9 +211,10 @@ TiUIBase::TiUIBase(const char* name)
 
 TiUIBase* TiUIBase::createView(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUIBase* obj = new TiUIBase;
+    TiUIBase* obj = new TiUIBase("TiUIBase");
     obj->setNativeObjectFactory(nativeObjectFactory);
     obj->initializeTiObject(NULL);
+
     return obj;
 }
 
@@ -221,9 +223,13 @@ void TiUIBase::initializeTiObject(TiObject* parentContext)
     if (!isInitialized())
     {
         TiProxy::initializeTiObject(parentContext);
-        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_VIEW);
-        setNativeObject(obj);
-        obj->release();
+        /* Don't create a native view object for derived classes */
+        if (string("TiUIBase") == getName())
+        {
+            NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_VIEW);
+            setNativeObject(obj);
+            obj->release();
+        }
     }
 }
 
