@@ -136,10 +136,12 @@ NativeControlObject::NativeControlObject() :
     control_(NULL),
     layout_(NULL),
     layoutHandler_(0),
+    bottom_(0),
     left_(0),
     top_(0),
     width_(0),
-    height_(0)
+    height_(0),
+    right_(0)
 {
     if ((g_width <= 0) || (g_height <= 0))
     {
@@ -419,6 +421,34 @@ int NativeControlObject::setLeft(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+PROP_SETGET(setBottom)
+int NativeControlObject::setBottom(TiObject* obj)
+{
+    Q_ASSERT(container_ != NULL);
+    //TODO: needs to keep the bottom_ as JS properties
+    int error = NativeControlObject::getFloat(obj, &bottom_);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+    container_->setBottomMargin(bottom_);
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(setRight)
+int NativeControlObject::setRight(TiObject* obj)
+{
+    Q_ASSERT(container_ != NULL);
+    //TODO: needs to keep the right_ as JS properties
+    int error = NativeControlObject::getFloat(obj, &right_);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+    container_->setRightMargin(right_);
+    return NATIVE_ERROR_OK;
+}
+
 PROP_SETGET(setMax)
 int NativeControlObject::setMax(TiObject*)
 {
@@ -559,6 +589,44 @@ int NativeControlObject::getLeft(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+PROP_SETGET(getBottom)
+int NativeControlObject::getBottom(TiObject* obj)
+{
+    obj->setValue(Number::New(bottom_));
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(getRight)
+int NativeControlObject::getRight(TiObject* obj)
+{
+    obj->setValue(Number::New(right_));
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(getRect)
+int NativeControlObject::getRect(TiObject* obj)
+{
+    Handle<Object> value = Object::New();
+    value->Set(String::New("height"), Number::New(rect_.height()));
+    value->Set(String::New("width"), Number::New(rect_.width()));
+    value->Set(String::New("x"), Number::New(rect_.x()));
+    value->Set(String::New("y"), Number::New(rect_.y()));
+    obj->setValue(value);
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(getSize)
+int NativeControlObject::getSize(TiObject* obj)
+{
+    Handle<Object> value = Object::New();
+    value->Set(String::New("height"), Number::New(rect_.height()));
+    value->Set(String::New("width"), Number::New(rect_.width()));
+    value->Set(String::New("x"), Number::New(0));
+    value->Set(String::New("y"), Number::New(0));
+    obj->setValue(value);
+    return NATIVE_ERROR_OK;
+}
+
 PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
@@ -579,12 +647,6 @@ int NativeControlObject::setWidth(TiObject* obj)
 
 PROP_SETGET(setType)
 int NativeControlObject::setType(TiObject*)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
-//PROP_SETGET(setRight)         // Commented to stop compiler from complaining
-int NativeControlObject::setRight(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -615,6 +677,7 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_ANCHOR_POINT, PROP_SETGET_FUNCTION(setAnchorPoint), NULL},
     {N_PROP_BACKGROUND_COLOR, PROP_SETGET_FUNCTION(setBackgroundColor), NULL},
     {N_PROP_BACKGROUND_DISABLED_COLOR, PROP_SETGET_FUNCTION(setBackgroundDisableColor), NULL},
+    {N_PROP_BOTTOM, PROP_SETGET_FUNCTION(setBottom), PROP_SETGET_FUNCTION(getBottom)},
     {N_PROP_COLOR, PROP_SETGET_FUNCTION(setColor), NULL},
     {N_PROP_DATA, PROP_SETGET_FUNCTION(setData), NULL},
     {N_PROP_ENABLED, PROP_SETGET_FUNCTION(setEnabled), NULL},
@@ -632,7 +695,10 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_MINDATE, PROP_SETGET_FUNCTION(setMinDate), NULL},
     {N_PROP_OPACITY, PROP_SETGET_FUNCTION(setOpacity), NULL},
     {N_PROP_OPTIONS, PROP_SETGET_FUNCTION(setOptions), NULL},
+    {N_PROP_RECT, NULL, PROP_SETGET_FUNCTION(getRect)},
+    {N_PROP_RIGHT, PROP_SETGET_FUNCTION(setRight), PROP_SETGET_FUNCTION(setRight)},
     {N_PROP_SELECTED_INDEX, PROP_SETGET_FUNCTION(setSelectedIndex), NULL},
+    {N_PROP_SIZE, NULL, PROP_SETGET_FUNCTION(getSize)},
     {N_PROP_TEXT, PROP_SETGET_FUNCTION(setText), NULL},
     {N_PROP_TEXT_ALIGN, PROP_SETGET_FUNCTION(setTextAlign), NULL},
     {N_PROP_TITLE, PROP_SETGET_FUNCTION(setTitle), NULL},
