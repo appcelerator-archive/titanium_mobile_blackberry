@@ -23,6 +23,8 @@
 #include <QColor>
 #include <QRectF>
 
+#define ZINDEX_PROPERTY_NAME            "tizindex"
+
 // 25.4mm in 1"
 #define INCHES_TO_MM_MUL                25.4f
 // 10mm in 1cm
@@ -595,6 +597,78 @@ int NativeControlObject::setWindow(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setZIndex)
+int NativeControlObject::setZIndex(TiObject* obj)
+{
+    Q_ASSERT(container_ != NULL);
+    float value;
+    int error = NativeControlObject::getFloat(obj, &value);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+    bb::cascades::Container* parent = (bb::cascades::Container*)container_->parent();
+    Q_ASSERT(parent != NULL);
+    int myIndex = parent->indexOf(container_);
+    Q_ASSERT(parent->count() > 0);
+    for (int i = parent->count() - 1; i > myIndex; i--)
+    {
+        bb::cascades::Control* control = parent->at(i);
+        Q_ASSERT(control != NULL);
+        QVariant zval = control->property(ZINDEX_PROPERTY_NAME);
+        bool insert = false;
+        if (zval.isValid())
+        {
+            bool conversionSucceeded = false;
+            float controlZValue = zval.toFloat(&conversionSucceeded);
+            if (!conversionSucceeded)
+            {
+                return NATIVE_ERROR_INVALID_ARG;
+            }
+            if (value > controlZValue)
+            {
+                insert = true;
+            }
+        }
+        else
+        {
+            insert = true;
+        }
+        if (insert)
+        {
+            parent->remove(container_);
+            parent->insert(i, container_);
+            break;
+        }
+    }
+    container_->setProperty(ZINDEX_PROPERTY_NAME, QVariant(value));
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(getZIndex)
+int NativeControlObject::getZIndex(TiObject* obj)
+{
+    Q_ASSERT(container_ != NULL);
+    QVariant value = container_->property(ZINDEX_PROPERTY_NAME);
+    if (value.isValid())
+    {
+        bool conversionSucceeded = false;
+        float controlZValue = value.toFloat(&conversionSucceeded);
+        if (!conversionSucceeded)
+        {
+            return NATIVE_ERROR_INVALID_ARG;
+        }
+        obj->setValue(Number::New(controlZValue));
+    }
+    else
+    {
+        obj->setValue(Undefined());
+        return NATIVE_ERROR_OK;
+    }
+    return NATIVE_ERROR_OK;
+}
+
+
 PROP_SETGET(setIcon)
 int NativeControlObject::setIcon(TiObject*)
 {
@@ -641,7 +715,8 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_VALUE, PROP_SETGET_FUNCTION(setValue), NULL},
     {N_PROP_VISIBLE, PROP_SETGET_FUNCTION(setVisible), PROP_SETGET_FUNCTION(getVisible)},
     {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), PROP_SETGET_FUNCTION(getWidth)},
-    {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setWindow), NULL}
+    {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setWindow), NULL},
+    {N_PROP_ZINDEX, PROP_SETGET_FUNCTION(setZIndex), PROP_SETGET_FUNCTION(getZIndex)}
 };
 
 static SetGetProperties g_props(g_propSetGet, GET_ARRAY_SIZE(g_propSetGet));

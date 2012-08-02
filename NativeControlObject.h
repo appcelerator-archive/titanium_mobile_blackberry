@@ -109,6 +109,8 @@ public:
     virtual int setVisible(TiObject* obj);
     virtual int setWidth(TiObject* obj);
     virtual int setWindow(TiObject* obj);
+    virtual int setZIndex(TiObject* obj);
+    virtual int getZIndex(TiObject* obj);
 
     static int getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a);
     static int getBoolean(TiObject* obj, bool* value);
