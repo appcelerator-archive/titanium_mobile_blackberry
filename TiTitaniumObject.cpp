@@ -8,6 +8,7 @@
 #include "TiTitaniumObject.h"
 #include "TiAPIObject.h"
 #include "TiAppObject.h"
+#include "TiBufferObject.h"
 #include "TiPlatformObject.h"
 #include "TiGenericFunctionObject.h"
 #include "TiLogger.h"
@@ -39,10 +40,12 @@ void TiTitaniumObject::onCreateStaticMembers()
     // TODO: remove hard coded version number
     ADD_STATIC_TI_VALUE("version", Number::New(2.0), this);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "include", this, _include);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createBuffer", this, _createBuffer);
     TiUIObject::addObjectToParent(this, objectFactory_);
     TiAPIObject::addObjectToParent(this);
     TiAppObject::addObjectToParent(this);
     TiPlatformObject::addObjectToParent(this);
+    //TiBufferObject::addObjectToParent(this);
 }
 
 bool TiTitaniumObject::canAddMembers() const
@@ -118,4 +121,26 @@ Handle<Value> TiTitaniumObject::_include(void*, TiObject*, const Arguments& args
     sRelDir = "";
 
     return Undefined();
+}
+
+NativeObjectFactory* TiTitaniumObject::getNativeObjectFactory() const
+{
+    return objectFactory_;
+}
+
+Handle<Value> TiTitaniumObject::_createBuffer(void* userContext, TiObject*, const Arguments& args)
+{
+    HandleScope handleScope;
+    TiTitaniumObject* obj = (TiTitaniumObject*) userContext;
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result = global->NewInstance();
+    TiBufferObject* newBuffer = TiBufferObject::createBuffer(obj->getNativeObjectFactory());
+    newBuffer->setValue(result);
+    if ((args.Length() > 0) && (args[0]->IsObject()))
+    {
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
+        newBuffer->setParametersFromObject(newBuffer, settingsObj);
+    }
+    setTiObjectToJsObject(result, newBuffer);
+    return handleScope.Close(result);
 }
