@@ -27,22 +27,22 @@ struct NATIVE_PROPSETGET_SETTING
     NATIVE_PROPSETGET_CALLBACK getter;
 };
 
-class SetGetProperties
+class SetGetBufferProperties
 {
 public:
-    SetGetProperties(const NATIVE_PROPSETGET_SETTING* map, int mapEntries)
+    SetGetBufferProperties(const NATIVE_PROPSETGET_SETTING* map, int mapEntries)
     {
-        setters_ = new NATIVE_PROPSETGET_CALLBACK[N_PROP_LAST];
-        memset(setters_, 0, sizeof(NATIVE_PROPSETGET_CALLBACK) * N_PROP_LAST);
-        getters_ = new NATIVE_PROPSETGET_CALLBACK[N_PROP_LAST];
-        memset(getters_, 0, sizeof(NATIVE_PROPSETGET_CALLBACK) * N_PROP_LAST);
+        setters_ = new NATIVE_PROPSETGET_CALLBACK[N_BUFFER_PROP_LAST];
+        memset(setters_, 0, sizeof(NATIVE_PROPSETGET_CALLBACK) * N_BUFFER_PROP_LAST);
+        getters_ = new NATIVE_PROPSETGET_CALLBACK[N_BUFFER_PROP_LAST];
+        memset(getters_, 0, sizeof(NATIVE_PROPSETGET_CALLBACK) * N_BUFFER_PROP_LAST);
         for (int i = 0; i < mapEntries; i++)
         {
             setters_[map[i].propNumber] = map[i].setter;
             getters_[map[i].propNumber] = map[i].getter;
         }
     }
-    ~SetGetProperties()
+    ~SetGetBufferProperties()
     {
         if (setters_ != NULL)
         {
@@ -57,7 +57,7 @@ public:
     }
     NATIVE_PROPSETGET_CALLBACK GetSetterCallback(size_t prop)
     {
-        if (prop >= (std::size_t)N_PROP_LAST)
+        if (prop >= (std::size_t)N_BUFFER_PROP_LAST)
         {
             return NULL;
         }
@@ -65,18 +65,15 @@ public:
     }
     NATIVE_PROPSETGET_CALLBACK GetGetterCallback(size_t prop)
     {
-        if (prop >= (std::size_t)N_PROP_LAST)
+        if (prop >= (std::size_t)N_BUFFER_PROP_LAST)
         {
             return NULL;
         }
         return getters_[prop];
     }
 private:
-    // Disabled default and copy constructors
-    SetGetProperties();
-    SetGetProperties(const SetGetProperties& prop);
-    // Disabled assignment operator
-    const SetGetProperties& operator = (const SetGetProperties& prop);
+    SetGetBufferProperties(const SetGetBufferProperties&);
+    SetGetBufferProperties& operator=(const SetGetBufferProperties&);
     NATIVE_PROPSETGET_CALLBACK* setters_;
     NATIVE_PROPSETGET_CALLBACK* getters_;
 };
@@ -98,7 +95,21 @@ NativeBufferObject* NativeBufferObject::createBuffer()
 PROP_SETGET(getByteOrder)
 int NativeBufferObject::getByteOrder(TiObject* obj)
 {
-    return NATIVE_ERROR_NOTSUPPORTED;
+    obj->setValue(Number::New(byteOrder_));
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(setByteOrder)
+int NativeBufferObject::setByteOrder(TiObject* obj)
+{
+    int typeValue;
+    int error = NativeControlObject::getInteger(obj, &typeValue);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+    byteOrder_ = (Ti::Codec::TI_BYTE_ORDER)typeValue;
+    return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(getLength)
@@ -122,7 +133,13 @@ int NativeBufferObject::setLength(TiObject* obj)
 }
 
 PROP_SETGET(getType)
-int NativeBufferObject::getType(TiObject* obj)
+int NativeBufferObject::getType(TiObject* /*obj*/)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setType)
+int NativeBufferObject::setType(TiObject* /*obj*/)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -137,7 +154,7 @@ int NativeBufferObject::setValue(TiObject* obj)
     }
     if (v8Value->IsNumber() || !v8Value->IsNumberObject())
     {
-        if (v8Value->IsInt32())
+        if (v8Value->IsInt32() || v8Value->IsUint32())
         {
             Handle<Number> num = Handle<Number>::Cast(v8Value);
             int value = (int)num->Value();
@@ -161,7 +178,7 @@ int NativeBufferObject::setValue(TiObject* obj)
 }
 
 PROP_SETGET(getValue)
-int NativeBufferObject::getValue(TiObject* obj)
+int NativeBufferObject::getValue(TiObject* /*obj*/)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -171,20 +188,48 @@ void NativeBufferObject::clear()
     internalData_.clear();
 }
 
-const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
+const char* NativeBufferObject::toString() const
 {
-    {N_BUFFER_PROP_BYTEORDER, NULL, PROP_SETGET_FUNCTION(getByteOrder)},
+    return internalData_.constData();
+}
+
+void NativeBufferObject::fill(double fillByte, int offset, int length)
+{
+    QByteArray newArray = QByteArray::number(fillByte);
+    int size = newArray.size();
+    if (offset == -1 && length == -1)
+    {
+        // Fills the entire byte array
+        int oldSize = internalData_.size();
+        for (int i = 0; i < (oldSize / size) - 1; ++i)
+        {
+            newArray.append(QByteArray::number(fillByte));
+        }
+        internalData_ = newArray;
+    }
+    else
+    {
+        for (int i = 0; i < (length / size) - 1; ++i)
+        {
+            newArray.append(QByteArray::number(fillByte));
+        }
+        internalData_.replace(offset, length, newArray);
+    }
+}
+
+const static NATIVE_PROPSETGET_SETTING g_BufferPropSetGet[] =
+{
+    {N_BUFFER_PROP_BYTEORDER, PROP_SETGET_FUNCTION(setByteOrder), PROP_SETGET_FUNCTION(getByteOrder)},
     {N_BUFFER_PROP_LENGTH, PROP_SETGET_FUNCTION(setLength), PROP_SETGET_FUNCTION(getLength)},
-    {N_BUFFER_PROP_TYPE, NULL, PROP_SETGET_FUNCTION(getType)},
+    {N_BUFFER_PROP_TYPE, PROP_SETGET_FUNCTION(setType), PROP_SETGET_FUNCTION(getType)},
     {N_BUFFER_PROP_VALUE, PROP_SETGET_FUNCTION(setValue), PROP_SETGET_FUNCTION(getValue)}
 };
 
-static SetGetProperties g_props(g_propSetGet, GET_ARRAY_SIZE(g_propSetGet));
-
+static SetGetBufferProperties g_BufferProps(g_BufferPropSetGet, GET_ARRAY_SIZE(g_BufferPropSetGet));
 
 int NativeBufferObject::setPropertyValue(size_t propertyNumber, TiObject* obj)
 {
-    NATIVE_PROPSETGET_CALLBACK cb = g_props.GetSetterCallback(propertyNumber);
+    NATIVE_PROPSETGET_CALLBACK cb = g_BufferProps.GetSetterCallback(propertyNumber);
     if (cb == NULL)
     {
         return NATIVE_ERROR_NOTSUPPORTED;
@@ -194,7 +239,7 @@ int NativeBufferObject::setPropertyValue(size_t propertyNumber, TiObject* obj)
 
 int NativeBufferObject::getPropertyValue(size_t propertyNumber, TiObject* obj)
 {
-    NATIVE_PROPSETGET_CALLBACK cb = g_props.GetGetterCallback(propertyNumber);
+    NATIVE_PROPSETGET_CALLBACK cb = g_BufferProps.GetGetterCallback(propertyNumber);
     if (cb == NULL)
     {
         return NATIVE_ERROR_NOTSUPPORTED;

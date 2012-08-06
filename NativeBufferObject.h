@@ -13,6 +13,7 @@
 #pragma GCC diagnostic warning "-Wunused-parameter"
 
 #include "NativeProxyObject.h"
+#include "TiConstants.h"
 #include <qbytearray>
 
 using namespace v8;
@@ -26,7 +27,7 @@ enum NATIVE_BUFFER_PROP
     , N_BUFFER_PROP_VALUE
 
     /* This MUST be the last element */
-    , N_PLATFORM_PROP_LAST
+    , N_BUFFER_PROP_LAST
 };
 
 class TiObject;
@@ -45,14 +46,18 @@ public:
     int setPropertyValue(size_t propertyNumber, TiObject* obj);
     int getPropertyValue(size_t propertyNumber, TiObject* obj);
     int getByteOrder(TiObject* obj);
+    int setByteOrder(TiObject* obj);
     int getLength(TiObject* obj);
     int setLength(TiObject* obj);
     int getType(TiObject* obj);
+    int setType(TiObject* obj);
     int getValue(TiObject* obj);
     int setValue(TiObject* obj);
     void setupEvents(TiEventContainerFactory* containerFactory);
 
     void clear();
+    void fill(double fillByte, int offset = -1, int length = -1);
+    const char* toString() const;
 
 protected:
     virtual ~NativeBufferObject();
@@ -63,6 +68,8 @@ private:
     NativeBufferObject& operator=(const NativeBufferObject&);
     // Buffer containing raw data
     QByteArray internalData_;
+    // Byte order
+    Ti::Codec::TI_BYTE_ORDER byteOrder_;
 };
 
 

@@ -26,7 +26,6 @@ protected:
     virtual ~TiTitaniumObject();
     virtual void onCreateStaticMembers();
     virtual bool canAddMembers() const;
-    virtual NativeObjectFactory* getNativeObjectFactory() const;
 
 private:
     explicit TiTitaniumObject();

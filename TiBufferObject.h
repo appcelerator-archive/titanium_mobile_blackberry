@@ -45,6 +45,7 @@ private:
     static Handle<Value> _insert(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _clone(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _clear(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _toString(void* userContext, TiObject* caller, const Arguments& args);
 };
 
 #endif /* TIBUFFEROBJECT_H_ */

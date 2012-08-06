@@ -6,6 +6,8 @@
  */
 
 #include "TiBufferObject.h"
+#include "TiMessageStrings.h"
+#include "TiConstants.h"
 #include "NativeBufferObject.h"
 #include "TiGenericFunctionObject.h"
 #include "TiPropertyGetFunctionObject.h"
@@ -15,7 +17,7 @@
 const static TiProperty g_tiProperties[] =
 {
     {
-        "byteOrder", TI_PROP_PERMISSION_READ, N_BUFFER_PROP_BYTEORDER
+        "byteOrder", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE, N_BUFFER_PROP_BYTEORDER
     },
 
     {
@@ -23,11 +25,11 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
-        "type", TI_PROP_PERMISSION_READ, N_BUFFER_PROP_TYPE
+        "type", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE, N_BUFFER_PROP_TYPE
     },
 
     {
-        "value", TI_PROP_PERMISSION_READ, N_BUFFER_PROP_VALUE
+        "value", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE, N_BUFFER_PROP_VALUE
     }
 };
 
@@ -77,6 +79,7 @@ void TiBufferObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "insert", this, _insert);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "clone", this, _clone);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "clear", this, _clear);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "toString", this, _toString);
 }
 
 void TiBufferObject::setTiBufferMappingProperties(const TiProperty* props, int propertyCount)
@@ -147,46 +150,79 @@ VALUE_MODIFY TiBufferObject::_valueModify(int propertyNumber, TiObject* value, v
     return modify;
 }
 
-Handle<Value> TiBufferObject::_append(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiBufferObject::_append(void* /*userContext*/, TiObject* /*caller*/, const Arguments& /*args*/)
 {
-    HandleScope handleScope;
-    Handle<Object> result;
-    return handleScope.Close(result);
+    return ThrowException(String::New("Not implemented"));
 }
 
-Handle<Value> TiBufferObject::_copy(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiBufferObject::_copy(void* /*userContext*/, TiObject* /*caller*/, const Arguments& /*args*/)
 {
-    HandleScope handleScope;
-    Handle<Object> result;
-    return handleScope.Close(result);
+    return ThrowException(String::New("Not implemented"));
 }
 
-Handle<Value> TiBufferObject::_fill(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiBufferObject::_fill(void* userContext, TiObject* /*caller*/, const Arguments& args)
 {
+    if (args.Length() < 1)
+    {
+        ThrowException(String::New(Ti::Msg::Missing_argument));
+        return Undefined();
+    }
     HandleScope handleScope;
-    Handle<Object> result;
-    return handleScope.Close(result);
+    TiBufferObject* obj = (TiBufferObject*) userContext;
+    NativeBufferObject* nbo = (NativeBufferObject*) obj->getNativeObject();
+
+    Handle<Number> fillByteNum = Handle<Number>::Cast(args[0]);
+    if (fillByteNum.IsEmpty() || (!fillByteNum->IsNumber() && !fillByteNum->IsNumberObject()))
+    {
+        ThrowException(String::New(Ti::Msg::Invalid_arguments));
+        return Undefined();
+    }
+
+    int offset = -1, length = -1;
+    if (args.Length() > 1)
+    {
+        // Should provided both offset and length
+        if (args.Length() < 3)
+        {
+            ThrowException(String::New(Ti::Msg::Missing_argument));
+            return Undefined();
+        }
+
+        Handle<Number> offsetNum = Handle<Number>::Cast(args[1]);
+        Handle<Number> lengthNum = Handle<Number>::Cast(args[2]);
+        offset = (int)offsetNum->Value();
+        length = (int)lengthNum->Value();
+    }
+
+    nbo->fill(fillByteNum->Value(), offset, length);
+    return Undefined();
 }
 
-Handle<Value> TiBufferObject::_insert(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiBufferObject::_insert(void* /*userContext*/, TiObject* /*caller*/, const Arguments& /*args*/)
 {
-    HandleScope handleScope;
-    Handle<Object> result;
-    return handleScope.Close(result);
+    return ThrowException(String::New("Not implemented"));
 }
 
-Handle<Value> TiBufferObject::_clone(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiBufferObject::_clone(void* /*userContext*/, TiObject* /*caller*/, const Arguments& /*args*/)
 {
-    HandleScope handleScope;
-    Handle<Object> result;
-    return handleScope.Close(result);
+    return ThrowException(String::New("Not implemented"));
 }
 
-Handle<Value> TiBufferObject::_clear(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiBufferObject::_clear(void* userContext, TiObject* /*caller*/, const Arguments& /*args*/)
 {
     HandleScope handleScope;
     TiBufferObject* obj = (TiBufferObject*) userContext;
     NativeBufferObject* nbo = (NativeBufferObject*) obj->getNativeObject();
     nbo->clear();
     return Undefined();
+}
+
+Handle<Value> TiBufferObject::_toString(void* userContext, TiObject* /*calles*/, const Arguments& /*args*/)
+{
+    HandleScope handleScope;
+    TiBufferObject* obj = (TiBufferObject*) userContext;
+    NativeBufferObject* nbo = (NativeBufferObject*) obj->getNativeObject();
+    const char* data = nbo->toString();
+    Handle<String> result = String::New(data);
+    return handleScope.Close(result);
 }
