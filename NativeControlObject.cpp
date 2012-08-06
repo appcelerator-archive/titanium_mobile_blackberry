@@ -136,10 +136,12 @@ NativeControlObject::NativeControlObject() :
     control_(NULL),
     layout_(NULL),
     layoutHandler_(0),
+    bottom_(0),
     left_(0),
     top_(0),
     width_(0),
-    height_(0)
+    height_(0),
+    right_(0)
 {
     if ((g_width <= 0) || (g_height <= 0))
     {
@@ -373,17 +375,24 @@ PROP_SETGET(setHeight)
 int NativeControlObject::setHeight(TiObject* obj)
 {
     Q_ASSERT(container_ != NULL);
+    if (height_)
+    {
+        height_->release();
+    }
+    height_ = obj;
+    height_->addRef();
+    float height = 0;
     // TODO:we need the parent height to calculate percentage values and
     // to use that value as max instead of g_height
     float max = g_height; // TODO: Remove this
-    int error = getMeasurementInfo(obj, max,
-                                   (float)g_height / g_physicalHeight, &height_);
+    int error = getMeasurementInfo(height_, max,
+                                   (float)g_height / g_physicalHeight, &height);
     if (error != NATIVE_ERROR_OK)
     {
         return error;
     }
-    container_->setMaxHeight(height_);
-    container_->setMinHeight(height_);
+    container_->setMaxHeight(height);
+    container_->setMinHeight(height);
     return NATIVE_ERROR_OK;
 }
 
@@ -409,13 +418,60 @@ PROP_SETGET(setLeft)
 int NativeControlObject::setLeft(TiObject* obj)
 {
     Q_ASSERT(container_ != NULL);
-    int error = NativeControlObject::getFloat(obj, &left_);
+    if (left_)
+    {
+        left_->release();
+    }
+    left_ = obj;
+    left_->addRef();
+    float left = 0;
+    int error = NativeControlObject::getFloat(left_, &left);
     if (!N_SUCCEEDED(error))
     {
         return error;
     }
-    layout_->setPositionX(left_);
+    layout_->setPositionX(left);
     container_->setLayoutProperties(layout_);
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(setBottom)
+int NativeControlObject::setBottom(TiObject* obj)
+{
+    Q_ASSERT(container_ != NULL);
+    if (bottom_)
+    {
+        bottom_->release();
+    }
+    bottom_ = obj;
+    bottom_->addRef();
+    float bottom = 0;
+    int error = NativeControlObject::getFloat(bottom_, &bottom);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+    container_->setBottomMargin(bottom);
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(setRight)
+int NativeControlObject::setRight(TiObject* obj)
+{
+    Q_ASSERT(container_ != NULL);
+    if (right_)
+    {
+        right_->release();
+    }
+    right_ = obj;
+    obj->addRef();
+    float right = 0;
+    int error = NativeControlObject::getFloat(right_, &right);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+    container_->setRightMargin(right);
     return NATIVE_ERROR_OK;
 }
 
@@ -495,12 +551,19 @@ PROP_SETGET(setTop)
 int NativeControlObject::setTop(TiObject* obj)
 {
     Q_ASSERT(container_ != NULL);
-    int error = NativeControlObject::getFloat(obj, &top_);
+    if (top_)
+    {
+        top_->release();
+    }
+    top_ = obj;
+    top_->addRef();
+    float top = 0;
+    int error = NativeControlObject::getFloat(top_, &top);
     if (!N_SUCCEEDED(error))
     {
         return error;
     }
-    layout_->setPositionY(top_);
+    layout_->setPositionY(top);
     container_->setLayoutProperties(layout_);
     return NATIVE_ERROR_OK;
 }
@@ -534,28 +597,109 @@ int NativeControlObject::getVisible(TiObject* obj)
 PROP_SETGET(getWidth)
 int NativeControlObject::getWidth(TiObject* obj)
 {
-    obj->setValue(Number::New(width_));
+    Q_ASSERT(obj != NULL);
+    if (width_)
+    {
+        if (width_->getValue()->IsNumber())
+        {
+            obj->setValue(Handle<Number>::Cast(width_->getValue()));
+        }
+        else
+        {
+            obj->setValue(width_->getValue());
+        }
+    }
     return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(getHeight)
 int NativeControlObject::getHeight(TiObject* obj)
 {
-    obj->setValue(Number::New(height_));
+    Q_ASSERT(obj != NULL);
+    if (height_)
+    {
+        if (height_->getValue()->IsNumber())
+        {
+            obj->setValue(Handle<Number>::Cast(height_->getValue()));
+        }
+        else
+        {
+            obj->setValue(height_->getValue());
+        }
+    }
     return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(getTop)
 int NativeControlObject::getTop(TiObject* obj)
 {
-    obj->setValue(Number::New(top_));
+    Q_ASSERT(obj != NULL);
+    if (top_)
+    {
+        if (top_->getValue()->IsNumber())
+        {
+            obj->setValue(Handle<Number>::Cast(top_->getValue()));
+        }
+        else
+        {
+            obj->setValue(top_->getValue());
+        }
+    }
     return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(getLeft)
 int NativeControlObject::getLeft(TiObject* obj)
 {
-    obj->setValue(Number::New(left_));
+    Q_ASSERT(obj != NULL);
+    if (left_)
+    {
+        if (left_->getValue()->IsNumber())
+        {
+            obj->setValue(Handle<Number>::Cast(left_->getValue()));
+        }
+        else
+        {
+            obj->setValue(left_->getValue());
+        }
+    }
+    return NATIVE_ERROR_OK;
+}
+
+
+PROP_SETGET(getBottom)
+int NativeControlObject::getBottom(TiObject* obj)
+{
+    Q_ASSERT(obj != NULL);
+    if (bottom_)
+    {
+        if (bottom_->getValue()->IsNumber())
+        {
+            obj->setValue(Handle<Number>::Cast(bottom_->getValue()));
+        }
+        else
+        {
+            obj->setValue(bottom_->getValue());
+        }
+    }
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(getRight)
+int NativeControlObject::getRight(TiObject* obj)
+{
+    Q_ASSERT(obj != NULL);
+    if (right_)
+    {
+        if (right_->getValue()->IsNumber())
+        {
+            obj->setValue(Handle<Number>::Cast(right_->getValue()));
+        }
+        else
+        {
+            obj->setValue(right_->getValue());
+        }
+    }
     return NATIVE_ERROR_OK;
 }
 
@@ -563,28 +707,29 @@ PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
     Q_ASSERT(container_ != NULL);
+    if (width_)
+    {
+        width_->release();
+    }
+    width_ = obj;
+    width_->addRef();
+    float width = 0;
     // TODO:we need the parent width to calculate percentage values and
     // to use that value as max instead of g_height
     float max = g_width; // TODO: Remove this
-    int error = getMeasurementInfo(obj, max,
-                                   (float)g_width / g_physicalWidth, &width_);
+    int error = getMeasurementInfo(width_, max,
+                                   (float)g_width / g_physicalWidth, &width);
     if (error != NATIVE_ERROR_OK)
     {
         return error;
     }
-    container_->setMaxWidth(width_);
-    container_->setMinWidth(width_);
+    container_->setMaxWidth(width);
+    container_->setMinWidth(width);
     return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(setType)
 int NativeControlObject::setType(TiObject*)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
-//PROP_SETGET(setRight)         // Commented to stop compiler from complaining
-int NativeControlObject::setRight(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -616,6 +761,7 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_BACKGROUND_COLOR, PROP_SETGET_FUNCTION(setBackgroundColor), NULL},
     {N_PROP_BACKGROUND_DISABLED_COLOR, PROP_SETGET_FUNCTION(setBackgroundDisableColor), NULL},
     {N_PROP_COLOR, PROP_SETGET_FUNCTION(setColor), NULL},
+    {N_PROP_BOTTOM, PROP_SETGET_FUNCTION(setBottom), PROP_SETGET_FUNCTION(getBottom)},
     {N_PROP_DATA, PROP_SETGET_FUNCTION(setData), NULL},
     {N_PROP_ENABLED, PROP_SETGET_FUNCTION(setEnabled), NULL},
     {N_PROP_FONT, PROP_SETGET_FUNCTION(setFont), NULL},
@@ -632,6 +778,7 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_MINDATE, PROP_SETGET_FUNCTION(setMinDate), NULL},
     {N_PROP_OPACITY, PROP_SETGET_FUNCTION(setOpacity), NULL},
     {N_PROP_OPTIONS, PROP_SETGET_FUNCTION(setOptions), NULL},
+    {N_PROP_RIGHT, PROP_SETGET_FUNCTION(setRight), PROP_SETGET_FUNCTION(getRight)},
     {N_PROP_SELECTED_INDEX, PROP_SETGET_FUNCTION(setSelectedIndex), NULL},
     {N_PROP_TEXT, PROP_SETGET_FUNCTION(setText), NULL},
     {N_PROP_TEXT_ALIGN, PROP_SETGET_FUNCTION(setTextAlign), NULL},
