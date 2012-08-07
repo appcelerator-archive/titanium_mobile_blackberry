@@ -135,8 +135,18 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "rect", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_RECT
+    },
+
+    {
         "selectedIndex", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_SELECTED_INDEX
+    },
+
+    {
+        "size", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_SIZE
     },
 
     {

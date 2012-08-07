@@ -70,15 +70,20 @@ public:
     virtual int initialize();
     virtual int addChildNativeObject(NativeObject* obj);
     virtual int removeChildNativeObject(NativeObject* obj);
+    virtual int getBottom(TiObject* obj);
     virtual int getPropertyValue(size_t propertyNumber, TiObject* obj);
     virtual int getHeight(TiObject* obj);
     virtual int getLeft(TiObject* obj);
+    virtual int getRect(TiObject* obj);
+    virtual int getRight(TiObject* obj);
+    virtual int getSize(TiObject* obj);
     virtual int getTop(TiObject* obj);
     virtual int getVisible(TiObject* obj);
     virtual int getWidth(TiObject* obj);
     virtual int setAnchorPoint(TiObject* obj);
     virtual int setBackgroundColor(TiObject* obj);
     virtual int setBackgroundDisableColor(TiObject* obj);
+    virtual int setBottom(TiObject* obj);
     virtual int setColor(TiObject* obj);
     virtual int setData(TiObject* obj);
     virtual int setEnabled(TiObject* obj);
@@ -141,10 +146,12 @@ private:
     bb::cascades::Color backgroundColor_;
     bb::cascades::Color disabledBackgroundColor_;
     NativeLayoutHandler* layoutHandler_;
+    float bottom_;
     float left_;
     float top_;
     float width_;
     float height_;
+    float right_;
     QRectF rect_;
 };
 
