@@ -56,8 +56,12 @@ public:
     void setupEvents(TiEventContainerFactory* containerFactory);
 
     void clear();
-    void fill(double fillByte, int offset = -1, int length = -1);
+    void fill(char fillByte, int offset = -1, int length = -1);
     const char* toString() const;
+    int copy(NativeBufferObject* sourceBuffer, int offset, int sourceOffset = -1, int sourceLength = -1);
+    int append(NativeBufferObject* sourceBuffer, int sourceOffset = -1, int sourceLength = -1);
+    NativeBufferObject* clone(int sourceOffset = -1, int sourceLength = -1);
+    int insert(NativeBufferObject* sourceBuffer, int offset, int sourceOffset = -1, int sourceLength = -1);
 
 protected:
     virtual ~NativeBufferObject();

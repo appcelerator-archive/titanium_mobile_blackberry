@@ -100,8 +100,9 @@ int NativeBufferObject::getByteOrder(TiObject* obj)
 }
 
 PROP_SETGET(setByteOrder)
-int NativeBufferObject::setByteOrder(TiObject* obj)
+int NativeBufferObject::setByteOrder(TiObject* /*obj*/)
 {
+    /* COMMENTED OUT FOR NOW. IT IS NOT USED IN ANVIL
     int typeValue;
     int error = NativeControlObject::getInteger(obj, &typeValue);
     if (!N_SUCCEEDED(error))
@@ -110,6 +111,8 @@ int NativeBufferObject::setByteOrder(TiObject* obj)
     }
     byteOrder_ = (Ti::Codec::TI_BYTE_ORDER)typeValue;
     return NATIVE_ERROR_OK;
+    */
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(getLength)
@@ -152,7 +155,7 @@ int NativeBufferObject::setValue(TiObject* obj)
     {
         return NATIVE_ERROR_INVALID_ARG;
     }
-    if (v8Value->IsNumber() || !v8Value->IsNumberObject())
+    if (v8Value->IsNumber() || v8Value->IsNumberObject())
     {
         if (v8Value->IsInt32() || v8Value->IsUint32())
         {
@@ -193,28 +196,92 @@ const char* NativeBufferObject::toString() const
     return internalData_.constData();
 }
 
-void NativeBufferObject::fill(double fillByte, int offset, int length)
+void NativeBufferObject::fill(char fillByte, int offset, int length)
 {
-    QByteArray newArray = QByteArray::number(fillByte);
-    int size = newArray.size();
     if (offset == -1 && length == -1)
     {
         // Fills the entire byte array
-        int oldSize = internalData_.size();
-        for (int i = 0; i < (oldSize / size) - 1; ++i)
-        {
-            newArray.append(QByteArray::number(fillByte));
-        }
-        internalData_ = newArray;
+        internalData_.fill(fillByte);
     }
     else
     {
-        for (int i = 0; i < (length / size) - 1; ++i)
-        {
-            newArray.append(QByteArray::number(fillByte));
-        }
+        QByteArray newArray(length, fillByte);
         internalData_.replace(offset, length, newArray);
     }
+}
+
+int NativeBufferObject::copy(NativeBufferObject* sourceBuffer, int offset, int sourceOffset, int sourceLength)
+{
+    Q_ASSERT(offset < internalData_.size());
+    int bytesWritten = 0;
+    const QByteArray& sourceData = sourceBuffer->internalData_;
+    int sourceSize = 0, leftSize = 0;
+    leftSize = internalData_.size() - offset;
+    if (sourceOffset == -1 && sourceLength == -1)
+    {
+        sourceSize = sourceData.size();
+    }
+    else
+    {
+        sourceSize = sourceLength;
+    }
+
+    bytesWritten = (leftSize < sourceSize) ? leftSize : sourceSize;
+
+    // Do not expand the original buffer if there is not enough room for data from sourceBuffer
+    internalData_.replace(offset, bytesWritten, sourceData.mid(sourceOffset == -1 ? 0 : sourceOffset, bytesWritten));
+
+    return bytesWritten;
+}
+
+int NativeBufferObject::append(NativeBufferObject* sourceBuffer, int sourceOffset, int sourceLength)
+{
+    int bytesWritten = 0;
+    const QByteArray& sourceData = sourceBuffer->internalData_;
+    if (sourceOffset == -1 && sourceLength == -1)
+    {
+        bytesWritten = sourceData.size();
+        internalData_.append(sourceData);
+    }
+    else
+    {
+        bytesWritten = sourceLength;
+        internalData_.append(sourceData.mid(sourceOffset, sourceLength));
+    }
+    return bytesWritten;
+}
+
+NativeBufferObject* NativeBufferObject::clone(int sourceOffset, int sourceLength)
+{
+    NativeBufferObject* cloneBuffer = new NativeBufferObject();
+    if (sourceOffset == -1 && sourceLength == -1)
+    {
+        cloneBuffer->internalData_ = QByteArray(internalData_);
+    }
+    else
+    {
+        cloneBuffer->internalData_ = QByteArray(internalData_.mid(sourceOffset, sourceLength));
+    }
+    return cloneBuffer;
+}
+
+int NativeBufferObject::insert(NativeBufferObject* sourceBuffer, int offset, int sourceOffset, int sourceLength)
+{
+    Q_ASSERT(offset < internalData_.size());
+    int bytesWritten = 0;
+    const QByteArray& sourceData = sourceBuffer->internalData_;
+    if (sourceOffset == -1 && sourceLength == -1)
+    {
+        bytesWritten = sourceData.size();
+        internalData_.insert(offset, sourceData);
+    }
+    else
+    {
+        bytesWritten = sourceLength;
+        internalData_.insert(offset, sourceData.mid(sourceOffset, sourceLength));
+    }
+
+    return bytesWritten;
 }
 
 const static NATIVE_PROPSETGET_SETTING g_BufferPropSetGet[] =

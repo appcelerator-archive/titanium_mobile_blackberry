@@ -9,6 +9,7 @@
 
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
+#include "TiMessageStrings.h"
 
 TiCodecObject::TiCodecObject()
     : TiProxy("Codec")
@@ -43,20 +44,20 @@ void TiCodecObject::onCreateStaticMembers()
 
 Handle<Value> TiCodecObject::_decodeNumber(void* /*userContext*/, TiObject* /*caller*/, const Arguments& /*args*/)
 {
-    return Undefined();
+    return ThrowException(String::New(Ti::Msg::Not_implemented));
 }
 
 Handle<Value> TiCodecObject::_decodeString(void* /*userContext*/, TiObject* /*caller*/, const Arguments& /*args*/)
 {
-    return Undefined();
+    return ThrowException(String::New(Ti::Msg::Not_implemented));
 }
 
 Handle<Value> TiCodecObject::_encodeNumber(void* /*userContext*/, TiObject* /*caller*/, const Arguments& /*args*/)
 {
-    return Undefined();
+    return ThrowException(String::New(Ti::Msg::Not_implemented));
 }
 
 Handle<Value> TiCodecObject::_encodeString(void* /*userContext*/, TiObject* /*caller*/, const Arguments& /*args*/)
 {
-    return Undefined();
+    return ThrowException(String::New(Ti::Msg::Not_implemented));
 }
