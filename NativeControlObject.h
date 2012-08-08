@@ -131,6 +131,8 @@ protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
     int addChildImpl(NativeObject* obj);
     int removeChildImpl(NativeObject* obj);
+    static int setZOrder(bb::cascades::Container* container, bb::cascades::Control* control,
+                         float zindex, bool zindexIsDefined);
 
 private:
     friend class NativePageObject;

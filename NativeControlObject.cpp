@@ -245,49 +245,8 @@ int NativeControlObject::addChildImpl(NativeObject* obj)
         zindexValue = (float)(zindex->ToNumber()->Value());
     }
     tmpObj->release();
-    int childControls = container_->count();
-    int insertPosition = -1;
-    for (int i = childControls; i > 0; i--)
-    {
-        bb::cascades::Control* child = container_->at(i - 1);
-        QVariant zqval = child->property(ZINDEX_PROPERTY_NAME);
-        if (zindex->IsNumber())
-        {
-            if (zqval.isValid())
-            {
-                bool conversionSucceeded = false;
-                float childZValue = zqval.toFloat(&conversionSucceeded);
-                if (!conversionSucceeded)
-                {
-                    return NATIVE_ERROR_INVALID_ARG;
-                }
-                if (zindexValue > childZValue)
-                {
-                    insertPosition = i - 1;
-                    break;
-                }
-            }
-            else
-            {
-                insertPosition = i - 1;
-                break;
-            }
-        }
-        else
-        {
-            if (!zqval.isValid())
-            {
-                break;
-            }
-            insertPosition = i - 1;
-        }
-    }
-    if (insertPosition < 0)
-    {
-        insertPosition = childControls;
-    }
-    container_->insert(insertPosition, control);
-    return NATIVE_ERROR_OK;
+    int error = setZOrder(container_, control, zindexValue, zindex->IsNumber());
+    return error;
 }
 
 int NativeControlObject::removeChildNativeObject(NativeObject* obj)
@@ -305,6 +264,57 @@ int NativeControlObject::removeChildImpl(NativeObject* obj)
     Q_ASSERT(container_ != NULL);
     bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
     container_->remove(control);
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::setZOrder(bb::cascades::Container* container, bb::cascades::Control* control,
+                                   float zindex, bool zindexIsDefined)
+{
+    Q_ASSERT(container != NULL);
+    Q_ASSERT(control != NULL);
+    container->remove(control);
+    int childControls = container->count();
+    int insertPosition = -1;
+    for (int i = childControls; i > 0; i--)
+    {
+        bb::cascades::Control* child = container->at(i - 1);
+        QVariant zqval = child->property(ZINDEX_PROPERTY_NAME);
+        if (zindexIsDefined)
+        {
+            if (zqval.isValid())
+            {
+                bool conversionSucceeded = false;
+                float childZValue = zqval.toFloat(&conversionSucceeded);
+                if (!conversionSucceeded)
+                {
+                    return NATIVE_ERROR_INVALID_ARG;
+                }
+                if (zindex > childZValue)
+                {
+                    insertPosition = i;
+                    break;
+                }
+            }
+            else
+            {
+                insertPosition = i;
+                break;
+            }
+        }
+        else
+        {
+            if (!zqval.isValid())
+            {
+                break;
+            }
+            insertPosition = i;
+        }
+    }
+    if (insertPosition < 0)
+    {
+        insertPosition = childControls;
+    }
+    container->insert(insertPosition, control);
     return NATIVE_ERROR_OK;
 }
 
@@ -657,43 +667,12 @@ int NativeControlObject::setZIndex(TiObject* obj)
     {
         return error;
     }
+    container_->setProperty(ZINDEX_PROPERTY_NAME, QVariant(value));
     bb::cascades::Container* parent = (bb::cascades::Container*)container_->parent();
     if (parent != NULL)
     {
-        int myIndex = parent->indexOf(container_);
-        Q_ASSERT(parent->count() > 0);
-        for (int i = parent->count() - 1; i > myIndex; i--)
-        {
-            bb::cascades::Control* control = parent->at(i);
-            Q_ASSERT(control != NULL);
-            QVariant zval = control->property(ZINDEX_PROPERTY_NAME);
-            bool insert = false;
-            if (zval.isValid())
-            {
-                bool conversionSucceeded = false;
-                float controlZValue = zval.toFloat(&conversionSucceeded);
-                if (!conversionSucceeded)
-                {
-                    return NATIVE_ERROR_INVALID_ARG;
-                }
-                if (value > controlZValue)
-                {
-                    insert = true;
-                }
-            }
-            else
-            {
-                insert = true;
-            }
-            if (insert)
-            {
-                parent->remove(container_);
-                parent->insert(i, container_);
-                break;
-            }
-        }
+        error = setZOrder(parent, container_, value, true);
     }
-    container_->setProperty(ZINDEX_PROPERTY_NAME, QVariant(value));
     return NATIVE_ERROR_OK;
 }
 
