@@ -375,12 +375,13 @@ PROP_SETGET(setHeight)
 int NativeControlObject::setHeight(TiObject* obj)
 {
     Q_ASSERT(container_ != NULL);
-    if (height_)
+    Q_ASSERT(obj != NULL);
+    obj->addRef();
+    if (height_ != NULL)
     {
         height_->release();
     }
     height_ = obj;
-    height_->addRef();
     float height = 0;
     // TODO:we need the parent height to calculate percentage values and
     // to use that value as max instead of g_height
@@ -418,12 +419,13 @@ PROP_SETGET(setLeft)
 int NativeControlObject::setLeft(TiObject* obj)
 {
     Q_ASSERT(container_ != NULL);
-    if (left_)
+    Q_ASSERT(obj != NULL);
+    obj->addRef();
+    if (left_ != NULL)
     {
         left_->release();
     }
     left_ = obj;
-    left_->addRef();
     float left = 0;
     int error = NativeControlObject::getFloat(left_, &left);
     if (!N_SUCCEEDED(error))
@@ -439,12 +441,13 @@ PROP_SETGET(setBottom)
 int NativeControlObject::setBottom(TiObject* obj)
 {
     Q_ASSERT(container_ != NULL);
-    if (bottom_)
+    Q_ASSERT(obj != NULL);
+    obj->addRef();
+    if (bottom_ != NULL)
     {
         bottom_->release();
     }
     bottom_ = obj;
-    bottom_->addRef();
     float bottom = 0;
     int error = NativeControlObject::getFloat(bottom_, &bottom);
     if (!N_SUCCEEDED(error))
@@ -459,12 +462,13 @@ PROP_SETGET(setRight)
 int NativeControlObject::setRight(TiObject* obj)
 {
     Q_ASSERT(container_ != NULL);
-    if (right_)
+    Q_ASSERT(obj != NULL);
+    obj->addRef();
+    if (right_ != NULL)
     {
         right_->release();
     }
     right_ = obj;
-    obj->addRef();
     float right = 0;
     int error = NativeControlObject::getFloat(right_, &right);
     if (!N_SUCCEEDED(error))
@@ -551,12 +555,13 @@ PROP_SETGET(setTop)
 int NativeControlObject::setTop(TiObject* obj)
 {
     Q_ASSERT(container_ != NULL);
+    Q_ASSERT(obj != NULL);
+    obj->addRef();
     if (top_)
     {
         top_->release();
     }
     top_ = obj;
-    top_->addRef();
     float top = 0;
     int error = NativeControlObject::getFloat(top_, &top);
     if (!N_SUCCEEDED(error))
@@ -598,7 +603,7 @@ PROP_SETGET(getWidth)
 int NativeControlObject::getWidth(TiObject* obj)
 {
     Q_ASSERT(obj != NULL);
-    if (width_)
+    if (width_ != NULL)
     {
         if (width_->getValue()->IsNumber())
         {
@@ -616,7 +621,7 @@ PROP_SETGET(getHeight)
 int NativeControlObject::getHeight(TiObject* obj)
 {
     Q_ASSERT(obj != NULL);
-    if (height_)
+    if (height_ != NULL)
     {
         if (height_->getValue()->IsNumber())
         {
@@ -634,7 +639,7 @@ PROP_SETGET(getTop)
 int NativeControlObject::getTop(TiObject* obj)
 {
     Q_ASSERT(obj != NULL);
-    if (top_)
+    if (top_ != NULL)
     {
         if (top_->getValue()->IsNumber())
         {
@@ -652,7 +657,7 @@ PROP_SETGET(getLeft)
 int NativeControlObject::getLeft(TiObject* obj)
 {
     Q_ASSERT(obj != NULL);
-    if (left_)
+    if (left_ != NULL)
     {
         if (left_->getValue()->IsNumber())
         {
@@ -671,7 +676,7 @@ PROP_SETGET(getBottom)
 int NativeControlObject::getBottom(TiObject* obj)
 {
     Q_ASSERT(obj != NULL);
-    if (bottom_)
+    if (bottom_ != NULL)
     {
         if (bottom_->getValue()->IsNumber())
         {
@@ -689,7 +694,7 @@ PROP_SETGET(getRight)
 int NativeControlObject::getRight(TiObject* obj)
 {
     Q_ASSERT(obj != NULL);
-    if (right_)
+    if (right_ != NULL)
     {
         if (right_->getValue()->IsNumber())
         {
@@ -707,12 +712,13 @@ PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
     Q_ASSERT(container_ != NULL);
-    if (width_)
+    Q_ASSERT(obj != NULL);
+    obj->addRef();
+    if (width_ != NULL)
     {
         width_->release();
     }
     width_ = obj;
-    width_->addRef();
     float width = 0;
     // TODO:we need the parent width to calculate percentage values and
     // to use that value as max instead of g_height
