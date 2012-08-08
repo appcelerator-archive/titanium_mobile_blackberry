@@ -226,7 +226,7 @@ void NativeBufferObject::fill(char fillByte, int offset, int length)
 
 int NativeBufferObject::copy(NativeBufferObject* sourceBuffer, int offset, int sourceOffset, int sourceLength)
 {
-    if (offset >= internalData_.size() - 1)
+    if (offset >= internalData_.size() || offset < 0)
     {
         throw NativeException(QString(Native::Msg::Out_of_bounds).toStdString());
     }
@@ -292,9 +292,10 @@ int NativeBufferObject::append(NativeBufferObject* sourceBuffer, int sourceOffse
 
 NativeBufferObject* NativeBufferObject::clone(int sourceOffset, int sourceLength)
 {
-    NativeBufferObject* cloneBuffer = new NativeBufferObject();
+    NativeBufferObject* cloneBuffer = NULL;
     if (sourceOffset == -1 && sourceLength == -1)
     {
+        cloneBuffer = new NativeBufferObject();
         cloneBuffer->internalData_ = QByteArray(internalData_);
     }
     else
@@ -310,6 +311,7 @@ NativeBufferObject* NativeBufferObject::clone(int sourceOffset, int sourceLength
         {
             throw NativeException(QString(Native::Msg::Out_of_bounds).toStdString());
         }
+        cloneBuffer = new NativeBufferObject();
         cloneBuffer->internalData_ = QByteArray(internalData_.mid(sourceOffset, sourceLength));
     }
     return cloneBuffer;
@@ -317,7 +319,7 @@ NativeBufferObject* NativeBufferObject::clone(int sourceOffset, int sourceLength
 
 int NativeBufferObject::insert(NativeBufferObject* sourceBuffer, int offset, int sourceOffset, int sourceLength)
 {
-    if (offset >= internalData_.size() - 1)
+    if (offset >= internalData_.size() || offset < 0)
     {
         throw NativeException(QString(Native::Msg::Out_of_bounds).toStdString());
     }
