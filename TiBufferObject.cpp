@@ -6,13 +6,15 @@
  */
 
 #include "TiBufferObject.h"
-#include "TiMessageStrings.h"
+
 #include "TiConstants.h"
-#include "NativeBufferObject.h"
 #include "TiGenericFunctionObject.h"
+#include "TiMessageStrings.h"
 #include "TiPropertyGetFunctionObject.h"
-#include "TiPropertySetFunctionObject.h"
 #include "TiPropertyMapObject.h"
+#include "TiPropertySetFunctionObject.h"
+#include "NativeBufferObject.h"
+#include "NativeException.h"
 
 const static TiProperty g_tiProperties[] =
 {
@@ -155,8 +157,7 @@ Handle<Value> TiBufferObject::_append(void* userContext, TiObject* /*caller*/, c
 {
     if (args.Length() < 1)
     {
-        ThrowException(String::New(Ti::Msg::Missing_argument));
-        return Undefined();
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
 
     HandleScope handleScope;
@@ -173,8 +174,7 @@ Handle<Value> TiBufferObject::_append(void* userContext, TiObject* /*caller*/, c
     // Invalid argument passed
     if (nboSource == NULL)
     {
-        ThrowException(String::New(Ti::Msg::Invalid_arguments));
-        return Undefined();
+        return ThrowException(String::New(Ti::Msg::Invalid_arguments));
     }
 
     // Optional arguments provided
@@ -184,8 +184,7 @@ Handle<Value> TiBufferObject::_append(void* userContext, TiObject* /*caller*/, c
         // Should provided both sourceOffset and sourceLength
         if (args.Length() < 3)
         {
-            ThrowException(String::New(Ti::Msg::Missing_argument));
-            return Undefined();
+            return ThrowException(String::New(Ti::Msg::Missing_argument));
         }
 
         Handle<Number> sourceOffsetNum = Handle<Number>::Cast(args[1]);
@@ -194,7 +193,15 @@ Handle<Value> TiBufferObject::_append(void* userContext, TiObject* /*caller*/, c
         sourceLength = (int)sourceLengthNum->Value();
     }
 
-    int bytesWritten = nbo->append(nboSource, sourceOffset, sourceLength);
+    int bytesWritten = 0;
+    try
+    {
+        bytesWritten = nbo->append(nboSource, sourceOffset, sourceLength);
+    }
+    catch (NativeException& ne)
+    {
+        return ThrowException(String::New(ne.what()));
+    }
     Handle<Number> result = Number::New(bytesWritten);
     return handleScope.Close(result);
 }
@@ -204,8 +211,7 @@ Handle<Value> TiBufferObject::_copy(void* userContext, TiObject* /*caller*/, con
     // Required sourceBuffer and offset
     if (args.Length() < 2)
     {
-        ThrowException(String::New(Ti::Msg::Missing_argument));
-        return Undefined();
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
     HandleScope handleScope;
     TiBufferObject* obj = (TiBufferObject*) userContext;
@@ -221,16 +227,14 @@ Handle<Value> TiBufferObject::_copy(void* userContext, TiObject* /*caller*/, con
     // Invalid argument passed
     if (nboSource == NULL)
     {
-        ThrowException(String::New(Ti::Msg::Invalid_arguments));
-        return Undefined();
+        return ThrowException(String::New(Ti::Msg::Invalid_arguments));
     }
 
     // Get the offset parameter
     Handle<Number> offsetNum = Handle<Number>::Cast(args[1]);
     if (offsetNum.IsEmpty() || (!offsetNum->IsNumber() && !offsetNum->IsNumberObject()))
     {
-        ThrowException(String::New(Ti::Msg::Invalid_arguments));
-        return Undefined();
+        return ThrowException(String::New(Ti::Msg::Invalid_arguments));
     }
 
     // Optional arguments provided
@@ -240,8 +244,7 @@ Handle<Value> TiBufferObject::_copy(void* userContext, TiObject* /*caller*/, con
         // Should provided both sourceOffset and sourceLength
         if (args.Length() < 4)
         {
-            ThrowException(String::New(Ti::Msg::Missing_argument));
-            return Undefined();
+            return ThrowException(String::New(Ti::Msg::Missing_argument));
         }
 
         Handle<Number> sourceOffsetNum = Handle<Number>::Cast(args[2]);
@@ -250,7 +253,15 @@ Handle<Value> TiBufferObject::_copy(void* userContext, TiObject* /*caller*/, con
         sourceLength = (int)sourceLengthNum->Value();
     }
 
-    int bytesWritten = nbo->copy(nboSource, offsetNum->Value(), sourceOffset, sourceLength);
+    int bytesWritten = 0;
+    try
+    {
+        bytesWritten = nbo->copy(nboSource, offsetNum->Value(), sourceOffset, sourceLength);
+    }
+    catch (NativeException& ne)
+    {
+        return ThrowException(String::New(ne.what()));
+    }
     Handle<Number> result = Number::New(bytesWritten);
     return handleScope.Close(result);
 }
@@ -259,8 +270,7 @@ Handle<Value> TiBufferObject::_fill(void* userContext, TiObject* /*caller*/, con
 {
     if (args.Length() < 1)
     {
-        ThrowException(String::New(Ti::Msg::Missing_argument));
-        return Undefined();
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
     HandleScope handleScope;
     TiBufferObject* obj = (TiBufferObject*) userContext;
@@ -269,8 +279,7 @@ Handle<Value> TiBufferObject::_fill(void* userContext, TiObject* /*caller*/, con
     Handle<Number> fillByteNum = Handle<Number>::Cast(args[0]);
     if (fillByteNum.IsEmpty() || (!fillByteNum->IsNumber() && !fillByteNum->IsNumberObject()))
     {
-        ThrowException(String::New(Ti::Msg::Invalid_arguments));
-        return Undefined();
+        return ThrowException(String::New(Ti::Msg::Invalid_arguments));
     }
 
     int offset = -1, length = -1;
@@ -279,8 +288,7 @@ Handle<Value> TiBufferObject::_fill(void* userContext, TiObject* /*caller*/, con
         // Should provided both offset and length
         if (args.Length() < 3)
         {
-            ThrowException(String::New(Ti::Msg::Missing_argument));
-            return Undefined();
+            return ThrowException(String::New(Ti::Msg::Missing_argument));
         }
 
         Handle<Number> offsetNum = Handle<Number>::Cast(args[1]);
@@ -289,7 +297,14 @@ Handle<Value> TiBufferObject::_fill(void* userContext, TiObject* /*caller*/, con
         length = (int)lengthNum->Value();
     }
 
-    nbo->fill(fillByteNum->Value(), offset, length);
+    try
+    {
+        nbo->fill(fillByteNum->Value(), offset, length);
+    }
+    catch (NativeException& ne)
+    {
+        return ThrowException(String::New(ne.what()));
+    }
     return Undefined();
 }
 
@@ -298,8 +313,7 @@ Handle<Value> TiBufferObject::_insert(void* userContext, TiObject* /*caller*/, c
     // Required sourceBuffer and offset
     if (args.Length() < 2)
     {
-        ThrowException(String::New(Ti::Msg::Missing_argument));
-        return Undefined();
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
     HandleScope handleScope;
     TiBufferObject* obj = (TiBufferObject*) userContext;
@@ -315,16 +329,14 @@ Handle<Value> TiBufferObject::_insert(void* userContext, TiObject* /*caller*/, c
     // Invalid argument passed
     if (nboSource == NULL)
     {
-        ThrowException(String::New(Ti::Msg::Invalid_arguments));
-        return Undefined();
+        return ThrowException(String::New(Ti::Msg::Invalid_arguments));
     }
 
     // Get the offset parameter
     Handle<Number> offsetNum = Handle<Number>::Cast(args[1]);
     if (offsetNum.IsEmpty() || (!offsetNum->IsNumber() && !offsetNum->IsNumberObject()))
     {
-        ThrowException(String::New(Ti::Msg::Invalid_arguments));
-        return Undefined();
+        return ThrowException(String::New(Ti::Msg::Invalid_arguments));
     }
 
     // Optional arguments provided
@@ -334,8 +346,7 @@ Handle<Value> TiBufferObject::_insert(void* userContext, TiObject* /*caller*/, c
         // Should provided both sourceOffset and sourceLength
         if (args.Length() < 4)
         {
-            ThrowException(String::New(Ti::Msg::Missing_argument));
-            return Undefined();
+            return ThrowException(String::New(Ti::Msg::Missing_argument));
         }
 
         Handle<Number> sourceOffsetNum = Handle<Number>::Cast(args[2]);
@@ -344,7 +355,16 @@ Handle<Value> TiBufferObject::_insert(void* userContext, TiObject* /*caller*/, c
         sourceLength = (int)sourceLengthNum->Value();
     }
 
-    int bytesWritten = nbo->insert(nboSource, offsetNum->Value(), sourceOffset, sourceLength);
+    int bytesWritten = 0;
+    try
+    {
+        bytesWritten = nbo->insert(nboSource, offsetNum->Value(), sourceOffset, sourceLength);
+    }
+    catch (NativeException& ne)
+    {
+        return ThrowException(String::New(ne.what()));
+    }
+
     Handle<Number> result = Number::New(bytesWritten);
     return handleScope.Close(result);
 }
@@ -361,8 +381,7 @@ Handle<Value> TiBufferObject::_clone(void* userContext, TiObject* /*caller*/, co
         // Should provided both offset and length
         if (args.Length() < 2)
         {
-            ThrowException(String::New(Ti::Msg::Missing_argument));
-            return Undefined();
+            return ThrowException(String::New(Ti::Msg::Missing_argument));
         }
 
         Handle<Number> offsetNum = Handle<Number>::Cast(args[1]);
@@ -372,7 +391,15 @@ Handle<Value> TiBufferObject::_clone(void* userContext, TiObject* /*caller*/, co
     }
 
     // Create new Ti.Buffer
-    NativeBufferObject* cloneBuffer = nbo->clone(offset, length);
+    NativeBufferObject* cloneBuffer = NULL;
+    try
+    {
+        cloneBuffer = nbo->clone(offset, length);
+    }
+    catch (NativeException& ne)
+    {
+        return ThrowException(String::New(ne.what()));
+    }
     Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(obj->getValue());
     NativeObjectFactory* factory = obj->getNativeObjectFactory();
     TiBufferObject* newBuffer = createBuffer(factory);

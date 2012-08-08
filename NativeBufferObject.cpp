@@ -6,7 +6,10 @@
  */
 
 #include "NativeBufferObject.h"
+
 #include "NativeControlObject.h"
+#include "NativeException.h"
+#include "NativeMessageStrings.h"
 #include "TiObject.h"
 
 #define PROP_SETGET_FUNCTION(NAME)      prop_##NAME
@@ -205,6 +208,17 @@ void NativeBufferObject::fill(char fillByte, int offset, int length)
     }
     else
     {
+        /*
+         * Do not allow buffer to grow.
+         * - Checked offset and length to be valid
+         * - Checked offset not to be above the buffer size
+         * - Checked length to be in range [offset, buffer.size()]
+         */
+        if (length < 0 || offset < 0 || (offset >= internalData_.size()) ||
+                (internalData_.size() - offset) < length)
+        {
+            throw NativeException(QString(Native::Msg::Out_of_bounds).toStdString());
+        }
         QByteArray newArray(length, fillByte);
         internalData_.replace(offset, length, newArray);
     }
@@ -212,7 +226,10 @@ void NativeBufferObject::fill(char fillByte, int offset, int length)
 
 int NativeBufferObject::copy(NativeBufferObject* sourceBuffer, int offset, int sourceOffset, int sourceLength)
 {
-    Q_ASSERT(offset < internalData_.size());
+    if (offset >= internalData_.size() - 1)
+    {
+        throw NativeException(QString(Native::Msg::Out_of_bounds).toStdString());
+    }
     int bytesWritten = 0;
     const QByteArray& sourceData = sourceBuffer->internalData_;
     int sourceSize = 0, leftSize = 0;
@@ -223,6 +240,17 @@ int NativeBufferObject::copy(NativeBufferObject* sourceBuffer, int offset, int s
     }
     else
     {
+        /*
+         * Validate the source buffer's sourceOffset and sourceLength.
+         * - Checked sourceOffset and sourceLength to be valid
+         * - Checked sourceOffset not to be above the buffer size
+         * - Checked sourceLength to be in range [sourceOffset, sourcebuffer.size()]
+         */
+        if (sourceLength < 0 || sourceOffset < 0 || (sourceOffset >= sourceData.size()) ||
+                (sourceData.size() - sourceOffset) < sourceLength)
+        {
+            throw NativeException(QString(Native::Msg::Out_of_bounds).toStdString());
+        }
         sourceSize = sourceLength;
     }
 
@@ -245,6 +273,17 @@ int NativeBufferObject::append(NativeBufferObject* sourceBuffer, int sourceOffse
     }
     else
     {
+        /*
+         * Validate the source buffer's sourceOffset and sourceLength.
+         * - Checked sourceOffset and sourceLength to be valid
+         * - Checked sourceOffset not to be above the buffer size
+         * - Checked sourceLength to be in range [sourceOffset, sourcebuffer.size()]
+         */
+        if (sourceLength < 0 || sourceOffset < 0 || (sourceOffset >= sourceData.size()) ||
+                (sourceData.size() - sourceOffset) < sourceLength)
+        {
+            throw NativeException(QString(Native::Msg::Out_of_bounds).toStdString());
+        }
         bytesWritten = sourceLength;
         internalData_.append(sourceData.mid(sourceOffset, sourceLength));
     }
@@ -260,6 +299,17 @@ NativeBufferObject* NativeBufferObject::clone(int sourceOffset, int sourceLength
     }
     else
     {
+        /*
+         * Validate the source buffer's sourceOffset and sourceLength.
+         * - Checked sourceOffset and sourceLength to be valid
+         * - Checked sourceOffset not to be above the buffer size
+         * - Checked sourceLength to be in range [sourceOffset, sourcebuffer.size()]
+         */
+        if (sourceLength < 0 || sourceOffset < 0 || (sourceOffset >= internalData_.size()) ||
+                (internalData_.size() - sourceOffset) < sourceLength)
+        {
+            throw NativeException(QString(Native::Msg::Out_of_bounds).toStdString());
+        }
         cloneBuffer->internalData_ = QByteArray(internalData_.mid(sourceOffset, sourceLength));
     }
     return cloneBuffer;
@@ -267,7 +317,10 @@ NativeBufferObject* NativeBufferObject::clone(int sourceOffset, int sourceLength
 
 int NativeBufferObject::insert(NativeBufferObject* sourceBuffer, int offset, int sourceOffset, int sourceLength)
 {
-    Q_ASSERT(offset < internalData_.size());
+    if (offset >= internalData_.size() - 1)
+    {
+        throw NativeException(QString(Native::Msg::Out_of_bounds).toStdString());
+    }
     int bytesWritten = 0;
     const QByteArray& sourceData = sourceBuffer->internalData_;
     if (sourceOffset == -1 && sourceLength == -1)
@@ -277,6 +330,17 @@ int NativeBufferObject::insert(NativeBufferObject* sourceBuffer, int offset, int
     }
     else
     {
+        /*
+         * Validate the source buffer's sourceOffset and sourceLength.
+         * - Checked sourceOffset and sourceLength to be valid
+         * - Checked sourceOffset not to be above the buffer size
+         * - Checked sourceLength to be in range [sourceOffset, sourcebuffer.size()]
+         */
+        if (sourceLength < 0 || sourceOffset < 0 || (sourceOffset >= sourceData.size()) ||
+                (sourceData.size() - sourceOffset) < sourceLength)
+        {
+            throw NativeException(QString(Native::Msg::Out_of_bounds).toStdString());
+        }
         bytesWritten = sourceLength;
         internalData_.insert(offset, sourceData.mid(sourceOffset, sourceLength));
     }
