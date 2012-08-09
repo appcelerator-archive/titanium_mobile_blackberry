@@ -276,6 +276,9 @@ void TiUIBase::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "hide", this, _hide);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "remove", this, _remove);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "show", this, _show);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "startLayout", this, _startLayout);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "finishLayout", this, _finishLayout);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "updateLayout", this, _updateLayout);
     setTiMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
     TiObject* value = TiPropertyGetObject::createGetProperty(this, "children", this, _getChildren);
     TiPropertyGetFunctionObject::addPropertyGetter(this, value, "getChildren");
@@ -433,5 +436,32 @@ Handle<Value> TiUIBase::_show(void* userContext, TiObject*, const Arguments&)
     TiUIBase* obj = (TiUIBase*) userContext;
     NativeObject* no = obj->getNativeObject();
     no->setVisibility(true);
+    return Undefined();
+}
+
+Handle<Value> TiUIBase::_startLayout(void* userContext, TiObject*, const Arguments&)
+{
+    TiUIBase* obj = (TiUIBase*) userContext;
+    NativeObject* no = obj->getNativeObject();
+    no->startLayout();
+    return Undefined();
+}
+
+Handle<Value> TiUIBase::_finishLayout(void* userContext, TiObject*, const Arguments&)
+{
+    TiUIBase* obj = (TiUIBase*) userContext;
+    NativeObject* no = obj->getNativeObject();
+    no->finishLayout();
+    return Undefined();
+}
+
+Handle<Value> TiUIBase::_updateLayout(void* userContext, TiObject* caller, const Arguments& args)
+{
+    if ((args.Length() > 0) && (args[0]->IsObject()))
+    {
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
+        TiUIBase* obj = (TiUIBase*) userContext;
+        obj->setParametersFromObject(obj, settingsObj);
+    }
     return Undefined();
 }

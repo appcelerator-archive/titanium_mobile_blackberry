@@ -141,7 +141,8 @@ NativeControlObject::NativeControlObject() :
     top_(0),
     width_(0),
     height_(0),
-    right_(0)
+    right_(0),
+    batchUpdating_(false)
 {
     if ((g_width <= 0) || (g_height <= 0))
     {
@@ -265,6 +266,32 @@ int NativeControlObject::setVisibility(bool visible)
     return NATIVE_ERROR_OK;
 }
 
+int NativeControlObject::startLayout()
+{
+    batchUpdating_ = true;
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::finishLayout()
+{
+    if (batchUpdating_)
+    {
+        batchUpdating_ = false;
+        updateViewLayout();
+    }
+    return NATIVE_ERROR_OK;
+}
+
+void NativeControlObject::updateViewLayout()
+{
+    updateWidth();
+    updateHeight();
+    updateLeft();
+    updateTop();
+    updateRight();
+    updateBottom();
+    //TODO: need to verify if other UI.View properties needs to be updated as well
+}
 
 // PROP_SETTER creates a static version of functions which
 // calls the non-static on method on the NativeControlObject
@@ -382,6 +409,20 @@ int NativeControlObject::setHeight(TiObject* obj)
         height_->release();
     }
     height_ = obj;
+    if (!batchUpdating_)
+    {
+        return updateHeight();
+    }
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::updateHeight()
+{
+    if (height_ == NULL)
+    {
+        //height wasn't set, just leave as it is
+        return NATIVE_ERROR_OK;
+    }
     float height = 0;
     // TODO:we need the parent height to calculate percentage values and
     // to use that value as max instead of g_height
@@ -426,6 +467,20 @@ int NativeControlObject::setLeft(TiObject* obj)
         left_->release();
     }
     left_ = obj;
+    if (!batchUpdating_)
+    {
+        return updateLeft();
+    }
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::updateLeft()
+{
+    if (left_ == NULL)
+    {
+        //left wasn't set, just leave as it is
+        return NATIVE_ERROR_OK;
+    }
     float left = 0;
     int error = NativeControlObject::getFloat(left_, &left);
     if (!N_SUCCEEDED(error))
@@ -448,6 +503,20 @@ int NativeControlObject::setBottom(TiObject* obj)
         bottom_->release();
     }
     bottom_ = obj;
+    if (!batchUpdating_)
+    {
+        return updateBottom();
+    }
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::updateBottom()
+{
+    if (bottom_ == NULL)
+    {
+        //bottom wasn't set, just leave as it is
+        return NATIVE_ERROR_OK;
+    }
     float bottom = 0;
     int error = NativeControlObject::getFloat(bottom_, &bottom);
     if (!N_SUCCEEDED(error))
@@ -469,6 +538,20 @@ int NativeControlObject::setRight(TiObject* obj)
         right_->release();
     }
     right_ = obj;
+    if (batchUpdating_)
+    {
+        return updateRight();
+    }
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::updateRight()
+{
+    if (right_ == NULL)
+    {
+        //right wasn't set, just leave as it is
+        return NATIVE_ERROR_OK;
+    }
     float right = 0;
     int error = NativeControlObject::getFloat(right_, &right);
     if (!N_SUCCEEDED(error))
@@ -562,6 +645,20 @@ int NativeControlObject::setTop(TiObject* obj)
         top_->release();
     }
     top_ = obj;
+    if (!batchUpdating_)
+    {
+        return updateTop();
+    }
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::updateTop()
+{
+    if (top_ == NULL)
+    {
+        //top wasn't set, just leave as it is
+        return NATIVE_ERROR_OK;
+    }
     float top = 0;
     int error = NativeControlObject::getFloat(top_, &top);
     if (!N_SUCCEEDED(error))
@@ -719,6 +816,20 @@ int NativeControlObject::setWidth(TiObject* obj)
         width_->release();
     }
     width_ = obj;
+    if (!batchUpdating_)
+    {
+        return updateWidth();
+    }
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::updateWidth()
+{
+    if (width_ == NULL)
+    {
+        //width wasn't set, just leave as it is
+        return NATIVE_ERROR_OK;
+    }
     float width = 0;
     // TODO:we need the parent width to calculate percentage values and
     // to use that value as max instead of g_height

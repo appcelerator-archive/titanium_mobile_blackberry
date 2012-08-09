@@ -48,6 +48,9 @@ private:
     static Handle<Value> _hide(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _remove(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _show(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _startLayout(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _finishLayout(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _updateLayout(void* userContext, TiObject* caller, const Arguments& args);
 
     // fields
     NativeObject* nativeObject_;

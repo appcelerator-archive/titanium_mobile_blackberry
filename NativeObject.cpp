@@ -107,6 +107,16 @@ int NativeObject::setVisibility(bool)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+int NativeObject::startLayout()
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+int NativeObject::finishLayout()
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 int NativeObject::fireEvent(const char*, const TiObject*) const
 {
     return NATIVE_ERROR_NOTSUPPORTED;
