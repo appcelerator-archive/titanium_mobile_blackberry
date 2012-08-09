@@ -28,7 +28,7 @@ void TiUISlider::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
-        TiProxy::initializeTiObject(parentContext);
+        TiUIBase::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_SLIDER);
         setNativeObject(obj);
         obj->release();

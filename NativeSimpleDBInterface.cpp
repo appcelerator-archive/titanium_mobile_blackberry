@@ -79,7 +79,7 @@ void NativeSimpleDBInterface::set(const string& key, const string& value)
 {
     open();
     QSqlQuery query(db_);
-    query.prepare("INSERT INTO " + table_ + " (simpleKey, simpleValue) VALUES (:simpleKey, :simpleValue)");
+    query.prepare("REPLACE INTO " + table_ + " (simpleKey, simpleValue) VALUES (:simpleKey, :simpleValue)");
     QString keyQString = QString::fromUtf8(key.c_str());
     query.bindValue(":simpleKey", keyQString);
     query.bindValue(":simpleValue", QString::fromUtf8(value.c_str()));

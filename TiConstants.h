@@ -47,6 +47,16 @@ enum TI_BATTERY_STATE
 
 }
 
+namespace Codec
+{
+enum TI_BYTE_ORDER
+{
+    UNDEFINED = -1,
+    BIG_ENDIAN,
+    LITTLE_ENDIAN
+};
+}
+
 }
 
 
