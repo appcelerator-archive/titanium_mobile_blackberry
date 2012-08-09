@@ -200,6 +200,11 @@ const static TiProperty g_tiProperties[] =
         N_PROP_WINDOW
     },
 
+    {
+        "zIndex", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_ZINDEX
+    },
+
 };
 
 TiUIBase::TiUIBase()

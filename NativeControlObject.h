@@ -80,6 +80,7 @@ public:
     virtual int getTop(TiObject* obj);
     virtual int getVisible(TiObject* obj);
     virtual int getWidth(TiObject* obj);
+    virtual int getZIndex(TiObject* obj);
     virtual int setAnchorPoint(TiObject* obj);
     virtual int setBackgroundColor(TiObject* obj);
     virtual int setBackgroundDisableColor(TiObject* obj);
@@ -114,6 +115,7 @@ public:
     virtual int setVisible(TiObject* obj);
     virtual int setWidth(TiObject* obj);
     virtual int setWindow(TiObject* obj);
+    virtual int setZIndex(TiObject* obj);
 
     static int getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a);
     static int getBoolean(TiObject* obj, bool* value);
@@ -134,6 +136,8 @@ protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
     int addChildImpl(NativeObject* obj);
     int removeChildImpl(NativeObject* obj);
+    static int setZOrder(bb::cascades::Container* container, bb::cascades::Control* control,
+                         float zindex, bool zindexIsDefined);
 
 private:
     friend class NativePageObject;
