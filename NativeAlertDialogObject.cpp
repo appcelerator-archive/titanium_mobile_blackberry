@@ -12,9 +12,8 @@
 #include "TiObject.h"
 
 NativeAlertDialogObject::NativeAlertDialogObject()
+    : nativeDialog_(NULL), cancelIndex_(-1)
 {
-    nativeDialog_ = NULL;
-    cancelIndex_ = -1;
 }
 
 NativeAlertDialogObject::~NativeAlertDialogObject()
@@ -39,6 +38,7 @@ int NativeAlertDialogObject::initialize()
 
 int NativeAlertDialogObject::setTitle(TiObject* obj)
 {
+    Q_ASSERT(nativeDialog_ != NULL);
     QString title;
     int error = NativeControlObject::getString(obj, title);
     if (error != NATIVE_ERROR_OK)
@@ -51,6 +51,7 @@ int NativeAlertDialogObject::setTitle(TiObject* obj)
 
 int NativeAlertDialogObject::setMessage(TiObject* obj)
 {
+    Q_ASSERT(nativeDialog_ != NULL);
     QString message;
     int error = NativeControlObject::getString(obj, message);
     if (error != NATIVE_ERROR_OK)
@@ -63,6 +64,7 @@ int NativeAlertDialogObject::setMessage(TiObject* obj)
 
 int NativeAlertDialogObject::setButtonNames(TiObject* obj)
 {
+    Q_ASSERT(nativeDialog_ != NULL);
     QVector<QString> buttons;
     int error = NativeControlObject::getStringArray(obj, buttons);
     if (!N_SUCCEEDED(error))
@@ -73,6 +75,8 @@ int NativeAlertDialogObject::setButtonNames(TiObject* obj)
     // Omit default buttons if button names provided
     nativeDialog_->confirmButton()->setLabel(QString::null);
     nativeDialog_->cancelButton()->setLabel(QString::null);
+    // Clear possibly existed buttons
+    nativeDialog_->clearButtons();
     for (int i = 0; i < buttons.size(); ++i)
     {
         bb::system::SystemUiButton* button = new bb::system::SystemUiButton();
@@ -86,6 +90,7 @@ int NativeAlertDialogObject::setButtonNames(TiObject* obj)
 
 int NativeAlertDialogObject::getButtonNames(TiObject* obj)
 {
+    Q_ASSERT(nativeDialog_ != NULL);
     int buttonsCount = nativeDialog_->buttonCount();
     Handle<Array> buttonsArray = Array::New(buttonsCount);
     for (int i = 0; i < buttonsCount; ++i)
@@ -99,6 +104,7 @@ int NativeAlertDialogObject::getButtonNames(TiObject* obj)
 
 int NativeAlertDialogObject::setCancel(TiObject* obj)
 {
+    Q_ASSERT(nativeDialog_ != NULL);
     int error = NativeControlObject::getInteger(obj, &cancelIndex_);
     if (error != NATIVE_ERROR_OK)
     {
