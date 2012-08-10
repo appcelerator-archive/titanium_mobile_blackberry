@@ -26,7 +26,7 @@ typedef Handle<Value>(*GET_PROPERTY_VALUE_CALLBACK)(int, void*);
 class TiPropertyMapObject : public TiObject
 {
 public:
-    static TiPropertyMapObject* addProperty(TiUIBase* parent, const char* name, int propertyNumber,
+    static TiPropertyMapObject* addProperty(TiObject* parent, const char* name, int propertyNumber,
                                             MODIFY_VALUE_CALLBACK cb, GET_PROPERTY_VALUE_CALLBACK gcb, void* context);
     static TiPropertyMapObject* addProperty(TiObject* parent, const char* name, int propertyNumber,
                                             GET_PROPERTY_VALUE_CALLBACK cb, void* context);
@@ -41,7 +41,7 @@ private:
     GET_PROPERTY_VALUE_CALLBACK getCallback_;
     void* context_;
     NativeObject* nativeObject_;
-    TiUIBase* parentObject_;
+    TiObject* parentObject_;
 
 };
 

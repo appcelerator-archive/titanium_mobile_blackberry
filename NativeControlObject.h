@@ -75,10 +75,13 @@ public:
     virtual int getPropertyValue(size_t propertyNumber, TiObject* obj);
     virtual int getHeight(TiObject* obj);
     virtual int getLeft(TiObject* obj);
+    virtual int getRect(TiObject* obj);
     virtual int getRight(TiObject* obj);
+    virtual int getSize(TiObject* obj);
     virtual int getTop(TiObject* obj);
     virtual int getVisible(TiObject* obj);
     virtual int getWidth(TiObject* obj);
+    virtual int getZIndex(TiObject* obj);
     virtual int setAnchorPoint(TiObject* obj);
     virtual int setBackgroundColor(TiObject* obj);
     virtual int setBackgroundDisableColor(TiObject* obj);
@@ -114,6 +117,7 @@ public:
     virtual int setWidth(TiObject* obj);
     virtual int setWindow(TiObject* obj);
     virtual int startLayout();
+    virtual int setZIndex(TiObject* obj);
 
     static int getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a);
     static int getBoolean(TiObject* obj, bool* value);
@@ -134,6 +138,8 @@ protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
     int addChildImpl(NativeObject* obj);
     int removeChildImpl(NativeObject* obj);
+    static int setZOrder(bb::cascades::Container* container, bb::cascades::Control* control,
+                         float zindex, bool zindexIsDefined);
 
 private:
     friend class NativePageObject;
@@ -146,6 +152,12 @@ private:
     int updateTop();
     int updateRight();
     int updateBottom();
+    bool heightIsUpdated;
+    bool widthIsUpdated;
+    bool leftIsUpdated;
+    bool topIsUpdated;
+    bool rightIsUpdated;
+    bool bottomIsUpdate;
 
     bb::cascades::Container* container_;
     bb::cascades::Control* control_;

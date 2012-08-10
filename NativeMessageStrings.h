@@ -38,6 +38,7 @@ N_MESSAGESTRINGS_CONST_DEF(char*, Failed_to_remove_key, "Failed to remove key (%
 N_MESSAGESTRINGS_CONST_DEF(char*, Failed_to_set_key, "Failed to set key (%1, %2): %3");
 N_MESSAGESTRINGS_CONST_DEF(char*, INTERNAL__An_error_occurred_while_parsing_the_format_string, "INTERNAL: An error occurred while parsing the format string");
 N_MESSAGESTRINGS_CONST_DEF(char*, Numbered_argument_exceeds_the_length_of_provided_arguments, "Numbered argument exceeds the length of provided arguments");
+N_MESSAGESTRINGS_CONST_DEF(char*, Out_of_bounds, "Out of bounds");
 N_MESSAGESTRINGS_CONST_DEF(char*, Unknown_key_value_received, "Unknown key:value received");
 N_MESSAGESTRINGS_CONST_DEF(char*, Unknown_value_received, "Unknown value received");
 N_MESSAGESTRINGS_CONST_DEF(char*, Unsupported_event_name_, "Unsupported event name ");

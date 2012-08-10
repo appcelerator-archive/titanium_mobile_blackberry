@@ -26,7 +26,7 @@ TiPropertyMapObject::~TiPropertyMapObject()
     }
 }
 
-TiPropertyMapObject* TiPropertyMapObject::addProperty(TiUIBase* parent, const char* name, int propertyNumber,
+TiPropertyMapObject* TiPropertyMapObject::addProperty(TiObject* parent, const char* name, int propertyNumber,
         MODIFY_VALUE_CALLBACK cb, GET_PROPERTY_VALUE_CALLBACK gcb, void* context)
 {
     TiPropertyMapObject* object = new TiPropertyMapObject(name);

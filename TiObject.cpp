@@ -335,7 +335,7 @@ Handle<Value> TiObject::propGetter_(Local<String> prop, const AccessorInfo& info
             return result;
         }
         */
-        return Undefined();
+        return Handle<Value>();
     }
     Handle<Value> ret = propObject->getValue();
     if (!ret.IsEmpty())

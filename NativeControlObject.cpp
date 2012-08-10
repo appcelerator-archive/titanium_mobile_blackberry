@@ -23,6 +23,8 @@
 #include <QColor>
 #include <QRectF>
 
+#define ZINDEX_PROPERTY_NAME            "tizindex"
+
 // 25.4mm in 1"
 #define INCHES_TO_MM_MUL                25.4f
 // 10mm in 1cm
@@ -142,7 +144,13 @@ NativeControlObject::NativeControlObject() :
     width_(0),
     height_(0),
     right_(0),
-    batchUpdating_(false)
+    batchUpdating_(false),
+    heightIsUpdated(false),
+    widthIsUpdated(false),
+    leftIsUpdated(false),
+    topIsUpdated(false),
+    rightIsUpdated(false),
+    bottomIsUpdate(false)
 {
     if ((g_width <= 0) || (g_height <= 0))
     {
@@ -237,8 +245,17 @@ int NativeControlObject::addChildImpl(NativeObject* obj)
 {
     Q_ASSERT(container_ != NULL);
     bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
-    container_->add(control);
-    return NATIVE_ERROR_OK;
+    TiObject* tmpObj = new TiObject;
+    obj->getPropertyValue(N_PROP_ZINDEX, tmpObj);
+    Handle<Value> zindex = tmpObj->getValue();
+    float zindexValue = 0.0;
+    if (zindex->IsNumber())
+    {
+        zindexValue = (float)(zindex->ToNumber()->Value());
+    }
+    tmpObj->release();
+    int error = setZOrder(container_, control, zindexValue, zindex->IsNumber());
+    return error;
 }
 
 int NativeControlObject::removeChildNativeObject(NativeObject* obj)
@@ -256,6 +273,57 @@ int NativeControlObject::removeChildImpl(NativeObject* obj)
     Q_ASSERT(container_ != NULL);
     bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
     container_->remove(control);
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::setZOrder(bb::cascades::Container* container, bb::cascades::Control* control,
+                                   float zindex, bool zindexIsDefined)
+{
+    Q_ASSERT(container != NULL);
+    Q_ASSERT(control != NULL);
+    container->remove(control);
+    int childControls = container->count();
+    int insertPosition = -1;
+    for (int i = childControls; i > 0; i--)
+    {
+        bb::cascades::Control* child = container->at(i - 1);
+        QVariant zqval = child->property(ZINDEX_PROPERTY_NAME);
+        if (zindexIsDefined)
+        {
+            if (zqval.isValid())
+            {
+                bool conversionSucceeded = false;
+                float childZValue = zqval.toFloat(&conversionSucceeded);
+                if (!conversionSucceeded)
+                {
+                    return NATIVE_ERROR_INVALID_ARG;
+                }
+                if (zindex > childZValue)
+                {
+                    insertPosition = i;
+                    break;
+                }
+            }
+            else
+            {
+                insertPosition = i;
+                break;
+            }
+        }
+        else
+        {
+            if (!zqval.isValid())
+            {
+                break;
+            }
+            insertPosition = i;
+        }
+    }
+    if (insertPosition < 0)
+    {
+        insertPosition = childControls;
+    }
+    container->insert(insertPosition, control);
     return NATIVE_ERROR_OK;
 }
 
@@ -284,12 +352,36 @@ int NativeControlObject::finishLayout()
 
 void NativeControlObject::updateViewLayout()
 {
-    updateWidth();
-    updateHeight();
-    updateLeft();
-    updateTop();
-    updateRight();
-    updateBottom();
+    if (widthIsUpdated)
+    {
+        updateWidth();
+        widthIsUpdated = false;
+    }
+    if (heightIsUpdated)
+    {
+        updateHeight();
+        heightIsUpdated = false;
+    }
+    if (leftIsUpdated)
+    {
+        updateLeft();
+        leftIsUpdated = false;
+    }
+    if (topIsUpdated)
+    {
+        updateTop();
+        topIsUpdated = false;
+    }
+    if (rightIsUpdated)
+    {
+        updateRight();
+        rightIsUpdated = false;
+    }
+    if (bottomIsUpdate)
+    {
+        updateBottom();
+        bottomIsUpdate = false;
+    }
     //TODO: need to verify if other UI.View properties needs to be updated as well
 }
 
@@ -413,6 +505,10 @@ int NativeControlObject::setHeight(TiObject* obj)
     {
         return updateHeight();
     }
+    else
+    {
+        heightIsUpdated = true;
+    }
     return NATIVE_ERROR_OK;
 }
 
@@ -471,6 +567,10 @@ int NativeControlObject::setLeft(TiObject* obj)
     {
         return updateLeft();
     }
+    else
+    {
+        leftIsUpdated = true;
+    }
     return NATIVE_ERROR_OK;
 }
 
@@ -507,6 +607,10 @@ int NativeControlObject::setBottom(TiObject* obj)
     {
         return updateBottom();
     }
+    else
+    {
+        bottomIsUpdate = true;
+    }
     return NATIVE_ERROR_OK;
 }
 
@@ -541,6 +645,10 @@ int NativeControlObject::setRight(TiObject* obj)
     if (batchUpdating_)
     {
         return updateRight();
+    }
+    else
+    {
+        rightIsUpdated = true;
     }
     return NATIVE_ERROR_OK;
 }
@@ -640,7 +748,7 @@ int NativeControlObject::setTop(TiObject* obj)
     Q_ASSERT(container_ != NULL);
     Q_ASSERT(obj != NULL);
     obj->addRef();
-    if (top_)
+    if (top_ != NULL)
     {
         top_->release();
     }
@@ -648,6 +756,10 @@ int NativeControlObject::setTop(TiObject* obj)
     if (!batchUpdating_)
     {
         return updateTop();
+    }
+    else
+    {
+        topIsUpdated = true;
     }
     return NATIVE_ERROR_OK;
 }
@@ -702,14 +814,7 @@ int NativeControlObject::getWidth(TiObject* obj)
     Q_ASSERT(obj != NULL);
     if (width_ != NULL)
     {
-        if (width_->getValue()->IsNumber())
-        {
-            obj->setValue(Handle<Number>::Cast(width_->getValue()));
-        }
-        else
-        {
-            obj->setValue(width_->getValue());
-        }
+        obj->setValue(width_->getValue());
     }
     return NATIVE_ERROR_OK;
 }
@@ -720,14 +825,7 @@ int NativeControlObject::getHeight(TiObject* obj)
     Q_ASSERT(obj != NULL);
     if (height_ != NULL)
     {
-        if (height_->getValue()->IsNumber())
-        {
-            obj->setValue(Handle<Number>::Cast(height_->getValue()));
-        }
-        else
-        {
-            obj->setValue(height_->getValue());
-        }
+        obj->setValue(Handle<Number>::Cast(height_->getValue()));
     }
     return NATIVE_ERROR_OK;
 }
@@ -738,14 +836,7 @@ int NativeControlObject::getTop(TiObject* obj)
     Q_ASSERT(obj != NULL);
     if (top_ != NULL)
     {
-        if (top_->getValue()->IsNumber())
-        {
-            obj->setValue(Handle<Number>::Cast(top_->getValue()));
-        }
-        else
-        {
-            obj->setValue(top_->getValue());
-        }
+        obj->setValue(Handle<Number>::Cast(top_->getValue()));
     }
     return NATIVE_ERROR_OK;
 }
@@ -756,14 +847,7 @@ int NativeControlObject::getLeft(TiObject* obj)
     Q_ASSERT(obj != NULL);
     if (left_ != NULL)
     {
-        if (left_->getValue()->IsNumber())
-        {
-            obj->setValue(Handle<Number>::Cast(left_->getValue()));
-        }
-        else
-        {
-            obj->setValue(left_->getValue());
-        }
+        obj->setValue(left_->getValue());
     }
     return NATIVE_ERROR_OK;
 }
@@ -775,14 +859,7 @@ int NativeControlObject::getBottom(TiObject* obj)
     Q_ASSERT(obj != NULL);
     if (bottom_ != NULL)
     {
-        if (bottom_->getValue()->IsNumber())
-        {
-            obj->setValue(Handle<Number>::Cast(bottom_->getValue()));
-        }
-        else
-        {
-            obj->setValue(bottom_->getValue());
-        }
+        obj->setValue(bottom_->getValue());
     }
     return NATIVE_ERROR_OK;
 }
@@ -793,15 +870,32 @@ int NativeControlObject::getRight(TiObject* obj)
     Q_ASSERT(obj != NULL);
     if (right_ != NULL)
     {
-        if (right_->getValue()->IsNumber())
-        {
-            obj->setValue(Handle<Number>::Cast(right_->getValue()));
-        }
-        else
-        {
-            obj->setValue(right_->getValue());
-        }
+        obj->setValue(right_->getValue());
     }
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(getRect)
+int NativeControlObject::getRect(TiObject* obj)
+{
+    Handle<Object> value = Object::New();
+    value->Set(String::New("height"), Number::New(rect_.height()));
+    value->Set(String::New("width"), Number::New(rect_.width()));
+    value->Set(String::New("x"), Number::New(rect_.x()));
+    value->Set(String::New("y"), Number::New(rect_.y()));
+    obj->setValue(value);
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(getSize)
+int NativeControlObject::getSize(TiObject* obj)
+{
+    Handle<Object> value = Object::New();
+    value->Set(String::New("height"), Number::New(rect_.height()));
+    value->Set(String::New("width"), Number::New(rect_.width()));
+    value->Set(String::New("x"), Number::New(0));
+    value->Set(String::New("y"), Number::New(0));
+    obj->setValue(value);
     return NATIVE_ERROR_OK;
 }
 
@@ -819,6 +913,10 @@ int NativeControlObject::setWidth(TiObject* obj)
     if (!batchUpdating_)
     {
         return updateWidth();
+    }
+    else
+    {
+        widthIsUpdated = true;
     }
     return NATIVE_ERROR_OK;
 }
@@ -857,6 +955,49 @@ int NativeControlObject::setWindow(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setZIndex)
+int NativeControlObject::setZIndex(TiObject* obj)
+{
+    Q_ASSERT(container_ != NULL);
+    float value;
+    int error = NativeControlObject::getFloat(obj, &value);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+    container_->setProperty(ZINDEX_PROPERTY_NAME, QVariant(value));
+    bb::cascades::Container* parent = (bb::cascades::Container*)container_->parent();
+    if (parent != NULL)
+    {
+        error = setZOrder(parent, container_, value, true);
+    }
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(getZIndex)
+int NativeControlObject::getZIndex(TiObject* obj)
+{
+    Q_ASSERT(container_ != NULL);
+    QVariant value = container_->property(ZINDEX_PROPERTY_NAME);
+    if (value.isValid())
+    {
+        bool conversionSucceeded = false;
+        float controlZValue = value.toFloat(&conversionSucceeded);
+        if (!conversionSucceeded)
+        {
+            return NATIVE_ERROR_INVALID_ARG;
+        }
+        obj->setValue(Number::New(controlZValue));
+    }
+    else
+    {
+        obj->setValue(Undefined());
+        return NATIVE_ERROR_OK;
+    }
+    return NATIVE_ERROR_OK;
+}
+
+
 PROP_SETGET(setIcon)
 int NativeControlObject::setIcon(TiObject*)
 {
@@ -877,6 +1018,7 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_ANCHOR_POINT, PROP_SETGET_FUNCTION(setAnchorPoint), NULL},
     {N_PROP_BACKGROUND_COLOR, PROP_SETGET_FUNCTION(setBackgroundColor), NULL},
     {N_PROP_BACKGROUND_DISABLED_COLOR, PROP_SETGET_FUNCTION(setBackgroundDisableColor), NULL},
+    {N_PROP_BOTTOM, PROP_SETGET_FUNCTION(setBottom), PROP_SETGET_FUNCTION(getBottom)},
     {N_PROP_COLOR, PROP_SETGET_FUNCTION(setColor), NULL},
     {N_PROP_BOTTOM, PROP_SETGET_FUNCTION(setBottom), PROP_SETGET_FUNCTION(getBottom)},
     {N_PROP_DATA, PROP_SETGET_FUNCTION(setData), NULL},
@@ -895,8 +1037,10 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_MINDATE, PROP_SETGET_FUNCTION(setMinDate), NULL},
     {N_PROP_OPACITY, PROP_SETGET_FUNCTION(setOpacity), NULL},
     {N_PROP_OPTIONS, PROP_SETGET_FUNCTION(setOptions), NULL},
+    {N_PROP_RECT, NULL, PROP_SETGET_FUNCTION(getRect)},
     {N_PROP_RIGHT, PROP_SETGET_FUNCTION(setRight), PROP_SETGET_FUNCTION(getRight)},
     {N_PROP_SELECTED_INDEX, PROP_SETGET_FUNCTION(setSelectedIndex), NULL},
+    {N_PROP_SIZE, NULL, PROP_SETGET_FUNCTION(getSize)},
     {N_PROP_TEXT, PROP_SETGET_FUNCTION(setText), NULL},
     {N_PROP_TEXT_ALIGN, PROP_SETGET_FUNCTION(setTextAlign), NULL},
     {N_PROP_TITLE, PROP_SETGET_FUNCTION(setTitle), NULL},
@@ -905,7 +1049,8 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_VALUE, PROP_SETGET_FUNCTION(setValue), NULL},
     {N_PROP_VISIBLE, PROP_SETGET_FUNCTION(setVisible), PROP_SETGET_FUNCTION(getVisible)},
     {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), PROP_SETGET_FUNCTION(getWidth)},
-    {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setWindow), NULL}
+    {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setWindow), NULL},
+    {N_PROP_ZINDEX, PROP_SETGET_FUNCTION(setZIndex), PROP_SETGET_FUNCTION(getZIndex)}
 };
 
 static SetGetProperties g_props(g_propSetGet, GET_ARRAY_SIZE(g_propSetGet));
