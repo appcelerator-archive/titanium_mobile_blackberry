@@ -7,10 +7,11 @@
 
 #include "TiUIAlertDialog.h"
 
+#include "NativeAlertDialogObject.h"
 #include "TiGenericFunctionObject.h"
 
 TiUIAlertDialog::TiUIAlertDialog()
-    : TiProxy("")
+    : TiUIBase("")
 {
 }
 
@@ -28,7 +29,7 @@ TiUIAlertDialog* TiUIAlertDialog::createAlertDialog(NativeObjectFactory* nativeO
 
 void TiUIAlertDialog::onCreateStaticMembers()
 {
-    TiProxy::onCreateStaticMembers();
+    TiUIBase::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "show", this, show_);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "hide", this, hide_);
 }
@@ -48,7 +49,7 @@ Handle<Value> TiUIAlertDialog::show_(void* userContext, TiObject*, const Argumen
 {
     HandleScope handleScope;
     TiUIAlertDialog* obj = (TiUIAlertDialog*) userContext;
-    NativeObject* no = obj->getNativeObject();
+    NativeAlertDialogObject* no = (NativeAlertDialogObject*)obj->getNativeObject();
     no->show();
     no->release();
     return Undefined();
@@ -58,7 +59,7 @@ Handle<Value> TiUIAlertDialog::hide_(void* userContext, TiObject*, const Argumen
 {
     HandleScope handleScope;
     TiUIAlertDialog* obj = (TiUIAlertDialog*) userContext;
-    NativeObject* no = obj->getNativeObject();
+    NativeAlertDialogObject* no = (NativeAlertDialogObject*)obj->getNativeObject();
     no->hide();
     no->release();
     return Undefined();

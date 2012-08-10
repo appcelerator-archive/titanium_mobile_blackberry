@@ -112,16 +112,6 @@ int NativeObject::fireEvent(const char*, const TiObject*) const
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-int NativeObject::show()
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
-int NativeObject::hide()
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
 void NativeObject::setupEvents(TiEventContainerFactory*)
 {
     // Do nothing in the base class
