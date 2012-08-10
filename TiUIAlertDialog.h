@@ -8,7 +8,7 @@
 #ifndef TIUIALERTDIALOG_H_
 #define TIUIALERTDIALOG_H_
 
-#include "TiProxy.h"
+#include "TiUIBase.h"
 
 /*
  * TiUIAlertDialog
@@ -17,7 +17,7 @@
  *
  */
 
-class TiUIAlertDialog : public TiProxy
+class TiUIAlertDialog : public TiUIBase
 {
 public:
     static TiUIAlertDialog* createAlertDialog(NativeObjectFactory* nativeObjectFactory);

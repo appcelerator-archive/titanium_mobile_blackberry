@@ -72,11 +72,13 @@ public:
     virtual int removeChildNativeObject(NativeObject* obj);
     virtual int finishLayout();
     virtual int getBottom(TiObject* obj);
+    virtual int getButtonNames(TiObject* obj);
+    virtual int getCancel(TiObject* obj);
     virtual int getPropertyValue(size_t propertyNumber, TiObject* obj);
     virtual int getHeight(TiObject* obj);
     virtual int getLeft(TiObject* obj);
-    virtual int getRect(TiObject* obj);
     virtual int getRight(TiObject* obj);
+    virtual int getRect(TiObject* obj);
     virtual int getSize(TiObject* obj);
     virtual int getTop(TiObject* obj);
     virtual int getVisible(TiObject* obj);
@@ -86,6 +88,8 @@ public:
     virtual int setBackgroundColor(TiObject* obj);
     virtual int setBackgroundDisableColor(TiObject* obj);
     virtual int setBottom(TiObject* obj);
+    virtual int setButtonNames(TiObject* obj);
+    virtual int setCancel(TiObject* obj);
     virtual int setColor(TiObject* obj);
     virtual int setData(TiObject* obj);
     virtual int setEnabled(TiObject* obj);

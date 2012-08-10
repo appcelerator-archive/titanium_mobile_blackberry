@@ -9,8 +9,10 @@
 
 #include "NativeControlObject.h"
 #include "TiEventContainerFactory.h"
+#include "TiObject.h"
 
 NativeAlertDialogObject::NativeAlertDialogObject()
+    : nativeDialog_(NULL), cancelIndex_(-1)
 {
 }
 
@@ -30,51 +32,123 @@ int NativeAlertDialogObject::getObjectType() const
 
 int NativeAlertDialogObject::initialize()
 {
+    nativeDialog_ = new bb::system::SystemDialog();
     return NATIVE_ERROR_OK;
 }
 
 int NativeAlertDialogObject::setTitle(TiObject* obj)
 {
-    int error = NativeControlObject::getString(obj, alertTitle_);
+    Q_ASSERT(nativeDialog_ != NULL);
+    QString title;
+    int error = NativeControlObject::getString(obj, title);
     if (error != NATIVE_ERROR_OK)
     {
         return error;
     }
+    nativeDialog_->setTitle(title);
     return NATIVE_ERROR_OK;
 }
 
 int NativeAlertDialogObject::setMessage(TiObject* obj)
 {
-    int error = NativeControlObject::getString(obj, alertMessage_);
+    Q_ASSERT(nativeDialog_ != NULL);
+    QString message;
+    int error = NativeControlObject::getString(obj, message);
     if (error != NATIVE_ERROR_OK)
     {
         return error;
     }
+    nativeDialog_->setBody(message);
+    return NATIVE_ERROR_OK;
+}
+
+int NativeAlertDialogObject::setButtonNames(TiObject* obj)
+{
+    Q_ASSERT(nativeDialog_ != NULL);
+    QVector<QString> buttons;
+    int error = NativeControlObject::getStringArray(obj, buttons);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+
+    // Omit default buttons if button names provided
+    nativeDialog_->confirmButton()->setLabel(QString::null);
+    nativeDialog_->cancelButton()->setLabel(QString::null);
+    // Clear possibly existed buttons
+    nativeDialog_->clearButtons();
+    for (int i = 0; i < buttons.size(); ++i)
+    {
+        bb::system::SystemUiButton* button = new bb::system::SystemUiButton();
+        button->setLabel(buttons[i]);
+        button->setProperty("index", QVariant::fromValue(i));
+        button->setProperty("cancel", QVariant::fromValue(cancelIndex_ != -1 && cancelIndex_ == i));
+        nativeDialog_->appendButton(button);
+    }
+    return NATIVE_ERROR_OK;
+}
+
+int NativeAlertDialogObject::getButtonNames(TiObject* obj)
+{
+    Q_ASSERT(nativeDialog_ != NULL);
+    int buttonsCount = nativeDialog_->buttonCount();
+    Handle<Array> buttonsArray = Array::New(buttonsCount);
+    for (int i = 0; i < buttonsCount; ++i)
+    {
+        QString str = nativeDialog_->buttonAt(i)->label();
+        buttonsArray->Set(Integer::New(i), String::New(str.toStdString().c_str()));
+    }
+    obj->setValue(buttonsArray);
+    return NATIVE_ERROR_OK;
+}
+
+int NativeAlertDialogObject::setCancel(TiObject* obj)
+{
+    Q_ASSERT(nativeDialog_ != NULL);
+    int error = NativeControlObject::getInteger(obj, &cancelIndex_);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    bb::system::SystemUiButton* button = nativeDialog_->buttonAt(cancelIndex_);
+    if (button)
+    {
+        button->setProperty("cancel", QVariant::fromValue(true));
+    }
+    return NATIVE_ERROR_OK;
+}
+
+int NativeAlertDialogObject::getCancel(TiObject* obj)
+{
+    Handle<Value> cancelProperty = Number::New(cancelIndex_);
+    obj->setValue(cancelProperty);
     return NATIVE_ERROR_OK;
 }
 
 int NativeAlertDialogObject::show()
 {
-    dialog_create_alert(&nativeDialog_);
-    dialog_set_alert_message_text(nativeDialog_, alertMessage_.toUtf8().constData());
-    dialog_set_title_text(nativeDialog_, alertTitle_.toUtf8().constData());
-    dialog_set_background_alpha(nativeDialog_, 0.0);
-    dialog_set_cover_sensitivity(nativeDialog_, DIALOG_COVER_SENSITIVITY_ALPHA_TEST);
-
-    dialog_add_button(nativeDialog_, DIALOG_CANCEL_LABEL, true, NULL, true);
-    dialog_add_button(nativeDialog_, DIALOG_OK_LABEL, true, NULL, true);
-    dialog_show(nativeDialog_);
+    nativeDialog_->show();
     return NATIVE_ERROR_OK;
 }
 
 int NativeAlertDialogObject::hide()
 {
-    dialog_cancel(nativeDialog_);
-    dialog_destroy(nativeDialog_);
+    nativeDialog_->cancel();
     return NATIVE_ERROR_OK;
 }
 
 NAHANDLE NativeAlertDialogObject::getNativeHandle() const
 {
-    return NULL;
+    return nativeDialog_;
+}
+
+void NativeAlertDialogObject::setupEvents(TiEventContainerFactory* containerFactory)
+{
+    NativeControlObject::setupEvents(containerFactory);
+    TiEventContainer* eventClick = containerFactory->createEventContainer();
+    eventClick->setDataProperty("type", tetCLICK);
+    events_.insert(tetCLICK, EventPairSmartPtr(eventClick, new AlertDialogEventHandler(eventClick)));
+    QObject::connect(nativeDialog_, SIGNAL(buttonSelected(bb::system::SystemUiButton*)), events_[tetCLICK]->handler, SLOT(buttonSelected(bb::system::SystemUiButton*)));
+    QObject::connect(nativeDialog_, SIGNAL(accepted(void)), events_[tetCLICK]->handler, SLOT(accepted(void)));
+    QObject::connect(nativeDialog_, SIGNAL(rejected(void)), events_[tetCLICK]->handler, SLOT(rejected(void)));
 }

@@ -631,6 +631,30 @@ int NativeControlObject::updateBottom()
     return NATIVE_ERROR_OK;
 }
 
+PROP_SETGET(setButtonNames)
+int NativeControlObject::setButtonNames(TiObject* /*obj*/)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(getButtonNames)
+int NativeControlObject::getButtonNames(TiObject* /*obj*/)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setCancel)
+int NativeControlObject::setCancel(TiObject* /*obj*/)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(getCancel)
+int NativeControlObject::getCancel(TiObject* /*obj*/)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 PROP_SETGET(setRight)
 int NativeControlObject::setRight(TiObject* obj)
 {
@@ -825,7 +849,7 @@ int NativeControlObject::getHeight(TiObject* obj)
     Q_ASSERT(obj != NULL);
     if (height_ != NULL)
     {
-        obj->setValue(Handle<Number>::Cast(height_->getValue()));
+        obj->setValue(height_->getValue());
     }
     return NATIVE_ERROR_OK;
 }
@@ -836,7 +860,7 @@ int NativeControlObject::getTop(TiObject* obj)
     Q_ASSERT(obj != NULL);
     if (top_ != NULL)
     {
-        obj->setValue(Handle<Number>::Cast(top_->getValue()));
+        obj->setValue(top_->getValue());
     }
     return NATIVE_ERROR_OK;
 }
@@ -1019,6 +1043,8 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_BACKGROUND_COLOR, PROP_SETGET_FUNCTION(setBackgroundColor), NULL},
     {N_PROP_BACKGROUND_DISABLED_COLOR, PROP_SETGET_FUNCTION(setBackgroundDisableColor), NULL},
     {N_PROP_BOTTOM, PROP_SETGET_FUNCTION(setBottom), PROP_SETGET_FUNCTION(getBottom)},
+    {N_PROP_BUTTONNAMES, PROP_SETGET_FUNCTION(setButtonNames), PROP_SETGET_FUNCTION(getButtonNames)},
+    {N_PROP_CANCEL, PROP_SETGET_FUNCTION(setCancel), PROP_SETGET_FUNCTION(getCancel)},
     {N_PROP_COLOR, PROP_SETGET_FUNCTION(setColor), NULL},
     {N_PROP_BOTTOM, PROP_SETGET_FUNCTION(setBottom), PROP_SETGET_FUNCTION(getBottom)},
     {N_PROP_DATA, PROP_SETGET_FUNCTION(setData), NULL},

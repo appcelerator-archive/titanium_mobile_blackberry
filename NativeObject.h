@@ -69,6 +69,8 @@ enum NATIVE_PROP
     , N_PROP_BORDER_RADIUS
     , N_PROP_BORDER_WIDTH
     , N_PROP_BOTTOM
+    , N_PROP_BUTTONNAMES
+    , N_PROP_CANCEL
     , N_PROP_CENTER
     , N_PROP_CHILDREN
     , N_PROP_COLOR
@@ -155,8 +157,6 @@ public:
     virtual int startLayout();
     virtual int stop();
     virtual int openWindowOnTab(NativeObject* obj);
-    virtual int show();
-    virtual int hide();
     virtual void completeInitialization();
     virtual bool isInitializationComplete() const;
     virtual int setEventHandler(const char* eventName, TiEvent* event);

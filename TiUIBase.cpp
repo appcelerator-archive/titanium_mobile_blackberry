@@ -46,8 +46,18 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "buttonNames", TI_PROP_PERMISSION_READ,
+        N_PROP_BUTTONNAMES
+    },
+
+    {
         "backgroundDisableColor", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_BACKGROUND_DISABLED_COLOR
+    },
+
+    {
+        "cancel", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_CANCEL
     },
 
     {
