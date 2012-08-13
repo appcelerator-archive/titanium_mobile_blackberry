@@ -27,7 +27,7 @@ public:
     static NativeImageViewObject* createImageView();
     virtual int getObjectType() const;
     virtual int initialize();
-    virtual int setImage(const char* image);
+    virtual int setImage(TiObject* obj);
 
 protected:
     virtual ~NativeImageViewObject();

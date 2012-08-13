@@ -7,6 +7,7 @@
 
 #include "NativeObjectFactory.h"
 #include "NativeTabGroupObject.h"
+#include "TiCascadesApp.h"
 #include <bb/cascades/TabbedPane>
 
 using namespace bb::cascades;
@@ -94,6 +95,9 @@ int NativeTabGroupObject::setActiveTab(int index)
 
 int NativeTabGroupObject::open()
 {
+    Q_ASSERT(nativeObjectFactory_ != 0);
+    Q_ASSERT(nativeObjectFactory_->getCascadeApp() != 0);
     nativeObjectFactory_->setRootContainer(this);
+    nativeObjectFactory_->getCascadeApp()->setScene(this);
     return NATIVE_ERROR_OK;
 }

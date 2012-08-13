@@ -32,6 +32,10 @@ public:
     void setRootContainer(NativeObject* container);
     void setEventContainerFactory(TiEventContainerFactory* eventContainerFactory);
     TiEventContainerFactory* getEventContainerFactory() const;
+    TiCascadesApp* getCascadeApp()
+    {
+        return cascadesApp_;
+    }
 
     static const NativeStringInterface* getNativeStringInterface();
 

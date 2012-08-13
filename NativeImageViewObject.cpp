@@ -39,10 +39,15 @@ int NativeImageViewObject::initialize()
     return NATIVE_ERROR_OK;
 }
 
-int NativeImageViewObject::setImage(const char* /*image*/)
+int NativeImageViewObject::setImage(TiObject* obj)
 {
-    // FIXME: following call fails to compile on R4
-    //imageView_->setImage(bb::cascades::Image(image));
+    QString image;
+    int error = NativeControlObject::getString(obj, image);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    imageView_->setImage(bb::cascades::Image(QUrl(image)));
     return NATIVE_ERROR_OK;
 }
 

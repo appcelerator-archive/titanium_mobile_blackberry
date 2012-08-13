@@ -203,22 +203,26 @@ Handle<Value> TiRootObject::_L(void*, TiObject*, const Arguments& args)
 
 Handle<Value> TiRootObject::_clearInterval(void*, TiObject*, const Arguments& args)
 {
+    if ((args.Length() != 1) || (!args[0]->IsNumber()))
+    {
+        return ThrowException(String::New(Ti::Msg::Invalid_arguments));
+    }
     clearTimeoutHelper(args, true);
     return Undefined();
 }
 
 Handle<Value> TiRootObject::_clearTimeout(void*, TiObject*, const Arguments& args)
 {
+    if ((args.Length() != 1) || (!args[0]->IsNumber()))
+    {
+        return ThrowException(String::New(Ti::Msg::Invalid_arguments));
+    }
     clearTimeoutHelper(args, false);
     return Undefined();
 }
 
 void TiRootObject::clearTimeoutHelper(const Arguments& args, bool interval)
 {
-    if ((args.Length() != 1) || (!args[0]->IsNumber()))
-    {
-        ThrowException(String::New(Ti::Msg::Invalid_arguments));
-    }
     Handle<Number> number = Handle<Number>::Cast(args[0]);
     TiTimeoutManager* timeoutManager = TiTimeoutManager::instance();
     timeoutManager->clearTimeout((int)number->Value(), interval);
