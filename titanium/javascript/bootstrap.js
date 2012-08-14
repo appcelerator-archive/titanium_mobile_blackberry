@@ -14,3 +14,9 @@ L = function(key, hint)
 {
 	return key;
 }
+
+// TODO: move to its own file when we can include from the framework dir
+//Ti.include("bufferstream.js");
+Ti.BufferStream.demoFunc = function() {
+    Ti.API.debug("demoFunc is being run");
+};
