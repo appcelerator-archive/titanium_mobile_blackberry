@@ -15,6 +15,7 @@
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
 #include "TiUIObject.h"
+#include "TiNetwork.h"
 
 #include <fstream>
 
@@ -47,6 +48,7 @@ void TiTitaniumObject::onCreateStaticMembers()
     TiAppObject::addObjectToParent(this);
     TiPlatformObject::addObjectToParent(this);
     TiCodecObject::addObjectToParent(this);
+    TiNetwork::addObjectToParent(this, objectFactory_);
 }
 
 bool TiTitaniumObject::canAddMembers() const

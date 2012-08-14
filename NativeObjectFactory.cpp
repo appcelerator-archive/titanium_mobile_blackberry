@@ -23,6 +23,7 @@
 #include "NativeTabGroupObject.h"
 #include "NativeSliderObject.h"
 #include "NativeStringInterface.h"
+#include "NativeTCPSocketObject.h"
 #include "NativeTextFieldObject.h"
 #include "NativeToggleButtonObject.h"
 #include "TiCascadesApp.h"
@@ -116,6 +117,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
 
     case N_TYPE_TABGROUP:
         obj = NativeTabGroupObject::createTabGroup(this);
+        break;
+
+    case N_TYPE_TCPSOCKET:
+        obj = NativeTCPSocketObject::createTCPSocket();
         break;
 
     case N_TYPE_DATE_TIME_PICKER:
