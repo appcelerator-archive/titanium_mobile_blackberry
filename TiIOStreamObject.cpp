@@ -19,3 +19,8 @@ TiIOStreamObject::TiIOStreamObject(const char* name)
     : TiProxy(name)
 {
 }
+
+void TiIOStreamObject::onCreateStaticMembers()
+{
+    TiProxy::onCreateStaticMembers();
+}

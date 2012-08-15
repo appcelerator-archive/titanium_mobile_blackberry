@@ -38,5 +38,5 @@ TiBufferStreamObject* TiBufferStreamObject::createBufferStream(Handle<Value> /*p
 
 void TiBufferStreamObject::onCreateStaticMembers()
 {
-    TiProxy::onCreateStaticMembers();
+    TiIOStreamObject::onCreateStaticMembers();
 }

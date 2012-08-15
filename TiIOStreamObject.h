@@ -21,6 +21,7 @@ protected:
     TiIOStreamObject(const char* name);
     TiIOStreamObject();
     virtual ~TiIOStreamObject();
+    virtual void onCreateStaticMembers();
 
 };
 
