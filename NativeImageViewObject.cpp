@@ -41,13 +41,15 @@ int NativeImageViewObject::initialize()
 
 int NativeImageViewObject::setImage(TiObject* obj)
 {
-    QString image;
-    int error = NativeControlObject::getString(obj, image);
+    QString imagePath;
+    int error = NativeControlObject::getString(obj, imagePath);
     if (error != NATIVE_ERROR_OK)
     {
         return error;
     }
-    imageView_->setImage(bb::cascades::Image(QUrl(image)));
+
+    imagePath = getResourcePath(imagePath);
+    imageView_->setImage(QUrl(imagePath));
     return NATIVE_ERROR_OK;
 }
 

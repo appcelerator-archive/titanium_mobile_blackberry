@@ -100,7 +100,16 @@ Handle<Value> TiTitaniumObject::_include(void*, TiObject*, const Arguments& args
     {
         return ThrowException(tryCatch.Exception());
     }
+
+    //backup current js file's path and update it with new one
+    string currentJsFilePath = TiObject::jsFilePath;
+    TiObject::jsFilePath = fullPath;
+
     Handle<Value> result = compiledScript->Run();
+
+    //restore back current js file's path
+    TiObject::jsFilePath = currentJsFilePath;
+
     if (result.IsEmpty())
     {
         Handle<Message> msg = tryCatch.Message();
