@@ -138,6 +138,8 @@ VALUE_MODIFY TiTCPSocketObject::_valueModify(int propertyNumber, TiObject* value
 
 Handle<Value> TiTCPSocketObject::_connect(void* userContext, TiObject* /*caller*/, const Arguments& /*args*/)
 {
+    // TODO: Throws an exception if the socket is in a CONNECTED or LISTENING state.
+    // Throws an exception if a valid host and port has not been set on this socket.
     HandleScope handleScope;
     TiTCPSocketObject* obj = (TiTCPSocketObject*) userContext;
     NativeTCPSocketObject* ntcp = (NativeTCPSocketObject*) obj->getNativeObject();
@@ -147,6 +149,7 @@ Handle<Value> TiTCPSocketObject::_connect(void* userContext, TiObject* /*caller*
 
 Handle<Value> TiTCPSocketObject::_close(void* userContext, TiObject* /*caller*/, const Arguments& /*args*/)
 {
+    // TODO: Throws exception if the socket is not in a CONNECTED or LISTENING state. Blocking.
     HandleScope handleScope;
     TiTCPSocketObject* obj = (TiTCPSocketObject*) userContext;
     NativeTCPSocketObject* ntcp = (NativeTCPSocketObject*) obj->getNativeObject();

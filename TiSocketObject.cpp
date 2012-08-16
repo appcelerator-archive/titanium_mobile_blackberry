@@ -9,7 +9,6 @@
 
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
-#include "TiMessageStrings.h"
 #include "TiTCPSocketObject.h"
 
 TiSocketObject::TiSocketObject()

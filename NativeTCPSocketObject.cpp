@@ -10,6 +10,12 @@
 #include "NativeControlObject.h"
 #include "TiObject.h"
 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#include <v8.h>
+#pragma GCC diagnostic warning "-Wunused-parameter"
+
+using namespace v8;
+
 #define PROP_SETGET_FUNCTION(NAME)      prop_##NAME
 
 #define PROP_SETGET(NAME)               static int prop_##NAME(NativeTCPSocketObject* tcpSocket, TiObject* obj) \

@@ -8,17 +8,11 @@
 #ifndef NATIVETCPSOCKETOBJECT_H_
 #define NATIVETCPSOCKETOBJECT_H_
 
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#include <v8.h>
-#pragma GCC diagnostic warning "-Wunused-parameter"
-
 #include "NativeProxyObject.h"
 #include <QtNetwork/qtcpsocket>
 
 class TiObject;
 class TiEventContainerFactory;
-
-using namespace v8;
 
 enum NATIVE_SOCKET_PROP
 {
