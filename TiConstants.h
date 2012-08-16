@@ -57,6 +57,22 @@ enum TI_BYTE_ORDER
 };
 }
 
+namespace Network
+{
+namespace Socket
+{
+// Socket states constants
+enum TI_SOCKET_STATE
+{
+    SOCKET_STATE_CLOSED,
+    SOCKET_STATE_CONNECTED,
+    SOCKET_STATE_ERROR,
+    SOCKET_STATE_INITIALIZED,
+    SOCKET_STATE_LISTENING,
+};
+}
+}
+
 }
 
 

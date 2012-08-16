@@ -18,6 +18,7 @@
 #include "TiPlatformObject.h"
 #include "TiStreamObject.h"
 #include "TiUIObject.h"
+#include "TiNetwork.h"
 
 #include <fstream>
 
@@ -50,6 +51,7 @@ void TiTitaniumObject::onCreateStaticMembers()
     TiAppObject::addObjectToParent(this);
     TiPlatformObject::addObjectToParent(this);
     TiCodecObject::addObjectToParent(this);
+    TiNetwork::addObjectToParent(this, objectFactory_);
     TiBufferStreamObject::addObjectToParent(this);
     TiStreamObject::addObjectToParent(this);
 }
