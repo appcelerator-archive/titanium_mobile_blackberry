@@ -86,9 +86,6 @@ struct TiProperty
     int nativePropertyNumber;
 };
 
-const string TopDir = "app/native";
-const string AssetsDir = "app/native/assets";
-
 /*
  * TiObject
  *

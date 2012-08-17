@@ -10,6 +10,7 @@
 #include "NativeLayoutHandler.h"
 #include "PersistentV8Value.h"
 #include "TiEventContainer.h"
+#include "TiConstants.h"
 #include "TiObject.h"
 #include <stdlib.h>
 #include <string.h>
@@ -1441,7 +1442,7 @@ QString NativeControlObject::getResourcePath(const QString& path)
     }
     else
     {
-        if (TiObject::jsFilePath.rfind("/") == AssetsDir.size())
+        if (TiObject::jsFilePath.rfind("/") == Ti::AssetsDir.size())
         {
             //js file is in the top dir (assets/) and image path is relative
             rPath = "assets/" + path;
@@ -1453,7 +1454,7 @@ QString NativeControlObject::getResourcePath(const QString& path)
             if (slashPos != std::string::npos)
             {
                 // remove app/native part from path
-                int s = std::string(TopDir).size();
+                int s = Ti::TopDir.size();
                 std::string dir  = TiObject::jsFilePath.substr(s + 1, slashPos - s);
                 rPath = QString((dir.c_str()) + path);
             }

@@ -8,8 +8,13 @@
 #ifndef TICONSTANTS_H_
 #define TICONSTANTS_H_
 
+#include <string>
+
 namespace Ti
 {
+
+const std::string TopDir = "app/native";
+const std::string AssetsDir = "app/native/assets";
 
 namespace UI
 {
