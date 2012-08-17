@@ -8,6 +8,7 @@
 #include "NativePageObject.h"
 
 #include "NativeObjectFactory.h"
+#include "TiCascadesApp.h"
 #include <bb/cascades/Container>
 #include <bb/cascades/Page>
 
@@ -67,7 +68,10 @@ int NativePageObject::addChildNativeObject(NativeObject* obj)
 
 int NativePageObject::open()
 {
+    Q_ASSERT(nativeObjectFactory_ != 0);
+    Q_ASSERT(nativeObjectFactory_->getCascadeApp() != 0);
     nativeObjectFactory_->setRootContainer(this);
+    nativeObjectFactory_->getCascadeApp()->setScene(this);
     return NATIVE_ERROR_OK;
 }
 

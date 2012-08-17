@@ -11,6 +11,9 @@
 #define HIDDEN_TI_OBJECT_PROPERTY           "ti_"
 #define HIDDEN_TEMP_OBJECT_PROPERTY         "globalTemplate_"
 
+//init with app.js file path
+string TiObject::jsFilePath = "app/native/assets/app.js";
+
 TiObject::TiObject()
     : name_(""),
       isInitialized_(false),

@@ -10,6 +10,7 @@
 #include "NativeLayoutHandler.h"
 #include "PersistentV8Value.h"
 #include "TiEventContainer.h"
+#include "TiConstants.h"
 #include "TiObject.h"
 #include <stdlib.h>
 #include <string.h>
@@ -1424,4 +1425,40 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float maxPixels, floa
         return NATIVE_ERROR_NOTSUPPORTED;
     }
     return NATIVE_ERROR_OK;
+}
+
+QString NativeControlObject::getResourcePath(const QString& path)
+{
+    if (path.isEmpty())
+    {
+        return "";
+    }
+
+    QString rPath;
+    if (path[0] == '/')
+    {
+        //absolute path, just append assets from front
+        rPath = "assets" + path;
+    }
+    else
+    {
+        if (TiObject::jsFilePath.rfind("/") == Ti::AssetsDir.size())
+        {
+            //js file is in the top dir (assets/) and image path is relative
+            rPath = "assets/" + path;
+        }
+        else
+        {
+            //relative path of image from current js file
+            std::string::size_type slashPos = TiObject::jsFilePath.rfind("/");
+            if (slashPos != std::string::npos)
+            {
+                // remove app/native part from path
+                int s = Ti::TopDir.size();
+                std::string dir  = TiObject::jsFilePath.substr(s + 1, slashPos - s);
+                rPath = QString((dir.c_str()) + path);
+            }
+        }
+    }
+    return rPath;
 }

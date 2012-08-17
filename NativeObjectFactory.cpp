@@ -32,9 +32,9 @@
 
 using namespace bb::cascades;
 
-NativeObjectFactory::NativeObjectFactory(TiCascadesApp*)
+NativeObjectFactory::NativeObjectFactory(TiCascadesApp* cascadeApp)
 {
-    cascadesApp_ = NULL;
+    cascadesApp_ = cascadeApp;
     eventContainerFactory_ = NULL;
     rootContainer_ = NULL;
 }

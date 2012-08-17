@@ -63,15 +63,14 @@ int NativeTabObject::setTitle(TiObject* obj)
 
 int NativeTabObject::setIcon(TiObject* obj)
 {
-    QString str;
-    int error = NativeControlObject::getString(obj, str);
+    QString iconPath;
+    int error = NativeControlObject::getString(obj, iconPath);
     if (!N_SUCCEEDED(error))
     {
         return error;
     }
-    //TODO: fix path
-    const bb::cascades::Image image = bb::cascades::Image(QUrl("assets" + str));
-    tab_->setImage(image);
+    iconPath = getResourcePath(iconPath);
+    tab_->setImage(bb::cascades::Image(QUrl(iconPath)));
     return NATIVE_ERROR_OK;
 }
 
