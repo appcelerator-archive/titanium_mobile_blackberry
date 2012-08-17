@@ -405,7 +405,7 @@ Handle<Value> TiBufferObject::_clone(void* userContext, TiObject* /*caller*/, co
     TiBufferObject* newBuffer = createBuffer(factory);
     newBuffer->setNativeObject(cloneBuffer);
     cloneBuffer->release();
-    Handle<Object> result = global->NewInstance();;
+    Handle<Object> result = global->NewInstance();
     setTiObjectToJsObject(result, newBuffer);
     return handleScope.Close(result);
 }

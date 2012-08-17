@@ -41,6 +41,8 @@ private:
 
     static Handle<Value> _connect(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _close(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _accept(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _listen(void* userContext, TiObject* caller, const Arguments& args);
 };
 
 
