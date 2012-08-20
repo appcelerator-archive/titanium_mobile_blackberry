@@ -9,9 +9,9 @@
 #define NATIVETCPSOCKETOBJECT_H_
 
 #include "NativeProxyObject.h"
-#include <QtNetwork/qtcpsocket>
-#include <QtNetwork/qtcpserver>
 #include <QtCore/QObject>
+#include <QtNetwork/qtcpserver>
+#include <QtNetwork/qtcpsocket>
 #include "TiConstants.h"
 #include "TiV8Event.h"
 #include "TiTCPSocketObject.h"
@@ -107,11 +107,26 @@ public slots:
     void connected()
     {
         eventContainer_->fireEvent();
+        owner_->socketState_ = SOCKET_STATE_CONNECTED;
     }
     void accepted()
     {
+        HandleScope handleScope;
         QTcpSocket* inboundSocket = owner_->tcpServer_->nextPendingConnection();
-        // TODO: Add inbound socket data to event container
+        Handle<Value> socketObj = eventContainer_->getDataProperty("socket");
+        Handle<ObjectTemplate> global = TiObject::getObjectTemplateFromJsObject(socketObj);
+        Handle<Object> result = global->NewInstance();
+        TiTCPSocketObject* socket = (TiTCPSocketObject*)TiObject::getTiObjectFromJsObject(socketObj);
+        TiTCPSocketObject* inBoundSocket = TiTCPSocketObject::createTCP(socket->getNativeObjectFactory());
+        inBoundSocket->setValue(result);
+        TiObject::setTiObjectToJsObject(result, inBoundSocket);
+        NativeTCPSocketObject* inBoundNative = (NativeTCPSocketObject*)inBoundSocket->getNativeObject();
+        inBoundNative->tcpClient_ =  inboundSocket;
+        inBoundNative->socketState_ = SOCKET_STATE_CONNECTED;
+        inBoundNative->port_ = inboundSocket->peerPort();
+        inBoundNative->hostName_ = inboundSocket->peerAddress().toString();
+        eventContainer_->setV8ValueProperty("inbound", inBoundSocket->getValue());
+        eventContainer_->fireEvent();
     }
 
     void error()

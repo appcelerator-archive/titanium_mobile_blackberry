@@ -142,34 +142,30 @@ int NativeTCPSocketObject::getState(TiObject* obj, void* /*userContext*/)
 PROP_SETGET(setListenQueueSize)
 int NativeTCPSocketObject::setListenQueueSize(TiObject* obj, void* /*userContext*/)
 {
-    if (socketState_ == SOCKET_STATE_LISTENING)
+    int maxCount;
+    int error = NativeControlObject::getInteger(obj, &maxCount);
+    if (!N_SUCCEEDED(error))
     {
-        int maxCount;
-        int error = NativeControlObject::getInteger(obj, &maxCount);
-        if (!N_SUCCEEDED(error))
-        {
-            return error;
-        }
-        tcpServer_->setMaxPendingConnections(maxCount);
-        return NATIVE_ERROR_OK;
+        return error;
     }
-    return NATIVE_ERROR_INVALID_ARG;
+    tcpServer_->setMaxPendingConnections(maxCount);
+    return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(getListenQueueSize)
 int NativeTCPSocketObject::getListenQueueSize(TiObject* obj, void* /*userContext*/)
 {
-    if (socketState_ == SOCKET_STATE_LISTENING)
-    {
-        obj->setValue(Number::New(tcpServer_->maxPendingConnections()));
-        return NATIVE_ERROR_OK;
-    }
-    return NATIVE_ERROR_INVALID_ARG;
+    obj->setValue(Number::New(tcpServer_->maxPendingConnections()));
+    return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(setConnectedCallback)
 int NativeTCPSocketObject::setConnectedCallback(TiObject* obj, void* userContext)
 {
+    if (socketState_ != SOCKET_STATE_INITIALIZED)
+    {
+        throw NativeException(QString(Native::Msg::Invalid_socket_state).toStdString());
+    }
     Handle<Value> value = obj->getValue();
     if (value->IsFunction())
     {
@@ -182,9 +178,8 @@ int NativeTCPSocketObject::setConnectedCallback(TiObject* obj, void* userContext
         Handle<Object> source = Handle<Object>::Cast(context->getValue());
         TiV8Event* connectEvent = TiV8Event::createEvent("connected", Handle<Function>::Cast(value), source);
         eventContainer_->addListener(connectEvent);
-        TCPSocketEventHandler* eHandler = new TCPSocketEventHandler(eventContainer_, this);
         eventContainer_->setV8ValueProperty("socket", context->getValue());
-        QObject::connect(tcpClient_, SIGNAL(connected()), eHandler, SLOT(connected()));
+        connectEvent->release();
         return NATIVE_ERROR_OK;
     }
     return NATIVE_ERROR_INVALID_ARG;
@@ -212,9 +207,7 @@ int NativeTCPSocketObject::setErrorCallback(TiObject* obj, void* userContext)
         Handle<Object> source = Handle<Object>::Cast(context->getValue());
         TiV8Event* connectEvent = TiV8Event::createEvent("error", Handle<Function>::Cast(value), source);
         eventContainer_->addListener(connectEvent);
-        TCPSocketEventHandler* eHandler = new TCPSocketEventHandler(eventContainer_, this);
         eventContainer_->setV8ValueProperty("socket", context->getValue());
-        QObject::connect(tcpClient_, SIGNAL(error()), eHandler, SLOT(error()));
         return NATIVE_ERROR_OK;
     }
     return NATIVE_ERROR_INVALID_ARG;
@@ -260,10 +253,20 @@ NativeTCPSocketObject::NativeTCPSocketObject()
     socketState_ = SOCKET_STATE_INITIALIZED;
     port_ = -1;
     eventContainer_ = NULL;
+    tcpClient_ = NULL;
+    tcpServer_ = NULL;
 }
 
 NativeTCPSocketObject::~NativeTCPSocketObject()
 {
+    if (tcpClient_ != NULL)
+    {
+        delete tcpClient_;
+    }
+    if (tcpServer_ != NULL)
+    {
+        delete tcpServer_;
+    }
 }
 
 int NativeTCPSocketObject::getObjectType() const
@@ -312,10 +315,17 @@ int NativeTCPSocketObject::getPropertyValue(size_t propertyNumber, TiObject* obj
 void NativeTCPSocketObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
     NativeProxyObject::setupEvents(containerFactory);
-    if (!eventContainer_)
+    if (eventContainer_ == NULL)
     {
         eventContainer_ = containerFactory->createEventContainer();
     }
+    if (tcpClient_ == NULL)
+    {
+        tcpClient_ = new QTcpSocket();
+    }
+    TCPSocketEventHandler* eHandler = new TCPSocketEventHandler(eventContainer_, this);
+    QObject::connect(tcpClient_, SIGNAL(connected()), eHandler, SLOT(connected()));
+    QObject::connect(tcpClient_, SIGNAL(error()), eHandler, SLOT(error()));
 }
 
 void NativeTCPSocketObject::connect()
@@ -328,16 +338,24 @@ void NativeTCPSocketObject::connect()
     {
         throw NativeException(QString(Native::Msg::Invalid_socket_state).toStdString());
     }
+    Q_ASSERT(tcpClient_ != NULL);
     tcpClient_->connectToHost(hostName_, port_);
 }
 
 void NativeTCPSocketObject::close()
 {
-    if (socketState_ != SOCKET_STATE_CONNECTED || socketState_ != SOCKET_STATE_LISTENING)
+    if (socketState_ != SOCKET_STATE_CONNECTED && socketState_ != SOCKET_STATE_LISTENING)
     {
         throw NativeException(QString(Native::Msg::Invalid_socket_state).toStdString());
     }
-    tcpClient_->close();
+    if (socketState_ == SOCKET_STATE_CONNECTED)
+    {
+        tcpClient_->close();
+    }
+    else if (socketState_ == SOCKET_STATE_LISTENING)
+    {
+        tcpServer_->close();
+    }
     socketState_ = SOCKET_STATE_CLOSED;
 }
 
@@ -351,7 +369,10 @@ void NativeTCPSocketObject::listen()
     {
         throw NativeException(QString(Native::Msg::Invalid_socket_state).toStdString());
     }
-    tcpServer_ = new QTcpServer();
+    if (tcpServer_ == NULL)
+    {
+        tcpServer_ = new QTcpServer();
+    }
     bool bSuccess = tcpServer_->listen(QHostAddress(hostName_), port_);
     socketState_ = bSuccess ? SOCKET_STATE_LISTENING : SOCKET_STATE_ERROR;
 }
@@ -371,6 +392,6 @@ void NativeTCPSocketObject::accept(TiEvent* /*errorCallback*/, int /*timeout*/)
     else
     {
         // Accept next incoming connection immediately
-        QObject::connect(tcpServer_, SIGNAL(newConnection()), eHandler, SLOT(accepted()));
+        QObject::connect(tcpServer_, SIGNAL(newConnection()), eHandler, SLOT(accepted()), Qt::UniqueConnection);
     }
 }
