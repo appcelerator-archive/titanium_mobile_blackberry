@@ -18,6 +18,7 @@
 
 class TiObject;
 class TiEventContainerFactory;
+class TCPSocketEventHandler;
 
 using namespace Ti::Network::Socket;
 
@@ -89,6 +90,7 @@ private:
 
     // Callback container
     TiEventContainer* eventContainer_;
+    TCPSocketEventHandler* eventHandler_;
 };
 
 // Event handler for Ti.Network.Socket.TCP
@@ -107,7 +109,10 @@ public slots:
     void connected()
     {
         eventContainer_->fireEvent();
-        owner_->socketState_ = SOCKET_STATE_CONNECTED;
+        if (owner_)
+        {
+            owner_->socketState_ = SOCKET_STATE_CONNECTED;
+        }
     }
     void accepted()
     {
@@ -135,6 +140,7 @@ public slots:
         {
             eventContainer_->setDataProperty("error", owner_->tcpClient_->errorString().toStdString().c_str());
             eventContainer_->setDataProperty("errorCode", owner_->tcpClient_->error());
+            owner_->socketState_ = SOCKET_STATE_ERROR;
         }
         eventContainer_->fireEvent();
     }
