@@ -16,6 +16,7 @@
 #include "TiV8Event.h"
 #include "TiTCPSocketObject.h"
 
+class NativeBufferObject;
 class TiObject;
 class TiEventContainerFactory;
 class TCPSocketEventHandler;
@@ -74,6 +75,8 @@ public:
     void close();
     void accept(TiEvent* errorCallback, int timeout);
     void listen();
+    int write(NativeBufferObject* buffer, int offset = -1, int length = -1);
+    int read(NativeBufferObject* buffer, int offset = -1, int length = -1);
 
 protected:
     virtual ~NativeTCPSocketObject();
@@ -98,7 +101,7 @@ class TCPSocketEventHandler : public QObject
 {
     Q_OBJECT
 public:
-    explicit TCPSocketEventHandler(TiEventContainer* eventContainer, NativeTCPSocketObject* owner = NULL)
+    explicit TCPSocketEventHandler(TiEventContainer* eventContainer, NativeTCPSocketObject* owner)
     {
         eventContainer_ = eventContainer;
         owner_ = owner;
@@ -108,17 +111,18 @@ public:
 public slots:
     void connected()
     {
-        eventContainer_->fireEvent();
         if (owner_)
         {
             owner_->socketState_ = SOCKET_STATE_CONNECTED;
         }
+        eventContainer_->fireEvent();
     }
+
     void accepted()
     {
         HandleScope handleScope;
         QTcpSocket* inboundSocket = owner_->tcpServer_->nextPendingConnection();
-        Handle<Value> socketObj = eventContainer_->getDataProperty("socket");
+        Handle<Value> socketObj = eventContainer_->getV8ValueProperty("socket");
         Handle<ObjectTemplate> global = TiObject::getObjectTemplateFromJsObject(socketObj);
         Handle<Object> result = global->NewInstance();
         TiTCPSocketObject* socket = (TiTCPSocketObject*)TiObject::getTiObjectFromJsObject(socketObj);
@@ -132,14 +136,17 @@ public slots:
         inBoundNative->hostName_ = inboundSocket->peerAddress().toString();
         eventContainer_->setV8ValueProperty("inbound", inBoundSocket->getValue());
         eventContainer_->fireEvent();
+
+        // Disconnect current slot from signal
+        QObject::disconnect(owner_->tcpServer_, SIGNAL(newConnection()), owner_->eventHandler_, SLOT(accepted()));
     }
 
-    void error()
+    void error(QAbstractSocket::SocketError socketError)
     {
         if (owner_)
         {
             eventContainer_->setDataProperty("error", owner_->tcpClient_->errorString().toStdString().c_str());
-            eventContainer_->setDataProperty("errorCode", owner_->tcpClient_->error());
+            eventContainer_->setDataProperty("errorCode", socketError);
             owner_->socketState_ = SOCKET_STATE_ERROR;
         }
         eventContainer_->fireEvent();

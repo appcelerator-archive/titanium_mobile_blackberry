@@ -44,6 +44,7 @@ N_MESSAGESTRINGS_CONST_DEF(char*, Out_of_bounds, "Out of bounds");
 N_MESSAGESTRINGS_CONST_DEF(char*, Unknown_key_value_received, "Unknown key:value received");
 N_MESSAGESTRINGS_CONST_DEF(char*, Unknown_value_received, "Unknown value received");
 N_MESSAGESTRINGS_CONST_DEF(char*, Unsupported_event_name_, "Unsupported event name ");
+N_MESSAGESTRINGS_CONST_DEF(char*, Write_operation_failure, "Write operation failed: %1");
 }
 }
 

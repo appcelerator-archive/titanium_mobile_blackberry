@@ -62,6 +62,8 @@ public:
     int append(NativeBufferObject* sourceBuffer, int sourceOffset = -1, int sourceLength = -1);
     NativeBufferObject* clone(int sourceOffset = -1, int sourceLength = -1);
     int insert(NativeBufferObject* sourceBuffer, int offset, int sourceOffset = -1, int sourceLength = -1);
+    int bufferSize() const;
+    void replaceInternalData(const QByteArray& newArray, int offset, int length);
 
 protected:
     virtual ~NativeBufferObject();

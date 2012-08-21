@@ -350,6 +350,16 @@ int NativeBufferObject::insert(NativeBufferObject* sourceBuffer, int offset, int
     return bytesWritten;
 }
 
+int NativeBufferObject::bufferSize() const
+{
+    return internalData_.size();
+}
+
+void NativeBufferObject::replaceInternalData(const QByteArray& newArray, int offset, int length)
+{
+    internalData_ = internalData_.replace(offset, length, newArray);
+}
+
 const static NATIVE_PROPSETGET_SETTING g_BufferPropSetGet[] =
 {
     {N_BUFFER_PROP_BYTEORDER, PROP_SETGET_FUNCTION(setByteOrder), PROP_SETGET_FUNCTION(getByteOrder)},

@@ -9,6 +9,7 @@
 
 #include "NativeException.h"
 #include "NativeTCPSocketObject.h"
+#include "TiBufferObject.h"
 #include "TiGenericFunctionObject.h"
 #include "TiPropertyGetFunctionObject.h"
 #include "TiPropertyMapObject.h"
@@ -94,6 +95,8 @@ void TiTCPSocketObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "close", this, _close);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "accept", this, _accept);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "listen", this, _listen);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "write", this, _write);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "read", this, _read);
 }
 
 void TiTCPSocketObject::setTiBufferMappingProperties(const TiProperty* props, int propertyCount)
@@ -182,7 +185,6 @@ Handle<Value> TiTCPSocketObject::_connect(void* userContext, TiObject* /*caller*
 
 Handle<Value> TiTCPSocketObject::_close(void* userContext, TiObject* /*caller*/, const Arguments& /*args*/)
 {
-    // TODO: Throws exception if the socket is not in a CONNECTED or LISTENING state. Blocking.
     HandleScope handleScope;
     TiTCPSocketObject* obj = (TiTCPSocketObject*) userContext;
     NativeTCPSocketObject* ntcp = (NativeTCPSocketObject*) obj->getNativeObject();
@@ -232,4 +234,112 @@ Handle<Value> TiTCPSocketObject::_listen(void* userContext, TiObject* /*caller*/
         return ThrowException(String::New(ne.what()));
     }
     return Undefined();
+}
+
+Handle<Value> TiTCPSocketObject::_write(void* userContext, TiObject* /*caller*/, const Arguments& args)
+{
+    if (args.Length() < 1)
+    {
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
+    }
+
+    HandleScope handleScope;
+    TiTCPSocketObject* obj = (TiTCPSocketObject*) userContext;
+    NativeTCPSocketObject* ntcp = (NativeTCPSocketObject*) obj->getNativeObject();
+
+    NativeBufferObject* nboSource = NULL;
+    if (args[0]->IsObject())
+    {
+        TiBufferObject* objSource = (TiBufferObject*) getTiObjectFromJsObject(args[0]);
+        nboSource = (NativeBufferObject*) objSource->getNativeObject();
+    }
+
+    // Invalid argument passed
+    if (nboSource == NULL)
+    {
+        return ThrowException(String::New(Ti::Msg::Invalid_arguments));
+    }
+
+    // Optional arguments provided
+    int sourceOffset = -1, sourceLength = -1;
+    if (args.Length() > 1)
+    {
+        // Should provided both offset and length
+        if (args.Length() < 3)
+        {
+            return ThrowException(String::New(Ti::Msg::Missing_argument));
+        }
+
+        Handle<Number> sourceOffsetNum = Handle<Number>::Cast(args[1]);
+        Handle<Number> sourceLengthNum = Handle<Number>::Cast(args[2]);
+        sourceOffset = (int)sourceOffsetNum->Value();
+        sourceLength = (int)sourceLengthNum->Value();
+    }
+
+    int bytesWritten = 0;
+    try
+    {
+        bytesWritten = ntcp->write(nboSource, sourceOffset, sourceLength);
+    }
+    catch (NativeException& ne)
+    {
+        return ThrowException(String::New(ne.what()));
+    }
+
+    Handle<Number> result = Number::New(bytesWritten);
+    return handleScope.Close(result);
+}
+
+Handle<Value> TiTCPSocketObject::_read(void* userContext, TiObject* /*caller*/, const Arguments& args)
+{
+    if (args.Length() < 1)
+    {
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
+    }
+
+    HandleScope handleScope;
+    TiTCPSocketObject* obj = (TiTCPSocketObject*) userContext;
+    NativeTCPSocketObject* ntcp = (NativeTCPSocketObject*) obj->getNativeObject();
+
+    NativeBufferObject* nboSource = NULL;
+    if (args[0]->IsObject())
+    {
+        TiBufferObject* objSource = (TiBufferObject*) getTiObjectFromJsObject(args[0]);
+        nboSource = (NativeBufferObject*) objSource->getNativeObject();
+    }
+
+    // Invalid argument passed
+    if (nboSource == NULL)
+    {
+        return ThrowException(String::New(Ti::Msg::Invalid_arguments));
+    }
+
+    // Optional arguments provided
+    int sourceOffset = -1, sourceLength = -1;
+    if (args.Length() > 1)
+    {
+        // Should provided both offset and length
+        if (args.Length() < 3)
+        {
+            return ThrowException(String::New(Ti::Msg::Missing_argument));
+        }
+
+        Handle<Number> sourceOffsetNum = Handle<Number>::Cast(args[1]);
+        Handle<Number> sourceLengthNum = Handle<Number>::Cast(args[2]);
+        sourceOffset = (int)sourceOffsetNum->Value();
+        sourceLength = (int)sourceLengthNum->Value();
+    }
+
+    int bytesRead = 0;
+    try
+    {
+        bytesRead = ntcp->read(nboSource, sourceOffset, sourceLength);
+    }
+    catch (NativeException& ne)
+    {
+        return ThrowException(String::New(ne.what()));
+    }
+
+    Handle<Number> result = Number::New(bytesRead);
+    return handleScope.Close(result);
 }

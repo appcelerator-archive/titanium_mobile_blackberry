@@ -18,7 +18,6 @@
  * Titanium.Network.Socket.TCP namespace
  */
 
-// TODO: Need to be inherited from Titanium.IOStream
 class TiTCPSocketObject : public TiProxy
 {
 public:
@@ -43,6 +42,8 @@ private:
     static Handle<Value> _close(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _accept(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _listen(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _write(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _read(void* userContext, TiObject* caller, const Arguments& args);
 };
 
 

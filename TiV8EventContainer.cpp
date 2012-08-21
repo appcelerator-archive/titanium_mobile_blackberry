@@ -88,7 +88,7 @@ void TiV8EventContainer::setV8ValueProperty(const char* propertyName, Handle<Val
     eventData_->Set(String::New(propertyName), data);
 }
 
-Handle<Value> TiV8EventContainer::getDataProperty(const char* propertyName)
+Handle<Value> TiV8EventContainer::getV8ValueProperty(const char* propertyName)
 {
     return eventData_->Get(v8::String::New(propertyName));
 }

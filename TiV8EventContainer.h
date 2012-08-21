@@ -37,7 +37,7 @@ public:
     virtual void setDataProperty(const char* propertyName, float value);
     virtual void setComplexDataProperty(const char* complexPropertyName, const char* propertyName, const char* value);
     virtual void setV8ValueProperty(const char* propertyName, v8::Handle<v8::Value> data);
-    virtual v8::Handle<v8::Value> getDataProperty(const char* propertyName);
+    virtual v8::Handle<v8::Value> getV8ValueProperty(const char* propertyName);
 
 private:
 

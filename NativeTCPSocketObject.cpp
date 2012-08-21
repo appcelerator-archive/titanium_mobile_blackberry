@@ -7,6 +7,7 @@
 
 #include "NativeTCPSocketObject.h"
 
+#include "NativeBufferObject.h"
 #include "NativeControlObject.h"
 #include "NativeException.h"
 #include "NativeMessageStrings.h"
@@ -312,7 +313,7 @@ void NativeTCPSocketObject::setupEvents(TiEventContainerFactory* containerFactor
     events_.insert("error", EventPairSmartPtr(eventContainer_, eventHandler_));
     events_.insert("accepted", EventPairSmartPtr(eventContainer_, eventHandler_));
     QObject::connect(tcpClient_, SIGNAL(connected()), eventHandler_, SLOT(connected()));
-    QObject::connect(tcpClient_, SIGNAL(error()), eventHandler_, SLOT(error()));
+    QObject::connect(tcpClient_, SIGNAL(error(QAbstractSocket::SocketError)), eventHandler_, SLOT(error(QAbstractSocket::SocketError)));
 }
 
 void NativeTCPSocketObject::connect()
@@ -327,6 +328,10 @@ void NativeTCPSocketObject::connect()
     }
     Q_ASSERT(tcpClient_ != NULL);
     tcpClient_->connectToHost(hostName_, port_);
+    if (!tcpClient_->waitForConnected())
+    {
+        eventHandler_->error(tcpClient_->error());
+    }
 }
 
 void NativeTCPSocketObject::close()
@@ -337,6 +342,7 @@ void NativeTCPSocketObject::close()
     }
     if (socketState_ == SOCKET_STATE_CONNECTED)
     {
+        tcpClient_->disconnectFromHost();
         tcpClient_->close();
     }
     else if (socketState_ == SOCKET_STATE_LISTENING)
@@ -348,10 +354,6 @@ void NativeTCPSocketObject::close()
 
 void NativeTCPSocketObject::listen()
 {
-    if (hostName_.isEmpty() || port_ == -1)
-    {
-        throw NativeException(QString(Native::Msg::Invalid_hostname_or_port).toStdString());
-    }
     if (socketState_ == SOCKET_STATE_CONNECTED || socketState_ == SOCKET_STATE_LISTENING)
     {
         throw NativeException(QString(Native::Msg::Invalid_socket_state).toStdString());
@@ -360,7 +362,9 @@ void NativeTCPSocketObject::listen()
     {
         tcpServer_ = new QTcpServer();
     }
-    bool bSuccess = tcpServer_->listen(QHostAddress(hostName_), port_);
+    QHostAddress address = hostName_.isEmpty() ? QHostAddress::Any : QHostAddress(hostName_);
+    int port = port_ == -1 ? 0 : port_;
+    bool bSuccess = tcpServer_->listen(address, port);
     socketState_ = bSuccess ? SOCKET_STATE_LISTENING : SOCKET_STATE_ERROR;
 }
 
@@ -380,4 +384,80 @@ void NativeTCPSocketObject::accept(TiEvent* /*errorCallback*/, int /*timeout*/)
         // Accept next incoming connection immediately
         QObject::connect(tcpServer_, SIGNAL(newConnection()), eventHandler_, SLOT(accepted()), Qt::UniqueConnection);
     }
+}
+
+int NativeTCPSocketObject::write(NativeBufferObject* buffer, int offset, int length)
+{
+    if (socketState_ != SOCKET_STATE_CONNECTED)
+    {
+        throw NativeException(QString(Native::Msg::Invalid_socket_state).toStdString());
+    }
+    char* data = (char*)buffer->toString();
+    int bufferLength = buffer->bufferSize();
+    if (offset != -1 && length != -1)
+    {
+        /*
+         * Validate the source buffer's offset and length.
+         * - Checked offset and length to be valid
+         * - Checked offset not to be above the buffer size
+         * - Checked length to be in range [offset, buffer->bufferSize()]
+         */
+        if (length < 0 || offset < 0 || (offset >= bufferLength) ||
+                (bufferLength - offset) < length)
+        {
+            throw NativeException(QString(Native::Msg::Out_of_bounds).toStdString());
+        }
+        memmove(data, data + offset, length);
+        bufferLength = length;
+    }
+
+    int bytesWritten = tcpClient_->write(data, bufferLength);
+    if (bytesWritten == -1 || !tcpClient_->waitForBytesWritten())
+    {
+        eventHandler_->error(tcpClient_->error());
+        throw NativeException(QString(Native::Msg::Write_operation_failure).arg(tcpClient_->errorString()).toStdString());
+    }
+
+    return bytesWritten;
+}
+
+int NativeTCPSocketObject::read(NativeBufferObject* buffer, int offset, int length)
+{
+    if (socketState_ != SOCKET_STATE_CONNECTED)
+    {
+        throw NativeException(QString(Native::Msg::Invalid_socket_state).toStdString());
+    }
+    int bufferLength = buffer->bufferSize();
+    int bytesRead = -1;
+    if (tcpClient_->waitForReadyRead())
+    {
+        int bytes = tcpClient_->bytesAvailable();
+        if (bytes != 0)
+        {
+            QByteArray readData;
+            if (offset != -1 && length != -1)
+            {
+                if (length < 0 || offset < 0 || (offset >= bufferLength))
+                {
+                    throw NativeException(QString(Native::Msg::Out_of_bounds).toStdString());
+                }
+                readData = tcpClient_->read(length);
+                buffer->replaceInternalData(readData, offset, length);
+            }
+            else
+            {
+                readData = tcpClient_->read(bufferLength);
+                buffer->replaceInternalData(readData, 0, bufferLength);
+            }
+
+            if (readData.isEmpty())
+            {
+                eventHandler_->error(tcpClient_->error());
+            }
+
+            bytesRead = readData.size();
+        }
+    }
+
+    return bytesRead;
 }
