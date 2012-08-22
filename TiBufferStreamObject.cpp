@@ -23,16 +23,18 @@ void TiBufferStreamObject::addObjectToParent(TiObject* parent)
     parent->addMember(obj);
 }
 
-TiBufferStreamObject* TiBufferStreamObject::createBufferStream(Handle<Value> /*params*/)
+TiBufferStreamObject* TiBufferStreamObject::createBufferStream(Handle<Object> /*params*/)
 {
     Handle<Object> global = Context::GetCurrent()->Global();
     Handle<Object> staticTiObject = global->Get(String::New("Ti"))->ToObject();
     Handle<Object> staticBsObject = staticTiObject->Get(String::New("BufferStream"))->ToObject();
-    Handle<Object> result = staticBsObject->Clone();
+    Handle<ObjectTemplate> globalTemplate = TiObject::getObjectTemplateFromJsObject(staticBsObject);
+    Handle<Object> result = globalTemplate->NewInstance();
+    result->SetPrototype(staticBsObject->Get(String::New("prototype")));
     TiBufferStreamObject* bsObject = new TiBufferStreamObject;
+    bsObject->initializeTiObject(NULL);
     bsObject->setValue(result);
-    // TODO: this messes things up
-    //setTiObjectToJsObject(result, bsObject);
+    setTiObjectToJsObject(result, bsObject);
     return bsObject;
 }
 
