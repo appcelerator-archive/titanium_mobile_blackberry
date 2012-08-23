@@ -9,6 +9,7 @@
 
 #include "TiBufferObject.h"
 #include "TiBufferStreamObject.h"
+#include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
 #include "TiIOStreamObject.h"
 #include "TiMessageStrings.h"
@@ -31,6 +32,9 @@ void TiStreamObject::addObjectToParent(TiObject* parent)
 void TiStreamObject::onCreateStaticMembers()
 {
     TiProxy::onCreateStaticMembers();
+    ADD_STATIC_TI_VALUE("MODE_APPEND", Number::New(Ti::Stream::MODE_APPEND), this);
+    ADD_STATIC_TI_VALUE("MODE_READ", Number::New(Ti::Stream::MODE_READ), this);
+    ADD_STATIC_TI_VALUE("MODE_WRITE", Number::New(Ti::Stream::MODE_WRITE), this);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createStream", this, _createStream);
 }
 
@@ -46,12 +50,13 @@ Handle<Value> TiStreamObject::_createStream(void* /*userContext*/, TiObject* /*c
     }
 
     Handle<Object> params = args[0]->ToObject();
-    // TODO: check mode
-    if (!params->Has(String::New("source")))
+    if (!params->Has(String::New("source")) || !params->Has(String::New("mode")))
     {
         return ThrowException(String::New(Ti::Msg::Invalid_arguments));
     }
     Handle<Value> source = params->Get(String::New("source"));
+    Handle<Value> mode = params->Get(String::New("mode"));
+    Handle<Value> pos = Number::New(0);
     TiObject* sourceObj = getTiObjectFromJsObject(source);
     TiIOStreamObject* resultObj = NULL;
     {
@@ -59,6 +64,10 @@ Handle<Value> TiStreamObject::_createStream(void* /*userContext*/, TiObject* /*c
         if (bufferObj != NULL)
         {
             resultObj = TiBufferStreamObject::createBufferStream(params);
+            if (mode->ToNumber()->Value() == Ti::Stream::MODE_APPEND)
+            {
+                pos = source->ToObject()->Get(String::New("length"))->ToNumber();
+            }
         }
         else
         {
@@ -72,8 +81,8 @@ Handle<Value> TiStreamObject::_createStream(void* /*userContext*/, TiObject* /*c
         return ThrowException(String::New(Ti::Msg::Invalid_arguments));
     }
     Handle<Object> result = resultObj->getValue()->ToObject();
-    // TODO: set mode
     result->Set(String::New("source"), source);
-    result->Set(String::New("pos"), Number::New(0));
+    result->Set(String::New("mode"), mode);
+    result->Set(String::New("pos"), pos);
     return result;
 }
