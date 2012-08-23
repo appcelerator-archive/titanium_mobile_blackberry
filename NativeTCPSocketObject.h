@@ -103,6 +103,7 @@ class TCPSocketEventHandler : public QObject
 public:
     explicit TCPSocketEventHandler(TiEventContainer* eventContainer, NativeTCPSocketObject* owner)
     {
+        Q_ASSERT(owner != NULL);
         eventContainer_ = eventContainer;
         owner_ = owner;
     }
@@ -111,10 +112,7 @@ public:
 public slots:
     void connected()
     {
-        if (owner_)
-        {
-            owner_->socketState_ = SOCKET_STATE_CONNECTED;
-        }
+        owner_->socketState_ = SOCKET_STATE_CONNECTED;
         eventContainer_->fireEvent();
     }
 
@@ -143,12 +141,9 @@ public slots:
 
     void error(QAbstractSocket::SocketError socketError)
     {
-        if (owner_)
-        {
-            eventContainer_->setDataProperty("error", owner_->tcpClient_->errorString().toStdString().c_str());
-            eventContainer_->setDataProperty("errorCode", socketError);
-            owner_->socketState_ = SOCKET_STATE_ERROR;
-        }
+        eventContainer_->setDataProperty("error", owner_->tcpClient_->errorString().toStdString().c_str());
+        eventContainer_->setDataProperty("errorCode", socketError);
+        owner_->socketState_ = SOCKET_STATE_ERROR;
         eventContainer_->fireEvent();
     }
 

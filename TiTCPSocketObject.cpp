@@ -79,7 +79,7 @@ void TiTCPSocketObject::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
     {
-        TiProxy::initializeTiObject(parentContext);
+        TiIOStreamObject::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_TCPSOCKET);
         setNativeObject(obj);
         obj->release();
@@ -88,7 +88,7 @@ void TiTCPSocketObject::initializeTiObject(TiObject* parentContext)
 
 void TiTCPSocketObject::onCreateStaticMembers()
 {
-    TiProxy::onCreateStaticMembers();
+    TiIOStreamObject::onCreateStaticMembers();
     setTiBufferMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
 
     TiGenericFunctionObject::addGenericFunctionToParent(this, "connect", this, _connect);
