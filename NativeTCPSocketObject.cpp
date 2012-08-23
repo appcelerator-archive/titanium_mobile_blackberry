@@ -165,7 +165,7 @@ int NativeTCPSocketObject::setConnectedCallback(TiObject* obj, void* userContext
 {
     if (socketState_ != SOCKET_STATE_INITIALIZED)
     {
-        throw NativeException(QString(Native::Msg::Invalid_socket_state).toStdString());
+        throw NativeException(Native::Msg::Invalid_socket_state);
     }
     Handle<Value> value = obj->getValue();
     if (value->IsFunction())
@@ -320,25 +320,21 @@ void NativeTCPSocketObject::connect()
 {
     if (hostName_.isEmpty() || port_ == -1)
     {
-        throw NativeException(QString(Native::Msg::Invalid_hostname_or_port).toStdString());
+        throw NativeException(Native::Msg::Invalid_hostname_or_port);
     }
     if (socketState_ == SOCKET_STATE_CONNECTED || socketState_ == SOCKET_STATE_LISTENING)
     {
-        throw NativeException(QString(Native::Msg::Invalid_socket_state).toStdString());
+        throw NativeException(Native::Msg::Invalid_socket_state);
     }
     Q_ASSERT(tcpClient_ != NULL);
     tcpClient_->connectToHost(hostName_, port_);
-    if (!tcpClient_->waitForConnected())
-    {
-        eventHandler_->error(tcpClient_->error());
-    }
 }
 
 void NativeTCPSocketObject::close()
 {
     if (socketState_ != SOCKET_STATE_CONNECTED && socketState_ != SOCKET_STATE_LISTENING)
     {
-        throw NativeException(QString(Native::Msg::Invalid_socket_state).toStdString());
+        throw NativeException(Native::Msg::Invalid_socket_state);
     }
     if (socketState_ == SOCKET_STATE_CONNECTED)
     {
@@ -356,7 +352,7 @@ void NativeTCPSocketObject::listen()
 {
     if (socketState_ == SOCKET_STATE_CONNECTED || socketState_ == SOCKET_STATE_LISTENING)
     {
-        throw NativeException(QString(Native::Msg::Invalid_socket_state).toStdString());
+        throw NativeException(Native::Msg::Invalid_socket_state);
     }
     if (tcpServer_ == NULL)
     {
@@ -373,7 +369,7 @@ void NativeTCPSocketObject::accept(TiEvent* /*errorCallback*/, int /*timeout*/)
     // TODO: Use errorCallback and timeout
     if (socketState_ != SOCKET_STATE_LISTENING)
     {
-        throw NativeException(QString(Native::Msg::Invalid_socket_state).toStdString());
+        throw NativeException(Native::Msg::Invalid_socket_state);
     }
     if (tcpServer_->hasPendingConnections())
     {
@@ -390,7 +386,7 @@ int NativeTCPSocketObject::write(NativeBufferObject* buffer, int offset, int len
 {
     if (socketState_ != SOCKET_STATE_CONNECTED)
     {
-        throw NativeException(QString(Native::Msg::Invalid_socket_state).toStdString());
+        throw NativeException(Native::Msg::Invalid_socket_state);
     }
     char* data = (char*)buffer->toString();
     int bufferLength = buffer->bufferSize();
@@ -400,18 +396,15 @@ int NativeTCPSocketObject::write(NativeBufferObject* buffer, int offset, int len
          * Validate the source buffer's offset and length.
          * - Checked offset and length to be valid
          * - Checked offset not to be above the buffer size
-         * - Checked length to be in range [offset, buffer->bufferSize()]
          */
-        if (length < 0 || offset < 0 || (offset >= bufferLength) ||
-                (bufferLength - offset) < length)
+        if (length < 0 || offset < 0 || (offset >= bufferLength))
         {
-            throw NativeException(QString(Native::Msg::Out_of_bounds).toStdString());
+            throw NativeException(Native::Msg::Out_of_bounds);
         }
-        memmove(data, data + offset, length);
-        bufferLength = length;
+        bufferLength = min(length, bufferLength - offset);
     }
 
-    int bytesWritten = tcpClient_->write(data, bufferLength);
+    int bytesWritten = tcpClient_->write(data + (offset == -1 ? 0 : offset), bufferLength);
     if (bytesWritten == -1 || !tcpClient_->waitForBytesWritten())
     {
         eventHandler_->error(tcpClient_->error());
@@ -425,7 +418,7 @@ int NativeTCPSocketObject::read(NativeBufferObject* buffer, int offset, int leng
 {
     if (socketState_ != SOCKET_STATE_CONNECTED)
     {
-        throw NativeException(QString(Native::Msg::Invalid_socket_state).toStdString());
+        throw NativeException(Native::Msg::Invalid_socket_state);
     }
     int bufferLength = buffer->bufferSize();
     int bytesRead = -1;
@@ -439,20 +432,22 @@ int NativeTCPSocketObject::read(NativeBufferObject* buffer, int offset, int leng
             {
                 if (length < 0 || offset < 0 || (offset >= bufferLength))
                 {
-                    throw NativeException(QString(Native::Msg::Out_of_bounds).toStdString());
+                    throw NativeException(Native::Msg::Out_of_bounds);
                 }
-                readData = tcpClient_->read(length);
-                buffer->replaceInternalData(readData, offset, length);
+                readData = tcpClient_->read(min(length, bufferLength - offset));
             }
             else
             {
                 readData = tcpClient_->read(bufferLength);
-                buffer->replaceInternalData(readData, 0, bufferLength);
             }
 
             if (readData.isEmpty())
             {
                 eventHandler_->error(tcpClient_->error());
+            }
+            else
+            {
+                buffer->replaceInternalData(readData, offset == -1 ? 0 : offset, readData.size());
             }
 
             bytesRead = readData.size();

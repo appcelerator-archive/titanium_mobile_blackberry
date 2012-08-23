@@ -120,6 +120,9 @@ public slots:
 
     void accepted()
     {
+        // Disconnect current slot from signal
+        QObject::disconnect(owner_->tcpServer_, SIGNAL(newConnection()), owner_->eventHandler_, SLOT(accepted()));
+
         HandleScope handleScope;
         QTcpSocket* inboundSocket = owner_->tcpServer_->nextPendingConnection();
         Handle<Value> socketObj = eventContainer_->getV8ValueProperty("socket");
@@ -136,9 +139,6 @@ public slots:
         inBoundNative->hostName_ = inboundSocket->peerAddress().toString();
         eventContainer_->setV8ValueProperty("inbound", inBoundSocket->getValue());
         eventContainer_->fireEvent();
-
-        // Disconnect current slot from signal
-        QObject::disconnect(owner_->tcpServer_, SIGNAL(newConnection()), owner_->eventHandler_, SLOT(accepted()));
     }
 
     void error(QAbstractSocket::SocketError socketError)

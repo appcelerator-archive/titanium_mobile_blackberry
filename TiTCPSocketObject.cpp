@@ -52,7 +52,7 @@ const static TiProperty g_tiProperties[] =
 };
 
 TiTCPSocketObject::TiTCPSocketObject()
-    : TiProxy("TCP")
+    : TiIOStreamObject("TCP")
 {
 }
 
@@ -250,8 +250,11 @@ Handle<Value> TiTCPSocketObject::_write(void* userContext, TiObject* /*caller*/,
     NativeBufferObject* nboSource = NULL;
     if (args[0]->IsObject())
     {
-        TiBufferObject* objSource = (TiBufferObject*) getTiObjectFromJsObject(args[0]);
-        nboSource = (NativeBufferObject*) objSource->getNativeObject();
+        TiBufferObject* objSource = dynamic_cast<TiBufferObject*>(getTiObjectFromJsObject(args[0]));
+        if (objSource != NULL)
+        {
+            nboSource = (NativeBufferObject*) objSource->getNativeObject();
+        }
     }
 
     // Invalid argument passed
@@ -304,8 +307,11 @@ Handle<Value> TiTCPSocketObject::_read(void* userContext, TiObject* /*caller*/, 
     NativeBufferObject* nboSource = NULL;
     if (args[0]->IsObject())
     {
-        TiBufferObject* objSource = (TiBufferObject*) getTiObjectFromJsObject(args[0]);
-        nboSource = (NativeBufferObject*) objSource->getNativeObject();
+        TiBufferObject* objSource = dynamic_cast<TiBufferObject*>(getTiObjectFromJsObject(args[0]));
+        if (objSource != NULL)
+        {
+            nboSource = (NativeBufferObject*) objSource->getNativeObject();
+        }
     }
 
     // Invalid argument passed

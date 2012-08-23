@@ -8,7 +8,7 @@
 #ifndef TITCPSOCKETOBJECT_H_
 #define TITCPSOCKETOBJECT_H_
 
-#include "TiProxy.h"
+#include "TiIOStreamObject.h"
 
 /*
  * TiTCPSocketObject
@@ -18,7 +18,7 @@
  * Titanium.Network.Socket.TCP namespace
  */
 
-class TiTCPSocketObject : public TiProxy
+class TiTCPSocketObject : public TiIOStreamObject
 {
 public:
     static void addObjectToParent(TiObject* parent);
