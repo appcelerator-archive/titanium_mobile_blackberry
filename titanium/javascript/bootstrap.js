@@ -23,30 +23,56 @@ Ti.BufferStream.demoFunc = function() {
 
 Ti.Stream.pump = function(inputStream, handler, maxChunkSize, isAsync)
 {
-    //this call is always synchronous, ignore last param
-    var pumpCallBackArgs  = {
-    buffer: undefined,
-    bytesProcessed: 0,
-    errorDescription: '',
-    errorState: 0,
-    source: inputStream,
-    totalBytesProcessed: 0,
-    };
-    
-    var tmpBuffer = Ti.createBuffer({ length: maxChunkSize });
-    try {
-        while((size = inputStream.read(tmpBuffer, 0, maxChunkSize)) > 0) {
-            pumpCallBackArgs.bytesProcessed = size;
-            pumpCallBackArgs.totalBytesProcessed += size;
-            pumpCallBackArgs.buffer = tmpBuffer;
-            tmpBuffer.clear();
-            handler(pumpCallBackArgs);
-       }
-    }
-    catch (e)
+    if (isAsync === undefined)
     {
-        pumpCallBackArgs.errorDescription = e;
+        isAsync = false;
     }
-    pumpCallBackArgs.bytesProcessed = -1;
-    handler(pumpCallBackArgs);
+    var buffer = Ti.createBuffer({ length: maxChunkSize });
+    var pumpCallBackArgs  = {
+        buffer: buffer,
+        bytesProcessed: -1,
+        errorDescription: '',
+        errorState: 0,
+        source: inputStream,
+        totalBytesProcessed: 0,
+    };
+
+    var readHelper = function() {
+        buffer.clear();
+        pumpCallBackArgs.bytesProcessed = -1;
+        try
+        {
+            pumpCallBackArgs.bytesProcessed = inputStream.read(buffer, 0, maxChunkSize);
+        }
+        catch(err)
+        {
+            pumpCallBackArgs.errorDescription = err;
+            pumpCallBackArgs.errorState = 1;
+        }
+        if (pumpCallBackArgs.bytesProcessed >= 0)
+        {
+            pumpCallBackArgs.totalBytesProcessed += pumpCallBackArgs.bytesProcessed;
+        }
+        handler(pumpCallBackArgs);
+    };
+
+    if (isAsync)
+    {
+        var pumpHelper = function()
+        {
+            readHelper();
+            if (pumpCallBackArgs.bytesProcessed >= 0)
+            {
+                setTimeout(pumpHelper, 1);
+            }
+        };
+        setTimeout(pumpHelper, 1);
+    }
+    else
+    {
+        do
+        {
+            readHelper();
+        } while (pumpCallBackArgs.bytesProcessed >= 0);
+    }
 };

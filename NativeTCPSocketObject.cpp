@@ -453,6 +453,10 @@ int NativeTCPSocketObject::read(NativeBufferObject* buffer, int offset, int leng
             bytesRead = readData.size();
         }
     }
+    else
+    {
+        eventHandler_->error(tcpClient_->error());
+    }
 
     return bytesRead;
 }
