@@ -71,7 +71,10 @@ VALUE_MODIFY TiPropertyMapObject::onValueChange(Handle<Value> oldValue, Handle<V
     }
     TiObject* value = new TiObject;
     value->setValue(newValue);
-    modify = (callback_)(propertyNumber_, value, context_);
+    if (callback_ != NULL)
+    {
+        modify = (callback_)(propertyNumber_, value, context_);
+    }
     if (modify == VALUE_MODIFY_ALLOW)
     {
         forceSetValue(value->getValue());

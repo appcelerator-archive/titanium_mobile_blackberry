@@ -21,7 +21,7 @@
 const static TiProperty g_tiProperties[] =
 {
     {
-        "anchorPoint", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "anchorPoint", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_ANCHOR_POINT
     },
 
@@ -31,187 +31,187 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
-        "autoLink", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "autoLink", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_AUTO_LINK
     },
 
     {
-        "backgroundColor", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "backgroundColor", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_BACKGROUND_COLOR
     },
 
     {
-        "bottom", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "bottom", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_BOTTOM
     },
 
     {
-        "buttonNames", TI_PROP_PERMISSION_READ,
+        "buttonNames", TI_PROP_PERMISSION_READ | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_BUTTONNAMES
     },
 
     {
-        "backgroundDisableColor", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "backgroundDisableColor", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_BACKGROUND_DISABLED_COLOR
     },
 
     {
-        "cancel", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "cancel", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_CANCEL
     },
 
     {
-        "color", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "color", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_COLOR
     },
 
     {
-        "font", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_FONT
-    },
-
-    {
-        "height", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_HEIGHT
-    },
-
-    {
-        "hintText", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_HINT_TEXT
-    },
-
-    {
-        "icon", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_ICON
-    },
-
-    {
-        "image", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_IMAGE
-    },
-
-    {
-        "data", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "data", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_DATA
     },
 
     {
-        "enabled", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "enabled", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_ENABLED
     },
 
     {
-        "label", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "font", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_FONT
+    },
+
+    {
+        "height", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_HEIGHT
+    },
+
+    {
+        "hintText", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_HINT_TEXT
+    },
+
+    {
+        "icon", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_ICON
+    },
+
+    {
+        "image", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_IMAGE
+    },
+
+    {
+        "label", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_LABEL
     },
 
     {
-        "left", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "left", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_LEFT
     },
 
     {
-        "max", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "max", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_MAX
     },
 
     {
-        "maxDate", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "maxDate", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_MAXDATE
     },
 
     {
-        "message", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "message", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_MESSAGE
     },
 
     {
-        "min", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "min", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_MIN
     },
 
     {
-        "minDate", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "minDate", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_MINDATE
     },
 
     {
-        "options", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_OPTIONS
-    },
-
-    {
-        "right", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_RIGHT
-    },
-
-    {
-        "rect", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_RECT
-    },
-
-    {
-        "selectedIndex", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_SELECTED_INDEX
-    },
-
-    {
-        "size", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
-        N_PROP_SIZE
-    },
-
-    {
-        "opacity", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "opacity", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_OPACITY
     },
 
     {
-        "text", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "options", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_OPTIONS
+    },
+
+    {
+        "rect", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_RECT
+    },
+
+    {
+        "right", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_RIGHT
+    },
+
+    {
+        "selectedIndex", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_SELECTED_INDEX
+    },
+
+    {
+        "size", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_SIZE
+    },
+
+    {
+        "text", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_TEXT
     },
 
     {
-        "textAlign", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "textAlign", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_TEXT_ALIGN
     },
 
     {
-        "title", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "title", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_TITLE
     },
 
     {
-        "top", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "top", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_TOP
     },
 
     {
-        "type", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "type", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_TYPE
     },
 
     {
-        "value", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "value", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_VALUE
     },
 
     {
-        "visible", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "visible", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_VISIBLE
     },
 
     {
-        "width", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "width", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_WIDTH
     },
 
     {
-        "window", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "window", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_WINDOW
     },
 
     {
-        "zIndex", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        "zIndex", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_ZINDEX
     },
 
@@ -277,7 +277,8 @@ void TiUIBase::setTiMappingProperties(const TiProperty* props, int propertyCount
     for (int i = 0; i < propertyCount; i++)
     {
         TiObject* value = TiPropertyMapObject::addProperty(this, props[i].propertyName, props[i].nativePropertyNumber,
-                          _valueModify, _getValue, this);
+                          (props[i].permissions & TI_PROP_FLAG_WRITE_NO_BRIDGE) ? NULL : _valueModify,
+                          (props[i].permissions & TI_PROP_FLAG_READ_NO_BRIDGE) ? NULL : _getValue, this);
         // For all properties that have write permissions, add a setter method, e.g., myLabel.text=<my text>; myLabel.setText(<my text>);
         if (props[i].permissions & TI_PROP_PERMISSION_WRITE)
         {
@@ -486,7 +487,7 @@ Handle<Value> TiUIBase::_finishLayout(void* userContext, TiObject*, const Argume
     return Undefined();
 }
 
-Handle<Value> TiUIBase::_updateLayout(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUIBase::_updateLayout(void* userContext, TiObject*, const Arguments& args)
 {
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {

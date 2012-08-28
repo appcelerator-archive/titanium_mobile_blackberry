@@ -36,9 +36,7 @@ public:
     virtual int setTitle(TiObject* obj);
     virtual int setMessage(TiObject* obj);
     virtual int setButtonNames(TiObject* obj);
-    virtual int getButtonNames(TiObject* obj);
     virtual int setCancel(TiObject* obj);
-    virtual int getCancel(TiObject* obj);
 
 protected:
     virtual ~NativeAlertDialogObject();

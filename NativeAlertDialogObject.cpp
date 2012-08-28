@@ -88,20 +88,6 @@ int NativeAlertDialogObject::setButtonNames(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-int NativeAlertDialogObject::getButtonNames(TiObject* obj)
-{
-    Q_ASSERT(nativeDialog_ != NULL);
-    int buttonsCount = nativeDialog_->buttonCount();
-    Handle<Array> buttonsArray = Array::New(buttonsCount);
-    for (int i = 0; i < buttonsCount; ++i)
-    {
-        QString str = nativeDialog_->buttonAt(i)->label();
-        buttonsArray->Set(Integer::New(i), String::New(str.toStdString().c_str()));
-    }
-    obj->setValue(buttonsArray);
-    return NATIVE_ERROR_OK;
-}
-
 int NativeAlertDialogObject::setCancel(TiObject* obj)
 {
     Q_ASSERT(nativeDialog_ != NULL);
@@ -115,13 +101,6 @@ int NativeAlertDialogObject::setCancel(TiObject* obj)
     {
         button->setProperty("cancel", QVariant::fromValue(true));
     }
-    return NATIVE_ERROR_OK;
-}
-
-int NativeAlertDialogObject::getCancel(TiObject* obj)
-{
-    Handle<Value> cancelProperty = Number::New(cancelIndex_);
-    obj->setValue(cancelProperty);
     return NATIVE_ERROR_OK;
 }
 

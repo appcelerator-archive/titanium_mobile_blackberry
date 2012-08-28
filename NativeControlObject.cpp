@@ -638,20 +638,8 @@ int NativeControlObject::setButtonNames(TiObject* /*obj*/)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETGET(getButtonNames)
-int NativeControlObject::getButtonNames(TiObject* /*obj*/)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
 PROP_SETGET(setCancel)
 int NativeControlObject::setCancel(TiObject* /*obj*/)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
-PROP_SETGET(getCancel)
-int NativeControlObject::getCancel(TiObject* /*obj*/)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -825,81 +813,6 @@ int NativeControlObject::setVisible(TiObject* obj)
     return setVisibility(visible);
 }
 
-PROP_SETGET(getVisible)
-int NativeControlObject::getVisible(TiObject* obj)
-{
-    Q_ASSERT(container_ != NULL);
-    obj->setValue(Boolean::New(container_->isVisible()));
-    return NATIVE_ERROR_OK;
-}
-
-PROP_SETGET(getWidth)
-int NativeControlObject::getWidth(TiObject* obj)
-{
-    Q_ASSERT(obj != NULL);
-    if (width_ != NULL)
-    {
-        obj->setValue(width_->getValue());
-    }
-    return NATIVE_ERROR_OK;
-}
-
-PROP_SETGET(getHeight)
-int NativeControlObject::getHeight(TiObject* obj)
-{
-    Q_ASSERT(obj != NULL);
-    if (height_ != NULL)
-    {
-        obj->setValue(height_->getValue());
-    }
-    return NATIVE_ERROR_OK;
-}
-
-PROP_SETGET(getTop)
-int NativeControlObject::getTop(TiObject* obj)
-{
-    Q_ASSERT(obj != NULL);
-    if (top_ != NULL)
-    {
-        obj->setValue(top_->getValue());
-    }
-    return NATIVE_ERROR_OK;
-}
-
-PROP_SETGET(getLeft)
-int NativeControlObject::getLeft(TiObject* obj)
-{
-    Q_ASSERT(obj != NULL);
-    if (left_ != NULL)
-    {
-        obj->setValue(left_->getValue());
-    }
-    return NATIVE_ERROR_OK;
-}
-
-
-PROP_SETGET(getBottom)
-int NativeControlObject::getBottom(TiObject* obj)
-{
-    Q_ASSERT(obj != NULL);
-    if (bottom_ != NULL)
-    {
-        obj->setValue(bottom_->getValue());
-    }
-    return NATIVE_ERROR_OK;
-}
-
-PROP_SETGET(getRight)
-int NativeControlObject::getRight(TiObject* obj)
-{
-    Q_ASSERT(obj != NULL);
-    if (right_ != NULL)
-    {
-        obj->setValue(right_->getValue());
-    }
-    return NATIVE_ERROR_OK;
-}
-
 PROP_SETGET(getRect)
 int NativeControlObject::getRect(TiObject* obj)
 {
@@ -1043,20 +956,19 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_ANCHOR_POINT, PROP_SETGET_FUNCTION(setAnchorPoint), NULL},
     {N_PROP_BACKGROUND_COLOR, PROP_SETGET_FUNCTION(setBackgroundColor), NULL},
     {N_PROP_BACKGROUND_DISABLED_COLOR, PROP_SETGET_FUNCTION(setBackgroundDisableColor), NULL},
-    {N_PROP_BOTTOM, PROP_SETGET_FUNCTION(setBottom), PROP_SETGET_FUNCTION(getBottom)},
-    {N_PROP_BUTTONNAMES, PROP_SETGET_FUNCTION(setButtonNames), PROP_SETGET_FUNCTION(getButtonNames)},
-    {N_PROP_CANCEL, PROP_SETGET_FUNCTION(setCancel), PROP_SETGET_FUNCTION(getCancel)},
+    {N_PROP_BOTTOM, PROP_SETGET_FUNCTION(setBottom), NULL},
+    {N_PROP_BUTTONNAMES, PROP_SETGET_FUNCTION(setButtonNames), NULL},
+    {N_PROP_CANCEL, PROP_SETGET_FUNCTION(setCancel), NULL},
     {N_PROP_COLOR, PROP_SETGET_FUNCTION(setColor), NULL},
-    {N_PROP_BOTTOM, PROP_SETGET_FUNCTION(setBottom), PROP_SETGET_FUNCTION(getBottom)},
     {N_PROP_DATA, PROP_SETGET_FUNCTION(setData), NULL},
     {N_PROP_ENABLED, PROP_SETGET_FUNCTION(setEnabled), NULL},
     {N_PROP_FONT, PROP_SETGET_FUNCTION(setFont), NULL},
-    {N_PROP_HEIGHT, PROP_SETGET_FUNCTION(setHeight), PROP_SETGET_FUNCTION(getHeight)},
+    {N_PROP_HEIGHT, PROP_SETGET_FUNCTION(setHeight), NULL},
     {N_PROP_HINT_TEXT, PROP_SETGET_FUNCTION(setHintText), NULL},
     {N_PROP_ICON, PROP_SETGET_FUNCTION(setIcon), NULL},
     {N_PROP_IMAGE, PROP_SETGET_FUNCTION(setImage), NULL},
     {N_PROP_LABEL, PROP_SETGET_FUNCTION(setLabel), NULL},
-    {N_PROP_LEFT, PROP_SETGET_FUNCTION(setLeft), PROP_SETGET_FUNCTION(getLeft)},
+    {N_PROP_LEFT, PROP_SETGET_FUNCTION(setLeft), NULL},
     {N_PROP_MAX, PROP_SETGET_FUNCTION(setMax), NULL},
     {N_PROP_MAXDATE, PROP_SETGET_FUNCTION(setMaxDate), NULL},
     {N_PROP_MESSAGE, PROP_SETGET_FUNCTION(setMessage), NULL},
@@ -1065,17 +977,17 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_OPACITY, PROP_SETGET_FUNCTION(setOpacity), NULL},
     {N_PROP_OPTIONS, PROP_SETGET_FUNCTION(setOptions), NULL},
     {N_PROP_RECT, NULL, PROP_SETGET_FUNCTION(getRect)},
-    {N_PROP_RIGHT, PROP_SETGET_FUNCTION(setRight), PROP_SETGET_FUNCTION(getRight)},
+    {N_PROP_RIGHT, PROP_SETGET_FUNCTION(setRight), NULL},
     {N_PROP_SELECTED_INDEX, PROP_SETGET_FUNCTION(setSelectedIndex), NULL},
     {N_PROP_SIZE, NULL, PROP_SETGET_FUNCTION(getSize)},
     {N_PROP_TEXT, PROP_SETGET_FUNCTION(setText), NULL},
     {N_PROP_TEXT_ALIGN, PROP_SETGET_FUNCTION(setTextAlign), NULL},
     {N_PROP_TITLE, PROP_SETGET_FUNCTION(setTitle), NULL},
-    {N_PROP_TOP, PROP_SETGET_FUNCTION(setTop), PROP_SETGET_FUNCTION(getTop)},
+    {N_PROP_TOP, PROP_SETGET_FUNCTION(setTop), NULL},
     {N_PROP_TYPE, PROP_SETGET_FUNCTION(setType), NULL},
     {N_PROP_VALUE, PROP_SETGET_FUNCTION(setValue), NULL},
-    {N_PROP_VISIBLE, PROP_SETGET_FUNCTION(setVisible), PROP_SETGET_FUNCTION(getVisible)},
-    {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), PROP_SETGET_FUNCTION(getWidth)},
+    {N_PROP_VISIBLE, PROP_SETGET_FUNCTION(setVisible), NULL},
+    {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), NULL},
     {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setWindow), NULL},
     {N_PROP_ZINDEX, PROP_SETGET_FUNCTION(setZIndex), PROP_SETGET_FUNCTION(getZIndex)}
 };
