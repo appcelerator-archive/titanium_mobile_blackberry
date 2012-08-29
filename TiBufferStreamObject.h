@@ -22,7 +22,7 @@ class TiBufferStreamObject : public TiIOStreamObject
 {
 public:
     static void addObjectToParent(TiObject* parent);
-    static TiBufferStreamObject* createBufferStream(Handle<Value> params);
+    static TiBufferStreamObject* createBufferStream(Handle<Object> params);
 
 protected:
     virtual ~TiBufferStreamObject();
