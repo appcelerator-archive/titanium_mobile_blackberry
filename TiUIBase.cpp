@@ -41,6 +41,11 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "backgroundDisableColor", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_BACKGROUND_DISABLED_COLOR
+    },
+
+    {
         "bottom", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_BOTTOM
     },
@@ -48,11 +53,6 @@ const static TiProperty g_tiProperties[] =
     {
         "buttonNames", TI_PROP_PERMISSION_READ | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_BUTTONNAMES
-    },
-
-    {
-        "backgroundDisableColor", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
-        N_PROP_BACKGROUND_DISABLED_COLOR
     },
 
     {
@@ -146,7 +146,7 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
-        "rect", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        "rect", TI_PROP_PERMISSION_READ,
         N_PROP_RECT
     },
 
@@ -161,7 +161,7 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
-        "size", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        "size", TI_PROP_PERMISSION_READ,
         N_PROP_SIZE
     },
 
