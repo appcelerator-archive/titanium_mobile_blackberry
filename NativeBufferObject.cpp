@@ -192,9 +192,7 @@ int NativeBufferObject::getValue(TiObject* /*obj*/)
 void NativeBufferObject::clear()
 {
     //reset data, but keep size the same
-    int size = internalData_.size();
-    internalData_.clear();
-    internalData_.resize(size);
+    internalData_.fill('\0');
 }
 
 const char* NativeBufferObject::toString() const

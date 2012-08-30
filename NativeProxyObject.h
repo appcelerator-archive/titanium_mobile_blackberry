@@ -89,6 +89,9 @@ public:
     // Ti event types (tet)
     static const char* tetCHANGE;
     static const char* tetCLICK;
+    static const char* tetCONNECTED;
+    static const char* tetACCEPTED;
+    static const char* tetERROR;
 
 protected:
     NativeProxyObject();

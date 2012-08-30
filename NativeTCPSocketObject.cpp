@@ -172,9 +172,12 @@ int NativeTCPSocketObject::setConnectedCallback(TiObject* obj, void* userContext
     {
         TiTCPSocketObject* context = (TiTCPSocketObject*)userContext;
         Handle<Object> source = Handle<Object>::Cast(context->getValue());
-        TiV8Event* connectEvent = TiV8Event::createEvent("connected", Handle<Function>::Cast(value), source);
-        setEventHandler("connected", connectEvent);
-        eventContainer_->setV8ValueProperty("socket", context->getValue());
+        TiV8Event* connectEvent = TiV8Event::createEvent(tetCONNECTED, Handle<Function>::Cast(value), source);
+        setEventHandler(tetCONNECTED, connectEvent);
+        if (events_[tetCONNECTED]->container != 0)
+        {
+            events_[tetCONNECTED]->container->setV8ValueProperty("socket", context->getValue());
+        }
         connectEvent->release();
         return NATIVE_ERROR_OK;
     }
@@ -196,9 +199,12 @@ int NativeTCPSocketObject::setErrorCallback(TiObject* obj, void* userContext)
     {
         TiTCPSocketObject* context = (TiTCPSocketObject*)userContext;
         Handle<Object> source = Handle<Object>::Cast(context->getValue());
-        TiV8Event* errorEvent = TiV8Event::createEvent("error", Handle<Function>::Cast(value), source);
-        setEventHandler("error", errorEvent);
-        eventContainer_->setV8ValueProperty("socket", context->getValue());
+        TiV8Event* errorEvent = TiV8Event::createEvent(tetERROR, Handle<Function>::Cast(value), source);
+        setEventHandler(tetERROR, errorEvent);
+        if (events_[tetERROR]->container != 0)
+        {
+            events_[tetERROR]->container->setV8ValueProperty("socket", context->getValue());
+        }
         errorEvent->release();
         return NATIVE_ERROR_OK;
     }
@@ -220,9 +226,12 @@ int NativeTCPSocketObject::setAcceptedCallback(TiObject* obj, void* userContext)
     {
         TiTCPSocketObject* context = (TiTCPSocketObject*)userContext;
         Handle<Object> source = Handle<Object>::Cast(context->getValue());
-        TiV8Event* acceptEvent = TiV8Event::createEvent("accepted", Handle<Function>::Cast(value), source);
-        setEventHandler("accepted", acceptEvent);
-        eventContainer_->setV8ValueProperty("socket", context->getValue());
+        TiV8Event* acceptEvent = TiV8Event::createEvent(tetACCEPTED, Handle<Function>::Cast(value), source);
+        setEventHandler(tetACCEPTED, acceptEvent);
+        if (events_[tetACCEPTED]->container != 0)
+        {
+            events_[tetACCEPTED]->container->setV8ValueProperty("socket", context->getValue());
+        }
         acceptEvent->release();
         return NATIVE_ERROR_OK;
     }
@@ -240,7 +249,6 @@ NativeTCPSocketObject::NativeTCPSocketObject()
 {
     socketState_ = SOCKET_STATE_INITIALIZED;
     port_ = -1;
-    eventContainer_ = NULL;
     eventHandler_ = NULL;
     tcpClient_ = NULL;
     tcpServer_ = NULL;
@@ -251,7 +259,6 @@ NativeTCPSocketObject::~NativeTCPSocketObject()
     delete tcpClient_;
     delete tcpServer_;
     delete eventHandler_;
-    delete eventContainer_;
 }
 
 int NativeTCPSocketObject::getObjectType() const
@@ -300,18 +307,14 @@ int NativeTCPSocketObject::getPropertyValue(size_t propertyNumber, TiObject* obj
 void NativeTCPSocketObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
     NativeProxyObject::setupEvents(containerFactory);
-    if (eventContainer_ == NULL)
-    {
-        eventContainer_ = containerFactory->createEventContainer();
-    }
     if (tcpClient_ == NULL)
     {
         tcpClient_ = new QTcpSocket();
     }
-    eventHandler_ = new TCPSocketEventHandler(eventContainer_, this);
-    events_.insert("connected", EventPairSmartPtr(eventContainer_, eventHandler_));
-    events_.insert("error", EventPairSmartPtr(eventContainer_, eventHandler_));
-    events_.insert("accepted", EventPairSmartPtr(eventContainer_, eventHandler_));
+    eventHandler_ = new TCPSocketEventHandler(this);
+    events_.insert(tetCONNECTED, EventPairSmartPtr(containerFactory->createEventContainer(), eventHandler_));
+    events_.insert(tetERROR, EventPairSmartPtr(containerFactory->createEventContainer(), eventHandler_));
+    events_.insert(tetACCEPTED, EventPairSmartPtr(containerFactory->createEventContainer(), eventHandler_));
     QObject::connect(tcpClient_, SIGNAL(connected()), eventHandler_, SLOT(connected()));
     QObject::connect(tcpClient_, SIGNAL(error(QAbstractSocket::SocketError)), eventHandler_, SLOT(error(QAbstractSocket::SocketError)));
 }
@@ -422,7 +425,7 @@ int NativeTCPSocketObject::read(NativeBufferObject* buffer, int offset, int leng
     }
     int bufferLength = buffer->bufferSize();
     int bytesRead = -1;
-    if (tcpClient_->waitForReadyRead())
+    if (tcpClient_->bytesAvailable() > 0 || tcpClient_->waitForReadyRead(1000))
     {
         int bytes = tcpClient_->bytesAvailable();
         if (bytes != 0)
@@ -455,7 +458,8 @@ int NativeTCPSocketObject::read(NativeBufferObject* buffer, int offset, int leng
     }
     else
     {
-        eventHandler_->error(tcpClient_->error());
+        //TODO: we should fix this after separating reading thread from the main thread
+        //eventHandler_->error(tcpClient_->error());
     }
 
     return bytesRead;
