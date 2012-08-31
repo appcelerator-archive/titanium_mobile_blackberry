@@ -134,7 +134,15 @@ int NativeBufferObject::setLength(TiObject* obj)
     {
         return error;
     }
-    internalData_.resize(lengthValue);
+    int oldSize = internalData_.size();
+    if (lengthValue > oldSize)
+    {
+        internalData_.append(QByteArray(lengthValue - oldSize, '\0'));
+    }
+    else
+    {
+        internalData_.truncate(lengthValue);
+    }
     return NATIVE_ERROR_OK;
 }
 
