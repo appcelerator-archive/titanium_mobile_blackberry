@@ -15,7 +15,6 @@
 #include "TiConstants.h"
 #include "TiV8Event.h"
 #include "TiTCPSocketObject.h"
-#include "NativeProxyObject.h"
 
 class NativeBufferObject;
 class TiObject;
@@ -133,20 +132,14 @@ public slots:
         inBoundNative->socketState_ = SOCKET_STATE_CONNECTED;
         inBoundNative->port_ = inboundSocket->peerPort();
         inBoundNative->hostName_ = inboundSocket->peerAddress().toString();
-        if (owner_->events_.contains(NativeProxyObject::tetACCEPTED) && owner_->events_[NativeProxyObject::tetACCEPTED]->container != 0)
-        {
-            owner_->events_[NativeProxyObject::tetACCEPTED]->container->setV8ValueProperty("inbound",  inBoundSocket->getValue());
-        }
+        owner_->events_[NativeProxyObject::tetACCEPTED]->container->setV8ValueProperty("inbound",  inBoundSocket->getValue());
         owner_->fireEvent(NativeProxyObject::tetACCEPTED, NULL);
     }
 
     void error(QAbstractSocket::SocketError socketError)
     {
-        if (owner_->events_.contains(NativeProxyObject::tetERROR) && owner_->events_[NativeProxyObject::tetERROR]->container != 0)
-        {
-            owner_->events_[NativeProxyObject::tetERROR]->container->setDataProperty(NativeProxyObject::tetERROR, owner_->tcpClient_->errorString().toStdString().c_str());
-            owner_->events_[NativeProxyObject::tetERROR]->container->setDataProperty("errorCode", socketError);
-        }
+        owner_->events_[NativeProxyObject::tetERROR]->container->setDataProperty(NativeProxyObject::tetERROR, owner_->tcpClient_->errorString().toStdString().c_str());
+        owner_->events_[NativeProxyObject::tetERROR]->container->setDataProperty("errorCode", socketError);
         owner_->socketState_ = SOCKET_STATE_ERROR;
         owner_->fireEvent(NativeProxyObject::tetERROR, NULL);
     }

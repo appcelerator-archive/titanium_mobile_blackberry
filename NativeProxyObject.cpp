@@ -11,11 +11,10 @@
 #include "NativeMessageStrings.h"
 #include "TiEvent.h"
 
-
+const char* NativeProxyObject::tetACCEPTED = "accepted";
 const char* NativeProxyObject::tetCHANGE = "change";
 const char* NativeProxyObject::tetCLICK = "click";
 const char* NativeProxyObject::tetCONNECTED = "connected";
-const char* NativeProxyObject::tetACCEPTED = "accepted";
 const char* NativeProxyObject::tetERROR = "error";
 
 
@@ -32,7 +31,7 @@ int NativeProxyObject::fireEvent(const char* name, const TiObject* event) const
     EventPairSmartPtr ep = events_.value(name);
     if (ep.get() != NULL && ep->isValid())
     {
-        if (event != 0)
+        if (event != NULL)
         {
             ep->container->fireEvent(event);
         }
