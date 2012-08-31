@@ -91,8 +91,6 @@ private:
     QString hostName_;
     TI_SOCKET_STATE socketState_;
 
-    // Callback container
-    TiEventContainer* eventContainer_;
     TCPSocketEventHandler* eventHandler_;
 };
 
@@ -101,10 +99,9 @@ class TCPSocketEventHandler : public QObject
 {
     Q_OBJECT
 public:
-    explicit TCPSocketEventHandler(TiEventContainer* eventContainer, NativeTCPSocketObject* owner)
+    explicit TCPSocketEventHandler(NativeTCPSocketObject* owner)
     {
         Q_ASSERT(owner != NULL);
-        eventContainer_ = eventContainer;
         owner_ = owner;
     }
     virtual ~TCPSocketEventHandler() {}
@@ -113,7 +110,7 @@ public slots:
     void connected()
     {
         owner_->socketState_ = SOCKET_STATE_CONNECTED;
-        eventContainer_->fireEvent();
+        owner_->fireEvent(NativeProxyObject::tetCONNECTED, NULL);
     }
 
     void accepted()
@@ -123,7 +120,7 @@ public slots:
 
         HandleScope handleScope;
         QTcpSocket* inboundSocket = owner_->tcpServer_->nextPendingConnection();
-        Handle<Value> socketObj = eventContainer_->getV8ValueProperty("socket");
+        Handle<Value> socketObj = owner_->events_[NativeProxyObject::tetACCEPTED]->container->getV8ValueProperty("socket");
         Handle<ObjectTemplate> global = TiObject::getObjectTemplateFromJsObject(socketObj);
         Handle<Object> result = global->NewInstance();
         TiTCPSocketObject* socket = (TiTCPSocketObject*)TiObject::getTiObjectFromJsObject(socketObj);
@@ -135,20 +132,19 @@ public slots:
         inBoundNative->socketState_ = SOCKET_STATE_CONNECTED;
         inBoundNative->port_ = inboundSocket->peerPort();
         inBoundNative->hostName_ = inboundSocket->peerAddress().toString();
-        eventContainer_->setV8ValueProperty("inbound", inBoundSocket->getValue());
-        eventContainer_->fireEvent();
+        owner_->events_[NativeProxyObject::tetACCEPTED]->container->setV8ValueProperty("inbound",  inBoundSocket->getValue());
+        owner_->fireEvent(NativeProxyObject::tetACCEPTED, NULL);
     }
 
     void error(QAbstractSocket::SocketError socketError)
     {
-        eventContainer_->setDataProperty("error", owner_->tcpClient_->errorString().toStdString().c_str());
-        eventContainer_->setDataProperty("errorCode", socketError);
+        owner_->events_[NativeProxyObject::tetERROR]->container->setDataProperty(NativeProxyObject::tetERROR, owner_->tcpClient_->errorString().toStdString().c_str());
+        owner_->events_[NativeProxyObject::tetERROR]->container->setDataProperty("errorCode", socketError);
         owner_->socketState_ = SOCKET_STATE_ERROR;
-        eventContainer_->fireEvent();
+        owner_->fireEvent(NativeProxyObject::tetERROR, NULL);
     }
 
 private:
-    TiEventContainer* eventContainer_;
     NativeTCPSocketObject* owner_;
 
     // Disable copy ctor & assignment operator

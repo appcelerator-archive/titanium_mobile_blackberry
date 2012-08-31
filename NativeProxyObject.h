@@ -87,8 +87,11 @@ public:
     virtual int setEventHandler(const char* eventName, TiEvent* event);
 
     // Ti event types (tet)
+    static const char* tetACCEPTED;
     static const char* tetCHANGE;
     static const char* tetCLICK;
+    static const char* tetCONNECTED;
+    static const char* tetERROR;
 
 protected:
     NativeProxyObject();
