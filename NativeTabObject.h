@@ -31,7 +31,7 @@ class Tab;
 class NativeTabObject : public NativeControlObject
 {
 public:
-    static NativeObject* createTab();
+    static NativeObject* createTab(TiObject* tiObject);
     virtual ~NativeTabObject();
     virtual int getObjectType() const;
     virtual int setTitle(TiObject* obj);
@@ -49,7 +49,7 @@ private:
     bb::cascades::Page* page_;
     bb::cascades::Tab* tab_;
 
-    NativeTabObject();
+    explicit NativeTabObject(TiObject* tiObject);
     // Disable copy ctor & assignment operator
     NativeTabObject(const NativeTabObject& obj);
     NativeTabObject& operator=(const NativeTabObject& obj);

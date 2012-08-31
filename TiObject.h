@@ -89,6 +89,7 @@ struct TiProperty
     int nativePropertyNumber;
 };
 
+
 /*
  * TiObject
  *
@@ -113,7 +114,7 @@ public:
     virtual Handle<Value> getValue() const;
     virtual Handle<Value> evaluate() const;
     virtual VALUE_MODIFY setValue(Handle<Value> value);
-    virtual void forceSetValue(Handle<Value> value);
+    virtual VALUE_MODIFY forceSetValue(Handle<Value> value);
     virtual bool hasMembers() const;
     virtual bool isFunction() const;
     virtual bool canAddMembers() const;
@@ -126,6 +127,7 @@ public:
     virtual NativeObject* getNativeObject() const;
     virtual void setupEvents();
     static string jsFilePath;
+    void forceSetProp(const char* propString, Local<Value> value);
 
 protected:
     virtual void initializeTiObject(TiObject* parentObject);
@@ -143,12 +145,15 @@ protected:
     virtual void setNativeObject(NativeObject* nativeObject);
     virtual void onSetupEvents();
 
-private:
-    static Handle<Value> propGetter_(Local<String> prop, const AccessorInfo& info);
-    static Handle<Value> propSetter_(Local<String> prop, Local<Value> value, const AccessorInfo& info);
-    static Handle<Value> functCallback_(const Arguments& args);
-    Persistent<Value> value_;
+    typedef VALUE_MODIFY(TiObject::*SET_VALUE_CALLBACK)(Handle<Value>);
+    virtual Handle<Value> setPropHelper(const char* propString, Local<Value> value, SET_VALUE_CALLBACK cb);
 
+private:
+    static Handle<Value> _propGetter(Local<String> prop, const AccessorInfo& info);
+    static Handle<Value> _propSetter(Local<String> prop, Local<Value> value, const AccessorInfo& info);
+    static Handle<Value> _functCallback(const Arguments& args);
+
+    Persistent<Value> value_;
     string name_;
     bool isInitialized_;
     TiObject* parentObject_;

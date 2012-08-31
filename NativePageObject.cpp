@@ -14,7 +14,8 @@
 
 using namespace bb::cascades;
 
-NativePageObject::NativePageObject()
+NativePageObject::NativePageObject(TiObject* tiObject)
+    : NativeControlObject(tiObject)
 {
     nativeObjectFactory_ = NULL;
     page_ = NULL;
@@ -24,9 +25,9 @@ NativePageObject::~NativePageObject()
 {
 }
 
-NativeObject* NativePageObject::createPage(NativeObjectFactory* nativeObjectFactory)
+NativeObject* NativePageObject::createPage(TiObject* tiObject, NativeObjectFactory* nativeObjectFactory)
 {
-    NativePageObject* obj = new NativePageObject;
+    NativePageObject* obj = new NativePageObject(tiObject);
     obj->nativeObjectFactory_ = nativeObjectFactory;
     return obj;
 }

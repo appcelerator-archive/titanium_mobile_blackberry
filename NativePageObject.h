@@ -29,7 +29,7 @@ class Page;
 class NativePageObject : public NativeControlObject
 {
 public:
-    static NativeObject* createPage(NativeObjectFactory* nativeObjectFactory);
+    static NativeObject* createPage(TiObject* tiObject, NativeObjectFactory* nativeObjectFactory);
     virtual ~NativePageObject();
     virtual int getObjectType() const;
     virtual NAHANDLE getNativeHandle() const;
@@ -44,7 +44,7 @@ private:
     NativeObjectFactory* nativeObjectFactory_;
     bb::cascades::Page* page_;
 
-    NativePageObject();
+    explicit NativePageObject(TiObject* tiObject);
     // Disable copy ctor & assignment operator
     NativePageObject(const NativePageObject& obj);
     NativePageObject& operator=(const NativePageObject& obj);

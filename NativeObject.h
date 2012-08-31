@@ -25,14 +25,12 @@ enum NATIVE_TYPE
     , N_TYPE_ALERTDIALOG
     , N_TYPE_BUFFER
     , N_TYPE_BUTTON
-    , N_TYPE_CONTAINER
     , N_TYPE_DATE_TIME_PICKER
     , N_TYPE_DROPDOWN
     , N_TYPE_IMAGEVIEW
     , N_TYPE_LABEL
     , N_TYPE_LIST_VIEW
     , N_TYPE_LOGGER
-    , N_TYPE_OPTION
     , N_TYPE_PROGRESSBAR
     , N_TYPE_SLIDER
     , N_TYPE_TAB
@@ -170,14 +168,20 @@ public:
     virtual int fireEvent(const char* name, const TiObject* event) const;
 
 protected:
-    NativeObject();
+    explicit NativeObject(TiObject* tiObject);
     virtual ~NativeObject();
 
     virtual int initialize();
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
     friend class NativeObjectFactory;
 
+    TiObject* tiObject_;
+
 private:
+    // Disable copy ctor & assignment operator
+    NativeObject(const NativeObject&);
+    void operator=(const NativeObject&);
+
     bool isInitializationComplete_;
 };
 

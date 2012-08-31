@@ -80,7 +80,7 @@ void TiTCPSocketObject::initializeTiObject(TiObject* parentContext)
     if (!isInitialized())
     {
         TiIOStreamObject::initializeTiObject(parentContext);
-        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_TCPSOCKET);
+        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_TCPSOCKET, this);
         setNativeObject(obj);
         obj->release();
     }

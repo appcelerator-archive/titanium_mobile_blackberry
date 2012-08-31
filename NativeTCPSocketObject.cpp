@@ -236,7 +236,8 @@ int NativeTCPSocketObject::getAcceptedCallback(TiObject* /*obj*/, void* /*userCo
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-NativeTCPSocketObject::NativeTCPSocketObject()
+NativeTCPSocketObject::NativeTCPSocketObject(TiObject* tiObject)
+    : NativeProxyObject(tiObject)
 {
     socketState_ = SOCKET_STATE_INITIALIZED;
     port_ = -1;
@@ -257,9 +258,9 @@ int NativeTCPSocketObject::getObjectType() const
     return N_TYPE_TCPSOCKET;
 }
 
-NativeTCPSocketObject* NativeTCPSocketObject::createTCPSocket()
+NativeTCPSocketObject* NativeTCPSocketObject::createTCPSocket(TiObject* tiObject)
 {
-    return new NativeTCPSocketObject;
+    return new NativeTCPSocketObject(tiObject);
 }
 
 const static NATIVE_PROPSETGET_SETTING g_SocketPropSetGet[] =

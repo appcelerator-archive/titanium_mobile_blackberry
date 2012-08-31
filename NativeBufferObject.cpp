@@ -90,9 +90,9 @@ int NativeBufferObject::getObjectType() const
     return N_TYPE_BUFFER;
 }
 
-NativeBufferObject* NativeBufferObject::createBuffer()
+NativeBufferObject* NativeBufferObject::createBuffer(TiObject* tiObject)
 {
-    return new NativeBufferObject;
+    return new NativeBufferObject(tiObject);
 }
 
 PROP_SETGET(getByteOrder)
@@ -299,12 +299,12 @@ int NativeBufferObject::append(NativeBufferObject* sourceBuffer, int sourceOffse
     return bytesWritten;
 }
 
-NativeBufferObject* NativeBufferObject::clone(int sourceOffset, int sourceLength)
+NativeBufferObject* NativeBufferObject::clone(TiObject* tiObject, int sourceOffset, int sourceLength)
 {
     NativeBufferObject* cloneBuffer = NULL;
     if (sourceOffset == -1 && sourceLength == -1)
     {
-        cloneBuffer = new NativeBufferObject();
+        cloneBuffer = new NativeBufferObject(tiObject);
         cloneBuffer->internalData_ = QByteArray(internalData_);
     }
     else
@@ -320,7 +320,7 @@ NativeBufferObject* NativeBufferObject::clone(int sourceOffset, int sourceLength
         {
             throw NativeException(QString(Native::Msg::Out_of_bounds).toStdString());
         }
-        cloneBuffer = new NativeBufferObject();
+        cloneBuffer = new NativeBufferObject(tiObject);
         cloneBuffer->internalData_ = QByteArray(internalData_.mid(sourceOffset, sourceLength));
     }
     return cloneBuffer;

@@ -39,7 +39,7 @@ void TiUIAlertDialog::initializeTiObject(TiObject* parentContext)
     if (!isInitialized())
     {
         TiProxy::initializeTiObject(parentContext);
-        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_ALERTDIALOG);
+        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_ALERTDIALOG, this);
         setNativeObject(obj);
         obj->release();
     }

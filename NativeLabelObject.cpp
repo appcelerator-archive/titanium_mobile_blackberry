@@ -10,7 +10,8 @@
 #include <bb/cascades/Color>
 #include <qtgui/QColor>
 
-NativeLabelObject::NativeLabelObject()
+NativeLabelObject::NativeLabelObject(TiObject* tiObject)
+    : NativeAbstractTextControlObject(tiObject)
 {
     label_ = NULL;
 }
@@ -19,9 +20,9 @@ NativeLabelObject::~NativeLabelObject()
 {
 }
 
-NativeLabelObject* NativeLabelObject::createLabel()
+NativeLabelObject* NativeLabelObject::createLabel(TiObject* tiObject)
 {
-    return new NativeLabelObject;
+    return new NativeLabelObject(tiObject);
 }
 
 int NativeLabelObject::getObjectType() const

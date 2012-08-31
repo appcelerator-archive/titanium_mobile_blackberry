@@ -23,18 +23,19 @@ class TextField;
 class NativeTextFieldObject : public NativeAbstractTextControlObject
 {
 public:
-    static NativeTextFieldObject* createTextField();
+    static NativeTextFieldObject* createTextField(TiObject* tiObject);
     virtual int getObjectType() const;
     virtual int initialize();
     virtual int setHintText(TiObject* obj);
     virtual int setValue(TiObject* obj);
+    void updateValue(QString value);
 
 protected:
     virtual ~NativeTextFieldObject();
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
-    explicit NativeTextFieldObject();
+    explicit NativeTextFieldObject(TiObject* tiObject);
     //this class is neither copy-constructible nor assignable
     NativeTextFieldObject(const NativeTextFieldObject& textField);
     NativeTextFieldObject& operator=(const NativeTextFieldObject& textField);
@@ -52,12 +53,19 @@ public:
         : eventContainer_(eventContainer)
         , owner_(owner)
     {
+        Q_ASSERT(owner_);
+        owner_->addRef();
     }
-    virtual ~TextFieldEventHandler() {}
+    virtual ~TextFieldEventHandler()
+    {
+        Q_ASSERT(owner_);
+        owner_->release();
+    }
 
 public slots:
     void textChanging(QString str)
     {
+        owner_->updateValue(str);
         eventContainer_->setDataProperty("value", str.toUtf8().constData());
         eventContainer_->fireEvent();
     }

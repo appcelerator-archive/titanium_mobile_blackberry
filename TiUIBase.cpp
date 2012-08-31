@@ -251,7 +251,7 @@ void TiUIBase::initializeTiObject(TiObject* parentContext)
         /* Don't create a native view object for derived classes */
         if (string("TiUIBase") == getName())
         {
-            NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_VIEW);
+            NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_VIEW, this);
             setNativeObject(obj);
             obj->release();
         }

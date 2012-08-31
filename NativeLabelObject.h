@@ -20,7 +20,7 @@
 class NativeLabelObject : public NativeAbstractTextControlObject
 {
 public:
-    static NativeLabelObject* createLabel();
+    static NativeLabelObject* createLabel(TiObject* tiObject);
     virtual int getObjectType() const;
     virtual int initialize();
 
@@ -28,10 +28,11 @@ protected:
     virtual ~NativeLabelObject();
 
 private:
-    explicit NativeLabelObject();
+    explicit NativeLabelObject(TiObject* tiObject);
     // Disable copy ctor & assignment operator
     NativeLabelObject(const NativeLabelObject& indicator);
     NativeLabelObject& operator=(const NativeLabelObject& indicator);
+
     bb::cascades::Label* label_;
 };
 

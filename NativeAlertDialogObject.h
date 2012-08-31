@@ -27,7 +27,7 @@ using namespace v8;
 class NativeAlertDialogObject : public NativeControlObject
 {
 public:
-    static NativeAlertDialogObject* createAlertDialog();
+    static NativeAlertDialogObject* createAlertDialog(TiObject* tiObject);
     virtual int getObjectType() const;
     virtual int initialize();
     virtual NAHANDLE getNativeHandle() const;
@@ -43,7 +43,7 @@ protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
-    NativeAlertDialogObject();
+    explicit NativeAlertDialogObject(TiObject* tiObject);
     // Disable copy ctor & assignment operator
     NativeAlertDialogObject(const NativeAlertDialogObject&);
     NativeAlertDialogObject& operator=(const NativeAlertDialogObject&);

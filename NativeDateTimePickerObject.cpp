@@ -14,10 +14,9 @@
 #include <bb/cascades/DateTimePicker>
 #include <QDateTime>
 
-NativeDateTimePickerObject::NativeDateTimePickerObject() :
-    dateTimePicker_(NULL),
-    left_(0),
-    top_(0)
+NativeDateTimePickerObject::NativeDateTimePickerObject(TiObject* tiObject)
+    : NativeControlObject(tiObject)
+    , dateTimePicker_(NULL)
 {
 }
 
@@ -27,9 +26,9 @@ NativeDateTimePickerObject::~NativeDateTimePickerObject()
     dateTimePicker_ = NULL;
 }
 
-NativeDateTimePickerObject* NativeDateTimePickerObject::createDateTimePicker()
+NativeDateTimePickerObject* NativeDateTimePickerObject::createDateTimePicker(TiObject* tiObject)
 {
-    return new NativeDateTimePickerObject;
+    return new NativeDateTimePickerObject(tiObject);
 }
 
 int NativeDateTimePickerObject::initialize()

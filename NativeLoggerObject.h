@@ -59,7 +59,7 @@ protected:
     virtual ~NativeLoggerObject();
 
 private:
-    explicit NativeLoggerObject();
+    explicit NativeLoggerObject(TiObject* tiObject);
     // Disable copy ctor & assignment operator
     NativeLoggerObject(const NativeLoggerObject& indicator);
     NativeLoggerObject& operator=(const NativeLoggerObject& indicator);

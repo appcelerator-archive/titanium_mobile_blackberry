@@ -36,7 +36,7 @@ class ListViewEventHandler;
 class NativeListViewObject : public NativeControlObject
 {
 public:
-    static NativeListViewObject* createListView();
+    static NativeListViewObject* createListView(TiObject* tiObject);
     virtual int getObjectType() const;
     virtual int setData(TiObject* obj);
     virtual int initialize();
@@ -49,14 +49,12 @@ protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
-    explicit NativeListViewObject();
+    explicit NativeListViewObject(TiObject* tiObject);
     //Not copy-constructible; Not assignable.
     NativeListViewObject(const NativeListViewObject& obj);
     NativeListViewObject& operator=(const NativeListViewObject& obj);
 
     bb::cascades::ListView* listView_;
-    float left_;
-    float top_;
 };
 
 class ListViewItemFactory: public bb::cascades::ListItemManager

@@ -41,7 +41,7 @@ class TiEventContainerFactory;
 class NativeBufferObject : public NativeProxyObject
 {
 public:
-    static NativeBufferObject* createBuffer();
+    static NativeBufferObject* createBuffer(TiObject* tiObject);
     int getObjectType() const;
     int setPropertyValue(size_t propertyNumber, TiObject* obj);
     int getPropertyValue(size_t propertyNumber, TiObject* obj);
@@ -60,7 +60,7 @@ public:
     const char* toString() const;
     int copy(NativeBufferObject* sourceBuffer, int offset, int sourceOffset = -1, int sourceLength = -1);
     int append(NativeBufferObject* sourceBuffer, int sourceOffset = -1, int sourceLength = -1);
-    NativeBufferObject* clone(int sourceOffset = -1, int sourceLength = -1);
+    NativeBufferObject* clone(TiObject* tiObject, int sourceOffset = -1, int sourceLength = -1);
     int insert(NativeBufferObject* sourceBuffer, int offset, int sourceOffset = -1, int sourceLength = -1);
     int bufferSize() const;
     void replaceInternalData(const QByteArray& newArray, int offset, int length);
@@ -69,9 +69,10 @@ protected:
     virtual ~NativeBufferObject();
 
 private:
-    NativeBufferObject() {};
+    explicit NativeBufferObject(TiObject* tiObject) : NativeProxyObject(tiObject) {};
     NativeBufferObject(const NativeBufferObject&);
     NativeBufferObject& operator=(const NativeBufferObject&);
+
     // Buffer containing raw data
     QByteArray internalData_;
     // Byte order

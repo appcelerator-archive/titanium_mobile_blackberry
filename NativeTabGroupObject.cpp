@@ -12,9 +12,10 @@
 
 using namespace bb::cascades;
 
-NativeTabGroupObject::NativeTabGroupObject() :
-    nativeObjectFactory_(NULL),
-    tabGroup_(NULL)
+NativeTabGroupObject::NativeTabGroupObject(TiObject* tiObject)
+    : NativeControlObject(tiObject)
+    , nativeObjectFactory_(NULL)
+    , tabGroup_(NULL)
 {
 }
 
@@ -24,9 +25,9 @@ NativeTabGroupObject::~NativeTabGroupObject()
     tabGroup_ = NULL;
 }
 
-NativeObject* NativeTabGroupObject::createTabGroup(NativeObjectFactory* nativeObjectFactory)
+NativeObject* NativeTabGroupObject::createTabGroup(TiObject* tiObject, NativeObjectFactory* nativeObjectFactory)
 {
-    NativeTabGroupObject* obj = new NativeTabGroupObject;
+    NativeTabGroupObject* obj = new NativeTabGroupObject(tiObject);
     obj->nativeObjectFactory_ = nativeObjectFactory;
     return obj;
 }

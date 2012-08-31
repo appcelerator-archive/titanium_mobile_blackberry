@@ -28,18 +28,24 @@ class Slider;
 class NativeSliderObject : public NativeControlObject
 {
 public:
-    NativeSliderObject();
+    static NativeSliderObject* createSlider(TiObject* tiObject);
     virtual ~NativeSliderObject();
     virtual int getObjectType() const;
     virtual int initialize();
     virtual int setMax(TiObject* obj);
     virtual int setMin(TiObject* obj);
     virtual int setValue(TiObject* obj);
+    void updateValue(float value);
 
 protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
+    explicit NativeSliderObject(TiObject* tiObject);
+    // Disable copy ctor & assignment operator
+    NativeSliderObject(const NativeSliderObject&);
+    void operator=(const NativeSliderObject&);
+
     bb::cascades::Slider* slider_;
 };
 
@@ -49,20 +55,30 @@ class SliderEventHandler : public QObject
     Q_OBJECT
 
 public:
-    explicit SliderEventHandler(TiEventContainer* eventContainer)
+    explicit SliderEventHandler(TiEventContainer* eventContainer, NativeSliderObject* owner)
     {
+        Q_ASSERT(owner);
+        owner_ = owner;
+        owner_->addRef();
         eventContainer_ = eventContainer;
     }
-    virtual ~SliderEventHandler() {}
+
+    virtual ~SliderEventHandler()
+    {
+        Q_ASSERT(owner_);
+        owner_->release();
+    }
 
 public slots:
     void valueChanging(float value)
     {
+        owner_->updateValue(value);
         eventContainer_->setDataProperty("value", value);
         eventContainer_->fireEvent();
     }
 
 private:
+    NativeSliderObject* owner_;
     TiEventContainer* eventContainer_;
 
     // Disable copy ctor & assignment operator

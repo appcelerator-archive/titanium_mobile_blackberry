@@ -50,21 +50,19 @@ NativeObjectFactory::~NativeObjectFactory()
     eventContainerFactory_ = NULL;
 }
 
-NativeObject* NativeObjectFactory::createNativeObject(int type)
+NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 {
     /* The NativeObject instances created here live in their TiObject counterpart
        The TiObject takes care of deleting them. */
     NativeObject* obj = NULL;
     switch (type)
     {
-    case N_TYPE_CONTAINER:
-
     case N_TYPE_WINDOW:
-        obj = NativePageObject::createPage(this);
+        obj = NativePageObject::createPage(tiObj, this);
         break;
 
     case N_TYPE_LABEL:
-        obj = NativeLabelObject::createLabel();
+        obj = NativeLabelObject::createLabel(tiObj);
         break;
 
     case N_TYPE_LOGGER:
@@ -72,67 +70,67 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
         break;
 
     case N_TYPE_BUFFER:
-        obj = NativeBufferObject::createBuffer();
+        obj = NativeBufferObject::createBuffer(tiObj);
         break;
 
     case N_TYPE_BUTTON:
-        obj = new NativeButtonObject;
+        obj = NativeButtonObject::createButton(tiObj);
         break;
 
     case N_TYPE_SLIDER:
-        obj = new NativeSliderObject;
+        obj = NativeSliderObject::createSlider(tiObj);
         break;
 
     case N_TYPE_PROGRESSBAR:
-        obj = NativeProgressBarObject::createProgressBar();
+        obj = NativeProgressBarObject::createProgressBar(tiObj);
         break;
 
     case N_TYPE_TEXT_FIELD:
-        obj = NativeTextFieldObject::createTextField();
+        obj = NativeTextFieldObject::createTextField(tiObj);
         break;
 
     case N_TYPE_IMAGEVIEW:
-        obj = NativeImageViewObject::createImageView();
+        obj = NativeImageViewObject::createImageView(tiObj);
         break;
 
     case N_TYPE_ACTIVITYINDICATOR:
-        obj = NativeActivityIndicatorObject::createActivityIndicator();
+        obj = NativeActivityIndicatorObject::createActivityIndicator(tiObj);
         break;
 
     case N_TYPE_TOGGLEBUTTON:
-        obj = NativeToggleButtonObject::createToggleButton();
+        obj = NativeToggleButtonObject::createToggleButton(tiObj);
         break;
 
     case N_TYPE_DROPDOWN:
-        obj = NativeDropDownObject::createDropDown();
+        obj = NativeDropDownObject::createDropDown(tiObj);
         break;
 
     case N_TYPE_LIST_VIEW:
-        obj = NativeListViewObject::createListView();
+        obj = NativeListViewObject::createListView(tiObj);
         break;
 
     case N_TYPE_TAB:
-        obj = NativeTabObject::createTab();
+        obj = NativeTabObject::createTab(tiObj);
         break;
 
     case N_TYPE_TABGROUP:
-        obj = NativeTabGroupObject::createTabGroup(this);
+        obj = NativeTabGroupObject::createTabGroup(tiObj, this);
         break;
 
     case N_TYPE_TCPSOCKET:
-        obj = NativeTCPSocketObject::createTCPSocket();
+        obj = NativeTCPSocketObject::createTCPSocket(tiObj);
         break;
 
     case N_TYPE_DATE_TIME_PICKER:
-        obj = NativeDateTimePickerObject::createDateTimePicker();
+        obj = NativeDateTimePickerObject::createDateTimePicker(tiObj);
         break;
 
     case N_TYPE_ALERTDIALOG:
-        obj = NativeAlertDialogObject::createAlertDialog();
+        obj = NativeAlertDialogObject::createAlertDialog(tiObj);
         break;
 
     case N_TYPE_VIEW:
-        obj = NativeControlObject::createView();
+        obj = NativeControlObject::createView(tiObj);
         break;
 
     }

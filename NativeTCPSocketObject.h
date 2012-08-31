@@ -48,7 +48,7 @@ class NativeTCPSocketObject : public NativeProxyObject
 {
 public:
     friend class TCPSocketEventHandler;
-    static NativeTCPSocketObject* createTCPSocket();
+    static NativeTCPSocketObject* createTCPSocket(TiObject* tiObject);
     int getObjectType() const;
     int setPropertyValue(size_t propertyNumber, TiObject* obj, void* userContext);
     int getPropertyValue(size_t propertyNumber, TiObject* obj, void* userContext);
@@ -82,7 +82,7 @@ protected:
     virtual ~NativeTCPSocketObject();
 
 private:
-    NativeTCPSocketObject();
+    explicit NativeTCPSocketObject(TiObject* tiObject);
     NativeTCPSocketObject(const NativeTCPSocketObject&);
     NativeTCPSocketObject& operator=(const NativeTCPSocketObject&);
     QTcpSocket* tcpClient_;

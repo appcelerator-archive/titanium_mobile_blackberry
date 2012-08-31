@@ -7,15 +7,22 @@
 
 #include "NativeSliderObject.h"
 #include "TiEventContainerFactory.h"
+#include "TiObject.h"
 #include "bb/cascades/slider"
 
-NativeSliderObject::NativeSliderObject()
+NativeSliderObject::NativeSliderObject(TiObject* tiObject)
+    : NativeControlObject(tiObject)
 {
     slider_ = NULL;
 }
 
 NativeSliderObject::~NativeSliderObject()
 {
+}
+
+NativeSliderObject* NativeSliderObject::createSlider(TiObject* tiObject)
+{
+    return new NativeSliderObject(tiObject);
 }
 
 int NativeSliderObject::getObjectType() const
@@ -70,6 +77,11 @@ void NativeSliderObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
     NativeControlObject::setupEvents(containerFactory);
     TiEventContainer* eventChange = containerFactory->createEventContainer();
-    events_.insert(tetCHANGE, EventPairSmartPtr(eventChange, new SliderEventHandler(eventChange)));
+    events_.insert(tetCHANGE, EventPairSmartPtr(eventChange, new SliderEventHandler(eventChange, this)));
     QObject::connect(slider_, SIGNAL(valueChanging(float)), events_[tetCHANGE]->handler, SLOT(valueChanging(float)));
+}
+
+void NativeSliderObject::updateValue(float value)
+{
+    tiObject_->forceSetProp("value", Number::New(value));
 }

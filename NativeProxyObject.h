@@ -94,7 +94,7 @@ public:
     static const char* tetERROR;
 
 protected:
-    NativeProxyObject();
+    explicit NativeProxyObject(TiObject* tiObject);
     virtual ~NativeProxyObject();
 
     int getNextEventId();

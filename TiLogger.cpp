@@ -43,7 +43,7 @@ void TiLogger::initialize(NativeObjectFactory* nativeObjectFactory)
 {
     if (s_nativeLogger == NULL)
     {
-        s_nativeLogger = (NativeLoggerInterface*)nativeObjectFactory->createNativeObject(N_TYPE_LOGGER);
+        s_nativeLogger = (NativeLoggerInterface*)nativeObjectFactory->createNativeObject(N_TYPE_LOGGER, NULL);
     }
 }
 

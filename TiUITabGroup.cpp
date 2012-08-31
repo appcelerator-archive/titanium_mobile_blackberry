@@ -39,7 +39,7 @@ void TiUITabGroup::initializeTiObject(TiObject* parentContext)
     if (!isInitialized())
     {
         TiUIBase::initializeTiObject(parentContext);
-        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_TABGROUP);
+        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_TABGROUP, this);
         setNativeObject(obj);
         obj->release();
     }

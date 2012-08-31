@@ -18,20 +18,19 @@
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 
-NativeListViewObject::NativeListViewObject()
+NativeListViewObject::NativeListViewObject(TiObject* tiObject)
+    : NativeControlObject(tiObject)
 {
     listView_ = NULL;
-    top_ = 0;
-    left_ = 0;
 }
 
 NativeListViewObject::~NativeListViewObject()
 {
 }
 
-NativeListViewObject* NativeListViewObject::createListView()
+NativeListViewObject* NativeListViewObject::createListView(TiObject* tiObject)
 {
-    return new NativeListViewObject;
+    return new NativeListViewObject(tiObject);
 }
 
 int NativeListViewObject::initialize()

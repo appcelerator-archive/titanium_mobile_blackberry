@@ -134,7 +134,8 @@ const static UnitTypeData g_unitTypes[] =
     {UnitTypePT, "pt"}
 };
 
-NativeControlObject::NativeControlObject() :
+NativeControlObject::NativeControlObject(TiObject* tiObject) :
+    NativeProxyObject(tiObject),
     container_(NULL),
     control_(NULL),
     layout_(NULL),
@@ -177,9 +178,9 @@ NativeControlObject::~NativeControlObject()
 {
 }
 
-NativeControlObject* NativeControlObject::createView()
+NativeControlObject* NativeControlObject::createView(TiObject* tiObject)
 {
-    return new NativeControlObject;
+    return new NativeControlObject(tiObject);
 }
 
 int NativeControlObject::getObjectType() const

@@ -8,14 +8,16 @@
 #include "NativeLoggerObject.h"
 
 #include "NativeLoggerWorker.h"
+#include "TiObject.h"
 
 #include <QString>
 
 
 static NativeLoggerObject* s_logger;
 
-NativeLoggerObject::NativeLoggerObject()
-    : nativeLoggerWorker_(new NativeLoggerWorker)
+NativeLoggerObject::NativeLoggerObject(TiObject* tiObject)
+    : NativeLoggerInterface(tiObject)
+    , nativeLoggerWorker_(new NativeLoggerWorker)
 {
     nativeLoggerThread_.start();
     nativeLoggerWorker_->moveToThread(&nativeLoggerThread_);
@@ -36,7 +38,11 @@ NativeLoggerObject* NativeLoggerObject::getInstance()
 {
     if (s_logger == NULL)
     {
-        s_logger = new NativeLoggerObject;
+        // Logger is a special case and doesn't have corresponding TiObject
+        // Create an empty one for it
+        TiObject* tiObject = new TiObject;
+        s_logger = new NativeLoggerObject(tiObject);
+        tiObject->release();
     }
     return s_logger;
 }

@@ -6,14 +6,17 @@
  */
 
 #include "NativeTextFieldObject.h"
+
 #include "TiEventContainerFactory.h"
+#include "TiObject.h"
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/TextField>
 #include <QString>
 
-NativeTextFieldObject::NativeTextFieldObject()
-    : textField_(NULL)
+NativeTextFieldObject::NativeTextFieldObject(TiObject* tiObject)
+    : NativeAbstractTextControlObject(tiObject)
+    , textField_(NULL)
 {
 }
 
@@ -26,9 +29,9 @@ int NativeTextFieldObject::getObjectType() const
     return N_TYPE_TEXT_FIELD;
 }
 
-NativeTextFieldObject* NativeTextFieldObject::createTextField()
+NativeTextFieldObject* NativeTextFieldObject::createTextField(TiObject* tiObject)
 {
-    return new NativeTextFieldObject;
+    return new NativeTextFieldObject(tiObject);
 }
 
 int NativeTextFieldObject::initialize()
@@ -69,4 +72,9 @@ void NativeTextFieldObject::setupEvents(TiEventContainerFactory* containerFactor
     eventFieldChanged->setDataProperty("type", tetCHANGE);
     events_.insert(tetCHANGE, EventPairSmartPtr(eventFieldChanged, new TextFieldEventHandler(eventFieldChanged, this)));
     QObject::connect(textField_, SIGNAL(textChanging(QString)), events_[tetCHANGE]->handler, SLOT(textChanging(QString)));
+}
+
+void NativeTextFieldObject::updateValue(QString value)
+{
+    tiObject_->forceSetProp("value", String::New(value.toUtf8().constData()));
 }

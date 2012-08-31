@@ -29,7 +29,7 @@ void TiUISwitch::initializeTiObject(TiObject* parentContext)
     if (!isInitialized())
     {
         TiUIBase::initializeTiObject(parentContext);
-        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_TOGGLEBUTTON);
+        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_TOGGLEBUTTON, this);
         setNativeObject(obj);
         obj->release();
     }

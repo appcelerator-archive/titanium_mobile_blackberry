@@ -29,17 +29,18 @@ class ToggleButton;
 class NativeToggleButtonObject : public NativeControlObject
 {
 public:
-    static NativeToggleButtonObject* createToggleButton();
+    static NativeToggleButtonObject* createToggleButton(TiObject* tiObject);
     virtual int getObjectType() const;
     virtual int initialize();
     virtual int setValue(TiObject* value);
+    void updateValue(bool value);
 
 protected:
     virtual ~NativeToggleButtonObject();
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
-    explicit NativeToggleButtonObject();
+    explicit NativeToggleButtonObject(TiObject* tiObject);
     // Disable copy ctor & assignment operator
     NativeToggleButtonObject(const NativeToggleButtonObject& toggleButton);
     NativeToggleButtonObject& operator=(const NativeToggleButtonObject& toggleButton);
@@ -53,17 +54,31 @@ class ToggleButtonEventHandler : public QObject
     Q_OBJECT
 
 public:
-    explicit ToggleButtonEventHandler(TiEventContainer* eventContainer)
+    explicit ToggleButtonEventHandler(TiEventContainer* eventContainer, NativeToggleButtonObject* owner)
     {
+        Q_ASSERT(owner);
+        owner_ = owner;
+        owner_->addRef();
         eventContainer_ = eventContainer;
     }
-    virtual ~ToggleButtonEventHandler() {}
+
+    virtual ~ToggleButtonEventHandler()
+    {
+        Q_ASSERT(owner_);
+        owner_->release();
+    }
 
 public slots:
-    //TODO
+    void checkedChanged(bool value)
+    {
+        owner_->updateValue(value);
+        eventContainer_->setDataProperty("value", value);
+        eventContainer_->fireEvent();
+    }
 
 private:
     TiEventContainer* eventContainer_;
+    NativeToggleButtonObject* owner_;
 
     // Disable copy ctor & assignment operator
     ToggleButtonEventHandler(const ToggleButtonEventHandler& eHandler);

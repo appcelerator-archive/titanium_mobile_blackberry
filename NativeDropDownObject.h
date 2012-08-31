@@ -28,7 +28,7 @@ class DropDown;
 class NativeDropDownObject : public NativeControlObject
 {
 public:
-    static NativeDropDownObject* createDropDown();
+    static NativeDropDownObject* createDropDown(TiObject* tiObject);
     virtual int getObjectType() const;
     virtual int initialize();
     virtual int setTitle(TiObject* obj);
@@ -40,10 +40,11 @@ protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
-    explicit NativeDropDownObject();
+    explicit NativeDropDownObject(TiObject* tiObject);
     // Disable copy ctor & assignment operator
     NativeDropDownObject(const NativeDropDownObject& dropdown);
     NativeDropDownObject& operator=(const NativeDropDownObject& dropdown);
+
     // Class members
     bb::cascades::DropDown* dropdown_;
 };
