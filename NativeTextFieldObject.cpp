@@ -7,12 +7,21 @@
 
 #include "NativeTextFieldObject.h"
 #include "TiEventContainerFactory.h"
+#include "TiObject.h"
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/TextField>
 #include <QString>
 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#include <v8.h>
+#pragma GCC diagnostic warning "-Wunused-parameter"
+
+using namespace v8;
+
 NativeTextFieldObject::NativeTextFieldObject()
+    : textField_(NULL)
+
 {
     textField_ = NULL;
 }
@@ -50,11 +59,30 @@ int NativeTextFieldObject::setHintText(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+int NativeTextFieldObject::setValue(TiObject* obj)
+{
+    int error = NativeControlObject::getString(obj, text_);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    textField_->setText(text_);
+    return NATIVE_ERROR_OK;
+}
+
+int NativeTextFieldObject::getValue(TiObject* obj)
+{
+    Handle<Object> value = Object::New();
+    value->Set(String::New("value"), String::New(text_.toUtf8().constData()));
+    obj->setValue(value);
+    return NATIVE_ERROR_OK;
+}
+
 void NativeTextFieldObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
     NativeControlObject::setupEvents(containerFactory);
     TiEventContainer* eventFieldChanged = containerFactory->createEventContainer();
     eventFieldChanged->setDataProperty("type", tetCHANGE);
-    events_.insert(tetCHANGE, EventPairSmartPtr(eventFieldChanged, new TextFieldEventHandler(eventFieldChanged)));
+    events_.insert(tetCHANGE, EventPairSmartPtr(eventFieldChanged, new TextFieldEventHandler(this, eventFieldChanged)));
     QObject::connect(textField_, SIGNAL(textChanging(QString)), events_[tetCHANGE]->handler, SLOT(textChanging(QString)));
 }
