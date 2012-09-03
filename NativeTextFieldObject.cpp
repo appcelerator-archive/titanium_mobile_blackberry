@@ -23,7 +23,6 @@ NativeTextFieldObject::NativeTextFieldObject()
     : textField_(NULL)
 
 {
-    textField_ = NULL;
 }
 
 NativeTextFieldObject::~NativeTextFieldObject()
@@ -61,20 +60,13 @@ int NativeTextFieldObject::setHintText(TiObject* obj)
 
 int NativeTextFieldObject::setValue(TiObject* obj)
 {
-    int error = NativeControlObject::getString(obj, text_);
+    QString text;
+    int error = NativeControlObject::getString(obj, text);
     if (error != NATIVE_ERROR_OK)
     {
         return error;
     }
-    textField_->setText(text_);
-    return NATIVE_ERROR_OK;
-}
-
-int NativeTextFieldObject::getValue(TiObject* obj)
-{
-    Handle<Object> value = Object::New();
-    value->Set(String::New("value"), String::New(text_.toUtf8().constData()));
-    obj->setValue(value);
+    textField_->setText(text);
     return NATIVE_ERROR_OK;
 }
 
@@ -83,6 +75,6 @@ void NativeTextFieldObject::setupEvents(TiEventContainerFactory* containerFactor
     NativeControlObject::setupEvents(containerFactory);
     TiEventContainer* eventFieldChanged = containerFactory->createEventContainer();
     eventFieldChanged->setDataProperty("type", tetCHANGE);
-    events_.insert(tetCHANGE, EventPairSmartPtr(eventFieldChanged, new TextFieldEventHandler(this, eventFieldChanged)));
+    events_.insert(tetCHANGE, EventPairSmartPtr(eventFieldChanged, new TextFieldEventHandler(eventFieldChanged, this)));
     QObject::connect(textField_, SIGNAL(textChanging(QString)), events_[tetCHANGE]->handler, SLOT(textChanging(QString)));
 }

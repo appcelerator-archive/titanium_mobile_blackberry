@@ -25,14 +25,9 @@ class NativeTextFieldObject : public NativeAbstractTextControlObject
 public:
     static NativeTextFieldObject* createTextField();
     virtual int getObjectType() const;
-    virtual int getValue(TiObject* obj);
     virtual int initialize();
     virtual int setHintText(TiObject* obj);
     virtual int setValue(TiObject* obj);
-    void setTextValue(QString text)
-    {
-        text_ = text;
-    }
 
 protected:
     virtual ~NativeTextFieldObject();
@@ -45,7 +40,6 @@ private:
     NativeTextFieldObject& operator=(const NativeTextFieldObject& textField);
 
     bb::cascades::TextField* textField_;
-    QString text_;
 };
 
 //Event handler for textField object
@@ -54,7 +48,7 @@ class TextFieldEventHandler : public QObject
     Q_OBJECT
 
 public:
-    explicit TextFieldEventHandler(NativeTextFieldObject* owner, TiEventContainer* eventContainer)
+    explicit TextFieldEventHandler(TiEventContainer* eventContainer, NativeTextFieldObject* owner)
         : eventContainer_(eventContainer)
         , owner_(owner)
     {
@@ -65,7 +59,6 @@ public slots:
     void textChanging(QString str)
     {
         eventContainer_->setDataProperty("value", str.toUtf8().constData());
-        owner_->setTextValue(str);
         eventContainer_->fireEvent();
     }
 

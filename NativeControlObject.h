@@ -74,7 +74,6 @@ public:
     virtual int getPropertyValue(size_t propertyNumber, TiObject* obj);
     virtual int getRect(TiObject* obj);
     virtual int getSize(TiObject* obj);
-    virtual int getValue(TiObject* obj);
     virtual int getZIndex(TiObject* obj);
     virtual int setAnchorPoint(TiObject* obj);
     virtual int setBackgroundColor(TiObject* obj);

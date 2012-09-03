@@ -801,12 +801,6 @@ int NativeControlObject::setValue(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETGET(getValue)
-int NativeControlObject::getValue(TiObject*)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
 PROP_SETGET(setVisible)
 int NativeControlObject::setVisible(TiObject* obj)
 {
@@ -991,7 +985,7 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_TITLE, PROP_SETGET_FUNCTION(setTitle), NULL},
     {N_PROP_TOP, PROP_SETGET_FUNCTION(setTop), NULL},
     {N_PROP_TYPE, PROP_SETGET_FUNCTION(setType), NULL},
-    {N_PROP_VALUE, PROP_SETGET_FUNCTION(setValue), PROP_SETGET_FUNCTION(getValue)},
+    {N_PROP_VALUE, PROP_SETGET_FUNCTION(setValue), NULL},
     {N_PROP_VISIBLE, PROP_SETGET_FUNCTION(setVisible), NULL},
     {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), NULL},
     {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setWindow), NULL},
