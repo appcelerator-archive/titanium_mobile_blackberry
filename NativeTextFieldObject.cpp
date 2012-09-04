@@ -7,15 +7,10 @@
 
 #include "NativeTextFieldObject.h"
 #include "TiEventContainerFactory.h"
-#include "TiObject.h"
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/TextField>
 #include <QString>
-
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#include <v8.h>
-#pragma GCC diagnostic warning "-Wunused-parameter"
 
 using namespace v8;
 
