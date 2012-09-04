@@ -12,11 +12,8 @@
 #include <bb/cascades/TextField>
 #include <QString>
 
-using namespace v8;
-
 NativeTextFieldObject::NativeTextFieldObject()
     : textField_(NULL)
-
 {
 }
 
