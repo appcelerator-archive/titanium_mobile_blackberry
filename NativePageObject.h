@@ -17,6 +17,7 @@ namespace bb
 namespace cascades
 {
 class Page;
+class TitleBar;
 }
 }
 
@@ -36,6 +37,7 @@ public:
     virtual int addChildNativeObject(NativeObject* obj);
     virtual int open();
     virtual int removeChildNativeObject(NativeObject* obj);
+    virtual int setTitle(TiObject* obj);
 
 protected:
     virtual int initialize();
@@ -43,6 +45,7 @@ protected:
 private:
     NativeObjectFactory* nativeObjectFactory_;
     bb::cascades::Page* page_;
+    bb::cascades::TitleBar* titleBar_;
 
     NativePageObject();
     // Disable copy ctor & assignment operator
