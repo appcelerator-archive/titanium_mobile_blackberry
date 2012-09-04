@@ -27,6 +27,7 @@ public:
     virtual int getObjectType() const;
     virtual int initialize();
     virtual int setHintText(TiObject* obj);
+    virtual int setValue(TiObject* obj);
 
 protected:
     virtual ~NativeTextFieldObject();
@@ -47,9 +48,10 @@ class TextFieldEventHandler : public QObject
     Q_OBJECT
 
 public:
-    explicit TextFieldEventHandler(TiEventContainer* eventContainer)
+    explicit TextFieldEventHandler(TiEventContainer* eventContainer, NativeTextFieldObject* owner)
+        : eventContainer_(eventContainer)
+        , owner_(owner)
     {
-        eventContainer_ = eventContainer;
     }
     virtual ~TextFieldEventHandler() {}
 
@@ -62,6 +64,7 @@ public slots:
 
 private:
     TiEventContainer* eventContainer_;
+    NativeTextFieldObject* owner_;
 
     // Disable copy ctor & assignment operator
     TextFieldEventHandler(const TextFieldEventHandler& eHandler);

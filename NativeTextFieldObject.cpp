@@ -13,8 +13,8 @@
 #include <QString>
 
 NativeTextFieldObject::NativeTextFieldObject()
+    : textField_(NULL)
 {
-    textField_ = NULL;
 }
 
 NativeTextFieldObject::~NativeTextFieldObject()
@@ -50,11 +50,23 @@ int NativeTextFieldObject::setHintText(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+int NativeTextFieldObject::setValue(TiObject* obj)
+{
+    QString text;
+    int error = NativeControlObject::getString(obj, text);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+    textField_->setText(text);
+    return NATIVE_ERROR_OK;
+}
+
 void NativeTextFieldObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
     NativeControlObject::setupEvents(containerFactory);
     TiEventContainer* eventFieldChanged = containerFactory->createEventContainer();
     eventFieldChanged->setDataProperty("type", tetCHANGE);
-    events_.insert(tetCHANGE, EventPairSmartPtr(eventFieldChanged, new TextFieldEventHandler(eventFieldChanged)));
+    events_.insert(tetCHANGE, EventPairSmartPtr(eventFieldChanged, new TextFieldEventHandler(eventFieldChanged, this)));
     QObject::connect(textField_, SIGNAL(textChanging(QString)), events_[tetCHANGE]->handler, SLOT(textChanging(QString)));
 }
