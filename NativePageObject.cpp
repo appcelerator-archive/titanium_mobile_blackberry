@@ -11,6 +11,7 @@
 #include "TiCascadesApp.h"
 #include <bb/cascades/Container>
 #include <bb/cascades/Page>
+#include <bb/cascades/TitleBar>
 
 using namespace bb::cascades;
 
@@ -18,6 +19,7 @@ NativePageObject::NativePageObject()
 {
     nativeObjectFactory_ = NULL;
     page_ = NULL;
+    titleBar_ = NULL;
 }
 
 NativePageObject::~NativePageObject()
@@ -78,4 +80,22 @@ int NativePageObject::open()
 int NativePageObject::removeChildNativeObject(NativeObject* obj)
 {
     return removeChildImpl(obj);
+}
+
+int NativePageObject::setTitle(TiObject* obj)
+{
+    QString title;
+
+    int error = NativeControlObject::getString(obj, title);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+    if (titleBar_ == NULL)
+    {
+        titleBar_ = new bb::cascades::TitleBar();
+    }
+    titleBar_->setTitle(title);
+    page_->setTitleBar(titleBar_);
+    return NATIVE_ERROR_OK;
 }
