@@ -18,20 +18,34 @@ L = function(key, hint)
 // TODO: move to its own file when we can include from the framework dir
 //Ti.include("bufferstream.js");
 Ti.BufferStream.prototype = {};
+
+Ti.BufferStream.prototype.isReadable = function() {
+    return (this.mode === Ti.Stream.MODE_READ);
+}
+
+Ti.BufferStream.prototype.isWriteable = function() {
+    return (this.mode === Ti.Stream.MODE_WRITE || this.mode === Ti.Stream.MODE_APPEND);
+}
+
 Ti.BufferStream.prototype.read = function(buffer, offset, length) {
-    if(this.pos == this.source.length)
+    if (!this.isReadable())
+    {
+        throw "Stream is not readable";
+    }
+
+    if (this.pos == this.source.length)
     {
         return -1;
     }
 
-    if (offset === undefined)
+    if (offset === undefined && length === undefined)
     {
         offset = 0;
-    }
-
-    if (length === undefined)
-    {
         length = buffer.length;
+    }
+    else if (offset === undefined || length === undefined)
+    {
+        throw "Missing argument";
     }
 
     // read until:
@@ -42,6 +56,44 @@ Ti.BufferStream.prototype.read = function(buffer, offset, length) {
     copyLength = Math.min(buffer.length - offset, copyLength);
 
     var numCopied = buffer.copy(this.source, offset, this.pos, copyLength);
+    this.pos += numCopied;
+    return numCopied;
+};
+
+Ti.BufferStream.prototype.write = function(buffer, offset, length) {
+    if (!this.isWriteable())
+    {
+        throw "Stream is not writeable";
+    }
+
+    if (offset === undefined && length === undefined)
+    {
+        offset = 0;
+        length = buffer.length;
+    }
+    else if (offset === undefined || length === undefined)
+    {
+        throw "Missing argument";
+    }
+
+    var numCopied = 0;
+    if (this.mode === Ti.Stream.MODE_WRITE)
+    {
+        // write until:
+        // - the end of this stream is reached
+        // - length bytes have been written
+        // - the stream returns an error
+        var copyLength = Math.min(buffer.length - offset, length);
+        numCopied = this.source.copy(buffer, this.pos, offset, copyLength);
+    }
+    else if(this.mode === Ti.Stream.MODE_APPEND)
+    {
+        numCopied = this.source.append(buffer, offset, length);
+    }
+    else
+    {
+        throw "Unknown open mode: " + this.mode;
+    }
     this.pos += numCopied;
     return numCopied;
 };
