@@ -11,8 +11,8 @@
 
 NativeActivityIndicatorObject::NativeActivityIndicatorObject(TiObject* tiObject)
     : NativeControlObject(tiObject)
+    , indicator_(NULL)
 {
-    indicator_ = NULL;
 }
 
 NativeActivityIndicatorObject::~NativeActivityIndicatorObject()
