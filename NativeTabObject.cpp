@@ -16,11 +16,12 @@
 
 using namespace bb::cascades;
 
-NativeTabObject::NativeTabObject() :
-    backAction_(NULL),
-    navigationPane_(NULL),
-    page_(NULL),
-    tab_(NULL)
+NativeTabObject::NativeTabObject(TiObject* tiObject)
+    : NativeControlObject(tiObject)
+    , backAction_(NULL)
+    , navigationPane_(NULL)
+    , page_(NULL)
+    , tab_(NULL)
 {
 }
 
@@ -32,9 +33,9 @@ NativeTabObject::~NativeTabObject()
     navigationPane_ = NULL;
 }
 
-NativeObject* NativeTabObject::createTab()
+NativeObject* NativeTabObject::createTab(TiObject* tiObject)
 {
-    NativeTabObject* obj = new NativeTabObject;
+    NativeTabObject* obj = new NativeTabObject(tiObject);
     return obj;
 }
 

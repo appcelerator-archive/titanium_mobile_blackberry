@@ -28,7 +28,7 @@ class TabbedPane;
 class NativeTabGroupObject : public NativeControlObject
 {
 public:
-    static NativeObject* createTabGroup(NativeObjectFactory* nativeObjectFactory);
+    static NativeObject* createTabGroup(TiObject* tiObject, NativeObjectFactory* nativeObjectFactory);
     virtual ~NativeTabGroupObject();
     virtual int getObjectType() const;
     virtual NAHANDLE getNativeHandle() const;
@@ -44,7 +44,7 @@ private:
     NativeObjectFactory* nativeObjectFactory_;
     bb::cascades::TabbedPane* tabGroup_;
 
-    NativeTabGroupObject();
+    explicit NativeTabGroupObject(TiObject* tiObject);
     // Disable copy ctor & assignment operator
     NativeTabGroupObject(const NativeTabGroupObject& obj);
     NativeTabGroupObject& operator=(const NativeTabGroupObject& obj);

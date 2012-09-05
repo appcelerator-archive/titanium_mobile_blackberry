@@ -37,7 +37,7 @@ void TiUIActivityIndicator::initializeTiObject(TiObject* parentContext)
     if (!isInitialized())
     {
         TiUIBase::initializeTiObject(parentContext);
-        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_ACTIVITYINDICATOR);
+        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_ACTIVITYINDICATOR, this);
         setNativeObject(obj);
         obj->release();
     }

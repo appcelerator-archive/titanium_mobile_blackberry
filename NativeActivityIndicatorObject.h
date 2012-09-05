@@ -28,7 +28,7 @@ class ActivityIndicator;
 class NativeActivityIndicatorObject : public NativeControlObject
 {
 public:
-    static NativeActivityIndicatorObject* createActivityIndicator();
+    static NativeActivityIndicatorObject* createActivityIndicator(TiObject* tiObject);
     virtual int getObjectType() const;
     virtual int initialize();
     virtual NAHANDLE getNativeHandle() const;
@@ -39,7 +39,7 @@ protected:
     virtual ~NativeActivityIndicatorObject();
 
 private:
-    explicit NativeActivityIndicatorObject();
+    explicit NativeActivityIndicatorObject(TiObject* tiObject);
     // Disable copy ctor & assignment operator
     NativeActivityIndicatorObject(const NativeActivityIndicatorObject& indicator);
     NativeActivityIndicatorObject& operator=(const NativeActivityIndicatorObject& indicator);

@@ -31,7 +31,7 @@ class DateTimePicker;
 class NativeDateTimePickerObject : public NativeControlObject
 {
 public:
-    static NativeDateTimePickerObject* createDateTimePicker();
+    static NativeDateTimePickerObject* createDateTimePicker(TiObject* tiObject);
     virtual int getObjectType() const;
     virtual int setValue(TiObject* obj);
     virtual int setType(TiObject* obj);
@@ -45,14 +45,12 @@ protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
-    explicit NativeDateTimePickerObject();
+    explicit NativeDateTimePickerObject(TiObject* tiObject);
     //Not copy-constructible; Not assignable.
     NativeDateTimePickerObject(const NativeDateTimePickerObject& obj);
     NativeDateTimePickerObject& operator=(const NativeDateTimePickerObject& obj);
 
     bb::cascades::DateTimePicker* dateTimePicker_;
-    float left_;
-    float top_;
 };
 
 //Event handler for DateTimePicker object

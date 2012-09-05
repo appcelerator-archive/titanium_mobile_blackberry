@@ -34,8 +34,9 @@ public:
     virtual int setTextAlign(TiObject* obj);
 
 protected:
-    explicit NativeAbstractTextControlObject();
+    explicit NativeAbstractTextControlObject(TiObject* tiObject);
     virtual ~NativeAbstractTextControlObject();
+
     virtual bb::cascades::AbstractTextControl* getTextControl() const;
     virtual void setTextControl(bb::cascades::AbstractTextControl* textControl);
 
@@ -43,6 +44,7 @@ private:
     // Disable copy ctor & assignment operator
     NativeAbstractTextControlObject(const NativeAbstractTextControlObject& textControl);
     NativeAbstractTextControlObject& operator=(const NativeAbstractTextControlObject& textControl);
+
     bb::cascades::AbstractTextControl* textControl_;
 };
 

@@ -6,12 +6,12 @@
  */
 
 #include "NativeDropDownObject.h"
-#include "NativeOptionObject.h"
 #include "TiEventContainerFactory.h"
 #include <bb/cascades/DropDown>
 #include <qt4/QtCore/qvector.h>
 
-NativeDropDownObject::NativeDropDownObject()
+NativeDropDownObject::NativeDropDownObject(TiObject* tiObject)
+    : NativeControlObject(tiObject)
 {
     dropdown_ = NULL;
 }
@@ -20,9 +20,9 @@ NativeDropDownObject::~NativeDropDownObject()
 {
 }
 
-NativeDropDownObject* NativeDropDownObject::createDropDown()
+NativeDropDownObject* NativeDropDownObject::createDropDown(TiObject* tiObject)
 {
-    return new NativeDropDownObject();
+    return new NativeDropDownObject(tiObject);
 }
 
 int NativeDropDownObject::getObjectType() const
@@ -59,11 +59,7 @@ int NativeDropDownObject::setOptions(TiObject* obj)
     }
     for (int i = 0; i < options.size(); ++i)
     {
-        NativeOptionObject* option = NativeOptionObject::createOption();
-        option->initialize();
-        option->setText(options[i].toStdString().c_str());
-        dropdown_->add((bb::cascades::Option*)option->getNativeHandle());
-        option->release();
+        dropdown_->add(bb::cascades::Option::create().text(options[i]));
     }
 
     return NATIVE_ERROR_OK;

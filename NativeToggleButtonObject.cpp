@@ -6,10 +6,13 @@
  */
 
 #include "NativeToggleButtonObject.h"
+
 #include "TiEventContainerFactory.h"
+#include "TiObject.h"
 #include <bb/cascades/ToggleButton>
 
-NativeToggleButtonObject::NativeToggleButtonObject()
+NativeToggleButtonObject::NativeToggleButtonObject(TiObject* tiObject)
+    : NativeControlObject(tiObject)
 {
     toggleButton_ = NULL;
 }
@@ -18,9 +21,9 @@ NativeToggleButtonObject::~NativeToggleButtonObject()
 {
 }
 
-NativeToggleButtonObject* NativeToggleButtonObject::createToggleButton()
+NativeToggleButtonObject* NativeToggleButtonObject::createToggleButton(TiObject* tiObject)
 {
-    return new NativeToggleButtonObject();
+    return new NativeToggleButtonObject(tiObject);
 }
 
 int NativeToggleButtonObject::getObjectType() const
@@ -51,7 +54,13 @@ void NativeToggleButtonObject::setupEvents(TiEventContainerFactory* containerFac
 {
     NativeControlObject::setupEvents(containerFactory);
     TiEventContainer* eventStateChanged = containerFactory->createEventContainer();
-    events_.insert(tetCHANGE, EventPairSmartPtr(eventStateChanged, new ToggleButtonEventHandler(eventStateChanged)));
-    //TODO: commented below line, because checkedChanged signal is not implemented for the toggleButton
-    //QObject::connect(toggleButton_, SIGNAL(checkedChanged(bool checked)), events_[tetCHANGE]->handler, SLOT(checkedChanged(bool checked)));
+    events_.insert(tetCHANGE, EventPairSmartPtr(eventStateChanged,
+                   new ToggleButtonEventHandler(eventStateChanged, this)));
+    QObject::connect(toggleButton_, SIGNAL(checkedChanged(bool)),
+                     events_[tetCHANGE]->handler, SLOT(checkedChanged(bool)));
+}
+
+void NativeToggleButtonObject::updateValue(bool value)
+{
+    tiObject_->forceSetProp("value", Local<Boolean>::New(Boolean::New(value)));
 }

@@ -30,7 +30,7 @@ class TitleBar;
 class NativePageObject : public NativeControlObject
 {
 public:
-    static NativeObject* createPage(NativeObjectFactory* nativeObjectFactory);
+    static NativeObject* createPage(TiObject* tiObject, NativeObjectFactory* nativeObjectFactory);
     virtual ~NativePageObject();
     virtual int getObjectType() const;
     virtual NAHANDLE getNativeHandle() const;
@@ -47,7 +47,7 @@ private:
     bb::cascades::Page* page_;
     bb::cascades::TitleBar* titleBar_;
 
-    NativePageObject();
+    explicit NativePageObject(TiObject* tiObject);
     // Disable copy ctor & assignment operator
     NativePageObject(const NativePageObject& obj);
     NativePageObject& operator=(const NativePageObject& obj);

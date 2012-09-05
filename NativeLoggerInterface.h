@@ -24,7 +24,7 @@ public:
     virtual void deleteInstance() = 0;
 
 protected:
-    NativeLoggerInterface() {};
+    explicit NativeLoggerInterface(TiObject* tiObject) : NativeObject(tiObject) {};
     virtual ~NativeLoggerInterface() {};
 
 private:

@@ -10,7 +10,8 @@
 #include <bb/cascades/VerticalAlignment>
 #include <bb/cascades/HorizontalAlignment>
 
-NativeProgressBarObject::NativeProgressBarObject()
+NativeProgressBarObject::NativeProgressBarObject(TiObject* tiObject)
+    : NativeControlObject(tiObject)
 {
     progressIndicator_ = NULL;
 }
@@ -24,9 +25,9 @@ int NativeProgressBarObject::getObjectType() const
     return N_TYPE_PROGRESSBAR;
 }
 
-NativeProgressBarObject* NativeProgressBarObject::createProgressBar()
+NativeProgressBarObject* NativeProgressBarObject::createProgressBar(TiObject* tiObject)
 {
-    return new NativeProgressBarObject();
+    return new NativeProgressBarObject(tiObject);
 }
 
 int NativeProgressBarObject::initialize()

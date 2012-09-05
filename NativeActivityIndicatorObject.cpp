@@ -9,18 +9,19 @@
 #include "TiEventContainerFactory.h"
 #include <bb/cascades/ActivityIndicator>
 
-NativeActivityIndicatorObject::NativeActivityIndicatorObject()
+NativeActivityIndicatorObject::NativeActivityIndicatorObject(TiObject* tiObject)
+    : NativeControlObject(tiObject)
+    , indicator_(NULL)
 {
-    indicator_ = NULL;
 }
 
 NativeActivityIndicatorObject::~NativeActivityIndicatorObject()
 {
 }
 
-NativeActivityIndicatorObject* NativeActivityIndicatorObject::createActivityIndicator()
+NativeActivityIndicatorObject* NativeActivityIndicatorObject::createActivityIndicator(TiObject* tiObject)
 {
-    return new NativeActivityIndicatorObject();
+    return new NativeActivityIndicatorObject(tiObject);
 }
 
 int NativeActivityIndicatorObject::getObjectType() const

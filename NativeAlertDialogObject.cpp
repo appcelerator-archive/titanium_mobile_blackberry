@@ -11,8 +11,10 @@
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 
-NativeAlertDialogObject::NativeAlertDialogObject()
-    : nativeDialog_(NULL), cancelIndex_(-1)
+NativeAlertDialogObject::NativeAlertDialogObject(TiObject* tiObject)
+    : NativeControlObject(tiObject)
+    , nativeDialog_(NULL)
+    , cancelIndex_(-1)
 {
 }
 
@@ -20,9 +22,9 @@ NativeAlertDialogObject::~NativeAlertDialogObject()
 {
 }
 
-NativeAlertDialogObject* NativeAlertDialogObject::createAlertDialog()
+NativeAlertDialogObject* NativeAlertDialogObject::createAlertDialog(TiObject* tiObject)
 {
-    return new NativeAlertDialogObject();
+    return new NativeAlertDialogObject(tiObject);
 }
 
 int NativeAlertDialogObject::getObjectType() const

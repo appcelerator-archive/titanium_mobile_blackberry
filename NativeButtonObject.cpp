@@ -13,13 +13,19 @@
 #include <bb/cascades/HorizontalAlignment>
 #include <bb/cascades/VerticalAlignment>
 
-NativeButtonObject::NativeButtonObject()
+NativeButtonObject::NativeButtonObject(TiObject* tiObject)
+    : NativeControlObject(tiObject)
 {
     button_ = NULL;
 }
 
 NativeButtonObject::~NativeButtonObject()
 {
+}
+
+NativeButtonObject* NativeButtonObject::createButton(TiObject* tiObject)
+{
+    return new NativeButtonObject(tiObject);
 }
 
 int NativeButtonObject::getObjectType() const

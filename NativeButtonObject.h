@@ -29,7 +29,7 @@ class Button;
 class NativeButtonObject : public NativeControlObject
 {
 public:
-    NativeButtonObject();
+    static NativeButtonObject* createButton(TiObject* tiObject);
     virtual ~NativeButtonObject();
     virtual int getObjectType() const;
     virtual int initialize();
@@ -40,6 +40,11 @@ protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
+    explicit NativeButtonObject(TiObject* tiObject);
+    // Disable copy ctor & assignment operator
+    NativeButtonObject(const NativeButtonObject&);
+    void operator=(const NativeButtonObject&);
+
     bb::cascades::Button* button_;
 };
 

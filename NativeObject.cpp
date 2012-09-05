@@ -6,15 +6,25 @@
  */
 
 #include "NativeObject.h"
+#include "TiObject.h"
+
+#include <assert.h>
+
+// Helpers prototypes
+static TiObject* assertPointer(TiObject* ptr);
 
 
-NativeObject::NativeObject()
+NativeObject::NativeObject(TiObject* tiObject)
+    : tiObject_(assertPointer(tiObject))
+    , isInitializationComplete_(false)
 {
-    isInitializationComplete_ = 0;
+    tiObject_->addRef();
 }
 
 NativeObject::~NativeObject()
 {
+    assert(tiObject_ != NULL);
+    tiObject_->release();
 }
 
 int NativeObject::setPropertyValue(std::size_t, TiObject*)
@@ -125,4 +135,13 @@ int NativeObject::fireEvent(const char*, const TiObject*) const
 void NativeObject::setupEvents(TiEventContainerFactory*)
 {
     // Do nothing in the base class
+}
+
+
+/* ==================== Static Helpers =================== */
+
+static TiObject* assertPointer(TiObject* ptr)
+{
+    assert(ptr != NULL);
+    return ptr;
 }

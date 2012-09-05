@@ -11,20 +11,19 @@
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/imageview>
 
-NativeImageViewObject::NativeImageViewObject()
+NativeImageViewObject::NativeImageViewObject(TiObject* tiObject)
+    : NativeControlObject(tiObject)
 {
     imageView_ = NULL;
-    left_ = 0;
-    top_ = 0;
 }
 
 NativeImageViewObject::~NativeImageViewObject()
 {
 }
 
-NativeImageViewObject* NativeImageViewObject::createImageView()
+NativeImageViewObject* NativeImageViewObject::createImageView(TiObject* tiObject)
 {
-    return new NativeImageViewObject;
+    return new NativeImageViewObject(tiObject);
 }
 
 int NativeImageViewObject::getObjectType() const

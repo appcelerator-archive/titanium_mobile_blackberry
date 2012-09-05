@@ -225,13 +225,13 @@ TiObject* TiObject::onLookupMember(const char* memberName)
 void TiObject::onSetGetPropertyCallback(Handle<ObjectTemplate>* objTemplate)
 {
     HandleScope handleScope;
-    (*objTemplate)->SetNamedPropertyHandler(propGetter_, propSetter_);
+    (*objTemplate)->SetNamedPropertyHandler(_propGetter, _propSetter);
 }
 
 void TiObject::onSetFunctionCallback(Handle<ObjectTemplate>* objTemplate)
 {
     HandleScope handleScope;
-    (*objTemplate)->SetCallAsFunctionHandler(functCallback_);
+    (*objTemplate)->SetCallAsFunctionHandler(_functCallback);
 }
 
 void TiObject::onSetProperty(const char*, Local<Value>)
@@ -300,18 +300,18 @@ VALUE_MODIFY TiObject::setValue(Handle<Value> value)
     return modify;
 }
 
-void TiObject::forceSetValue(Handle<Value> value)
+VALUE_MODIFY TiObject::forceSetValue(Handle<Value> value)
 {
     value_ = Persistent<Value>::New(value);
+    return VALUE_MODIFY_ALLOW;
 }
 
 bool TiObject::userCanAddMember(const char*) const
-
 {
     return true;
 }
 
-Handle<Value> TiObject::propGetter_(Local<String> prop, const AccessorInfo& info)
+Handle<Value> TiObject::_propGetter(Local<String> prop, const AccessorInfo& info)
 {
     HandleScope handleScope;
     Handle<Object> result;
@@ -360,7 +360,7 @@ Handle<Value> TiObject::propGetter_(Local<String> prop, const AccessorInfo& info
     return handleScope.Close(result);
 }
 
-Handle<Value> TiObject::propSetter_(Local<String> prop, Local<Value> value, const AccessorInfo& info)
+Handle<Value> TiObject::_propSetter(Local<String> prop, Local<Value> value, const AccessorInfo& info)
 {
     HandleScope handleScope;
     Handle<Object> result;
@@ -373,7 +373,17 @@ Handle<Value> TiObject::propSetter_(Local<String> prop, Local<Value> value, cons
     }
     String::Utf8Value propName(prop);
     const char* propString = (const char*)(*propName);
-    TiObject* destObj = obj->onLookupMember(propString);
+    return obj->setPropHelper(propString, value, &TiObject::setValue);
+}
+
+void TiObject::forceSetProp(const char* propString, Local<Value> value)
+{
+    setPropHelper(propString, value, &TiObject::forceSetValue);
+}
+
+Handle<Value> TiObject::setPropHelper(const char* propString, Local<Value> value, SET_VALUE_CALLBACK cb)
+{
+    TiObject* destObj = onLookupMember(propString);
     TiObject* srcObj = getTiObjectFromJsObject(value);
     if (srcObj == NULL)
     {
@@ -384,21 +394,22 @@ Handle<Value> TiObject::propSetter_(Local<String> prop, Local<Value> value, cons
     }
     if (destObj == NULL)
     {
-        if ((!obj->canAddMembers()) || (!obj->userCanAddMember(propString)))
+        if ((!canAddMembers()) || (!userCanAddMember(propString)))
         {
             srcObj->release();
             return Undefined();
         }
         destObj = srcObj;
     }
-    destObj->setValue(value);
+    (destObj->*cb)(value);
     setTiObjectToJsObject(value, destObj);
-    obj->addMember(destObj, propString);
-    obj->onSetProperty(propString, value);
+    addMember(destObj, propString);
+    onSetProperty(propString, value);
     srcObj->release();
     return value;
 }
-Handle<Value> TiObject::functCallback_(const Arguments& args)
+
+Handle<Value> TiObject::_functCallback(const Arguments& args)
 {
     HandleScope handleScope;
     TiObject* obj = getTiObjectFromJsObject(args.Holder());

@@ -14,6 +14,7 @@ class NativeObject;
 class NativePageObject;
 class NativeStringInterface;
 class TiCascadesApp;
+class TiObject;
 
 /*
  * NativeObjectFactory
@@ -27,7 +28,7 @@ class NativeObjectFactory
 public:
     NativeObjectFactory(TiCascadesApp* cascadesApp);
     virtual ~NativeObjectFactory();
-    NativeObject* createNativeObject(int type);
+    NativeObject* createNativeObject(int type, TiObject* tiObj);
     NativeObject* getRootContainer() const;
     void setRootContainer(NativeObject* container);
     void setEventContainerFactory(TiEventContainerFactory* eventContainerFactory);

@@ -64,7 +64,7 @@ void TiBufferObject::initializeTiObject(TiObject* parentContext)
     if (!isInitialized())
     {
         TiProxy::initializeTiObject(parentContext);
-        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_BUFFER);
+        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_BUFFER, this);
         setNativeObject(obj);
         obj->release();
     }
@@ -391,18 +391,18 @@ Handle<Value> TiBufferObject::_clone(void* userContext, TiObject* /*caller*/, co
     }
 
     // Create new Ti.Buffer
+    NativeObjectFactory* factory = obj->getNativeObjectFactory();
+    TiBufferObject* newBuffer = createBuffer(factory);
     NativeBufferObject* cloneBuffer = NULL;
     try
     {
-        cloneBuffer = nbo->clone(offset, length);
+        cloneBuffer = nbo->clone(newBuffer, offset, length);
     }
     catch (NativeException& ne)
     {
         return ThrowException(String::New(ne.what()));
     }
     Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(obj->getValue());
-    NativeObjectFactory* factory = obj->getNativeObjectFactory();
-    TiBufferObject* newBuffer = createBuffer(factory);
     newBuffer->setNativeObject(cloneBuffer);
     cloneBuffer->release();
     Handle<Object> result = global->NewInstance();

@@ -24,7 +24,7 @@ class ImageView;
 class NativeImageViewObject : public NativeControlObject
 {
 public:
-    static NativeImageViewObject* createImageView();
+    static NativeImageViewObject* createImageView(TiObject* tiObject);
     virtual int getObjectType() const;
     virtual int initialize();
     virtual int setImage(TiObject* obj);
@@ -34,14 +34,12 @@ protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
-    NativeImageViewObject();
+    explicit NativeImageViewObject(TiObject* tiObject);
     // Disable copy ctor and assignment operator
     NativeImageViewObject(const NativeImageViewObject& obj);
     NativeImageViewObject& operator=(const NativeImageViewObject& obj);
 
     bb::cascades::ImageView* imageView_;
-    float left_;
-    float top_;
 };
 
 //Event handler for ImageView object

@@ -64,7 +64,7 @@ enum UnitType
 class NativeControlObject : public NativeProxyObject
 {
 public:
-    static NativeControlObject* createView();
+    static NativeControlObject* createView(TiObject* tiObject);
     virtual int getObjectType() const;
     virtual NAHANDLE getNativeHandle() const;
     virtual int initialize();
@@ -127,7 +127,7 @@ public:
     void updateLayout(QRectF rect);
 
 protected:
-    NativeControlObject();
+    explicit NativeControlObject(TiObject* tiObject);
     virtual ~NativeControlObject();
     virtual void setControl(bb::cascades::Control* control);
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
