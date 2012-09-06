@@ -1,0 +1,29 @@
+{
+  "name": "titanium_mobile_blackberry",
+  "description": "Appcelerator BlackBerry Platform",
+  "keywords": [
+    "appcelerator",
+    "titanium",
+	   "blackberry",
+	   "mobile"
+  ],
+  "version": "__VERSION__",
+  "author": "Appcelerator, Inc. <info@appcelerator.com>",
+  "maintainers": [
+  	{"name":"Russ McMahon","email":"rmcmahon@appcelerator.com"}
+  ],
+  "contributors":[
+    {"name":"Russ McMahon","email":"rmcmahon@appcelerator.com"}
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/appcelerator/titanium_mobile_blackberry.git"
+  },
+  "preferGlobal": true,
+  "dependencies": {
+  },
+  "license":"Apache Public License v2",
+  "engines": {
+    "node": ">= 0.6.6"
+  }
+}
