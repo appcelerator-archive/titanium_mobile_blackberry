@@ -11,7 +11,7 @@
 #include <math.h>
 #include <qsize.h>
 
-#include <bb/device/Display>
+#include <bb/device/DisplayInfo>
 #include <bps/deviceinfo.h>
 
 // TODO: Remove once all functions implemented
@@ -79,23 +79,23 @@ Handle<Value> NativePlatformInterface::getBatteryMonitoring()
 PROP_GETTER(getBatteryState)
 Handle<Value> NativePlatformInterface::getBatteryState()
 {
-    bb::device::BatteryInfo::ChargingState bState = instance()->batteryInfo_.chargingState();
+    bb::device::BatteryChargingState::Type bState = instance()->batteryInfo_.chargingState();
     Ti::Platform::TI_BATTERY_STATE tiState = Ti::Platform::BATTERY_STATE_UNKNOWN;
     switch (bState)
     {
-    case bb::device::BatteryInfo::UnknownChargingState:
+    case bb::device::BatteryChargingState::Unknown:
         tiState = Ti::Platform::BATTERY_STATE_UNKNOWN;
         break;
-    case bb::device::BatteryInfo::NotCharging:
+    case bb::device::BatteryChargingState::NotCharging:
         tiState = Ti::Platform::BATTERY_STATE_UNKNOWN;
         break;
-    case bb::device::BatteryInfo::Full:
+    case bb::device::BatteryChargingState::Full:
         tiState = Ti::Platform::BATTERY_STATE_FULL;
         break;
-    case bb::device::BatteryInfo::Discharging:
+    case bb::device::BatteryChargingState::Discharging:
         tiState = Ti::Platform::BATTERY_STATE_UNPLUGGED;
         break;
-    case bb::device::BatteryInfo::Charging:
+    case bb::device::BatteryChargingState::Charging:
         tiState = Ti::Platform::BATTERY_STATE_CHARGING;
         break;
     }
@@ -108,7 +108,7 @@ Handle<Value> NativePlatformInterface::getDisplayCaps()
     HandleScope scope;
     Local<Object> dCapsObject = Object::New();
 
-    bb::device::Display display;
+    bb::device::DisplayInfo display;
 
     const float MMPERINCH = 25.4f;
 

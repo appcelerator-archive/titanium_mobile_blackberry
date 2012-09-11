@@ -11,7 +11,6 @@
 #include <bb/cascades/DataModel>
 #include <bb/cascades/ListView>
 #include <bb/cascades/QListDataModel>
-#include <bb/cascades/ListItemManager>
 #include <bb/cascades/VisualNode>
 #include "NativeListViewObject.h"
 #include "PersistentV8Value.h"
@@ -37,7 +36,7 @@ int NativeListViewObject::initialize()
 {
     listView_ = bb::cascades::ListView::create();
     setControl(listView_);
-    listView_->setListItemManager(new ListViewItemFactory());
+    listView_->setListItemProvider(new ListViewItemFactory());
     return NATIVE_ERROR_OK;
 }
 

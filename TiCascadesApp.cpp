@@ -31,7 +31,7 @@ void TiCascadesApp::setScene(NativeObject* mainWindow)
         AbstractPane* pane = (AbstractPane*)(mainWindow->getNativeHandle());
         if (pane != NULL)
         {
-            Application::setScene(pane);
+            Application::instance()->setScene(pane);
         }
     }
 }

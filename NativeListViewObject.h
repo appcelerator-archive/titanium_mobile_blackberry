@@ -26,7 +26,7 @@ class VisualNode;
 };
 };
 
-#include <bb/cascades/ListItemManager>
+#include <bb/cascades/ListItemProvider>
 #include <bb/cascades/StandardListItem>
 
 class TiEventContainer;
@@ -57,7 +57,7 @@ private:
     bb::cascades::ListView* listView_;
 };
 
-class ListViewItemFactory: public bb::cascades::ListItemManager
+class ListViewItemFactory: public bb::cascades::ListItemProvider
 {
 public:
     ListViewItemFactory() {};

@@ -20,7 +20,7 @@
 #include <bb/cascades/Color>
 #include <bb/cascades/Container>
 #include <bb/cascades/LayoutUpdateHandler>
-#include <bb/device/Display>
+#include <bb/device/DisplayInfo>
 #include <QColor>
 #include <QRectF>
 
@@ -147,16 +147,16 @@ NativeControlObject::NativeControlObject(TiObject* tiObject) :
     height_(0),
     right_(0),
     batchUpdating_(false),
-    heightIsUpdated(false),
-    widthIsUpdated(false),
-    leftIsUpdated(false),
-    topIsUpdated(false),
-    rightIsUpdated(false),
-    bottomIsUpdate(false)
+    heightIsUpdated_(false),
+    widthIsUpdated_(false),
+    leftIsUpdated_(false),
+    topIsUpdated_(false),
+    rightIsUpdated_(false),
+    bottomIsUpdated_(false)
 {
     if ((g_width <= 0) || (g_height <= 0))
     {
-        bb::device::Display display;
+        bb::device::DisplayInfo display;
         QSize size = display.pixelSize();
         g_width = size.width();
         g_height = size.height();
@@ -275,6 +275,7 @@ int NativeControlObject::removeChildImpl(NativeObject* obj)
     Q_ASSERT(container_ != NULL);
     bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
     container_->remove(control);
+    control->setParent(NULL);
     return NATIVE_ERROR_OK;
 }
 
@@ -354,35 +355,35 @@ int NativeControlObject::finishLayout()
 
 void NativeControlObject::updateViewLayout()
 {
-    if (widthIsUpdated)
+    if (widthIsUpdated_)
     {
         updateWidth();
-        widthIsUpdated = false;
+        widthIsUpdated_ = false;
     }
-    if (heightIsUpdated)
+    if (heightIsUpdated_)
     {
         updateHeight();
-        heightIsUpdated = false;
+        heightIsUpdated_ = false;
     }
-    if (leftIsUpdated)
+    if (leftIsUpdated_)
     {
         updateLeft();
-        leftIsUpdated = false;
+        leftIsUpdated_ = false;
     }
-    if (topIsUpdated)
+    if (topIsUpdated_)
     {
         updateTop();
-        topIsUpdated = false;
+        topIsUpdated_ = false;
     }
-    if (rightIsUpdated)
+    if (rightIsUpdated_)
     {
         updateRight();
-        rightIsUpdated = false;
+        rightIsUpdated_ = false;
     }
-    if (bottomIsUpdate)
+    if (bottomIsUpdated_)
     {
         updateBottom();
-        bottomIsUpdate = false;
+        bottomIsUpdated_ = false;
     }
     //TODO: need to verify if other UI.View properties needs to be updated as well
 }
@@ -509,7 +510,7 @@ int NativeControlObject::setHeight(TiObject* obj)
     }
     else
     {
-        heightIsUpdated = true;
+        heightIsUpdated_ = true;
     }
     return NATIVE_ERROR_OK;
 }
@@ -571,7 +572,7 @@ int NativeControlObject::setLeft(TiObject* obj)
     }
     else
     {
-        leftIsUpdated = true;
+        leftIsUpdated_ = true;
     }
     return NATIVE_ERROR_OK;
 }
@@ -611,7 +612,7 @@ int NativeControlObject::setBottom(TiObject* obj)
     }
     else
     {
-        bottomIsUpdate = true;
+        bottomIsUpdated_ = true;
     }
     return NATIVE_ERROR_OK;
 }
@@ -662,7 +663,7 @@ int NativeControlObject::setRight(TiObject* obj)
     }
     else
     {
-        rightIsUpdated = true;
+        rightIsUpdated_ = true;
     }
     return NATIVE_ERROR_OK;
 }
@@ -773,7 +774,7 @@ int NativeControlObject::setTop(TiObject* obj)
     }
     else
     {
-        topIsUpdated = true;
+        topIsUpdated_ = true;
     }
     return NATIVE_ERROR_OK;
 }
@@ -855,7 +856,7 @@ int NativeControlObject::setWidth(TiObject* obj)
     }
     else
     {
-        widthIsUpdated = true;
+        widthIsUpdated_ = true;
     }
     return NATIVE_ERROR_OK;
 }

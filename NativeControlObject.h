@@ -148,12 +148,6 @@ private:
     int updateTop();
     int updateRight();
     int updateBottom();
-    bool heightIsUpdated;
-    bool widthIsUpdated;
-    bool leftIsUpdated;
-    bool topIsUpdated;
-    bool rightIsUpdated;
-    bool bottomIsUpdate;
 
     bb::cascades::Container* container_;
     bb::cascades::Control* control_;
@@ -161,6 +155,7 @@ private:
     bb::cascades::Color backgroundColor_;
     bb::cascades::Color disabledBackgroundColor_;
     NativeLayoutHandler* layoutHandler_;
+
     TiObject* bottom_;
     TiObject* left_;
     TiObject* top_;
@@ -168,7 +163,14 @@ private:
     TiObject* height_;
     TiObject* right_;
     QRectF rect_;
+
     bool batchUpdating_;
+    bool heightIsUpdated_;
+    bool widthIsUpdated_;
+    bool leftIsUpdated_;
+    bool topIsUpdated_;
+    bool rightIsUpdated_;
+    bool bottomIsUpdated_;
 };
 
 // Event handler for Ti.UI.View

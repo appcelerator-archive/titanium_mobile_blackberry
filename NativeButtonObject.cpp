@@ -9,9 +9,6 @@
 #include "TiEvent.h"
 #include "TiEventContainerFactory.h"
 #include <bb/cascades/Button>
-#include <bb/cascades/DockLayoutProperties>
-#include <bb/cascades/HorizontalAlignment>
-#include <bb/cascades/VerticalAlignment>
 
 NativeButtonObject::NativeButtonObject(TiObject* tiObject)
     : NativeControlObject(tiObject)
@@ -36,10 +33,6 @@ int NativeButtonObject::getObjectType() const
 int NativeButtonObject::initialize()
 {
     button_ = bb::cascades::Button::create();
-    bb::cascades::DockLayoutProperties* properties = bb::cascades::DockLayoutProperties::create();
-    properties->setHorizontalAlignment(bb::cascades::HorizontalAlignment::Center);
-    properties->setVerticalAlignment(bb::cascades::VerticalAlignment::Top);
-    button_->setLayoutProperties(properties);
     setControl(button_);
     return NATIVE_ERROR_OK;
 }
