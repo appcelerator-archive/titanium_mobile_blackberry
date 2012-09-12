@@ -23,7 +23,7 @@ class Tab;
 }
 
 /*
- * NativePageObject
+ * NativeTabObject
  *
  * UI: Tab container
  */
