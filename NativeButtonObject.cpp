@@ -65,6 +65,7 @@ int NativeButtonObject::setImage(TiObject* obj)
     {
         return error;
     }
+    str = getResourcePath(str);
     const bb::cascades::Image image = bb::cascades::Image(QUrl(str));
     button_->setImage(image);
     return NATIVE_ERROR_OK;

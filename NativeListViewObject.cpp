@@ -121,7 +121,7 @@ void ListViewItemFactory::updateItem(bb::cascades::ListView*, bb::cascades::Visu
 /*********** ListViewEventHandler class *************/
 void ListViewEventHandler::selectionChanged(QVariantList var, bool)
 {
-    eventContainer_->setDataProperty("index", var[0].toString().toStdString().c_str());
+    eventContainer_->setDataProperty("index", var[0].toInt());
     Persistent<Value> propValue;
     if (owner_)
     {
