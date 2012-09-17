@@ -240,11 +240,12 @@ Handle<Value> TiRootObject::_require(void*, TiObject*, const Arguments& args)
 
     // check if cached
     static map<string, Persistent<Value> > cache;
-    map<string, Persistent<Value> >::const_iterator cachedValue = cache.find(id);
+    // FIXME: caching the value doesn't work, the resulting object is not a Function after the first time
+    /*map<string, Persistent<Value> >::const_iterator cachedValue = cache.find(id);
     if (cachedValue != cache.end())
     {
         return cachedValue->second;
-    }
+    }*/
 
     string filename = id + ".js";
     // TODO: need to make this relative and support com.example.module

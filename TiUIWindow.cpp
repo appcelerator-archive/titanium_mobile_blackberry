@@ -28,7 +28,7 @@ TiUIWindow* TiUIWindow::createWindow(NativeObjectFactory* objectFactory)
 void TiUIWindow::onCreateStaticMembers()
 {
     TiUIBase::onCreateStaticMembers();
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "open", this, open_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "open", this, _open);
 }
 
 void TiUIWindow::initializeTiObject(TiObject* parentContext)
@@ -42,7 +42,7 @@ void TiUIWindow::initializeTiObject(TiObject* parentContext)
     }
 }
 
-Handle<Value> TiUIWindow::open_(void* userContext, TiObject*, const Arguments&)
+Handle<Value> TiUIWindow::_open(void* userContext, TiObject*, const Arguments&)
 {
     HandleScope handleScope;
     TiUIWindow* obj = (TiUIWindow*) userContext;

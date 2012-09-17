@@ -89,7 +89,7 @@ void NativeListViewObject::setupEvents(TiEventContainerFactory* containerFactory
     TiEventContainer* eventClicked = containerFactory->createEventContainer();
     eventClicked->setDataProperty("type", tetCLICK);
     events_.insert(tetCLICK, EventPairSmartPtr(eventClicked, new ListViewEventHandler(eventClicked, this)));
-    QObject::connect(listView_, SIGNAL(selectionChanged(QVariantList, bool)), events_[tetCLICK]->handler, SLOT(selectionChanged(QVariantList, bool)));
+    QObject::connect(listView_, SIGNAL(triggered(QVariantList)), events_[tetCLICK]->handler, SLOT(triggered(QVariantList)));
 }
 
 /*********** ListViewItemFactory class *************/
@@ -118,7 +118,7 @@ void ListViewItemFactory::updateItem(bb::cascades::ListView*, bb::cascades::Visu
 }
 
 /*********** ListViewEventHandler class *************/
-void ListViewEventHandler::selectionChanged(QVariantList var, bool)
+void ListViewEventHandler::triggered(QVariantList var)
 {
     eventContainer_->setDataProperty("index", var[0].toInt());
     Persistent<Value> propValue;

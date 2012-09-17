@@ -18,9 +18,7 @@ using namespace bb::cascades;
 
 NativeTabObject::NativeTabObject(TiObject* tiObject)
     : NativeControlObject(tiObject)
-    , backAction_(NULL)
     , navigationPane_(NULL)
-    , page_(NULL)
     , tab_(NULL)
 {
 }
@@ -92,7 +90,6 @@ int NativeTabObject::openWindowOnTab(NativeObject* obj)
     if (obj->getObjectType() == N_TYPE_WINDOW)
     {
         bb::cascades::Page* page = (bb::cascades::Page*)obj->getNativeHandle();
-        page->setPaneProperties(NavigationPaneProperties::create().backButton(backAction_));
         navigationPane_->push(page);
         return NATIVE_ERROR_OK;
     }
@@ -103,12 +100,10 @@ int NativeTabObject::initialize()
 {
     tab_ = Tab::create();
     navigationPane_ = NavigationPane::create();
-    backAction_ = ActionItem::create();
-    QObject::connect(backAction_, SIGNAL(triggered()), navigationPane_, SLOT(pop()));
 
-    if (backAction_ == NULL || tab_ == NULL || navigationPane_ == NULL)
+    if (tab_ == NULL || navigationPane_ == NULL)
     {
-        //if one of the tab_, navigationPane_ or backAction_ pointers is NULL,
+        //if one of the tab_ or navigationPane_ pointers is NULL,
         //it means that create function couldn't allocate enough memory for at least one of these objects
         return NATIVE_ERROR_OUTOFMEMORY;
     }

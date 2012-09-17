@@ -29,9 +29,9 @@ TiUITabGroup* TiUITabGroup::createTabGroup(NativeObjectFactory* objectFactory)
 void TiUITabGroup::onCreateStaticMembers()
 {
     TiUIBase::onCreateStaticMembers();
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "open", this, open_);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "addTab", this, addTab_);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "setActiveTab", this, setActiveTab_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "open", this, _open);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "addTab", this, _addTab);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "setActiveTab", this, _setActiveTab);
 }
 
 void TiUITabGroup::initializeTiObject(TiObject* parentContext)
@@ -45,7 +45,7 @@ void TiUITabGroup::initializeTiObject(TiObject* parentContext)
     }
 }
 
-Handle<Value> TiUITabGroup::open_(void* userContext, TiObject*, const Arguments&)
+Handle<Value> TiUITabGroup::_open(void* userContext, TiObject*, const Arguments&)
 {
     HandleScope handleScope;
     TiUITabGroup* obj = (TiUITabGroup*) userContext;
@@ -56,13 +56,13 @@ Handle<Value> TiUITabGroup::open_(void* userContext, TiObject*, const Arguments&
     return Undefined();
 }
 
-Handle<Value> TiUITabGroup::addTab_(void* userContext, TiObject* caller, const Arguments& args)
+Handle<Value> TiUITabGroup::_addTab(void* userContext, TiObject* caller, const Arguments& args)
 {
     TiUIBase::_add(userContext, caller, args);
     return Undefined();
 }
 
-Handle<Value> TiUITabGroup::setActiveTab_(void* userContext, TiObject*, const Arguments& args)
+Handle<Value> TiUITabGroup::_setActiveTab(void* userContext, TiObject*, const Arguments& args)
 {
     HandleScope handleScope;
     TiUITabGroup* obj = (TiUITabGroup*) userContext;

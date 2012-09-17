@@ -79,7 +79,8 @@ public:
     virtual ~ListViewEventHandler() {}
 
 public slots:
-    void selectionChanged(QVariantList var, bool);
+    void triggered(QVariantList var);
+
 private:
     TiEventContainer* eventContainer_;
     NativeListViewObject* owner_;
