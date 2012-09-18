@@ -7,7 +7,7 @@ CONFIG += qt staticlib warn_on debug_and_release cascades
 INCLUDEPATH += \
 	. \
 	./include \
-	../libv8/include
+	../runtime/v8/include
 SOURCES += ./*.cpp
 HEADERS += ./*.h
 
