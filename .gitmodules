@@ -1,0 +1,3 @@
+[submodule "runtime/v8"]
+	path = runtime/v8
+	url = git://github.com/blackberry/v8.git
