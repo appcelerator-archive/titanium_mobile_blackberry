@@ -1,0 +1,26 @@
+#Tue Mar 27 11:17:25 EDT 2012
+eclipse.preferences.version=1
+environment/project/com.qnx.qcc.toolChain.1711873784/CPULIST/delimiter=,
+environment/project/com.qnx.qcc.toolChain.1711873784/CPULIST/operation=append
+environment/project/com.qnx.qcc.toolChain.1711873784/CPULIST/value=arm
+environment/project/com.qnx.qcc.toolChain.1711873784/VARIANTLIST/delimiter=,
+environment/project/com.qnx.qcc.toolChain.1711873784/VARIANTLIST/operation=append
+environment/project/com.qnx.qcc.toolChain.1711873784/VARIANTLIST/value=g
+environment/project/com.qnx.qcc.toolChain.1711873784/append=true
+environment/project/com.qnx.qcc.toolChain.1711873784/appendContributed=true
+environment/project/com.qnx.qcc.toolChain.872840444/CPULIST/delimiter=,
+environment/project/com.qnx.qcc.toolChain.872840444/CPULIST/operation=append
+environment/project/com.qnx.qcc.toolChain.872840444/CPULIST/value=x86
+environment/project/com.qnx.qcc.toolChain.872840444/VARIANTLIST/delimiter=,
+environment/project/com.qnx.qcc.toolChain.872840444/VARIANTLIST/operation=append
+environment/project/com.qnx.qcc.toolChain.872840444/VARIANTLIST/value=g
+environment/project/com.qnx.qcc.toolChain.872840444/append=true
+environment/project/com.qnx.qcc.toolChain.872840444/appendContributed=true
+environment/project/com.qnx.qcc.toolChain.963109406/CPULIST/delimiter=,
+environment/project/com.qnx.qcc.toolChain.963109406/CPULIST/operation=append
+environment/project/com.qnx.qcc.toolChain.963109406/CPULIST/value=arm
+environment/project/com.qnx.qcc.toolChain.963109406/EXCLUDE_VARIANTLIST/delimiter=,
+environment/project/com.qnx.qcc.toolChain.963109406/EXCLUDE_VARIANTLIST/operation=append
+environment/project/com.qnx.qcc.toolChain.963109406/EXCLUDE_VARIANTLIST/value=r
+environment/project/com.qnx.qcc.toolChain.963109406/append=true
+environment/project/com.qnx.qcc.toolChain.963109406/appendContributed=true
