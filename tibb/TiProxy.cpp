@@ -169,10 +169,10 @@ void TiProxy::setParametersFromObject(void* userContext, Local<Object> obj)
     {
         Handle<String> propString = Handle<String>::Cast(propNames->Get(Integer::New(i)));
         String::Utf8Value propNameUTF(propString);
+        Local<Value> propValue = obj->Get(propString);
         TiObject* foundProp = onLookupMember(*propNameUTF);
         if (foundProp != NULL)
         {
-            Local<Value> propValue = obj->Get(propString);
             TiObject* addObj = getTiObjectFromJsObject(propValue);
             if (addObj)
             {
@@ -187,6 +187,11 @@ void TiProxy::setParametersFromObject(void* userContext, Local<Object> obj)
             {
                 foundProp->setValue(propValue);
             }
+        }
+        else
+        {
+            // Set any custom properties onto the JS object.
+            getValue()->ToObject()->ForceSet(propString, propValue);
         }
     }
 }
