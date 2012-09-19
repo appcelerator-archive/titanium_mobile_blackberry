@@ -10,7 +10,8 @@
 #include "NativeLoggerObject.h"
 #include "NativeMessageStrings.h"
 #include "TiConstants.h"
-#include <bb/cascades/controls/abstracttextcontrol.h>
+#include <bb/cascades/AbstractTextControl>
+#include <bb/cascades/FontSize>
 #include <QMap>
 #include <QString>
 
@@ -85,13 +86,13 @@ int NativeAbstractTextControlObject::setTextAlign(TiObject* obj)
     switch (value)
     {
     case Ti::UI::TEXT_ALIGNMENT_LEFT:
-        textControl_->textStyle()->setAlignment(bb::cascades::TextAlignment::ForceLeft);
+        textControl_->textStyle()->setTextAlign(bb::cascades::TextAlign::Left);
         break;
     case Ti::UI::TEXT_ALIGNMENT_CENTER:
-        textControl_->textStyle()->setAlignment(bb::cascades::TextAlignment::Center);
+        textControl_->textStyle()->setTextAlign(bb::cascades::TextAlign::Center);
         break;
     case Ti::UI::TEXT_ALIGNMENT_RIGHT:
-        textControl_->textStyle()->setAlignment(bb::cascades::TextAlignment::ForceRight);
+        textControl_->textStyle()->setTextAlign(bb::cascades::TextAlign::Right);
         break;
     default:
         N_DEBUG(Native::Msg::Unknown_value_received << ": " << value);
@@ -123,7 +124,8 @@ int NativeAbstractTextControlObject::setFont(TiObject* obj)
             float size = it.value().toFloat(&bSucceeded);
             if (bSucceeded)
             {
-                textControl_->textStyle()->setSize(size);
+                textControl_->textStyle()->setFontSize(bb::cascades::FontSize::PointValue);
+                textControl_->textStyle()->setFontSizeValue(size);
             }
             else
             {

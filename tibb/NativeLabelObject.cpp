@@ -6,7 +6,6 @@
  */
 
 #include "NativeLabelObject.h"
-#include <bb/cascades/TextAlignment>
 #include <bb/cascades/Color>
 #include <qtgui/QColor>
 

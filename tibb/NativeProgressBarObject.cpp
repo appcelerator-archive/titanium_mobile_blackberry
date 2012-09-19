@@ -6,9 +6,6 @@
  */
 
 #include "NativeProgressBarObject.h"
-#include <bb/cascades/DockLayoutProperties>
-#include <bb/cascades/VerticalAlignment>
-#include <bb/cascades/HorizontalAlignment>
 
 NativeProgressBarObject::NativeProgressBarObject(TiObject* tiObject)
     : NativeControlObject(tiObject)
@@ -33,10 +30,6 @@ NativeProgressBarObject* NativeProgressBarObject::createProgressBar(TiObject* ti
 int NativeProgressBarObject::initialize()
 {
     progressIndicator_ = bb::cascades::ProgressIndicator::create();
-    bb::cascades::DockLayoutProperties* properties = bb::cascades::DockLayoutProperties::create();
-    properties->setHorizontalAlignment(bb::cascades::HorizontalAlignment::Center);
-    properties->setVerticalAlignment(bb::cascades::VerticalAlignment::Top);
-    progressIndicator_->setLayoutProperties(properties);
     setControl(progressIndicator_);
     return NATIVE_ERROR_OK;
 }

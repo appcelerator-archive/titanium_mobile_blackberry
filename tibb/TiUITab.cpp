@@ -30,7 +30,7 @@ TiUITab* TiUITab::createTab(NativeObjectFactory* nativeObjectFactory)
 void TiUITab::onCreateStaticMembers()
 {
     TiUIBase::onCreateStaticMembers();
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "open", this, open_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "open", this, _open);
 }
 
 void TiUITab::initializeTiObject(TiObject* parentContext)
@@ -44,7 +44,7 @@ void TiUITab::initializeTiObject(TiObject* parentContext)
     }
 }
 
-Handle<Value> TiUITab::open_(void* userContext, TiObject*, const Arguments& args)
+Handle<Value> TiUITab::_open(void* userContext, TiObject*, const Arguments& args)
 {
     HandleScope handleScope;
     if ((args.Length() > 0) && (args[0]->IsObject()))

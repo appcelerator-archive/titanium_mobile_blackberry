@@ -29,7 +29,7 @@ protected:
     virtual void onCreateStaticMembers();
 
 private:
-    static Handle<Value> open_(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _open(void* userContext, TiObject* caller, const Arguments& args);
 
     TiUITab();
     //This class is neither copy-constructible nor assignable

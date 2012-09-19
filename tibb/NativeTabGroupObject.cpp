@@ -86,7 +86,7 @@ int NativeTabGroupObject::setActiveTab(NativeObject* tab)
 
 int NativeTabGroupObject::setActiveTab(int index)
 {
-    if (tabGroup_->at(index) != 0)
+    if (tabGroup_->at(index) != NULL)
     {
         tabGroup_->setActiveTab(tabGroup_->at(index));
         return NATIVE_ERROR_OK;
@@ -96,8 +96,8 @@ int NativeTabGroupObject::setActiveTab(int index)
 
 int NativeTabGroupObject::open()
 {
-    Q_ASSERT(nativeObjectFactory_ != 0);
-    Q_ASSERT(nativeObjectFactory_->getCascadeApp() != 0);
+    Q_ASSERT(nativeObjectFactory_ != NULL);
+    Q_ASSERT(nativeObjectFactory_->getCascadeApp() != NULL);
     nativeObjectFactory_->setRootContainer(this);
     nativeObjectFactory_->getCascadeApp()->setScene(this);
     return NATIVE_ERROR_OK;

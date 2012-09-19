@@ -44,9 +44,7 @@ protected:
     virtual int initialize();
 
 private:
-    bb::cascades::ActionItem* backAction_;
     bb::cascades::NavigationPane* navigationPane_;
-    bb::cascades::Page* page_;
     bb::cascades::Tab* tab_;
 
     explicit NativeTabObject(TiObject* tiObject);
