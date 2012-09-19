@@ -13,7 +13,7 @@
 /*
  * TiEvent
  *
- * Abstract class the represents an event subscriber
+ * Abstract class that represents an event subscriber
  *
  */
 

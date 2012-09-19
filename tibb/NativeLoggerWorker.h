@@ -16,7 +16,8 @@ class QString;
 /*
  * NativeLoggerWorker
  *
- * Worker for the Native Logger
+ * Worker for the Native Logger.  It runs in its own thread to allow logging
+ * from multiple threads without thrashing the logs.
  */
 
 class NativeLoggerWorker : public QObject

@@ -8,7 +8,7 @@
 #ifndef TIMESSAGESTRINGS_H_
 #define TIMESSAGESTRINGS_H_
 
-// Single file to contain the message strings
+// Single file to contain the message strings for the Ti layer
 
 #ifdef TIMESSAGESTRINGS_DEF_VALUE
 #define TIMESSAGESTRINGS_CONST_DEF(T,N,V) const T N=V

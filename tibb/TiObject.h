@@ -93,8 +93,10 @@ struct TiProperty
 /*
  * TiObject
  *
- * Base class that reflects Javascript objects
+ * Base class that acts as a wrapper for Javascript objects.  It is the base
+ * class for all Ti*Object classes.
  *
+ * It implements functions to interact with V8 and the JS objects.
  */
 
 class TiObject : public TiBase

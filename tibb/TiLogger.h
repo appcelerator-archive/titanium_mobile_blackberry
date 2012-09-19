@@ -37,6 +37,12 @@ class NativeObjectFactory;
 
 /*
  * TiLogger
+ *
+ * Logger to be used from the Ti* classes.  This logger is meant to
+ * be used via the TI_* macros such as TI_DEBUG.  The macros accept string
+ * concatenation in the parameter using the '<<' operator.
+ *
+ * See NativeLoggerObject.h for logging from the Native* classes.
  */
 
 class TiLogger

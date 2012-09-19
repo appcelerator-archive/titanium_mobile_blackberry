@@ -19,8 +19,8 @@ class TiObject;
 /*
  * NativeObjectFactory
  *
- * Creates native control objects
- *
+ * Creates NativeObject's for the Ti layer based on the type.  (createNativeObject)
+ * The types are defined in NativeObject::NATIVE_TYPE enum.
  */
 
 class NativeObjectFactory

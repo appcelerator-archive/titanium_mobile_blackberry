@@ -14,7 +14,12 @@
 /*
  * NativeLoggerInterface
  *
- * Native Logger Interface
+ * Native Logger Interface to be used from the Native* classes.  This class 
+ * should not need to be used directly; instead the N_* macros defined in 
+ * NativeLoggerObject.h such as N_DEBUG should be used.  The macros accept
+ * string concatenation in the parameter using the '<<' operator.
+ *
+ * See TiLogger.h for logging from the Ti* classes.
  */
 
 class NativeLoggerInterface : public NativeObject

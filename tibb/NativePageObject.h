@@ -24,7 +24,7 @@ class TitleBar;
 /*
  * NativePageObject
  *
- * UI: Container (Window)
+ * UI: Page (Window)
  */
 
 class NativePageObject : public NativeControlObject

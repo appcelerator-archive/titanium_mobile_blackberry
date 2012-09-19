@@ -74,7 +74,7 @@ private:
  * This class is the Native representation of the Proxy Module, it implements
  * its functionality to be inherited by subclasses.
  *
- * It inherits directly from the NativeObject abstract class and is the
+ * It inherits directly from the NativeObject abstract class and is
  * inherited by all NativeObjects for which the associated Ti object is a
  * derivative of Ti.Proxy
  *

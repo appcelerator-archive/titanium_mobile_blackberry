@@ -40,7 +40,7 @@ class TouchEvent;
  *
  * 1. It implements the native View functionality inherited by all Ti classes
  * that extend UI.VIew.  This is done by managing an internal Container that
- * contains the control actual control of the derived class.
+ * contains the actual control of the derived class.
  *
  * 2. It also can be instanciated on it's own when using Ti.UI.createView
  * In this case it's a pure container and the control_ member remains NULL
