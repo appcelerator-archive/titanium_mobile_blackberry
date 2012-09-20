@@ -11,6 +11,7 @@
 #include "NativeProxyObject.h"
 
 #include <bb/cascades/Color>
+#include <bb/cascades/TouchEvent>
 #include <QRect>
 
 
@@ -26,7 +27,6 @@ namespace cascades
 class AbsoluteLayoutProperties;
 class Container;
 class Control;
-class TouchEvent;
 }
 }
 
@@ -185,9 +185,12 @@ public:
     virtual ~UIViewEventHandler() {}
 
 public slots:
-    void touch(bb::cascades::TouchEvent*)
+    void touch(bb::cascades::TouchEvent* event)
     {
-        eventContainer_->fireEvent();
+        if (event->touchType() == bb::cascades::TouchType::Up)
+        {
+            eventContainer_->fireEvent();
+        }
     }
 
 private:
