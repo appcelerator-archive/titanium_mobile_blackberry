@@ -12,6 +12,17 @@
 
 typedef Handle<Value>(*GET_PROPERTY_CALLBACK)(void*);
 
+/*
+ * TiPropertyGetObject
+ *
+ * Allows creating a property and binding a function to it that computes
+ * the value of the  property.  It is used for implementing  read-only
+ * properties such as View.children
+ *
+ * createGetProperty is used to create the value used with 
+ * TiPropertyGetFunctionObject.  
+ */
+
 class TiPropertyGetObject : public TiObject
 {
 public:

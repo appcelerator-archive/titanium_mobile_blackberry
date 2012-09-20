@@ -10,6 +10,11 @@
 
 #include <string>
 
+/**
+ * Centralized file to contain the C++ definition of Titanium constants
+ */
+
+
 namespace Ti
 {
 

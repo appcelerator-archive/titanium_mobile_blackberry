@@ -35,16 +35,10 @@ public:
     virtual void setComplexDataProperty(const char* complexPropertyName, const char* propertyName, const char* value) = 0;
     virtual void setV8ValueProperty(const char* propertyName, v8::Handle<v8::Value> data) = 0;
     virtual v8::Handle<v8::Value> getV8ValueProperty(const char* propertyName) = 0;
-    virtual ~TiEventContainer()
-    {
-    }
-    ;
+    virtual ~TiEventContainer() {}
 
 protected:
-    TiEventContainer()
-    {
-    }
-    ;
+    TiEventContainer() {}
 };
 
 #endif /* TIEVENTCONTAINER_H_ */

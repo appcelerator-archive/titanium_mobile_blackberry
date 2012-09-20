@@ -269,6 +269,12 @@ bool TiUIBase::canAddMembers() const
     return true;
 }
 
+/**
+ * FIXME: This function has been duplicated in sibling classes with a modified
+ * name (setTi*MappingProperties).  It should really be moved to a common parent
+ * class (TiProxy) and shared amongst all classes needing it.  Also consider
+ * sharing _valueModify and _getValue
+ */
 void TiUIBase::setTiMappingProperties(const TiProperty* props, int propertyCount)
 {
     string name;

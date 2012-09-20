@@ -14,7 +14,7 @@
 /*
  * NativeListView
  *
- * UI: ListView control
+ * UI: TableView control
  */
 
 namespace bb
