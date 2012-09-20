@@ -19,6 +19,7 @@ class TiCascadesApp;
  * TiUIBase
  *
  * Titanium base class for all UI objects such as windows, labels, buttons, etc...
+ * This class implements the functionality of UI.View
  */
 class TiUIBase : public TiProxy
 {

@@ -8,14 +8,14 @@
 #ifndef TIPLATFORMOBJECT_H_
 #define TIPLATFORMOBJECT_H_
 
-#include "TiObject.h"
+#include "TiProxy.h"
 
 /*
  * TiPlatformObject
  *
  * Titanium.Platform namespace
  */
-class TiPlatformObject : public TiObject
+class TiPlatformObject : public TiProxy
 {
 public:
     static void addObjectToParent(TiObject* parent);

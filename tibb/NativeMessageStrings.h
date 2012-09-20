@@ -8,7 +8,7 @@
 #ifndef NATIVEMESSAGESTRINGS_H_
 #define NATIVEMESSAGESTRINGS_H_
 
-// Single file to contain the message strings
+// Single file to contain the message strings for the Native layer
 
 #ifdef NATIVEMESSAGESTRINGS_DEF_VALUE
 #define N_MESSAGESTRINGS_CONST_DEF(T,N,V) const T N=V

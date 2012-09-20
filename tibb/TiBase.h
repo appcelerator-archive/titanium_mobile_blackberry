@@ -11,8 +11,11 @@
 /*
  * TiBase
  *
- * Base class for all objects that
- * need to be reference counted.
+ * Base class for all objects that need to be reference counted.  It is the base
+ * class of all TiObjects and NativeObjects.
+ *
+ * NOTE: The refcount is initialized at 1 in the ctor and when the last
+ * reference is released the object is deleted.
  */
 
 class TiBase

@@ -16,7 +16,7 @@ struct FUNCTION_ENTRY;
 /*
  * TiRootObject
  *
- * Root namespace in Titanium
+ * Root namespace in Titanium.  It binds the methods from the Global object
  */
 
 typedef int (*MESSAGELOOPENTRY)(void*);

@@ -93,7 +93,7 @@ const static TiProperty g_tiProperties[] =
 };
 
 TiPlatformObject::TiPlatformObject()
-    : TiObject("Platform")
+    : TiProxy("Platform")
 {
 }
 
@@ -110,7 +110,7 @@ void TiPlatformObject::addObjectToParent(TiObject* parent)
 
 void TiPlatformObject::onCreateStaticMembers()
 {
-    TiObject::onCreateStaticMembers();
+    TiProxy::onCreateStaticMembers();
     setTiPlatformMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
 
     // Adding javascript constants from Ti.Platform

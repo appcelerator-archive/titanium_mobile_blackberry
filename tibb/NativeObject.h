@@ -137,10 +137,15 @@ class TiObject;
 /*
  * NativeObject
  *
- * Abstract class that represents a native object. A
- * native object represents an object that has been
- * implemented for a specific platform
- * such as a button, label, file, etc...
+ * Abstract class that represents a native object. A native object represents an
+ * object that has been implemented for a specific platform such as a button,
+ * label, file, etc...  The NativeObjects are implemented in terms of the
+ * Cascades SDK.
+ *
+ * This class aims at limiting the coupling between the Ti layer and the Native
+ * layer by having the Ti layer interact with it and not needing to know the 
+ * specializations.  NativeObjects are created using the NativeObjectFactoryi
+ * singleton.
  */
 class NativeObject : public TiBase
 {

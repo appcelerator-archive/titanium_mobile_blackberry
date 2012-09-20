@@ -311,6 +311,10 @@ bool TiObject::userCanAddMember(const char*) const
     return true;
 }
 
+/* Call back for V8 named properties.  This is the entry point for accessing
+ * properties from js.  We handle the properties we know and let V8 handle
+ * all other properties.
+ */
 Handle<Value> TiObject::_propGetter(Local<String> prop, const AccessorInfo& info)
 {
     HandleScope handleScope;
@@ -360,6 +364,10 @@ Handle<Value> TiObject::_propGetter(Local<String> prop, const AccessorInfo& info
     return handleScope.Close(result);
 }
 
+/* Call back for V8 named properties.  This is the entry point for setting
+ * properties from js.  We handle the properties we know and let V8 handle
+ * all other properties.
+ */
 Handle<Value> TiObject::_propSetter(Local<String> prop, Local<Value> value, const AccessorInfo& info)
 {
     HandleScope handleScope;

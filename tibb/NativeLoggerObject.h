@@ -42,7 +42,11 @@ class QString;
 /*
  * NativeLoggerObject
  *
- * Native Logger
+ * Native Logger to be used from the Native* classes.  This logger is meant to
+ * be used via the N_* macros such as N_DEBUG.  The macros accept string
+ * concatenation in the parameter using the '<<' operator.
+ *
+ * See TiLogger.h for logging from the Ti* classes.
  */
 
 class NativeLoggerObject : public NativeLoggerInterface
