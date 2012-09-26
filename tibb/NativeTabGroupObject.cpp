@@ -49,7 +49,7 @@ int NativeTabGroupObject::initialize()
         return NATIVE_ERROR_OK;
     }
 
-    tabGroup_ = TabbedPane::create();
+    tabGroup_ = TabbedPane::create().showTabsOnActionBar(true);
 
     if (tabGroup_ == NULL)
     {

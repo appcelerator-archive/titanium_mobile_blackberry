@@ -906,7 +906,12 @@ int NativeControlObject::setZIndex(TiObject* obj)
         return error;
     }
     container_->setProperty(ZINDEX_PROPERTY_NAME, QVariant(value));
-    bb::cascades::Container* parent = (bb::cascades::Container*)container_->parent();
+
+    // In the case of the NativePageObject, the dynamic_cast will return NULL
+    // as a Page is not a Container.  Setting zIndex on a Page doesn't make
+    // sense and is not supported by Cascades.  We still return NATIVE_ERROR_OK
+    // so the zIndex value is set on the JS object although it is ignored
+    bb::cascades::Container* parent = dynamic_cast<bb::cascades::Container*>(container_->parent());
     if (parent != NULL)
     {
         error = setZOrder(parent, container_, value, true);

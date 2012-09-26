@@ -71,9 +71,11 @@ int NativePageObject::addChildNativeObject(NativeObject* obj)
 
 int NativePageObject::open()
 {
-    Q_ASSERT(nativeObjectFactory_ != 0);
-    Q_ASSERT(nativeObjectFactory_->getCascadeApp() != 0);
+    Q_ASSERT(nativeObjectFactory_ != NULL);
+    Q_ASSERT(nativeObjectFactory_->getCascadeApp() != NULL);
     nativeObjectFactory_->setRootContainer(this);
+    // FIXME: currently setting a new scene deletes the previous scene object
+    // see TIMOB-10543 for a WIP patch
     nativeObjectFactory_->getCascadeApp()->setScene(this);
     return NATIVE_ERROR_OK;
 }
