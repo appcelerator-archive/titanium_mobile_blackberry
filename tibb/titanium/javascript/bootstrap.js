@@ -10,11 +10,6 @@ alert = function(msg)
     Ti.UI.createAlertDialog({message: msg}).show();
 }
 
-L = function(key, hint)
-{
-	return key;
-}
-
 // TODO: move to its own file when we can include from the framework dir
 //Ti.include("bufferstream.js");
 Ti.BufferStream.prototype = {};

@@ -197,8 +197,7 @@ void TiRootObject::createStringMethods()
 Handle<Value> TiRootObject::_L(void*, TiObject*, const Arguments& args)
 {
     // TODO: finish this
-    (void)args;
-    return Undefined();
+    return args[0];
 }
 
 Handle<Value> TiRootObject::_clearInterval(void*, TiObject*, const Arguments& args)

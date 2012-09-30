@@ -131,7 +131,8 @@ const static UnitTypeData g_unitTypes[] =
     {UnitTypeInches, "in"},
     {UnitTypeMM, "mm"},
     {UnitTypeCM, "cm"},
-    {UnitTypePT, "pt"}
+    {UnitTypePT, "pt"},
+    {UnitTypeAuto, "auto"}
 };
 
 NativeControlObject::NativeControlObject(TiObject* tiObject) :
@@ -523,17 +524,28 @@ int NativeControlObject::updateHeight()
         return NATIVE_ERROR_OK;
     }
     float height = 0;
+    bool isAuto;
     // TODO:we need the parent height to calculate percentage values and
     // to use that value as max instead of g_height
     float max = g_height; // TODO: Remove this
     int error = getMeasurementInfo(height_, max,
-                                   (float)g_height / g_physicalHeight, &height);
+                                   (float)g_height / g_physicalHeight, &height, &isAuto);
     if (error != NATIVE_ERROR_OK)
     {
         return error;
     }
-    container_->setMaxHeight(height);
-    container_->setMinHeight(height);
+
+    if (isAuto)
+    {
+        container_->resetMaxHeight();
+        container_->resetMinHeight();
+    }
+    else
+    {
+        container_->setMaxHeight(height);
+        container_->setMinHeight(height);
+    }
+
     return NATIVE_ERROR_OK;
 }
 
@@ -869,17 +881,28 @@ int NativeControlObject::updateWidth()
         return NATIVE_ERROR_OK;
     }
     float width = 0;
+    bool isAuto;
     // TODO:we need the parent width to calculate percentage values and
     // to use that value as max instead of g_height
     float max = g_width; // TODO: Remove this
     int error = getMeasurementInfo(width_, max,
-                                   (float)g_width / g_physicalWidth, &width);
+                                   (float)g_width / g_physicalWidth, &width, &isAuto);
     if (error != NATIVE_ERROR_OK)
     {
         return error;
     }
-    container_->setMaxWidth(width);
-    container_->setMinWidth(width);
+
+    if (isAuto)
+    {
+        container_->resetMaxWidth();
+        container_->resetMinWidth();
+    }
+    else
+    {
+        container_->setMaxWidth(width);
+        container_->setMinWidth(width);
+    }
+
     return NATIVE_ERROR_OK;
 }
 
@@ -1239,10 +1262,14 @@ int NativeControlObject::getDateTime(TiObject* obj, QDateTime& dt)
 }
 
 int NativeControlObject::getMeasurementInfo(TiObject* obj, float maxPixels, float dotsPerMillimeter,
-        float* calculatedValue)
+        float* calculatedValue, bool* isAuto)
 {
     Q_ASSERT(calculatedValue != NULL);
+    Q_ASSERT(isAuto != NULL);
+
+    *isAuto = false;
     UnitType unitType = UnitTypeDefault;
+
     if ((!obj->getValue()->IsString()) && (!obj->getValue()->IsStringObject()))
     {
         float value;
@@ -1280,6 +1307,9 @@ int NativeControlObject::getMeasurementInfo(TiObject* obj, float maxPixels, floa
     }
     switch (unitType)
     {
+    case UnitTypeAuto:
+        *isAuto = true;
+        break;
     case UnitTypePixels:
         if (numberPart < 0.0f)
         {

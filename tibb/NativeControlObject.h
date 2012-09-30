@@ -58,7 +58,8 @@ enum UnitType
     UnitTypeInches,
     UnitTypeMM,
     UnitTypeCM,
-    UnitTypePT
+    UnitTypePT,
+    UnitTypeAuto,
 };
 
 class NativeControlObject : public NativeProxyObject
@@ -140,7 +141,7 @@ protected:
 private:
     friend class NativePageObject;
     static int getMeasurementInfo(TiObject* obj, float maxPixels, float dotsPerMillimeter,
-                                  float* calculatedValue);
+                                  float* calculatedValue, bool* isAuto);
     void updateViewLayout();
     int updateHeight();
     int updateWidth();
