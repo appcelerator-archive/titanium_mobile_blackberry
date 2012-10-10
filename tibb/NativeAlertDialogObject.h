@@ -65,25 +65,18 @@ public:
     virtual ~AlertDialogEventHandler() {}
 
 public slots:
-    void buttonSelected(bb::system::SystemUiButton* button)
+    void buttonSelected(bb::system::SystemUiResult::Type type)
     {
-        QVariant index = button->property("index");
-        QVariant cancel = button->property("cancel");
-        bool b;
-        eventContainer_->setDataProperty("index", index.toInt(&b));
+        bb::system::SystemDialog* dialog = static_cast<bb::system::SystemDialog*>(sender());
+        bb::system::SystemUiButton* selectedButton = dialog->buttonSelection();
+        if (selectedButton == NULL) {
+            return;
+        }
+
+        QVariant index = selectedButton->property("index");
+        QVariant cancel = selectedButton->property("cancel");
+        eventContainer_->setDataProperty("index", index.toInt(NULL));
         eventContainer_->setDataProperty("cancel", cancel.toBool());
-        eventContainer_->fireEvent();
-    }
-    void accepted()
-    {
-        eventContainer_->setDataProperty("index", 1);
-        eventContainer_->setDataProperty("cancel", false);
-        eventContainer_->fireEvent();
-    }
-    void rejected()
-    {
-        eventContainer_->setDataProperty("index", 0);
-        eventContainer_->setDataProperty("cancel", true);
         eventContainer_->fireEvent();
     }
 

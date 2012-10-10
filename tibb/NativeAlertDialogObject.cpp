@@ -125,11 +125,8 @@ NAHANDLE NativeAlertDialogObject::getNativeHandle() const
 
 void NativeAlertDialogObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
-    NativeControlObject::setupEvents(containerFactory);
     TiEventContainer* eventClick = containerFactory->createEventContainer();
     eventClick->setDataProperty("type", tetCLICK);
     events_.insert(tetCLICK, EventPairSmartPtr(eventClick, new AlertDialogEventHandler(eventClick)));
-    QObject::connect(nativeDialog_, SIGNAL(buttonSelected(bb::system::SystemUiButton*)), events_[tetCLICK]->handler, SLOT(buttonSelected(bb::system::SystemUiButton*)));
-    QObject::connect(nativeDialog_, SIGNAL(accepted(void)), events_[tetCLICK]->handler, SLOT(accepted(void)));
-    QObject::connect(nativeDialog_, SIGNAL(rejected(void)), events_[tetCLICK]->handler, SLOT(rejected(void)));
+    QObject::connect(nativeDialog_, SIGNAL(finished(bb::system::SystemUiResult::Type)), events_[tetCLICK]->handler, SLOT(buttonSelected(bb::system::SystemUiResult::Type)));
 }
