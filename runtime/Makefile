@@ -43,7 +43,7 @@ V8_PREBUILD_S3_SUFFIX ?= "blackberry/v8"
 .PHONY: upload-v8
 upload-v8: $(V8_PREBUILD_PACKAGE)
 	@echo "Uploading to S3 bucket..."
-	@s3cmd put --acl-public --guess-mime-type $(V8_PREBUILD_PACKAGE) "s3://$(V8_PREBUILD_S3_BUCKET)/$(V8_PREBUILD_S3_SUFFIX)"
+	@s3cmd put --acl-public --guess-mime-type $(V8_PREBUILD_PACKAGE) "s3://$(V8_PREBUILD_S3_BUCKET)/$(V8_PREBUILD_S3_SUFFIX)/$(V8_PREBUILD_PACKAGE)"
 	@echo "Done!"
 
 download-v8:
@@ -51,7 +51,7 @@ download-v8:
 	@curl -f "http://$(V8_PREBUILD_S3_BUCKET).s3.amazonaws.com/$(V8_PREBUILD_S3_SUFFIX)/$(V8_PREBUILD_PACKAGE)" \
 		-o $(V8_PREBUILD_PACKAGE)
 	@echo "Extracting..."
-	@unzip $(V8_PREBUILD_PACKAGE) -d v8/
+	@unzip $(V8_PREBUILD_PACKAGE)
 
 .PHONY: clean
 clean:
