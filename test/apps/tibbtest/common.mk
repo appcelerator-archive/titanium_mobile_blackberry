@@ -23,7 +23,7 @@ CCFLAGS+=-fstack-protector-all -D_FORTIFY_SOURCE=2 \
 	$(if $(filter g,$(VARIANTS)),,-frecord-gcc-switches)
 
 # Linker options for enhanced security
-LDFLAGS+=-Wl,-z,relro -Wl,-z,now $(if $(filter g so shared,$(VARIANTS)),,-pie)
+LDFLAGS+=-Wl,-z,relro -Wl,-z,now $(if $(filter g so shared,$(VARIANTS)),,-fPIE)
 
 # Add your required library names, here
 LIBS+=tibb socket bps
