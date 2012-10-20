@@ -77,6 +77,7 @@ public:
     virtual int getSize(TiObject* obj);
     virtual int getZIndex(TiObject* obj);
     virtual int setAnchorPoint(TiObject* obj);
+    virtual int setBackgroundImage(TiObject* obj);
     virtual int setBackgroundColor(TiObject* obj);
     virtual int setBackgroundDisableColor(TiObject* obj);
     virtual int setBottom(TiObject* obj);

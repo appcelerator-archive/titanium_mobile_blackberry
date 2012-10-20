@@ -19,6 +19,7 @@
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/Color>
 #include <bb/cascades/Container>
+#include <bb/cascades/ImagePaint>
 #include <bb/cascades/LayoutUpdateHandler>
 #include <bb/device/DisplayInfo>
 #include <QColor>
@@ -409,6 +410,22 @@ int NativeControlObject::setAnchorPoint(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+PROP_SETGET(setBackgroundImage)
+int NativeControlObject::setBackgroundImage(TiObject* obj)
+{
+    Q_ASSERT(container_ != NULL);
+
+    QString imagePath;
+    int error = NativeControlObject::getString(obj, imagePath);
+    if (error != NATIVE_ERROR_OK)
+    {
+        return error;
+    }
+
+    imagePath = getResourcePath(imagePath);
+    container_->setBackground(bb::cascades::ImagePaint(QUrl(imagePath)));
+    return NATIVE_ERROR_OK;
+}
 
 PROP_SETGET(setBackgroundColor)
 int NativeControlObject::setBackgroundColor(TiObject* obj)
@@ -984,6 +1001,7 @@ int NativeControlObject::setMessage(TiObject*)
 const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
 {
     {N_PROP_ANCHOR_POINT, PROP_SETGET_FUNCTION(setAnchorPoint), NULL},
+    {N_PROP_BACKGROUND_IMAGE, PROP_SETGET_FUNCTION(setBackgroundImage), NULL},
     {N_PROP_BACKGROUND_COLOR, PROP_SETGET_FUNCTION(setBackgroundColor), NULL},
     {N_PROP_BACKGROUND_DISABLED_COLOR, PROP_SETGET_FUNCTION(setBackgroundDisableColor), NULL},
     {N_PROP_BOTTOM, PROP_SETGET_FUNCTION(setBottom), NULL},

@@ -36,6 +36,11 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "backgroundImage", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_BACKGROUND_IMAGE
+    },
+
+    {
         "backgroundColor", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_BACKGROUND_COLOR
     },
