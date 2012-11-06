@@ -58,7 +58,7 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
     switch (type)
     {
     case N_TYPE_WINDOW:
-        obj = NativePageObject::createPage(tiObj, this);
+        obj = NativeWindowObject::createWindow(tiObj, this);
         break;
 
     case N_TYPE_LABEL:
