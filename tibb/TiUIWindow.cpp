@@ -8,6 +8,8 @@
 #include "TiUIWindow.h"
 #include "TiGenericFunctionObject.h"
 
+#include "NativeWindowObject.h"
+
 TiUIWindow::TiUIWindow(const char* name)
     : TiUIBase(name)
 {
@@ -29,6 +31,7 @@ void TiUIWindow::onCreateStaticMembers()
 {
     TiUIBase::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "open", this, _open);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "close", this, _close);
 }
 
 void TiUIWindow::initializeTiObject(TiObject* parentContext)
@@ -44,17 +47,29 @@ void TiUIWindow::initializeTiObject(TiObject* parentContext)
 
 Handle<Value> TiUIWindow::_open(void* userContext, TiObject*, const Arguments&)
 {
-    HandleScope handleScope;
-    TiUIWindow* obj = (TiUIWindow*) userContext;
-    NativeObject* no = obj->getNativeObject();
-    no->completeInitialization();
+    HandleScope scope;
+    TiUIWindow* self = static_cast<TiUIWindow*>(userContext);
+    NativeWindowObject* window = static_cast<NativeWindowObject*>(self->getNativeObject());
+
     vector<ObjectEntry>::iterator it;
-    for (it = obj->childControls_.begin(); it != obj->childControls_.end(); it++)
+    for (it = self->childControls_.begin(); it != self->childControls_.end(); it++)
     {
         (*it)->setupEvents();
     }
-    no->open();
-    no->release();
+
+    window->open();
+    window->release(); // XXX(josh): Do we really want to release now?
+
     return Undefined();
 }
 
+Handle<Value> TiUIWindow::_close(void* userContext, TiObject*, const Arguments&)
+{
+    HandleScope scope;
+    TiUIWindow* self = static_cast<TiUIWindow*>(userContext);
+    NativeWindowObject* window = static_cast<NativeWindowObject*>(self->getNativeObject());
+
+    window->close();
+
+    return Undefined();
+}
