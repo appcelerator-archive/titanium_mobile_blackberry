@@ -52,11 +52,6 @@ NAHANDLE NativeObject::getNativeHandle() const
     return NULL;
 }
 
-int NativeObject::open()
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
 int NativeObject::start()
 {
     return NATIVE_ERROR_NOTSUPPORTED;

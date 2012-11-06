@@ -156,7 +156,6 @@ public:
     virtual int addChildNativeObject(NativeObject* obj);
     virtual NAHANDLE getNativeHandle() const;
     virtual int finishLayout();
-    virtual int open();
     virtual int start();
     virtual int startLayout();
     virtual int stop();
