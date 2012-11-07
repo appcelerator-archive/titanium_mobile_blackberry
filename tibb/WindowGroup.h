@@ -8,18 +8,18 @@
 #ifndef TI_WINDOW_GROUP_H
 #define TI_WINDOW_GROUP_H
 
-#include "AbstractWindow.h"
+#include "Window.h"
 
 namespace titanium {
 
-class WindowGroup : public AbstractWindow {
+class WindowGroup : public Window {
   public:
     /**
      * Insert the window into the group and give it focus.
      * Returns true if the window was inserted, otherwise
      * false if the window is already part of the group.
      */
-    bool insertWindow(AbstractWindow* window);
+    bool insertWindow(Window* window);
 
     /**
      * Replaces an existing window in the group at the given stack index.
@@ -29,7 +29,7 @@ class WindowGroup : public AbstractWindow {
      *
      * Returns true if existing window was replaced, otherwise false if not found.
      */
-    bool replaceWindow(int existingWindowIndex, AbstractWindow* newWindow);
+    bool replaceWindow(int existingWindowIndex, Window* newWindow);
 
     /**
      * Removes the window from the group.
@@ -37,13 +37,13 @@ class WindowGroup : public AbstractWindow {
      *
      * Returns true if window was removed, otherwise false if not found.
      */
-    bool removeWindow(AbstractWindow* window);
+    bool removeWindow(Window* window);
 
     /**
      * Returns the window currently focused in the group.
      * If no windows are focused returns NULL.
      */
-    AbstractWindow* getFocusedWindow() const;
+    Window* getFocusedWindow() const;
 
   protected:
     virtual void focus();

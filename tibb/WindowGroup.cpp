@@ -11,29 +11,29 @@ using namespace bb::cascades;
 
 namespace titanium {
 
-void WindowGroup::insertWindow(AbstractWindow* window) {
-    // Get the currently focused window before we insert the new window.
-    // We will need to blur it once the insert has completed.
-    AbstractWindow* blurredWindow = getFocusedWindow();
-
-    if (!Container::add(window)) {
+bool WindowGroup::insertWindow(Window* window) {
+    if (Container::indexOf(window) != -1) {
         // Fail if the window is already in this group.
         return false;
     }
 
-    if (blurredWindow != NULL) {
-        blurredWindow->blur();
+    Window* focusedWindow = getFocusedWindow();
+    if (focusedWindow != NULL) {
+        focusedWindow->blur();
     }
+
+    Container::add(window);
+
     window->focus();
 
     return true;
 }
 
-bool WindowGroup::replaceWindow(int existingWindowIndex, AbstractWindow* newWindow) {
+bool WindowGroup::replaceWindow(int existingWindowIndex, Window* newWindow) {
     return false;
 }
 
-bool WindowGroup::removeWindow(AbstractWindow* window) {
+bool WindowGroup::removeWindow(Window* window) {
     if (!Container::remove(window)) {
         // Fail if the window was not in this group.
         return false;
@@ -42,7 +42,7 @@ bool WindowGroup::removeWindow(AbstractWindow* window) {
     // Get the window now in focus after we have removed the
     // previously focused window from the group. Note this
     // may be NULL if the group is now empty.
-    AbstractWindow* focusedWindow = getFocusedWindow();
+    Window* focusedWindow = getFocusedWindow();
 
     window->blur();
     if (focusedWindow != NULL) {
@@ -52,12 +52,15 @@ bool WindowGroup::removeWindow(AbstractWindow* window) {
     return true;
 }
 
-AbstractWindow* WindowGroup::getFocusedWindow() const {
+Window* WindowGroup::getFocusedWindow() const {
     Control* control = Container::at(Container::count() - 1);
+    if (control == NULL) {
+        return NULL;
+    }
 
     // TODO(josh): Could we do more to prevent this failure?
-    Q_ASSERT(control->inherits("AbstractWindow"));
-    return static_cast<AbstractWindow*>(control);
+    //Q_ASSERT(control->inherits("Window"));
+    return static_cast<Window*>(control);
 }
 
 void WindowGroup::focus() {

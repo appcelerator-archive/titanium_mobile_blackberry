@@ -5,19 +5,28 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef TI_ABSTRACT_WINDOW_H
-#define TI_ABSTRACT_WINDOW_H
+#ifndef TI_WINDOW_H
+#define TI_WINDOW_H
 
 #include <bb/cascades/Container>
 
 namespace titanium {
 
-class AbstractWindow : public bb::cascades::Container {
+class Window : public bb::cascades::Container {
     Q_OBJECT
 
-protected:
-    virtual void focus() = 0;
-    virtual void blur() = 0;
+public:
+    virtual void focus() {
+        emit onFocus();
+    }
+
+    virtual void blur() {
+        emit onBlur();
+    }
+
+signals:
+    void onFocus();
+    void onBlur();
 };
 
 } // namespace titanium
