@@ -13,18 +13,21 @@
 class NativeWindowObject : public NativeControlObject {
 public:
     static NativeObject* createWindow(TiObject* tiObject, NativeObjectFactory* factory);
-    virtual int getObjectType const {
+
+    virtual int getObjectType() const {
         return N_TYPE_WINDOW;
     }
+    virtual int addChildNativeObject(NativeObject* obj);
 
     void open();
     void close();
 
 protected:
     virtual int initialize();
+    virtual void setupEvents(TiEventContainerFactory* factory);
 
 private:
-    bb::cascades::Page* page_;
+    explicit NativeWindowObject(TiObject* tiObject);
 };
 
 #endif

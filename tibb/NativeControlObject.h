@@ -141,6 +141,8 @@ protected:
 
 private:
     friend class NativePageObject;
+    friend class NativeWindowObject; // TODO(josh): we shouldn't have to abuse friends this way.
+
     static int getMeasurementInfo(TiObject* obj, float maxPixels, float dotsPerMillimeter,
                                   float* calculatedValue, bool* isAuto);
     void updateViewLayout();

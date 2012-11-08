@@ -17,7 +17,6 @@
 #include "NativeLabelObject.h"
 #include "NativeListViewObject.h"
 #include "NativeLoggerObject.h"
-#include "NativePageObject.h"
 #include "NativeProgressBarObject.h"
 #include "NativeTabObject.h"
 #include "NativeTabGroupObject.h"
@@ -26,6 +25,7 @@
 #include "NativeTCPSocketObject.h"
 #include "NativeTextFieldObject.h"
 #include "NativeToggleButtonObject.h"
+#include "NativeWindowObject.h"
 #include "TiCascadesApp.h"
 
 #include <bb/cascades/Container>
