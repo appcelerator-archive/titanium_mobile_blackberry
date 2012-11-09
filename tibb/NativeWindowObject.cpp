@@ -10,14 +10,15 @@
 #include <bb/cascades/Application>
 #include <bb/cascades/Page>
 
+#include "PageScene.h"
+#include "SceneManager.h"
 #include "TiEventContainer.h"
 #include "TiEventContainerFactory.h"
 #include "Window.h"
 #include "WindowGroup.h"
 
 using namespace bb::cascades;
-
-static titanium::WindowGroup* group = NULL;
+using namespace titanium;
 
 NativeObject* NativeWindowObject::createWindow(TiObject* tiObject, NativeObjectFactory* factory)
 {
@@ -39,19 +40,23 @@ void NativeWindowObject::open()
 {
     events_["open"]->container->fireEvent();
 
-    if (group == NULL) {
-        group = new titanium::WindowGroup();
-
-        Page* page = Page::create();
-        page->setContent(group);
-        Application::instance()->setScene(page);
+    titanium::WindowGroup* group;
+    SceneManager* sceneManager = SceneManager::instance();
+    if (sceneManager->activeScene()) {
+        group = sceneManager->activeScene()->windowGroup();
+    } else {
+        PageScene* scene = new PageScene();
+        sceneManager->presentScene(scene);
+        group = scene->windowGroup();
     }
+
     group->insertWindow(static_cast<titanium::Window*>(container_));
 }
 
 void NativeWindowObject::close()
 {
-    group->removeWindow(static_cast<titanium::Window*>(container_));
+    Scene* scene = SceneManager::instance()->activeScene();
+    scene->windowGroup()->removeWindow(static_cast<titanium::Window*>(container_));
     events_["close"]->container->fireEvent();
 }
 

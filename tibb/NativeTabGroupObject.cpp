@@ -7,10 +7,13 @@
 
 #include "NativeObjectFactory.h"
 #include "NativeTabGroupObject.h"
+#include "SceneManager.h"
+#include "TabbedScene.h"
 #include "TiCascadesApp.h"
 #include <bb/cascades/TabbedPane>
 
 using namespace bb::cascades;
+using namespace titanium;
 
 NativeTabGroupObject::NativeTabGroupObject(TiObject* tiObject)
     : NativeControlObject(tiObject)
@@ -49,7 +52,10 @@ int NativeTabGroupObject::initialize()
         return NATIVE_ERROR_OK;
     }
 
-    tabGroup_ = TabbedPane::create().showTabsOnActionBar(true);
+    scene_ = new TabbedScene();
+    tabGroup_ = static_cast<TabbedPane*>(scene_->pane());
+
+    //tabGroup_ = TabbedPane::create().showTabsOnActionBar(true);
 
     if (tabGroup_ == NULL)
     {
@@ -96,9 +102,11 @@ int NativeTabGroupObject::setActiveTab(int index)
 
 int NativeTabGroupObject::open()
 {
-    Q_ASSERT(nativeObjectFactory_ != NULL);
-    Q_ASSERT(nativeObjectFactory_->getCascadeApp() != NULL);
-    nativeObjectFactory_->setRootContainer(this);
-    nativeObjectFactory_->getCascadeApp()->setScene(this);
+    //Q_ASSERT(nativeObjectFactory_ != NULL);
+    //nativeObjectFactory_->setRootContainer(this);
+
+    SceneManager::instance()->presentScene(scene_);
+
     return NATIVE_ERROR_OK;
 }
+

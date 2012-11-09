@@ -19,6 +19,10 @@ class TabbedPane;
 }
 }
 
+namespace titanium {
+class Scene;
+}
+
 /*
  * NativeTabGroupObject
  *
@@ -43,6 +47,7 @@ protected:
 private:
     NativeObjectFactory* nativeObjectFactory_;
     bb::cascades::TabbedPane* tabGroup_;
+    titanium::Scene* scene_;
 
     explicit NativeTabGroupObject(TiObject* tiObject);
     // Disable copy ctor & assignment operator

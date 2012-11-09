@@ -8,6 +8,7 @@
 #include "TiUITabGroup.h"
 #include "TiGenericFunctionObject.h"
 #include "NativeMessageStrings.h"
+#include "NativeTabGroupObject.h"
 
 TiUITabGroup::TiUITabGroup()
     : TiUIBase("")
@@ -49,8 +50,7 @@ Handle<Value> TiUITabGroup::_open(void* userContext, TiObject*, const Arguments&
 {
     HandleScope handleScope;
     TiUITabGroup* obj = (TiUITabGroup*) userContext;
-    NativeObject* no = obj->getNativeObject();
-    no->completeInitialization();
+    NativeTabGroupObject* no = static_cast<NativeTabGroupObject*>(obj->getNativeObject());
     no->open();
     no->release();
     return Undefined();
