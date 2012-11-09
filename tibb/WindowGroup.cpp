@@ -7,9 +7,17 @@
 
 #include "WindowGroup.h"
 
+#include <bb/cascades/AbsoluteLayout>
+
 using namespace bb::cascades;
 
 namespace titanium {
+
+WindowGroup::WindowGroup() {
+    // Windows groups use absolute layout for
+    // positioning of windows inside the container.
+    setLayout(new AbsoluteLayout());
+}
 
 bool WindowGroup::insertWindow(Window* window) {
     if (Container::indexOf(window) != -1) {

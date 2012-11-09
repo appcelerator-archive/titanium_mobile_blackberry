@@ -14,6 +14,8 @@ namespace titanium {
 
 class WindowGroup : public Window {
   public:
+    WindowGroup();
+
     /**
      * Insert the window into the group and give it focus.
      * Returns true if the window was inserted, otherwise
