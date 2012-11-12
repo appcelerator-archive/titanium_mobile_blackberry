@@ -10,6 +10,7 @@
 #include <bb/cascades/Application>
 #include <bb/cascades/Page>
 
+#include "EventHandler.h"
 #include "PageScene.h"
 #include "SceneManager.h"
 #include "TiEventContainer.h"
@@ -59,25 +60,6 @@ void NativeWindowObject::close()
     scene->windowGroup()->removeWindow(static_cast<titanium::Window*>(container_));
     events_["close"]->container->fireEvent();
 }
-
-class EventHandler : public QObject
-{
-    Q_OBJECT
-
-public:
-    explicit EventHandler(TiEventContainer* container)
-        : container_(container) { }
-
-    virtual ~EventHandler() { }
-
-protected:
-    TiEventContainer* getEventContainer() const {
-        return container_;
-    }
-
-private:
-    TiEventContainer* container_;
-};
 
 class FocusEventHandler : public EventHandler
 {
