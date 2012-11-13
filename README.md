@@ -34,8 +34,8 @@ runtime - Put the Javasript runtime here.
 * Work in progress so do not rely on args or process flow.  
 
 
-How create Titanium Applications using the BlackBerry SDK
----------------------------------------------------------
+How to create Titanium applications using the BlackBerry SDK
+------------------------------------------------------------
 
 Notes: The following instructions are targeted at OSX (Mac). It is recommended to do development on Apple/Mac systems. Because of time constraints the BB platform team has not been able to test on PC environments. Also the platform is missing many of the Titanium APIs. Please work closely with the BB team to get the missing APIs available for your application.
 
