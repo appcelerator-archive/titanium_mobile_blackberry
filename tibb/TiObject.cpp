@@ -109,6 +109,15 @@ void TiObject::freeString(char* str)
     }
 }
 
+QString TiObject::getStringFromValue(Handle<Value> value)
+{
+    Handle<String> v8string = Handle<String>::Cast(value);
+    String::Utf8Value v8UtfString(v8string);
+    const char* cStr = *v8UtfString;
+    return QString(cStr);
+}
+
+
 TiObject* TiObject::getTiObjectFromJsObject(Handle<Value> value)
 {
     if (!value->IsObject())

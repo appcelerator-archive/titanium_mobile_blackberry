@@ -46,7 +46,7 @@ void TiV8Event::fire(void* fireDataObject)
         // are passed the the Javascript function. In this case there is one
         // argument: "e". The argument is an object with properties relating
         // to the event that was triggered.
-        result = function_->Call(context->Global(), 1, (Handle<Value>*) &dataObject);
+        result = function_->Call(source_, 1, (Handle<Value>*) &dataObject);
     }
     if (result.IsEmpty())
     {

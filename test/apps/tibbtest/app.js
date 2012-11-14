@@ -122,3 +122,58 @@ var timer=setInterval(function()
 	testbutton4.left=Math.floor(Math.random()*500);
 },5000
 );
+
+/*
+var socket = Ti.Network.Socket.createTCP({
+    host: 'docs.appcelerator.com', port: 80,
+    connected: function (e) {
+        Ti.API.info('Socket opened!');
+        Ti.Stream.pump(e.socket, readCallback, 1024, true);
+        Ti.Stream.write(socket, Ti.createBuffer({
+            value: 'GET /titanium/latest/ HTTP/1.1\r\nHost: docs.appcelerator.com\r\n\r\n'
+        }), writeCallback);
+    },
+        error: function (e) {
+        Ti.API.info('Error (' + e.errorCode + '): ' + e.error);
+    },
+});
+socket.connect();
+
+function writeCallback(e) {
+    Ti.API.info('Successfully wrote to socket.');
+}
+
+function readCallback(e) {
+    if (e.bytesProcessed == -1)
+    {
+		Ti.API.error("bytesProcessed == -1");
+		return;
+    }
+    try {
+        if(e.buffer) {
+            var received = e.buffer.toString();
+            Ti.API.info('Received: ' + received);
+        } else {
+            Ti.API.error('Error: read callback called with no buffer!');
+        }
+    } catch (ex) {
+        Ti.API.error(ex);
+    }
+}
+*/
+
+var h = Ti.Network.createHTTPClient({
+	onload : function(e) {
+		Ti.API.info("Received text: " + this.responseText);
+	},
+	onerror : function(e) {
+		Ti.API.info(e);
+	},
+	onreadystatechange: function(e) {
+		Ti.API.info("Readystate change: " + this.readyState);		
+	}
+});
+h.enableKeepAlive = true;
+h.open("GET", "http://www.xhaus.com/headers");
+h.setRequestHeader("TESTTEST", "abcdefg");
+h.send();

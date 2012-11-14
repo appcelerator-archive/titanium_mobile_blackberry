@@ -26,6 +26,7 @@
 #include "NativeTextFieldObject.h"
 #include "NativeToggleButtonObject.h"
 #include "NativeWindowObject.h"
+#include "NativeHTTPClientObject.h"
 #include "TiCascadesApp.h"
 
 #include <bb/cascades/Container>
@@ -119,6 +120,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 
     case N_TYPE_TCPSOCKET:
         obj = NativeTCPSocketObject::createTCPSocket(tiObj);
+        break;
+
+    case N_TYPE_HTTPCLIENT:
+        obj = NativeHTTPClientObject::createHTTPClient(tiObj);
         break;
 
     case N_TYPE_DATE_TIME_PICKER:

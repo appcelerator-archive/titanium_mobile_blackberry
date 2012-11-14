@@ -23,6 +23,7 @@
 #include "TiObjectScope.h"
 #include "NativeObject.h"
 #include "NativeObjectFactory.h"
+#include "qstring.h"
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #include <v8.h>
@@ -108,6 +109,7 @@ public:
     virtual ~TiObject();
     static char* getStringFromObject(Handle<Value> value, const char* defaultString);
     static void freeString(char* str);
+    static QString getStringFromValue(Handle<Value> value);
     static TiObject* getTiObjectFromJsObject(Handle<Value> value);
     static void setTiObjectToJsObject(Handle<Value> jsObject, TiObject* tiObj);
     static Handle<ObjectTemplate> getObjectTemplateFromJsObject(Handle<Value> value);

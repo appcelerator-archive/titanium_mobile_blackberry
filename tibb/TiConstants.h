@@ -45,6 +45,20 @@ enum TI_SOCKET_STATE
     SOCKET_STATE_LISTENING,
 }; // enum TI_SOCKET_STATE
 } // namespace Socket
+
+namespace HTTPClient
+{
+// HTTPClient states constants
+enum TI_HTTPCLIENT_STATE
+{
+	HTTPCLIENT_STATE_UNSENT = 0,
+	HTTPCLIENT_STATE_OPENED,
+	HTTPCLIENT_STATE_HEADERS_RECEIVED,
+	HTTPCLIENT_STATE_LOADING,
+	HTTPCLIENT_STATE_DONE,
+}; // enum TI_HTTPCLIENT_STATE
+} // namespace HTTPClient
+
 } // namespace Network
 
 namespace Platform
