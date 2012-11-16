@@ -195,7 +195,7 @@ int NativeHTTPClientObject::getResponseText(TiObject* obj, void* /*userContext*/
 	}
 	QByteArray byteArray = reply_->readAll();
 	QString responseData = QString::fromUtf8(byteArray.constData(), byteArray.size());
-    obj->setValue(String::New(responseData.toUtf8()));
+    obj->setValue(String::New(responseData.toUtf8().constData()));
     return NATIVE_ERROR_OK;
 }
 
@@ -246,6 +246,7 @@ int NativeHTTPClientObject::abort()
 	}
 	reply_->abort();
 	delete reply_;
+	reply_ = NULL;
 	readyState_ = HTTPCLIENT_STATE_UNSENT;
 	return NATIVE_ERROR_OK;
 }
