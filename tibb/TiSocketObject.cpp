@@ -10,6 +10,7 @@
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
 #include "TiTCPSocketObject.h"
+#include "TiUDPSocketObject.h"
 
 TiSocketObject::TiSocketObject()
     : TiProxy("Socket")
@@ -38,6 +39,7 @@ void TiSocketObject::onCreateStaticMembers()
 {
     TiProxy::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTCP", this, _createTCP);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createUDP", this, _createUDP);
 
     // Socket state constant from Titanium.Network.Socket namespace
     ADD_STATIC_TI_VALUE("CLOSED", Number::New(Ti::Network::Socket::SOCKET_STATE_CLOSED), this);
@@ -54,6 +56,23 @@ Handle<Value> TiSocketObject::_createTCP(void* userContext, TiObject* /*caller*/
     Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
     Handle<Object> result = global->NewInstance();
     TiTCPSocketObject* newSocket = TiTCPSocketObject::createTCP(obj->objectFactory_);
+    newSocket->setValue(result);
+    if ((args.Length() > 0) && (args[0]->IsObject()))
+    {
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
+        newSocket->setParametersFromObject(newSocket, settingsObj);
+    }
+    setTiObjectToJsObject(result, newSocket);
+    return handleScope.Close(result);
+}
+
+Handle<Value> TiSocketObject::_createUDP(void* userContext, TiObject* /*caller*/, const Arguments& args)
+{
+    HandleScope handleScope;
+    TiSocketObject* obj = (TiSocketObject*) userContext;
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result = global->NewInstance();
+    TiUDPSocketObject* newSocket = TiUDPSocketObject::createUDP(obj->objectFactory_);
     newSocket->setValue(result);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {

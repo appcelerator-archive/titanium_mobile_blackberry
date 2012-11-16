@@ -94,6 +94,8 @@ public:
     static const char* tetERROR;
     static const char* tetLOAD;
     static const char* tetREADYSTATECHANGE;
+    static const char* tetSTARTED;
+    static const char* tetDATA;
 
 protected:
     explicit NativeProxyObject(TiObject* tiObject);

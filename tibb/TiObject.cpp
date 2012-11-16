@@ -117,6 +117,32 @@ QString TiObject::getStringFromValue(Handle<Value> value)
     return QString(cStr);
 }
 
+QByteArray TiObject::getByteArrayFromValue(Handle<Value> value)
+{
+	if (value->IsArray()) {
+		Handle<Array> array = Handle<Array>::Cast(value);
+		int length = array->Length();
+		QByteArray result = QByteArray(length, 0);
+		char *data = result.data();
+		for (int index = 0; index < length; ++index) {
+			data[index] = Handle<Number>::Cast(array->Get(index))->Value();
+		}
+		return result;
+	}
+	return QByteArray();
+}
+
+Handle<Array> TiObject::getValueFromByteArray(const QByteArray& bytes)
+{
+    HandleScope handleScope;
+    int length = bytes.length();
+    Handle<Array> array = Array::New(length);
+    for (int index = 0; index < length; ++index) {
+    	array->Set(index, Number::New(bytes[index]));
+    }
+    return handleScope.Close(array);
+}
+
 
 TiObject* TiObject::getTiObjectFromJsObject(Handle<Value> value)
 {

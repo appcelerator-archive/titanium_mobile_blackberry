@@ -18,6 +18,8 @@ const char* NativeProxyObject::tetCONNECTED = "connected";
 const char* NativeProxyObject::tetERROR = "error";
 const char* NativeProxyObject::tetLOAD = "load";
 const char* NativeProxyObject::tetREADYSTATECHANGE = "readystatechange";
+const char* NativeProxyObject::tetSTARTED = "started";
+const char* NativeProxyObject::tetDATA = "data";
 
 
 NativeProxyObject::NativeProxyObject(TiObject* tiObject)

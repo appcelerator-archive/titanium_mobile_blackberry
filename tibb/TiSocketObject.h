@@ -35,6 +35,7 @@ private:
     TiSocketObject& operator=(const TiSocketObject&);
 
     static Handle<Value> _createTCP(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createUDP(void* userContext, TiObject* caller, const Arguments& args);
 
     NativeObjectFactory* objectFactory_;
 };

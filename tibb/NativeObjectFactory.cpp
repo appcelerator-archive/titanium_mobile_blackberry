@@ -23,6 +23,7 @@
 #include "NativeSliderObject.h"
 #include "NativeStringInterface.h"
 #include "NativeTCPSocketObject.h"
+#include "NativeUDPSocketObject.h"
 #include "NativeTextFieldObject.h"
 #include "NativeToggleButtonObject.h"
 #include "NativeWindowObject.h"
@@ -120,6 +121,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 
     case N_TYPE_TCPSOCKET:
         obj = NativeTCPSocketObject::createTCPSocket(tiObj);
+        break;
+
+    case N_TYPE_UDPSOCKET:
+        obj = NativeUDPSocketObject::createUDPSocket(tiObj);
         break;
 
     case N_TYPE_HTTPCLIENT:
