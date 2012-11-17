@@ -5,3 +5,4 @@ tibb/arm
 tibb/x86
 test/apps/tibbtest/arm
 test/apps/tibbtest/x86
+build
