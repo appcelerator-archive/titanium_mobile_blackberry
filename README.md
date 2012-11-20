@@ -42,8 +42,10 @@ How to get Started with Titanium BlackBerry Development
 
 5) When the simulator starts up in the lower left side of the simulator display is an IP address--please note the number.
 
+Note: If you are interested in writing Titanium Applications go to "How to Create Titanium Applications using the BlackBerry SDK" section below. If you are interested in native BlackBerry development to extend or contribute to the Titanium platform go to "How to Setup and Build the Titanium BlackBerry SDK (Native Platform Drop-In)"
 
-How to Create Titanium applications using the BlackBerry SDK
+
+How to Create Titanium Applications using the BlackBerry SDK
 ------------------------------------------------------------
 
 1) Get the latest Titanium Studio 3.0.0 RC at http://preview.appcelerator.com. 
@@ -128,8 +130,10 @@ Ti.Utils
 Ti.Geolocation
 
 
-How to Setup and Build the Titanium BlackBerry SDK
---------------------------------------------------
+How to Setup and Build the Titanium BlackBerry SDK (Native Platform Drop-In)
+----------------------------------------------------------------------------
+
+Note: The following instructions are for Mac. For Windows you will need cygwin or some other Unix on Windows utility.
 
 1) Download the Git/GitHub client. 
 
@@ -148,6 +152,8 @@ the python scons tool is used. To build V8 using scons:
 6) Set the Build Configuration -> Simulator Debug. Also you need to setup the simulator using the Debug Configuration panel and give the target IP of the simulator that was noted in step 5.
 
 7) Build tibb and test/tibbtest and then Debug As C/C++ Application.
+
+8) To create the the blackberry drop-in, from the repo cli/commands execute "./create_sdk" this will create a build folder with the blackberry sdk folder in it. The blackberry folder can be dropped into a current Titanium SDK. 
 
 
 Legal
