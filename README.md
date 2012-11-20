@@ -50,11 +50,11 @@ How to Create Titanium Applications using the BlackBerry SDK
 
 1) Get the latest Titanium Studio 3.0.0 RC at http://preview.appcelerator.com. It is important to use 3.0.0 or greater for Studio to enable BlackBerry support.
 
-2) Download the most recent BlackBerry Titanium SDK from http://sdrv.ms/UGJ1wp choose bb-mobilesdk-osx or bb-mobilesdk-win32 zip file depending on your development environment. The BB team will be posting frequent updates.
+2) Download the most recent BlackBerry Titanium SDK from http://sdrv.ms/Taibxw choose bb-mobilesdk-osx or bb-mobilesdk-win32 zip file depending on your development environment. The BB team will be posting frequent updates.
 
 3) Unzip the file down a location that does not include spaces in the path name. This is a temporary issue and will be fixed.
 
-4) Unzip the StarterApp.zip file located at http://sdrv.ms/UGJ1wp somewhere where it is easy to find (i.e. the Desktop) and new spaces in path.
+4) Unzip the StarterApp.zip file located at http://sdrv.ms/Taibxw somewhere where it is easy to find (i.e. the Desktop) and new spaces in path.
 
 5) Launch Titanium Studio. You may wish to have a separate workspace for BB development to make it easy to switch between settings.
 In the Preferences panel under Titanium Studio > Preferences from the main menu select Titanium Studio and then Titanium.
