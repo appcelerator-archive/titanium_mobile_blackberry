@@ -32,6 +32,7 @@ void TiUIWindow::onCreateStaticMembers()
     TiUIBase::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "open", this, _open);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "close", this, _close);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "addAction", this, _addAction);
 }
 
 void TiUIWindow::initializeTiObject(TiObject* parentContext)
@@ -70,6 +71,22 @@ Handle<Value> TiUIWindow::_close(void* userContext, TiObject*, const Arguments&)
     NativeWindowObject* window = static_cast<NativeWindowObject*>(self->getNativeObject());
 
     window->close();
+
+    return Undefined();
+}
+
+Handle<Value> TiUIWindow::_addAction(void* userContext, TiObject* caller, const Arguments& args)
+{
+    HandleScope scope;
+    TiUIWindow* self = static_cast<TiUIWindow*>(userContext);
+    NativeWindowObject* window = static_cast<NativeWindowObject*>(self->getNativeObject());
+
+    if (args.Length() < 1) {
+        return ThrowException(Exception::Error(String::New("Argument 'title' required.")));
+    }
+
+    QString title = QString::fromUtf8(*String::Utf8Value(args[0]));
+    window->addAction(title);
 
     return Undefined();
 }

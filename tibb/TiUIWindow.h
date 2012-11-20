@@ -32,6 +32,7 @@ private:
     TiUIWindow(const char* name);
     static Handle<Value> _open(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _close(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _addAction(void* userContext, TiObject* caller, const Arguments& args);
 };
 
 #endif /* TIUIWINDOW_H_ */

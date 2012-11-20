@@ -20,20 +20,25 @@ class PageScene : public Scene {
 
 public:
     PageScene() {
-        bb::cascades::Page* page = bb::cascades::Page::create();
-        setPane(page);
+        page_ = bb::cascades::Page::create();
+        setPane(page_);
 
         // The content of the page is the window group container.
         windowGroup_ = new WindowGroup();
-        page->setContent(windowGroup_);
+        page_->setContent(windowGroup_);
     }
 
     virtual WindowGroup* windowGroup() const {
         return windowGroup_;
     }
 
+    virtual void addAction(bb::cascades::ActionItem* item) {
+        page_->addAction(item);
+    }
+
 private:
     WindowGroup* windowGroup_;
+    bb::cascades::Page* page_;
 };
 
 } // namespace titanium

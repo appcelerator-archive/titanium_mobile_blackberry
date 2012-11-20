@@ -8,6 +8,7 @@
 #include "NativeWindowObject.h"
 
 #include <bb/cascades/AbsoluteLayout>
+#include <bb/cascades/ActionItem>
 #include <bb/cascades/Application>
 #include <bb/cascades/Page>
 
@@ -40,17 +41,28 @@ int NativeWindowObject::addChildNativeObject(NativeObject* obj)
 
 void NativeWindowObject::open()
 {
-    events_["open"]->container->fireEvent();
-
+    titanium::Window* window = static_cast<titanium::Window*>(container_);
     titanium::WindowGroup* group;
+    titanium::Scene* scene;
     SceneManager* sceneManager = SceneManager::instance();
     if (sceneManager->activeScene()) {
-        group = sceneManager->activeScene()->windowGroup();
+        scene = sceneManager->activeScene();
+        group = scene->windowGroup();
     } else {
-        PageScene* scene = new PageScene();
+        fprintf(stderr, "creating page scene.\n");
+        scene = new PageScene();
         sceneManager->presentScene(scene);
         group = scene->windowGroup();
     }
+
+    // When an action item is added to a window, notify the scene
+    // so the item can be inserted into the action bar.
+    QObject::connect(window,
+                     SIGNAL(onActionAdded(bb::cascades::ActionItem*)),
+                     scene,
+                     SLOT(addAction(bb::cascades::ActionItem*)));
+
+    events_["open"]->container->fireEvent();
 
     group->insertWindow(static_cast<titanium::Window*>(container_));
 }
@@ -60,6 +72,13 @@ void NativeWindowObject::close()
     Scene* scene = SceneManager::instance()->activeScene();
     scene->windowGroup()->removeWindow(static_cast<titanium::Window*>(container_));
     events_["close"]->container->fireEvent();
+}
+
+void NativeWindowObject::addAction(const QString& title)
+{
+    ActionItem* item = ActionItem::create();
+    item->setTitle(title);
+    static_cast<titanium::Window*>(container_)->addAction(item);
 }
 
 class FocusEventHandler : public EventHandler

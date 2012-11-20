@@ -8,6 +8,7 @@
 #ifndef TI_WINDOW_H
 #define TI_WINDOW_H
 
+#include <bb/cascades/ActionItem>
 #include <bb/cascades/Container>
 
 namespace titanium {
@@ -24,9 +25,15 @@ public:
         emit onBlur();
     }
 
+    virtual void addAction(bb::cascades::ActionItem* item) {
+        fprintf(stderr, "Widow::addAction()\n");
+        emit onActionAdded(item);
+    }
+
 signals:
     void onFocus();
     void onBlur();
+    void onActionAdded(bb::cascades::ActionItem* item);
 };
 
 } // namespace titanium

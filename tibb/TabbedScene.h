@@ -35,6 +35,10 @@ public:
         return windowGroup_;
     }
 
+    virtual void addAction(bb::cascades::ActionItem* item) {
+        // TODO(josh): support action items for tabbed scenes.
+    }
+
 private:
     WindowGroup* windowGroup_;
 };

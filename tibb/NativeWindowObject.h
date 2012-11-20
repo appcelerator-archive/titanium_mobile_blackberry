@@ -22,6 +22,8 @@ public:
     void open();
     void close();
 
+    void addAction(const QString& title);
+
 protected:
     virtual int initialize();
     virtual void setupEvents(TiEventContainerFactory* factory);

@@ -9,6 +9,7 @@
 #define TI_SCENE_H
 
 #include <bb/cascades/AbstractPane>
+#include <bb/cascades/ActionItem>
 #include <QObject>
 #include <QScopedPointer>
 
@@ -44,6 +45,8 @@ public:
     virtual void close() {
         emit onClose(this);
     }
+
+    Q_SLOT virtual void addAction(bb::cascades::ActionItem* item) = 0;
 
     /**
      * The various states the scene can go
