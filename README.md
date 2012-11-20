@@ -48,7 +48,7 @@ Note: If you are interested in writing Titanium Applications go to "How to Creat
 How to Create Titanium Applications using the BlackBerry SDK
 ------------------------------------------------------------
 
-1) Get the latest Titanium Studio 3.0.0 RC at http://preview.appcelerator.com. 
+1) Get the latest Titanium Studio 3.0.0 RC at http://preview.appcelerator.com. It is important to use 3.0.0 or greater for Studio to enable BlackBerry support.
 
 2) Download the most recent BlackBerry Titanium SDK from http://sdrv.ms/UGJ1wp choose bb-mobilesdk-osx or bb-mobilesdk-win32 zip file depending on your development environment. The BB team will be posting frequent updates.
 
