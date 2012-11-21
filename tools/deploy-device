@@ -1,0 +1,9 @@
+#! /bin/sh
+
+TI_SDK="/tmp/mobilesdk/osx/2.2.0"
+BBNDK="/Applications/bbndk"
+DEVICE_IP="169.254.0.1"
+DEVICE_PASS="josh123"
+DEBUG_TOKEN=$HOME/debugtoken1.bar
+
+$TI_SDK/blackberry/builder.py run -d $PWD -p $BBNDK -i $DEVICE_IP -s $DEVICE_PASS -t device --debug_token=$DEBUG_TOKEN
