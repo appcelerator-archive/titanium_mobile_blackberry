@@ -151,6 +151,11 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "passwordMask", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_PASSWORD_MASK
+    },
+
+    {
         "rect", TI_PROP_PERMISSION_READ,
         N_PROP_RECT
     },

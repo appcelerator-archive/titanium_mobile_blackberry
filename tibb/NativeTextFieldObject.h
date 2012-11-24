@@ -28,6 +28,7 @@ public:
     virtual int initialize();
     virtual int setHintText(TiObject* obj);
     virtual int setValue(TiObject* obj);
+    virtual int setPasswordMask(TiObject* obj);
     void updateValue(QString value);
 
 protected:

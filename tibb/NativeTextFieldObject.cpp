@@ -12,6 +12,7 @@
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/TextField>
+#include <bb/cascades/TextFieldInputMode>
 #include <QString>
 
 NativeTextFieldObject::NativeTextFieldObject(TiObject* tiObject)
@@ -50,6 +51,20 @@ int NativeTextFieldObject::setHintText(TiObject* obj)
         return error;
     }
     textField_->setHintText(strHint);
+    return NATIVE_ERROR_OK;
+}
+
+int NativeTextFieldObject::setPasswordMask(TiObject* obj)
+{
+    bool enabled;
+    getBoolean(obj, &enabled);
+
+    if (enabled) {
+        textField_->setInputMode(bb::cascades::TextFieldInputMode::Password);
+    } else {
+        textField_->setInputMode(bb::cascades::TextFieldInputMode::Default);
+    }
+
     return NATIVE_ERROR_OK;
 }
 

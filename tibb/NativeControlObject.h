@@ -100,6 +100,7 @@ public:
     virtual int setMinDate(TiObject* obj);
     virtual int setOpacity(TiObject* obj);
     virtual int setOptions(TiObject* obj);
+    virtual int setPasswordMask(TiObject* obj);
     virtual int setPropertyValue(size_t propertyNumber, TiObject* obj);
     virtual int setRight(TiObject* obj);
     virtual int setSelectedIndex(TiObject* obj);
