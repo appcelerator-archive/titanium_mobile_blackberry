@@ -7,6 +7,8 @@
 
 #include "TiHTTPClientObject.h"
 
+#include <QUrl>
+
 #include "NativeHTTPClientObject.h"
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
@@ -283,9 +285,30 @@ Handle<Value> TiHTTPClientObject::_send(void* userContext, TiObject* /*caller*/,
     HandleScope handleScope;
     TiHTTPClientObject* obj = (TiHTTPClientObject*) userContext;
     NativeHTTPClientObject* nhttp = (NativeHTTPClientObject*) obj->getNativeObject();
+
+    QString data;
+    if (args.Length() > 0) {
+        if (args[0]->IsObject()) {
+            // Convert objects into form-encoded data.
+            QUrl url;
+            Local<Object> formData = args[0]->ToObject();
+            Local<Array> propertyNames = formData->GetOwnPropertyNames();
+            uint32_t propertyCount = propertyNames->Length();
+            for (uint32_t i = 0; i < propertyCount; i++) {
+                Local<Value> key = propertyNames->Get(i);
+                Local<Value> value = formData->Get(key);
+                url.addQueryItem(QString::fromUtf8(*String::Utf8Value(key)),
+                                 QString::fromUtf8(*String::Utf8Value(value)));
+            }
+            data = url.toString().mid(1);  // exclude the '?' character
+        } else {
+            data = QString::fromUtf8(*String::Utf8Value(args[0]));
+        }
+    }
+
     try
     {
-        nhttp->send(args.Length() != 0 ? TiObject::getStringFromValue(args[0]) : NULL);
+        nhttp->send(data);
     }
     catch (NativeException& ne)
     {
