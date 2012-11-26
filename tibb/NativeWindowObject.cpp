@@ -10,6 +10,7 @@
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/ActionItem>
 #include <bb/cascades/Application>
+#include <bb/cascades/Image>
 #include <bb/cascades/Page>
 
 #include "EventHandler.h"
@@ -100,10 +101,13 @@ private:
     Persistent<Function> callback_;
 };
 
-void NativeWindowObject::addAction(const QString& title, Handle<Function> triggerCallback)
+void NativeWindowObject::addAction(const QString& title, const QString& image, Handle<Function> triggerCallback)
 {
     ActionItem* item = ActionItem::create();
     item->setTitle(title);
+    if (!image.isEmpty()) {
+        item->setImageSource(getResourcePath(image));
+    }
     QObject::connect(item, SIGNAL(triggered()), new ActionItemTriggerHandler(tiObject_, triggerCallback), SLOT(triggered()));
     static_cast<titanium::Window*>(container_)->addAction(item);
 }

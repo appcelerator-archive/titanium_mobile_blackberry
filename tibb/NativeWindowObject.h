@@ -24,7 +24,7 @@ public:
     void open();
     void close();
 
-    void addAction(const QString& title, v8::Handle<v8::Function> triggerCallback);
+    void addAction(const QString& title, const QString& image, v8::Handle<v8::Function> triggerCallback);
 
 protected:
     virtual int initialize();

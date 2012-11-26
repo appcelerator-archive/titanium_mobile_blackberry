@@ -81,16 +81,22 @@ Handle<Value> TiUIWindow::_addAction(void* userContext, TiObject* caller, const 
     TiUIWindow* self = static_cast<TiUIWindow*>(userContext);
     NativeWindowObject* window = static_cast<NativeWindowObject*>(self->getNativeObject());
 
+    bool hasImage = args.Length() > 2;
     if (args.Length() < 2) {
-        return ThrowException(Exception::Error(String::New("Missing arguments: addAction(title, triggerCallback)")));
+        return ThrowException(Exception::Error(String::New("Missing arguments: addAction(title, [image], triggerCallback)")));
     }
-    if (!args[1]->IsFunction()) {
+    if (!args[hasImage ? 2 : 1]->IsFunction()) {
         return ThrowException(Exception::Error(String::New("'triggerCallback' argument must be function.")));
     }
 
     QString title = QString::fromUtf8(*String::Utf8Value(args[0]));
-    Handle<Function> triggerCallback = Handle<Function>::Cast(args[1]);
-    window->addAction(title, triggerCallback);
+    Handle<Function> triggerCallback = Handle<Function>::Cast(args[hasImage ? 2 : 1]);
+    QString image;
+    if (hasImage) {
+        image = QString::fromUtf8(*String::Utf8Value(args[1]));
+    }
+
+    window->addAction(title, image, triggerCallback);
 
     return Undefined();
 }
