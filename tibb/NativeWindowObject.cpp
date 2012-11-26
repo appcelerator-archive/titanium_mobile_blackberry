@@ -8,6 +8,7 @@
 #include "NativeWindowObject.h"
 
 #include <bb/cascades/AbsoluteLayout>
+#include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/ActionItem>
 #include <bb/cascades/Application>
 #include <bb/cascades/Image>
@@ -151,6 +152,8 @@ int NativeWindowObject::initialize()
 
     container_ = new titanium::Window();
     container_->setLayout(new AbsoluteLayout());
+    layout_ = new AbsoluteLayoutProperties;
+    container_->setLayoutProperties(layout_);
 
     return NATIVE_ERROR_OK;
 }
