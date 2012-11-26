@@ -17,11 +17,13 @@
 #include "SceneManager.h"
 #include "TiEventContainer.h"
 #include "TiEventContainerFactory.h"
+#include "TiObject.h"
 #include "Window.h"
 #include "WindowGroup.h"
 
 using namespace bb::cascades;
 using namespace titanium;
+using namespace v8;
 
 NativeObject* NativeWindowObject::createWindow(TiObject* tiObject, NativeObjectFactory* factory)
 {
@@ -74,10 +76,35 @@ void NativeWindowObject::close()
     events_["close"]->container->fireEvent();
 }
 
-void NativeWindowObject::addAction(const QString& title)
+class ActionItemTriggerHandler : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit ActionItemTriggerHandler(TiObject* recv, Handle<Function> callback)
+        : recv_(recv)
+        , callback_(Persistent<Function>::New(callback)) { }
+
+    virtual ~ActionItemTriggerHandler() {
+        callback_.Dispose();
+    }
+
+public slots:
+    void triggered() {
+        HandleScope scope;
+        callback_->Call(recv_->getValue()->ToObject(), 0, NULL);
+    }
+
+private:
+    TiObject* recv_;
+    Persistent<Function> callback_;
+};
+
+void NativeWindowObject::addAction(const QString& title, Handle<Function> triggerCallback)
 {
     ActionItem* item = ActionItem::create();
     item->setTitle(title);
+    QObject::connect(item, SIGNAL(triggered()), new ActionItemTriggerHandler(tiObject_, triggerCallback), SLOT(triggered()));
     static_cast<titanium::Window*>(container_)->addAction(item);
 }
 

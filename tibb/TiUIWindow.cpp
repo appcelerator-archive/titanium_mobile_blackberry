@@ -81,12 +81,16 @@ Handle<Value> TiUIWindow::_addAction(void* userContext, TiObject* caller, const 
     TiUIWindow* self = static_cast<TiUIWindow*>(userContext);
     NativeWindowObject* window = static_cast<NativeWindowObject*>(self->getNativeObject());
 
-    if (args.Length() < 1) {
-        return ThrowException(Exception::Error(String::New("Argument 'title' required.")));
+    if (args.Length() < 2) {
+        return ThrowException(Exception::Error(String::New("Missing arguments: addAction(title, triggerCallback)")));
+    }
+    if (!args[1]->IsFunction()) {
+        return ThrowException(Exception::Error(String::New("'triggerCallback' argument must be function.")));
     }
 
     QString title = QString::fromUtf8(*String::Utf8Value(args[0]));
-    window->addAction(title);
+    Handle<Function> triggerCallback = Handle<Function>::Cast(args[1]);
+    window->addAction(title, triggerCallback);
 
     return Undefined();
 }

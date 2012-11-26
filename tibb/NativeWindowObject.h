@@ -8,6 +8,8 @@
 #ifndef NativeWindowObject_H_
 #define NativeWindowObject_H_
 
+#include <v8.h>
+
 #include "NativeControlObject.h"
 
 class NativeWindowObject : public NativeControlObject {
@@ -22,7 +24,7 @@ public:
     void open();
     void close();
 
-    void addAction(const QString& title);
+    void addAction(const QString& title, v8::Handle<v8::Function> triggerCallback);
 
 protected:
     virtual int initialize();
