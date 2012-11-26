@@ -33,7 +33,8 @@ public:
     }
 
     virtual void addAction(bb::cascades::ActionItem* item) {
-        page_->addAction(item);
+        // TODO(josh): expose setting placement of action item.
+        page_->addAction(item, bb::cascades::ActionBarPlacement::OnBar);
     }
 
 private:
