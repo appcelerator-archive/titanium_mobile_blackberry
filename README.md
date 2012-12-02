@@ -54,7 +54,7 @@ How to Create Titanium Applications using the BlackBerry SDK
 
 3) Unzip the file down a location that does not include spaces in the path name. This is a temporary issue and will be fixed.
 
-4) Unzip the StarterApp.zip file located at http://sdrv.ms/Taibxw somewhere where it is easy to find (i.e. the Desktop) and new spaces in path.
+4) Unzip the StarterApp.zip file located at http://sdrv.ms/Taibxw somewhere where it is easy to find (i.e. the Desktop) and no spaces in path.
 
 5) Launch Titanium Studio. You may wish to have a separate workspace for BB development to make it easy to switch between settings.
 In the Preferences panel under Titanium Studio > Preferences from the main menu select Titanium Studio and then Titanium.
@@ -67,6 +67,13 @@ In the Simulator IP box enter the IP address you noted in step 5.
 7) Select the "StarterApp" Project in the project explorer, select the "Run" drop down and choose "BlackBerry Simulator".
 
 8) You may also use Titanium Studio to create a new BlackBerry project. Make sure when creating the new project there are no spaces in the project path. Note most of the default templates are still being worked and will not be displayed correctly on the simulator or device. Most of this has to do missing flow layout functionality that the team is busy working on.
+
+9) To display Ti.APP.info for your application you need to use the command line / BB tools for now until Studio can read the logs. Here's the steps:
+
+1. telnet <simulator ip>  (you can find the IP in the lower left corner of the simulator window)
+2. login: username = devuser password = devuser
+3. The log files are located at /accounts/1000/appdata/<your app id>/logs
+4. You can use tail -f to stream log updates. Note you will need to re-start tail between application runs. 
 
 
 API Status:
@@ -153,8 +160,8 @@ the python scons tool is used. To build V8 using scons:
 
 7) Build tibb and test/tibbtest and then Debug As C/C++ Application.
 
-8) To create the the blackberry drop-in, from the repo cli/commands execute "./create_sdk" this will create a build folder with the blackberry sdk folder in it. The blackberry folder can be dropped into a current Titanium SDK. 
-
+8) To create the the blackberry drop-in, from the repo cli/commands execute "./create_sdk" this will create a build folder with the blackberry sdk folder in it. The blackberry folder can be dropped into a current Titanium SDK. The create_sdk script is a Node.js module and has a dependency on the 
+wrench module. If you get an error about wrench execute the command "npm install wrench".
 
 Legal
 ------
