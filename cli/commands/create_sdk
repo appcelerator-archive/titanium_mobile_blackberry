@@ -28,9 +28,7 @@ copyFileSync('tibb/x86/a/libtibb.a', 'build/sdk/blackberry/tibb/x86/a/libtibb.a'
 copyFileSync('tibb/x86/a-g/libtibb.a',  'build/sdk/blackberry/tibb/x86/a-g/libtibb.a');
 
 copyFileSync('runtime/v8/libv8-arm.a', 'build/sdk/blackberry/libv8/lib/arm/libv8.a');
-copyFileSync('runtime/v8/libv8preparser.a',  'build/sdk/blackberry/libv8/lib/arm/libv8preparser.a');
 copyFileSync('runtime/v8/libv8-ia32.a', 'build/sdk/blackberry/libv8/lib/x86/libv8.a');
-copyFileSync('runtime/v8/libv8preparser.a', 'build/sdk/blackberry/libv8/lib/x86/libv8preparser.a');
 
 copyFileSync('sdk_version.json', 'build/sdk/blackberry/sdk_version.json');
 
