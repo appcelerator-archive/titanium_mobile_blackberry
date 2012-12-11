@@ -80,11 +80,11 @@ In the Simulator IP box enter the IP address you noted in step 5.
 10) The easiest way to target running on a device is to use Titanium Studio and follow the instructions on the preview site. You can also use the deploy-device script under /tools folder and edit the script to match your configuration. You will first need to generate and install a debug token on the the target device as outlined below:
 
 1. Register for a set of signing keys at https://www.blackberry.com/SignedKeys/codesigning.html (note the signing pin number)
-2) After receiving the signing certs put them somewhere locally.
-3) From a command window run "cd /Applications/bbndk/host_<IP_ADDRESS>/darwin/x86/usr/bin/
-4) From a command window run "./blackberry-signer -register -csjpin <SIGNING_PIN> -storepass <STORAGE_PASSWORD> <PATH_TO_RDK_KEYS>.csj <PATH_TO_PBDT_KEYS>.csj"
-5) From a command window run "./blackberry-debugtokenrequest -storepass <STORAGE_PASSWORD> -devicepin <DEVICE_PIN> debugtoken.bar"
-6) From a command window run "./blackberry-deploy -installDebugToken <PATH_TO_DEBUG_TOKEN>/debugtoken.bar -device <DEVICE_IP>  -password <DEVICE_PASSWORD>
+2. After receiving the signing certs put them somewhere locally.
+3. From a command window run "cd /Applications/bbndk/host_<IP_ADDRESS>/darwin/x86/usr/bin/
+4. From a command window run "./blackberry-signer -register -csjpin <SIGNING_PIN> -storepass <STORAGE_PASSWORD> <PATH_TO_RDK_KEYS>.csj <PATH_TO_PBDT_KEYS>.csj"
+5. From a command window run "./blackberry-debugtokenrequest -storepass <STORAGE_PASSWORD> -devicepin <DEVICE_PIN> debugtoken.bar"
+6. From a command window run "./blackberry-deploy -installDebugToken <PATH_TO_DEBUG_TOKEN>/debugtoken.bar -device <DEVICE_IP>  -password <DEVICE_PASSWORD>
 
 
 How to Setup and Build the Titanium BlackBerry SDK (Native Platform Drop-In)
