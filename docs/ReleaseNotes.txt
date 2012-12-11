@@ -1,0 +1,67 @@
+
+Release Notes (3.1.0.201212051932):
+
+1) Project clean through Studio now works 
+2) Deploy to BB10 device works
+
+
+API Status (3.1.0.201212051932):
+
+Implemented: Basic operations supported
+Ti.Network.HTTPClient
+Ti.Network.TCPSocket
+Ti.UI.Window 
+Ti.UI.AlertDialog
+Ti.UI.View
+Ti.UI.Button
+Ti.UI.TextField 
+Ti.UI.Label 
+Ti.UI.TableView 
+Ti.UI.ProgressBar
+Ti.UI.Slider 
+
+P1: In development 
+2.0 Layout Engine
+Ti.Database 
+Ti.Filesystem
+Ti.API - (event handler)
+TouchStart, TouchMove & TouchEnd
+Ti.UI.TableViewRow
+Ti.UI.TabGroup 
+Ti.API (log info to standard out)
+Ti.Module (native modules)
+Ti.UI.WebView
+
+P2: To be finished once P1 items are completed:
+Ti.Analytics
+Ti.Accelerometer 
+Ti.Cloud 
+Ti.CloudPush 
+Ti.Codec 
+Ti.Contacts 
+Ti.Facebook 
+Ti.Gesture 
+Ti.Locale 
+Ti.Media 
+Ti.Platform
+Ti.Stream
+Ti.UI.ActivityIndicator 
+Ti.UI.Animation  
+Ti.UI.ButtonBar
+Ti.UI.DashboardItem
+Ti.UI.DashboardView
+Ti.UI.EmailDialog 
+Ti.UI.Picker 
+Ti.UI.OptionDialog 
+Ti.UI.ScrollableView 
+Ti.UI.ScrollView 
+Ti.UI.Switch 
+Ti.UI.TableViewSection 
+Ti.UI.TextArea 
+Ti.Utils 
+Ti.Geolocation
+Ti.UI.ImageView
+
+
+
+

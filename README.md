@@ -13,6 +13,8 @@ Release Notes
 
 Notes: Currently the platform is in it's early stage of development and  missing many of the Titanium APIs. Please work closely with the BB team to get the missing APIs available for your application. The supported platforms for development are Mac 10.7 and greater and Windows7/8.
 
+The latest release and API status notes are at http://preview.appcelerator.com/studio/bb/ReleaseNotes.txt
+
 Folders & Files
 ---------------
 
@@ -48,13 +50,13 @@ Note: If you are interested in writing Titanium Applications go to "How to Creat
 How to Create Titanium Applications using the BlackBerry SDK
 ------------------------------------------------------------
 
-1) Get the latest Titanium Studio 3.0.0 RC at http://preview.appcelerator.com. It is important to use 3.0.0 or greater for Studio to enable BlackBerry support.
+1) Get the latest Titanium Studio at http://preview.appcelerator.com/studio/bb. The Studio team will be posting frequent updates.
 
-2) Download the most recent BlackBerry Titanium SDK from http://sdrv.ms/Taibxw choose bb-mobilesdk-osx or bb-mobilesdk-win32 zip file depending on your development environment. The BB team will be posting frequent updates.
+2) Download the most recent BlackBerry Titanium SDK from http://preview.appcelerator.com/studio/bb. The BB team will be posting frequent updates.
 
 3) Unzip the file down a location that does not include spaces in the path name. This is a temporary issue and will be fixed.
 
-4) Unzip the StarterApp.zip file located at http://sdrv.ms/Taibxw somewhere where it is easy to find (i.e. the Desktop) and no spaces in path.
+4) Unzip the StarterApp.zip file located at http://preview.appcelerator.com/studio/bb/StarterApp.zip somewhere where it is easy to find (i.e. the Desktop) and no spaces in path.
 
 5) Launch Titanium Studio. You may wish to have a separate workspace for BB development to make it easy to switch between settings.
 In the Preferences panel under Titanium Studio > Preferences from the main menu select Titanium Studio and then Titanium.
@@ -74,67 +76,6 @@ In the Simulator IP box enter the IP address you noted in step 5.
 2. login: username = devuser password = devuser
 3. The log files are located at /accounts/1000/appdata/<your app id>/logs
 4. You can use tail -f to stream log updates. Note you will need to re-start tail between application runs. 
-
-
-API Status:
-
-Majority/completely implemented:
-Global APIs
-Ti.API
-Ti.App.Properties
-Ti.Buffer
-Ti.BufferStream
-Ti.IOStream
-Ti.Network.Socket
-Ti.Network.Socket.TCP
-Ti.Platform
-Ti.Proxy
-Ti.Stream
-Ti.UI.ActivityIndicator
-Ti.UI.Tab
-Ti.UI.ProgressBar
-Ti.UI.AlertDialog
-
-P1: In development for mid-November 
-Ti.Database
-Ti.Filesystem
-Ti.Network.HTTPClient
-Ti.UI.Notification
-Ti.UI.TableViewRow
-Ti.UI.ImageView
-Ti.UI.Window
-Ti.UI.View
-Layout
-
-P2: Somewhat implemented already, and to be finished once P1 items are completed
-Ti.Analytics
-Ti.Cloud
-Ti.CloudPush
-Ti.Codec
-Ti.Contacts
-Ti.Facebook
-Ti.Gesture
-Ti.Locale
-Ti.Media
-Ti.UI
-Ti.UI.Animation
-Ti.UI.Button
-Ti.UI.EmailDialog
-Ti.UI.Label
-Ti.UI.Picker
-Ti.UI.OptionDialog
-Ti.UI.Slider
-Ti.UI.ScrollableView
-Ti.UI.ScrollView
-Ti.UI.Switch
-Ti.UI.TabGroup
-Ti.UI.TableView
-Ti.UI.TableViewSection
-Ti.UI.TextArea
-Ti.UI.TextField
-Ti.UI.WebView
-Ti.Utils
-Ti.Geolocation
 
 
 How to Setup and Build the Titanium BlackBerry SDK (Native Platform Drop-In)
