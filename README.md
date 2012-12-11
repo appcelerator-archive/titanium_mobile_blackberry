@@ -13,7 +13,7 @@ Release Notes
 
 Notes: Currently the platform is in it's early stage of development and  missing many of the Titanium APIs. Please work closely with the BB team to get the missing APIs available for your application. The supported platforms for development are Mac 10.7 and greater and Windows7/8.
 
-The latest release and API status notes are at http://preview.appcelerator.com/studio/bb.
+The latest release and API status notes are at http://preview.appcelerator.com/studio/bb/ReleaseNotes.txt.
 
 Folders & Files
 ---------------
