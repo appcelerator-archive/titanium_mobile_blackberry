@@ -13,7 +13,7 @@ Release Notes
 
 Notes: Currently the platform is in it's early stage of development and  missing many of the Titanium APIs. Please work closely with the BB team to get the missing APIs available for your application. The supported platforms for development are Mac 10.7 and greater and Windows7/8.
 
-The latest release and API status notes are at http://preview.appcelerator.com/appcelerator/studio/bb/ReleaseNotes.txt
+The latest release and API status notes are at http://preview.appcelerator.com/appc/studio/bb/.
 
 Folders & Files
 ---------------
@@ -56,7 +56,7 @@ How to Create Titanium Applications using the BlackBerry SDK
 
 3) Unzip the file down a location that does not include spaces in the path name. This is a temporary issue and will be fixed.
 
-4) Unzip the StarterApp.zip file located at http://preview.appcelerator.com/studio/bb/StarterApp.zip somewhere where it is easy to find (i.e. the Desktop) and no spaces in path.
+4) Unzip the StarterApp.zip file located at http://preview.appcelerator.com/studio/bb/ somewhere where it is easy to find (i.e. the Desktop) and no spaces in path.
 
 5) Launch Titanium Studio. You may wish to have a separate workspace for BB development to make it easy to switch between settings.
 In the Preferences panel under Titanium Studio > Preferences from the main menu select Titanium Studio and then Titanium.
