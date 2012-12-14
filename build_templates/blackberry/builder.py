@@ -61,15 +61,18 @@ class Builder(object):
 		if retCode != 0:
 			return retCode
 		info('Running')
-		
+
+		templates = os.path.join(template_dir,'templates')
+
 		# Check if tiapp.xml changed since last run
+		bar_descriptor_exists = os.path.exists(os.path.join(self.buildDir, 'bar-descriptor.xml'))
 		tiapp_delta = self.project_deltafy.scan_single_file(self.project_tiappxml)
 		tiapp_changed = tiapp_delta is not None
 
-		if (tiapp_changed):
+		if (tiapp_changed or not bar_descriptor_exists):
 			# regenerate bar-descriptor.xml
 			# TODO MAC: Add blackberry specific properties. Needs update in tiapp.py script
-			templates = os.path.join(template_dir,'templates')
+			print 'Creating bar-descriptor.xml'
 			shutil.copy2(os.path.join(templates,'bar-descriptor.xml'), self.buildDir)
 			newConfig = {
 			'id':self.tiappxml.properties['id'],
@@ -101,6 +104,25 @@ class Builder(object):
 	
 	def build(self):
 		info('Building')
+
+		# Copy the tibbapp sample project
+		if not os.path.exists(self.buildDir):
+			os.makedirs(self.buildDir)
+		sourcePath = os.path.join(template_dir,'tibbapp')
+		for file in os.listdir(sourcePath):
+			path = os.path.join(sourcePath, file)
+			try:
+				if os.path.isdir(path):
+					dstDir = os.path.join(self.buildDir, file)
+					if (os.path.exists(dstDir)):
+						shutil.rmtree(dstDir)
+					shutil.copytree(path, dstDir)
+				else:
+					shutil.copy2(path, self.buildDir)
+			except Exception, e:
+				print >> sys.stderr, e
+				sys.exit(1)
+
 		return self.ndk.build(self.buildDir, self.cpu, self.variant, self.name)
 
 	def uninstallApp(self, ipAddress, password = None):

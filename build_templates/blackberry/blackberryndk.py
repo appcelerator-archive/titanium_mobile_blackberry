@@ -5,7 +5,7 @@
 # WARNING: the paths to qde, project and project name must not contain any
 #          spaces for the tools to work correctly
 
-import os, sys, platform, subprocess, pprint, shutil
+import os, sys, platform, subprocess, pprint, shutil, tempfile
 from optparse import OptionParser
 
 class Device:
@@ -158,18 +158,58 @@ class BlackberryNDK:
 		command = [self.qde, '-nosplash', '-application', 'org.eclipse.cdt.managedbuilder.core.headlessbuild', '-consoleLog', '-data', workspace, '-import', project]
 		self._run(command)
 
+
+	visited = []
+	def _copy_file(self, src, dest):
+	    for path, dirs, files in os.walk(src, topdown=True):
+		    if path not in self.visited:
+		        for di in dirs:
+		            print dest, di
+		            self._copy_file(os.path.join(path, di), os.path.join(dest,  di))
+		        if not os.path.exists(dest):
+		            os.makedirs(dest)
+		        for fi in files:
+		            shutil.copy(os.path.join(path, fi), dest)
+		        self.visited.append(path)
+
 	def build(self, project, cpu, variant, name):
 		assert os.path.exists(project)
 		templateDir = os.path.abspath(os.path.dirname(sys._getframe(0).f_code.co_filename))
+
+		# BB NDK makefiles do not allow spaces in path names this causes problems
+		# with both the the location of the Ti SDK and the app/project. The design like iOS
+		# does a make build on a small main.cpp which includes v8 and the JavaScript bindings.
+		# The solution is to use python temporary directories without spaces to do builds.
+
+		tmpPathSDK = tempfile.mkdtemp()
+		self._copy_file(os.path.join(templateDir, "tibb"), os.path.join(tmpPathSDK, "tibb"))
+		self._copy_file(os.path.join(templateDir, "libv8"), os.path.join(tmpPathSDK, "libv8"))
+
 		tiappName = 'TIAPP_NAME=' + name
 		cpuList = 'CPULIST=' + cpu
-		bbRoot = 'BB_ROOT=' + templateDir
+		bbRoot = 'BB_ROOT=' + tmpPathSDK
 		variant = 'VARIANTLIST=' + ('g' if variant.endswith('-g') else '')
-		oldPath = os.getcwd()
+
+		oldPath = os.getcwd()	
 		os.chdir(project)
+		tmpPathProj = tempfile.mkdtemp()
+
+		#print tmpPath
+		self._copy_file(os.getcwd(), tmpPathProj)
+		projPath = os.getcwd()	
+		os.chdir(tmpPathProj)
 		command = ['make', tiappName, cpuList, bbRoot, variant]
 		retCode = self._run(command)
+		self._copy_file(tmpPathProj, projPath)
+
+		try:
+			shutil.rmtree(tmpPathSDK)
+			shutil.rmtree(tmpPathProj)
+		except error:
+			print "Error removing temporary file"
+
 		os.chdir(oldPath)
+
 		return retCode
 
 	def package(self, package, appFile, projectName, type, debugToken, isUnitTest = False):

@@ -54,6 +54,9 @@
 	<!-- TODO Mac: List all files need to be included in assets -->
     <asset path="assets/app.js">assets/app.js</asset>
 
+    <!-- Used to send BB promotions to App World application -->
+    <asset path="Ti.Manifest">Ti.Manifest</asset>
+
 	<!-- Configuration section -->
     <configuration id="com.qnx.qcc.toolChain.1839462390" name="Default">
        <platformArchitecture>armle-v7</platformArchitecture>

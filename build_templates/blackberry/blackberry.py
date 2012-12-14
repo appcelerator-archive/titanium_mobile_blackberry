@@ -42,22 +42,6 @@ class Blackberry(object):
 			shutil.rmtree(blackberry_project_resources)
 		shutil.copytree(os.path.join(template_dir,'resources'),blackberry_project_resources)
 
-		# Copy the tibbapp sample project
-		sourcePath = os.path.join(template_dir,'tibbapp')
-		for file in os.listdir(sourcePath):
-			path = os.path.join(sourcePath, file)
-			try:
-				if os.path.isdir(path):
-					dstDir = os.path.join(build_dir, file)
-					if (os.path.exists(dstDir)):
-						shutil.rmtree(dstDir)
-					shutil.copytree(path, dstDir)
-				else:
-					shutil.copy2(path, build_dir)
-			except Exception, e:
-				print >> sys.stderr, e
-				sys.exit(1)
-
 		# Configuration for the bar-descriptor.xml file
 		configDescriptor = {
 			'id':self.id,

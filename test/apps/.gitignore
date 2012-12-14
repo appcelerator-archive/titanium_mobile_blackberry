@@ -2,3 +2,5 @@
 node_modules
 *.sublime-project
 *.sublime-workspace
+*.a
+*.o
