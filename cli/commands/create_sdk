@@ -4,12 +4,25 @@
 var fs = require('fs'),
     wrench = require('wrench');
 
-//var args = process.argv.slice(2);
+// var args = process.argv.slice(2);
 
 
 var currDir = process.cwd();
 wrench.mkdirSyncRecursive('../../build/sdk/blackberry', 0777);
-//fs.mkdir('../../build/');
+
+
+// run the source scripts to setup qmake and the qnx/bb10 ndk enviroment
+
+
+
+// run the make file to first clean the old tibb binaries 
+
+
+// run the makefile to create the archives/libs
+
+
+// everything should be built and ready to create the dropin
+fs.mkdir('../../build/');
 
 process.chdir('../../build_templates/');
 wrench.copyDirSyncRecursive('blackberry', '../build/sdk/blackberry');
