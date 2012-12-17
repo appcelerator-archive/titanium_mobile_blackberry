@@ -2,6 +2,7 @@
 
 VAR_PWD=`pwd`
 
+echo "Creating Blackberry Libraries"
 source /Applications/bbndk/bbndk-env.sh
 cd ../../src/tibb
 
@@ -9,5 +10,7 @@ make clean
 make
 
 cd $VAR_PWD
+
+echo "Creating the BlackBerry drop-in folder at /build/sdk/blackberry"
 node create_sdk.js
 

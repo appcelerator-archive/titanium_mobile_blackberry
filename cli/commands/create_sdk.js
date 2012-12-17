@@ -1,6 +1,5 @@
 var fs = require('fs'),
-    wrench = require('wrench'),
-    exec = require('child_process').exec;
+    wrench = require('wrench');
 
 var currDir = process.cwd();
 
