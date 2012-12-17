@@ -1,50 +1,8 @@
-#!/usr/bin/env node
+#!/bin/bash
 
-
-var fs = require('fs'),
-    wrench = require('wrench');
-
-// var args = process.argv.slice(2);
-
-
-var currDir = process.cwd();
-wrench.mkdirSyncRecursive('../../build/sdk/blackberry', 0777);
-
-
-// run the source scripts to setup qmake and the qnx/bb10 ndk enviroment
-
-
-
-// run the make file to first clean the old tibb binaries 
-
-
-// run the makefile to create the archives/libs
-
-
-// everything should be built and ready to create the dropin
-fs.mkdir('../../build/');
-
-process.chdir('../../build_templates/');
-wrench.copyDirSyncRecursive('blackberry', '../build/sdk/blackberry');
-
-// repo root
-process.chdir('../');
-
-var copyFileSync = function(srcFile, destFile, encoding) {
-  var content = fs.readFileSync(srcFile, encoding);
-  fs.writeFileSync(destFile, content, encoding);
-}
-
-copyFileSync('tibb/arm/a.le-v7/libtibb.a', 'build/sdk/blackberry/tibb/arm/a.le-v7/libtibb.a');
-copyFileSync('tibb/arm/a.le-v7-g/libtibb.a', 'build/sdk/blackberry/tibb/arm/a.le-v7-g/libtibb.a');
-copyFileSync('tibb/x86/a/libtibb.a', 'build/sdk/blackberry/tibb/x86/a/libtibb.a');
-copyFileSync('tibb/x86/a-g/libtibb.a',  'build/sdk/blackberry/tibb/x86/a-g/libtibb.a');
-
-copyFileSync('runtime/v8/libv8-arm.a', 'build/sdk/blackberry/libv8/lib/arm/libv8.a');
-copyFileSync('runtime/v8/libv8-ia32.a', 'build/sdk/blackberry/libv8/lib/x86/libv8.a');
-
-copyFileSync('sdk_version.json', 'build/sdk/blackberry/sdk_version.json');
-
-//console.info(process.cwd());
- 
+source /Applications/bbndk/bbndk-env.sh
+cd ../../src/tibb
+make clean
+make
+node ./create_sdk.js
 
