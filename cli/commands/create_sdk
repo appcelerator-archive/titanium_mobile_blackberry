@@ -1,8 +1,13 @@
 #!/bin/bash
 
+VAR_PWD=`pwd`
+
 source /Applications/bbndk/bbndk-env.sh
 cd ../../src/tibb
+
 make clean
 make
-node ./create_sdk.js
+
+cd $VAR_PWD
+node create_sdk.js
 
