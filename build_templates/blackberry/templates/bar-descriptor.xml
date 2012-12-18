@@ -50,12 +50,9 @@
 
     <!--  The category where the application appears. Either core.games or core.media. -->
     <category>${config['category']}</category>
-    <asset path="assets">assets</asset>
-	<!-- TODO Mac: List all files need to be included in assets -->
-    <asset path="assets/app.js">assets/app.js</asset>
 
-    <!-- Used to send BB promotions to App World application -->
-    <asset path="Ti.Manifest">Ti.Manifest</asset>
+    <!-- Grab resources for Titanium Resource folder assets from Resource folder -->
+    <asset path="assets">assets</asset>
 
 	<!-- Configuration section -->
     <configuration id="com.qnx.qcc.toolChain.1839462390" name="Default">
