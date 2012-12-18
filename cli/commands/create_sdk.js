@@ -23,8 +23,8 @@ copyFileSync('src/tibb/arm/a.le-v7-g/libtibb.a', 'build/sdk/blackberry/tibb/arm/
 copyFileSync('src/tibb/x86/a/libtibb.a', 'build/sdk/blackberry/tibb/x86/a/libtibb.a');
 copyFileSync('src/tibb/x86/a-g/libtibb.a',  'build/sdk/blackberry/tibb/x86/a-g/libtibb.a');
 
-copyFileSync('runtime/v8/libv8-arm.a', 'build/sdk/blackberry/libv8/lib/arm/libv8.a');
-copyFileSync('runtime/v8/libv8-ia32.a', 'build/sdk/blackberry/libv8/lib/x86/libv8.a');
+copyFileSync('runtime/v8/arm/libv8.a', 'build/sdk/blackberry/libv8/lib/arm/libv8.a');
+copyFileSync('runtime/v8/x86/libv8.a', 'build/sdk/blackberry/libv8/lib/x86/libv8.a');
 
 // bump version before publishing release notes, this way a platform can be have a version and release cycle 
 // separate from titanium sdk

@@ -8,14 +8,14 @@ USEFILE=
 # Extra include path for libfreetype and for target overrides and patches
 EXTRA_INCVPATH+=$(QNX_TARGET)/usr/include/freetype2 \
 	$(QNX_TARGET)/../target-override/usr/include \
-	$(PROJECT_ROOT)/../../../runtime/v8/include \
-	$(PROJECT_ROOT)/../../../tibb/include
+	$(PROJECT_ROOT)/../../../../runtime/v8/include \
+	$(PROJECT_ROOT)/../../../../src/tibb/include
 	
 # Extra library search path for target overrides and patches
 EXTRA_LIBVPATH+=$(QNX_TARGET)/$(CPUVARDIR)/usr/lib \
 	$(QNX_TARGET)/$(CPUVARDIR)/usr/lib/qt4/lib \
-	$(PROJECT_ROOT)/../../../runtime/lib/$(CPU) \
-	$(PROJECT_ROOT)/../../../tibb/$(CPU)/a$(if $(filter arm,$(CPULIST)),.le-v7,)$(if $(filter g,$(VARIANTS)),-g,)
+	$(PROJECT_ROOT)/../../../../runtime/v8/$(CPU) \
+	$(PROJECT_ROOT)/../../../../src/tibb/$(CPU)/a$(if $(filter arm,$(CPULIST)),.le-v7,)$(if $(filter g,$(VARIANTS)),-g,)
 
 
 # Compiler options for enhanced security and recording the compiler options in release builds

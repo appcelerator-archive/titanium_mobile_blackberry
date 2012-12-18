@@ -4,14 +4,16 @@ all: libv8
 define build_libv8
 	@echo "Compiling V8 for $1"
 	@./qnxbuild.sh $1; \
-	mv v8/libv8.a v8/libv8-$1.a
+	mv v8/libv8.a v8/$2/libv8.a 
 endef
 
 LIBV8_SRC := $(wildcard v8/include/* v8/src/*)
 v8/libv8-arm.a: $(LIBV8_SRC)
-	$(call build_libv8,arm)
+	mkdir v8/arm
+	$(call build_libv8,arm,arm)
 v8/libv8-ia32.a: $(LIBV8_SRC)
-	$(call build_libv8,ia32)
+	mkdir v8/x86
+	$(call build_libv8,ia32,x86)
 
 .PHONY: libv8 libv8-arm libv8-ia32
 libv8-arm: v8/libv8-arm.a
@@ -54,5 +56,5 @@ download-v8:
 
 .PHONY: clean
 clean:
-	@cd v8; scons -c; rm *.a
+	@cd v8; scons -c; rm -r arm; rm -r x86; rm *.a
 
