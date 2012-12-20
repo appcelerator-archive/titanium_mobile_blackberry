@@ -1,4 +1,12 @@
 
+We are starting to version the BlackBerry SDK using a version file inside the platform SDK. To see the latest version look at the contents of the sdk_version.json file at the root of the BlackBerry SDK
+
+Release Notes (3.1.0.300):
+
+1) Can now have spaces in the application/project and the Titanium SDK path.
+2) Code signing for device and App World enabled.
+
+
 Release Notes (3.1.0.201212051932):
 
 1) Project clean through Studio now works 
@@ -31,6 +39,7 @@ Ti.UI.TabGroup
 Ti.API (log info to standard out)
 Ti.Module (native modules)
 Ti.UI.WebView
+Ti.UI.ImageView
 
 P2: To be finished once P1 items are completed:
 Ti.Analytics
@@ -60,7 +69,7 @@ Ti.UI.TableViewSection
 Ti.UI.TextArea 
 Ti.Utils 
 Ti.Geolocation
-Ti.UI.ImageView
+
 
 
 

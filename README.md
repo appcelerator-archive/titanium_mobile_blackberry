@@ -54,21 +54,19 @@ How to Create Titanium Applications using the BlackBerry SDK
 
 2) Download the most recent BlackBerry Titanium SDK from http://preview.appcelerator.com/studio/bb. The BB team will be posting frequent updates.
 
-3) Unzip the file down a location that does not include spaces in the path name. This is a temporary issue and will be fixed.
+3) Unzip the file down a location that does not include spaces in the path name. This has been fixed in release "3.1.0.300
 
 4) Unzip the StarterApp.zip file located at http://preview.appcelerator.com/studio/bb/ somewhere where it is easy to find (i.e. the Desktop) and no spaces in path. The StarterApp is listed under the install instructions.
 
 5) Launch Titanium Studio. You may wish to have a separate workspace for BB development to make it easy to switch between settings.
-In the Preferences panel under Titanium Studio > Preferences from the main menu select Titanium Studio and then Titanium.
-In the Titanium SDK Home edit box put the location to the BlackBerry Titanium SDK that you downloaded in step 7. Note the previous value so that you can return back to do iOS, Android or Mobile Web development (it's generally /Users/username/Library/Application Support/Titanium/) on Mac.
-In the BlackBerry NDK Home box put the path to the NDK downloaded in step 2. It by default lives in /Applications/bbndk on MAc.
-In the Simulator IP box enter the IP address you noted in step 5.
+In the Preferences panel under Titanium Studio > Preferences from the main menu select Titanium Studio and then Titanium. In the BlackBerry NDK Home box put the path to the NDK downloaded in step 2. It by default lives in /Applications/bbndk on MAc.
+In the Simulator IP box enter the IP address you noted in step 5 BlackBerry tools setup above.
 
 6) Still within Titanium Studio go to File > Import... > Titanium > Existing Titanium Project and in the Project Directory box enter the location of the StarterApp that was unzipped in step 6.
 
 7) Select the "StarterApp" Project in the project explorer, select the "Run" drop down and choose "BlackBerry Simulator".
 
-8) You may also use Titanium Studio to create a new BlackBerry project. Make sure when creating the new project there are no spaces in the project path. Note most of the default templates are still being worked and will not be displayed correctly on the simulator or device. Most of this has to do missing flow layout functionality that the team is busy working on.
+8) You may also use Titanium Studio to create a new BlackBerry project. Make sure when creating the new project there are no spaces in the project path. Spaces are allowed in release "3.1.0.300. Note most of the default templates are still being worked on and will not be displayed correctly on the simulator or device. Most of this has to do missing flow layout functionality that the team is busy working on.
 
 9) To display Ti.APP.info for your application you need to use the command line / BB tools for now until Studio can read the logs. Here's the steps:
 
@@ -77,14 +75,29 @@ In the Simulator IP box enter the IP address you noted in step 5.
 3. The log files are located at /accounts/1000/appdata/<your app id>/logs
 4. You can use tail -f to stream log updates. Note you will need to re-start tail between application runs. 
 
-10) The easiest way to target running on a device is to use Titanium Studio and follow the instructions on the preview site. You can also use the deploy-device script under /tools folder and edit the script to match your configuration. You will first need to generate and install a debug token on the the target device as outlined below:
+10) The easiest way to target running on a device is to use Titanium Studio and follow the instructions on the preview site. You can also use the command utilities to do the same activities as in Titanium Studio.
+
+- Setup the BB10 environment for code signing:
 
 1. Register for a set of signing keys at https://www.blackberry.com/SignedKeys/codesigning.html (note the signing pin number)
 2. After receiving the signing certs put them somewhere locally.
 3. From a command window run "cd /Applications/bbndk/host_IP_ADDRESS/darwin/x86/usr/bin/
 4. From a command window run "./blackberry-signer -register -csjpin SIGNING_PIN -storepass STORAGE_PASSWORD PATH_TO_RDK_KEYS.csj PATH_TO_PBDT_KEYS.csj"
-5. From a command window run "./blackberry-debugtokenrequest -storepass STORAGE_PASSWORD -devicepin DEVICE_PIN debugtoken.bar"
+5. From a command window run "./blackberry-debugtokenrequest -storepass STORE_PASSWORD -devicepin DEVICE_PIN debugtoken.bar"
 6. From a command window run "./blackberry-deploy -installDebugToken PATH_TO_DEBUG_TOKEN/debugtoken.bar -device DEVICE_IP  -password DEVICE_PASSWORD
+
+
+- Run the application on the BB10 simulator:
+
+PATH_TO_PLATFORM_SDK/blackberry/builder.py run -t simulator -d PATH_TO_PROJECT -p PATH_TO_BB_NDK --ip_address=SIMULATOR_IP --device_password=DEVICE_PASSWORD
+
+- Run on a development device:
+
+PATH_TO_PLATFORM_SDK/blackberry/builder.py run -t device -d PATH_TO_PROJECT -p PATH_TO_BB_NDK --ip_address=DEVICE_IP --device_password=DEVICE_PASSWORD --debug_token PATH_TO_DEBUG_TOKEN/debugtoken.bar 
+
+- Build a release bar file and sign it so it can be published to 'App World' or deployed to device:
+
+PATH_TO_PLATFORM_SDK/blackberry/builder.py" run -t distribute -d PATH_TO_PROJECT -p PATH_TO_BB_NDK --store_password STORE_PASSWORD --output_dir PATH_TO_SIGNED_BAR_FILE
 
 
 How to Setup and Build the Titanium BlackBerry SDK (Native Platform Drop-In)
@@ -110,8 +123,18 @@ the python scons tool is used. To build V8 using scons:
 
 7) Build tibb and test/tibbtest and then Debug As C/C++ Application.
 
-8) To create the the blackberry drop-in, from the repo cli/commands execute "./create_sdk" this will create a build folder with the blackberry sdk folder in it. The blackberry folder can be dropped into a current Titanium SDK. The create_sdk script is a Node.js module and has a dependency on the 
-wrench module. If you get an error about wrench execute the command "npm install wrench".
+8) To create the the blackberry drop-in, from the repo cli/commands execute "./create_sdk" this will create a build folder with the blackberry sdk folder in it. The blackberry folder can be dropped into a current Titanium SDK. The create_sdk script will call create_sdk.js which is a Node.js module and has a dependency on the 
+wrench module. If you get an error about wrench, execute the command "npm install wrench".
+
+Feedback
+--------
+
+Google Groups - https://groups.google.com/forum/?fromgroups#!forum/appc-ti-mobile-blackberry
+
+Training Videos
+---------------
+
+https://appcelerator.webex.com/appcelerator/lsr.php?AT=pb&SP=EC&rID=63953422&rKey=6202ab1eb2cfb372
 
 Legal
 ------
