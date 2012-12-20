@@ -37,9 +37,11 @@ class BlackberryNDK:
 		if platform.system() == 'Windows':
 			self.packagerProgram = 'blackberry-nativepackager.bat'
 			self.deployProgram = 'blackberry-deploy.bat'
+			self.barSignerProgram = 'blackberry-signer.bat'
 		else:
 			self.packagerProgram = 'blackberry-nativepackager'
 			self.deployProgram = 'blackberry-deploy'
+			self.barSignerProgram = 'blackberry-signer'
 
 		self.log = log
 		self.blackberryNdk = self._findNdk(blackberryNdk)
@@ -182,6 +184,7 @@ class BlackberryNDK:
 		# The solution is to use python temporary directories without spaces to do builds.
 
 		tmpPathSDK = tempfile.mkdtemp()
+
 		self._copy_file(os.path.join(templateDir, "tibb"), os.path.join(tmpPathSDK, "tibb"))
 		self._copy_file(os.path.join(templateDir, "libv8"), os.path.join(tmpPathSDK, "libv8"))
 
@@ -193,13 +196,13 @@ class BlackberryNDK:
 		oldPath = os.getcwd()	
 		os.chdir(project)
 		tmpPathProj = tempfile.mkdtemp()
-
-		#print tmpPath
 		self._copy_file(os.getcwd(), tmpPathProj)
 		projPath = os.getcwd()	
 		os.chdir(tmpPathProj)
+
 		command = ['make', tiappName, cpuList, bbRoot, variant]
 		retCode = self._run(command)
+
 		self._copy_file(tmpPathProj, projPath)
 
 		try:
@@ -212,10 +215,27 @@ class BlackberryNDK:
 
 		return retCode
 
+	def _getBuildID(self, buildDir):
+		manifestPath = os.path.join(buildDir, 'assets', 'Ti.Manifest')
+		if os.path.exists(manifestPath):
+			try:
+				f = open(manifestPath, 'rU')
+				for line in f:
+					(key, val) = line.split('=', 1)
+					if key == 'buildID':
+						f.close()
+						return val.strip()
+			except IOError, e:
+				print >>sys.stderr, e
+		return None
+
 	def package(self, package, appFile, projectName, type, debugToken, isUnitTest = False):
 		templateDir = os.path.abspath(os.path.dirname(sys._getframe(0).f_code.co_filename))
 		buildDir = os.path.abspath(os.path.join(appFile, '..', '..', '..'))
 		projectDir = os.path.abspath(os.path.join(buildDir, '..', '..'))
+
+		# BuildID is is a 0-65535 value that identifies this package it must be incremented before bar signing 
+		buildID = self._getBuildID(buildDir)
 
 		# Copy the framework's JavaScript
 		frameworkDir = os.path.join(buildDir, 'framework')
@@ -252,16 +272,22 @@ class BlackberryNDK:
 
 		# TODO: minimize .js files in Release mode
 
-		command = [self.packagerProgram, '-package', package, 'bar-descriptor.xml', '-e', appFile, projectName, 'assets', 'framework']
+		command = [self.packagerProgram, '-package', package, 'bar-descriptor.xml', '-e', appFile, projectName, '-buildID', buildID, 'assets', 'framework']
 		if isUnitTest:
 			command.append('icon.png')
-		if type != 'deploy':
+		if type != 'publish':
 			command.append('-devMode')
 		if debugToken != None:
 			command.extend(['-debugToken', debugToken])
 		return self._run(command)
 
+	def publish(self, buildDir, storePass, outputDir = None):
+		command = [self.barSignerProgram, '-storepass', storePass, buildDir+"/arm/o.le-v7/test.bar"]
+		return self._run(command)
+
 	def deploy(self, deviceIP, package, password = None):
+		if deviceIP == None:
+			return 0
 		command = [self.deployProgram, '-installApp', '-launchApp', '-device', deviceIP, '-package', package]
 		if password != None:
 			command.append('-password')

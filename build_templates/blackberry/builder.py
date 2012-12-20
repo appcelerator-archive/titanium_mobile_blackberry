@@ -26,7 +26,8 @@ from deltafy import Deltafy
 class Builder(object):
 	type2variantCpu = {'simulator' : ('o-g', 'x86'),
 	                 'device' : ('o.le-v7-g', 'arm'),
-	                 'deploy' : ('o.le-v7', 'arm')}
+	                 'deploy' : ('o.le-v7', 'arm'),
+	                 'distribute' : ('o.le-v7', 'arm')}
 
 	def __init__(self, project_dir, type, ndk, useLogFile = False):
 		self.top_dir = project_dir.rstrip(os.sep)
@@ -54,7 +55,7 @@ class Builder(object):
 	def getPackage(self):
 		return os.path.join(self.buildDir, self.cpu, self.variant, '%s.bar' % self.name)
 
-	def run(self, ipAddress, password = None, debugToken = None):
+	def run(self, ipAddress = None, password = None, debugToken = None, storePass = None, outputDir = None):
 		# TODO Mac: V8 runtime should be added and possibly a lot of other stuff
 
 		retCode = self.build()
@@ -99,7 +100,15 @@ class Builder(object):
 		if retCode != 0:
 			return retCode
 
-		retCode = self.ndk.deploy(ipAddress, barPath, password)
+		if self.type != 'distribute':   
+			retCode = self.ndk.deploy(ipAddress, barPath, password)
+		else: 
+			retCode = self.ndk.distribute(self.name, savePath, storePass, outputDir)
+			if retCode != 0:
+				log.info (
+					'Distribution has failed. Please check that the buildID inside your\n' +
+					'project/Resources/blackberry/Ti.Manifest is a higher value then the\n' +
+					'the last time you ran distribute.')	
 		return retCode
 	
 	def build(self):
@@ -167,7 +176,7 @@ if __name__ == "__main__":
 	parser = OptionParser(usage='<command: build | run | uninstallApp | terminateApp | isAppRunning | printExitCode | getFile | putFile | appLog> -t TYPE -d PROJECT_PATH [-p NDK_PATH] [-i IP_ADDRESS] [-s DEVICE_PASSWORD] [--host_file HOST_FILE] [--device_file DEVICE_FILE]')
 
 	commonGroup = parser.add_option_group('Common options')
-	commonGroup.add_option('-t', '--type', choices=['simulator', 'device', 'deploy'], help='simulator | device | deploy', dest='type')
+	commonGroup.add_option('-t', '--type', choices=['simulator', 'device', 'deploy', 'distribute'], help='simulator | device | deploy | distribute', dest='type')
 	commonGroup.add_option('-d', '--project_path', help='project directory path', dest='project_path')
 	commonGroup.add_option('-p', '--ndk_path', help='blackberry ndk path', dest='ndk_path')
 
@@ -177,6 +186,8 @@ if __name__ == "__main__":
 
 	runGroup = parser.add_option_group('Run options')
 	runGroup.add_option('--debug_token', help='path to debug token file (required for --type device)')
+	runGroup.add_option('--store_password', help='name of password used to register signing keys (required for --type distribute)')
+	runGroup.add_option('--output_dir', help='path to the directory where signed blackberry (*.bar) is placed')
 
 	getPutFileGroup = parser.add_option_group('getFile, putFile options')
 	getPutFileGroup.add_option('--host_file', help='file location on host')
@@ -188,7 +199,7 @@ if __name__ == "__main__":
 		sys.exit(1)
 
 	buildUsage = 'Usage: %s build -t TYPE -d PROJECT_PATH [-p NDK_PATH]' %os.path.basename(sys.argv[0])
-	runUsage = 'Usage: %s run -t TYPE -d PROJECT_PATH [-p NDK_PATH] -i IP_ADDRESS [-s DEVICE_PASSWORD] [--debug_token DEBUG_TOKEN]' %os.path.basename(sys.argv[0])
+	runUsage = 'Usage: %s run -t TYPE -d PROJECT_PATH [-p NDK_PATH][--store_password] [--output_dir] [-i IP_ADDRESS] [-s DEVICE_PASSWORD] [--debug_token DEBUG_TOKEN]' %os.path.basename(sys.argv[0])
 	uninstallAppUsage = 'Usage: %s uninstallApp -t TYPE -d PROJECT_PATH [-p NDK_PATH] -i IP_ADDRESS [-s DEVICE_PASSWORD]' %os.path.basename(sys.argv[0])
 	terminateAppUsage = 'Usage: %s terminateApp -t TYPE -d PROJECT_PATH [-p NDK_PATH] -i IP_ADDRESS [-s DEVICE_PASSWORD]' %os.path.basename(sys.argv[0])
 	isAppRunningUsage = 'Usage: %s isAppRunning -t TYPE -d PROJECT_PATH [-p NDK_PATH] -i IP_ADDRESS [-s DEVICE_PASSWORD]' %os.path.basename(sys.argv[0])
@@ -203,6 +214,8 @@ if __name__ == "__main__":
 	ipAddress = options.ip_address and options.ip_address.decode('utf-8')
 	devicePassword = options.device_password and options.device_password.decode('utf-8')
 	debugToken = options.debug_token and options.debug_token.decode('utf-8')
+	storePass = options.store_password and options.store_password.decode('utf-8')
+	outputDir = options.output_dir and options.output_dir.decode('utf-8')
 	hostFile = options.host_file and options.host_file.decode('utf-8')
 	deviceFile = options.device_file and options.device_file.decode('utf-8')
 
@@ -213,7 +226,7 @@ if __name__ == "__main__":
 			sys.exit(1)
 		useLogFile = True
 	elif args[0] == 'run':
-		if type == None or projectPath == None or ipAddress == None or (type == 'device' and debugToken == None):
+		if type == None or projectPath == None or (type != 'distribute' and ipAddress == None) or (type == 'device' and debugToken == None):
 			if type == 'device' and debugToken == None:
 				print "--debug_token is required for --type device"
 			parser.error(runUsage)
@@ -260,7 +273,7 @@ if __name__ == "__main__":
 	if (args[0] == 'build'):
 		retCode = builder.build()
 	elif (args[0] == 'run'):
-		retCode = builder.run(ipAddress, devicePassword, debugToken)
+		retCode = builder.run(ipAddress, devicePassword, debugToken, storePass, outputDir)
 	elif (args[0] == 'uninstallApp'):
 		retCode = builder.uninstallApp(ipAddress, devicePassword)
 	elif (args[0] == 'terminateApp'):
