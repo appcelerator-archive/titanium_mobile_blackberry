@@ -5,7 +5,7 @@
 # WARNING: the paths to qde, project and project name must not contain any
 #          spaces for the tools to work correctly
 
-import os, sys, platform, subprocess, pprint, shutil, tempfile
+import os, sys, platform, subprocess, pprint, shutil, tempfile, telnetlib, time
 from optparse import OptionParser
 
 class Device:
@@ -50,6 +50,7 @@ class BlackberryNDK:
 		self.version = self._findVersion()
 		self._sourceEnvironment()
 		self.qde = self._findQde()
+		self.lastLineCount = 0
 
 	def getVersion(self):
 		return self.version
@@ -128,6 +129,7 @@ class BlackberryNDK:
 
 	def _run(self, command, echoCommand = True):
 		assert type(command) is list
+		# if no log, don't output
 		try:
 			# if no log, don't output
 			if self.log == None:
@@ -178,9 +180,7 @@ class BlackberryNDK:
 		assert os.path.exists(project)
 		templateDir = os.path.abspath(os.path.dirname(sys._getframe(0).f_code.co_filename))
 
-		# BB NDK makefiles do not allow spaces in path names this causes problems
-		# with both the the location of the Ti SDK and the app/project. The design like iOS
-		# does a make build on a small main.cpp which includes v8 and the JavaScript bindings.
+		# BB NDK makefiles do not allow spaces in path names and cause build problem.
 		# The solution is to use python temporary directories without spaces to do builds.
 
 		tmpPathSDK = tempfile.mkdtemp()
@@ -227,7 +227,7 @@ class BlackberryNDK:
 						return val.strip()
 			except IOError, e:
 				print >>sys.stderr, e
-		return None
+		return '1'
 
 	def package(self, package, appFile, projectName, type, debugToken, isUnitTest = False):
 		templateDir = os.path.abspath(os.path.dirname(sys._getframe(0).f_code.co_filename))
@@ -275,14 +275,18 @@ class BlackberryNDK:
 		command = [self.packagerProgram, '-package', package, 'bar-descriptor.xml', '-e', appFile, projectName, '-buildID', buildID, 'assets', 'framework']
 		if isUnitTest:
 			command.append('icon.png')
-		if type != 'publish':
+		if type != 'distribute':
 			command.append('-devMode')
 		if debugToken != None:
 			command.extend(['-debugToken', debugToken])
 		return self._run(command)
 
-	def publish(self, buildDir, storePass, outputDir = None):
-		command = [self.barSignerProgram, '-storepass', storePass, buildDir+"/arm/o.le-v7/test.bar"]
+	def distribute(self, projectName, appFile, storePass, outputDir = None):
+		command = [self.barSignerProgram, '-storepass', storePass, appFile+'.bar']
+         
+		if outputDir != None:
+			os.path.join(outputDir, projectName)
+			shutil.copy2(appFile+'.bar', os.path.join(outputDir, projectName+'.bar'))
 		return self._run(command)
 
 	def deploy(self, deviceIP, package, password = None):
@@ -293,7 +297,7 @@ class BlackberryNDK:
 			command.append('-password')
 			command.append(password)
 		return self._run(command)
-
+	
 	def uninstallApp(self, deviceIP, package, password = None):
 		command = [self.deployProgram, '-uninstallApp', '-device', deviceIP, '-package', package]
 		if password != None:
@@ -345,19 +349,26 @@ class BlackberryNDK:
 		return output.find("result::true") != -1
 
 	def _printAppLog(self, deviceIP, package, password = None):
-		hostFile = "-"
+		hostFile = "-" 
 		deviceFile = "logs/log"
 		command = [self.deployProgram, '-getFile', deviceFile, hostFile, '-device', deviceIP, '-package', package]
 		if password != None:
 			command.append('-password')
 			command.append(password)
-		return self._run(command)
+		output = subprocess.check_output(command)
+		output = output.split('\n')
+
+		for k in range (len(output)):
+			if k > self.lastLineCount:
+				print output[k]
+				self.lastLineCount = k
+				
+		return 0
 
 	def appLog(self, deviceIP, package, password = None):
-		import time
-		while self._isAppRunning(deviceIP, package, password):
+		while self._isAppRunning(deviceIP, package, password):			
 			time.sleep(2)
-		self._printAppLog(deviceIP, package, password)
+			self._printAppLog(deviceIP, package, password)
 
 	def buildTibb(self, tibbPath, buildType):
 		assert os.path.exists(tibbPath)

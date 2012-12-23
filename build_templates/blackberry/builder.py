@@ -37,6 +37,7 @@ class Builder(object):
 		self.project_tiappxml = os.path.join(self.top_dir, 'tiapp.xml')
 		self.tiappxml = TiAppXML(self.project_tiappxml)
 		self.name = self.tiappxml.properties['name']
+		self.id = self.tiappxml.properties['id']
 		self.buildDir = os.path.join(self.top_dir, 'build', 'blackberry')
 		self.project_deltafy = Deltafy(self.top_dir)
 
@@ -102,6 +103,7 @@ class Builder(object):
 
 		if self.type != 'distribute':   
 			retCode = self.ndk.deploy(ipAddress, barPath, password)
+			retCode = self.ndk.appLog(ipAddress, barPath, password)
 		else: 
 			retCode = self.ndk.distribute(self.name, savePath, storePass, outputDir)
 			if retCode != 0:
@@ -224,14 +226,12 @@ if __name__ == "__main__":
 		if type == None or projectPath == None:
 			parser.error(buildUsage)
 			sys.exit(1)
-		useLogFile = True
 	elif args[0] == 'run':
 		if type == None or projectPath == None or (type != 'distribute' and ipAddress == None) or (type == 'device' and debugToken == None):
 			if type == 'device' and debugToken == None:
 				print "--debug_token is required for --type device"
 			parser.error(runUsage)
 			sys.exit(1)
-		useLogFile = True
 	elif args[0] in ['uninstallApp', 'terminateApp', 'isAppRunning', 'printExitCode', 'appLog']:
 		if type == None or projectPath == None or ipAddress == None:
 			if args[0] == 'uninstallApp':
