@@ -5,6 +5,7 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
+#include <stdio.h>
 #include "tibb.h"
 
 #include <fstream>
@@ -14,6 +15,8 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
+    setvbuf(stdout, NULL, _IOLBF, 0);
+
     string javascript;
     {
         ifstream ifs("app/native/assets/app.js");
