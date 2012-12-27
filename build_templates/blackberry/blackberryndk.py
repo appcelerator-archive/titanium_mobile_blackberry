@@ -208,7 +208,7 @@ class BlackberryNDK:
 		try:
 			shutil.rmtree(tmpPathSDK)
 			shutil.rmtree(tmpPathProj)
-		except error:
+		except:
 			print "Error removing temporary file"
 
 		os.chdir(oldPath)
