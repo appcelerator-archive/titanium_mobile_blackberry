@@ -112,7 +112,7 @@ Note: The following instructions are for Mac. For Windows you will need cygwin o
 3) BlackBerry has forked the V8 Javascript runtime for BB10 and made it available on GitHub (https://github.com/blackberry/v8). To build
 the python scons tool is used. To build V8 using scons:
 	Download macports
-	From a command window execute "sudo port install scones"
+	From a command window execute "sudo port install scons"
 	From a command window execute "source /Applications/bbndk/bbndk-env.sh"
 
 4) Now from the repo runtime directory execute "make" this will build the BB10 V8 binaries.
