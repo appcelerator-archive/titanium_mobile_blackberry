@@ -12,9 +12,11 @@
 
 namespace titanium {
 
+class Scene;
+
 class WindowGroup : public Window {
   public:
-    WindowGroup();
+    WindowGroup(Scene* scene);
 
     /**
      * Insert the window into the group and give it focus.
@@ -50,6 +52,9 @@ class WindowGroup : public Window {
   protected:
     virtual void focus();
     virtual void blur();
+
+  private:
+    Scene* scene_;
 };
 
 } // namespace titanium

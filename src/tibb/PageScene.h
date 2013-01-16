@@ -24,7 +24,7 @@ public:
         setPane(page_);
 
         // The content of the page is the window group container.
-        windowGroup_ = new WindowGroup();
+        windowGroup_ = new WindowGroup(this);
         page_->setContent(windowGroup_);
     }
 

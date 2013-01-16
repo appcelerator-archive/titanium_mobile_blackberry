@@ -60,7 +60,7 @@ bool SceneManager::removeScene(Scene* scene) {
     // If the scene being removed was active,
     // change states and bring the next scene
     // in the scene stack onto the screen.
-    if (index == (scenes_.count() - 1)) {
+    if (index == scenes_.count()) {
         scene->changeState(Scene::STATE_BACKSTAGE);
 
         Scene* nextScene = activeScene();

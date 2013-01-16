@@ -9,11 +9,14 @@
 
 #include <bb/cascades/AbsoluteLayout>
 
+#include "SceneManager.h"
+
 using namespace bb::cascades;
 
 namespace titanium {
 
-WindowGroup::WindowGroup() {
+WindowGroup::WindowGroup(Scene* scene)
+    : scene_(scene) {
     // Windows groups use absolute layout for
     // positioning of windows inside the container.
     setLayout(new AbsoluteLayout());
@@ -47,14 +50,15 @@ bool WindowGroup::removeWindow(Window* window) {
         return false;
     }
 
-    // Get the window now in focus after we have removed the
-    // previously focused window from the group. Note this
-    // may be NULL if the group is now empty.
-    Window* focusedWindow = getFocusedWindow();
-
     window->blur();
-    if (focusedWindow != NULL) {
+
+    // Focus the next window in the group. If the group is
+    // now empty, the scene hosting it will be removed.
+    Window* focusedWindow = getFocusedWindow();
+    if (focusedWindow) {
         focusedWindow->focus();
+    } else {
+        SceneManager::instance()->removeScene(scene_);
     }
 
     return true;
