@@ -1,6 +1,16 @@
 // this sets the background color of the master UIView (when there are no windows/tab groups on it)
 //Titanium.UI.setBackgroundColor('#000');
 
+var win = Ti.UI.createWindow({});
+//Clipping.
+var parent = Ti.UI.createView({backgroundColor:'red',width:'100',height:'100'})
+var child =Ti.UI.createView({backgroundColor:'green',width:150,height:150,left:5,top:5});
+//parent.add(child);
+win.add(parent);
+win.open();
+
+
+/*
 //
 // create root window
 //
@@ -122,6 +132,8 @@ var timer=setInterval(function()
 	testbutton4.left=Math.floor(Math.random()*500);
 },5000
 );
+
+*/
 
 /*
 var socket = Ti.Network.Socket.createTCP({
