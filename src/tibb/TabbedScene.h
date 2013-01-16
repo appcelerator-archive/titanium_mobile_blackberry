@@ -23,16 +23,10 @@ public:
     TabbedScene() {
         bb::cascades::TabbedPane* tabbedPane = new bb::cascades::TabbedPane();
         setPane(tabbedPane);
-
-        bb::cascades::Page* activePane = new bb::cascades::Page();
-        tabbedPane->setActivePane(activePane);
-
-        windowGroup_ = new WindowGroup();
-        activePane->setContent(windowGroup_);
     }
 
     virtual WindowGroup* windowGroup() const {
-        return windowGroup_;
+        return NULL;
     }
 
     virtual void addAction(bb::cascades::ActionItem* item) {

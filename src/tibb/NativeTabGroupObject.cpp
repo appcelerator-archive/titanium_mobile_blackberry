@@ -55,7 +55,8 @@ int NativeTabGroupObject::initialize()
     scene_ = new TabbedScene();
     tabGroup_ = static_cast<TabbedPane*>(scene_->pane());
 
-    //tabGroup_ = TabbedPane::create().showTabsOnActionBar(true);
+    // TODO(josh): expose as property
+    tabGroup_->setShowTabsOnActionBar(true);
 
     if (tabGroup_ == NULL)
     {

@@ -77,9 +77,8 @@ int NativeTabObject::addChildNativeObject(NativeObject* obj)
 {
     if (obj->getObjectType() == N_TYPE_WINDOW)
     {
-        bb::cascades::Page* page = (bb::cascades::Page*)obj->getNativeHandle();
-        navigationPane_->push(page);
-        tab_->setContent(navigationPane_);
+        bb::cascades::Page* page = bb::cascades::Page::create().content((bb::cascades::Control*)obj->getNativeHandle());
+        tab_->setContent(page);
         return NATIVE_ERROR_OK;
     }
     return NATIVE_ERROR_NOTSUPPORTED;

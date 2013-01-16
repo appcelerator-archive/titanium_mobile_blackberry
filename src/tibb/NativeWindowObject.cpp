@@ -46,13 +46,15 @@ int NativeWindowObject::addChildNativeObject(NativeObject* obj)
 void NativeWindowObject::open()
 {
     titanium::Window* window = static_cast<titanium::Window*>(container_);
-    titanium::WindowGroup* group;
+    titanium::WindowGroup* group = NULL;
     titanium::Scene* scene;
     SceneManager* sceneManager = SceneManager::instance();
     if (sceneManager->activeScene()) {
         scene = sceneManager->activeScene();
         group = scene->windowGroup();
-    } else {
+    }
+
+    if (group == NULL) {
         fprintf(stderr, "creating page scene.\n");
         scene = new PageScene();
         sceneManager->presentScene(scene);
