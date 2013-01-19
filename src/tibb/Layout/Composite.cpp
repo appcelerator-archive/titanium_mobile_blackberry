@@ -14,7 +14,7 @@
 #include <stack>
 #include <math.h>
 
-struct ComputedSize doCompositeLayout(struct Element* element, double width, double height, bool isWidthSize, bool isHeightSize) {
+struct ComputedSize doCompositeLayout(std::vector<struct Element*> children, double width, double height, bool isWidthSize, bool isHeightSize) {
 	struct ComputedSize computedSize = {0, 0};
 	struct Element* child;
 	int i = 0;
@@ -24,13 +24,13 @@ struct ComputedSize doCompositeLayout(struct Element* element, double width, dou
 	struct FourCoefficients topLayoutCoefficients;
 	struct ComputedSize childSize;
 	double	measuredWidth, measuredHeight, measuredSandboxHeight, measuredSandboxWidth, measuredLeft, measuredTop;
-	std::stack<struct Element*>	deferredLeftCalculations;
-	std::stack<struct Element*>	deferredTopCalculations;
-	int len = (*element)._children.size();
+	std::vector<struct Element*> deferredLeftCalculations;
+	std::vector<struct Element*> deferredTopCalculations;
+	int len = children.size();
 
 	// Calculate size and position for the children
 	for(i = 0; i < len; i++) {
-	    child = (*element)._children[i];
+	    child = children[i];
 		layoutCoefficients = (*child)._layoutCoefficients;
 		widthLayoutCoefficients = layoutCoefficients.width;
 		minWidthLayoutCoefficients = layoutCoefficients.minWidth;
@@ -50,14 +50,11 @@ struct ComputedSize doCompositeLayout(struct Element* element, double width, dou
 			measuredHeight = std::max(measuredHeight, minHeightLayoutCoefficients.x1 * height + minHeightLayoutCoefficients.x2);
 		}
 
-		if ((*child)._layoutType == composite) {
-			childSize = doCompositeLayout(
-				child,
-				isNaN(measuredWidth) ? width : measuredWidth - (*child)._borderLeftWidth - (*child)._borderRightWidth,
+		childSize = layoutNode(child,
+                isNaN(measuredWidth) ? width : measuredWidth - (*child)._borderLeftWidth - (*child)._borderRightWidth,
 				isNaN(measuredHeight) ? height : measuredHeight - (*child)._borderTopWidth - (*child)._borderBottomWidth,
 				isNaN(measuredWidth),
 				isNaN(measuredHeight));
-		}
 
 		if (isNaN(measuredWidth)) {
 			measuredWidth = childSize.width + (*child)._borderLeftWidth + (*child)._borderRightWidth;
@@ -74,12 +71,12 @@ struct ComputedSize doCompositeLayout(struct Element* element, double width, dou
 		}
 
 		if (isWidthSize && leftLayoutCoefficients.x1 != 0) {
-			deferredLeftCalculations.push(child);
+			deferredLeftCalculations.push_back(child);
 		} else {
 			measuredLeft = leftLayoutCoefficients.x1 * width + leftLayoutCoefficients.x2 * measuredWidth + leftLayoutCoefficients.x3;
 		}
 		if (isHeightSize && topLayoutCoefficients.x1 != 0) {
-			deferredTopCalculations.push(child);
+			deferredTopCalculations.push_back(child);
 		} else {
 			measuredTop = topLayoutCoefficients.x1 * height + topLayoutCoefficients.x2 * measuredHeight + topLayoutCoefficients.x3;
 		}
@@ -100,7 +97,7 @@ struct ComputedSize doCompositeLayout(struct Element* element, double width, dou
 	// Second pass, if necessary, to determine the left/top values
 	len = deferredLeftCalculations.size();
 	for(i = 0; i < len; i++) {
-		child = deferredLeftCalculations.[i];
+		child = deferredLeftCalculations[i];
 		leftLayoutCoefficients = (*child)._layoutCoefficients.left;
 		sandboxWidthLayoutCoefficients = (*child)._layoutCoefficients.sandboxWidth;
 		(*child)._measuredLeft = measuredLeft = leftLayoutCoefficients.x1 * computedSize.width + leftLayoutCoefficients.x2 * measuredWidth + leftLayoutCoefficients.x3;
@@ -142,7 +139,7 @@ struct ComputedSize doCompositeLayout(struct Element* element, double width, dou
 	}
 	*/
 
-	return (*element)._computedSize = computedSize;
+	return computedSize;
 }
 
 void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, struct Element* element) {

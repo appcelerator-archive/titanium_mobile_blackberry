@@ -1,6 +1,12 @@
 We are starting to version the BlackBerry SDK using a version file inside the platform SDK. To see the latest 
 version look at the contents of the sdk_version.json file at the root of the BlackBerry SDK
 
+
+Release Notes (3.1.0.301):
+
+1) Fixed TabGroup.
+
+
 Release Notes (3.1.0.300):
 
 1) Can now have spaces in the application/project and the Titanium SDK path.

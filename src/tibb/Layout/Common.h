@@ -41,5 +41,6 @@ struct LayoutCoefficients {
 };
 
 bool isNaN(float);
+ComputedSize layoutNode(struct Element*, double, double, bool, bool);
 
 #endif /* COMMON_H_ */

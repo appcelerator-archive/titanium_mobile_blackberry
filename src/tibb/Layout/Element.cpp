@@ -11,26 +11,26 @@
 #include <math.h>
 
 struct Element* createElement(enum LayoutType layoutType) {
-    struct Element* e = (struct Element*)malloc(sizeof(struct Element));
+    struct Element* element = (struct Element*)malloc(sizeof(struct Element));
 
-    if (NULL == e) {
+    if (NULL == element) {
         printf("\n Element creation failed \n");
         return NULL;
     }
 
-    (*e)._layoutCoefficients.width = {NAN, NAN, NAN};
-    (*e)._layoutCoefficients.minWidth = {NAN, NAN, NAN};
-    (*e)._layoutCoefficients.sandboxWidth = {NAN, NAN, NAN};
-    (*e)._layoutCoefficients.height = {NAN, NAN, NAN};
-    (*e)._layoutCoefficients.minHeight = {NAN, NAN, NAN};
-    (*e)._layoutCoefficients.sandboxHeight = {NAN, NAN, NAN};
-    (*e)._layoutCoefficients.left = {NAN, NAN, NAN};
-    (*e)._layoutCoefficients.top =  {NAN, NAN, NAN, NAN};
-    (*e)._layoutType = layoutType;
-    (*e)._defaultHorizontalAlignment = center;
-    (*e)._defaultVerticalAlignment = center;
+    (*element)._layoutCoefficients.width = {NAN, NAN, NAN};
+    (*element)._layoutCoefficients.minWidth = {NAN, NAN, NAN};
+    (*element)._layoutCoefficients.sandboxWidth = {NAN, NAN, NAN};
+    (*element)._layoutCoefficients.height = {NAN, NAN, NAN};
+    (*element)._layoutCoefficients.minHeight = {NAN, NAN, NAN};
+    (*element)._layoutCoefficients.sandboxHeight = {NAN, NAN, NAN};
+    (*element)._layoutCoefficients.left = {NAN, NAN, NAN};
+    (*element)._layoutCoefficients.top =  {NAN, NAN, NAN, NAN};
+    (*element)._layoutType = layoutType;
+    (*element)._defaultHorizontalAlignment = center;
+    (*element)._defaultVerticalAlignment = center;
 
-    return e;
+    return element;
 }
 
 void addChildElement(Element* parent, Element* child) {

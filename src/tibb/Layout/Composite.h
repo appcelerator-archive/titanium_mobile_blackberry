@@ -11,7 +11,7 @@
 #include "Common.h"
 #include "ParseProperty.h"
 
-struct ComputedSize doCompositeLayout(struct Element*, double, double, bool, bool);
+struct ComputedSize doCompositeLayout(std::vector<struct Element*>, double, double, bool, bool);
 void measureNodeForCompositeLayout(struct LayoutProperties, struct Element*);
 
 #endif /* COMPOSITE_H_ */

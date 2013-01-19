@@ -44,6 +44,7 @@ double _computeValue(std::string value, enum ValueType valueType) {
 	  else {
 		  return atof(value.c_str());
 	  }
+
 	  if (units == "mm") {
 		  return parsedValue /= 10;
 	  }
