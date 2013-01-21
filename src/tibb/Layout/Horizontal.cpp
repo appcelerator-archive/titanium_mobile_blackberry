@@ -27,16 +27,17 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
 	std::string pixelUnits = "px";
 	double runningHeight = 0;
 	double runningWidth = 0;
-	std::vector<std::vector> rows;
-	std::vector<struct Element*> row;
-	std::vector<double> rowHeights;
+	Element* rows [200][200];
+	Element* row[200];
+	double rowHeights[200];
 	double rowHeight;
 	std::vector<struct Element*> deferredTopCalculations;
 	double deferHeight;
 	double sizeHeight;
 	double verticalAlignmentOffset = 0;
 	int len = children.size();
-	int rowLen;
+	int rowLen = 0;
+	int rowsLen = 0;
 
 	// Calculate horizontal size and position for the children
 	for(i = 0; i < len; i++) {
@@ -79,22 +80,25 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
 		measuredSandboxWidth = (*child)._measuredSandboxWidth = sandboxWidthLayoutCoefficients.x1 * width + sandboxWidthLayoutCoefficients.x2 + measuredWidth;
 
 		measuredLeft = leftLayoutCoefficients.x1 * width + leftLayoutCoefficients.x2 + runningWidth;
-		if (!isWidthSize && floor(measuredSandboxWidth + runningWidth) > std::ceil(width)) {
+/*
+		if (!isWidthSize && std::floor(measuredSandboxWidth + runningWidth) > std::ceil(width)) {
+			rowsLen++;
 			measuredLeft -= runningWidth;
 			runningWidth = 0;
 		}
+*/
 		(*child)._measuredLeft = measuredLeft;
-		rows[rows.length - 1].push_back(child);
+		rows[rowsLen - 1][rowLen] = child;
+		rowLen++;
 		runningWidth += measuredSandboxWidth;
 		runningWidth > computedSize.width && (computedSize.width = runningWidth);
 	}
 
 	// Calculate vertical size and position for the children
-	len = rows.size();
+	len = rowsLen;
 	for(i = 0; i < len; i++) {
-		row = rows[i];
+// to do  array to array copies		row = rows[i];
 		rowHeight = 0;
-		rowLen = row.size();
 		for (j = 0; j < rowLen; j++) {
 			child = row[j];
 
@@ -130,17 +134,18 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
 			(*child)._measuredSandboxHeight = measuredSandboxHeight = sandboxHeightLayoutCoefficients.x1 * height + sandboxHeightLayoutCoefficients.x2 + measuredHeight + measuredTop - runningHeight;
 			rowHeight < measuredSandboxHeight && (rowHeight = measuredSandboxHeight);
 		}
-		rowHeights.push_back(rowHeight);
+		rowHeights[i] = rowHeight;
 		runningHeight += rowHeight;
 	}
 
 	// Second pass, if necessary, to determine the top values
 	runningHeight = 0;
-	len = rows.size();
+	len = rowsLen;
+
+/* to needs array to array copies and a quick array find
 	for(i = 0; i < len; i++) {
 		row = rows[i];
 		rowHeight = rowHeights[i];
-		rowLen = row.size();
 		for (j = 0; j < rowLen; j++) {
 			child = row[j];
 			(*child)._measuredRunningHeight = runningHeight;
@@ -156,6 +161,7 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
 		}
 		runningHeight += rowHeight;
 	}
+*/
 	computedSize.height = runningHeight;
 
 	return computedSize;
@@ -186,6 +192,7 @@ void measureNodeForHorizontalLayout(struct LayoutProperties layoutProperties, st
 	double x1 = 0;
 	double x2 = 0;
 	double x3 = 0;
+	double x4 = 0;
 
 	// Width rule calculation
 	if (widthType == size) {
@@ -201,9 +208,9 @@ void measureNodeForHorizontalLayout(struct LayoutProperties layoutProperties, st
 	} else if (widthType == fixed) {
 		x3 = widthValue;
 	}
-	widthLayoutCoefficients.x1 = x1;
-	widthLayoutCoefficients.x2 = x2;
-	widthLayoutCoefficients.x3 = x3;
+	(*element)._layoutCoefficients.width.x1 = x1;
+	(*element)._layoutCoefficients.width.x2 = x2;
+	(*element)._layoutCoefficients.width.x3 = x3;
 
 	// Sandbox width rule calculation
 	x1 = x2 = 0;
@@ -211,8 +218,8 @@ void measureNodeForHorizontalLayout(struct LayoutProperties layoutProperties, st
 	leftType == fixed && (x2 = leftValue);
 	rightType == percent && (x1 += rightValue);
 	rightType == fixed && (x2 += rightValue);
-	sandboxWidthLayoutCoefficients.x1 = x1;
-	sandboxWidthLayoutCoefficients.x2 = x2;
+	(*element)._layoutCoefficients.sandboxWidth.x1 = x1;
+	(*element)._layoutCoefficients.sandboxWidth.x2 = x2;
 
 	// Height rule calculation
 	x1 = x2 = x3 = 0;
@@ -227,17 +234,17 @@ void measureNodeForHorizontalLayout(struct LayoutProperties layoutProperties, st
 	} else if (heightType == fixed) {
 		x3 = heightValue;
 	}
-	heightLayoutCoefficients.x1 = x1;
-	heightLayoutCoefficients.x2 = x2;
-	heightLayoutCoefficients.x3 = x3;
+	(*element)._layoutCoefficients.height.x1 = x1;
+	(*element)._layoutCoefficients.height.x2 = x2;
+	(*element)._layoutCoefficients.height.x3 = x3;
 
 	// Sandbox height rule calculation
-	sandboxHeightLayoutCoefficients.x1 = bottomType == percent ? bottomValue : 0;
-	sandboxHeightLayoutCoefficients.x2 = bottomType == fixed ? bottomValue : 0;
+	(*element)._layoutCoefficients.sandboxHeight.x1 = bottomType == percent ? bottomValue : 0;
+	(*element)._layoutCoefficients.sandboxHeight.x2 = bottomType == fixed ? bottomValue : 0;
 
 	// Left rule calculation
-	leftLayoutCoefficients.x1 = leftType == percent ? leftValue : 0;
-	leftLayoutCoefficients.x2 = leftType == fixed ? leftValue : 0;
+	(*element)._layoutCoefficients.left.x1 = leftType == percent ? leftValue : 0;
+	(*element)._layoutCoefficients.left.x2 = leftType == fixed ? leftValue : 0;
 
 	// Top rule calculation
 	x1 = x2 = x3 = x4 = 0;
@@ -264,8 +271,8 @@ void measureNodeForHorizontalLayout(struct LayoutProperties layoutProperties, st
 				break;
 		}
 	}
-	topLayoutCoefficients.x1 = x1;
-	topLayoutCoefficients.x2 = x2;
-	topLayoutCoefficients.x3 = x3;
-	topLayoutCoefficients.x4 = x4;
+	(*element)._layoutCoefficients.top.x1 = x1;
+	(*element)._layoutCoefficients.top.x2 = x2;
+	(*element)._layoutCoefficients.top.x3 = x3;
+	(*element)._layoutCoefficients.top.x4 = x4;
 }

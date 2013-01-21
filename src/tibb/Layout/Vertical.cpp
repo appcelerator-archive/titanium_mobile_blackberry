@@ -26,7 +26,7 @@ struct ComputedSize doVerticalLayout(std::vector<struct Element*> children, doub
 	std::string	pixelUnits = "px";
 	std::vector<struct Element*> deferredLeftCalculations;
 	double runningHeight = 0;
-	len = children.size();
+	int len = children.size();
 
 	// Calculate size and position for the children
 	for(i = 0; i < len; i++) {
@@ -74,7 +74,7 @@ struct ComputedSize doVerticalLayout(std::vector<struct Element*> children, doub
 
 		measuredSandboxHeight = (*child)._measuredSandboxHeight = sandboxHeightLayoutCoefficients.x1 * height + sandboxHeightLayoutCoefficients.x2 + measuredHeight;
 
-		runningHeight = (computedSize.height += child._measuredSandboxHeight);
+		runningHeight = (computedSize.height += (*child)._measuredSandboxHeight);
 	}
 
 	// Calculate the preliminary sandbox widths (missing left, since one of these widths may end up impacting all the lefts)
@@ -82,7 +82,7 @@ struct ComputedSize doVerticalLayout(std::vector<struct Element*> children, doub
 	for(i = 0; i < len; i++) {
 		child = deferredLeftCalculations[i];
 		sandboxWidthLayoutCoefficients = (*child)._layoutCoefficients.sandboxWidth;
-		measuredSandboxWidth = (*child)._measuredSandboxWidth = sandboxWidthLayoutCoefficients.x1 * width + sandboxWidthLayoutCoefficients.x2 + child._measuredWidth;
+		measuredSandboxWidth = (*child)._measuredSandboxWidth = sandboxWidthLayoutCoefficients.x1 * width + sandboxWidthLayoutCoefficients.x2 + (*child)._measuredWidth;
 											measuredSandboxWidth > computedSize.width && (computedSize.width = measuredSandboxWidth);
 	}
 
@@ -187,12 +187,12 @@ void measureNodeForVerticalLayout(struct LayoutProperties layoutProperties, stru
 			x2 = 2 * (rightValue - centerXValue);
 		}
 	}
-	widthLayoutCoefficients.x1 = x1;
-	widthLayoutCoefficients.x2 = x2;
+	(*element)._layoutCoefficients.width.x1 = x1;
+	(*element)._layoutCoefficients.width.x2 = x2;
 
 	// Sandbox width/height rule evaluation
-	sandboxWidthLayoutCoefficients.x1 = rightType == percent ? rightValue : 0;
-	sandboxWidthLayoutCoefficients.x2 = rightType == fixed ? rightValue : 0;
+	(*element)._layoutCoefficients.sandboxWidth.x1 = rightType == percent ? rightValue : 0;
+	(*element)._layoutCoefficients.sandboxWidth.x2 = rightType == fixed ? rightValue : 0;
 
 	// Height rule calculation
 	x1 = x2 = x3 = 0;
@@ -209,9 +209,9 @@ void measureNodeForVerticalLayout(struct LayoutProperties layoutProperties, stru
 	} else if (heightType == fixed) {
 		x3 = heightValue;
 	}
-	heightLayoutCoefficients.x1 = x1;
-	heightLayoutCoefficients.x2 = x2;
-	heightLayoutCoefficients.x3 = x3;
+	(*element)._layoutCoefficients.height.x1 = x1;
+	(*element)._layoutCoefficients.height.x2 = x2;
+	(*element)._layoutCoefficients.height.x3 = x3;
 
 	// Sandbox height rule calculation
 	x1 = x2 = 0;
@@ -219,8 +219,8 @@ void measureNodeForVerticalLayout(struct LayoutProperties layoutProperties, stru
 	topType == fixed && (x2 = topValue);
 	bottomType == percent && (x1 += bottomValue);
 	bottomType == fixed && (x2 += bottomValue);
-	sandboxHeightLayoutCoefficients.x1 = x1;
-	sandboxHeightLayoutCoefficients.x2 = x2;
+	(*element)._layoutCoefficients.sandboxHeight.x1 = x1;
+	(*element)._layoutCoefficients.sandboxHeight.x2 = x2;
 
 	// Left rule calculation
 	x1 = x2 = x3 = 0;
@@ -253,281 +253,16 @@ void measureNodeForVerticalLayout(struct LayoutProperties layoutProperties, stru
 				break;
 		}
 	}
-	leftLayoutCoefficients.x1 = x1;
-	leftLayoutCoefficients.x2 = x2;
-	leftLayoutCoefficients.x3 = x3;
-
-	// Top rule calculation
-	topLayoutCoefficients.x1 = topType == percent ? topValue : 0;
-	topLayoutCoefficients.x2 = topType == fixed ? topValue : 0;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	if (widthType == size) {
-		x1 = x2 = NAN;
-	} else if (widthType == fill) {
-		x1 = 1;
-		if (widthType == percent) {
-			x1 -= leftValue;
-		} else if (widthType == fixed) {
-			x2 = -leftValue;
-		} else if (rightType == percent) {
-			x1 -= rightValue;
-		} else if (rightType == fixed) {
-			x2 = -rightValue;
-		}
-	} else if (widthType == percent) {
-		x1 = widthValue;
-	} else if (widthType == fixed) {
-		x2 = widthValue;
-	} else if (widthType == percent) {
-		if (centerXType == percent) {
-			x1 = 2 * (centerXValue - leftValue);
-		} else if (centerXType == fixed) {
-			x1 = -2 * leftValue;
-			x2 = 2 * centerXValue;
-		} else if (rightType == percent) {
-			x1 = 1 - leftValue - rightValue;
-		} else if (rightType == fixed) {
-			x1 = 1 - leftValue;
-			x2 = -rightValue;
-		}
-	} else if (widthType == fixed) {
-		if (centerXType == percent) {
-			x1 = 2 * centerXValue;
-			x2 = -2 * leftValue;
-		} else if (centerXType == fixed) {
-			x2 = 2 * (centerXValue - leftValue);
-		} else if (rightType == percent) {
-			x1 = 1 - rightValue;
-			x2 = -leftValue;
-		} else if (rightType == fixed) {
-			x1 = 1;
-			x2 = -rightValue - leftValue;
-		}
-	} else if (centerXType == percent) {
-		if (rightType == percent) {
-			x1 = 2 * (rightValue - centerXValue);
-		} else if (rightType == fixed) {
-			x1 = -2 * centerXValue;
-			x2 = 2 * rightValue;
-		}
-	} else if (centerXType == fixed) {
-		if (rightType == percent) {
-			x1 = 2 * rightValue;
-			x2 = -2 * centerXValue;
-		} else if (rightType == fixed) {
-			x2 = 2 * (rightValue - centerXValue);
-		}
-	}
-
-	(*element)._layoutCoefficients.width.x1 = x1;
-	(*element)._layoutCoefficients.width.x2 = x2;
-
-	x1 = x2 = 0;
-	if (heightType == size) {
-		x1 = x2 = NAN;
-	} else if (heightType == fill) {
-		x1 = 1;
-		if (topType == percent) {
-			x1 -= topValue;
-		} else if (topType == fixed) {
-			x2 = -topValue;
-		} else if (bottomType == percent) {
-			x1 -= bottomValue;
-		} else if (bottomType == fixed) {
-			x2 = -bottomValue;
-		}
-	} else if (heightType == percent) {
-		x1 = heightValue;
-	} else if (heightType == fixed) {
-		x2 = heightValue;
-	} else if (topType == percent) {
-		if (centerYType == percent) {
-			x1 = 2 * (centerYValue - topValue);
-		} else if (centerYType == fixed) {
-			x1 = -2 * topValue;
-			x2 = 2 * centerYValue;
-		} else if (bottomType == percent) {
-			x1 = 1 - topValue - bottomValue;
-		} else if (bottomType == fixed) {
-			x1 = 1 - topValue;
-			x2 = -bottomValue;
-		}
-	} else if (topType == fixed) {
-		if (centerYType == percent) {
-			x1 = 2 * centerYValue;
-			x2 = -2 * topValue;
-		} else if (centerYType == fixed) {
-			x2 = 2 * (centerYValue - topValue);
-		} else if (bottomType == percent) {
-			x1 = 1 - bottomValue;
-			x2 = -topValue;
-		} else if (bottomType == fixed) {
-			x1 = 1;
-			x2 = -bottomValue - topValue;
-		}
-	} else if (centerYType == percent) {
-		if (bottomType == percent) {
-			x1 = 2 * (bottomValue - centerYValue);
-		} else if (bottomType == fixed) {
-			x1 = -2 * centerYValue;
-			x2 = 2 * bottomValue;
-		}
-	} else if (centerYType == fixed) {
-		if (bottomType == percent) {
-			x1 = 2 * bottomValue;
-			x2 = -2 * centerYValue;
-		} else if (bottomType == fixed) {
-			x2 = 2 * (bottomValue - centerYValue);
-		}
-	}
-
-	(*element)._layoutCoefficients.height.x1 = x1;
-	(*element)._layoutCoefficients.height.x2 = x2;
-
-	x1 = x2 = x3 = 0;
-	if (minWidthType == size) {
-		x1 = x2 = NAN;
-	} else if (minWidthType == fill) {
-		x1 = 1;
-		if (leftType == percent) {
-			x1 -= leftValue;
-		} else if (leftType == fixed) {
-			x2 = -leftValue;
-		} else if (rightType == percent) {
-			x1 -= rightValue;
-		} else if (rightType == fixed) {
-			x2 = -rightValue;
-		}
-	} else if (minWidthType == percent) {
-		x1 = minWidthValue;
-	} else if (minWidthType == fixed) {
-		x2 = minWidthValue;
-	} else {
-		x1 = x2 = x3 = NAN;
-	}
-
-	(*element)._layoutCoefficients.minWidth.x1 = x1;
-    (*element)._layoutCoefficients.minWidth.x2 = x2;
-    (*element)._layoutCoefficients.minWidth.x3 = x3;
-
-    x1 = x2 = x3 = 0;
-	if (minHeightType == size) {
-		x1 = x2 = NAN;
-	} else if (minHeightType == fill) {
-		x1 = 1;
-		if (topType == percent) {
-			x1 -= topValue;
-		} else if (topType == fixed) {
-			x2 = -topValue;
-		} else if (bottomType == percent) {
-			x1 -= bottomValue;
-		} else if (bottomType == fixed) {
-			x2 = -bottomValue;
-		}
-	} else if (minHeightType == percent) {
-		x1 = minHeightValue;
-	} else if (minHeightType == fixed) {
-		x2 = minHeightValue;
-	} else {
-		x1 = x2 = x3 = NAN;
-	}
-
-	(*element)._layoutCoefficients.minHeight.x1 = x1;
-	(*element)._layoutCoefficients.minHeight.x2 = x2;
-	(*element)._layoutCoefficients.minHeight.x3 = x3;
-
-	x1 = x2 = x3 = 0;
-	if (leftType == percent) {
-		x1 = leftValue;
-	} else if(leftType == fixed) {
-		x3 = leftValue;
-	} else if (centerXType == percent) {
-		x1 = centerXValue;
-		x2 = -0.5;
-	} else if (centerXType == fixed) {
-		x2 = -0.5;
-		x3 = centerXValue;
-	} else if (rightType == percent) {
-		x1 = 1 - rightValue;
-		x2 = -1;
-	} else if (rightType == fixed) {
-		x1 = 1;
-		x2 = -1;
-		x3 = -rightValue;
-	} else {
-		switch((*element)._defaultHorizontalAlignment) {
-			case center:
-				x1 = 0.5;
-				x2 = -0.5;
-				break;
-			case end:
-				x1 = 1;
-				x2 = -1;
-			break;
-		}
-	}
-
 	(*element)._layoutCoefficients.left.x1 = x1;
-    (*element)._layoutCoefficients.left.x2 = x2;
+	(*element)._layoutCoefficients.left.x2 = x2;
 	(*element)._layoutCoefficients.left.x3 = x3;
 
-	x1 = x2 = x3 = 0;
-	if (topType == percent) {
-		x1 = topValue;
-	} else if(topType == fixed) {
-		x3 = topValue;
-	} else if (centerYType == percent) {
-		x1 = centerYValue;
-		x2 = -0.5;
-	} else if (centerYType == fixed) {
-		x2 = -0.5;
-		x3 = centerYValue;
-	} else if (bottomType == percent) {
-		x1 = 1 - bottomValue;
-		x2 = -1;
-	} else if (bottomType == fixed) {
-		x1 = 1;
-		x2 = -1;
-		x3 = -bottomValue;
-	} else {
-		switch((*element)._defaultVerticalAlignment) {
-			case center:
-				x1 = 0.5;
-				x2 = -0.5;
-				break;
-			case end:
-				x1 = 1;
-				x2 = -1;
-				break;
-		}
-	}
-
-	(*element)._layoutCoefficients.top.x1 = x1;
-	(*element)._layoutCoefficients.top.x2 = x2;
-    (*element)._layoutCoefficients.top.x3 = x3;
-
-	// Sandbox width/height rule evaluation
-	(*element)._layoutCoefficients.sandboxWidth.x1 = (rightType == percent ? rightValue : 0);
-	(*element)._layoutCoefficients.sandboxWidth.x2 = (rightType == fixed ? rightValue : 0);
-	(*element)._layoutCoefficients.sandboxHeight.x1 = (bottomType == percent ? bottomValue : 0);
-	(*element)._layoutCoefficients.sandboxHeight.x2 = (bottomType == fixed ? bottomValue : 0);
+	// Top rule calculation
+	(*element)._layoutCoefficients.top.x1 = topType == percent ? topValue : 0;
+	(*element)._layoutCoefficients.top.x2 = topType == fixed ? topValue : 0;
 }
+
+
+
+
+

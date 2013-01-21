@@ -31,6 +31,9 @@ struct Element {
     enum ElementAlignment _defaultHorizontalAlignment;
     enum ElementAlignment _defaultVerticalAlignment;
     double _measuredRunningHeight;
+    double _measuredRunningWidth;
+    double _measuredRowHeight;
+    bool _childrenLaidOut;
 };
 
 struct Element* createElement(enum LayoutType);
