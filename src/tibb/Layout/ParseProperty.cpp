@@ -25,10 +25,9 @@ enum ValueType _getValueType(std::string value) {
     }
 }
 
-double _computeValue(std::string value, enum ValueType valueType) {
+double _computeValue(std::string value, enum ValueType valueType, double dpi) {
 	std::string units;
 	double parsedValue;
-	int dpi = 96;
 
 	if (valueType == percent) {
 		return atof(value.c_str()) / 100;
@@ -72,66 +71,66 @@ double _computeValue(std::string value, enum ValueType valueType) {
 	}
 }
 
-void populateLayoutPoperties(struct InputProperty inputProperty, struct LayoutProperties* layoutProperties) {
+void populateLayoutPoperties(struct InputProperty inputProperty, struct LayoutProperties* layoutProperties, double dpi) {
 
 	if (inputProperty.name == minHeight) {
 		(*layoutProperties).minHeight.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).minHeight.value = _computeValue(inputProperty.value,
-												(*layoutProperties).minHeight.valueType);
+												(*layoutProperties).minHeight.valueType, dpi);
 	}
 
 	if (inputProperty.name == minWidth) {
 		(*layoutProperties).minWidth.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).minWidth.value = _computeValue(inputProperty.value,
-												(*layoutProperties).minWidth.valueType);
+												(*layoutProperties).minWidth.valueType, dpi);
 	}
 
 	if (inputProperty.name == width) {
 		(*layoutProperties).width.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).width.value = _computeValue(inputProperty.value,
-												(*layoutProperties).width.valueType);
+												(*layoutProperties).width.valueType, dpi);
 	}
 
 	if (inputProperty.name == height) {
 		(*layoutProperties).height.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).height.value = _computeValue(inputProperty.value,
-												(*layoutProperties).height.valueType);
+												(*layoutProperties).height.valueType, dpi);
 	}
 
 	if (inputProperty.name == left) {
 		(*layoutProperties).left.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).left.value = _computeValue(inputProperty.value,
-												(*layoutProperties).left.valueType);
+												(*layoutProperties).left.valueType, dpi);
 	}
 
 	if (inputProperty.name == centerX) {
 		(*layoutProperties).centerX.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).centerX.value = _computeValue(inputProperty.value,
-												(*layoutProperties).centerX.valueType);
+												(*layoutProperties).centerX.valueType, dpi);
 	}
 
 	if (inputProperty.name == centerY) {
 		(*layoutProperties).centerY.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).centerY.value = _computeValue(inputProperty.value,
-												(*layoutProperties).centerY.valueType);
+												(*layoutProperties).centerY.valueType, dpi);
 	}
 
 	if (inputProperty.name == right) {
 		(*layoutProperties).right.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).right.value = _computeValue(inputProperty.value,
-												(*layoutProperties).right.valueType);
+												(*layoutProperties).right.valueType, dpi);
 	}
 
 	if (inputProperty.name == top) {
 		(*layoutProperties).top.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).top.value = _computeValue(inputProperty.value,
-												(*layoutProperties).top.valueType);
+												(*layoutProperties).top.valueType, dpi);
 	}
 
 	if (inputProperty.name == bottom) {
 		(*layoutProperties).bottom.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).bottom.value = _computeValue(inputProperty.value,
-												(*layoutProperties).bottom.valueType);
+												(*layoutProperties).bottom.valueType, dpi);
 	}
 }
 

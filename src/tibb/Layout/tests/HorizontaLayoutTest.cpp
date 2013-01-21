@@ -6,17 +6,17 @@
 #include "../ParseProperty.h"
 #include "../Element.h"
 #include "../Common.h"
-#include "../Composite.h"
+#include "../Horizontal.h"
 
-std::string _test_measure_composite_node_fill_properties() {
+std::string _test_measure_horizontal_node_fill_properties() {
 	struct LayoutProperties layoutProperties;
 	layoutPropertiesInitialize(&layoutProperties);
-	struct Element* element = createElement(composite);
+	struct Element* element = createElement(horizontal);
 	layoutProperties.width.valueType = fill;
 	layoutProperties.width.value = NAN;
 	layoutProperties.height.valueType = fill;
 	layoutProperties.height.value = NAN;
-	measureNodeForCompositeLayout(layoutProperties, element);
+	measureNodeForHorizontalLayout(layoutProperties, element);
 	// width height rule
 	ut_assert("error, layout width coefficient x1", (*element)._layoutCoefficients.width.x1 == 1);
 	ut_assert("error, layout width coefficient x2", (*element)._layoutCoefficients.width.x2 == 0);
@@ -37,13 +37,13 @@ std::string _test_measure_composite_node_fill_properties() {
 	return "";
 }
 
-std::string _test_measure_composite_node() {
+std::string _test_measure_horizontal_node() {
 	struct LayoutProperties layoutProperties;
 	layoutPropertiesInitialize(&layoutProperties);
-	struct Element* element = createElement(composite);
+	struct Element* element = createElement(horizontal);
 	layoutProperties.width = {fixed, 100};
 	layoutProperties.height = {fixed, 100};
-	measureNodeForCompositeLayout(layoutProperties, element);
+	measureNodeForHorizontalLayout(layoutProperties, element);
 	// width height rule
 	ut_assert("error, layout width coefficient x1", (*element)._layoutCoefficients.width.x1 == 0);
 	ut_assert("error, layout width coefficient x2", (*element)._layoutCoefficients.width.x2 == 100);
@@ -64,7 +64,7 @@ std::string _test_measure_composite_node() {
 	return "";
 }
 
-std::string _test_composite_layout() {
+std::string _test_horizontal_layout() {
 	struct LayoutProperties layoutProperties;
 	layoutPropertiesInitialize(&layoutProperties);
 	struct Element* e1 = createElement(composite); // Device - top level window
@@ -73,14 +73,14 @@ std::string _test_composite_layout() {
 	layoutProperties.height.valueType = fill;
 	layoutProperties.height.value = NAN;
 	struct Element* e2 = createElement(composite);
-	measureNodeForCompositeLayout(layoutProperties, e2);
+	measureNodeForHorizontalLayout(layoutProperties, e2);
 	layoutProperties.width = {fixed, 100};
 	layoutProperties.height = {fixed, 100};
 	struct Element* e3 = createElement(composite);
-	measureNodeForCompositeLayout(layoutProperties, e3);
+	measureNodeForHorizontalLayout(layoutProperties, e3);
 	addChildElement(e1, e2);
 	addChildElement(e2, e3);
-	doCompositeLayout((*e1)._children, 449, 662, false, false);
+	doHorizontalLayout((*e1)._children, 449, 662, false, false);
 	ut_assert("error, absolute position top e2", (*e3)._measuredTop == 281);
 	ut_assert("error, absolute position left e2", (*e3)._measuredLeft == 174.5);
 	ut_assert("error, absolute width e2", (*e3)._measuredWidth == 100);
@@ -92,9 +92,9 @@ std::string _test_composite_layout() {
 	return "";
 }
 
-std::string run_all_composite_layout_tests() {
-	ut_run_test(_test_measure_composite_node_fill_properties);
-	ut_run_test(_test_measure_composite_node);
-	ut_run_test(_test_composite_layout);
+std::string run_all_horizontal_layout_tests() {
+	//ut_run_test(_test_measure_horizontal_node_fill_properties);
+	//ut_run_test(_test_measure_horizontal_node);
+	//ut_run_test(_test_horizontal_layout);
 	return "";
 }

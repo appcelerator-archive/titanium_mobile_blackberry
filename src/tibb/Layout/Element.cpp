@@ -27,6 +27,7 @@ struct Element* createElement(enum LayoutType layoutType) {
     (*element)._layoutCoefficients.left = {NAN, NAN, NAN};
     (*element)._layoutCoefficients.top =  {NAN, NAN, NAN, NAN};
     (*element)._layoutType = layoutType;
+    (*element)._defaultRowAlignment = start;
     (*element)._defaultHorizontalAlignment = center;
     (*element)._defaultVerticalAlignment = center;
 

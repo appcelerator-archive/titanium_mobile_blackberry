@@ -9,7 +9,7 @@
 #define COMMON_H_
 
 enum LayoutType {composite = 0, horizontal, vertical};
-enum ElementAlignment {center = 0, end};
+enum ElementAlignment {start = 0, center, end};
 
 struct ComputedSize {
 	double width;

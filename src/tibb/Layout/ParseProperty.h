@@ -38,6 +38,6 @@ struct LayoutProperties {
 };
 
 void layoutPropertiesInitialize(struct LayoutProperties*);
-void populateLayoutPoperties(struct InputProperty, struct LayoutProperties*);
+void populateLayoutPoperties(struct InputProperty, struct LayoutProperties*, double);
 
 #endif /* PARSEPROPERTY */

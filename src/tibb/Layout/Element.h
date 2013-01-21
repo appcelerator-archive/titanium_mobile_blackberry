@@ -27,8 +27,10 @@ struct Element {
     double _borderBottomWidth;
     double _borderLeftWidth;
     enum LayoutType _layoutType;
+    enum ElementAlignment _defaultRowAlignment;
     enum ElementAlignment _defaultHorizontalAlignment;
     enum ElementAlignment _defaultVerticalAlignment;
+    double _measuredRunningHeight;
 };
 
 struct Element* createElement(enum LayoutType);

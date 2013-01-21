@@ -8,6 +8,8 @@
 
 #include "Element.h"
 #include "Composite.h"
+#include "Horizontal.h"
+#include "Vertical.h"
 
 bool isNaN(float value) {
 	if (value != value)
@@ -24,10 +26,10 @@ ComputedSize layoutNode(struct Element* element, double width, double height, bo
 			computedSize = doCompositeLayout((*element)._children, width, height, isWidthSize, isHeightSize);
 			break;
 		case horizontal:
-			//computedSize = doHorizontalLayout((*element).children);
+			computedSize = doHorizontalLayout((*element)._children, width, height, isWidthSize, isHeightSize);
 			break;
 		case vertical:
-			//computedSize = doVerticalLayout((*element).children);
+			computedSize = doVerticalLayout((*element)._children, width, height, isWidthSize, isHeightSize);
 			break;
 	}
 
