@@ -12,6 +12,8 @@
 #include "Element.h"
 #include <vector>
 #include <math.h>
+#include <string.h>
+#include <algorithm>
 
 struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, double width, double height, bool isWidthSize, bool isHeightSize) {
 	struct ComputedSize computedSize = {0, 0};
@@ -27,8 +29,10 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
 	std::string pixelUnits = "px";
 	double runningHeight = 0;
 	double runningWidth = 0;
+	// ToDo Russ - remove hard coded c arrays
 	Element* rows [200][200];
 	Element* row[200];
+	int elementsPerRow[200];
 	double rowHeights[200];
 	double rowHeight;
 	std::vector<struct Element*> deferredTopCalculations;
@@ -37,7 +41,7 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
 	double verticalAlignmentOffset = 0;
 	int len = children.size();
 	int rowLen = 0;
-	int rowsLen = 0;
+	int rowsLen = 1;
 
 	// Calculate horizontal size and position for the children
 	for(i = 0; i < len; i++) {
@@ -80,16 +84,18 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
 		measuredSandboxWidth = (*child)._measuredSandboxWidth = sandboxWidthLayoutCoefficients.x1 * width + sandboxWidthLayoutCoefficients.x2 + measuredWidth;
 
 		measuredLeft = leftLayoutCoefficients.x1 * width + leftLayoutCoefficients.x2 + runningWidth;
-/*
-		if (!isWidthSize && std::floor(measuredSandboxWidth + runningWidth) > std::ceil(width)) {
+
+		if (!isWidthSize && (int)(measuredSandboxWidth + runningWidth) > width) {
 			rowsLen++;
 			measuredLeft -= runningWidth;
 			runningWidth = 0;
+			elementsPerRow[rowsLen] = 0;
 		}
-*/
+
 		(*child)._measuredLeft = measuredLeft;
 		rows[rowsLen - 1][rowLen] = child;
 		rowLen++;
+		elementsPerRow[rowLen] = rowLen;
 		runningWidth += measuredSandboxWidth;
 		runningWidth > computedSize.width && (computedSize.width = runningWidth);
 	}
@@ -97,7 +103,8 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
 	// Calculate vertical size and position for the children
 	len = rowsLen;
 	for(i = 0; i < len; i++) {
-// to do  array to array copies		row = rows[i];
+		rowLen = elementsPerRow[i];
+		memcpy(&row, &rows[i], rowLen * sizeof(struct Element*));
 		rowHeight = 0;
 		for (j = 0; j < rowLen; j++) {
 			child = row[j];
@@ -142,18 +149,16 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
 	runningHeight = 0;
 	len = rowsLen;
 
-/* to needs array to array copies and a quick array find
 	for(i = 0; i < len; i++) {
-		row = rows[i];
+		rowLen = elementsPerRow[i];
+		memcpy(&row, &rows[i], rowLen * sizeof(struct Element*));
 		rowHeight = rowHeights[i];
 		for (j = 0; j < rowLen; j++) {
 			child = row[j];
 			(*child)._measuredRunningHeight = runningHeight;
 			(*child)._measuredRowHeight = rowHeight;
 
-			auto result = std::find(deferredTopCalculations.begin(),
-					deferredTopCalculations.end(), child);
-			if (result == deferredTopCalculations.end()) {
+			if (std::find(deferredTopCalculations.begin(), deferredTopCalculations.end(), child) != deferredTopCalculations.end()) {
 				measuredHeight = (*child)._measuredHeight;
 				topLayoutCoefficients = (*child)._layoutCoefficients.top;
 				(*child)._measuredTop = topLayoutCoefficients.x1 * height + topLayoutCoefficients.x2 * rowHeight + topLayoutCoefficients.x3 * measuredHeight + topLayoutCoefficients.x4 + runningHeight;
@@ -161,7 +166,7 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
 		}
 		runningHeight += rowHeight;
 	}
-*/
+
 	computedSize.height = runningHeight;
 
 	return computedSize;
