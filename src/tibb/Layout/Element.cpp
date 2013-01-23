@@ -18,14 +18,30 @@ struct Element* createElement(enum LayoutType layoutType) {
         return NULL;
     }
 
-    (*element)._layoutCoefficients.width = {NAN, NAN, NAN};
-    (*element)._layoutCoefficients.minWidth = {NAN, NAN, NAN};
-    (*element)._layoutCoefficients.sandboxWidth = {NAN, NAN, NAN};
-    (*element)._layoutCoefficients.height = {NAN, NAN, NAN};
-    (*element)._layoutCoefficients.minHeight = {NAN, NAN, NAN};
-    (*element)._layoutCoefficients.sandboxHeight = {NAN, NAN, NAN};
-    (*element)._layoutCoefficients.left = {NAN, NAN, NAN};
-    (*element)._layoutCoefficients.top =  {NAN, NAN, NAN, NAN};
+    (*element)._layoutCoefficients.width.x1 = NAN;
+    (*element)._layoutCoefficients.width.x2 =  NAN;
+    (*element)._layoutCoefficients.width.x3 = NAN;
+    (*element)._layoutCoefficients.minWidth.x1 = NAN;
+    (*element)._layoutCoefficients.minWidth.x2 = NAN;
+    (*element)._layoutCoefficients.minWidth.x3 = NAN;
+    (*element)._layoutCoefficients.sandboxWidth.x1 = NAN;
+    (*element)._layoutCoefficients.sandboxWidth.x2 = NAN;
+    (*element)._layoutCoefficients.sandboxWidth.x3 = NAN;
+    (*element)._layoutCoefficients.height.x1 = NAN;
+    (*element)._layoutCoefficients.height.x2 =  NAN;
+    (*element)._layoutCoefficients.height.x3 =  NAN;
+    (*element)._layoutCoefficients.minHeight.x1 = NAN;
+    (*element)._layoutCoefficients.minHeight.x2 =  NAN;
+    (*element)._layoutCoefficients.minHeight.x3 =  NAN;
+    (*element)._layoutCoefficients.sandboxHeight.x1 = NAN;
+    (*element)._layoutCoefficients.sandboxHeight.x2 = NAN;
+    (*element)._layoutCoefficients.sandboxHeight.x3 = NAN;
+    (*element)._layoutCoefficients.left.x1 = NAN;
+    (*element)._layoutCoefficients.left.x2 = NAN;
+    (*element)._layoutCoefficients.left.x3 = NAN;
+    (*element)._layoutCoefficients.top.x1 =  NAN;
+    (*element)._layoutCoefficients.top.x2 = NAN;
+	(*element)._layoutCoefficients.top.x3 = NAN;
     (*element)._layoutType = layoutType;
     (*element)._defaultRowAlignment = start;
     (*element)._defaultHorizontalAlignment = center;
