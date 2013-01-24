@@ -12,6 +12,7 @@
 #include "TiEventContainer.h"
 #include "TiConstants.h"
 #include "TiObject.h"
+#include "Layout/Composite.h"
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
@@ -156,6 +157,8 @@ NativeControlObject::NativeControlObject(TiObject* tiObject) :
     rightIsUpdated_(false),
     bottomIsUpdated_(false)
 {
+    nodeInitialize(&layoutNode_);
+
     if ((g_width <= 0) || (g_height <= 0))
     {
         bb::device::DisplayInfo display;
@@ -249,6 +252,7 @@ int NativeControlObject::addChildImpl(NativeObject* obj)
 {
     Q_ASSERT(container_ != NULL);
     bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
+    nodeAddChild(&layoutNode_, &((NativeControlObject*) obj)->layoutNode_);
     TiObject* tmpObj = new TiObject;
     obj->getPropertyValue(N_PROP_ZINDEX, tmpObj);
     Handle<Value> zindex = tmpObj->getValue();
@@ -353,6 +357,31 @@ int NativeControlObject::finishLayout()
         updateViewLayout();
     }
     return NATIVE_ERROR_OK;
+}
+
+void NativeControlObject::updateLayoutProperty(ValueName name, TiObject* val) {
+    HandleScope handleScope;
+
+    struct InputProperty property;
+    property.name = name;
+    property.value = *String::Utf8Value(val->getValue());
+
+    // TODO(josh): query the real DPI value from hardware.
+    populateLayoutPoperties(property, &layoutNode_.properties, 96);
+
+    // TODO(josh): move measuring into layout passes?
+    measureNodeForCompositeLayout(layoutNode_.properties, &layoutNode_.element);
+
+    nodeRequestLayout(&layoutNode_);
+
+    float width = layoutNode_.element._measuredWidth,
+          height = layoutNode_.element._measuredHeight;
+    container_->setMinWidth(width);
+    container_->setMaxWidth(width);
+    container_->setMinHeight(height);
+    container_->setMaxHeight(height);
+    layout_->setPositionX(layoutNode_.element._measuredLeft);
+    layout_->setPositionY(layoutNode_.element._measuredTop);
 }
 
 void NativeControlObject::updateViewLayout()
@@ -514,6 +543,10 @@ int NativeControlObject::setFont(TiObject*)
 PROP_SETGET(setHeight)
 int NativeControlObject::setHeight(TiObject* obj)
 {
+    updateLayoutProperty(Height, obj);
+    return NATIVE_ERROR_OK;
+
+    /*
     Q_ASSERT(container_ != NULL);
     Q_ASSERT(obj != NULL);
     obj->addRef();
@@ -531,6 +564,7 @@ int NativeControlObject::setHeight(TiObject* obj)
         heightIsUpdated_ = true;
     }
     return NATIVE_ERROR_OK;
+    */
 }
 
 int NativeControlObject::updateHeight()
@@ -587,6 +621,9 @@ int NativeControlObject::setLabel(TiObject*)
 PROP_SETGET(setLeft)
 int NativeControlObject::setLeft(TiObject* obj)
 {
+    updateLayoutProperty(Left, obj);
+
+    /*
     Q_ASSERT(container_ != NULL);
     Q_ASSERT(obj != NULL);
     obj->addRef();
@@ -603,6 +640,8 @@ int NativeControlObject::setLeft(TiObject* obj)
     {
         leftIsUpdated_ = true;
     }
+    */
+
     return NATIVE_ERROR_OK;
 }
 
@@ -627,6 +666,9 @@ int NativeControlObject::updateLeft()
 PROP_SETGET(setBottom)
 int NativeControlObject::setBottom(TiObject* obj)
 {
+    updateLayoutProperty(Bottom, obj);
+
+    /*
     Q_ASSERT(container_ != NULL);
     Q_ASSERT(obj != NULL);
     obj->addRef();
@@ -643,6 +685,8 @@ int NativeControlObject::setBottom(TiObject* obj)
     {
         bottomIsUpdated_ = true;
     }
+    */
+
     return NATIVE_ERROR_OK;
 }
 
@@ -678,6 +722,9 @@ int NativeControlObject::setCancel(TiObject* /*obj*/)
 PROP_SETGET(setRight)
 int NativeControlObject::setRight(TiObject* obj)
 {
+    updateLayoutProperty(Right, obj);
+
+    /*
     Q_ASSERT(container_ != NULL);
     Q_ASSERT(obj != NULL);
     obj->addRef();
@@ -694,6 +741,8 @@ int NativeControlObject::setRight(TiObject* obj)
     {
         rightIsUpdated_ = true;
     }
+    */
+
     return NATIVE_ERROR_OK;
 }
 
@@ -795,6 +844,9 @@ int NativeControlObject::setTitle(TiObject*)
 PROP_SETGET(setTop)
 int NativeControlObject::setTop(TiObject* obj)
 {
+    updateLayoutProperty(Top, obj);
+
+    /*
     Q_ASSERT(container_ != NULL);
     Q_ASSERT(obj != NULL);
     obj->addRef();
@@ -811,6 +863,8 @@ int NativeControlObject::setTop(TiObject* obj)
     {
         topIsUpdated_ = true;
     }
+    */
+
     return NATIVE_ERROR_OK;
 }
 
@@ -877,6 +931,9 @@ int NativeControlObject::getSize(TiObject* obj)
 PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
+    updateLayoutProperty(Width, obj);
+
+    /*
     Q_ASSERT(container_ != NULL);
     Q_ASSERT(obj != NULL);
     obj->addRef();
@@ -893,6 +950,8 @@ int NativeControlObject::setWidth(TiObject* obj)
     {
         widthIsUpdated_ = true;
     }
+    */
+
     return NATIVE_ERROR_OK;
 }
 

@@ -14,6 +14,8 @@
 #include <bb/cascades/TouchEvent>
 #include <QRect>
 
+#include <Layout/Node.h>
+
 
 class QString;
 class TiObject;
@@ -140,12 +142,15 @@ protected:
                          float zindex, bool zindexIsDefined);
     static QString getResourcePath(const QString& path);
 
+    struct Node layoutNode_;
+
 private:
     friend class NativePageObject;
     friend class NativeWindowObject; // TODO(josh): we shouldn't have to abuse friends this way.
 
     static int getMeasurementInfo(TiObject* obj, float maxPixels, float dotsPerMillimeter,
                                   float* calculatedValue, bool* isAuto);
+    void updateLayoutProperty(ValueName name, TiObject* val);
     void updateViewLayout();
     int updateHeight();
     int updateWidth();

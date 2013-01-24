@@ -157,6 +157,10 @@ int NativeWindowObject::initialize()
     layout_ = new AbsoluteLayoutProperties;
     container_->setLayoutProperties(layout_);
 
+    // TODO(josh): query display size
+    layoutNode_.element._measuredWidth = 400;
+    layoutNode_.element._measuredHeight = 400;
+
     return NATIVE_ERROR_OK;
 }
 
