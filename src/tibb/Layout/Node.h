@@ -10,11 +10,16 @@ struct Node {
     struct Node *firstChild, *lastChild;
     struct Element element;
     struct LayoutProperties properties;
+    int flags;
+
+    void(*onLayout)(struct Node*);
+    void* data;
 };
 
 void nodeInitialize(struct Node* node);
 void nodeAddChild(struct Node* parent, struct Node* child);
 void nodeRemoveChild(struct Node* parent, struct Node* child);
-void nodeRequestLayout(struct Node* node);
+struct Node* nodeRequestLayout(struct Node* node);
+void nodeLayout(struct Node* root);
 
 #endif
