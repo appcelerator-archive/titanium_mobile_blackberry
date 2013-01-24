@@ -12,16 +12,16 @@
 
 enum ValueType _getValueType(std::string value) {
 	if (value == "UI.SIZE") {
-		return size;
+		return Size;
 	}
 	else if (value == "UI.FILL") {
-		return fill;
+		return Fill;
 	}
 	else if (value.find("%") != std::string::npos) {
-		return percent;
+		return Percent;
     }
     else {
-    	return fixed;
+    	return Fixed;
     }
 }
 
@@ -29,10 +29,10 @@ double _computeValue(std::string value, enum ValueType valueType, double dpi) {
 	std::string units;
 	double parsedValue;
 
-	if (valueType == percent) {
+	if (valueType == Percent) {
 		return atof(value.c_str()) / 100;
 	}
-	else if (valueType == fixed) {
+	else if (valueType == Fixed) {
 	  if ((value.find("mm") != std::string::npos) && (value.find("cm") != std::string::npos) &&
 			  (value.find("em") != std::string::npos) && (value.find("pt") != std::string::npos) &&
 			  (value.find("in") != std::string::npos) && (value.find("px") != std::string::npos) &&
@@ -73,61 +73,61 @@ double _computeValue(std::string value, enum ValueType valueType, double dpi) {
 
 void populateLayoutPoperties(struct InputProperty inputProperty, struct LayoutProperties* layoutProperties, double dpi) {
 
-	if (inputProperty.name == minHeight) {
+	if (inputProperty.name == MinHeight) {
 		(*layoutProperties).minHeight.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).minHeight.value = _computeValue(inputProperty.value,
 												(*layoutProperties).minHeight.valueType, dpi);
 	}
 
-	if (inputProperty.name == minWidth) {
+	if (inputProperty.name == MinWidth) {
 		(*layoutProperties).minWidth.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).minWidth.value = _computeValue(inputProperty.value,
 												(*layoutProperties).minWidth.valueType, dpi);
 	}
 
-	if (inputProperty.name == width) {
+	if (inputProperty.name == Width) {
 		(*layoutProperties).width.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).width.value = _computeValue(inputProperty.value,
 												(*layoutProperties).width.valueType, dpi);
 	}
 
-	if (inputProperty.name == height) {
+	if (inputProperty.name == Height) {
 		(*layoutProperties).height.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).height.value = _computeValue(inputProperty.value,
 												(*layoutProperties).height.valueType, dpi);
 	}
 
-	if (inputProperty.name == left) {
+	if (inputProperty.name == Left) {
 		(*layoutProperties).left.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).left.value = _computeValue(inputProperty.value,
 												(*layoutProperties).left.valueType, dpi);
 	}
 
-	if (inputProperty.name == centerX) {
+	if (inputProperty.name == CenterX) {
 		(*layoutProperties).centerX.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).centerX.value = _computeValue(inputProperty.value,
 												(*layoutProperties).centerX.valueType, dpi);
 	}
 
-	if (inputProperty.name == centerY) {
+	if (inputProperty.name == CenterY) {
 		(*layoutProperties).centerY.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).centerY.value = _computeValue(inputProperty.value,
 												(*layoutProperties).centerY.valueType, dpi);
 	}
 
-	if (inputProperty.name == right) {
+	if (inputProperty.name == Right) {
 		(*layoutProperties).right.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).right.value = _computeValue(inputProperty.value,
 												(*layoutProperties).right.valueType, dpi);
 	}
 
-	if (inputProperty.name == top) {
+	if (inputProperty.name == Top) {
 		(*layoutProperties).top.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).top.value = _computeValue(inputProperty.value,
 												(*layoutProperties).top.valueType, dpi);
 	}
 
-	if (inputProperty.name == bottom) {
+	if (inputProperty.name == Bottom) {
 		(*layoutProperties).bottom.valueType = _getValueType(inputProperty.value);
 		(*layoutProperties).bottom.value = _computeValue(inputProperty.value,
 												(*layoutProperties).bottom.valueType, dpi);
@@ -135,16 +135,16 @@ void populateLayoutPoperties(struct InputProperty inputProperty, struct LayoutPr
 }
 
 void layoutPropertiesInitialize(struct LayoutProperties* layoutProperties) {
-	(*layoutProperties).top.valueType = undefined;
-	(*layoutProperties).bottom.valueType = undefined;
-	(*layoutProperties).left.valueType = undefined;
-	(*layoutProperties).right.valueType = undefined;
-	(*layoutProperties).width.valueType = undefined;
-	(*layoutProperties).minWidth.valueType = undefined;
-	(*layoutProperties).height.valueType = undefined;
-	(*layoutProperties).minHeight.valueType = undefined;
-	(*layoutProperties).centerX.valueType = undefined;
-	(*layoutProperties).centerY.valueType = undefined;
+	(*layoutProperties).top.valueType = None;
+	(*layoutProperties).bottom.valueType = None;
+	(*layoutProperties).left.valueType = None;
+	(*layoutProperties).right.valueType = None;
+	(*layoutProperties).width.valueType = None;
+	(*layoutProperties).minWidth.valueType = None;
+	(*layoutProperties).height.valueType = None;
+	(*layoutProperties).minHeight.valueType = None;
+	(*layoutProperties).centerX.valueType = None;
+	(*layoutProperties).centerY.valueType = None;
 }
 
 

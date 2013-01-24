@@ -148,60 +148,60 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
 	double x1 = 0;
 	double x2 = 0;
 	double x3 = 0;
-	if (widthType == size) {
+	if (widthType == Size) {
 		x1 = x2 = NAN;
-	} else if (widthType == fill) {
+	} else if (widthType == Fill) {
 		x1 = 1;
-		if (widthType == percent) {
+		if (widthType == Percent) {
 			x1 -= leftValue;
-		} else if (widthType == fixed) {
+		} else if (widthType == Fixed) {
 			x2 = -leftValue;
-		} else if (rightType == percent) {
+		} else if (rightType == Percent) {
 			x1 -= rightValue;
-		} else if (rightType == fixed) {
+		} else if (rightType == Fixed) {
 			x2 = -rightValue;
 		}
-	} else if (widthType == percent) {
+	} else if (widthType == Percent) {
 		x1 = widthValue;
-	} else if (widthType == fixed) {
+	} else if (widthType == Fixed) {
 		x2 = widthValue;
-	} else if (widthType == percent) {
-		if (centerXType == percent) {
+	} else if (widthType == Percent) {
+		if (centerXType == Percent) {
 			x1 = 2 * (centerXValue - leftValue);
-		} else if (centerXType == fixed) {
+		} else if (centerXType == Fixed) {
 			x1 = -2 * leftValue;
 			x2 = 2 * centerXValue;
-		} else if (rightType == percent) {
+		} else if (rightType == Percent) {
 			x1 = 1 - leftValue - rightValue;
-		} else if (rightType == fixed) {
+		} else if (rightType == Fixed) {
 			x1 = 1 - leftValue;
 			x2 = -rightValue;
 		}
-	} else if (widthType == fixed) {
-		if (centerXType == percent) {
+	} else if (widthType == Fixed) {
+		if (centerXType == Percent) {
 			x1 = 2 * centerXValue;
 			x2 = -2 * leftValue;
-		} else if (centerXType == fixed) {
+		} else if (centerXType == Fixed) {
 			x2 = 2 * (centerXValue - leftValue);
-		} else if (rightType == percent) {
+		} else if (rightType == Percent) {
 			x1 = 1 - rightValue;
 			x2 = -leftValue;
-		} else if (rightType == fixed) {
+		} else if (rightType == Fixed) {
 			x1 = 1;
 			x2 = -rightValue - leftValue;
 		}
-	} else if (centerXType == percent) {
-		if (rightType == percent) {
+	} else if (centerXType == Percent) {
+		if (rightType == Percent) {
 			x1 = 2 * (rightValue - centerXValue);
-		} else if (rightType == fixed) {
+		} else if (rightType == Fixed) {
 			x1 = -2 * centerXValue;
 			x2 = 2 * rightValue;
 		}
-	} else if (centerXType == fixed) {
-		if (rightType == percent) {
+	} else if (centerXType == Fixed) {
+		if (rightType == Percent) {
 			x1 = 2 * rightValue;
 			x2 = -2 * centerXValue;
-		} else if (rightType == fixed) {
+		} else if (rightType == Fixed) {
 			x2 = 2 * (rightValue - centerXValue);
 		}
 	}
@@ -210,60 +210,60 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
 	(*element)._layoutCoefficients.width.x2 = x2;
 
 	x1 = x2 = 0;
-	if (heightType == size) {
+	if (heightType == Size) {
 		x1 = x2 = NAN;
-	} else if (heightType == fill) {
+	} else if (heightType == Fill) {
 		x1 = 1;
-		if (topType == percent) {
+		if (topType == Percent) {
 			x1 -= topValue;
-		} else if (topType == fixed) {
+		} else if (topType == Fixed) {
 			x2 = -topValue;
-		} else if (bottomType == percent) {
+		} else if (bottomType == Percent) {
 			x1 -= bottomValue;
-		} else if (bottomType == fixed) {
+		} else if (bottomType == Fixed) {
 			x2 = -bottomValue;
 		}
-	} else if (heightType == percent) {
+	} else if (heightType == Percent) {
 		x1 = heightValue;
-	} else if (heightType == fixed) {
+	} else if (heightType == Fixed) {
 		x2 = heightValue;
-	} else if (topType == percent) {
-		if (centerYType == percent) {
+	} else if (topType == Percent) {
+		if (centerYType == Percent) {
 			x1 = 2 * (centerYValue - topValue);
-		} else if (centerYType == fixed) {
+		} else if (centerYType == Fixed) {
 			x1 = -2 * topValue;
 			x2 = 2 * centerYValue;
-		} else if (bottomType == percent) {
+		} else if (bottomType == Percent) {
 			x1 = 1 - topValue - bottomValue;
-		} else if (bottomType == fixed) {
+		} else if (bottomType == Fixed) {
 			x1 = 1 - topValue;
 			x2 = -bottomValue;
 		}
-	} else if (topType == fixed) {
-		if (centerYType == percent) {
+	} else if (topType == Fixed) {
+		if (centerYType == Percent) {
 			x1 = 2 * centerYValue;
 			x2 = -2 * topValue;
-		} else if (centerYType == fixed) {
+		} else if (centerYType == Fixed) {
 			x2 = 2 * (centerYValue - topValue);
-		} else if (bottomType == percent) {
+		} else if (bottomType == Percent) {
 			x1 = 1 - bottomValue;
 			x2 = -topValue;
-		} else if (bottomType == fixed) {
+		} else if (bottomType == Fixed) {
 			x1 = 1;
 			x2 = -bottomValue - topValue;
 		}
-	} else if (centerYType == percent) {
-		if (bottomType == percent) {
+	} else if (centerYType == Percent) {
+		if (bottomType == Percent) {
 			x1 = 2 * (bottomValue - centerYValue);
-		} else if (bottomType == fixed) {
+		} else if (bottomType == Fixed) {
 			x1 = -2 * centerYValue;
 			x2 = 2 * bottomValue;
 		}
-	} else if (centerYType == fixed) {
-		if (bottomType == percent) {
+	} else if (centerYType == Fixed) {
+		if (bottomType == Percent) {
 			x1 = 2 * bottomValue;
 			x2 = -2 * centerYValue;
-		} else if (bottomType == fixed) {
+		} else if (bottomType == Fixed) {
 			x2 = 2 * (bottomValue - centerYValue);
 		}
 	}
@@ -272,22 +272,22 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
 	(*element)._layoutCoefficients.height.x2 = x2;
 
 	x1 = x2 = x3 = 0;
-	if (minWidthType == size) {
+	if (minWidthType == Size) {
 		x1 = x2 = NAN;
-	} else if (minWidthType == fill) {
+	} else if (minWidthType == Fill) {
 		x1 = 1;
-		if (leftType == percent) {
+		if (leftType == Percent) {
 			x1 -= leftValue;
-		} else if (leftType == fixed) {
+		} else if (leftType == Fixed) {
 			x2 = -leftValue;
-		} else if (rightType == percent) {
+		} else if (rightType == Percent) {
 			x1 -= rightValue;
-		} else if (rightType == fixed) {
+		} else if (rightType == Fixed) {
 			x2 = -rightValue;
 		}
-	} else if (minWidthType == percent) {
+	} else if (minWidthType == Percent) {
 		x1 = minWidthValue;
-	} else if (minWidthType == fixed) {
+	} else if (minWidthType == Fixed) {
 		x2 = minWidthValue;
 	} else {
 		x1 = x2 = x3 = NAN;
@@ -298,22 +298,22 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
     (*element)._layoutCoefficients.minWidth.x3 = x3;
 
     x1 = x2 = x3 = 0;
-	if (minHeightType == size) {
+	if (minHeightType == Size) {
 		x1 = x2 = NAN;
-	} else if (minHeightType == fill) {
+	} else if (minHeightType == Fill) {
 		x1 = 1;
-		if (topType == percent) {
+		if (topType == Percent) {
 			x1 -= topValue;
-		} else if (topType == fixed) {
+		} else if (topType == Fixed) {
 			x2 = -topValue;
-		} else if (bottomType == percent) {
+		} else if (bottomType == Percent) {
 			x1 -= bottomValue;
-		} else if (bottomType == fixed) {
+		} else if (bottomType == Fixed) {
 			x2 = -bottomValue;
 		}
-	} else if (minHeightType == percent) {
+	} else if (minHeightType == Percent) {
 		x1 = minHeightValue;
-	} else if (minHeightType == fixed) {
+	} else if (minHeightType == Fixed) {
 		x2 = minHeightValue;
 	} else {
 		x1 = x2 = x3 = NAN;
@@ -324,30 +324,30 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
 	(*element)._layoutCoefficients.minHeight.x3 = x3;
 
 	x1 = x2 = x3 = 0;
-	if (leftType == percent) {
+	if (leftType == Percent) {
 		x1 = leftValue;
-	} else if(leftType == fixed) {
+	} else if(leftType == Fixed) {
 		x3 = leftValue;
-	} else if (centerXType == percent) {
+	} else if (centerXType == Percent) {
 		x1 = centerXValue;
 		x2 = -0.5;
-	} else if (centerXType == fixed) {
+	} else if (centerXType == Fixed) {
 		x2 = -0.5;
 		x3 = centerXValue;
-	} else if (rightType == percent) {
+	} else if (rightType == Percent) {
 		x1 = 1 - rightValue;
 		x2 = -1;
-	} else if (rightType == fixed) {
+	} else if (rightType == Fixed) {
 		x1 = 1;
 		x2 = -1;
 		x3 = -rightValue;
 	} else {
 		switch((*element)._defaultHorizontalAlignment) {
-			case center:
+			case Center:
 				x1 = 0.5;
 				x2 = -0.5;
 				break;
-			case end:
+			case End:
 				x1 = 1;
 				x2 = -1;
 			break;
@@ -359,30 +359,30 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
 	(*element)._layoutCoefficients.left.x3 = x3;
 
 	x1 = x2 = x3 = 0;
-	if (topType == percent) {
+	if (topType == Percent) {
 		x1 = topValue;
-	} else if(topType == fixed) {
+	} else if(topType == Fixed) {
 		x3 = topValue;
-	} else if (centerYType == percent) {
+	} else if (centerYType == Percent) {
 		x1 = centerYValue;
 		x2 = -0.5;
-	} else if (centerYType == fixed) {
+	} else if (centerYType == Fixed) {
 		x2 = -0.5;
 		x3 = centerYValue;
-	} else if (bottomType == percent) {
+	} else if (bottomType == Percent) {
 		x1 = 1 - bottomValue;
 		x2 = -1;
-	} else if (bottomType == fixed) {
+	} else if (bottomType == Fixed) {
 		x1 = 1;
 		x2 = -1;
 		x3 = -bottomValue;
 	} else {
 		switch((*element)._defaultVerticalAlignment) {
-			case center:
+			case Center:
 				x1 = 0.5;
 				x2 = -0.5;
 				break;
-			case end:
+			case End:
 				x1 = 1;
 				x2 = -1;
 				break;
@@ -394,8 +394,8 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
     (*element)._layoutCoefficients.top.x3 = x3;
 
 	// Sandbox width/height rule evaluation
-	(*element)._layoutCoefficients.sandboxWidth.x1 = (rightType == percent ? rightValue : 0);
-	(*element)._layoutCoefficients.sandboxWidth.x2 = (rightType == fixed ? rightValue : 0);
-	(*element)._layoutCoefficients.sandboxHeight.x1 = (bottomType == percent ? bottomValue : 0);
-	(*element)._layoutCoefficients.sandboxHeight.x2 = (bottomType == fixed ? bottomValue : 0);
+	(*element)._layoutCoefficients.sandboxWidth.x1 = (rightType == Percent ? rightValue : 0);
+	(*element)._layoutCoefficients.sandboxWidth.x2 = (rightType == Fixed ? rightValue : 0);
+	(*element)._layoutCoefficients.sandboxHeight.x1 = (bottomType == Percent ? bottomValue : 0);
+	(*element)._layoutCoefficients.sandboxHeight.x2 = (bottomType == Fixed ? bottomValue : 0);
 }

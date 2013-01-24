@@ -22,13 +22,13 @@ ComputedSize layoutNode(struct Element* element, double width, double height, bo
 	ComputedSize computedSize;
 
 	switch ((*element)._layoutType) {
-		case composite:
+		case Composite:
 			computedSize = doCompositeLayout((*element)._children, width, height, isWidthSize, isHeightSize);
 			break;
-		case horizontal:
+		case Horizontal:
 			computedSize = doHorizontalLayout((*element)._children, width, height, isWidthSize, isHeightSize);
 			break;
-		case vertical:
+		case Vertical:
 			computedSize = doVerticalLayout((*element)._children, width, height, isWidthSize, isHeightSize);
 			break;
 	}

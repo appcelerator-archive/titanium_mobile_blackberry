@@ -1,11 +1,13 @@
 #include "Node.h"
 
+#include <string.h>
+
 #include "Common.h"
 #include "Composite.h"
 
 void nodeInitialize(struct Node* node) {
     memset(node, 0, sizeof(struct Node));
-    elementInitialize(&node->element, composite);  // TODO(josh): expose layout type
+    elementInitialize(&node->element, Composite);  // TODO(josh): expose layout type
     layoutPropertiesInitialize(&node->properties);
 }
 
@@ -42,7 +44,6 @@ void nodeRequestLayout(struct Node* node) {
     measureNodeForCompositeLayout(node->properties, &node->element);
 
     while (node->parent) {
-      printf("found parent\n");
       node = (Node*) node->parent;
     }
 

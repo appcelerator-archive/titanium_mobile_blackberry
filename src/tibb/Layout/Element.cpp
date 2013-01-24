@@ -36,9 +36,9 @@ void elementInitialize(struct Element* element, enum LayoutType layoutType) {
     (*element)._layoutCoefficients.top.x2 = NAN;
     (*element)._layoutCoefficients.top.x3 = NAN;
     (*element)._layoutType = layoutType;
-    (*element)._defaultRowAlignment = start;
-    (*element)._defaultHorizontalAlignment = center;
-    (*element)._defaultVerticalAlignment = center;
+    (*element)._defaultRowAlignment = Start;
+    (*element)._defaultHorizontalAlignment = Center;
+    (*element)._defaultVerticalAlignment = Center;
 }
 
 void addChildElement(Element* parent, Element* child) {
