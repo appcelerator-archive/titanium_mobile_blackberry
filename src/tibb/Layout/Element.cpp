@@ -5,6 +5,7 @@
  *      Author: rmcmahon
  */
 
+#include <algorithm>
 #include <stdlib.h>
 #include <stdio.h>
 #include "Element.h"
@@ -42,10 +43,18 @@ void elementInitialize(struct Element* element, enum LayoutType layoutType) {
 }
 
 void addChildElement(Element* parent, Element* child) {
+    if (NULL == parent || NULL == child) {
+       printf("\n Element add child failed \n");
+    }
 
-	if (NULL == parent || NULL == child) {
-	   printf("\n Element add child failed \n");
-	}
-
-	(*parent)._children.push_back(child);
+    (*parent)._children.push_back(child);
 }
+
+void removeChildElement(struct Element* parent, struct Element* child) {
+    std::vector<struct Element*>::iterator i;
+    i = std::find(parent->_children.begin(), parent->_children.end(), child);
+    if (i != parent->_children.end()) {
+        parent->_children.erase(i);
+    }
+}
+

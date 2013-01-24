@@ -37,6 +37,7 @@ struct Element {
 };
 
 void elementInitialize(struct Element* element, enum LayoutType);
-void addChildElement(Element*, Element*);
+void addChildElement(struct Element* parent, struct Element* child);
+void removeChildElement(struct Element* parent, struct Element* child);
 
 #endif /* ELEMENT_H_ */

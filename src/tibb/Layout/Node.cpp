@@ -24,7 +24,7 @@ void nodeAddChild(struct Node* parent, struct Node* child) {
     }
     parent->lastChild = child;
 
-    parent->element._children.push_back(&child->element);
+    addChildElement(&parent->element, &child->element);
 }
 
 void nodeRemoveChild(struct Node* parent, struct Node* child) {
@@ -40,7 +40,7 @@ void nodeRemoveChild(struct Node* parent, struct Node* child) {
         parent->lastChild = child->prev;
     }
 
-    // TODO(josh): remove element from parent
+    removeChildElement(&parent->element, &child->element);
 }
 
 struct Node* nodeRequestLayout(struct Node* node) {
