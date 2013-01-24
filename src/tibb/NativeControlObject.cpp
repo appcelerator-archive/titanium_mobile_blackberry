@@ -137,6 +137,19 @@ const static UnitTypeData g_unitTypes[] =
     {UnitTypeAuto, "auto"}
 };
 
+static void onPostLayout(struct Node* node) {
+    bb::cascades::Control* control = static_cast<bb::cascades::Control*>(node->data);
+    float width = node->element._measuredWidth,
+          height = node->element._measuredHeight;
+    control->setMinWidth(width);
+    control->setMaxWidth(width);
+    control->setMinHeight(height);
+    control->setMaxHeight(height);
+    bb::cascades::AbsoluteLayoutProperties* layoutProperties = static_cast<bb::cascades::AbsoluteLayoutProperties*>(control->layoutProperties());
+    layoutProperties->setPositionX(node->element._measuredLeft);
+    layoutProperties->setPositionY(node->element._measuredTop);
+}
+
 NativeControlObject::NativeControlObject(TiObject* tiObject) :
     NativeProxyObject(tiObject),
     container_(NULL),
@@ -223,6 +236,9 @@ void NativeControlObject::setControl(bb::cascades::Control* control)
     layoutHandler_ = new NativeLayoutHandler(this);
     bb::cascades::LayoutUpdateHandler::create(container_).onLayoutFrameChanged(layoutHandler_, SLOT(handleLayoutFrameUpdated(QRectF)));
     control_ = control;
+
+    layoutNode_.onLayout = onPostLayout;
+    layoutNode_.data = container_;
 }
 
 void NativeControlObject::setupEvents(TiEventContainerFactory* containerFactory)
@@ -253,6 +269,10 @@ int NativeControlObject::addChildImpl(NativeObject* obj)
     Q_ASSERT(container_ != NULL);
     bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
     nodeAddChild(&layoutNode_, &((NativeControlObject*) obj)->layoutNode_);
+    struct Node* root = nodeRequestLayout(&layoutNode_);
+    if (root) {
+        nodeLayout(root);
+    }
     TiObject* tmpObj = new TiObject;
     obj->getPropertyValue(N_PROP_ZINDEX, tmpObj);
     Handle<Value> zindex = tmpObj->getValue();
@@ -369,19 +389,10 @@ void NativeControlObject::updateLayoutProperty(ValueName name, TiObject* val) {
     // TODO(josh): query the real DPI value from hardware.
     populateLayoutPoperties(property, &layoutNode_.properties, 96);
 
-    // TODO(josh): move measuring into layout passes?
-    measureNodeForCompositeLayout(layoutNode_.properties, &layoutNode_.element);
-
-    nodeRequestLayout(&layoutNode_);
-
-    float width = layoutNode_.element._measuredWidth,
-          height = layoutNode_.element._measuredHeight;
-    container_->setMinWidth(width);
-    container_->setMaxWidth(width);
-    container_->setMinHeight(height);
-    container_->setMaxHeight(height);
-    layout_->setPositionX(layoutNode_.element._measuredLeft);
-    layout_->setPositionY(layoutNode_.element._measuredTop);
+    struct Node* root = nodeRequestLayout(&layoutNode_);
+    if (root) {
+        nodeLayout(root);
+    }
 }
 
 void NativeControlObject::updateViewLayout()
