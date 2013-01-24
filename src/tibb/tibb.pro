@@ -8,7 +8,13 @@ INCLUDEPATH += \
 	. \
 	./include \
 	../../runtime/v8/include
-SOURCES += ./*.cpp
+SOURCES += \
+	./*.cpp \
+	./Layout/Common.cpp \
+	./Layout/Composite.cpp \
+	./Layout/Element.cpp \
+	./Layout/Node.cpp \
+	./Layout/ParseProperty.cpp
 HEADERS += ./*.h
 
 device {
