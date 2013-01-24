@@ -36,7 +36,7 @@ struct Element {
     bool _childrenLaidOut;
 };
 
-struct Element* createElement(enum LayoutType);
+void elementInitialize(struct Element* element, enum LayoutType);
 void addChildElement(Element*, Element*);
 
 #endif /* ELEMENT_H_ */
