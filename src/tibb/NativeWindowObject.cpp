@@ -55,7 +55,6 @@ void NativeWindowObject::open()
     }
 
     if (group == NULL) {
-        fprintf(stderr, "creating page scene.\n");
         scene = new PageScene();
         sceneManager->presentScene(scene);
         group = scene->windowGroup();
