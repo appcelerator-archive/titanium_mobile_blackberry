@@ -36,8 +36,8 @@ ComputedSize layoutNode(struct Element* element, double width, double height, bo
   return computedSize;
 }
 
-void measureNode(struct LayoutProperties* properties, struct Element* element) {
-  switch ((*element)._layoutType) {
+void measureNode(enum LayoutType type, struct LayoutProperties* properties, struct Element* element) {
+  switch (type) {
     case Composite:
       measureNodeForCompositeLayout(*properties, element);
       break;

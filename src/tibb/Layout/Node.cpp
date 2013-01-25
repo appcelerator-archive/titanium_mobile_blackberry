@@ -9,8 +9,18 @@
 
 void nodeInitialize(struct Node* node) {
     memset(node, 0, sizeof(struct Node));
-    elementInitialize(&node->element, Composite);  // TODO(josh): expose layout type
+    elementInitialize(&node->element, Composite);
     layoutPropertiesInitialize(&node->properties);
+}
+
+void nodeSetLayoutType(struct Node* node, const char* type) {
+    if(!strcmp("composite", type)) {
+        node->element._layoutType = Composite;
+    } else if (!strcmp("horizontal", type)) {
+        node->element._layoutType = Horizontal;
+    } else if (!strcmp("vertical", type)) {
+        node->element._layoutType = Vertical;
+    }
 }
 
 void nodeAddChild(struct Node* parent, struct Node* child) {
@@ -59,19 +69,21 @@ struct Node* nodeRequestLayout(struct Node* node) {
     return node;
 }
 
-static void measureNode(struct Node* node) {
-    // TODO(josh): move into layout pass?
-    node->flags &= ~FLAG_REQ_LAYOUT;
+static void measureNodes(enum LayoutType type, struct Node* node) {
+    while(node) {
+        // TODO(josh): Clear this flag during layout pass.
+        node->flags &= ~FLAG_REQ_LAYOUT;
 
-    if ((node->flags & FLAG_INVALID) == FLAG_INVALID) {
-        node->flags &= ~FLAG_INVALID;
-        measureNode(&node->properties, &node->element);
-    }
+        if ((node->flags & FLAG_INVALID) == FLAG_INVALID) {
+            node->flags &= ~FLAG_INVALID;
+            measureNode(type, &node->properties, &node->element);
+        }
 
-    struct Node* child = node->firstChild;
-    while (child) {
-        measureNode(child);
-        child = child->next;
+        if (node->firstChild) {
+            measureNodes(node->element._layoutType, node->firstChild);
+        }
+
+        node = node->next;
     }
 }
 
@@ -88,18 +100,23 @@ static void invokeLayoutCallback(struct Node* node) {
 }
 
 void nodeLayout(struct Node* root) {
-    struct Node* parent;
+    // TODO(josh): remove once layout clears this flag.
+    root->flags &= ~FLAG_REQ_LAYOUT;
 
-    // Pass 1 - measure any invalid nodes
-    measureNode(root);
+    if (!root->firstChild) {
+        return;
+    }
 
-    // Pass 2 - layout nodes
+    // Pass 1 - Measure any invalidated child nodes.
+    measureNodes(root->element._layoutType, root->firstChild);
+
+    // Pass 2 - Layout out children.
     layoutNode(&root->element,
                root->element._measuredWidth,
                root->element._measuredHeight,
                false,
                false);
 
-    // Pass 3 - Invoke layout callbacks
+    // Pass 3 - Invoke post layout callbacks.
     invokeLayoutCallback(root);
 }

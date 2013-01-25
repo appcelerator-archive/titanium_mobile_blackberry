@@ -43,6 +43,6 @@ struct LayoutCoefficients {
 bool isNaN(float);
 ComputedSize layoutNode(struct Element*, double, double, bool, bool);
 
-void measureNode(struct LayoutProperties* properties, struct Element* element);
+void measureNode(enum LayoutType type, struct LayoutProperties* properties, struct Element* element);
 
 #endif /* COMMON_H_ */

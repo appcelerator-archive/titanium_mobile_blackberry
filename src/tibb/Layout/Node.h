@@ -17,6 +17,7 @@ struct Node {
 };
 
 void nodeInitialize(struct Node* node);
+void nodeSetLayoutType(struct Node* node, const char* type);
 void nodeAddChild(struct Node* parent, struct Node* child);
 void nodeRemoveChild(struct Node* parent, struct Node* child);
 struct Node* nodeRequestLayout(struct Node* node);
