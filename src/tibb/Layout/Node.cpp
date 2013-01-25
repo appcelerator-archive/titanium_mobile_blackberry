@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include "Common.h"
-#include "Composite.h"
 
 #define FLAG_INVALID    0x01  // Node layout properties have been updated since last layout pass.
 #define FLAG_REQ_LAYOUT 0x02  // Layout has been request for this node and its children.
@@ -66,7 +65,7 @@ static void measureNode(struct Node* node) {
 
     if ((node->flags & FLAG_INVALID) == FLAG_INVALID) {
         node->flags &= ~FLAG_INVALID;
-        measureNodeForCompositeLayout(node->properties, &node->element); // TODO(josh): support other layout types
+        measureNode(&node->properties, &node->element);
     }
 
     struct Node* child = node->firstChild;
