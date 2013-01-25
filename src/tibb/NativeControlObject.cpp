@@ -299,6 +299,11 @@ int NativeControlObject::removeChildNativeObject(NativeObject* obj)
 int NativeControlObject::removeChildImpl(NativeObject* obj)
 {
     Q_ASSERT(container_ != NULL);
+    nodeRemoveChild(&layoutNode_, &((NativeControlObject*) obj)->layoutNode_);
+    struct Node* root = nodeRequestLayout(&layoutNode_);
+    if (root) {
+        nodeLayout(root);
+    }
     bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
     container_->remove(control);
     control->setParent(NULL);
