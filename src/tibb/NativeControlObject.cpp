@@ -634,6 +634,12 @@ int NativeControlObject::setLabel(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setLayout)
+int NativeControlObject::setLayout(TiObject* obj)
+{
+    nodeSetLayoutType(&layoutNode_, *String::Utf8Value(obj->getValue()));
+}
+
 PROP_SETGET(setLeft)
 int NativeControlObject::setLeft(TiObject* obj)
 {
@@ -1097,6 +1103,7 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_ICON, PROP_SETGET_FUNCTION(setIcon), NULL},
     {N_PROP_IMAGE, PROP_SETGET_FUNCTION(setImage), NULL},
     {N_PROP_LABEL, PROP_SETGET_FUNCTION(setLabel), NULL},
+    {N_PROP_LAYOUT, PROP_SETGET_FUNCTION(setLayout), NULL},
     {N_PROP_LEFT, PROP_SETGET_FUNCTION(setLeft), NULL},
     {N_PROP_MAX, PROP_SETGET_FUNCTION(setMax), NULL},
     {N_PROP_MAXDATE, PROP_SETGET_FUNCTION(setMaxDate), NULL},
