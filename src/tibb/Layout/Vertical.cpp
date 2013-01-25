@@ -130,60 +130,60 @@ void measureNodeForVerticalLayout(struct LayoutProperties layoutProperties, stru
 	double x3 = 0;
 
 	// Width rule evaluation
-	if (widthType == size) {
+	if (widthType == Size) {
 		x1 = x2 = NAN;
-	} else if (widthType == fill) {
+	} else if (widthType == Fill) {
 		x1 = 1;
-		if (leftType == percent) {
+		if (leftType == Percent) {
 			x1 -= leftValue;
-		} else if (leftType == fixed) {
+		} else if (leftType == Fixed) {
 			x2 = -leftValue;
-		} else if (rightType == percent) {
+		} else if (rightType == Percent) {
 			x1 -= rightValue;
-		} else if (rightType == fixed) {
+		} else if (rightType == Fixed) {
 			x2 = -rightValue;
 		}
-	} else if (widthType == percent) {
+	} else if (widthType == Percent) {
 		x1 = widthValue;
-	} else if (widthType == fixed) {
+	} else if (widthType == Fixed) {
 		x2 = widthValue;
-	} else if (leftType == percent) {
-		if (centerXType == percent) {
+	} else if (leftType == Percent) {
+		if (centerXType == Percent) {
 			x1 = 2 * (centerXValue - leftValue);
-		} else if (centerXType == fixed) {
+		} else if (centerXType == Fixed) {
 			x1 = -2 * leftValue;
 			x2 = 2 * centerXValue;
-		} else if (rightType == percent) {
+		} else if (rightType == Percent) {
 			x1 = 1 - leftValue - rightValue;
-		} else if (rightType == fixed) {
+		} else if (rightType == Fixed) {
 			x1 = 1 - leftValue;
 			x2 = -rightValue;
 		}
-	} else if (leftType == fixed) {
-		if (centerXType == percent) {
+	} else if (leftType == Fixed) {
+		if (centerXType == Percent) {
 			x1 = 2 * centerXValue;
 			x2 = -2 * leftValue;
-		} else if (centerXType == fixed) {
+		} else if (centerXType == Fixed) {
 			x2 = 2 * (centerXValue - leftValue);
-		} else if (rightType == percent) {
+		} else if (rightType == Percent) {
 			x1 = 1 - rightValue;
 			x2 = -leftValue;
-		} else if (rightType == fixed) {
+		} else if (rightType == Fixed) {
 			x1 = 1;
 			x2 = -rightValue - leftValue;
 		}
-	} else if (centerXType == percent) {
-		if (rightType == percent) {
+	} else if (centerXType == Percent) {
+		if (rightType == Percent) {
 			x1 = 2 * (rightValue - centerXValue);
-		} else if (rightType == fixed) {
+		} else if (rightType == Fixed) {
 			x1 = -2 * centerXValue;
 			x2 = 2 * rightValue;
 		}
-	} else if (centerXType == fixed) {
-		if (rightType == percent) {
+	} else if (centerXType == Fixed) {
+		if (rightType == Percent) {
 			x1 = 2 * rightValue;
 			x2 = -2 * centerXValue;
-		} else if (rightType == fixed) {
+		} else if (rightType == Fixed) {
 			x2 = 2 * (rightValue - centerXValue);
 		}
 	}
@@ -191,22 +191,22 @@ void measureNodeForVerticalLayout(struct LayoutProperties layoutProperties, stru
 	(*element)._layoutCoefficients.width.x2 = x2;
 
 	// Sandbox width/height rule evaluation
-	(*element)._layoutCoefficients.sandboxWidth.x1 = rightType == percent ? rightValue : 0;
-	(*element)._layoutCoefficients.sandboxWidth.x2 = rightType == fixed ? rightValue : 0;
+	(*element)._layoutCoefficients.sandboxWidth.x1 = rightType == Percent ? rightValue : 0;
+	(*element)._layoutCoefficients.sandboxWidth.x2 = rightType == Fixed ? rightValue : 0;
 
 	// Height rule calculation
 	x1 = x2 = x3 = 0;
-	if (heightType == size) {
+	if (heightType == Size) {
 		x1 = x2 = x3 = NAN;
-	} else if (heightType == fill) {
+	} else if (heightType == Fill) {
 		x2 = 1;
-		topType == percent && (x1 = -topValue);
-		topType == fixed && (x3 = -topValue);
-		bottomType == percent && (x1 = -bottomValue);
-		bottomType == fixed && (x3 = -bottomValue);
-	} else if (heightType == percent) {
+		topType == Percent && (x1 = -topValue);
+		topType == Fixed && (x3 = -topValue);
+		bottomType == Percent && (x1 = -bottomValue);
+		bottomType == Fixed && (x3 = -bottomValue);
+	} else if (heightType == Percent) {
 		x1 = heightValue;
-	} else if (heightType == fixed) {
+	} else if (heightType == Fixed) {
 		x3 = heightValue;
 	}
 	(*element)._layoutCoefficients.height.x1 = x1;
@@ -215,39 +215,39 @@ void measureNodeForVerticalLayout(struct LayoutProperties layoutProperties, stru
 
 	// Sandbox height rule calculation
 	x1 = x2 = 0;
-	topType == percent && (x1 = topValue);
-	topType == fixed && (x2 = topValue);
-	bottomType == percent && (x1 += bottomValue);
-	bottomType == fixed && (x2 += bottomValue);
+	topType == Percent && (x1 = topValue);
+	topType == Fixed && (x2 = topValue);
+	bottomType == Percent && (x1 += bottomValue);
+	bottomType == Fixed && (x2 += bottomValue);
 	(*element)._layoutCoefficients.sandboxHeight.x1 = x1;
 	(*element)._layoutCoefficients.sandboxHeight.x2 = x2;
 
 	// Left rule calculation
 	x1 = x2 = x3 = 0;
-	if (leftType == percent) {
+	if (leftType == Percent) {
 		x1 = leftValue;
-	} else if(leftType == fixed) {
+	} else if(leftType == Fixed) {
 		x3 = leftValue;
-	} else if (centerXType == percent) {
+	} else if (centerXType == Percent) {
 		x1 = centerXValue;
 		x2 = -0.5;
-	} else if (centerXType == fixed) {
+	} else if (centerXType == Fixed) {
 		x2 = -0.5;
 		x3 = centerXValue;
-	} else if (rightType == percent) {
+	} else if (rightType == Percent) {
 		x1 = 1 - rightValue;
 		x2 = -1;
-	} else if (rightType == fixed) {
+	} else if (rightType == Fixed) {
 		x1 = 1;
 		x2 = -1;
 		x3 = -rightValue;
 	} else {
 		switch((*element)._defaultHorizontalAlignment) {
-			case center:
+			case Center:
 				x1 = 0.5;
 				x2 = -0.5;
 				break;
-			case end:
+			case End:
 				x1 = 1;
 				x2 = -1;
 				break;
@@ -258,8 +258,8 @@ void measureNodeForVerticalLayout(struct LayoutProperties layoutProperties, stru
 	(*element)._layoutCoefficients.left.x3 = x3;
 
 	// Top rule calculation
-	(*element)._layoutCoefficients.top.x1 = topType == percent ? topValue : 0;
-	(*element)._layoutCoefficients.top.x2 = topType == fixed ? topValue : 0;
+	(*element)._layoutCoefficients.top.x1 = topType == Percent ? topValue : 0;
+	(*element)._layoutCoefficients.top.x2 = topType == Fixed ? topValue : 0;
 }
 
 
