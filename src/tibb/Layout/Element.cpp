@@ -5,19 +5,13 @@
  *      Author: rmcmahon
  */
 
+#include <algorithm>
 #include <stdlib.h>
 #include <stdio.h>
 #include "Element.h"
 #include <math.h>
 
-struct Element* createElement(enum LayoutType layoutType) {
-    struct Element* element = (struct Element*)malloc(sizeof(struct Element));
-
-    if (NULL == element) {
-        printf("\n Element creation failed \n");
-        return NULL;
-    }
-
+void elementInitialize(struct Element* element, enum LayoutType layoutType) {
     (*element)._layoutCoefficients.width.x1 = NAN;
     (*element)._layoutCoefficients.width.x2 =  NAN;
     (*element)._layoutCoefficients.width.x3 = NAN;
@@ -41,20 +35,26 @@ struct Element* createElement(enum LayoutType layoutType) {
     (*element)._layoutCoefficients.left.x3 = NAN;
     (*element)._layoutCoefficients.top.x1 =  NAN;
     (*element)._layoutCoefficients.top.x2 = NAN;
-	(*element)._layoutCoefficients.top.x3 = NAN;
+    (*element)._layoutCoefficients.top.x3 = NAN;
     (*element)._layoutType = layoutType;
-    (*element)._defaultRowAlignment = start;
-    (*element)._defaultHorizontalAlignment = center;
-    (*element)._defaultVerticalAlignment = center;
-
-    return element;
+    (*element)._defaultRowAlignment = Start;
+    (*element)._defaultHorizontalAlignment = Center;
+    (*element)._defaultVerticalAlignment = Center;
 }
 
 void addChildElement(Element* parent, Element* child) {
+    if (NULL == parent || NULL == child) {
+       printf("\n Element add child failed \n");
+    }
 
-	if (NULL == parent || NULL == child) {
-	   printf("\n Element add child failed \n");
-	}
-
-	(*parent)._children.push_back(child);
+    (*parent)._children.push_back(child);
 }
+
+void removeChildElement(struct Element* parent, struct Element* child) {
+    std::vector<struct Element*>::iterator i;
+    i = std::find(parent->_children.begin(), parent->_children.end(), child);
+    if (i != parent->_children.end()) {
+        parent->_children.erase(i);
+    }
+}
+

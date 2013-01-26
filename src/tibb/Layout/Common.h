@@ -8,8 +8,8 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
-enum LayoutType {composite = 0, horizontal, vertical};
-enum ElementAlignment {start = 0, center, end};
+enum LayoutType {Composite = 0, Horizontal, Vertical};
+enum ElementAlignment {Start = 0, Center, End};
 
 struct ComputedSize {
 	double width;
@@ -42,5 +42,7 @@ struct LayoutCoefficients {
 
 bool isNaN(float);
 ComputedSize layoutNode(struct Element*, double, double, bool, bool);
+
+void measureNode(enum LayoutType type, struct LayoutProperties* properties, struct Element* element);
 
 #endif /* COMMON_H_ */

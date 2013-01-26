@@ -13,6 +13,7 @@
 #include <bb/cascades/Application>
 #include <bb/cascades/Image>
 #include <bb/cascades/Page>
+#include <bb/device/DisplayInfo>
 
 #include "EventHandler.h"
 #include "PageScene.h"
@@ -55,7 +56,6 @@ void NativeWindowObject::open()
     }
 
     if (group == NULL) {
-        fprintf(stderr, "creating page scene.\n");
         scene = new PageScene();
         sceneManager->presentScene(scene);
         group = scene->windowGroup();
@@ -152,7 +152,7 @@ int NativeWindowObject::initialize()
         return NATIVE_ERROR_OK;
     }
 
-    container_ = new titanium::Window();
+    container_ = new titanium::Window(&layoutNode_);
     container_->setLayout(new AbsoluteLayout());
     layout_ = new AbsoluteLayoutProperties;
     container_->setLayoutProperties(layout_);

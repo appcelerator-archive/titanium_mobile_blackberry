@@ -10,31 +10,33 @@
 
 #include <string>
 
-enum ValueName {top = 0, bottom, left, right, width, minWidth, height, minHeight, centerX, centerY};
-enum ValueType {fill = 1, size = 2, percent = 3, undefined = 4, fixed = 0};
+enum ValueName {
+    Top = 0, Bottom, Left, Right, Width, MinWidth, Height, MinHeight, CenterX, CenterY
+};
+enum ValueType {Fill = 1, Size = 2, Percent = 3, Fixed = 0, None = -1};
 
 struct InputProperty {
-	enum ValueName name;
-	std::string value;
+    ValueName name;
+    std::string value;
 };
 
 struct layoutProp {
-	// fill = UI.FILL, size = UI.SIZE, percent = values containing %, fixed = everything else
-	enum ValueType valueType;
-	float value;
+    // fill = UI.FILL, size = UI.SIZE, percent = values containing %, fixed = everything else
+    enum ValueType valueType;
+    float value;
 };
 
 struct LayoutProperties {
-	struct layoutProp top;
-	struct layoutProp bottom;
-	struct layoutProp left;
-	struct layoutProp right;
-	struct layoutProp width;
-	struct layoutProp minWidth;
-	struct layoutProp height;
-	struct layoutProp minHeight;
-	struct layoutProp centerX;
-	struct layoutProp centerY;
+    struct layoutProp top;
+    struct layoutProp bottom;
+    struct layoutProp left;
+    struct layoutProp right;
+    struct layoutProp width;
+    struct layoutProp minWidth;
+    struct layoutProp height;
+    struct layoutProp minHeight;
+    struct layoutProp centerX;
+    struct layoutProp centerY;
 };
 
 void layoutPropertiesInitialize(struct LayoutProperties*);

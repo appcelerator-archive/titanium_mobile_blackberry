@@ -17,6 +17,9 @@ class Window : public bb::cascades::Container {
     Q_OBJECT
 
 public:
+    Window(struct Node* layout)
+        : layout_(layout) { }
+
     virtual void focus() {
         emit onFocus();
     }
@@ -30,10 +33,18 @@ public:
         emit onActionAdded(item);
     }
 
+    // Returns the root layout node for this window's view tree.
+    struct Node* layoutNode() const {
+        return layout_;
+    }
+
 signals:
     void onFocus();
     void onBlur();
     void onActionAdded(bb::cascades::ActionItem* item);
+
+private:
+    struct Node* layout_;
 };
 
 } // namespace titanium

@@ -8,6 +8,7 @@
 #include "WindowGroup.h"
 
 #include <bb/cascades/AbsoluteLayout>
+#include <bb/cascades/LayoutUpdateHandler>
 
 #include "SceneManager.h"
 
@@ -16,7 +17,13 @@ using namespace bb::cascades;
 namespace titanium {
 
 WindowGroup::WindowGroup(Scene* scene)
-    : scene_(scene) {
+    : Window(NULL)
+    , scene_(scene) {
+    nodeInitialize(&node_);
+
+    LayoutUpdateHandler::create(this)
+        .onLayoutFrameChanged(this, SLOT(layoutFrameChanged(QRectF)));
+
     // Windows groups use absolute layout for
     // positioning of windows inside the container.
     setLayout(new AbsoluteLayout());
@@ -34,6 +41,8 @@ bool WindowGroup::insertWindow(Window* window) {
     }
 
     Container::add(window);
+    nodeAddChild(&node_, window->layoutNode());
+    nodeLayout(&node_);
 
     window->focus();
 
@@ -79,6 +88,13 @@ void WindowGroup::focus() {
 }
 
 void WindowGroup::blur() {
+}
+
+void WindowGroup::layoutFrameChanged(const QRectF& frame) {
+    fprintf(stderr, "layoutFrameChanged()\n");
+    node_.element._measuredWidth = frame.width();
+    node_.element._measuredHeight = frame.height();
+    nodeLayout(&node_);
 }
 
 } // namespace titanium

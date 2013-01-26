@@ -8,6 +8,9 @@
 #ifndef TI_WINDOW_GROUP_H
 #define TI_WINDOW_GROUP_H
 
+#include <QRectF>
+
+#include "Layout/Node.h"
 #include "Window.h"
 
 namespace titanium {
@@ -15,6 +18,8 @@ namespace titanium {
 class Scene;
 
 class WindowGroup : public Window {
+  Q_OBJECT
+
   public:
     WindowGroup(Scene* scene);
 
@@ -53,7 +58,11 @@ class WindowGroup : public Window {
     virtual void focus();
     virtual void blur();
 
+  public slots:
+    void layoutFrameChanged(const QRectF& frame);
+
   private:
+    struct Node node_;
     Scene* scene_;
 };
 
