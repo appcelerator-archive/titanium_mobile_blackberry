@@ -2,6 +2,12 @@
 //Titanium.UI.setBackgroundColor('#000');
 
 var win = Ti.UI.createWindow({});
+
+Ti.API.info("Received text: ");
+
+
+
+
 //Clipping.
 var parent = Ti.UI.createView({backgroundColor:'red',width:'100',height:'100'})
 var child =Ti.UI.createView({backgroundColor:'green',width:150,height:150,left:5,top:5});
