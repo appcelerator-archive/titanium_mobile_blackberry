@@ -13,6 +13,7 @@
 
 const char* NativeProxyObject::tetACCEPTED = "accepted";
 const char* NativeProxyObject::tetCHANGE = "change";
+const char* NativeProxyObject::tetBEFORELOAD = "beforeload";
 const char* NativeProxyObject::tetCLICK = "click";
 const char* NativeProxyObject::tetCONNECTED = "connected";
 const char* NativeProxyObject::tetERROR = "error";

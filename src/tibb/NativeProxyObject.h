@@ -88,6 +88,7 @@ public:
 
     // Ti event types (tet)
     static const char* tetACCEPTED;
+    static const char* tetBEFORELOAD;
     static const char* tetCHANGE;
     static const char* tetCLICK;
     static const char* tetCONNECTED;
@@ -96,6 +97,7 @@ public:
     static const char* tetREADYSTATECHANGE;
     static const char* tetSTARTED;
     static const char* tetDATA;
+
 
 protected:
     explicit NativeProxyObject(TiObject* tiObject);

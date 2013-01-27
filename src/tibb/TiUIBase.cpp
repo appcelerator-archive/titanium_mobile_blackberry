@@ -225,6 +225,69 @@ const static TiProperty g_tiProperties[] =
         N_PROP_ZINDEX
     },
 
+
+     //TODO: need to place alfabetically
+   {
+        "url", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_URL
+    },
+
+
+    {
+        "willHandleTouches", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_WILL_HANDLE_TOUCHES
+    },
+
+    {
+        "userAgent", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_USER_AGENT
+    },
+
+    {
+        "showScrollbars", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_SHOW_SCROLL_BARS
+    },
+
+    {
+        "scrollsToTop", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_SCROLLS_TO_TOP
+    },
+
+    {
+        "scalesToFit", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_SCALES_TO_FIT
+    },
+
+    {
+        "pluginState", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_PLUGIN_STATE
+    },
+
+    {
+        "loading", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_LOADING
+    },
+
+    {
+        "html", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_HTML
+    },
+
+    {
+        "hideLoadIndicator", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_HIDE_LOAD_INDICATOR
+    },
+
+    {
+        "enableZoomControls", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_ENABLE_ZOOM_CONTROLS
+    },
+
+    {
+        "disableBounce", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_DISABLE_BOUNCE
+    }
+
 };
 
 TiUIBase::TiUIBase()

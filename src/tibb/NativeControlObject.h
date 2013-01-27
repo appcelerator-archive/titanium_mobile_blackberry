@@ -85,14 +85,19 @@ public:
     virtual int setCancel(TiObject* obj);
     virtual int setColor(TiObject* obj);
     virtual int setData(TiObject* obj);
+    virtual int setDisableBounce(TiObject* obj);
     virtual int setEnabled(TiObject* obj);
+    virtual int setEnableZoomControls(TiObject* obj);
     virtual int setFont(TiObject* obj);
     virtual int setHeight(TiObject* obj);
+    virtual int setHideLoadIndicator(TiObject* obj);
     virtual int setHintText(TiObject* obj);
+    virtual int setHtml(TiObject* obj);
     virtual int setIcon(TiObject* obj);
     virtual int setImage(TiObject* obj);
     virtual int setLabel(TiObject* obj);
     virtual int setLeft(TiObject* obj);
+    virtual int setLoading(TiObject* obj);
     virtual int setMax(TiObject* obj);
     virtual int setMaxDate(TiObject* obj);
     virtual int setMessage(TiObject* obj);
@@ -101,22 +106,28 @@ public:
     virtual int setOpacity(TiObject* obj);
     virtual int setOptions(TiObject* obj);
     virtual int setPasswordMask(TiObject* obj);
+    virtual int setPluginState(TiObject* obj);
     virtual int setPropertyValue(size_t propertyNumber, TiObject* obj);
     virtual int setRight(TiObject* obj);
+    virtual int setScalesPageToFit(TiObject* obj);
+    virtual int setScrollsToTop(TiObject* obj);
+    virtual int setShowScrollbars(TiObject* obj);
     virtual int setSelectedIndex(TiObject* obj);
     virtual int setText(TiObject* obj);
     virtual int setTextAlign(TiObject* obj);
     virtual int setTitle(TiObject* obj);
     virtual int setType(TiObject* obj);
     virtual int setTop(TiObject* obj);
+    virtual int setUrl(TiObject* obj);
+    virtual int setUserAgent(TiObject* obj);
     virtual int setValue(TiObject* obj);
     virtual int setVisibility(bool visible);
     virtual int setVisible(TiObject* obj);
     virtual int setWidth(TiObject* obj);
+    virtual int setWillHandleTouches(TiObject* obj);
     virtual int setWindow(TiObject* obj);
     virtual int startLayout();
     virtual int setZIndex(TiObject* obj);
-
     static int getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a);
     static int getBoolean(TiObject* obj, bool* value);
     static int getString(TiObject* obj, QString& str);
@@ -127,6 +138,8 @@ public:
     static int getPoint(TiObject* obj, float* x, float* y);
     static int getDataModel(TiObject* obj, QVector<QVariant>& dataModel);
     static int getDateTime(TiObject* obj, QDateTime& dt);
+    int updateHeight();
+    int updateWidth();
     void updateLayout(QRectF rect);
 
 protected:
@@ -147,8 +160,6 @@ private:
     static int getMeasurementInfo(TiObject* obj, float maxPixels, float dotsPerMillimeter,
                                   float* calculatedValue, bool* isAuto);
     void updateViewLayout();
-    int updateHeight();
-    int updateWidth();
     int updateLeft();
     int updateTop();
     int updateRight();
