@@ -16,6 +16,7 @@ SOURCES += \
 	./Layout/Node.cpp \
 	./Layout/ParseProperty.cpp
 HEADERS += ./*.h
+LIBS += -lz -lsqlite3
 
 device {
 	CONFIG(release, debug|release) {

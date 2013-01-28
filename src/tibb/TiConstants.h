@@ -61,6 +61,23 @@ enum TI_HTTPCLIENT_STATE
 
 } // namespace Network
 
+namespace Database
+{
+namespace DB
+{
+// HTTPClient states constants
+enum TI_HTTPCLIENT_STATE
+{
+	HTTPCLIENT_STATE_UNSENT = 0,
+	HTTPCLIENT_STATE_OPENED,
+	HTTPCLIENT_STATE_HEADERS_RECEIVED,
+	HTTPCLIENT_STATE_LOADING,
+	HTTPCLIENT_STATE_DONE,
+}; // enum TI_HTTPCLIENT_STATE
+} // namespace DB
+
+} // namespace DB
+
 namespace Platform
 {
 // Battery states constants

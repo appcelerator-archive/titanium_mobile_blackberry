@@ -42,6 +42,7 @@ enum NATIVE_TYPE
     , N_TYPE_TOGGLEBUTTON
     , N_TYPE_VIEW
     , N_TYPE_WINDOW
+    , N_TYPE_DB
 };
 
 enum NATIVE_PROP

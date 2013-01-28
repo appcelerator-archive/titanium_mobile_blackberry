@@ -110,6 +110,7 @@ public:
     static char* getStringFromObject(Handle<Value> value, const char* defaultString);
     static void freeString(char* str);
     static QString getStringFromValue(Handle<Value> value);
+    static string getSTDStringFromValue(Handle<Value> value);
     static QByteArray getByteArrayFromValue(Handle<Value> value);
     static Handle<Array> getValueFromByteArray(const QByteArray& array);
     static TiObject* getTiObjectFromJsObject(Handle<Value> value);
