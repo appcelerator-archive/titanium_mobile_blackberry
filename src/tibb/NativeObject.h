@@ -43,6 +43,7 @@ enum NATIVE_TYPE
     , N_TYPE_VIEW
     , N_TYPE_WINDOW
     , N_TYPE_DB
+    , N_TYPE_RESULTSET
 };
 
 enum NATIVE_PROP

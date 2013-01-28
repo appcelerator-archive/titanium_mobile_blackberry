@@ -29,6 +29,7 @@
 #include "NativeWindowObject.h"
 #include "NativeHTTPClientObject.h"
 #include "NativeDBObject.h"
+#include "NativeResultSetObject.h"
 #include "TiCascadesApp.h"
 
 #include <bb/cascades/Container>
@@ -135,6 +136,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
     case N_TYPE_DB:
 		obj = NativeDBObject::createDB(tiObj);
 		break;
+
+    case N_TYPE_RESULTSET:
+   		obj = NativeResultSetObject::createResultSet(tiObj);
+   		break;
 
     case N_TYPE_DATE_TIME_PICKER:
         obj = NativeDateTimePickerObject::createDateTimePicker(tiObj);
