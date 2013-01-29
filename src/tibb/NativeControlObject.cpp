@@ -193,6 +193,10 @@ NativeControlObject::NativeControlObject(TiObject* tiObject) :
 {
     nodeInitialize(&layoutNode_);
 
+    // Views auto behavior is to fill their parent.
+    layoutNode_.properties.width.valueType = Fill;
+    layoutNode_.properties.height.valueType = Fill;
+
     if ((g_width <= 0) || (g_height <= 0))
     {
         bb::device::DisplayInfo display;
