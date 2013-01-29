@@ -12,6 +12,8 @@ SOURCES += \
 	./*.cpp \
 	./Layout/Common.cpp \
 	./Layout/Composite.cpp \
+	./Layout/Horizontal.cpp \
+	./Layout/Vertical.cpp \
 	./Layout/Element.cpp \
 	./Layout/Node.cpp \
 	./Layout/ParseProperty.cpp

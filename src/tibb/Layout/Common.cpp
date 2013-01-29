@@ -29,7 +29,7 @@ ComputedSize layoutNode(struct Element* element, double width, double height, bo
       computedSize = doHorizontalLayout((*element)._children, width, height, isWidthSize, isHeightSize);
       break;
     case Vertical:
-//      computedSize = doVerticalLayout((*element)._children, width, height, isWidthSize, isHeightSize);
+      computedSize = doVerticalLayout((*element)._children, width, height, isWidthSize, isHeightSize);
       break;
   }
 
@@ -42,10 +42,10 @@ void measureNode(enum LayoutType type, struct LayoutProperties* properties, stru
       measureNodeForCompositeLayout(*properties, element);
       break;
     case Horizontal:
- //   measureNodeForHorizontalLayout(*properties, element);
+      measureNodeForHorizontalLayout(*properties, element);
       break;
     case Vertical:
-//      measureNodeForVerticalLayout(*properties, element);
+      measureNodeForVerticalLayout(*properties, element);
       break;
   }
 }

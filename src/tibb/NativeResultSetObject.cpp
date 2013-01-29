@@ -118,6 +118,11 @@ int NativeResultSetObject::getConnectedCallback(TiObject* /*obj*/, void* /*userC
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+NativeResultSetObject::NativeResultSetObject(TiObject* tiObject)
+    : NativeProxyObject(tiObject)
+{
+}
+
 
 NativeResultSetObject::~NativeResultSetObject() {
 }
