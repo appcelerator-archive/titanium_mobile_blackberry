@@ -13,8 +13,18 @@ GIT_VERSION=$(/usr/bin/git log -1 --format="%H")
 # Create Time Stamp
 DATE=$(date +"%Y%m%d%H%M")
 
+# Check OS
+OS=$(uname -s)
+
+BB_PATH="/Applications"
+
+# Set bbndk path
+if [ "$OS" == 'Linux' ]; then
+    BB_PATH="/opt"
+fi
+
 # Set source for build
-source /Applications/bbndk/bbndk-env.sh
+source $BB_PATH/bbndk/bbndk-env.sh
 
 # Build v8 runtime
 cd runtime && make
