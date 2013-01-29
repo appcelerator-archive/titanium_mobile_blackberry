@@ -12,6 +12,7 @@
 
 #include <bb/cascades/Color>
 #include <bb/cascades/TouchEvent>
+#include <bb/cascades/VisualNode>
 #include <QRect>
 
 #include <Layout/Node.h>
@@ -149,6 +150,8 @@ private:
     friend class NativePageObject;
     friend class NativeWindowObject; // TODO(josh): we shouldn't have to abuse friends this way.
 
+    void addTouchEvent(const char* name, const QObject* source, const char* signal, TiEventContainer* container);
+
     static int getMeasurementInfo(TiObject* obj, float maxPixels, float dotsPerMillimeter,
                                   float* calculatedValue, bool* isAuto);
     void updateLayoutProperty(ValueName name, TiObject* val);
@@ -185,31 +188,55 @@ private:
 };
 
 // Event handler for Ti.UI.View
-class UIViewEventHandler : public QObject
-{
+class UIViewEventHandler : public QObject {
     Q_OBJECT
-public:
-    explicit UIViewEventHandler(TiEventContainer* eventContainer)
-    {
-        eventContainer_ = eventContainer;
-    }
-    virtual ~UIViewEventHandler() {}
 
-public slots:
-    void touch(bb::cascades::TouchEvent* event)
-    {
-        if (event->touchType() == bb::cascades::TouchType::Up)
-        {
-            eventContainer_->fireEvent();
+public:
+    explicit UIViewEventHandler(const bb::cascades::VisualNode* node) {
+        QObject::connect(node, SIGNAL(touch(bb::cascades::TouchEvent*)),
+                         this, SLOT(dispatchTouch(bb::cascades::TouchEvent*)));
+        QObject::connect(node, SIGNAL(destroyed(QObject*)),
+                         this, SLOT(onNodeDestroyed()));
+    }
+
+signals:
+    void click(float x, float y);
+    void touchStart(float x, float y);
+    void touchMove(float x, float y);
+    void touchEnd(float x, float y);
+    void touchCancel(float x, float y);
+
+private slots:
+    void dispatchTouch(bb::cascades::TouchEvent* event) {
+        float x = event->localX(),
+              y = event->localY();
+
+        // TODO(josh): Include coordinates of "click".
+        // TODO(josh): Click should only happen with no movement (down & up).
+        if (event->touchType() == bb::cascades::TouchType::Up) {
+            emit click(x, y);
+        }
+
+        switch (event->touchType()) {
+            case bb::cascades::TouchType::Down:
+                emit touchStart(x, y);
+                break;
+            case bb::cascades::TouchType::Move:
+                emit touchMove(x, y);
+                break;
+            case bb::cascades::TouchType::Up:
+                emit touchEnd(x, y);
+                break;
+            case bb::cascades::TouchType::Cancel:
+                emit touchCancel(x, y);
+                break;
         }
     }
 
-private:
-    TiEventContainer* eventContainer_;
-
-    // Disable copy ctor & assignment operator
-    UIViewEventHandler(const UIViewEventHandler& eHandler);
-    UIViewEventHandler& operator=(const UIViewEventHandler& eHandler);
+    void onNodeDestroyed() {
+        // Release this event handler once the node is destroyed.
+        delete this;
+    }
 };
 
 #endif /* NATIVECONTROLOBJECT_H_ */
