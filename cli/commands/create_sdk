@@ -2,8 +2,18 @@
 
 VAR_PWD=`pwd`
 
+# Check OS
+OS=$(uname -s)
+
+BB_PATH="/Applications"
+
+# Set bbndk path
+if [ "$OS" == 'Linux' ]; then
+    BB_PATH="/opt"
+fi
+
 echo "Creating Blackberry Libraries"
-source /Applications/bbndk/bbndk-env.sh
+source $BB_PATH/bbndk/bbndk-env.sh
 cd ../../src/tibb
 
 make clean
