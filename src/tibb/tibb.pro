@@ -13,8 +13,10 @@ SOURCES += \
 	./Layout/Common.cpp \
 	./Layout/Composite.cpp \
 	./Layout/Element.cpp \
+	./Layout/Horizontal.cpp\
 	./Layout/Node.cpp \
-	./Layout/ParseProperty.cpp
+	./Layout/ParseProperty.cpp \
+	./Layout/Vertical.cpp
 HEADERS += ./*.h
 LIBS += -lz -lsqlite3
 
