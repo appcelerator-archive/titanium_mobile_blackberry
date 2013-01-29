@@ -78,7 +78,7 @@ int NativeTabObject::addChildNativeObject(NativeObject* obj)
     if (obj->getObjectType() == N_TYPE_WINDOW)
     {
         bb::cascades::Page* page = bb::cascades::Page::create().content((bb::cascades::Control*)obj->getNativeHandle());
-        tab_->setContent(page);
+        navigationPane_->push(page);
         return NATIVE_ERROR_OK;
     }
     return NATIVE_ERROR_NOTSUPPORTED;
@@ -86,19 +86,14 @@ int NativeTabObject::addChildNativeObject(NativeObject* obj)
 
 int NativeTabObject::openWindowOnTab(NativeObject* obj)
 {
-    if (obj->getObjectType() == N_TYPE_WINDOW)
-    {
-        bb::cascades::Page* page = (bb::cascades::Page*)obj->getNativeHandle();
-        navigationPane_->push(page);
-        return NATIVE_ERROR_OK;
-    }
-    return NATIVE_ERROR_NOTSUPPORTED;
+    return addChildNativeObject(obj);
 }
 
 int NativeTabObject::initialize()
 {
     tab_ = Tab::create();
     navigationPane_ = NavigationPane::create();
+    tab_->setContent(navigationPane_);
 
     if (tab_ == NULL || navigationPane_ == NULL)
     {
