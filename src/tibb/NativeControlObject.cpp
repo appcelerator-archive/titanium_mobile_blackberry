@@ -7,6 +7,7 @@
 
 #include "NativeControlObject.h"
 
+#include "EventHandler.h"
 #include "NativeLayoutHandler.h"
 #include "PersistentV8Value.h"
 #include "TiEventContainer.h"
@@ -25,6 +26,8 @@
 #include <bb/device/DisplayInfo>
 #include <QColor>
 #include <QRectF>
+
+using namespace bb::cascades;
 
 #define ZINDEX_PROPERTY_NAME            "tizindex"
 
@@ -117,6 +120,24 @@ private:
     NATIVE_PROPSETGET_CALLBACK* setters_;
     NATIVE_PROPSETGET_CALLBACK* getters_;
 };
+
+class TouchEventHandler : public titanium::EventHandler {
+    Q_OBJECT
+
+public:
+    TouchEventHandler(TiEventContainer* container)
+        : titanium::EventHandler(container) { }
+
+public slots:
+    void onTouch(float x, float y) {
+        TiEventContainer* container = getEventContainer();
+        container->setDataProperty("x", x);
+        container->setDataProperty("y", y);
+        container->fireEvent();
+    }
+};
+
+#include "NativeControlObject.moc"
 
 // Unit types
 struct UnitTypeData
@@ -241,17 +262,24 @@ void NativeControlObject::setControl(bb::cascades::Control* control)
     layoutNode_.data = container_;
 }
 
+void NativeControlObject::addTouchEvent(const char* name, const QObject* source, const char* signal, TiEventContainer* container) {
+    TouchEventHandler* handler = new TouchEventHandler(container);
+    QObject::connect(source, signal, handler, SLOT(onTouch(float,float)));
+    events_.insert(name, EventPairSmartPtr(container, handler));
+}
+
 void NativeControlObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
     NativeProxyObject::setupEvents(containerFactory);
-    TiEventContainer* eventClick = containerFactory->createEventContainer();
-    eventClick->setDataProperty("type", tetCLICK);
-    events_.insert(tetCLICK, EventPairSmartPtr(eventClick, new UIViewEventHandler(eventClick)));
 
-    /* For pure containers connect the container signals, otherwise connect the control signals */
-    bb::cascades::Control* connectCtrl = (control_ != NULL) ? control_ : container_;
-    QObject::connect(connectCtrl, SIGNAL(touch(bb::cascades::TouchEvent*)),
-                     events_[tetCLICK]->handler, SLOT(touch(bb::cascades::TouchEvent*)));
+    bb::cascades::Control* control = (control_ != NULL) ? control_ : container_;
+    UIViewEventHandler* handler = new UIViewEventHandler(control);
+
+    addTouchEvent("touchstart", handler, SIGNAL(touchStart(float,float)), containerFactory->createEventContainer());
+    addTouchEvent("touchmove", handler, SIGNAL(touchMove(float,float)), containerFactory->createEventContainer());
+    addTouchEvent("touchend", handler, SIGNAL(touchEnd(float,float)), containerFactory->createEventContainer());
+    addTouchEvent("touchcancel", handler, SIGNAL(touchCancel(float,float)), containerFactory->createEventContainer());
+    addTouchEvent("click", handler, SIGNAL(click(float,float)), containerFactory->createEventContainer());
 }
 
 int NativeControlObject::addChildNativeObject(NativeObject* obj)
@@ -528,6 +556,12 @@ int NativeControlObject::setData(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setDisableBounce)
+int NativeControlObject::setDisableBounce(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 PROP_SETGET(setEnabled)
 int NativeControlObject::setEnabled(TiObject* obj)
 {
@@ -548,6 +582,12 @@ int NativeControlObject::setEnabled(TiObject* obj)
         container_->setBackground(disabledBackgroundColor_);
     }
     return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(setEnableZoomControls)
+int NativeControlObject::setEnableZoomControls(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setFont)
@@ -616,8 +656,20 @@ int NativeControlObject::updateHeight()
     return NATIVE_ERROR_OK;
 }
 
+PROP_SETGET(setHideLoadIndicator)
+int NativeControlObject::setHideLoadIndicator(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 PROP_SETGET(setHintText)
 int NativeControlObject::setHintText(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setHtml)
+int NativeControlObject::setHtml(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -638,6 +690,12 @@ PROP_SETGET(setLayout)
 int NativeControlObject::setLayout(TiObject* obj)
 {
     nodeSetLayoutType(&layoutNode_, *String::Utf8Value(obj->getValue()));
+}
+
+PROP_SETGET(setLoading)
+int NativeControlObject::setLoading(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setLeft)
@@ -839,8 +897,32 @@ int NativeControlObject::setPasswordMask(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setPluginState)
+int NativeControlObject::setPluginState(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 PROP_SETGET(setSelectedIndex)
 int NativeControlObject::setSelectedIndex(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setScalesPageToFit)
+int NativeControlObject::setScalesPageToFit(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setScrollsToTop)
+int NativeControlObject::setScrollsToTop(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setShowScrollbars)
+int NativeControlObject::setShowScrollbars(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -859,6 +941,18 @@ int NativeControlObject::setTextAlign(TiObject*)
 
 PROP_SETGET(setTitle)
 int NativeControlObject::setTitle(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setUrl)
+int NativeControlObject::setUrl(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setUserAgent)
+int NativeControlObject::setUserAgent(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -924,6 +1018,12 @@ int NativeControlObject::setVisible(TiObject* obj)
         return error;
     }
     return setVisibility(visible);
+}
+
+PROP_SETGET(setWillHandleTouches)
+int NativeControlObject::setWillHandleTouches(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(getRect)
@@ -1087,6 +1187,23 @@ int NativeControlObject::setMessage(TiObject*)
 
 const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
 {
+
+    
+     //TODO: need to place alfabetically
+    {N_PROP_DISABLE_BOUNCE, PROP_SETGET_FUNCTION(setDisableBounce), NULL},
+    {N_PROP_ENABLE_ZOOM_CONTROLS, PROP_SETGET_FUNCTION(setEnableZoomControls), NULL},
+    {N_PROP_HIDE_LOAD_INDICATOR, PROP_SETGET_FUNCTION(setHideLoadIndicator), NULL},
+    {N_PROP_HTML, PROP_SETGET_FUNCTION(setHtml), NULL},
+    {N_PROP_LOADING, PROP_SETGET_FUNCTION(setLoading), NULL},
+    {N_PROP_PLUGIN_STATE, PROP_SETGET_FUNCTION(setPluginState), NULL},
+    {N_PROP_SCALES_TO_FIT, PROP_SETGET_FUNCTION(setScalesPageToFit), NULL},
+    {N_PROP_SCROLLS_TO_TOP, PROP_SETGET_FUNCTION(setScrollsToTop), NULL},
+    {N_PROP_SHOW_SCROLL_BARS, PROP_SETGET_FUNCTION(setShowScrollbars), NULL},
+    {N_PROP_USER_AGENT, PROP_SETGET_FUNCTION(setUserAgent), NULL},
+    {N_PROP_WILL_HANDLE_TOUCHES, PROP_SETGET_FUNCTION(setWillHandleTouches), NULL},
+
+
+
     {N_PROP_ANCHOR_POINT, PROP_SETGET_FUNCTION(setAnchorPoint), NULL},
     {N_PROP_BACKGROUND_IMAGE, PROP_SETGET_FUNCTION(setBackgroundImage), NULL},
     {N_PROP_BACKGROUND_COLOR, PROP_SETGET_FUNCTION(setBackgroundColor), NULL},
@@ -1126,6 +1243,8 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_VISIBLE, PROP_SETGET_FUNCTION(setVisible), NULL},
     {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), NULL},
     {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setWindow), NULL},
+    {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setUrl), NULL},
+    {N_PROP_URL, PROP_SETGET_FUNCTION(setUrl), NULL},
     {N_PROP_ZINDEX, PROP_SETGET_FUNCTION(setZIndex), PROP_SETGET_FUNCTION(getZIndex)}
 };
 

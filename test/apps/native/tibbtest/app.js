@@ -3,6 +3,7 @@
 
 var win = Ti.UI.createWindow({});
 
+/* db
 var db = Ti.Database.open('mydb1Installed');
 
 db.execute('CREATE TABLE IF NOT EXISTS people (name TEXT, phone_number TEXT, city TEXT)');
@@ -34,12 +35,13 @@ db.close();
 //}
 //rows.close();
 
-
+ db */
 
 
 //Clipping.
 var parent = Ti.UI.createView({backgroundColor:'red',width:'100',height:'100'})
 var child =Ti.UI.createView({backgroundColor:'green',width:150,height:150,left:5,top:5});
+
 //parent.add(child);
 win.add(parent);
 win.open();
@@ -209,6 +211,7 @@ function readCallback(e) {
 }
 */
 
+/*
 var h = Ti.Network.createHTTPClient({
 	onload : function(e) {
 		Ti.API.info("Received text: " + this.responseText);
@@ -224,3 +227,4 @@ h.enableKeepAlive = true;
 h.open("GET", "http://www.xhaus.com/headers");
 h.setRequestHeader("TESTTEST", "abcdefg");
 h.send();
+*/
