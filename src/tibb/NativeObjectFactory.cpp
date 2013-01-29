@@ -30,6 +30,7 @@
 #include "NativeHTTPClientObject.h"
 #include "NativeDBObject.h"
 #include "NativeResultSetObject.h"
+#include "NativeWebViewObject.h"
 #include "TiCascadesApp.h"
 
 #include <bb/cascades/Container>
@@ -151,6 +152,9 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 
     case N_TYPE_VIEW:
         obj = NativeControlObject::createView(tiObj);
+        break;
+    case N_TYPE_WEBVIEW:
+        obj = NativeWebViewObject::createWebView(tiObj);
         break;
 
     }

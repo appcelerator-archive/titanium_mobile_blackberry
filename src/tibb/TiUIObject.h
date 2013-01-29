@@ -48,6 +48,7 @@ private:
     static Handle<Value> _createPicker(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createAlertDialog(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createView(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createWebView(void* userContext, TiObject* caller, const Arguments& args);
 
     NativeObjectFactory* objectFactory_;
     NativeObject* contentContainer_;
