@@ -14,7 +14,7 @@
 
 #include "NativeProxyObject.h"
 #include "TiConstants.h"
-#include <qbytearray>
+#include <QByteArray>
 
 using namespace v8;
 
