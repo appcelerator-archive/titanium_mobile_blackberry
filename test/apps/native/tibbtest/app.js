@@ -1,7 +1,6 @@
 // this sets the background color of the master UIView (when there are no windows/tab groups on it)
 //Titanium.UI.setBackgroundColor('#000');
 
-/* db
 
 var win = Ti.UI.createWindow({});
 
@@ -18,27 +17,29 @@ var rows = db.execute('INSERT INTO people (name, phone_number, city) VALUES (?, 
 
 
 var personArray = ['Paul',300, 'London'];
-var rows = db.execute('INSERT INTO people (name, phone_number, city) VALUES (?, ?, ?)', personArray);
+db.execute('INSERT INTO people (name, phone_number, city) VALUES (?, ?, ?)', personArray);
 
-db.execute('SELECT rowid,name,phone_number,city FROM people');
+rows = db.execute('SELECT rowid,name,phone_number,city FROM people');
 //db.close();
 
 
-Ti.API.info('Row count: ' + rows.rowCount);
+//Ti.API.info('Row count: ' + rows.rowCount);
 
-var fieldCount;
-fieldCount = rows.fieldCount;
+//var fieldCount;
+//fieldCount = rows.fieldCount;
 
-Ti.API.info('Field count: ' + fieldCount);
+//Ti.API.info('Field count: ' + fieldCount);
 
 while (rows.isValidRow()){
 //  Ti.API.info('Person ---> ROWID: ' + rows.fieldByName('rowid') + ', name:' + rows.field(1) + ', phone_number: ' + rows.fieldByName('phone_number') + ', city: ' + rows.field(3));
   rows.next();
 }
+
 rows.close();
-*/
 
 
+/*
+ 
 var win = Ti.UI.createWindow({});
 //Clipping.
 var parent = Ti.UI.createView({backgroundColor:'red',width:'100',height:'100'})
@@ -47,17 +48,25 @@ var child =Ti.UI.createView({backgroundColor:'green',width:150,height:150,left:5
 //parent.add(child);
 win.add(parent);
 
+var basicSwitch = Ti.UI.createSwitch({
+	  value:true // mandatory property for iOS 
+});
+win.add(basicSwitch);
+
 
 var label2 = Ti.UI.createLabel({
 	  color:'blue',
-	  text: 'A long label with\na few line breaks\nand unicode (UTF8)\nsymbols such as\na white chess piece \u2655\nand the euro symbol \u20ac\nlooks like this!\n',
+	  text: 'ksskasksaaskjshakhsiuahsiuahaiuhaisuhsaiuhsaiuahsiuashjjjjj',
+	  //text: 'A long label with\na few line breaks\nand unicode (UTF8)\nsymbols such as\na white chess piece \u2655\nand the euro symbol \u20ac\nlooks like this!\n',
 	  textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
 	  top: 30,
 	  width: 300, height: 200
 	});
 
 win.add(label2);
+
 win.open();
+*/
 
 /*
 //
@@ -221,9 +230,7 @@ function readCallback(e) {
         Ti.API.error(ex);
     }
 }
-*/
 
-/*
 var h = Ti.Network.createHTTPClient({
 	onload : function(e) {
 		Ti.API.info("Received text: " + this.responseText);

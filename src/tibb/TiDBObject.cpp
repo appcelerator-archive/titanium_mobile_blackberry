@@ -8,6 +8,7 @@
 #include "TiDBObject.h"
 
 #include "NativeDBObject.h"
+#include "NativeResultSetObject.h"
 #include "TiResultSetObject.h"
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
@@ -70,6 +71,7 @@ Handle<Value> TiDBObject::_execute(void* userContext, TiObject*, const Arguments
     Handle<Object> result = global->NewInstance();
     TiResultSetObject* newResultSet = TiResultSetObject::createResultSet(obj->objectFactory_);
     newResultSet->setValue(result);
+    NativeResultSetObject* nativeResultSet = (NativeResultSetObject*) newResultSet->getNativeObject();
 
     vector<string> bindings;
     if (args.Length() > 1) {
@@ -87,14 +89,16 @@ Handle<Value> TiDBObject::_execute(void* userContext, TiObject*, const Arguments
 		}
     }
 
+
     try {
-      ndb->execute(newResultSet, TiObject::getSTDStringFromValue(args[0]), bindings);
+
+      ndb->execute(nativeResultSet, TiObject::getSTDStringFromValue(args[0]), bindings);
     } catch (NativeException& ne) {
         return ThrowException(String::New(ne.what()));
     }
 
 
-    if (newResultSet->effectedRows > 0) {
+    if (nativeResultSet->effectedRows > 0) {
     	setTiObjectToJsObject(result, newResultSet);
     	return handleScope.Close(result);
     }

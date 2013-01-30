@@ -19,6 +19,8 @@
 
 NativeResultSetObject::NativeResultSetObject(TiObject* tiObject)
     : NativeProxyObject(tiObject) {
+
+	effectedRows = 0;
 }
 
 NativeResultSetObject::~NativeResultSetObject() {
@@ -32,10 +34,31 @@ NativeResultSetObject* NativeResultSetObject::createResultSet(TiObject* tiObject
     return new NativeResultSetObject(tiObject);
 }
 
-int NativeResultSetObject::fieldByName() {
+bool NativeResultSetObject::isValidRow() {
 
+    if (stepResult == SQLITE_ROW) {
+    	return true;
+    }
 
-	return NATIVE_ERROR_OK;
+    return false;
+}
+
+string NativeResultSetObject::fieldByName(string name /*, number type for cast*/) {
+	return "";
+}
+
+string NativeResultSetObject::field(int index /*, number type for cast*/) {
+	string value = (const char*)sqlite3_column_text(statement, index);
+	return value;
+}
+
+bool NativeResultSetObject::next() {
+    stepResult = sqlite3_step(statement);
+    if (stepResult == SQLITE_ROW) {
+    	return true;
+    }
+
+   return false;
 }
 
 #pragma GCC diagnostic warning "-Wdeprecated-declarations"

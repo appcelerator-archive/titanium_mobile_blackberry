@@ -6,7 +6,7 @@
  */
 
 #include "NativeDBObject.h"
-
+#include "NativeResultSetObject.h"
 #include "NativeException.h"
 #include "NativeMessageStrings.h"
 #include "TiObject.h"
@@ -46,7 +46,7 @@ int NativeDBObject::_open(string name) {
 	return NATIVE_ERROR_OK;
 }
 
-int NativeDBObject::execute(TiResultSetObject* resultSet, string command, vector<string> bindings) {
+int NativeDBObject::execute(NativeResultSetObject* resultSet, string command, vector<string> bindings) {
 	int error;
 	sqlite3_stmt* statement;
 	int stepResult;
@@ -93,6 +93,10 @@ int NativeDBObject::execute(TiResultSetObject* resultSet, string command, vector
 	}
 
 	resultSet->effectedRows = effectedRows;
+	sqlite3_reset(statement);
+	resultSet->stepResult = sqlite3_step(statement);
+	resultSet->statement = statement;
+
 
 	return NATIVE_ERROR_OK;
 }

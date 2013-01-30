@@ -18,13 +18,11 @@
 TiResultSetObject::TiResultSetObject()
     : TiProxy("ResultSet") {
     objectFactory_ = NULL;
-    effectedRows = 0;
 }
 
 TiResultSetObject::TiResultSetObject(NativeObjectFactory* objectFactory)
     : TiProxy("ResultSet") {
     objectFactory_ = objectFactory;
-    effectedRows = 0;
 }
 
 TiResultSetObject::~TiResultSetObject() {
@@ -51,33 +49,49 @@ void TiResultSetObject::initializeTiObject(TiObject* parentContext) {
 
 void TiResultSetObject::onCreateStaticMembers() {
     TiProxy::onCreateStaticMembers();
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "isValidRow", this, _isValidRow);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "fieldByName", this, _fieldByName);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "rowCount", this, _rowCount);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "field", this, _field);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "next", this, _next);
 }
 
-Handle<Value> TiResultSetObject::_rowCount(void* userContext, TiObject*, const Arguments& args)
-{
-	//HandleScope handleScope;
-    if (args.Length() < 1) {
-     //   return ThrowException(String::New(Ti::Msg::Missing_argument));
-    }
+Handle<Value> TiResultSetObject::_isValidRow(void* userContext, TiObject*, const Arguments& args) {
+	HandleScope handleScope;
+	TiResultSetObject* obj = (TiResultSetObject*) userContext;
+	NativeResultSetObject* nativeResultSet = (NativeResultSetObject*) obj->getNativeObject();
+	bool isVaildRow = nativeResultSet->isValidRow();
 
-    //return handleScope.Close(result);
+    return handleScope.Close(Boolean::New(isVaildRow));
+}
 
+Handle<Value> TiResultSetObject::_fieldByName(void* userContext, TiObject*, const Arguments& args) {
     return Undefined();
 }
 
-Handle<Value> TiResultSetObject::_fieldByName(void* userContext, TiObject*, const Arguments& args)
-{
+Handle<Value> TiResultSetObject::_field(void* userContext, TiObject*, const Arguments& args) {
+
 	HandleScope handleScope;
     if (args.Length() < 1) {
         return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
 
-    //return handleScope.Close(result);
+	TiResultSetObject* obj = (TiResultSetObject*) userContext;
+	NativeResultSetObject* nativeResultSet = (NativeResultSetObject*) obj->getNativeObject();
+	int index  = Handle<Integer>::Cast(args[0])->Value();
+	string value = nativeResultSet->field(index);
+
+    return handleScope.Close(String::New(value.c_str()));
 
     return Undefined();
 }
 
+Handle<Value> TiResultSetObject::_next(void* userContext, TiObject*, const Arguments& args) {
+	HandleScope handleScope;
+	TiResultSetObject* obj = (TiResultSetObject*) userContext;
+	NativeResultSetObject* nativeResultSet = (NativeResultSetObject*) obj->getNativeObject();
+	bool isVaildRow = nativeResultSet->next();
+
+	return handleScope.Close(Boolean::New(isVaildRow));
+}
 
 

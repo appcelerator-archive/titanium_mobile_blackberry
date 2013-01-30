@@ -6,12 +6,11 @@
  */
 
 #ifndef NATIVERESULTSETOBJECT_H_
-#define NATIVERESULTOBJECT_H_
+#define NATIVERESULTSETOBJECT_H_
 
 #include "NativeProxyObject.h"
 #include "TiConstants.h"
 #include "TiV8Event.h"
-#include "TiResultSetObject.h"
 
 #include <sqlite3.h>
 #include <string>
@@ -36,8 +35,14 @@ public:
     static NativeResultSetObject* createResultSet(TiObject* tiObject);
     int getObjectType() const;
 
-    // ResultSet methods
-    int fieldByName();
+    bool isValidRow();
+    string fieldByName(string name /*, number type for cast*/);
+    string field(int index /*, number type for cast*/);
+    bool next();
+
+    int effectedRows;
+    sqlite3_stmt* statement;
+    int  stepResult;
 
 protected:
     virtual ~NativeResultSetObject();

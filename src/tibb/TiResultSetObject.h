@@ -25,15 +25,16 @@ public:
     static void addObjectToParent(TiObject* parent, NativeObjectFactory* objectFactory);
     static TiResultSetObject* createResultSet(NativeObjectFactory* objectFactory);
 
-    int effectedRows;
-
 protected:
     virtual ~TiResultSetObject();
     virtual void onCreateStaticMembers();
     virtual void initializeTiObject(TiObject* parentContext);
 
+    static Handle<Value> _isValidRow(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _fieldByName(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> _rowCount(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _field(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _next(void* userContext, TiObject* caller, const Arguments& args);
+
 private:
     TiResultSetObject();
     explicit TiResultSetObject(NativeObjectFactory* objectFactory);
