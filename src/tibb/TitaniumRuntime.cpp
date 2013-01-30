@@ -17,7 +17,7 @@
 #include <bb/cascades/Application>
 #include <bb/cascades/Control>
 #include <bb/cascades/Event>
-#include <bb/cascades/UiObject>
+#include <bb/cascades/UIObject>
 #include <QtCore/QMetaType>
 #include <QtCore/QObject>
 #include <stdio.h>
