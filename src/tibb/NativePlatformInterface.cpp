@@ -9,7 +9,7 @@
 #include "TiConstants.h"
 #include <vector>
 #include <math.h>
-#include <qsize.h>
+#include <QSize.h>
 
 #include <bb/device/DisplayInfo>
 #include <bps/deviceinfo.h>

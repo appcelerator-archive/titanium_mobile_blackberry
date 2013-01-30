@@ -10,8 +10,8 @@
 
 #include "NativeProxyObject.h"
 #include <QtCore/QObject>
-#include <QtNetwork/qtcpserver>
-#include <QtNetwork/qtcpsocket>
+#include <QtNetwork/QTcpServer>
+#include <QtNetwork/QTcpSocket>
 #include "TiConstants.h"
 #include "TiV8Event.h"
 #include "TiTCPSocketObject.h"

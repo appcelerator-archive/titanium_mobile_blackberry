@@ -9,7 +9,7 @@
 #define NATIVELISTVIEWOBJECT_H_
 
 #include "NativeControlObject.h"
-#include <QtCore/qobject.h>
+#include <QObject.h>
 
 /*
  * NativeListView

@@ -10,7 +10,7 @@
 
 #include "NativeProxyObject.h"
 #include <QtCore/QObject>
-#include <QtNetwork/qudpsocket>
+#include <QtNetwork/QUdpSocket>
 #include "TiConstants.h"
 #include "TiV8Event.h"
 #include "TiUDPSocketObject.h"
