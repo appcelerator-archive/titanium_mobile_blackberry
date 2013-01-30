@@ -8,7 +8,7 @@
 
 #include "NativeTimeoutHandler.h"
 #include "TiV8Event.h"
-#include <QTimer.h>
+#include <QTimer>
 
 int NativeTimeoutHandler::idGenerator = 0;
 
