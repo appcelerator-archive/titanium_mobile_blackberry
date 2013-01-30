@@ -9,14 +9,15 @@
 #define NATIVEDBOBJECT_H_
 
 #include "NativeProxyObject.h"
-#include <QtCore/QObject>
+//#include <QtCore/QObject>
 #include "TiConstants.h"
 #include "TiV8Event.h"
 #include "TiDBObject.h"
+#include "TiResultSetObject.h"
 
 #include <sqlite3.h>
-#include <stdio.h>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -38,7 +39,7 @@ public:
     int getObjectType() const;
 
     // DB methods
-    int execute(string command);
+    int execute(TiResultSetObject* resultSet, string command, vector<string> bindings);
     int close();
 
 protected:

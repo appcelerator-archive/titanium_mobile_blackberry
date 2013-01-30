@@ -7,6 +7,7 @@
 
 #include "TiDatabase.h"
 #include "TiDBObject.h"
+#include "TiResultSetObject.h"
 
 #include "TiGenericFunctionObject.h"
 

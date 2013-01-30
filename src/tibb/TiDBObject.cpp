@@ -8,10 +8,13 @@
 #include "TiDBObject.h"
 
 #include "NativeDBObject.h"
+#include "TiResultSetObject.h"
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
 #include "NativeException.h"
 #include "TiMessageStrings.h"
+#include <vector>
+
 
 TiDBObject::TiDBObject()
     : TiProxy("DB") {
@@ -30,7 +33,7 @@ void TiDBObject::addObjectToParent(TiObject* parent, NativeObjectFactory* object
 }
 
 TiDBObject* TiDBObject::createDB(NativeObjectFactory* objectFactory, const Arguments& args) {
-	TiDBObject* obj = new TiDBObject();
+	TiDBObject* obj = new TiDBObject(objectFactory);
     obj->setNativeObjectFactory(objectFactory);
     obj->initializeTiObject(NULL,args);
     return obj;
@@ -57,24 +60,50 @@ Handle<Value> TiDBObject::_execute(void* userContext, TiObject*, const Arguments
     if (args.Length() < 1) {
         return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
+
     HandleScope handleScope;
     TiDBObject* obj = (TiDBObject*) userContext;
     NativeDBObject* ndb = (NativeDBObject*) obj->getNativeObject();
 
+    // create ResultSet object
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result = global->NewInstance();
+    TiResultSetObject* newResultSet = TiResultSetObject::createResultSet(obj->objectFactory_);
+    newResultSet->setValue(result);
+
+    vector<string> bindings;
+    if (args.Length() > 1) {
+		if (args[1]->IsArray()) {
+			Handle<Array> array = Handle<Array>::Cast(args[1]);
+			for (int i = 0; i < array->Length(); i++) {
+				Handle<Value> element = array->Get(i);
+				bindings.push_back(TiObject::getSTDStringFromValue(element));
+			}
+		}
+		else {
+			for (int i = 1; i > args.Length(); i++) {
+				bindings.push_back(TiObject::getSTDStringFromValue(args[i]));
+			}
+		}
+    }
+
     try {
-    	// create and pass in the result set object fill it in if callback
-        ndb->execute(TiObject::getSTDStringFromValue(args[0]));
+      ndb->execute(newResultSet, TiObject::getSTDStringFromValue(args[0]), bindings);
     } catch (NativeException& ne) {
         return ThrowException(String::New(ne.what()));
     }
 
-    // like socket create tcp returning the tcp object return the result set object
+
+    if (newResultSet->effectedRows > 0) {
+    	setTiObjectToJsObject(result, newResultSet);
+    	return handleScope.Close(result);
+    }
+
     return Undefined();
 }
 
 Handle<Value> TiDBObject::_close(void* userContext, TiObject*, const Arguments& args)
 {
-    HandleScope handleScope;
     TiDBObject* obj = (TiDBObject*) userContext;
     NativeDBObject* ndb = (NativeDBObject*) obj->getNativeObject();
 

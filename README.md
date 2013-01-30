@@ -100,8 +100,8 @@ PATH_TO_PLATFORM_SDK/blackberry/builder.py run -t device -d PATH_TO_PROJECT -p P
 PATH_TO_PLATFORM_SDK/blackberry/builder.py" run -t distribute -d PATH_TO_PROJECT -p PATH_TO_BB_NDK --store_password STORE_PASSWORD --output_dir PATH_TO_SIGNED_BAR_FILE
 
 
-How to Setup and Build the Titanium BlackBerry SDK (Native Platform Drop-In)
-----------------------------------------------------------------------------
+How to Setup, Build and Test the Titanium BlackBerry SDK
+---------------------------------------------------------
 
 Note: The following instructions are for Mac. For Windows you will need cygwin or some other Unix on Windows utility.
 
@@ -109,21 +109,22 @@ Note: The following instructions are for Mac. For Windows you will need cygwin o
 
 2) From a command window (Terminal) execute "git clone --recursive https://github.com/appcelerator/titanium_mobile_blackberry"
 
-3) BlackBerry has forked the V8 Javascript runtime for BlackBerry 10 and made it available on GitHub (https://github.com/blackberry/v8). To build
-the python scons tool is used. To build V8 using scons:
-	Download macports
-	From a command window execute "sudo port install scons"
-	From a command window execute "source /Applications/bbndk/bbndk-env.sh"
+3) BlackBerry has forked the V8 Javascript runtime for BlackBerry 10 and made it available on GitHub (https://github.com/blackberry/v8). To build: 
 
-4) Now from the repo runtime directory execute "make" this will build the BlackBerry 10 V8 binaries.
+1. From a command window execute "source /Applications/bbndk/bbndk-env.sh"
+2. Now from the repo runtime directory execute "make" this will build the BlackBerry 10 V8 binaries. If you get errors execute "make clean" first.
 
-5) Launch QNX Momentics IDE and from "File->Import->General->Existing Projects into Workspace" import the tibb and test/tibbtest projects from the repo
+4) Launch QNX Momentics IDE and from "File->Import->General->Existing Projects into Workspace" import the tibb and test/tibbtest projects from the repo
 
-6) Set the Build Configuration -> Simulator Debug. 
+5) Set the Build Configuration -> Simulator Debug. 
 
-7) Build tibb and test/tibbtest. When the builds are finished "Debug As" C/C++ Application. Also you need to setup the simulator using the Debug Configuration panel. Make sure to have the simulator running, you should see the simulator in the list of debug targets.
+6) Build tibb and test/tibbtest. When the builds are finished "Debug As" C/C++ Application. Also you need to setup the simulator using the Debug Configuration panel. Make sure to have the simulator running, you should see the simulator in the list of debug targets.
 
-8) To create the the blackberry drop-in, from the repo cli/commands execute "./create_sdk" this will create a build folder with the blackberry sdk folder in it. The blackberry folder can be dropped into a current Titanium SDK. The create_sdk script will call create_sdk.js which is a Node.js module and has a dependency on the wrench module. If you get an error about wrench, execute the command "npm install wrench".
+
+How to Build and Deploy the Titanium BlackBerry SDK (Native Platform Drop-In)
+-----------------------------------------------------------------------------
+
+1) To create the the blackberry drop-in, from the repo cli/commands execute "./create_sdk" this will create a build folder with the blackberry sdk folder in it. The blackberry folder can be dropped into a current Titanium SDK. The create_sdk script will call create_sdk.js which is a Node.js module and has a dependency on the wrench module. If you get an error about wrench, execute the command "npm install wrench".
 
 Feedback
 --------

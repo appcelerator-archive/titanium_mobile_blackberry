@@ -1,51 +1,63 @@
 // this sets the background color of the master UIView (when there are no windows/tab groups on it)
 //Titanium.UI.setBackgroundColor('#000');
 
+/* db
+
 var win = Ti.UI.createWindow({});
 
-/* db
+
 var db = Ti.Database.open('mydb1Installed');
 
 db.execute('CREATE TABLE IF NOT EXISTS people (name TEXT, phone_number TEXT, city TEXT)');
 db.execute('DELETE FROM people');
 
-//var thisName = 'Arthur';
-//var thisPhoneNo = '1-617-000-0000';
-//var thisCity = 'Mountain View';
-//db.execute('INSERT INTO people (name, phone_number, city) VALUES (?, ?, ?)', thisName, thisPhoneNo, thisCity);
+var thisName = 'Arthur';
+var thisPhoneNo = '1-617-000-0000';
+var thisCity = 'Mountain View';
+var rows = db.execute('INSERT INTO people (name, phone_number, city) VALUES (?, ?, ?)', thisName, thisPhoneNo, thisCity);
 
-db.execute("INSERT INTO people (name, phone_number, city) VALUES ('Arthur', '1-617-000-0000', 'Mountain View')");
 
-//var personArray = ['Paul','020 7000 0000', 'London'];
-//db.execute('INSERT INTO people (name, phone_number, city) VALUES (?, ?, ?)', personArray);
+var personArray = ['Paul',300, 'London'];
+var rows = db.execute('INSERT INTO people (name, phone_number, city) VALUES (?, ?, ?)', personArray);
 
-var rows = db.execute('SELECT rowid,name,phone_number,city FROM people');
-db.close();
+db.execute('SELECT rowid,name,phone_number,city FROM people');
+//db.close();
 
-//Ti.API.info('Row count: ' + rows.rowCount);
 
-//var fieldCount;
-//fieldCount = rows.fieldCount();
+Ti.API.info('Row count: ' + rows.rowCount);
 
-//Ti.API.info('Field count: ' + fieldCount);
+var fieldCount;
+fieldCount = rows.fieldCount;
 
-//while (rows.isValidRow()){
+Ti.API.info('Field count: ' + fieldCount);
+
+while (rows.isValidRow()){
 //  Ti.API.info('Person ---> ROWID: ' + rows.fieldByName('rowid') + ', name:' + rows.field(1) + ', phone_number: ' + rows.fieldByName('phone_number') + ', city: ' + rows.field(3));
-//  rows.next();
-//}
-//rows.close();
+  rows.next();
+}
+rows.close();
+*/
 
- db */
 
-
+var win = Ti.UI.createWindow({});
 //Clipping.
 var parent = Ti.UI.createView({backgroundColor:'red',width:'100',height:'100'})
 var child =Ti.UI.createView({backgroundColor:'green',width:150,height:150,left:5,top:5});
 
 //parent.add(child);
 win.add(parent);
-win.open();
 
+
+var label2 = Ti.UI.createLabel({
+	  color:'blue',
+	  text: 'A long label with\na few line breaks\nand unicode (UTF8)\nsymbols such as\na white chess piece \u2655\nand the euro symbol \u20ac\nlooks like this!\n',
+	  textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
+	  top: 30,
+	  width: 300, height: 200
+	});
+
+win.add(label2);
+win.open();
 
 /*
 //

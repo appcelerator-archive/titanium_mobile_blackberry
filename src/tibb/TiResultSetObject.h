@@ -8,39 +8,39 @@
 #ifndef TIRESULTSETOBJECT_H_
 #define TIRESULTSETOBJECT_H_
 
-/*
- * TiResultSetObject
- *
- * TCP socket that implements the Titanium.IOStream interface.
- *
- * Titanium.Database.ResultSet namespace
- */
-
 #include "TiProxy.h"
 
 class NativeObjectFactory;
 
+/*
+ * TiResultSetObject
+ *
+ * ResultSet object that wraps SQLite database engine.
+ *
+ * Titanium.Database.ResultSet namespace
+ */
 class TiResultSetObject : public TiProxy
 {
 public:
-    static void addObjectToParent(TiObject* parent);
-    static TiResultSetObject* createTCP(NativeObjectFactory* objectFactory);
+    static void addObjectToParent(TiObject* parent, NativeObjectFactory* objectFactory);
+    static TiResultSetObject* createResultSet(NativeObjectFactory* objectFactory);
+
+    int effectedRows;
 
 protected:
     virtual ~TiResultSetObject();
     virtual void onCreateStaticMembers();
     virtual void initializeTiObject(TiObject* parentContext);
 
+    static Handle<Value> _fieldByName(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _rowCount(void* userContext, TiObject* caller, const Arguments& args);
 private:
     TiResultSetObject();
+    explicit TiResultSetObject(NativeObjectFactory* objectFactory);
     TiResultSetObject(const TiResultSetObject&);
     TiResultSetObject& operator=(const TiResultSetObject&);
 
-    void setTiBufferMappingProperties(const TiProperty* props, int propertyCount);
-    static VALUE_MODIFY _valueModify(int propertyNumber, TiObject* value, void* context);
-    static Handle<Value> _getValue(int propertyNumber, void* context);
-
-    static Handle<Value> _connect(void* userContext, TiObject* caller, const Arguments& args);
+    NativeObjectFactory* objectFactory_;
 };
 
 

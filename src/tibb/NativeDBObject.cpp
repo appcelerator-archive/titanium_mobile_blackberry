@@ -10,17 +10,12 @@
 #include "NativeException.h"
 #include "NativeMessageStrings.h"
 #include "TiObject.h"
+#include "TiLogger.h"
+
+#define N_FILEPATH "app/native/"
+#define N_SQLITE_ERROR 1
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-
-static int callback(void *NotUsed, int argc, char **argv, char **azColName){
-	int i;
-	for(i=0; i<argc; i++){
-		printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-	}
-	printf("\n");
-	return 0;
-}
 
 NativeDBObject::NativeDBObject(TiObject* tiObject)
     : NativeProxyObject(tiObject) {
@@ -38,28 +33,66 @@ NativeDBObject* NativeDBObject::createDB(TiObject* tiObject) {
 }
 
 int NativeDBObject::_open(string name) {
-	int rc;
-    string dbFile = "app/native/" + name;
+	int error;
+    string dbFile = N_FILEPATH + name;
 
-	rc = sqlite3_open_v2(dbFile.c_str(), &_db, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, NULL);
-	if (rc) {
-		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(_db));
+	error = sqlite3_open_v2(dbFile.c_str(), &_db, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, NULL);
+	if (error) {
+		TiLogger::getInstance().log(sqlite3_errmsg(_db));
 		sqlite3_close(_db);
-		return(1);
+		return error;
 	}
 
 	return NATIVE_ERROR_OK;
 }
 
-int NativeDBObject::execute(string command) {
-	int rc;
-	char *zErrMsg = 0;
+int NativeDBObject::execute(TiResultSetObject* resultSet, string command, vector<string> bindings) {
+	int error;
+	sqlite3_stmt* statement;
+	int stepResult;
 
-	rc = sqlite3_exec(_db, command.c_str(), callback, 0, &zErrMsg);
-	if (rc != SQLITE_OK) {
-		fprintf(stderr, "SQL error: %s\n", zErrMsg);
-        sqlite3_free(zErrMsg);
+	error = sqlite3_prepare_v2(_db, command.c_str(), strlen(command.c_str()) + 1, &statement, NULL);
+	if(error) {
+		TiLogger::getInstance().log(sqlite3_errmsg(_db));
+		sqlite3_finalize(statement);
+		sqlite3_close(_db);
+		return error;
 	}
+
+	for (int i = 0; i < bindings.size(); i++) {
+		error = sqlite3_bind_text(statement, i + 1, bindings[i].c_str(), strlen(bindings[i].c_str()), 0);
+		if(error) {
+			TiLogger::getInstance().log(sqlite3_errmsg(_db));
+			sqlite3_finalize(statement);
+			sqlite3_close(_db);
+			return error;
+		}
+	}
+
+	stepResult = sqlite3_step(statement);
+
+	if (stepResult == SQLITE_DONE) {
+		sqlite3_finalize(statement);
+		return NATIVE_ERROR_OK;
+	}
+
+	int effectedRows = 0;
+	while (true) {
+		if (stepResult == SQLITE_ROW) {
+			effectedRows++;
+		}
+		else if (stepResult == SQLITE_DONE) {
+			break;
+		}
+		else {
+			sqlite3_finalize(statement);
+			TiLogger::getInstance().log("While stepping through statement, an error has occurred");
+			return  N_SQLITE_ERROR;
+		}
+		stepResult = sqlite3_step(statement);
+	}
+
+	resultSet->effectedRows = effectedRows;
 
 	return NATIVE_ERROR_OK;
 }
