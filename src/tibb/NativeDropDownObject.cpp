@@ -8,7 +8,7 @@
 #include "NativeDropDownObject.h"
 #include "TiEventContainerFactory.h"
 #include <bb/cascades/DropDown>
-#include <QVector.h>
+#include <QVector>
 
 NativeDropDownObject::NativeDropDownObject(TiObject* tiObject)
     : NativeControlObject(tiObject)
