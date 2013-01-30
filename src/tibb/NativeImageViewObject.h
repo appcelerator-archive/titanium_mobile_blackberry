@@ -8,8 +8,9 @@
 #ifndef NATIVEIMAGEVIEWOBJECT_H_
 #define NATIVEIMAGEVIEWOBJECT_H_
 
+#include <bb/cascades/Image>
+
 #include "NativeControlObject.h"
-#include <bb/cascades/resources/Image>
 
 //forward declaration
 namespace bb
