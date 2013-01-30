@@ -10,7 +10,7 @@
 
 #include "NativeProxyObject.h"
 #include <QtCore/QObject>
-#include <QtNetwork/QNetworkReply.h>
+#include <QtNetwork/QNetworkReply>
 #include "TiConstants.h"
 #include "TiV8Event.h"
 #include "TiHTTPClientObject.h"
