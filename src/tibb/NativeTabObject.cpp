@@ -14,7 +14,10 @@
 #include <bb/cascades/Page>
 #include <bb/cascades/Tab>
 
+#include "WindowGroup.h"
+
 using namespace bb::cascades;
+using namespace titanium;
 
 NativeTabObject::NativeTabObject(TiObject* tiObject)
     : NativeControlObject(tiObject)
@@ -77,8 +80,9 @@ int NativeTabObject::addChildNativeObject(NativeObject* obj)
 {
     if (obj->getObjectType() == N_TYPE_WINDOW)
     {
-        bb::cascades::Page* page = bb::cascades::Page::create().content((bb::cascades::Control*)obj->getNativeHandle());
-        navigationPane_->push(page);
+        WindowGroup* group = new WindowGroup(NULL);
+        group->insertWindow((Window*) obj->getNativeHandle());
+        navigationPane_->push(Page::create().content(group));
         return NATIVE_ERROR_OK;
     }
     return NATIVE_ERROR_NOTSUPPORTED;
