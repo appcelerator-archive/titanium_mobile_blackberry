@@ -8,7 +8,7 @@
 #include "NativeSliderObject.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
-#include "bb/cascades/slider"
+#include <bb/cascades/Slider>
 
 NativeSliderObject::NativeSliderObject(TiObject* tiObject)
     : NativeControlObject(tiObject)

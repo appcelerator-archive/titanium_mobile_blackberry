@@ -9,7 +9,7 @@
 #define NATIVEIMAGEVIEWOBJECT_H_
 
 #include "NativeControlObject.h"
-#include "bb/cascades/resources/image.h"
+#include <bb/cascades/resources/Image>
 
 //forward declaration
 namespace bb
