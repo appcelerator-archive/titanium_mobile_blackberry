@@ -9,7 +9,7 @@
 #include "TiEventContainerFactory.h"
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
-#include <bb/cascades/imageview>
+#include <bb/cascades/ImageView>
 
 NativeImageViewObject::NativeImageViewObject(TiObject* tiObject)
     : NativeControlObject(tiObject)
