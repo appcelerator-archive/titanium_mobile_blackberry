@@ -7,7 +7,7 @@
 
 #include "NativeLabelObject.h"
 #include <bb/cascades/Color>
-#include <qtgui/QColor>
+#include <QColor>
 
 NativeLabelObject::NativeLabelObject(TiObject* tiObject)
     : NativeAbstractTextControlObject(tiObject)
