@@ -11,42 +11,36 @@
 #include "NativeObject.h"
 #include "TiEventContainer.h"
 #include <QHash>
+#include <QScopedPointer>
 
 
 class EventPair : public TiBase
 {
 public:
-    EventPair(TiEventContainer* c, QObject* h)
-        : container(c)
-        , handler(h)
-    {}
+    EventPair(TiEventContainer* c, QObject* h = 0)
+        : container_(c)
+        , handler_(h)
+    { }
 
-    ~EventPair()
-    {
-        delete container;
-        delete handler;
+    bool isValid() const {
+        return !(container_.isNull() || handler_.isNull());
     }
 
-    bool isValid()
-    {
-        return container != NULL && handler != NULL;
+    TiEventContainer* container() const {
+        return container_.data();
     }
 
-    TiEventContainer* container;
-    QObject* handler;
+    QObject* handler() const {
+        return handler_.data();
+    }
 
 private:
-    EventPair()
-        : container(NULL)
-        , handler(NULL)
-    {
-        /* Default ctor must not be used */
-        Q_ASSERT(false);
-    }
-
     /* Disable copy ctor and assignment */
     EventPair(const EventPair&);
     EventPair& operator=(const EventPair&);
+
+    QScopedPointer<TiEventContainer> container_;
+    QScopedPointer<QObject> handler_;
 };
 
 

@@ -58,5 +58,5 @@ void NativeImageViewObject::setupEvents(TiEventContainerFactory* containerFactor
     TiEventContainer* eventImageChanged = containerFactory->createEventContainer();
     eventImageChanged->setDataProperty("type", tetCHANGE);
     events_.insert(tetCHANGE, EventPairSmartPtr(eventImageChanged, new ImageViewEventHandler(eventImageChanged)));
-    QObject::connect(imageView_, SIGNAL(imageChanged(const bb::cascades::Image)), events_[tetCHANGE]->handler, SLOT(imageChanged(const bb::cascades::Image)));
+    QObject::connect(imageView_, SIGNAL(imageChanged(const bb::cascades::Image)), events_[tetCHANGE]->handler(), SLOT(imageChanged(const bb::cascades::Image)));
 }

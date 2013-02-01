@@ -89,7 +89,7 @@ void NativeListViewObject::setupEvents(TiEventContainerFactory* containerFactory
     TiEventContainer* eventClicked = containerFactory->createEventContainer();
     eventClicked->setDataProperty("type", tetCLICK);
     events_.insert(tetCLICK, EventPairSmartPtr(eventClicked, new ListViewEventHandler(eventClicked, this)));
-    QObject::connect(listView_, SIGNAL(triggered(QVariantList)), events_[tetCLICK]->handler, SLOT(triggered(QVariantList)));
+    QObject::connect(listView_, SIGNAL(triggered(QVariantList)), events_[tetCLICK]->handler(), SLOT(triggered(QVariantList)));
 }
 
 /*********** ListViewItemFactory class *************/

@@ -39,11 +39,11 @@ int NativeProxyObject::fireEvent(const char* name, const TiObject* event) const
     {
         if (event != NULL)
         {
-            ep->container->fireEvent(event);
+            ep->container()->fireEvent(event);
         }
         else
         {
-            ep->container->fireEvent();
+            ep->container()->fireEvent();
         }
         return NATIVE_ERROR_OK;
     }
@@ -57,7 +57,7 @@ int NativeProxyObject::setEventHandler(const char* eventName, TiEvent* event)
     if (events_.contains(eventName))
     {
         event->setId(getNextEventId());
-        events_[eventName]->container->addListener(event);
+        events_[eventName]->container()->addListener(event);
         return NATIVE_ERROR_OK;
     }
     return NATIVE_ERROR_NOTSUPPORTED;
@@ -67,7 +67,7 @@ int NativeProxyObject::removeEventHandler(const char* eventName, int eventId)
 {
     if (events_.contains(eventName))
     {
-        events_[eventName]->container->removeListener(eventId);
+        events_[eventName]->container()->removeListener(eventId);
         return NATIVE_ERROR_OK;
     }
     return NATIVE_ERROR_NOTSUPPORTED;

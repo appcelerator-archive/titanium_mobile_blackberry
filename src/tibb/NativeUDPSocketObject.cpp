@@ -106,7 +106,7 @@ int NativeUDPSocketObject::setStartedCallback(TiObject* obj, void* userContext)
         Handle<Object> source = Handle<Object>::Cast(context->getValue());
         TiV8Event* connectEvent = TiV8Event::createEvent(tetSTARTED, Handle<Function>::Cast(value), source);
         setEventHandler(tetSTARTED, connectEvent);
-        events_[tetSTARTED]->container->setV8ValueProperty("socket", context->getValue());
+        events_[tetSTARTED]->container()->setV8ValueProperty("socket", context->getValue());
         connectEvent->release();
         return NATIVE_ERROR_OK;
     }
@@ -130,7 +130,7 @@ int NativeUDPSocketObject::setErrorCallback(TiObject* obj, void* userContext)
         Handle<Object> source = Handle<Object>::Cast(context->getValue());
         TiV8Event* errorEvent = TiV8Event::createEvent(tetERROR, Handle<Function>::Cast(value), source);
         setEventHandler(tetERROR, errorEvent);
-        events_[tetERROR]->container->setV8ValueProperty("socket", context->getValue());
+        events_[tetERROR]->container()->setV8ValueProperty("socket", context->getValue());
         errorEvent->release();
         return NATIVE_ERROR_OK;
     }
@@ -154,7 +154,7 @@ int NativeUDPSocketObject::setDataCallback(TiObject* obj, void* userContext)
         Handle<Object> source = Handle<Object>::Cast(context->getValue());
         TiV8Event* acceptEvent = TiV8Event::createEvent(tetDATA, Handle<Function>::Cast(value), source);
         setEventHandler(tetDATA, acceptEvent);
-        events_[tetDATA]->container->setV8ValueProperty("socket", context->getValue());
+        events_[tetDATA]->container()->setV8ValueProperty("socket", context->getValue());
         acceptEvent->release();
         return NATIVE_ERROR_OK;
     }
@@ -278,10 +278,10 @@ void NativeUDPSocketObject::datagramReady()
 		if (udpSocket_->readDatagram(datagram.data(), datagram.size(), &addr, &port) == -1) {
 			continue;
 		}
-        events_[NativeProxyObject::tetDATA]->container->setDataProperty("stringData", datagram.data());
-        events_[NativeProxyObject::tetDATA]->container->setV8ValueProperty("bytesData", TiObject::getValueFromByteArray(datagram));
-        events_[NativeProxyObject::tetDATA]->container->setDataProperty("address", addr.toString().toAscii().data());
-        events_[NativeProxyObject::tetDATA]->container->setDataProperty("port", (int)port);
+        events_[NativeProxyObject::tetDATA]->container()->setDataProperty("stringData", datagram.data());
+        events_[NativeProxyObject::tetDATA]->container()->setV8ValueProperty("bytesData", TiObject::getValueFromByteArray(datagram));
+        events_[NativeProxyObject::tetDATA]->container()->setDataProperty("address", addr.toString().toAscii().data());
+        events_[NativeProxyObject::tetDATA]->container()->setDataProperty("port", (int)port);
 		fireEvent(NativeProxyObject::tetDATA, NULL);
 	}
 }
