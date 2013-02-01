@@ -33,15 +33,16 @@ double _computeValue(std::string value, enum ValueType valueType, double dpi) {
 		return atof(value.c_str()) / 100;
 	}
 	else if (valueType == Fixed) {
-	  if ((value.find("mm") != std::string::npos) && (value.find("cm") != std::string::npos) &&
-			  (value.find("em") != std::string::npos) && (value.find("pt") != std::string::npos) &&
-			  (value.find("in") != std::string::npos) && (value.find("px") != std::string::npos) &&
-			  (value.find("dp") != std::string::npos)) {
+	  if ((value.find("mm") != std::string::npos) || (value.find("cm") != std::string::npos) ||
+			  (value.find("em") != std::string::npos) || (value.find("pt") != std::string::npos) ||
+			  (value.find("in") != std::string::npos) || (value.find("px") != std::string::npos) ||
+			  (value.find("dp") != std::string::npos) || (value.find("dip") != std::string::npos)) {
 		  units = value.substr (value.size() - 2 , 2);
 		  parsedValue = atof(value.substr(0, value.size() - 2).c_str());
 	  }
 	  else {
-		  return atof(value.c_str());
+		  parsedValue = atof(value.c_str());
+		  units = "dp";
 	  }
 
 	  if (units == "mm") {
@@ -63,7 +64,7 @@ double _computeValue(std::string value, enum ValueType valueType, double dpi) {
 	  	  return parsedValue;
 	  }
 	  else if (units == "dp") {
-	  	  return parsedValue * dpi / 96;
+	  	  return parsedValue * (336/96);
 	  }
 	}
 	else {
