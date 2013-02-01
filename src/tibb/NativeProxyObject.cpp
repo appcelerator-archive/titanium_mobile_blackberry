@@ -10,6 +10,7 @@
 #include "NativeLoggerObject.h"
 #include "NativeMessageStrings.h"
 #include "TiEvent.h"
+#include "TitaniumRuntime.h"
 
 const char* NativeProxyObject::tetACCEPTED = "accepted";
 const char* NativeProxyObject::tetCHANGE = "change";
@@ -35,7 +36,7 @@ NativeProxyObject::~NativeProxyObject()
 int NativeProxyObject::fireEvent(const char* name, const TiObject* event) const
 {
     EventPairSmartPtr ep = events_.value(name);
-    if (ep.get() != NULL && ep->isValid())
+    if (ep.get() != NULL && ep->container())
     {
         if (event != NULL)
         {
@@ -53,14 +54,18 @@ int NativeProxyObject::fireEvent(const char* name, const TiObject* event) const
 
 int NativeProxyObject::setEventHandler(const char* eventName, TiEvent* event)
 {
-    // TODO: support custom events
-    if (events_.contains(eventName))
-    {
-        event->setId(getNextEventId());
-        events_[eventName]->container()->addListener(event);
-        return NATIVE_ERROR_OK;
+    TiEventContainer* container;
+    if (events_.contains(eventName)) {
+        container = events_[eventName]->container();
+    } else {
+        TiEventContainerFactory* factory = TitaniumRuntime::instance()->objectFactory()->getEventContainerFactory();
+        container = factory->createEventContainer();
+        events_.insert(eventName, EventPairSmartPtr(container, NULL));
     }
-    return NATIVE_ERROR_NOTSUPPORTED;
+
+    event->setId(getNextEventId());
+    container->addListener(event);
+    return NATIVE_ERROR_OK;
 }
 
 int NativeProxyObject::removeEventHandler(const char* eventName, int eventId)
