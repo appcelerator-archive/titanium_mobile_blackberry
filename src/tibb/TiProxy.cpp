@@ -7,6 +7,7 @@
 
 #include "TiProxy.h"
 
+#include "NativeProxyObject.h"
 #include "TiGenericFunctionObject.h"
 #include "TiV8Event.h"
 
@@ -105,7 +106,10 @@ void TiProxy::onAddEventListener(const char* eventName, Handle<Function> eventFu
     NativeObject* no = getNativeObject();
     if (no == NULL)
     {
-        return;
+        // To support events we need to create a native proxy
+        // instance here if no native object has been set yet.
+        no = new NativeProxyObject(this);
+        setNativeObject(no);
     }
     Handle<Object> source = Handle<Object>::Cast(getValue());
     TiV8Event* event = TiV8Event::createEvent(eventName, eventFunction, source);

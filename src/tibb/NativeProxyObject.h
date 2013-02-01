@@ -76,6 +76,11 @@ private:
 class NativeProxyObject: public NativeObject
 {
 public:
+    explicit NativeProxyObject(TiObject* tiObject);
+    virtual ~NativeProxyObject();
+
+    virtual int getObjectType() const { return 0; }
+
     virtual int fireEvent(const char* name, const TiObject* event) const;
     virtual int removeEventHandler(const char* eventName, int eventId);
     virtual int setEventHandler(const char* eventName, TiEvent* event);
@@ -94,9 +99,6 @@ public:
 
 
 protected:
-    explicit NativeProxyObject(TiObject* tiObject);
-    virtual ~NativeProxyObject();
-
     int getNextEventId();
 
     QHash<QString, EventPairSmartPtr> events_;
