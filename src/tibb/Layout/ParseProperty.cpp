@@ -37,8 +37,14 @@ double _computeValue(std::string value, enum ValueType valueType, double dpi) {
 			  (value.find("em") != std::string::npos) || (value.find("pt") != std::string::npos) ||
 			  (value.find("in") != std::string::npos) || (value.find("px") != std::string::npos) ||
 			  (value.find("dp") != std::string::npos) || (value.find("dip") != std::string::npos)) {
-		  units = value.substr (value.size() - 2 , 2);
-		  parsedValue = atof(value.substr(0, value.size() - 2).c_str());
+
+		  if((value.find("dip") != std::string::npos)) {
+			  units = value.substr (value.size() - 3 , 3);
+			  parsedValue = atof(value.substr(0, value.size() - 3).c_str());
+		  } else {
+			  units = value.substr (value.size() - 2 , 2);
+			  parsedValue = atof(value.substr(0, value.size() - 2).c_str());
+		  }
 	  }
 	  else {
 		  parsedValue = atof(value.c_str());
@@ -63,7 +69,7 @@ double _computeValue(std::string value, enum ValueType valueType, double dpi) {
 	  else if (units == "px") {
 	  	  return parsedValue;
 	  }
-	  else if (units == "dp") {
+	  else if (units == "dp" || units == "dip") {
 	  	  return parsedValue * (336/96);
 	  }
 	}
