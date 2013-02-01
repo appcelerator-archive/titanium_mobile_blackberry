@@ -11,7 +11,7 @@
 #include "TiMessageStrings.h"
 
 TiAPIObject::TiAPIObject()
-    : TiObject("API")
+    : TiProxy("API")
 {
 }
 
@@ -27,6 +27,7 @@ void TiAPIObject::addObjectToParent(TiObject* parent)
 
 void TiAPIObject::onCreateStaticMembers()
 {
+    TiProxy::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "debug", this, _debug);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "info", this, _info);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "warn", this, _warn);

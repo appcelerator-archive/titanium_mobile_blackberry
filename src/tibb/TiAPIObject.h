@@ -8,7 +8,7 @@
 #ifndef TIAPIOBJECT_H_
 #define TIAPIOBJECT_H_
 
-#include "TiObject.h"
+#include "TiProxy.h"
 
 /*
  * TiAPIObject
@@ -16,7 +16,7 @@
  * Object that represents name space: Titanium.API
  */
 
-class TiAPIObject : public TiObject
+class TiAPIObject : public TiProxy
 {
 public:
     static void addObjectToParent(TiObject* parent);

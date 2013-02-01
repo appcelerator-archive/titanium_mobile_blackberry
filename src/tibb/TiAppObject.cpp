@@ -10,7 +10,7 @@
 #include "TiAppPropertiesObject.h"
 
 TiAppObject::TiAppObject()
-    : TiObject("App")
+    : TiProxy("App")
 {
 }
 
@@ -26,5 +26,6 @@ void TiAppObject::addObjectToParent(TiObject* parent)
 
 void TiAppObject::onCreateStaticMembers()
 {
+    TiProxy::onCreateStaticMembers();
     TiAppPropertiesObject::addObjectToParent(this);
 }
