@@ -120,7 +120,7 @@ public slots:
 
         HandleScope handleScope;
         QTcpSocket* inboundSocket = owner_->tcpServer_->nextPendingConnection();
-        Handle<Value> socketObj = owner_->events_[NativeProxyObject::tetACCEPTED]->container->getV8ValueProperty("socket");
+        Handle<Value> socketObj = owner_->events_[NativeProxyObject::tetACCEPTED]->container()->getV8ValueProperty("socket");
         Handle<ObjectTemplate> global = TiObject::getObjectTemplateFromJsObject(socketObj);
         Handle<Object> result = global->NewInstance();
         TiTCPSocketObject* socket = (TiTCPSocketObject*)TiObject::getTiObjectFromJsObject(socketObj);
@@ -132,14 +132,14 @@ public slots:
         inBoundNative->socketState_ = SOCKET_STATE_CONNECTED;
         inBoundNative->port_ = inboundSocket->peerPort();
         inBoundNative->hostName_ = inboundSocket->peerAddress().toString();
-        owner_->events_[NativeProxyObject::tetACCEPTED]->container->setV8ValueProperty("inbound",  inBoundSocket->getValue());
+        owner_->events_[NativeProxyObject::tetACCEPTED]->container()->setV8ValueProperty("inbound",  inBoundSocket->getValue());
         owner_->fireEvent(NativeProxyObject::tetACCEPTED, NULL);
     }
 
     void error(QAbstractSocket::SocketError socketError)
     {
-        owner_->events_[NativeProxyObject::tetERROR]->container->setDataProperty(NativeProxyObject::tetERROR, owner_->tcpClient_->errorString().toStdString().c_str());
-        owner_->events_[NativeProxyObject::tetERROR]->container->setDataProperty("errorCode", socketError);
+        owner_->events_[NativeProxyObject::tetERROR]->container()->setDataProperty(NativeProxyObject::tetERROR, owner_->tcpClient_->errorString().toStdString().c_str());
+        owner_->events_[NativeProxyObject::tetERROR]->container()->setDataProperty("errorCode", socketError);
         owner_->socketState_ = SOCKET_STATE_ERROR;
         owner_->fireEvent(NativeProxyObject::tetERROR, NULL);
     }

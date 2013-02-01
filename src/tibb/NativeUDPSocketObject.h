@@ -98,8 +98,8 @@ public slots:
 
     void udpError(QAbstractSocket::SocketError socketError)
     {
-        owner_->events_[NativeProxyObject::tetERROR]->container->setDataProperty(NativeProxyObject::tetERROR, owner_->udpSocket_->errorString().toStdString().c_str());
-        owner_->events_[NativeProxyObject::tetERROR]->container->setDataProperty("errorCode", socketError);
+        owner_->events_[NativeProxyObject::tetERROR]->container()->setDataProperty(NativeProxyObject::tetERROR, owner_->udpSocket_->errorString().toStdString().c_str());
+        owner_->events_[NativeProxyObject::tetERROR]->container()->setDataProperty("errorCode", socketError);
         owner_->fireEvent(NativeProxyObject::tetERROR, NULL);
     }
 

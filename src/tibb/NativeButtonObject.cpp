@@ -70,5 +70,5 @@ void NativeButtonObject::setupEvents(TiEventContainerFactory* containerFactory)
     TiEventContainer* eventClick = containerFactory->createEventContainer();
     eventClick->setDataProperty("type", tetCLICK);
     events_.insert(tetCLICK, EventPairSmartPtr(eventClick, new ButtonEventHandler(eventClick)));
-    QObject::connect(button_, SIGNAL(clicked()), events_[tetCLICK]->handler, SLOT(clicked(void)));
+    QObject::connect(button_, SIGNAL(clicked()), events_[tetCLICK]->handler(), SLOT(clicked(void)));
 }

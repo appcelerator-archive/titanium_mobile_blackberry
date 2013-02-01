@@ -30,14 +30,14 @@
 #include <string.h>
 
 TiUIObject::TiUIObject()
-    : TiObject("UI")
+    : TiProxy("UI")
 {
     objectFactory_ = NULL;
     contentContainer_ = NULL;
 }
 
 TiUIObject::TiUIObject(NativeObjectFactory* objectFactory)
-    : TiObject("UI")
+    : TiProxy("UI")
 {
     objectFactory_ = objectFactory;
     contentContainer_ = NULL;
@@ -56,6 +56,8 @@ void TiUIObject::addObjectToParent(TiObject* parent, NativeObjectFactory* object
 
 void TiUIObject::onCreateStaticMembers()
 {
+    TiProxy::onCreateStaticMembers();
+
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTableView", this, _createTableView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTabGroup", this, _createTabGroup);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createWindow", this, _createWindow);

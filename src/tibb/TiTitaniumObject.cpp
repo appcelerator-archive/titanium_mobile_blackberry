@@ -24,7 +24,7 @@
 #include <fstream>
 
 TiTitaniumObject::TiTitaniumObject()
-    : TiObject("Titanium")
+    : TiProxy("Titanium")
 {
     objectFactory_ = NULL;
 }
@@ -42,6 +42,8 @@ TiObject* TiTitaniumObject::createObject(NativeObjectFactory* objectFactory)
 
 void TiTitaniumObject::onCreateStaticMembers()
 {
+    TiProxy::onCreateStaticMembers();
+
     ADD_STATIC_TI_VALUE("buildDate", String::New(__DATE__), this);
     // TODO: remove hard coded version number
     ADD_STATIC_TI_VALUE("version", Number::New(2.0), this);

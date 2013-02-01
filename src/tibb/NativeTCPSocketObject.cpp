@@ -174,7 +174,7 @@ int NativeTCPSocketObject::setConnectedCallback(TiObject* obj, void* userContext
         Handle<Object> source = Handle<Object>::Cast(context->getValue());
         TiV8Event* connectEvent = TiV8Event::createEvent(tetCONNECTED, Handle<Function>::Cast(value), source);
         setEventHandler(tetCONNECTED, connectEvent);
-        events_[tetCONNECTED]->container->setV8ValueProperty("socket", context->getValue());
+        events_[tetCONNECTED]->container()->setV8ValueProperty("socket", context->getValue());
         connectEvent->release();
         return NATIVE_ERROR_OK;
     }
@@ -198,7 +198,7 @@ int NativeTCPSocketObject::setErrorCallback(TiObject* obj, void* userContext)
         Handle<Object> source = Handle<Object>::Cast(context->getValue());
         TiV8Event* errorEvent = TiV8Event::createEvent(tetERROR, Handle<Function>::Cast(value), source);
         setEventHandler(tetERROR, errorEvent);
-        events_[tetERROR]->container->setV8ValueProperty("socket", context->getValue());
+        events_[tetERROR]->container()->setV8ValueProperty("socket", context->getValue());
         errorEvent->release();
         return NATIVE_ERROR_OK;
     }
@@ -222,7 +222,7 @@ int NativeTCPSocketObject::setAcceptedCallback(TiObject* obj, void* userContext)
         Handle<Object> source = Handle<Object>::Cast(context->getValue());
         TiV8Event* acceptEvent = TiV8Event::createEvent(tetACCEPTED, Handle<Function>::Cast(value), source);
         setEventHandler(tetACCEPTED, acceptEvent);
-        events_[tetACCEPTED]->container->setV8ValueProperty("socket", context->getValue());
+        events_[tetACCEPTED]->container()->setV8ValueProperty("socket", context->getValue());
         acceptEvent->release();
         return NATIVE_ERROR_OK;
     }

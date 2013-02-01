@@ -125,5 +125,5 @@ void NativeDateTimePickerObject::setupEvents(TiEventContainerFactory* containerF
     TiEventContainer* eventChange = containerFactory->createEventContainer();
     eventChange->setDataProperty("type", tetCHANGE);
     events_.insert(tetCHANGE, EventPairSmartPtr(eventChange, new DateTimePickerEventHandler(eventChange)));
-    QObject::connect(dateTimePicker_, SIGNAL(valueChanged(QDateTime)), events_[tetCHANGE]->handler, SLOT(setValue(QDateTime)));
+    QObject::connect(dateTimePicker_, SIGNAL(valueChanged(QDateTime)), events_[tetCHANGE]->handler(), SLOT(setValue(QDateTime)));
 }

@@ -68,7 +68,7 @@ void NativeWindowObject::open()
                      scene,
                      SLOT(addAction(bb::cascades::ActionItem*)));
 
-    events_["open"]->container->fireEvent();
+    events_["open"]->container()->fireEvent();
 
     group->insertWindow(static_cast<titanium::Window*>(container_));
 }
@@ -77,7 +77,7 @@ void NativeWindowObject::close()
 {
     Scene* scene = SceneManager::instance()->activeScene();
     scene->windowGroup()->removeWindow(static_cast<titanium::Window*>(container_));
-    events_["close"]->container->fireEvent();
+    events_["close"]->container()->fireEvent();
 }
 
 class ActionItemTriggerHandler : public QObject
@@ -165,12 +165,12 @@ void NativeWindowObject::setupEvents(TiEventContainerFactory* factory)
     TiEventContainer* eventFocus = factory->createEventContainer();
     eventFocus->setDataProperty("type", "focus");
     events_.insert("focus", EventPairSmartPtr(eventFocus, new FocusEventHandler(eventFocus)));
-    QObject::connect(container_, SIGNAL(onFocus()), events_["focus"]->handler, SLOT(onFocus()));
+    QObject::connect(container_, SIGNAL(onFocus()), events_["focus"]->handler(), SLOT(onFocus()));
 
     TiEventContainer* eventBlur = factory->createEventContainer();
     eventBlur->setDataProperty("type", "blur");
     events_.insert("blur", EventPairSmartPtr(eventBlur, new BlurEventHandler(eventBlur)));
-    QObject::connect(container_, SIGNAL(onBlur()), events_["blur"]->handler, SLOT(onBlur()));
+    QObject::connect(container_, SIGNAL(onBlur()), events_["blur"]->handler(), SLOT(onBlur()));
 
     TiEventContainer* eventOpen = factory->createEventContainer();
     eventOpen->setDataProperty("type", "open");

@@ -57,7 +57,7 @@ void NativeToggleButtonObject::setupEvents(TiEventContainerFactory* containerFac
     events_.insert(tetCHANGE, EventPairSmartPtr(eventStateChanged,
                    new ToggleButtonEventHandler(eventStateChanged, this)));
     QObject::connect(toggleButton_, SIGNAL(checkedChanged(bool)),
-                     events_[tetCHANGE]->handler, SLOT(checkedChanged(bool)));
+                     events_[tetCHANGE]->handler(), SLOT(checkedChanged(bool)));
 }
 
 void NativeToggleButtonObject::updateValue(bool value)

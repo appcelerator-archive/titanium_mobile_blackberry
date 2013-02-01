@@ -7,6 +7,7 @@
 
 #include "TiProxy.h"
 
+#include "NativeProxyObject.h"
 #include "TiGenericFunctionObject.h"
 #include "TiV8Event.h"
 
@@ -59,17 +60,23 @@ Handle<Value> TiProxy::_addEventListener(void* userContext, TiObject*, const Arg
 
 Handle<Value> TiProxy::_fireEvent(void* userContext, TiObject*, const Arguments& args)
 {
-    if (args.Length() < 2)
-    {
+    if (args.Length() < 1) {
         return Undefined();
     }
+
     const TiProxy* obj = (TiProxy*) userContext;
     NativeObject* no = obj->getNativeObject();
+    if (!no) return Undefined();
+
     const String::Utf8Value name(args[0]->ToString());
-    const TiObject event("", args[1]);
-    no->fireEvent(*name, &event);
+    if (args.Length() >= 2) {
+        const TiObject event("", args[1]);
+        no->fireEvent(*name, &event);
+    } else {
+        no->fireEvent(*name, NULL);
+    }
     no->release();
-    no = NULL;
+
     return Undefined();
 }
 
@@ -99,7 +106,10 @@ void TiProxy::onAddEventListener(const char* eventName, Handle<Function> eventFu
     NativeObject* no = getNativeObject();
     if (no == NULL)
     {
-        return;
+        // To support events we need to create a native proxy
+        // instance here if no native object has been set yet.
+        no = new NativeProxyObject(this);
+        setNativeObject(no);
     }
     Handle<Object> source = Handle<Object>::Cast(getValue());
     TiV8Event* event = TiV8Event::createEvent(eventName, eventFunction, source);
