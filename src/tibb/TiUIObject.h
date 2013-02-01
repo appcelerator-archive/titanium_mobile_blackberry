@@ -8,9 +8,7 @@
 #ifndef TIUIOBJECT_H_
 #define TIUIOBJECT_H_
 
-#include "TiObject.h"
-
-class TiProxy;
+#include "TiProxy.h"
 
 typedef TiProxy* (*CREATEOBJECTCALLBACK)(NativeObjectFactory*);
 
@@ -19,7 +17,7 @@ typedef TiProxy* (*CREATEOBJECTCALLBACK)(NativeObjectFactory*);
  *
  * Titanium.UI namespace
  */
-class TiUIObject : public TiObject
+class TiUIObject : public TiProxy
 {
 public:
     static void addObjectToParent(TiObject* parent, NativeObjectFactory* objectFactory);

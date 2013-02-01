@@ -128,5 +128,5 @@ void NativeAlertDialogObject::setupEvents(TiEventContainerFactory* containerFact
     TiEventContainer* eventClick = containerFactory->createEventContainer();
     eventClick->setDataProperty("type", tetCLICK);
     events_.insert(tetCLICK, EventPairSmartPtr(eventClick, new AlertDialogEventHandler(eventClick)));
-    QObject::connect(nativeDialog_, SIGNAL(finished(bb::system::SystemUiResult::Type)), events_[tetCLICK]->handler, SLOT(buttonSelected(bb::system::SystemUiResult::Type)));
+    QObject::connect(nativeDialog_, SIGNAL(finished(bb::system::SystemUiResult::Type)), events_[tetCLICK]->handler(), SLOT(buttonSelected(bb::system::SystemUiResult::Type)));
 }

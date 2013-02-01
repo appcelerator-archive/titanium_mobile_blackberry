@@ -233,21 +233,21 @@ void NativeWebViewObject::setupEvents(TiEventContainerFactory* containerFactory)
 
 
     // load
-    res = QObject::connect(webview_, SIGNAL(loadingChanged(bb::cascades::WebLoadRequest *)), events_[tetLOAD]->handler, SLOT(onLoadingChanged(bb::cascades::WebLoadRequest *)));
+    res = QObject::connect(webview_, SIGNAL(loadingChanged(bb::cascades::WebLoadRequest *)), events_[tetLOAD]->handler(), SLOT(onLoadingChanged(bb::cascades::WebLoadRequest *)));
     // beforeload
-    res = QObject::connect(webview_, SIGNAL(navigationRequested (bb::cascades::WebNavigationRequest *)), events_[tetBEFORELOAD]->handler, SLOT(onNavigationRequested (bb::cascades::WebNavigationRequest *)));
+    res = QObject::connect(webview_, SIGNAL(navigationRequested (bb::cascades::WebNavigationRequest *)), events_[tetBEFORELOAD]->handler(), SLOT(onNavigationRequested (bb::cascades::WebNavigationRequest *)));
     // debug
-    res = QObject::connect(webview_, SIGNAL(javaScriptInterrupted()), events_[tetDATA]->handler, SLOT(inJavaScriptInterrupted()));
-    res = QObject::connect(webview_, SIGNAL(loadProgressChanged(int)), events_[tetDATA]->handler, SLOT(onLoadProgressChanged(int)));
-    res = QObject::connect(webview_, SIGNAL(titleChanged (const QString &)), events_[tetDATA]->handler, SLOT(onTitleChanged (const QString &)));
-    res = QObject::connect(webview_, SIGNAL(navigationHistoryChanged()), events_[tetDATA]->handler, SLOT(onNavigationHistoryChanged()));
-    res = QObject::connect(webview_, SIGNAL(urlChanged(const QUrl &)), events_[tetDATA]->handler, SLOT(onUrlChanged(const QUrl &)));
-    res = QObject::connect(webview_, SIGNAL(iconChanged(const QUrl &)), events_[tetDATA]->handler, SLOT(onIconChanged(const QUrl &)));
-    res = QObject::connect(webview_, SIGNAL(javaScriptResult (int, const QVariant &)), events_[tetDATA]->handler, SLOT(onJavaScriptResult (int, const QVariant &)));
-    res = QObject::connect(webview_, SIGNAL(messageReceived (const QVariantMap &)), events_[tetDATA]->handler, SLOT(onMessageReceived (const QVariantMap &)));
-    res = QObject::connect(webview_, SIGNAL(microFocusChanged()), events_[tetDATA]->handler, SLOT(onMicroFocusChanged()));
-	res = QObject::connect(webview_, SIGNAL(maxContentScaleChanged(float)), events_[tetDATA]->handler, SLOT(onMaxContentScaleChanged(float)));
-	res = QObject::connect(webview_, SIGNAL(minContentScaleChanged(float)), events_[tetDATA]->handler, SLOT(onMinContentScaleChanged(float)));
+    res = QObject::connect(webview_, SIGNAL(javaScriptInterrupted()), events_[tetDATA]->handler(), SLOT(inJavaScriptInterrupted()));
+    res = QObject::connect(webview_, SIGNAL(loadProgressChanged(int)), events_[tetDATA]->handler(), SLOT(onLoadProgressChanged(int)));
+    res = QObject::connect(webview_, SIGNAL(titleChanged (const QString &)), events_[tetDATA]->handler(), SLOT(onTitleChanged (const QString &)));
+    res = QObject::connect(webview_, SIGNAL(navigationHistoryChanged()), events_[tetDATA]->handler(), SLOT(onNavigationHistoryChanged()));
+    res = QObject::connect(webview_, SIGNAL(urlChanged(const QUrl &)), events_[tetDATA]->handler(), SLOT(onUrlChanged(const QUrl &)));
+    res = QObject::connect(webview_, SIGNAL(iconChanged(const QUrl &)), events_[tetDATA]->handler(), SLOT(onIconChanged(const QUrl &)));
+    res = QObject::connect(webview_, SIGNAL(javaScriptResult (int, const QVariant &)), events_[tetDATA]->handler(), SLOT(onJavaScriptResult (int, const QVariant &)));
+    res = QObject::connect(webview_, SIGNAL(messageReceived (const QVariantMap &)), events_[tetDATA]->handler(), SLOT(onMessageReceived (const QVariantMap &)));
+    res = QObject::connect(webview_, SIGNAL(microFocusChanged()), events_[tetDATA]->handler(), SLOT(onMicroFocusChanged()));
+	res = QObject::connect(webview_, SIGNAL(maxContentScaleChanged(float)), events_[tetDATA]->handler(), SLOT(onMaxContentScaleChanged(float)));
+	res = QObject::connect(webview_, SIGNAL(minContentScaleChanged(float)), events_[tetDATA]->handler(), SLOT(onMinContentScaleChanged(float)));
 
     Q_ASSERT(res);
     // Indicate that the variable res isn't used in the rest of the app, to prevent

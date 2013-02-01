@@ -25,12 +25,23 @@ class TitaniumRuntime
 public:
     static int run(const char* javaScript, int argc, char** argv);
 
+    static TitaniumRuntime* instance() {
+        return runtime;
+    }
+
+    NativeObjectFactory* objectFactory() const {
+        return objectFactory_;
+    }
+
 private:
     TitaniumRuntime();
     TitaniumRuntime(const char* javaScript);
     virtual ~TitaniumRuntime();
+
     int internalRun(int argc, char** argv);
     static int messageLoop(void* context);
+
+    static TitaniumRuntime* runtime;
 
     char* javaScript_;
     TiObjectScope rootObject_;

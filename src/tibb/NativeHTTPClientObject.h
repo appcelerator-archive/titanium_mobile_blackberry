@@ -151,8 +151,8 @@ public slots:
 
     void httpError(QNetworkReply::NetworkError code)
     {
-        owner_->events_[NativeProxyObject::tetERROR]->container->setDataProperty(NativeProxyObject::tetERROR, owner_->reply_->errorString().toStdString().c_str());
-        owner_->events_[NativeProxyObject::tetERROR]->container->setDataProperty("errorCode", code);
+        owner_->events_[NativeProxyObject::tetERROR]->container()->setDataProperty(NativeProxyObject::tetERROR, owner_->reply_->errorString().toStdString().c_str());
+        owner_->events_[NativeProxyObject::tetERROR]->container()->setDataProperty("errorCode", code);
         owner_->fireEvent(NativeProxyObject::tetERROR, NULL);
     }
 

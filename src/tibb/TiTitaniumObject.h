@@ -8,7 +8,7 @@
 #ifndef TITITANIUMOBJECT_H_
 #define TITITANIUMOBJECT_H_
 
-#include "TiObject.h"
+#include "TiProxy.h"
 
 class TiCascadesApp;
 
@@ -17,7 +17,7 @@ class TiCascadesApp;
  *
  * Titanium namespace
  */
-class TiTitaniumObject : public TiObject
+class TiTitaniumObject : public TiProxy
 {
 public:
     static TiObject* createObject(NativeObjectFactory* objectFactory);

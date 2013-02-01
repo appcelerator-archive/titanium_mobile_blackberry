@@ -23,6 +23,8 @@
 #include <stdio.h>
 #include <string.h>
 
+TitaniumRuntime* TitaniumRuntime::runtime = 0;
+
 TitaniumRuntime::TitaniumRuntime()
 {
     javaScript_ = NULL;
@@ -45,6 +47,7 @@ TitaniumRuntime::~TitaniumRuntime()
 int TitaniumRuntime::run(const char* javaScript, int argc, char** argv)
 {
     TitaniumRuntime ti(javaScript);
+    runtime = &ti;  // Note this pointer will be invalid once we return.
     return ti.internalRun(argc, argv);
 }
 

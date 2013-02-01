@@ -86,7 +86,7 @@ void NativeTextFieldObject::setupEvents(TiEventContainerFactory* containerFactor
     TiEventContainer* eventFieldChanged = containerFactory->createEventContainer();
     eventFieldChanged->setDataProperty("type", tetCHANGE);
     events_.insert(tetCHANGE, EventPairSmartPtr(eventFieldChanged, new TextFieldEventHandler(eventFieldChanged, this)));
-    QObject::connect(textField_, SIGNAL(textChanging(QString)), events_[tetCHANGE]->handler, SLOT(textChanging(QString)));
+    QObject::connect(textField_, SIGNAL(textChanging(QString)), events_[tetCHANGE]->handler(), SLOT(textChanging(QString)));
 }
 
 void NativeTextFieldObject::updateValue(QString value)
