@@ -14,6 +14,7 @@
 #include "TiTitaniumObject.h"
 #include "TiTimeoutManager.h"
 #include "TiV8EventContainerFactory.h"
+#include "V8Utils.h"
 
 #include <fstream>
 #include <sstream>
@@ -148,29 +149,14 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     Handle<Script> compiledScript = Script::Compile(String::New(javaScript), String::New(filename));
     if (compiledScript.IsEmpty())
     {
-        String::Utf8Value error(tryCatch.Exception());
-        TiLogger::getInstance().log(*error);
-        return -1;
+        ReportException(tryCatch, true);
+        return 1;
     }
-    Handle<Value> result = compiledScript->Run();
-    if (result.IsEmpty())
+    compiledScript->Run();
+    if (tryCatch.HasCaught())
     {
-        Local<Value> exception = tryCatch.Exception();
-        // FIXME: need a way to prevent double "filename + line" output
-        Handle<Message> msg = tryCatch.Message();
-        stringstream ss;
-        ss << filename << " line ";
-        if (msg.IsEmpty())
-        {
-            ss << "?";
-        }
-        else
-        {
-            ss << msg->GetLineNumber();
-        }
-        ss << ": " << *String::Utf8Value(exception);
-        TiLogger::getInstance().log(ss.str());
-        return -1;
+        ReportException(tryCatch, true);
+        return 1;
     }
     onStartMessagePump();
     return (messageLoopEntry)(context);
@@ -274,24 +260,13 @@ Handle<Value> TiRootObject::_require(void*, TiObject*, const Arguments& args)
     Handle<Script> compiledScript = Script::Compile(String::New(javascript.c_str()), String::New(filename.c_str()));
     if (compiledScript.IsEmpty())
     {
-        return ThrowException(tryCatch.Exception());
+        DisplayExceptionLine(tryCatch);
+        return tryCatch.ReThrow();
     }
     Persistent<Value> result = (Persistent<Value>)compiledScript->Run();
     if (result.IsEmpty())
     {
-        Handle<Message> msg = tryCatch.Message();
-        stringstream ss;
-        ss << filename << " line ";
-        if (msg.IsEmpty())
-        {
-            ss << "?";
-        }
-        else
-        {
-            ss << msg->GetLineNumber() - 1; // -1 for the wrapper
-        }
-        ss << ": " << *String::Utf8Value(tryCatch.Exception());
-        return ThrowException(String::New(ss.str().c_str()));
+        return tryCatch.ReThrow();
     }
 
     // cache result
