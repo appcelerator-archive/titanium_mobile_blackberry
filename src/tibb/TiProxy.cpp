@@ -59,17 +59,23 @@ Handle<Value> TiProxy::_addEventListener(void* userContext, TiObject*, const Arg
 
 Handle<Value> TiProxy::_fireEvent(void* userContext, TiObject*, const Arguments& args)
 {
-    if (args.Length() < 2)
-    {
+    if (args.Length() < 1) {
         return Undefined();
     }
+
     const TiProxy* obj = (TiProxy*) userContext;
     NativeObject* no = obj->getNativeObject();
+    if (!no) return Undefined();
+
     const String::Utf8Value name(args[0]->ToString());
-    const TiObject event("", args[1]);
-    no->fireEvent(*name, &event);
+    if (args.Length() >= 2) {
+        const TiObject event("", args[1]);
+        no->fireEvent(*name, &event);
+    } else {
+        no->fireEvent(*name, NULL);
+    }
     no->release();
-    no = NULL;
+
     return Undefined();
 }
 
