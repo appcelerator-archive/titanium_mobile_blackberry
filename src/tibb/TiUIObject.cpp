@@ -56,6 +56,8 @@ void TiUIObject::addObjectToParent(TiObject* parent, NativeObjectFactory* object
 
 void TiUIObject::onCreateStaticMembers()
 {
+    HandleScope scope;
+
     TiProxy::onCreateStaticMembers();
 
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTableView", this, _createTableView);
@@ -86,6 +88,8 @@ void TiUIObject::onCreateStaticMembers()
     ADD_STATIC_TI_VALUE("PICKER_TYPE_TIME", Number::New(Ti::UI::PICKER_TYPE_TIME), this);
     ADD_STATIC_TI_VALUE("PICKER_TYPE_DATE_AND_TIME", Number::New(Ti::UI::PICKER_TYPE_DATE_AND_TIME), this);
     ADD_STATIC_TI_VALUE("PICKER_TYPE_COUNT_DOWN_TIMER", Number::New(Ti::UI::PICKER_TYPE_COUNT_DOWN_TIMER), this);
+    ADD_STATIC_TI_VALUE("FILL", String::NewSymbol("UI.FILL"), this);
+    ADD_STATIC_TI_VALUE("SIZE", String::NewSymbol("UI.SIZE"), this);
 }
 
 Handle<Value> TiUIObject::_createControlHelper(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args)
