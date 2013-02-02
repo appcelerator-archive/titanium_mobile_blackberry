@@ -11,6 +11,7 @@
 #
 import os, sys, shutil
 from optparse import OptionParser
+import re
 
 template_dir = os.path.abspath(os.path.dirname(sys._getframe(0).f_code.co_filename))
 top_support_dir = os.path.dirname(template_dir) 
@@ -39,6 +40,7 @@ class Builder(object):
 		self.name = self.tiappxml.properties['name']
 		self.id = self.tiappxml.properties['id']
 		self.buildDir = os.path.join(self.top_dir, 'build', 'blackberry')
+		self.blackberryResources = os.path.join(self.top_dir, 'Resources', 'blackberry')
 		self.project_deltafy = Deltafy(self.top_dir)
 
 		if useLogFile:
@@ -71,6 +73,11 @@ class Builder(object):
 		tiapp_delta = self.project_deltafy.scan_single_file(self.project_tiappxml)
 		tiapp_changed = tiapp_delta is not None
 
+		# Discover any splash images that follow this pattern:
+		#     splash-widthxheight.[png|jpg]
+		resources = os.listdir(self.blackberryResources)
+		splashScreens = [r for r in resources if re.match('splash-[0-9]*x[0-9]*.png|jpg', r)]
+
 		if (tiapp_changed or not bar_descriptor_exists):
 			# regenerate bar-descriptor.xml
 			# TODO MAC: Add blackberry specific properties. Needs update in tiapp.py script
@@ -85,7 +92,7 @@ class Builder(object):
 			'author':(self.tiappxml.properties['publisher'] or 'not specified'),
 			'category':'core.games',
 			'icon':'assets/%s' %(self.tiappxml.properties['icon'] or 'appicon.png'),
-			'splashscreen':'assets/default.png'
+			'splashScreens':splashScreens
 			}
 			try:
 				Blackberry.renderTemplate(os.path.join(self.buildDir,'bar-descriptor.xml'), newConfig)
