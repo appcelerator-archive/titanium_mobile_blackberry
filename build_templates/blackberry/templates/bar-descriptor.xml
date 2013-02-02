@@ -80,10 +80,12 @@
         <image>${config['icon']}</image>
     </icon>
 
-    <!--  The splash screen that will appear when your application is launching. Should be 1024x600. -->
-    <splashscreen>
-        <image>${config['splashscreen']}</image>
-    </splashscreen>
+    <!--  The splash screen that will appear when your application is launching. -->
+    <splashScreens>
+        % for splashscreen in config['splashScreens']:
+	<image>assets/${splashscreen}</image>
+        % endfor
+    </splashScreens>
 
     <!-- Request permission to execute native code.  Required for native applications. -->
     <action system="true">run_native</action>
