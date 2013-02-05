@@ -83,7 +83,7 @@ Handle<Value> TiDBObject::_execute(void* userContext, TiObject*, const Arguments
 			}
 		}
 		else {
-			for (int i = 1; i > args.Length(); i++) {
+			for (int i = 1; i < args.Length(); i++) {
 				bindings.push_back(TiObject::getSTDStringFromValue(args[i]));
 			}
 		}

@@ -23,6 +23,23 @@ class TiObject;
 
 using namespace Ti::Database::ResultSet;
 
+enum FIELD_TYPE
+{
+    STRING_FIELD
+    , NUMERIC_FIELD
+    // ToDo Support Blob
+};
+
+enum NATIVE_RESULTSET_PROP
+{
+    N_RESULTSET_PROP_UNDEFINED
+    , N_RESULTSET_PROP_ROWCOUNT
+    , N_RESULTSET_PROP_FIELDCOUNT
+    /* This MUST be the last element */
+    , N_RESULTSET_PROP_LAST
+};
+
+#define NAME_NOT_FOUND -1
 
 /*
  * NativeResultSetObject
@@ -35,14 +52,26 @@ public:
     static NativeResultSetObject* createResultSet(TiObject* tiObject);
     int getObjectType() const;
 
+    int setPropertyValue(size_t propertyNumber, TiObject* obj, void* userContext);
+    int getPropertyValue(size_t propertyNumber, TiObject* obj, void* userContext);
+
+
+    //int setPort(TiObject* obj, void* userContext);
+    int getRowCount(TiObject* obj, void* userContext);
+    int getFieldCount(TiObject* obj, void* userContext);
+
     bool isValidRow();
+    int fieldIndexByName(string name /*, number type for cast*/);
+    FIELD_TYPE fieldType(int index);
     string fieldByName(string name /*, number type for cast*/);
     string field(int index /*, number type for cast*/);
     bool next();
+    void close();
 
     int effectedRows;
     sqlite3_stmt* statement;
     int  stepResult;
+    vector<string> columnNames;
 
 protected:
     virtual ~NativeResultSetObject();

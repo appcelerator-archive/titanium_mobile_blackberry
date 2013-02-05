@@ -96,7 +96,9 @@ int NativeDBObject::execute(NativeResultSetObject* resultSet, string command, ve
 	sqlite3_reset(statement);
 	resultSet->stepResult = sqlite3_step(statement);
 	resultSet->statement = statement;
-
+	for (int i = 0; i < sqlite3_column_count(statement); i++) {
+		resultSet->columnNames.push_back(sqlite3_column_name(statement, i));
+	}
 
 	return NATIVE_ERROR_OK;
 }
