@@ -23,6 +23,10 @@ class TiAppPropertiesObject : public TiObject
 public:
     static void addObjectToParent(TiObject* parent);
 
+    enum PropertyType {
+        BoolProperty, DoubleProperty, IntProperty, ListProperty, ObjectProperty, StringProperty
+    };
+
 protected:
     virtual ~TiAppPropertiesObject();
     virtual void onCreateStaticMembers();
@@ -34,8 +38,8 @@ private:
 
     static NativeSimpleDBInterface db;
 
-    static Handle<Value> _get(const string& key, const char* type, Handle<Value> defaultValue);
-    static Handle<Value> _set(const string& key, const char* type, Handle<Value> value);
+    static Handle<Value> _get(const Arguments& args, PropertyType type);
+    static Handle<Value> _set(const Arguments& args, PropertyType type);
     static Handle<Value> _nullOrDefaultValue(Handle<Value> defaultValue);
 
     static Handle<Value> _getBool(void* userContext, TiObject* caller, const Arguments& args);
