@@ -75,14 +75,14 @@ string NativeSimpleDBInterface::get(const string& key)
     return "";
 }
 
-void NativeSimpleDBInterface::set(const string& key, const string& value)
+void NativeSimpleDBInterface::set(const string& key, const char* value)
 {
     open();
     QSqlQuery query(db_);
     query.prepare("REPLACE INTO " + table_ + " (simpleKey, simpleValue) VALUES (:simpleKey, :simpleValue)");
     QString keyQString = QString::fromUtf8(key.c_str());
     query.bindValue(":simpleKey", keyQString);
-    query.bindValue(":simpleValue", QString::fromUtf8(value.c_str()));
+    query.bindValue(":simpleValue", QString::fromUtf8(value));
     query.exec();
     QSqlError sqlError = query.lastError();
     if (sqlError.isValid())
