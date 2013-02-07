@@ -23,6 +23,7 @@
 #include "TiUITab.h"
 #include "TiUITabGroup.h"
 #include "TiUITableView.h"
+#include "TiUITableViewRow.h"
 #include "TiUITextField.h"
 #include "TiUIWebView.h"
 #include "TiUIWindow.h"
@@ -61,6 +62,7 @@ void TiUIObject::onCreateStaticMembers()
     TiProxy::onCreateStaticMembers();
 
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTableView", this, _createTableView);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTableViewRow", this, _createTableViewRow);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTabGroup", this, _createTabGroup);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createWindow", this, _createWindow);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createLabel", this, _createLabel);
@@ -168,6 +170,11 @@ Handle<Value> TiUIObject::_createOptionDialog(void* userContext, TiObject*, cons
 Handle<Value> TiUIObject::_createTableView(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUITableView::createTableView), args);
+}
+
+Handle<Value> TiUIObject::_createTableViewRow(void* userContext, TiObject* caller, const Arguments& args)
+{
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUITableViewRow::createTableViewRow), args);
 }
 
 Handle<Value> TiUIObject::_createSwitch(void* userContext, TiObject*, const Arguments& args)
