@@ -7,6 +7,8 @@
 
 #include "TiUITableViewRow.h"
 
+#include "NativeListItemObject.h"
+
 TiUITableViewRow::TiUITableViewRow()
     : TiUIBase("") { }
 
@@ -20,8 +22,14 @@ TiUITableViewRow* TiUITableViewRow::createTableViewRow(NativeObjectFactory* fact
 }
 
 void TiUITableViewRow::initializeTiObject(TiObject* parentContext) {
+    if (isInitialized()) return;
+    TiUIBase::initializeTiObject(parentContext);
+    NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_LIST_ITEM, this);
+    setNativeObject(obj);
+    obj->release();
 }
 
 void TiUITableViewRow::onCreateStaticMembers() {
+    TiUIBase::onCreateStaticMembers();
 }
 

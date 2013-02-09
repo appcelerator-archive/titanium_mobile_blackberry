@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -8,14 +8,18 @@
 #include "NativeListViewObject.h"
 
 #include <bb/cascades/AbsoluteLayoutProperties>
-#include <bb/cascades/DataModel>
+#include <bb/cascades/ArrayDataModel>
 #include <bb/cascades/ListView>
 #include <bb/cascades/QListDataModel>
 #include <bb/cascades/VisualNode>
+
+#include "NativeListItemObject.h"
 #include "NativeListViewObject.h"
 #include "PersistentV8Value.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
+
+using namespace bb::cascades;
 
 NativeListViewObject::NativeListViewObject(TiObject* tiObject)
     : NativeControlObject(tiObject)
@@ -36,24 +40,45 @@ int NativeListViewObject::initialize()
 {
     listView_ = bb::cascades::ListView::create();
     setControl(listView_);
+    listView_->setDataModel(new ArrayDataModel());
     listView_->setListItemProvider(new ListViewItemFactory());
     return NATIVE_ERROR_OK;
 }
 
 int NativeListViewObject::setData(TiObject* obj)
 {
-    QVector<QVariant> dataModel;
-    int error = NativeControlObject::getDataModel(obj, dataModel);
-    if (!N_SUCCEEDED(error))
-    {
-        return error;
+    HandleScope scope;
+
+    Handle<Value> value = obj->getValue();
+    if (!value->IsArray()) {
+        return NATIVE_ERROR_INVALID_ARG;
     }
-    QList<QVariant> dataList;
-    for (int i = 0; i < dataModel.size(); ++i)
-    {
-        dataList.append(dataModel[i]);
+
+    ArrayDataModel* model = static_cast<ArrayDataModel*>(listView_->dataModel());
+
+    Handle<Array> data = Handle<Array>::Cast(value);
+    uint32_t length = data->Length();
+    for (uint32_t i = 0; i < length; i++) {
+        Local<Value> item = data->Get(i);
+        if (!item->IsObject()) {
+            // Silently ignore any invalid data items.
+            continue;
+        }
+
+        TiObject* itemObject = TiObject::getTiObjectFromJsObject(item);
+        if (itemObject) {
+            NativeObject* native = itemObject->getNativeObject();
+            if (!native) {
+                // Convert any dictionary objects to row objects.
+                // TODO
+                continue;
+            }
+
+            NativeListItemObject* listItem = static_cast<NativeListItemObject*>(native);
+            model->append(listItem->data());
+        }
     }
-    listView_->setDataModel(new bb::cascades::QListDataModel<QVariant>(dataList));
+
     return NATIVE_ERROR_OK;
 }
 
@@ -102,19 +127,9 @@ bb::cascades::VisualNode* ListViewItemFactory::createItem(bb::cascades::ListView
 void ListViewItemFactory::updateItem(bb::cascades::ListView*, bb::cascades::VisualNode* listItem, const QString&,
                                      const QVariantList&, const QVariant& data)
 {
-    // Trying to parse the title from v8 object
-    if (data.canConvert<PersistentV8Value>())
-    {
-        PersistentV8Value v8Value = data.value<PersistentV8Value>();
-        Persistent<Value> propValue = v8Value.getValue();
-        if (propValue->IsObject())
-        {
-            Local<Value> titleValue = propValue->ToObject()->Get(String::New("title"));
-            Local<String> valueStr = titleValue->ToString();
-            String::Utf8Value valueUTF(valueStr);
-            ((bb::cascades::StandardListItem*)listItem)->setTitle(*valueUTF);
-        }
-    }
+    StandardListItem* standardItem = static_cast<StandardListItem*>(listItem);
+    QVariantMap map = data.value<QVariantMap>();
+    standardItem->setTitle(map["title"].toString());
 }
 
 /*********** ListViewEventHandler class *************/

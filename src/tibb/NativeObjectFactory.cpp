@@ -15,6 +15,7 @@
 #include "NativeDropDownObject.h"
 #include "NativeImageViewObject.h"
 #include "NativeLabelObject.h"
+#include "NativeListItemObject.h"
 #include "NativeListViewObject.h"
 #include "NativeLoggerObject.h"
 #include "NativeProgressBarObject.h"
@@ -113,6 +114,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
     case N_TYPE_LIST_VIEW:
         obj = NativeListViewObject::createListView(tiObj);
         break;
+
+    case N_TYPE_LIST_ITEM:
+	obj = new NativeListItemObject(tiObj);
+	break;
 
     case N_TYPE_TAB:
         obj = NativeTabObject::createTab(tiObj);
