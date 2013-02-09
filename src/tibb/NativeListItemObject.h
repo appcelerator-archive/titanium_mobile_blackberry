@@ -19,6 +19,10 @@ public:
     NativeListItemObject(TiObject* object);
     virtual ~NativeListItemObject();
 
+    virtual int getObjectType() const {
+        return N_TYPE_LIST_ITEM;
+    }
+
     virtual int setTitle(TiObject* obj);
 
     QVariant data() const {

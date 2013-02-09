@@ -18,6 +18,8 @@
 #include "PersistentV8Value.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
+#include "TiProxy.h"
+#include "TiUITableViewRow.h"
 
 using namespace bb::cascades;
 
@@ -66,17 +68,34 @@ int NativeListViewObject::setData(TiObject* obj)
         }
 
         TiObject* itemObject = TiObject::getTiObjectFromJsObject(item);
-        if (itemObject) {
-            NativeObject* native = itemObject->getNativeObject();
-            if (!native) {
-                // Convert any dictionary objects to row objects.
-                // TODO
-                continue;
-            }
+        if (!itemObject) {
+            // Convert the dictionary object into a row object.
+            NativeObjectFactory* factory = tiObject_->getNativeObjectFactory();
+            TiUITableViewRow* row = TiUITableViewRow::createTableViewRow(factory);
+            itemObject = static_cast<TiObject*>(row);
 
-            NativeListItemObject* listItem = static_cast<NativeListItemObject*>(native);
-            model->append(listItem->data());
+            // Create a JavaScript proxy for the new row object.
+            Handle<ObjectTemplate> templ = TiObject::getObjectTemplateFromJsObject(tiObject_->getValue());
+            Local<Object> proxy = templ->NewInstance();
+            row->setValue(proxy);
+            TiObject::setTiObjectToJsObject(proxy, row);
+
+            // Apply the properties in the dictionary to the new row object.
+            row->setParametersFromObject(row, item->ToObject());
+
+            // Replace the dictionary object in the data array with the row object.
+            // This allows developers to later update properties on the row.
+            data->Set(i, itemObject->getValue());
         }
+
+        NativeObject* native = itemObject->getNativeObject();
+        if (native->getObjectType() != N_TYPE_LIST_ITEM) {
+            // Only allow row objects as table data.
+            return NATIVE_ERROR_INVALID_ARG;
+        }
+
+        NativeListItemObject* listItem = static_cast<NativeListItemObject*>(native);
+        model->append(listItem->data());
     }
 
     return NATIVE_ERROR_OK;
