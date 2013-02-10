@@ -24,6 +24,10 @@ void BasicListItem::setData(QObject* data) {
 }
 
 void BasicListItem::updateImage(const QUrl& url) {
+    if (url.isEmpty()) {
+        item_->resetImage();
+        return;
+    }
     item_->setImage(Image(url));
 }
 
