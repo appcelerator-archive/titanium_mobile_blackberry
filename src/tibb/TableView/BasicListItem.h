@@ -22,6 +22,7 @@ public:
     void setData(QObject* data);
 
 private slots:
+    void updateImage(const QUrl& url);
     void updateTitle(const QString& title);
 
 private:

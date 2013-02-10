@@ -15,10 +15,16 @@ BasicListItem::BasicListItem() {
 }
 
 void BasicListItem::setData(QObject* data) {
+    updateImage(data->property("leftImage").value<QUrl>());
     updateTitle(data->property("title").toString());
+    connect(data, SIGNAL(leftImageChanged(const QUrl&)), SLOT(updateImage(const QUrl&)));
     connect(data, SIGNAL(titleChanged(const QString&)), SLOT(updateTitle(const QString&)));
     data_->disconnect(this);
     data_ = data;
+}
+
+void BasicListItem::updateImage(const QUrl& url) {
+    item_->setImage(Image(url));
 }
 
 void BasicListItem::updateTitle(const QString& title) {

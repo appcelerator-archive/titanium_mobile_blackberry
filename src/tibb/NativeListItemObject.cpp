@@ -18,7 +18,14 @@ NativeListItemObject::NativeListItemObject(TiObject* object)
 NativeListItemObject::~NativeListItemObject() {
 }
 
+int NativeListItemObject::setLeftImage(TiObject* obj) {
+    QString imagePath = TiObject::getStringFromValue(obj->getValue());
+    data_->setProperty("leftImage", QUrl(getResourcePath(imagePath)));
+    return NATIVE_ERROR_OK;
+}
+
 int NativeListItemObject::setTitle(TiObject* obj) {
     data_->setProperty("title", TiObject::getStringFromValue(obj->getValue()));
+    return NATIVE_ERROR_OK;
 }
 

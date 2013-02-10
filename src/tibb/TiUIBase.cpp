@@ -121,6 +121,11 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "leftImage", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_LEFT_IMAGE
+    },
+
+    {
         "max", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_MAX
     },

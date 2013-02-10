@@ -23,6 +23,7 @@ public:
         return N_TYPE_LIST_ITEM;
     }
 
+    virtual int setLeftImage(TiObject* obj);
     virtual int setTitle(TiObject* obj);
 
     QVariant data() const {

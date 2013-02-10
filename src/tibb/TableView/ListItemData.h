@@ -10,13 +10,24 @@
 
 #include <QObject>
 #include <QString>
+#include <QUrl>
 
 class ListItemData : public QObject {
     Q_OBJECT
 
+    Q_PROPERTY(QUrl leftImage READ leftImage WRITE setLeftImage NOTIFY leftImageChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
 
 public:
+    QUrl leftImage() const {
+        return leftImage_;
+    }
+
+    void setLeftImage(const QUrl& image) {
+        leftImage_ = image;
+        emit leftImageChanged(image);
+    }
+
     QString title() const {
         return title_;
     }
@@ -27,9 +38,11 @@ public:
     }
 
 signals:
+    void leftImageChanged(const QUrl& image);
     void titleChanged(const QString& title);
 
 private:
+    QUrl leftImage_;
     QString title_;
 };
 
