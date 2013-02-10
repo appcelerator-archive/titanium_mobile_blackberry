@@ -12,13 +12,6 @@
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
 
-#define APP_PROP_TYPE_BOOL "bool"
-#define APP_PROP_TYPE_DOUBLE "double"
-#define APP_PROP_TYPE_INT "int"
-#define APP_PROP_TYPE_LIST "list"
-#define APP_PROP_TYPE_OBJECT "object"
-#define APP_PROP_TYPE_STRING "string"
-
 TiAppPropertiesObject::TiAppPropertiesObject()
     : TiObject("Properties")
 {
@@ -56,15 +49,17 @@ void TiAppPropertiesObject::onCreateStaticMembers()
 NativeSimpleDBInterface TiAppPropertiesObject::db("app/native/framework/TiAppProperties.db", "TiAppProperties");
 
 // TODO: move these to a util file
-static string stringify(Handle<Value> object)
+static Local<String> stringify(Handle<Value> object)
 {
+    HandleScope scope;
+
     Handle<Context> context = Context::GetCurrent();
     Handle<Object> global = context->Global();
 
     Handle<Object> JSON = global->Get(String::New("JSON"))->ToObject();
     Handle<Function> JSON_stringify = Handle<Function>::Cast(JSON->Get(String::New("stringify")));
 
-    return *String::Utf8Value(JSON_stringify->Call(JSON, 1, &object));
+    return scope.Close(JSON_stringify->Call(JSON, 1, &object)->ToString());
 }
 
 static Local<Value> parseJson(const string& json)
@@ -80,330 +75,141 @@ static Local<Value> parseJson(const string& json)
     return JSON_parse->Call(JSON, 1, &value);
 }
 
-Handle<Value> TiAppPropertiesObject::_get(const string& key, const char* type, Handle<Value> defaultValue)
-{
-    string typeValueString;
-    try
-    {
-        typeValueString = db.get(key);
+static Local<Value> convertType(TiAppPropertiesObject::PropertyType type, Local<Value> value) {
+    switch (type) {
+    case TiAppPropertiesObject::BoolProperty:
+        return value->ToBoolean();
+    case TiAppPropertiesObject::DoubleProperty:
+    case TiAppPropertiesObject::IntProperty:
+        return value->ToNumber();
+    case TiAppPropertiesObject::ObjectProperty:
+        return value->ToObject();
+    case TiAppPropertiesObject::ListProperty:
+        return value;
+    case TiAppPropertiesObject::StringProperty:
+        return value->ToString();
+    default:
+        return Local<Value>();
     }
-    catch (NativeException& ne)
-    {
+}
+
+Handle<Value> TiAppPropertiesObject::_get(const Arguments& args, PropertyType type)
+{
+    HandleScope scope;
+
+    Local<Value> key = args[0], defaultValue = args[1];
+
+    if (key->IsUndefined() || key->IsNull()) {
+        return Undefined();
+    }
+
+    string json;
+    try {
+        json = db.get(*String::Utf8Value(key));
+    } catch (NativeException& ne) {
         return ThrowException(String::New(ne.what()));
     }
 
-    if (typeValueString.empty())
-    {
+    if (json.empty()) {
         return defaultValue;
     }
 
-    HandleScope scope;
-    Local<Object> typeValue = parseJson(typeValueString)->ToObject();
-    string storedType = *String::Utf8Value(typeValue->Get(String::New("type")));
-    Local<Value> value = typeValue->Get(String::New("value"));
-    if (storedType == type)
-    {
-        return scope.Close(value);
-    }
-    else
-    {
-        return ThrowException(String::New(Ti::Msg::Type_does_not_match));
-    }
+    // Parse JSON value and return value as type requested by caller.
+    return scope.Close(convertType(type, parseJson(json)));
 }
 
-Handle<Value> TiAppPropertiesObject::_set(const string& key, const char* type, Handle<Value> value)
+Handle<Value> TiAppPropertiesObject::_set(const Arguments& args, PropertyType type)
 {
     HandleScope scope;
-    Local<Object> typeValue = Object::New();
-    typeValue->Set(String::New("type"), String::New(type));
-    typeValue->Set(String::New("value"), value);
-    string typeValueString = stringify(typeValue);
-    try
-    {
-        db.set(key, typeValueString);
+
+    Local<Value> key = args[0], value = args[1];
+
+    if (key->IsUndefined() || key->IsNull()) {
+        return Undefined();
     }
-    catch (NativeException& ne)
-    {
+
+    // Remove property if value is set to null or undefined.
+    if (value->IsUndefined() || value->IsNull()) {
+        db.remove(*String::Utf8Value(key));
+        return Undefined();
+    }
+
+    // Serialize the property value to JSON.
+    Local<String> json = stringify(convertType(type, value));
+
+    try {
+        db.set(*String::Utf8Value(key), *String::Utf8Value(json));
+    } catch (NativeException& ne) {
         return ThrowException(String::New(ne.what()));
     }
-    return Undefined();
-}
 
-Handle<Value> TiAppPropertiesObject::_nullOrDefaultValue(Handle<Value> defaultValue)
-{
-    if (defaultValue->IsUndefined())
-    {
-        return Null();
-    }
-    return defaultValue;
+    return Undefined();
 }
 
 Handle<Value> TiAppPropertiesObject::_getBool(void* /*userContext*/, TiObject* /*caller*/, const Arguments& args)
 {
-    if (args.Length() < 1)
-    {
-        return ThrowException(String::New(Ti::Msg::Missing_argument));
-    }
-    if (!args[0]->IsString() && !args[0]->IsStringObject())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "String").c_str()));
-    }
-    Handle<Value> defaultValue = Null();
-    if (args.Length() > 1)
-    {
-        defaultValue = _nullOrDefaultValue(args[1]);
-        if (!defaultValue->IsNull() && !defaultValue->IsBoolean() && !defaultValue->IsBooleanObject())
-        {
-            return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "Boolean").c_str()));
-        }
-    }
-
-    string key = *String::Utf8Value(args[0]);
-    return _get(key, APP_PROP_TYPE_BOOL, defaultValue);
+    return _get(args, BoolProperty);
 }
 
 
 Handle<Value> TiAppPropertiesObject::_setBool(void* /*userContext*/, TiObject* /*caller*/, const Arguments& args)
 {
-    if (args.Length() < 2)
-    {
-        return ThrowException(String::New(Ti::Msg::Missing_argument));
-    }
-    if (!args[0]->IsString() && !args[0]->IsStringObject())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "String").c_str()));
-    }
-    if (!args[1]->IsBoolean() && !args[1]->IsBooleanObject())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "Boolean").c_str()));
-    }
-
-    string key = *String::Utf8Value(args[0]);
-    Handle<Boolean> value = args[1]->ToBoolean();
-    return _set(key, APP_PROP_TYPE_BOOL, value);
+    return _set(args, BoolProperty);
 }
 
 Handle<Value> TiAppPropertiesObject::_getDouble(void* /*userContext*/, TiObject* /*caller*/, const Arguments& args)
 {
-    if (args.Length() < 1)
-    {
-        return ThrowException(String::New(Ti::Msg::Missing_argument));
-    }
-    if (!args[0]->IsString() && !args[0]->IsStringObject())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "String").c_str()));
-    }
-    Handle<Value> defaultValue = Null();
-    if (args.Length() > 1)
-    {
-        defaultValue = _nullOrDefaultValue(args[1]);
-        if (!defaultValue->IsNull() && !defaultValue->IsNumber() && !defaultValue->IsNumberObject())
-        {
-            return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "Number").c_str()));
-        }
-    }
-
-    string key = *String::Utf8Value(args[0]);
-    return _get(key, APP_PROP_TYPE_DOUBLE, defaultValue);
+    return _get(args, DoubleProperty);
 }
 
 
 Handle<Value> TiAppPropertiesObject::_setDouble(void* /*userContext*/, TiObject* /*caller*/, const Arguments& args)
 {
-    if (args.Length() < 2)
-    {
-        return ThrowException(String::New(Ti::Msg::Missing_argument));
-    }
-    if (!args[0]->IsString() && !args[0]->IsStringObject())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "String").c_str()));
-    }
-    if (!args[1]->IsNumber() && !args[1]->IsNumberObject())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "Number").c_str()));
-    }
-
-    string key = *String::Utf8Value(args[0]);
-    Handle<Number> value = args[1]->ToNumber();
-    return _set(key, APP_PROP_TYPE_DOUBLE, value);
+    return _set(args, DoubleProperty);
 }
 
 Handle<Value> TiAppPropertiesObject::_getInt(void* /*userContext*/, TiObject* /*caller*/, const Arguments& args)
 {
-    if (args.Length() < 1)
-    {
-        return ThrowException(String::New(Ti::Msg::Missing_argument));
-    }
-    if (!args[0]->IsString() && !args[0]->IsStringObject())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "String").c_str()));
-    }
-    Handle<Value> defaultValue = Null();
-    if (args.Length() > 1)
-    {
-        defaultValue = _nullOrDefaultValue(args[1]);
-        if (!defaultValue->IsNull() && !defaultValue->IsInt32())
-        {
-            return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "Integer").c_str()));
-        }
-    }
-
-    string key = *String::Utf8Value(args[0]);
-    return _get(key, APP_PROP_TYPE_INT, defaultValue);
+    return _get(args, IntProperty);
 }
 
 
 Handle<Value> TiAppPropertiesObject::_setInt(void* /*userContext*/, TiObject* /*caller*/, const Arguments& args)
 {
-    if (args.Length() < 2)
-    {
-        return ThrowException(String::New(Ti::Msg::Missing_argument));
-    }
-    if (!args[0]->IsString() && !args[0]->IsStringObject())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "String").c_str()));
-    }
-    if (!args[1]->IsInt32())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "Integer").c_str()));
-    }
-
-    string key = *String::Utf8Value(args[0]);
-    Handle<Integer> value = args[1]->ToInteger();
-    return _set(key, APP_PROP_TYPE_INT, value);
+    return _set(args, IntProperty);
 }
 
 Handle<Value> TiAppPropertiesObject::_getList(void* /*userContext*/, TiObject* /*caller*/, const Arguments& args)
 {
-    if (args.Length() < 1)
-    {
-        return ThrowException(String::New(Ti::Msg::Missing_argument));
-    }
-    if (!args[0]->IsString() && !args[0]->IsStringObject())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "String").c_str()));
-    }
-    Handle<Value> defaultValue = Null();
-    if (args.Length() > 1)
-    {
-        defaultValue = _nullOrDefaultValue(args[1]);
-        if (!defaultValue->IsNull() && !defaultValue->IsArray())
-        {
-            return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "Array").c_str()));
-        }
-    }
-
-    string key = *String::Utf8Value(args[0]);
-    return _get(key, APP_PROP_TYPE_LIST, defaultValue);
+    return _get(args, ListProperty);
 }
 
 
 Handle<Value> TiAppPropertiesObject::_setList(void* /*userContext*/, TiObject* /*caller*/, const Arguments& args)
 {
-    if (args.Length() < 2)
-    {
-        return ThrowException(String::New(Ti::Msg::Missing_argument));
-    }
-    if (!args[0]->IsString() && !args[0]->IsStringObject())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "String").c_str()));
-    }
-    if (!args[1]->IsArray())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "Array").c_str()));
-    }
-
-    string key = *String::Utf8Value(args[0]);
-    return _set(key, APP_PROP_TYPE_LIST, args[1]);
+    return _set(args, ListProperty);
 }
 
 Handle<Value> TiAppPropertiesObject::_getObject(void* /*userContext*/, TiObject* /*caller*/, const Arguments& args)
 {
-    if (args.Length() < 1)
-    {
-        return ThrowException(String::New(Ti::Msg::Missing_argument));
-    }
-    if (!args[0]->IsString() && !args[0]->IsStringObject())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "String").c_str()));
-    }
-    Handle<Value> defaultValue = Null();
-    if (args.Length() > 1)
-    {
-        defaultValue = _nullOrDefaultValue(args[1]);
-        if (!defaultValue->IsNull() && !defaultValue->IsObject())
-        {
-            return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "Object").c_str()));
-        }
-    }
-
-    string key = *String::Utf8Value(args[0]);
-    return _get(key, APP_PROP_TYPE_OBJECT, defaultValue);
+    return _get(args, ObjectProperty);
 }
 
 
 Handle<Value> TiAppPropertiesObject::_setObject(void* /*userContext*/, TiObject* /*caller*/, const Arguments& args)
 {
-    if (args.Length() < 2)
-    {
-        return ThrowException(String::New(Ti::Msg::Missing_argument));
-    }
-    if (!args[0]->IsString() && !args[0]->IsStringObject())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "String").c_str()));
-    }
-    if (!args[1]->IsObject())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "Object").c_str()));
-    }
-
-    string key = *String::Utf8Value(args[0]);
-    return _set(key, APP_PROP_TYPE_OBJECT, args[1]);
+    return _set(args, ObjectProperty);
 }
 
 Handle<Value> TiAppPropertiesObject::_getString(void* /*userContext*/, TiObject* /*caller*/, const Arguments& args)
 {
-    if (args.Length() < 1)
-    {
-        return ThrowException(String::New(Ti::Msg::Missing_argument));
-    }
-    if (!args[0]->IsString() && !args[0]->IsStringObject())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "String").c_str()));
-    }
-    Handle<Value> defaultValue = Null();
-    if (args.Length() > 1)
-    {
-        defaultValue = _nullOrDefaultValue(args[1]);
-        if (!defaultValue->IsNull() && !defaultValue->IsString() && !defaultValue->IsStringObject())
-        {
-            return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "String").c_str()));
-        }
-    }
-
-    string key = *String::Utf8Value(args[0]);
-    return _get(key, APP_PROP_TYPE_STRING, defaultValue);
+    return _get(args, StringProperty);
 }
 
 
 Handle<Value> TiAppPropertiesObject::_setString(void* /*userContext*/, TiObject* /*caller*/, const Arguments& args)
 {
-    if (args.Length() < 2)
-    {
-        return ThrowException(String::New(Ti::Msg::Missing_argument));
-    }
-    if (!args[0]->IsString() && !args[0]->IsStringObject())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "String").c_str()));
-    }
-    if (!args[1]->IsString() && !args[1]->IsStringObject())
-    {
-        return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "String").c_str()));
-    }
-
-    string key = *String::Utf8Value(args[0]);
-    Handle<String> value = args[1]->ToString();
-    return _set(key, APP_PROP_TYPE_STRING, value);
+    return _set(args, StringProperty);
 }
 
 Handle<Value> TiAppPropertiesObject::_hasProperty(void* /*userContext*/, TiObject* /*caller*/, const Arguments& args)

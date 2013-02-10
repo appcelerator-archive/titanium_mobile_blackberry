@@ -27,7 +27,7 @@ public:
     virtual ~NativeSimpleDBInterface();
 
     std::string get(const std::string& key);
-    void set(const std::string& key, const std::string& value);
+    void set(const std::string& key, const char* value);
 
     bool contains(const std::string& key);
     std::list<std::string> keys();
