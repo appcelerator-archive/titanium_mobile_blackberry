@@ -18,8 +18,12 @@ SOURCES += \
 	./Layout/Horizontal.cpp\
 	./Layout/Node.cpp \
 	./Layout/ParseProperty.cpp \
-	./Layout/Vertical.cpp
-HEADERS += ./*.h
+	./Layout/Vertical.cpp \
+	./TableView/BasicListItem.cpp
+HEADERS += \
+	./*.h \
+	TableView/BasicListItem.h \
+	TableView/ListItemData.h
 LIBS += -lz -lsqlite3
 
 device {

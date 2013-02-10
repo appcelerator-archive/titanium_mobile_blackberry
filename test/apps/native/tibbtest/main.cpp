@@ -16,7 +16,7 @@ int main(int argc, char** argv)
 {
     string javascript;
     {
-        ifstream ifs("app/native/Resources/app.js");
+        ifstream ifs("app/native/assets/app.js");
         if (!ifs)
         {
             return -1;

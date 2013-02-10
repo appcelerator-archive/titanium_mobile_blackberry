@@ -43,6 +43,7 @@ private:
     static Handle<Value> _createSwitch(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createOptionDialog(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createTableView(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createTableViewRow(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createPicker(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createAlertDialog(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createView(void* userContext, TiObject* caller, const Arguments& args);
