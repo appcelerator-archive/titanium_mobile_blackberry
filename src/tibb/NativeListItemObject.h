@@ -26,11 +26,11 @@ public:
     virtual int setTitle(TiObject* obj);
 
     QVariant data() const {
-        return QVariant(data_);
+        return QVariant::fromValue(data_);
     }
 
 private:
-    QVariantMap data_;
+    QObject* data_;
 };
 
 #endif

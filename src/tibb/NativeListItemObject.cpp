@@ -7,16 +7,18 @@
 
 #include "NativeListItemObject.h"
 
+#include "TableView/ListItemData.h"
 #include "TiObject.h"
 
 NativeListItemObject::NativeListItemObject(TiObject* object)
-    : NativeControlObject(object) {
+    : NativeControlObject(object)
+    , data_(new ListItemData()) {
 }
 
 NativeListItemObject::~NativeListItemObject() {
 }
 
 int NativeListItemObject::setTitle(TiObject* obj) {
-    data_["title"] = TiObject::getStringFromValue(obj->getValue());
+    data_->setProperty("title", TiObject::getStringFromValue(obj->getValue()));
 }
 

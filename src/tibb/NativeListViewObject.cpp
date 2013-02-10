@@ -7,15 +7,13 @@
 
 #include "NativeListViewObject.h"
 
-#include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/ArrayDataModel>
 #include <bb/cascades/ListView>
-#include <bb/cascades/QListDataModel>
-#include <bb/cascades/VisualNode>
 
 #include "NativeListItemObject.h"
 #include "NativeListViewObject.h"
 #include "PersistentV8Value.h"
+#include "TableView/BasicListItem.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 #include "TiProxy.h"
@@ -139,16 +137,15 @@ void NativeListViewObject::setupEvents(TiEventContainerFactory* containerFactory
 /*********** ListViewItemFactory class *************/
 bb::cascades::VisualNode* ListViewItemFactory::createItem(bb::cascades::ListView*, const QString&)
 {
-    bb::cascades::StandardListItem* item = new bb::cascades::StandardListItem();
+    BasicListItem* item = new BasicListItem();
     return item;
 }
 
 void ListViewItemFactory::updateItem(bb::cascades::ListView*, bb::cascades::VisualNode* listItem, const QString&,
                                      const QVariantList&, const QVariant& data)
 {
-    StandardListItem* standardItem = static_cast<StandardListItem*>(listItem);
-    QVariantMap map = data.value<QVariantMap>();
-    standardItem->setTitle(map["title"].toString());
+    BasicListItem* item = static_cast<BasicListItem*>(listItem);
+    item->setData(data.value<QObject*>());
 }
 
 /*********** ListViewEventHandler class *************/
