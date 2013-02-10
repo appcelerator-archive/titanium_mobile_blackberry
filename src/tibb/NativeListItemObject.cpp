@@ -13,6 +13,10 @@
 NativeListItemObject::NativeListItemObject(TiObject* object)
     : NativeControlObject(object)
     , data_(new ListItemData(object)) {
+    // Prevent the data object from getting destroyed
+    // when it is removed from the data model. It should live
+    // until this native object is deleted.
+    data_->setParent(data_.data());
 }
 
 NativeListItemObject::~NativeListItemObject() {
@@ -27,5 +31,9 @@ int NativeListItemObject::setLeftImage(TiObject* obj) {
 int NativeListItemObject::setTitle(TiObject* obj) {
     data_->setProperty("title", TiObject::getStringFromValue(obj->getValue()));
     return NATIVE_ERROR_OK;
+}
+
+QVariant NativeListItemObject::data() const {
+    return QVariant::fromValue(static_cast<QObject*>(data_.data()));
 }
 

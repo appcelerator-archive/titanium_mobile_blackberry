@@ -10,8 +10,10 @@
 
 #include "NativeControlObject.h"
 
+#include <QScopedPointer>
 #include <QVariant>
 
+class ListItemData;
 class TiObject;
 
 class NativeListItemObject : public NativeControlObject {
@@ -26,12 +28,10 @@ public:
     virtual int setLeftImage(TiObject* obj);
     virtual int setTitle(TiObject* obj);
 
-    QVariant data() const {
-        return QVariant::fromValue(data_);
-    }
+    QVariant data() const;
 
 private:
-    QObject* data_;
+    QScopedPointer<ListItemData> data_;
 };
 
 #endif
