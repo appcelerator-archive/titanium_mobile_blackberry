@@ -9,7 +9,8 @@
 
 using namespace bb::cascades;
 
-BasicListItem::BasicListItem() {
+BasicListItem::BasicListItem()
+    : data_(NULL) {
     item_ = new StandardListItem();
     setRoot(item_);
 }
@@ -17,9 +18,14 @@ BasicListItem::BasicListItem() {
 void BasicListItem::setData(QObject* data) {
     updateImage(data->property("leftImage").value<QUrl>());
     updateTitle(data->property("title").toString());
+
     connect(data, SIGNAL(leftImageChanged(const QUrl&)), SLOT(updateImage(const QUrl&)));
     connect(data, SIGNAL(titleChanged(const QString&)), SLOT(updateTitle(const QString&)));
-    data_->disconnect(this);
+
+    if (data_) {
+        // Remove any signals from the previous data object.
+        data_->disconnect(this);
+    }
     data_ = data;
 }
 
