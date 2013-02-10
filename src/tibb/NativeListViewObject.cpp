@@ -12,8 +12,8 @@
 
 #include "NativeListItemObject.h"
 #include "NativeListViewObject.h"
-#include "PersistentV8Value.h"
 #include "TableView/BasicListItem.h"
+#include "TableView/ListItemData.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 #include "TiProxy.h"
@@ -151,17 +151,13 @@ void ListViewItemFactory::updateItem(bb::cascades::ListView*, bb::cascades::Visu
 /*********** ListViewEventHandler class *************/
 void ListViewEventHandler::triggered(QVariantList var)
 {
-    eventContainer_->setDataProperty("index", var[0].toInt());
-    Persistent<Value> propValue;
-    if (owner_)
-    {
-        QVariant property = owner_->getListViewElementFromIndex(var);
-        if (property.canConvert<PersistentV8Value>())
-        {
-            PersistentV8Value v8Value = property.value<PersistentV8Value>();
-            propValue = v8Value.getValue();
-        }
-    }
-    eventContainer_->setV8ValueProperty("rowData", propValue);
+    int index = var[0].toInt();
+    QVariant data = owner_->getListViewElementFromIndex(var);
+    ListItemData* itemData = static_cast<ListItemData*>(data.value<QObject*>());
+    Handle<Value> row = itemData->row()->getValue();
+
+    eventContainer_->setDataProperty("index", index);
+    eventContainer_->setV8ValueProperty("rowData", row);
+    eventContainer_->setV8ValueProperty("row", row);
     eventContainer_->fireEvent();
 }

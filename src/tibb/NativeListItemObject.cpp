@@ -12,7 +12,7 @@
 
 NativeListItemObject::NativeListItemObject(TiObject* object)
     : NativeControlObject(object)
-    , data_(new ListItemData()) {
+    , data_(new ListItemData(object)) {
 }
 
 NativeListItemObject::~NativeListItemObject() {

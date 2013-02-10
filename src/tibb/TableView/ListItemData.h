@@ -12,6 +12,8 @@
 #include <QString>
 #include <QUrl>
 
+class TiObject;
+
 class ListItemData : public QObject {
     Q_OBJECT
 
@@ -19,6 +21,13 @@ class ListItemData : public QObject {
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
 
 public:
+    explicit ListItemData(TiObject* row)
+        : row_(row) { }
+
+    TiObject* row() const {
+        return row_;
+    }
+
     QUrl leftImage() const {
         return leftImage_;
     }
@@ -42,6 +51,7 @@ signals:
     void titleChanged(const QString& title);
 
 private:
+    TiObject* row_;
     QUrl leftImage_;
     QString title_;
 };
