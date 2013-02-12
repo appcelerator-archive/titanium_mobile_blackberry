@@ -45,8 +45,8 @@ Handle<Value> TiAPIObject::_debug(void*, TiObject*, const Arguments& args)
     }
 
     // Log message with DEBUG severity-level
-    Local<Value> taggedMessage = String::Concat(String::New("[DEBUG]:"), args[0]->ToString());
-    TiLogger::getInstance().log(*String::Utf8Value(taggedMessage));
+    TiLogger::getInstance().log("DEBUG", *String::Utf8Value(args[0]));
+
     return Undefined();
 }
 
@@ -58,8 +58,8 @@ Handle<Value> TiAPIObject::_info(void*, TiObject*, const Arguments& args)
     }
 
     // Log message with INFO severity-level
-    Local<Value> taggedMessage = String::Concat(String::New("[INFO]:"), args[0]->ToString());
-    TiLogger::getInstance().log(*String::Utf8Value(taggedMessage));
+    TiLogger::getInstance().log("INFO", *String::Utf8Value(args[0]));
+
     return Undefined();
 }
 
@@ -71,8 +71,8 @@ Handle<Value> TiAPIObject::_warn(void*, TiObject*, const Arguments& args)
     }
 
     // Log message with WARNING severity-level
-    Local<Value> taggedMessage = String::Concat(String::New("[WARNING]:"), args[0]->ToString());
-    TiLogger::getInstance().log(*String::Utf8Value(taggedMessage));
+    TiLogger::getInstance().log("WARN", *String::Utf8Value(args[0]));
+
     return Undefined();
 }
 
@@ -84,20 +84,39 @@ Handle<Value> TiAPIObject::_error(void*, TiObject*, const Arguments& args)
     }
 
     // Log message with ERROR severity-level
-    Local<Value> taggedMessage = String::Concat(String::New("[ERROR]:"), args[0]->ToString());
-    TiLogger::getInstance().log(*String::Utf8Value(taggedMessage));
+    TiLogger::getInstance().log("ERROR", *String::Utf8Value(args[0]));
     return Undefined();
 }
 
-Handle<Value> TiAPIObject::_log(void*, TiObject*, const Arguments&)
+// log([level], msg)
+Handle<Value> TiAPIObject::_log(void*, TiObject*, const Arguments& args)
 {
-    // TODO: Implement this later
+    HandleScope scope;
+
+    if (args.Length() < 1) {
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
+    }
+
+    TiLogger& logger = TiLogger::getInstance();
+
+    if (args.Length() > 1) {
+        logger.log(*String::Utf8Value(args[0]),
+                   *String::Utf8Value(args[1]));
+    } else {
+        // If no log level is provided default to "INFO".
+        logger.log("INFO", *String::Utf8Value(args[0]));
+    }
+
     return Undefined();
 }
 
-Handle<Value> TiAPIObject::_timestamp(void*, TiObject*, const Arguments&)
+Handle<Value> TiAPIObject::_timestamp(void*, TiObject*, const Arguments& args)
 {
-    // TODO: Implement this later
+    if (args.Length() < 1) {
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
+    }
+
+    TiLogger::getInstance().log("TIMESTAMP", *String::Utf8Value(args[0]));
     return Undefined();
 }
 
@@ -109,7 +128,7 @@ Handle<Value> TiAPIObject::_trace(void*, TiObject*, const Arguments& args)
     }
 
     // Log message with TRACE severity-level
-    Local<Value> taggedMessage = String::Concat(String::New("[TRACE]:"), args[0]->ToString());
-    TiLogger::getInstance().log(*String::Utf8Value(taggedMessage));
+    TiLogger::getInstance().log("TRACE", *String::Utf8Value(args[0]));
     return Undefined();
 }
+
