@@ -19,7 +19,7 @@ class NativeObjectFactory;
     do { \
         stringstream ss; \
         ss << tag " " << __PRETTY_FUNCTION__ << " Line " << __LINE__ << ": " << msg; \
-        TiLogger::getInstance().log(ss.str()); \
+        TiLogger::getInstance().log(ss.str().c_str()); \
     } while(0)
 
 #define TI_TAG_INTERNAL "[TI_INTERNAL]"
@@ -52,7 +52,8 @@ public:
     static void deleteInstance();
     static void initialize(NativeObjectFactory* nativeObjectFactory);
 
-    void log(std::string msg);
+    void log(const char* msg);
+    void log(const char* tag, const char* msg);
 
 protected:
     virtual ~TiLogger();

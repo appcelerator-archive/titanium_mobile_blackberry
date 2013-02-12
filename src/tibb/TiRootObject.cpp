@@ -141,7 +141,7 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
             ss << msg->GetLineNumber();
         }
         ss << ": " << *String::Utf8Value(exception);
-        TiLogger::getInstance().log(ss.str());
+        TiLogger::getInstance().log(ss.str().c_str());
         return -1;
     }
 

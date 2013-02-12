@@ -148,3 +148,18 @@ Ti.Stream.pump = function(inputStream, handler, maxChunkSize, isAsync)
         } while (pumpCallBackArgs.bytesProcessed >= 0);
     }
 };
+
+// Global.console
+console = { };
+['debug', 'error', 'info', 'warn'].forEach(function(level) {
+    console[level] = function() {
+        var msg = Array.prototype.map.call(arguments, function(m) {
+            if (typeof(m) === 'object') {
+                return m.hasOwnProperty('toString') ? m.toString() : JSON.stringify(m);
+            }
+            return m === null ? 'null' : m === void 0 ? 'undefined' : m;
+        }).join(' ');
+        Ti.API.log(level.toUpperCase(), msg);
+    }
+});
+console.log = console.info;
