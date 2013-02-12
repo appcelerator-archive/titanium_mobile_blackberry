@@ -124,7 +124,12 @@ public slots:
 #include "NativeControlObject.moc"
 
 static void onPostLayout(struct Node* node) {
-    bb::cascades::Control* control = static_cast<bb::cascades::Control*>(node->data);
+    NativeControlObject* native = static_cast<NativeControlObject*>(node->data);
+    Control* control = static_cast<Control*>(native->getNativeHandle());
+    if (!control) {
+      // Cannot update layout until control has been created for the view.
+      return;
+    }
 
     if (node->properties.width.valueType == Defer || node->properties.height.valueType == Defer) {
     	return;
@@ -149,19 +154,22 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     layoutHandler_(0),
     batchUpdating_(false)
 {
-	 nodeInitialize(&layoutNode_);
+    nodeInitialize(&layoutNode_);
+    layoutNode_.onLayout = onPostLayout;
+    layoutNode_.data = this;
 
-	if (objType == N_TYPE_WINDOW || objType == N_TYPE_VIEW) {
-		layoutNode_.properties.width.valueType = Fill;
-		layoutNode_.properties.height.valueType = Fill;
-	}
-	else if (objType == N_TYPE_LABEL || objType == N_TYPE_BUTTON || objType == N_TYPE_TOGGLEBUTTON ||
-			objType == N_TYPE_SLIDER || objType == N_TYPE_PROGRESSBAR) {
-		layoutNode_.properties.width.valueType = Defer;
-		layoutNode_.properties.height.valueType = Defer;
-	}
 
-	objType_ = objType;
+    if (objType == N_TYPE_WINDOW || objType == N_TYPE_VIEW) {
+        layoutNode_.properties.width.valueType = Fill;
+        layoutNode_.properties.height.valueType = Fill;
+	}
+    else if (objType == N_TYPE_LABEL || objType == N_TYPE_BUTTON || objType == N_TYPE_TOGGLEBUTTON ||
+        objType == N_TYPE_SLIDER || objType == N_TYPE_PROGRESSBAR) {
+        layoutNode_.properties.width.valueType = Defer;
+        layoutNode_.properties.height.valueType = Defer;
+    }
+
+    objType_ = objType;
 }
 
 NativeControlObject::~NativeControlObject()
@@ -237,9 +245,6 @@ void NativeControlObject::setControl(bb::cascades::Control* control)
     layoutHandler_ = new NativeLayoutHandler(this);
     bb::cascades::LayoutUpdateHandler::create(container_).onLayoutFrameChanged(layoutHandler_, SLOT(handleLayoutFrameUpdated(QRectF)));
     control_ = control;
-
-    layoutNode_.onLayout = onPostLayout;
-    layoutNode_.data = container_;
 }
 
 void NativeControlObject::addTouchEvent(const char* name, const QObject* source, const char* signal, TiEventContainer* container) {

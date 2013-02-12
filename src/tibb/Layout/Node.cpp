@@ -9,6 +9,7 @@
 
 void nodeInitialize(struct Node* node) {
     memset(node, 0, sizeof(struct Node));
+    node->flags = FLAG_INVALID;
     elementInitialize(&node->element, Composite);
     layoutPropertiesInitialize(&node->properties);
 }
