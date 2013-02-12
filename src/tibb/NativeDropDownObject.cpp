@@ -11,7 +11,7 @@
 #include <QVector>
 
 NativeDropDownObject::NativeDropDownObject(TiObject* tiObject)
-    : NativeControlObject(tiObject)
+    : NativeControlObject(tiObject, N_TYPE_DROPDOWN)
 {
     dropdown_ = NULL;
 }
@@ -25,7 +25,7 @@ NativeDropDownObject* NativeDropDownObject::createDropDown(TiObject* tiObject)
     return new NativeDropDownObject(tiObject);
 }
 
-int NativeDropDownObject::getObjectType() const
+NATIVE_TYPE NativeDropDownObject::getObjectType() const
 {
     return N_TYPE_DROPDOWN;
 }

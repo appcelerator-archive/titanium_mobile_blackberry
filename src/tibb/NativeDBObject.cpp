@@ -24,7 +24,7 @@ NativeDBObject::NativeDBObject(TiObject* tiObject)
 NativeDBObject::~NativeDBObject() {
 }
 
-int NativeDBObject::getObjectType() const {
+NATIVE_TYPE NativeDBObject::getObjectType() const {
     return N_TYPE_DB;
 }
 

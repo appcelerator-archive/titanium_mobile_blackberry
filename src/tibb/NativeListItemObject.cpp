@@ -11,7 +11,7 @@
 #include "TiObject.h"
 
 NativeListItemObject::NativeListItemObject(TiObject* object)
-    : NativeControlObject(object)
+    : NativeControlObject(object, N_TYPE_LIST_ITEM)
     , data_(new ListItemData(object)) {
     // Prevent the data object from getting destroyed
     // when it is removed from the data model. It should live

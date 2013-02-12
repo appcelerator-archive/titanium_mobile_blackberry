@@ -32,7 +32,7 @@ class NativeDateTimePickerObject : public NativeControlObject
 {
 public:
     static NativeDateTimePickerObject* createDateTimePicker(TiObject* tiObject);
-    virtual int getObjectType() const;
+    virtual NATIVE_TYPE getObjectType() const;
     virtual int setValue(TiObject* obj);
     virtual int setType(TiObject* obj);
     virtual int setMinDate(TiObject* obj);

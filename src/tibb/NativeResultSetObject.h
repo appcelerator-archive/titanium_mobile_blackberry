@@ -50,7 +50,7 @@ class NativeResultSetObject : public NativeProxyObject
 {
 public:
     static NativeResultSetObject* createResultSet(TiObject* tiObject);
-    int getObjectType() const;
+    NATIVE_TYPE getObjectType() const;
 
     int setPropertyValue(size_t propertyNumber, TiObject* obj, void* userContext);
     int getPropertyValue(size_t propertyNumber, TiObject* obj, void* userContext);

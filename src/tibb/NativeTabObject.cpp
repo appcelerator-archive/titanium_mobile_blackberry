@@ -20,7 +20,7 @@ using namespace bb::cascades;
 using namespace titanium;
 
 NativeTabObject::NativeTabObject(TiObject* tiObject)
-    : NativeControlObject(tiObject)
+    : NativeControlObject(tiObject, N_TYPE_TAB)
     , navigationPane_(NULL)
     , tab_(NULL)
 {
@@ -40,7 +40,7 @@ NativeObject* NativeTabObject::createTab(TiObject* tiObject)
     return obj;
 }
 
-int NativeTabObject::getObjectType() const
+NATIVE_TYPE NativeTabObject::getObjectType() const
 {
     return N_TYPE_TAB;
 }

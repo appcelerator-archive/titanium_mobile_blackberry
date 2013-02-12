@@ -34,7 +34,7 @@ class NativeTabGroupObject : public NativeControlObject
 public:
     static NativeObject* createTabGroup(TiObject* tiObject, NativeObjectFactory* nativeObjectFactory);
     virtual ~NativeTabGroupObject();
-    virtual int getObjectType() const;
+    virtual NATIVE_TYPE getObjectType() const;
     virtual NAHANDLE getNativeHandle() const;
     virtual int addChildNativeObject(NativeObject* obj);
     virtual int setActiveTab(NativeObject* tab);

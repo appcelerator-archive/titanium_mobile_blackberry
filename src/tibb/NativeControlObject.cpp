@@ -24,30 +24,12 @@
 #include <bb/cascades/ImagePaint>
 #include <bb/cascades/LayoutUpdateHandler>
 #include <bb/device/DisplayInfo>
-#include <QColor>
 #include <QRectF>
 
 using namespace bb::cascades;
 
 #define ZINDEX_PROPERTY_NAME            "tizindex"
 
-// 25.4mm in 1"
-#define INCHES_TO_MM_MUL                25.4f
-// 10mm in 1cm
-#define CM_TO_MM_MUL                    10.0f
-// 72 points = 1" = 25.4mm
-#define PT_TO_MM_MUL                    (INCHES_TO_MM_MUL / 72.0f)
-// Default dots per mm
-#define DPMM                            19.2f
-
-// Width in pixels
-static int g_width = 0;
-// Height in pixels
-static int g_height = 0;
-// Width in mm
-static float g_physicalWidth = 0.0f;
-// Height in mm
-static float g_physicalHeight = 0.0f;
 
 #define PROP_SETGET_FUNCTION(NAME)      prop_##NAME
 
@@ -139,27 +121,14 @@ public slots:
 
 #include "NativeControlObject.moc"
 
-// Unit types
-struct UnitTypeData
-{
-    UnitType unitType;
-    const char* postfix;
-};
-
-const static UnitTypeData g_unitTypes[] =
-{
-    {UnitTypePixels, "px"},
-    {UnitTypePercent, "%"},
-    {UnitTypeDIP, "dip"},
-    {UnitTypeInches, "in"},
-    {UnitTypeMM, "mm"},
-    {UnitTypeCM, "cm"},
-    {UnitTypePT, "pt"},
-    {UnitTypeAuto, "auto"}
-};
-
 static void onPostLayout(struct Node* node) {
     bb::cascades::Control* control = static_cast<bb::cascades::Control*>(node->data);
+
+    if (node->properties.width.valueType == Defer || node->properties.height.valueType == Defer) {
+    	return;
+    }
+
+    // if button label ... and no height value or width then get from callback
     float width = node->element._measuredWidth,
           height = node->element._measuredHeight;
     control->setMinWidth(width);
@@ -171,50 +140,27 @@ static void onPostLayout(struct Node* node) {
     layoutProperties->setPositionY(node->element._measuredTop);
 }
 
-NativeControlObject::NativeControlObject(TiObject* tiObject) :
+NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType) :
     NativeProxyObject(tiObject),
     container_(NULL),
     control_(NULL),
     layout_(NULL),
     layoutHandler_(0),
-    bottom_(0),
-    left_(0),
-    top_(0),
-    width_(0),
-    height_(0),
-    right_(0),
-    batchUpdating_(false),
-    heightIsUpdated_(false),
-    widthIsUpdated_(false),
-    leftIsUpdated_(false),
-    topIsUpdated_(false),
-    rightIsUpdated_(false),
-    bottomIsUpdated_(false)
+    batchUpdating_(false)
 {
-    nodeInitialize(&layoutNode_);
+	 nodeInitialize(&layoutNode_);
 
-    // Views auto behavior is to fill their parent.
-    layoutNode_.properties.width.valueType = Fill;
-    layoutNode_.properties.height.valueType = Fill;
+	if (objType == N_TYPE_WINDOW || objType == N_TYPE_VIEW) {
+		layoutNode_.properties.width.valueType = Fill;
+		layoutNode_.properties.height.valueType = Fill;
+	}
+	else if (objType == N_TYPE_LABEL || objType == N_TYPE_BUTTON || objType == N_TYPE_TOGGLEBUTTON ||
+			objType == N_TYPE_SLIDER || objType == N_TYPE_PROGRESSBAR) {
+		layoutNode_.properties.width.valueType = Defer;
+		layoutNode_.properties.height.valueType = Defer;
+	}
 
-    if ((g_width <= 0) || (g_height <= 0))
-    {
-        bb::device::DisplayInfo display;
-        QSize size = display.pixelSize();
-        g_width = size.width();
-        g_height = size.height();
-        QSizeF phySize = display.physicalSize();
-        // Get size of screen if mm
-        g_physicalWidth = (float)phySize.width();
-        g_physicalHeight = (float)phySize.height();
-        // NOTE: the previous functions do not work on the simulator
-        if ((g_physicalWidth == 0.0f) || (g_physicalHeight == 0.0f))
-        {
-            // For now, try to guess what the physical size is.
-            g_physicalWidth = (float)g_width / DPMM;
-            g_physicalHeight = (float)g_height / DPMM;
-        }
-    }
+	objType_ = objType;
 }
 
 NativeControlObject::~NativeControlObject()
@@ -223,12 +169,12 @@ NativeControlObject::~NativeControlObject()
 
 NativeControlObject* NativeControlObject::createView(TiObject* tiObject)
 {
-    return new NativeControlObject(tiObject);
+    return new NativeControlObject(tiObject, N_TYPE_VIEW);
 }
 
-int NativeControlObject::getObjectType() const
+NATIVE_TYPE NativeControlObject::getObjectType() const
 {
-    return N_TYPE_VIEW;
+    return objType_;
 }
 
 NAHANDLE NativeControlObject::getNativeHandle() const
@@ -239,6 +185,35 @@ NAHANDLE NativeControlObject::getNativeHandle() const
 void NativeControlObject::updateLayout(QRectF rect)
 {
     rect_ = rect;
+
+    char str[64];
+	struct InputProperty property;
+
+	if (layoutNode_.properties.width.valueType == Defer) {
+		property.name = Width;
+		sprintf(str, "%fpx", rect.width());
+		property.value = str;
+		populateLayoutPoperties(property, &layoutNode_.properties, 96);
+		layoutNode_.properties.width.valueType = Fixed;
+
+		struct Node* root = nodeRequestLayout(&layoutNode_);
+		if (root) {
+			nodeLayout(root);
+		}
+	}
+
+	if (layoutNode_.properties.height.valueType == Defer) {
+		property.name = Height;
+		sprintf(str, "%fpx", rect.height());
+		property.value = str;
+		populateLayoutPoperties(property, &layoutNode_.properties, 96);
+		layoutNode_.properties.height.valueType = Fixed;
+
+		struct Node* root = nodeRequestLayout(&layoutNode_);
+		if (root) {
+			nodeLayout(root);
+		}
+	}
 }
 
 int NativeControlObject::initialize()
@@ -411,7 +386,7 @@ int NativeControlObject::finishLayout()
     if (batchUpdating_)
     {
         batchUpdating_ = false;
-        updateViewLayout();
+        //updateViewLayout();
     }
     return NATIVE_ERROR_OK;
 }
@@ -430,41 +405,6 @@ void NativeControlObject::updateLayoutProperty(ValueName name, TiObject* val) {
     if (root) {
         nodeLayout(root);
     }
-}
-
-void NativeControlObject::updateViewLayout()
-{
-    if (widthIsUpdated_)
-    {
-        updateWidth();
-        widthIsUpdated_ = false;
-    }
-    if (heightIsUpdated_)
-    {
-        updateHeight();
-        heightIsUpdated_ = false;
-    }
-    if (leftIsUpdated_)
-    {
-        updateLeft();
-        leftIsUpdated_ = false;
-    }
-    if (topIsUpdated_)
-    {
-        updateTop();
-        topIsUpdated_ = false;
-    }
-    if (rightIsUpdated_)
-    {
-        updateRight();
-        rightIsUpdated_ = false;
-    }
-    if (bottomIsUpdated_)
-    {
-        updateBottom();
-        bottomIsUpdated_ = false;
-    }
-    //TODO: need to verify if other UI.View properties needs to be updated as well
 }
 
 // PROP_SETTER creates a static version of functions which
@@ -605,59 +545,6 @@ int NativeControlObject::setHeight(TiObject* obj)
 {
     updateLayoutProperty(Height, obj);
     return NATIVE_ERROR_OK;
-
-    /*
-    Q_ASSERT(container_ != NULL);
-    Q_ASSERT(obj != NULL);
-    obj->addRef();
-    if (height_ != NULL)
-    {
-        height_->release();
-    }
-    height_ = obj;
-    if (!batchUpdating_)
-    {
-        return updateHeight();
-    }
-    else
-    {
-        heightIsUpdated_ = true;
-    }
-    return NATIVE_ERROR_OK;
-    */
-}
-
-int NativeControlObject::updateHeight()
-{
-    if (height_ == NULL)
-    {
-        //height wasn't set, just leave as it is
-        return NATIVE_ERROR_OK;
-    }
-    float height = 0;
-    bool isAuto;
-    // TODO:we need the parent height to calculate percentage values and
-    // to use that value as max instead of g_height
-    float max = g_height; // TODO: Remove this
-    int error = getMeasurementInfo(height_, max,
-                                   (float)g_height / g_physicalHeight, &height, &isAuto);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
-
-    if (isAuto)
-    {
-        container_->resetMaxHeight();
-        container_->resetMinHeight();
-    }
-    else
-    {
-        container_->setMaxHeight(height);
-        container_->setMinHeight(height);
-    }
-
-    return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(setHideLoadIndicator)
@@ -707,25 +594,6 @@ int NativeControlObject::setLeft(TiObject* obj)
 {
     updateLayoutProperty(Left, obj);
 
-    /*
-    Q_ASSERT(container_ != NULL);
-    Q_ASSERT(obj != NULL);
-    obj->addRef();
-    if (left_ != NULL)
-    {
-        left_->release();
-    }
-    left_ = obj;
-    if (!batchUpdating_)
-    {
-        return updateLeft();
-    }
-    else
-    {
-        leftIsUpdated_ = true;
-    }
-    */
-
     return NATIVE_ERROR_OK;
 }
 
@@ -734,65 +602,11 @@ int NativeControlObject::setLeftImage(TiObject* obj) {
   return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-int NativeControlObject::updateLeft()
-{
-    if (left_ == NULL)
-    {
-        //left wasn't set, just leave as it is
-        return NATIVE_ERROR_OK;
-    }
-    float left = 0;
-    int error = NativeControlObject::getFloat(left_, &left);
-    if (!N_SUCCEEDED(error))
-    {
-        return error;
-    }
-    layout_->setPositionX(left);
-    container_->setLayoutProperties(layout_);
-    return NATIVE_ERROR_OK;
-}
-
 PROP_SETGET(setBottom)
 int NativeControlObject::setBottom(TiObject* obj)
 {
     updateLayoutProperty(Bottom, obj);
 
-    /*
-    Q_ASSERT(container_ != NULL);
-    Q_ASSERT(obj != NULL);
-    obj->addRef();
-    if (bottom_ != NULL)
-    {
-        bottom_->release();
-    }
-    bottom_ = obj;
-    if (!batchUpdating_)
-    {
-        return updateBottom();
-    }
-    else
-    {
-        bottomIsUpdated_ = true;
-    }
-    */
-
-    return NATIVE_ERROR_OK;
-}
-
-int NativeControlObject::updateBottom()
-{
-    if (bottom_ == NULL)
-    {
-        //bottom wasn't set, just leave as it is
-        return NATIVE_ERROR_OK;
-    }
-    float bottom = 0;
-    int error = NativeControlObject::getFloat(bottom_, &bottom);
-    if (!N_SUCCEEDED(error))
-    {
-        return error;
-    }
-    container_->setBottomMargin(bottom);
     return NATIVE_ERROR_OK;
 }
 
@@ -813,42 +627,6 @@ int NativeControlObject::setRight(TiObject* obj)
 {
     updateLayoutProperty(Right, obj);
 
-    /*
-    Q_ASSERT(container_ != NULL);
-    Q_ASSERT(obj != NULL);
-    obj->addRef();
-    if (right_ != NULL)
-    {
-        right_->release();
-    }
-    right_ = obj;
-    if (batchUpdating_)
-    {
-        return updateRight();
-    }
-    else
-    {
-        rightIsUpdated_ = true;
-    }
-    */
-
-    return NATIVE_ERROR_OK;
-}
-
-int NativeControlObject::updateRight()
-{
-    if (right_ == NULL)
-    {
-        //right wasn't set, just leave as it is
-        return NATIVE_ERROR_OK;
-    }
-    float right = 0;
-    int error = NativeControlObject::getFloat(right_, &right);
-    if (!N_SUCCEEDED(error))
-    {
-        return error;
-    }
-    container_->setRightMargin(right);
     return NATIVE_ERROR_OK;
 }
 
@@ -971,43 +749,6 @@ int NativeControlObject::setTop(TiObject* obj)
 {
     updateLayoutProperty(Top, obj);
 
-    /*
-    Q_ASSERT(container_ != NULL);
-    Q_ASSERT(obj != NULL);
-    obj->addRef();
-    if (top_ != NULL)
-    {
-        top_->release();
-    }
-    top_ = obj;
-    if (!batchUpdating_)
-    {
-        return updateTop();
-    }
-    else
-    {
-        topIsUpdated_ = true;
-    }
-    */
-
-    return NATIVE_ERROR_OK;
-}
-
-int NativeControlObject::updateTop()
-{
-    if (top_ == NULL)
-    {
-        //top wasn't set, just leave as it is
-        return NATIVE_ERROR_OK;
-    }
-    float top = 0;
-    int error = NativeControlObject::getFloat(top_, &top);
-    if (!N_SUCCEEDED(error))
-    {
-        return error;
-    }
-    layout_->setPositionY(top);
-    container_->setLayoutProperties(layout_);
     return NATIVE_ERROR_OK;
 }
 
@@ -1063,58 +804,6 @@ PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
     updateLayoutProperty(Width, obj);
-
-    /*
-    Q_ASSERT(container_ != NULL);
-    Q_ASSERT(obj != NULL);
-    obj->addRef();
-    if (width_ != NULL)
-    {
-        width_->release();
-    }
-    width_ = obj;
-    if (!batchUpdating_)
-    {
-        return updateWidth();
-    }
-    else
-    {
-        widthIsUpdated_ = true;
-    }
-    */
-
-    return NATIVE_ERROR_OK;
-}
-
-int NativeControlObject::updateWidth()
-{
-    if (width_ == NULL)
-    {
-        //width wasn't set, just leave as it is
-        return NATIVE_ERROR_OK;
-    }
-    float width = 0;
-    bool isAuto;
-    // TODO:we need the parent width to calculate percentage values and
-    // to use that value as max instead of g_height
-    float max = g_width; // TODO: Remove this
-    int error = getMeasurementInfo(width_, max,
-                                   (float)g_width / g_physicalWidth, &width, &isAuto);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
-
-    if (isAuto)
-    {
-        container_->resetMaxWidth();
-        container_->resetMinWidth();
-    }
-    else
-    {
-        container_->setMaxWidth(width);
-        container_->setMinWidth(width);
-    }
 
     return NATIVE_ERROR_OK;
 }
@@ -1196,9 +885,6 @@ int NativeControlObject::setMessage(TiObject*)
 
 const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
 {
-
-    
-     //TODO: need to place alfabetically
     {N_PROP_DISABLE_BOUNCE, PROP_SETGET_FUNCTION(setDisableBounce), NULL},
     {N_PROP_ENABLE_ZOOM_CONTROLS, PROP_SETGET_FUNCTION(setEnableZoomControls), NULL},
     {N_PROP_HIDE_LOAD_INDICATOR, PROP_SETGET_FUNCTION(setHideLoadIndicator), NULL},
@@ -1494,121 +1180,6 @@ int NativeControlObject::getDateTime(TiObject* obj, QDateTime& dt)
         day = dayValue->NumberValue();
     }
     dt.setDate(QDate(year, month, day));
-    return NATIVE_ERROR_OK;
-}
-
-int NativeControlObject::getMeasurementInfo(TiObject* obj, float maxPixels, float dotsPerMillimeter,
-        float* calculatedValue, bool* isAuto)
-{
-    Q_ASSERT(calculatedValue != NULL);
-    Q_ASSERT(isAuto != NULL);
-
-    *isAuto = false;
-    UnitType unitType = UnitTypeDefault;
-
-    if ((!obj->getValue()->IsString()) && (!obj->getValue()->IsStringObject()))
-    {
-        float value;
-        int error = getFloat(obj, &value);
-        if (error != NATIVE_ERROR_OK)
-        {
-            return error;
-        }
-        if (value < 0.0f)
-        {
-            value = 0.0f;
-        }
-        else if (value > maxPixels)
-        {
-            value = maxPixels;
-        }
-        *calculatedValue = value;
-        return NATIVE_ERROR_OK;
-    }
-    v8::String::Utf8Value myString(obj->getValue()->ToString());
-    QString measurement = (const char*)(*myString);
-    float numberPart = (float)atof(*myString);
-    for (int i = 0; i < GET_ARRAY_SIZE(g_unitTypes); i++)
-    {
-        if (measurement.endsWith(QString(g_unitTypes[i].postfix)))
-        {
-            unitType = g_unitTypes[i].unitType;
-            break;
-        }
-    }
-    if (unitType == UnitTypeDefault)
-    {
-        // Default to 'pixels'
-        unitType = UnitTypePixels;
-    }
-    switch (unitType)
-    {
-    case UnitTypeAuto:
-        *isAuto = true;
-        break;
-    case UnitTypePixels:
-        if (numberPart < 0.0f)
-        {
-            numberPart = 0.0f;
-        }
-        else if (numberPart > maxPixels)
-        {
-            numberPart = maxPixels;
-        }
-        *calculatedValue = numberPart;
-        break;
-    case UnitTypePercent:
-        if (numberPart < 0.0f)
-        {
-            numberPart = 0.0f;
-        }
-        else if (numberPart > 100.0f)
-        {
-            numberPart = 100.0f;
-        }
-        if (maxPixels <= 0.0f)
-        {
-            *calculatedValue = 0;
-        }
-        else
-        {
-            *calculatedValue = maxPixels * numberPart / 100;
-        }
-        break;
-    case UnitTypeDIP:
-        // TODO: complete (NOTE: DPI is required)
-        break;
-    case UnitTypeInches:
-        if (numberPart < 0.0f)
-        {
-            numberPart = 0.0f;
-        }
-        *calculatedValue = dotsPerMillimeter * numberPart * INCHES_TO_MM_MUL;
-        break;
-    case UnitTypeMM:
-        if (numberPart < 0.0f)
-        {
-            numberPart = 0.0f;
-        }
-        *calculatedValue = dotsPerMillimeter * numberPart;
-        break;
-    case UnitTypeCM:
-        if (numberPart < 0.0f)
-        {
-            numberPart = 0.0f;
-        }
-        *calculatedValue = dotsPerMillimeter * numberPart * CM_TO_MM_MUL;
-        break;
-    case UnitTypePT:
-        if (numberPart < 0.0f)
-        {
-            numberPart = 0.0f;
-        }
-        *calculatedValue = dotsPerMillimeter * numberPart * PT_TO_MM_MUL;
-        break;
-    default:
-        return NATIVE_ERROR_NOTSUPPORTED;
-    }
     return NATIVE_ERROR_OK;
 }
 

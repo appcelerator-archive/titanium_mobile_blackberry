@@ -43,7 +43,7 @@ class NativeUDPSocketObject : public NativeProxyObject
 public:
     friend class UDPSocketEventHandler;
     static NativeUDPSocketObject* createUDPSocket(TiObject* tiObject);
-    int getObjectType() const;
+    NATIVE_TYPE getObjectType() const;
     int setPropertyValue(size_t propertyNumber, TiObject* obj, void* userContext);
     int getPropertyValue(size_t propertyNumber, TiObject* obj, void* userContext);
 

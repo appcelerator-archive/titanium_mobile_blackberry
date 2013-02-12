@@ -24,8 +24,8 @@ static const char* FONT_WEIGHT            = "fontWeight";
 static const char* FONT_WEIGHT_NORMAL     = "normal";
 static const char* FONT_WEIGHT_BOLD       = "bold";
 
-NativeAbstractTextControlObject::NativeAbstractTextControlObject(TiObject* tiObject)
-    : NativeControlObject(tiObject)
+NativeAbstractTextControlObject::NativeAbstractTextControlObject(TiObject* tiObject,  NATIVE_TYPE objType)
+    : NativeControlObject(tiObject, objType)
     , textControl_(NULL)
 {
 }

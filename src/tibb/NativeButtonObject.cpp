@@ -11,7 +11,7 @@
 #include <bb/cascades/Button>
 
 NativeButtonObject::NativeButtonObject(TiObject* tiObject)
-    : NativeControlObject(tiObject)
+    : NativeControlObject(tiObject, N_TYPE_BUTTON)
 {
     button_ = NULL;
 }
@@ -25,7 +25,7 @@ NativeButtonObject* NativeButtonObject::createButton(TiObject* tiObject)
     return new NativeButtonObject(tiObject);
 }
 
-int NativeButtonObject::getObjectType() const
+NATIVE_TYPE NativeButtonObject::getObjectType() const
 {
     return N_TYPE_BUTTON;
 }

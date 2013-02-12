@@ -39,7 +39,7 @@ class NativeWebViewObject : public NativeControlObject
 public:
     static NativeWebViewObject* createWebView(TiObject* tiObject);
     virtual ~NativeWebViewObject();
-    virtual int getObjectType() const;
+    virtual NATIVE_TYPE getObjectType() const;
     virtual int initialize();
     // properties
     virtual int setData(TiObject* obj);

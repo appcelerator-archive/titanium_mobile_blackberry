@@ -16,7 +16,7 @@ class NativeWindowObject : public NativeControlObject {
 public:
     static NativeObject* createWindow(TiObject* tiObject, NativeObjectFactory* factory);
 
-    virtual int getObjectType() const {
+    virtual NATIVE_TYPE getObjectType() const {
         return N_TYPE_WINDOW;
     }
     virtual int addChildNativeObject(NativeObject* obj);

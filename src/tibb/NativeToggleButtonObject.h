@@ -30,7 +30,7 @@ class NativeToggleButtonObject : public NativeControlObject
 {
 public:
     static NativeToggleButtonObject* createToggleButton(TiObject* tiObject);
-    virtual int getObjectType() const;
+    virtual NATIVE_TYPE getObjectType() const;
     virtual int initialize();
     virtual int setValue(TiObject* value);
     void updateValue(bool value);

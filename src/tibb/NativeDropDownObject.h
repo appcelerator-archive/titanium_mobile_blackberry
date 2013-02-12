@@ -29,7 +29,7 @@ class NativeDropDownObject : public NativeControlObject
 {
 public:
     static NativeDropDownObject* createDropDown(TiObject* tiObject);
-    virtual int getObjectType() const;
+    virtual NATIVE_TYPE getObjectType() const;
     virtual int initialize();
     virtual int setTitle(TiObject* obj);
     virtual int setOptions(TiObject* obj);

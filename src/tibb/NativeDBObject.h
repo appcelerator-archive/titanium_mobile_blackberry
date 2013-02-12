@@ -33,7 +33,7 @@ class NativeDBObject : public NativeProxyObject
 {
 public:
     static NativeDBObject* createDB(TiObject* tiObject);
-    int getObjectType() const;
+    NATIVE_TYPE getObjectType() const;
 
     // DB methods
     int execute(NativeResultSetObject* resultSet, string command, vector<string> bindings);

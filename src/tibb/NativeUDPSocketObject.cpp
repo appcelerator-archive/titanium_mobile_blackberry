@@ -182,7 +182,7 @@ NativeUDPSocketObject::~NativeUDPSocketObject()
     delete eventHandler_;
 }
 
-int NativeUDPSocketObject::getObjectType() const
+NATIVE_TYPE NativeUDPSocketObject::getObjectType() const
 {
     return N_TYPE_UDPSOCKET;
 }

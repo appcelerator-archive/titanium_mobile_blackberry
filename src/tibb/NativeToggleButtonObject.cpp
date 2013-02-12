@@ -12,7 +12,7 @@
 #include <bb/cascades/ToggleButton>
 
 NativeToggleButtonObject::NativeToggleButtonObject(TiObject* tiObject)
-    : NativeControlObject(tiObject)
+    : NativeControlObject(tiObject, N_TYPE_TOGGLEBUTTON)
 {
     toggleButton_ = NULL;
 }
@@ -26,7 +26,7 @@ NativeToggleButtonObject* NativeToggleButtonObject::createToggleButton(TiObject*
     return new NativeToggleButtonObject(tiObject);
 }
 
-int NativeToggleButtonObject::getObjectType() const
+NATIVE_TYPE NativeToggleButtonObject::getObjectType() const
 {
     return N_TYPE_TOGGLEBUTTON;
 }

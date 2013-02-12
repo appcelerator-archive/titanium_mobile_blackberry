@@ -12,7 +12,7 @@
 #include <bb/cascades/ImageView>
 
 NativeImageViewObject::NativeImageViewObject(TiObject* tiObject)
-    : NativeControlObject(tiObject)
+    : NativeControlObject(tiObject, N_TYPE_IMAGEVIEW)
 {
     imageView_ = NULL;
 }
@@ -26,7 +26,7 @@ NativeImageViewObject* NativeImageViewObject::createImageView(TiObject* tiObject
     return new NativeImageViewObject(tiObject);
 }
 
-int NativeImageViewObject::getObjectType() const
+NATIVE_TYPE NativeImageViewObject::getObjectType() const
 {
     return N_TYPE_IMAGEVIEW;
 }

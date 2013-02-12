@@ -21,7 +21,7 @@ public:
     NativeListItemObject(TiObject* object);
     virtual ~NativeListItemObject();
 
-    virtual int getObjectType() const {
+    virtual NATIVE_TYPE getObjectType() const {
         return N_TYPE_LIST_ITEM;
     }
 

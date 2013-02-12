@@ -35,7 +35,7 @@ NativeObject* NativeWindowObject::createWindow(TiObject* tiObject, NativeObjectF
 }
 
 NativeWindowObject::NativeWindowObject(TiObject* tiObject)
-    : NativeControlObject(tiObject)
+    : NativeControlObject(tiObject, N_TYPE_WINDOW)
 {
 }
 

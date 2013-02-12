@@ -8,7 +8,7 @@
 #include "NativeProgressBarObject.h"
 
 NativeProgressBarObject::NativeProgressBarObject(TiObject* tiObject)
-    : NativeControlObject(tiObject)
+    : NativeControlObject(tiObject, N_TYPE_PROGRESSBAR)
 {
     progressIndicator_ = NULL;
 }
@@ -17,7 +17,7 @@ NativeProgressBarObject::~NativeProgressBarObject()
 {
 }
 
-int NativeProgressBarObject::getObjectType() const
+NATIVE_TYPE NativeProgressBarObject::getObjectType() const
 {
     return N_TYPE_PROGRESSBAR;
 }

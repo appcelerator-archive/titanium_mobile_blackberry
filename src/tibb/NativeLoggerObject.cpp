@@ -53,7 +53,7 @@ void NativeLoggerObject::deleteInstance()
     s_logger = NULL;
 }
 
-int NativeLoggerObject::getObjectType() const
+NATIVE_TYPE NativeLoggerObject::getObjectType() const
 {
     return N_TYPE_LOGGER;
 }

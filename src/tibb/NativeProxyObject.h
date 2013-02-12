@@ -79,7 +79,7 @@ public:
     explicit NativeProxyObject(TiObject* tiObject);
     virtual ~NativeProxyObject();
 
-    virtual int getObjectType() const { return 0; }
+    virtual NATIVE_TYPE getObjectType() const { return N_TYPE_VIEW; }
 
     virtual int fireEvent(const char* name, const TiObject* event) const;
     virtual int removeEventHandler(const char* eventName, int eventId);

@@ -170,7 +170,7 @@ class TiObject;
 class NativeObject : public TiBase
 {
 public:
-    virtual int getObjectType() const = 0;
+    virtual NATIVE_TYPE getObjectType() const = 0;
     virtual int setPropertyValue(std::size_t propertyNumber, TiObject* obj);
     virtual int getPropertyValue(std::size_t propertyNumber, TiObject* obj);
     virtual int addChildNativeObject(NativeObject* obj);

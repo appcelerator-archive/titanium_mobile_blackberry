@@ -31,7 +31,7 @@ class NativeButtonObject : public NativeControlObject
 public:
     static NativeButtonObject* createButton(TiObject* tiObject);
     virtual ~NativeButtonObject();
-    virtual int getObjectType() const;
+    virtual NATIVE_TYPE getObjectType() const;
     virtual int initialize();
     virtual int setTitle(TiObject* obj);
     virtual int setImage(TiObject* obj);

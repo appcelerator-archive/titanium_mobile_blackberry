@@ -21,7 +21,7 @@ class NativeLabelObject : public NativeAbstractTextControlObject
 {
 public:
     static NativeLabelObject* createLabel(TiObject* tiObject);
-    virtual int getObjectType() const;
+    virtual NATIVE_TYPE getObjectType() const;
     virtual int initialize();
 
 protected:

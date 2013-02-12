@@ -22,7 +22,7 @@
 using namespace bb::cascades;
 
 NativeListViewObject::NativeListViewObject(TiObject* tiObject)
-    : NativeControlObject(tiObject)
+    : NativeControlObject(tiObject, N_TYPE_LIST_VIEW)
 {
     listView_ = NULL;
 }
@@ -99,7 +99,7 @@ int NativeListViewObject::setData(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-int NativeListViewObject::getObjectType() const
+NATIVE_TYPE NativeListViewObject::getObjectType() const
 {
     return N_TYPE_LIST_VIEW;
 }

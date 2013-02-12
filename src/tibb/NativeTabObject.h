@@ -33,7 +33,7 @@ class NativeTabObject : public NativeControlObject
 public:
     static NativeObject* createTab(TiObject* tiObject);
     virtual ~NativeTabObject();
-    virtual int getObjectType() const;
+    virtual NATIVE_TYPE getObjectType() const;
     virtual int setTitle(TiObject* obj);
     virtual int setIcon(TiObject* obj);
     virtual int addChildNativeObject(NativeObject* obj);

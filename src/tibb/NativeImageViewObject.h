@@ -26,7 +26,7 @@ class NativeImageViewObject : public NativeControlObject
 {
 public:
     static NativeImageViewObject* createImageView(TiObject* tiObject);
-    virtual int getObjectType() const;
+    virtual NATIVE_TYPE getObjectType() const;
     virtual int initialize();
     virtual int setImage(TiObject* obj);
 

@@ -10,7 +10,7 @@
 #include <QColor>
 
 NativeLabelObject::NativeLabelObject(TiObject* tiObject)
-    : NativeAbstractTextControlObject(tiObject)
+    : NativeAbstractTextControlObject(tiObject, N_TYPE_LABEL)
 {
     label_ = NULL;
 }
@@ -24,7 +24,7 @@ NativeLabelObject* NativeLabelObject::createLabel(TiObject* tiObject)
     return new NativeLabelObject(tiObject);
 }
 
-int NativeLabelObject::getObjectType() const
+NATIVE_TYPE NativeLabelObject::getObjectType() const
 {
     return N_TYPE_LABEL;
 }

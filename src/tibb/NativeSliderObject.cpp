@@ -11,7 +11,7 @@
 #include <bb/cascades/Slider>
 
 NativeSliderObject::NativeSliderObject(TiObject* tiObject)
-    : NativeControlObject(tiObject)
+    : NativeControlObject(tiObject, N_TYPE_SLIDER)
 {
     slider_ = NULL;
 }
@@ -25,7 +25,7 @@ NativeSliderObject* NativeSliderObject::createSlider(TiObject* tiObject)
     return new NativeSliderObject(tiObject);
 }
 
-int NativeSliderObject::getObjectType() const
+NATIVE_TYPE NativeSliderObject::getObjectType() const
 {
     return N_TYPE_SLIDER;
 }

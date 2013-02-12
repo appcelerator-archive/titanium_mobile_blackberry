@@ -16,7 +16,7 @@ using namespace bb::cascades;
 using namespace titanium;
 
 NativeTabGroupObject::NativeTabGroupObject(TiObject* tiObject)
-    : NativeControlObject(tiObject)
+    : NativeControlObject(tiObject, N_TYPE_TABGROUP)
     , nativeObjectFactory_(NULL)
     , tabGroup_(NULL)
 {
@@ -35,7 +35,7 @@ NativeObject* NativeTabGroupObject::createTabGroup(TiObject* tiObject, NativeObj
     return obj;
 }
 
-int NativeTabGroupObject::getObjectType() const
+NATIVE_TYPE NativeTabGroupObject::getObjectType() const
 {
     return N_TYPE_TABGROUP;
 }

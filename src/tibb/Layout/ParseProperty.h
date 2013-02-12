@@ -13,7 +13,7 @@
 enum ValueName {
     Top = 0, Bottom, Left, Right, Width, MinWidth, Height, MinHeight, CenterX, CenterY
 };
-enum ValueType {Fill = 1, Size = 2, Percent = 3, Fixed = 0, None = -1};
+enum ValueType {Fill = 1, Size = 2, Percent = 3, Defer = 4, Fixed = 0, None = -1};
 
 struct InputProperty {
     ValueName name;

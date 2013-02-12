@@ -116,8 +116,8 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
         break;
 
     case N_TYPE_LIST_ITEM:
-	obj = new NativeListItemObject(tiObj);
-	break;
+    	obj = new NativeListItemObject(tiObj);
+    	break;
 
     case N_TYPE_TAB:
         obj = NativeTabObject::createTab(tiObj);

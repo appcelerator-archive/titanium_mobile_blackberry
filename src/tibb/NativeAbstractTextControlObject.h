@@ -34,7 +34,7 @@ public:
     virtual int setTextAlign(TiObject* obj);
 
 protected:
-    explicit NativeAbstractTextControlObject(TiObject* tiObject);
+    explicit NativeAbstractTextControlObject(TiObject* tiObject, NATIVE_TYPE objType = N_TYPE_UNDEFINED);
     virtual ~NativeAbstractTextControlObject();
 
     virtual bb::cascades::AbstractTextControl* getTextControl() const;

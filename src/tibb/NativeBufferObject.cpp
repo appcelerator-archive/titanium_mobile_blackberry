@@ -85,7 +85,7 @@ NativeBufferObject::~NativeBufferObject()
 {
 }
 
-int NativeBufferObject::getObjectType() const
+NATIVE_TYPE NativeBufferObject::getObjectType() const
 {
     return N_TYPE_BUFFER;
 }

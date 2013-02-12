@@ -15,7 +15,7 @@
 #include <QDateTime>
 
 NativeDateTimePickerObject::NativeDateTimePickerObject(TiObject* tiObject)
-    : NativeControlObject(tiObject)
+    : NativeControlObject(tiObject, N_TYPE_DATE_TIME_PICKER)
     , dateTimePicker_(NULL)
 {
 }
@@ -109,7 +109,7 @@ int NativeDateTimePickerObject::setType(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-int NativeDateTimePickerObject::getObjectType() const
+NATIVE_TYPE NativeDateTimePickerObject::getObjectType() const
 {
     return N_TYPE_DATE_TIME_PICKER;
 }

@@ -16,7 +16,7 @@
 #include <QString>
 
 NativeTextFieldObject::NativeTextFieldObject(TiObject* tiObject)
-    : NativeAbstractTextControlObject(tiObject)
+    : NativeAbstractTextControlObject(tiObject, N_TYPE_TEXT_FIELD)
     , textField_(NULL)
 {
 }
@@ -25,7 +25,7 @@ NativeTextFieldObject::~NativeTextFieldObject()
 {
 }
 
-int NativeTextFieldObject::getObjectType() const
+NATIVE_TYPE NativeTextFieldObject::getObjectType() const
 {
     return N_TYPE_TEXT_FIELD;
 }

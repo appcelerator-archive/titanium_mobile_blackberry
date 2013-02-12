@@ -52,24 +52,11 @@ class Control;
  * also a NULL control_.
  */
 
-enum UnitType
-{
-    UnitTypeDefault,
-    UnitTypePixels,
-    UnitTypePercent,
-    UnitTypeDIP,
-    UnitTypeInches,
-    UnitTypeMM,
-    UnitTypeCM,
-    UnitTypePT,
-    UnitTypeAuto,
-};
-
 class NativeControlObject : public NativeProxyObject
 {
 public:
     static NativeControlObject* createView(TiObject* tiObject);
-    virtual int getObjectType() const;
+    virtual NATIVE_TYPE getObjectType() const;
     virtual NAHANDLE getNativeHandle() const;
     virtual int initialize();
     virtual int addChildNativeObject(NativeObject* obj);
@@ -143,12 +130,11 @@ public:
     static int getPoint(TiObject* obj, float* x, float* y);
     static int getDataModel(TiObject* obj, QVector<QVariant>& dataModel);
     static int getDateTime(TiObject* obj, QDateTime& dt);
-    int updateHeight();
-    int updateWidth();
     void updateLayout(QRectF rect);
 
+
 protected:
-    explicit NativeControlObject(TiObject* tiObject);
+    explicit NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType = N_TYPE_UNDEFINED);
     virtual ~NativeControlObject();
     virtual void setControl(bb::cascades::Control* control);
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
@@ -165,15 +151,7 @@ private:
     friend class NativeWindowObject; // TODO(josh): we shouldn't have to abuse friends this way.
 
     void addTouchEvent(const char* name, const QObject* source, const char* signal, TiEventContainer* container);
-
-    static int getMeasurementInfo(TiObject* obj, float maxPixels, float dotsPerMillimeter,
-                                  float* calculatedValue, bool* isAuto);
     void updateLayoutProperty(ValueName name, TiObject* val);
-    void updateViewLayout();
-    int updateLeft();
-    int updateTop();
-    int updateRight();
-    int updateBottom();
 
     bb::cascades::Container* container_;
     bb::cascades::Control* control_;
@@ -182,21 +160,9 @@ private:
     bb::cascades::Color disabledBackgroundColor_;
     NativeLayoutHandler* layoutHandler_;
 
-    TiObject* bottom_;
-    TiObject* left_;
-    TiObject* top_;
-    TiObject* width_;
-    TiObject* height_;
-    TiObject* right_;
     QRectF rect_;
-
     bool batchUpdating_;
-    bool heightIsUpdated_;
-    bool widthIsUpdated_;
-    bool leftIsUpdated_;
-    bool topIsUpdated_;
-    bool rightIsUpdated_;
-    bool bottomIsUpdated_;
+    NATIVE_TYPE objType_;
 };
 
 // Event handler for Ti.UI.View

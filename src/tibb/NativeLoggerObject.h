@@ -54,7 +54,7 @@ class NativeLoggerObject : public NativeLoggerInterface
 public:
     static NativeLoggerObject* getInstance();
     virtual void deleteInstance();
-    virtual int getObjectType() const;
+    virtual NATIVE_TYPE getObjectType() const;
 
     void log(const char* msg);
     void log(const QString& t);

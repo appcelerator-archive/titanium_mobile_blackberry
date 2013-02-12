@@ -22,7 +22,7 @@
 #include <bb/cascades/WebSettings>
 
 NativeWebViewObject::NativeWebViewObject(TiObject* tiObject)
-    : NativeControlObject(tiObject)
+    : NativeControlObject(tiObject, N_TYPE_WEBVIEW)
 {
 	webview_ = NULL;
 }
@@ -36,7 +36,7 @@ NativeWebViewObject* NativeWebViewObject::createWebView(TiObject* tiObject)
     return new NativeWebViewObject(tiObject);
 }
 
-int NativeWebViewObject::getObjectType() const
+NATIVE_TYPE NativeWebViewObject::getObjectType() const
 {
     return N_TYPE_WEBVIEW;
 }

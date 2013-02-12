@@ -253,7 +253,7 @@ NativeTCPSocketObject::~NativeTCPSocketObject()
     delete eventHandler_;
 }
 
-int NativeTCPSocketObject::getObjectType() const
+NATIVE_TYPE NativeTCPSocketObject::getObjectType() const
 {
     return N_TYPE_TCPSOCKET;
 }

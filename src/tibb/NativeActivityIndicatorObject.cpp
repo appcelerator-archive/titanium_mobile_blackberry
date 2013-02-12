@@ -10,7 +10,7 @@
 #include <bb/cascades/ActivityIndicator>
 
 NativeActivityIndicatorObject::NativeActivityIndicatorObject(TiObject* tiObject)
-    : NativeControlObject(tiObject)
+    : NativeControlObject(tiObject, N_TYPE_ACTIVITYINDICATOR)
     , indicator_(NULL)
 {
 }
@@ -24,7 +24,7 @@ NativeActivityIndicatorObject* NativeActivityIndicatorObject::createActivityIndi
     return new NativeActivityIndicatorObject(tiObject);
 }
 
-int NativeActivityIndicatorObject::getObjectType() const
+NATIVE_TYPE NativeActivityIndicatorObject::getObjectType() const
 {
     return N_TYPE_ACTIVITYINDICATOR;
 }

@@ -30,7 +30,7 @@ class NativeSliderObject : public NativeControlObject
 public:
     static NativeSliderObject* createSlider(TiObject* tiObject);
     virtual ~NativeSliderObject();
-    virtual int getObjectType() const;
+    virtual NATIVE_TYPE getObjectType() const;
     virtual int initialize();
     virtual int setMax(TiObject* obj);
     virtual int setMin(TiObject* obj);

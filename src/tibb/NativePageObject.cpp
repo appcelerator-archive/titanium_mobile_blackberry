@@ -16,7 +16,7 @@
 using namespace bb::cascades;
 
 NativePageObject::NativePageObject(TiObject* tiObject)
-    : NativeControlObject(tiObject)
+    : NativeControlObject(tiObject, N_TYPE_WINDOW)
 {
     nativeObjectFactory_ = NULL;
     page_ = NULL;
@@ -34,7 +34,7 @@ NativeObject* NativePageObject::createPage(TiObject* tiObject, NativeObjectFacto
     return obj;
 }
 
-int NativePageObject::getObjectType() const
+NATIVE_TYPE NativePageObject::getObjectType() const
 {
     return N_TYPE_WINDOW;
 }

@@ -12,7 +12,7 @@
 #include "TiObject.h"
 
 NativeAlertDialogObject::NativeAlertDialogObject(TiObject* tiObject)
-    : NativeControlObject(tiObject)
+    : NativeControlObject(tiObject, N_TYPE_ALERTDIALOG)
     , nativeDialog_(NULL)
     , cancelIndex_(-1)
 {
@@ -27,7 +27,7 @@ NativeAlertDialogObject* NativeAlertDialogObject::createAlertDialog(TiObject* ti
     return new NativeAlertDialogObject(tiObject);
 }
 
-int NativeAlertDialogObject::getObjectType() const
+NATIVE_TYPE NativeAlertDialogObject::getObjectType() const
 {
     return N_TYPE_ALERTDIALOG;
 }

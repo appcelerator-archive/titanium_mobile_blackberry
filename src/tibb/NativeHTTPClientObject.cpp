@@ -101,7 +101,7 @@ NativeHTTPClientObject::~NativeHTTPClientObject()
     delete eventHandler_;
 }
 
-int NativeHTTPClientObject::getObjectType() const
+NATIVE_TYPE NativeHTTPClientObject::getObjectType() const
 {
     return N_TYPE_HTTPCLIENT;
 }

@@ -24,7 +24,7 @@ NativeResultSetObject::NativeResultSetObject(TiObject* tiObject)
 NativeResultSetObject::~NativeResultSetObject() {
 }
 
-int NativeResultSetObject::getObjectType() const {
+NATIVE_TYPE NativeResultSetObject::getObjectType() const {
     return N_TYPE_RESULTSET;
 }
 

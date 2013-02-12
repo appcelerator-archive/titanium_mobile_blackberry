@@ -24,7 +24,7 @@ class NativeTextFieldObject : public NativeAbstractTextControlObject
 {
 public:
     static NativeTextFieldObject* createTextField(TiObject* tiObject);
-    virtual int getObjectType() const;
+    virtual NATIVE_TYPE getObjectType() const;
     virtual int initialize();
     virtual int setHintText(TiObject* obj);
     virtual int setValue(TiObject* obj);

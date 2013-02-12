@@ -73,7 +73,7 @@ class NativeHTTPClientObject : public NativeProxyObject
 public:
     friend class HTTPClientEventHandler;
     static NativeHTTPClientObject* createHTTPClient(TiObject* tiObject);
-    int getObjectType() const;
+    NATIVE_TYPE getObjectType() const;
     int setPropertyValue(size_t propertyNumber, TiObject* obj, void* userContext);
     int getPropertyValue(size_t propertyNumber, TiObject* obj, void* userContext);
 
