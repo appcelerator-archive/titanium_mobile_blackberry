@@ -17,9 +17,6 @@ enum ValueType _getValueType(std::string value) {
 	else if (value == "UI.FILL") {
 		return Fill;
 	}
-	else if (value == "auto") {
-			return Auto;
-	}
 	else if (value.find("%") != std::string::npos) {
 		return Percent;
     }

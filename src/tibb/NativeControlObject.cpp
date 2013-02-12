@@ -540,7 +540,12 @@ int NativeControlObject::setFont(TiObject*)
 PROP_SETGET(setHeight)
 int NativeControlObject::setHeight(TiObject* obj)
 {
-    updateLayoutProperty(Height, obj);
+	// auto uses defaults that have already been set
+	string str = *String::Utf8Value(obj->getValue());
+	if (str != "auto") {
+		updateLayoutProperty(Height, obj);
+	}
+
     return NATIVE_ERROR_OK;
 }
 
@@ -800,7 +805,11 @@ int NativeControlObject::getSize(TiObject* obj)
 PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
-    updateLayoutProperty(Width, obj);
+	// auto uses defaults that have already been set
+	string str = *String::Utf8Value(obj->getValue());
+	if (str != "auto") {
+		updateLayoutProperty(Width, obj);
+	}
 
     return NATIVE_ERROR_OK;
 }
