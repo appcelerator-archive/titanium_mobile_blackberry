@@ -17,7 +17,7 @@ std::string _test_populate_layout() {
 	struct InputProperty inputProperty;
 	inputProperty.name = top;
     inputProperty.value = "99px";
-    populateLayoutPoperties(inputProperty, &layoutProperties, /*dpi*/ 96);
+    populateLayoutPoperties(inputProperty, &layoutProperties, /*ppi*/ 96);
     ut_assert("error, layout not populated", layoutProperties.top.value == 99);
     return "";
 }

@@ -30,6 +30,8 @@ using namespace bb::cascades;
 
 #define ZINDEX_PROPERTY_NAME            "tizindex"
 
+static const float device_resolution = 355;
+
 
 #define PROP_SETGET_FUNCTION(NAME)      prop_##NAME
 
@@ -128,7 +130,6 @@ static void onPostLayout(struct Node* node) {
     	return;
     }
 
-    // if button label ... and no height value or width then get from callback
     float width = node->element._measuredWidth,
           height = node->element._measuredHeight;
     control->setMinWidth(width);
@@ -193,7 +194,7 @@ void NativeControlObject::updateLayout(QRectF rect)
 		property.name = Width;
 		sprintf(str, "%fpx", rect.width());
 		property.value = str;
-		populateLayoutPoperties(property, &layoutNode_.properties, 96);
+		populateLayoutPoperties(property, &layoutNode_.properties, device_resolution);
 		layoutNode_.properties.width.valueType = Fixed;
 
 		struct Node* root = nodeRequestLayout(&layoutNode_);
@@ -206,7 +207,7 @@ void NativeControlObject::updateLayout(QRectF rect)
 		property.name = Height;
 		sprintf(str, "%fpx", rect.height());
 		property.value = str;
-		populateLayoutPoperties(property, &layoutNode_.properties, 96);
+		populateLayoutPoperties(property, &layoutNode_.properties, device_resolution);
 		layoutNode_.properties.height.valueType = Fixed;
 
 		struct Node* root = nodeRequestLayout(&layoutNode_);
@@ -399,7 +400,7 @@ void NativeControlObject::updateLayoutProperty(ValueName name, TiObject* val) {
     property.value = *String::Utf8Value(val->getValue());
 
     // TODO(josh): query the real DPI value from hardware.
-    populateLayoutPoperties(property, &layoutNode_.properties, 96);
+    populateLayoutPoperties(property, &layoutNode_.properties, device_resolution);
 
     struct Node* root = nodeRequestLayout(&layoutNode_);
     if (root) {
