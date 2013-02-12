@@ -47,8 +47,16 @@ void TiLogger::initialize(NativeObjectFactory* nativeObjectFactory)
     }
 }
 
-void TiLogger::log(std::string msg)
+void TiLogger::log(const char* msg)
 {
     assert(s_nativeLogger);
-    s_nativeLogger->log(msg.c_str());
+    s_nativeLogger->log(msg);
 }
+
+void TiLogger::log(const char* tag, const char* msg)
+{
+    std::stringstream s;
+    s << "[" << tag << "] " << msg;
+    log(s.str().c_str());
+}
+
