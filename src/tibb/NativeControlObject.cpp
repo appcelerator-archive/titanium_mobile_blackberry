@@ -195,14 +195,8 @@ void NativeControlObject::updateLayout(QRectF rect)
 {
     rect_ = rect;
 
-    char str[64];
-	struct InputProperty property;
-
 	if (layoutNode_.properties.width.valueType == Defer) {
-		property.name = Width;
-		sprintf(str, "%fpx", rect.width());
-		property.value = str;
-		populateLayoutPoperties(property, &layoutNode_.properties, device_resolution);
+		layoutNode_.properties.width.value = rect.width();
 		layoutNode_.properties.width.valueType = Fixed;
 
 		struct Node* root = nodeRequestLayout(&layoutNode_);
@@ -212,10 +206,7 @@ void NativeControlObject::updateLayout(QRectF rect)
 	}
 
 	if (layoutNode_.properties.height.valueType == Defer) {
-		property.name = Height;
-		sprintf(str, "%fpx", rect.height());
-		property.value = str;
-		populateLayoutPoperties(property, &layoutNode_.properties, device_resolution);
+		layoutNode_.properties.height.value = rect.height();
 		layoutNode_.properties.height.valueType = Fixed;
 
 		struct Node* root = nodeRequestLayout(&layoutNode_);

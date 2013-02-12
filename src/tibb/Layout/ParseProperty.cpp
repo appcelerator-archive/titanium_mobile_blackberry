@@ -17,9 +17,6 @@ enum ValueType _getValueType(std::string value) {
 	else if (value == "UI.FILL") {
 		return Fill;
 	}
-	else if (value == "UI.FILL") {
-		return Fill;
-	}
 	else if (value == "auto") {
 			return Auto;
 	}
@@ -86,64 +83,57 @@ double _computeValue(std::string value, enum ValueType valueType, double ppi) {
 
 void populateLayoutPoperties(struct InputProperty inputProperty, struct LayoutProperties* layoutProperties, double ppi) {
 
-	if (inputProperty.name == MinHeight) {
-		(*layoutProperties).minHeight.valueType = _getValueType(inputProperty.value);
-		(*layoutProperties).minHeight.value = _computeValue(inputProperty.value,
-												(*layoutProperties).minHeight.valueType, ppi);
-	}
-
-	if (inputProperty.name == MinWidth) {
-		(*layoutProperties).minWidth.valueType = _getValueType(inputProperty.value);
-		(*layoutProperties).minWidth.value = _computeValue(inputProperty.value,
-												(*layoutProperties).minWidth.valueType, ppi);
-	}
-
-	if (inputProperty.name == Width) {
-		(*layoutProperties).width.valueType = _getValueType(inputProperty.value);
-		(*layoutProperties).width.value = _computeValue(inputProperty.value,
-												(*layoutProperties).width.valueType, ppi);
-	}
-
-	if (inputProperty.name == Height) {
-		(*layoutProperties).height.valueType = _getValueType(inputProperty.value);
-		(*layoutProperties).height.value = _computeValue(inputProperty.value,
-												(*layoutProperties).height.valueType, ppi);
-	}
-
-	if (inputProperty.name == Left) {
-		(*layoutProperties).left.valueType = _getValueType(inputProperty.value);
-		(*layoutProperties).left.value = _computeValue(inputProperty.value,
-												(*layoutProperties).left.valueType, ppi);
-	}
-
-	if (inputProperty.name == CenterX) {
-		(*layoutProperties).centerX.valueType = _getValueType(inputProperty.value);
-		(*layoutProperties).centerX.value = _computeValue(inputProperty.value,
-												(*layoutProperties).centerX.valueType, ppi);
-	}
-
-	if (inputProperty.name == CenterY) {
-		(*layoutProperties).centerY.valueType = _getValueType(inputProperty.value);
-		(*layoutProperties).centerY.value = _computeValue(inputProperty.value,
-												(*layoutProperties).centerY.valueType, ppi);
-	}
-
-	if (inputProperty.name == Right) {
-		(*layoutProperties).right.valueType = _getValueType(inputProperty.value);
-		(*layoutProperties).right.value = _computeValue(inputProperty.value,
-												(*layoutProperties).right.valueType, ppi);
-	}
-
-	if (inputProperty.name == Top) {
-		(*layoutProperties).top.valueType = _getValueType(inputProperty.value);
-		(*layoutProperties).top.value = _computeValue(inputProperty.value,
-												(*layoutProperties).top.valueType, ppi);
-	}
-
-	if (inputProperty.name == Bottom) {
-		(*layoutProperties).bottom.valueType = _getValueType(inputProperty.value);
-		(*layoutProperties).bottom.value = _computeValue(inputProperty.value,
-												(*layoutProperties).bottom.valueType, ppi);
+	switch (inputProperty.name) {
+		case MinHeight:
+			(*layoutProperties).minHeight.valueType = _getValueType(inputProperty.value);
+			(*layoutProperties).minHeight.value = _computeValue(inputProperty.value,
+													(*layoutProperties).minHeight.valueType, ppi);
+			break;
+		case MinWidth:
+			(*layoutProperties).minWidth.valueType = _getValueType(inputProperty.value);
+			(*layoutProperties).minWidth.value = _computeValue(inputProperty.value,
+													(*layoutProperties).minWidth.valueType, ppi);
+			break;
+		case Width:
+			(*layoutProperties).width.valueType = _getValueType(inputProperty.value);
+			(*layoutProperties).width.value = _computeValue(inputProperty.value,
+													(*layoutProperties).width.valueType, ppi);
+			break;
+		case Height:
+			(*layoutProperties).height.valueType = _getValueType(inputProperty.value);
+			(*layoutProperties).height.value = _computeValue(inputProperty.value,
+													(*layoutProperties).height.valueType, ppi);
+			break;
+		case Left:
+			(*layoutProperties).left.valueType = _getValueType(inputProperty.value);
+			(*layoutProperties).left.value = _computeValue(inputProperty.value,
+													(*layoutProperties).left.valueType, ppi);
+			break;
+		case CenterX:
+			(*layoutProperties).centerX.valueType = _getValueType(inputProperty.value);
+			(*layoutProperties).centerX.value = _computeValue(inputProperty.value,
+													(*layoutProperties).centerX.valueType, ppi);
+			break;
+		case CenterY:
+			(*layoutProperties).centerY.valueType = _getValueType(inputProperty.value);
+			(*layoutProperties).centerY.value = _computeValue(inputProperty.value,
+													(*layoutProperties).centerY.valueType, ppi);
+			break;
+		case Right:
+			(*layoutProperties).right.valueType = _getValueType(inputProperty.value);
+			(*layoutProperties).right.value = _computeValue(inputProperty.value,
+													(*layoutProperties).right.valueType, ppi);
+			break;
+		case Top:
+			(*layoutProperties).top.valueType = _getValueType(inputProperty.value);
+			(*layoutProperties).top.value = _computeValue(inputProperty.value,
+													(*layoutProperties).top.valueType, ppi);
+			break;
+		case Bottom:
+			(*layoutProperties).bottom.valueType = _getValueType(inputProperty.value);
+			(*layoutProperties).bottom.value = _computeValue(inputProperty.value,
+													(*layoutProperties).bottom.valueType, ppi);
+			break;
 	}
 }
 
