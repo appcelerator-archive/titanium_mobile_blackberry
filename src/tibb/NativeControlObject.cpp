@@ -159,7 +159,7 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     layoutNode_.data = this;
 
 
-    if (objType == N_TYPE_WINDOW || objType == N_TYPE_VIEW) {
+    if (objType == N_TYPE_WINDOW || objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW) {
         layoutNode_.properties.width.valueType = Fill;
         layoutNode_.properties.height.valueType = Fill;
 	}
