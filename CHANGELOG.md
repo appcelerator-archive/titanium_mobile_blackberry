@@ -1,15 +1,12 @@
 Release Notes
 =============
 
-To compare the listed version with the installed SDK look at the content of the sdk_version.json file. It's located at the root of the installed BlackBerry SDK.
 
-Release Notes (3.1.0.4):
-
-New Feature in this Release:
-----------------------------
+New Feature in this Release (3.1.0.4):
+-------------------------------------
 
 -Database
--WebView 
+WebView 
 -2.0 Layout Engine
 -Touch Events
 -Simple TableViewRow
@@ -63,4 +60,8 @@ Targeted for GA Release:
 -VideoPlayer
 -Contacts
 -Search Bar
+
+
+To compare the listed version with the installed SDK look at the content of the sdk_version.json file. It's located at the root of the installed BlackBerry SDK.
+
 
