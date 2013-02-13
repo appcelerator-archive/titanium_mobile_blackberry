@@ -2,8 +2,8 @@ Release Notes
 =============
 
 
-New Feature in this Release (3.1.0.4):
--------------------------------------
+New Features in this Release (3.1.0.4):
+---------------------------------------
 
 * Database
 * WebView 
