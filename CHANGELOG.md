@@ -14,7 +14,7 @@ New Features in this Release (3.1.0.4):
 Notes in this Release (3.1.0.4):
 --------------------------------
 
-1) When using Ti.UI.FILL on root windows there is a pixel shift towards bottom on top and right on left side. This only appears on the simulator. This is a visual issue and does not effect application functionality.
+When using Ti.UI.FILL on root windows there is a pixel shift towards bottom on top and right on left side. This only appears on the simulator. This is a visual issue and does not effect application functionality.
 
 
 Implemented: Basic operations supported
@@ -50,7 +50,6 @@ Targeted for Beta Release:
 * ScrollView TIMOB-8832
 * Additional Window/Button/TextField/TabGroup/ImageView/Blob and Network functionality TIMOB-9605, TIMOB-10872, TIMOB-9604, TIMOB-10275, TIMOB-10873, TIMOB-10083, TIMOB-10871
 
-GA
 
 Targeted for GA Release:
 ------------------------
@@ -71,6 +70,6 @@ Targeted for GA Release:
 
 To compare the listed version with the installed SDK look at the content of the sdk_version.json file. It's located at the root of the installed BlackBerry SDK.
 
-The TIMOB-* entries refer to tickets in our Jira bug and feature tracking system. The tickets are public and can be viewed at  https://jira.appcelerator.org/browse/TIMOB-<ticket number>.
+The TIMOB-* entries refer to tickets in our Jira bug and feature tracking system. The tickets are public and can be viewed at  https://jira.appcelerator.org/browse/TIMOB-ticket number.
 
 

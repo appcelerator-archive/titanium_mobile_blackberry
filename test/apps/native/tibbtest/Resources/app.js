@@ -1,17 +1,13 @@
 var win1 = Titanium.UI.createWindow({  
-    backgroundColor:'green'
+   backgroundColor:'#000'
 });
   
-var lbl = Ti.UI.createLabel({
-	backgroundColor: 'red',
-	text:'This is a label test',
-	font:{fontSize:15},
-	height:'auto',
-	width:'auto',
-	color:'#000'
+var usernameField = Ti.UI.createTextField({
+       width:'auto',
+       height:'auto',
+       hintText: 'Username',
+       top: 10, 
+       left: 10
 });
-
-
-win1.add(lbl);
-
-win1.open()
+win1.add(usernameField);
+win1.open();

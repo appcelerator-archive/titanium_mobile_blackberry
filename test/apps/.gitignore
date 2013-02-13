@@ -4,3 +4,8 @@ node_modules
 *.sublime-workspace
 *.a
 *.o
+*.bar
+*/arm/o.le-v7/tibbtest
+*/arm/o.le-v7-g/tibbtest
+*/x86/o/tibbtest
+*/x86/o-g/tibbtest
