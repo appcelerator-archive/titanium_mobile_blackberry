@@ -5,8 +5,8 @@ Release Notes
 New Feature in this Release (3.1.0.4):
 -------------------------------------
 
--Database
-WebView 
+* Database
+* WebView 
 -2.0 Layout Engine
 -Touch Events
 -Simple TableViewRow
