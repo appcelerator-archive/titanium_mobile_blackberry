@@ -195,7 +195,7 @@ void NativeControlObject::updateLayout(QRectF rect)
 {
     rect_ = rect;
 
-	if (layoutNode_.properties.width.valueType == Defer) {
+	if (rect.width() != 0 && layoutNode_.properties.width.valueType == Defer) {
 		layoutNode_.properties.width.value = rect.width();
 		layoutNode_.properties.width.valueType = Fixed;
 
@@ -205,7 +205,7 @@ void NativeControlObject::updateLayout(QRectF rect)
 		}
 	}
 
-	if (layoutNode_.properties.height.valueType == Defer) {
+	if (rect.height() != 0 && layoutNode_.properties.height.valueType == Defer) {
 		layoutNode_.properties.height.value = rect.height();
 		layoutNode_.properties.height.valueType = Fixed;
 
