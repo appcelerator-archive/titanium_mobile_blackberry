@@ -11,6 +11,11 @@ New Features in this Release (3.1.0.4):
 * Touch Events
 * Simple TableViewRow
 
+Notes in this Release (3.1.0.4):
+--------------------------------
+
+1) When using Ti.UI.FILL on root windows there is a pixel shift towards bottom on top and right on left side. This only appears on the simulator. This is a visual issue and does not effect application functionality.
+
 
 Implemented: Basic operations supported
 ---------------------------------------

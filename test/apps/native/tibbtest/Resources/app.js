@@ -4,11 +4,11 @@ var win1 = Titanium.UI.createWindow({
   
 var lbl = Ti.UI.createLabel({
 	backgroundColor: 'red',
-text:'This is a label test',
-//font:{fontSize:15},
-//height:'auto',
-//width:'auto',
-color:'#000'
+	text:'This is a label test',
+	font:{fontSize:15},
+	height:'auto',
+	width:'auto',
+	color:'#000'
 });
 
 
