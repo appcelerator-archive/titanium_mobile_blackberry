@@ -35,11 +35,10 @@
     <!-- <copyright></copyright> -->
 
     <!--  Name of author which is used for signing. Must match the developer name of your development certificate. -->
-    <author>dcampbell</author>
-    <authorId>gYAAgC55Fxgkt4Je_sUDXD_Ulvo</authorId>
+    <author>Russ McMahon</author>
     
     <!--  Unique author ID assigned by signing authority. Required if using debug tokens. -->
-    <!-- <authorId>ABC1234YjsnUk235h</authorId> -->
+    <authorId>gYAAgJvflT02FgVRZXrkzre4QQo</authorId>
    
     <initialWindow>
         <systemChrome>none</systemChrome>
