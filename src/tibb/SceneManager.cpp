@@ -19,7 +19,7 @@ SceneManager::SceneManager() {
 }
 
 void SceneManager::presentScene(Scene* scene) {
-    QObject::connect(scene, SIGNAL(onClose(Scene*)), this, SLOT(removeWindow(Scene*)));
+    QObject::connect(scene, SIGNAL(onClose(Scene*)), this, SLOT(removeScene(Scene*)));
 
     // Change the state of the currently active scene
     // to BACKSTAGE before removing it from the screen.
