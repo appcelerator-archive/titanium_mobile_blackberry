@@ -22,7 +22,6 @@
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 #include "Window.h"
-#include "WindowGroup.h"
 
 using namespace bb::cascades;
 using namespace titanium;
@@ -44,39 +43,25 @@ int NativeWindowObject::addChildNativeObject(NativeObject* obj)
     return addChildImpl(obj);
 }
 
+void NativeWindowObject::updateLayout(QRectF rect) {
+    layoutNode_.element._measuredWidth = rect.width();
+    layoutNode_.element._measuredHeight = rect.height();
+    nodeLayout(&layoutNode_);
+}
+
 void NativeWindowObject::open()
 {
-    titanium::Window* window = static_cast<titanium::Window*>(container_);
-    titanium::WindowGroup* group = NULL;
-    titanium::Scene* scene;
-    SceneManager* sceneManager = SceneManager::instance();
-    if (sceneManager->activeScene()) {
-        scene = sceneManager->activeScene();
-        group = scene->windowGroup();
-    }
-
-    if (group == NULL) {
-        scene = new PageScene();
-        sceneManager->presentScene(scene);
-        group = scene->windowGroup();
-    }
-
-    // When an action item is added to a window, notify the scene
-    // so the item can be inserted into the action bar.
-    QObject::connect(window,
-                     SIGNAL(onActionAdded(bb::cascades::ActionItem*)),
-                     scene,
-                     SLOT(addAction(bb::cascades::ActionItem*)));
-
+    SceneManager::instance()->presentScene(&scene_);
     events_["open"]->container()->fireEvent();
-
-    group->insertWindow(static_cast<titanium::Window*>(container_));
 }
 
 void NativeWindowObject::close()
 {
-    Scene* scene = SceneManager::instance()->activeScene();
-    scene->windowGroup()->removeWindow(static_cast<titanium::Window*>(container_));
+    if (scene_.state() == Scene::STATE_CLOSED) {
+        // This window is not currently open.
+        return;
+    }
+    scene_.close();
     events_["close"]->container()->fireEvent();
 }
 
@@ -152,11 +137,7 @@ int NativeWindowObject::initialize()
         return NATIVE_ERROR_OK;
     }
 
-    container_ = new titanium::Window(&layoutNode_);
-    container_->setLayout(new AbsoluteLayout());
-    layout_ = new AbsoluteLayoutProperties;
-    container_->setLayoutProperties(layout_);
-
+    setContainer(scene_.mainWindow());
     return NATIVE_ERROR_OK;
 }
 

@@ -13,30 +13,22 @@
 
 namespace titanium {
 
+class Scene;
+
 class Window : public bb::cascades::Container {
     Q_OBJECT
 
 public:
-    Window(struct Node* layout)
-        : layout_(layout) { }
+    Window(Scene* scene);
 
-    virtual void focus() {
-        emit onFocus();
+    Scene* scene() const {
+        return scene_;
     }
 
-    virtual void blur() {
-        emit onBlur();
-    }
+    void focus();
+    void blur();
 
-    virtual void addAction(bb::cascades::ActionItem* item) {
-        fprintf(stderr, "Widow::addAction()\n");
-        emit onActionAdded(item);
-    }
-
-    // Returns the root layout node for this window's view tree.
-    struct Node* layoutNode() const {
-        return layout_;
-    }
+    void addAction(bb::cascades::ActionItem* item);
 
 signals:
     void onFocus();
@@ -44,7 +36,7 @@ signals:
     void onActionAdded(bb::cascades::ActionItem* item);
 
 private:
-    struct Node* layout_;
+    Scene* scene_;
 };
 
 } // namespace titanium

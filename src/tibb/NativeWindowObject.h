@@ -11,6 +11,7 @@
 #include <v8.h>
 
 #include "NativeControlObject.h"
+#include "PageScene.h"
 
 class NativeWindowObject : public NativeControlObject {
 public:
@@ -20,6 +21,7 @@ public:
         return N_TYPE_WINDOW;
     }
     virtual int addChildNativeObject(NativeObject* obj);
+    virtual void updateLayout(QRectF rect);
 
     void open();
     void close();
@@ -32,6 +34,8 @@ protected:
 
 private:
     explicit NativeWindowObject(TiObject* tiObject);
+
+    titanium::PageScene scene_;
 };
 
 #endif

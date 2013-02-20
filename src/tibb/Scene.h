@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2012 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -21,8 +21,10 @@ class Scene : public QObject {
     Q_OBJECT
 
 public:
-    Scene()
-        : state_(STATE_BACKSTAGE) { }
+    explicit Scene(bb::cascades::AbstractPane* pane)
+        : pane_(pane)
+        , state_(STATE_CLOSED) {
+    }
 
     /**
      * Returns the root pane for this scene.
@@ -32,21 +34,12 @@ public:
     }
 
     /**
-     * Returns the top window group for this scene.
-     * Any top level windows opened while this scene
-     * is active should be inserted into this group.
-     */
-    virtual WindowGroup* windowGroup() const = 0;
-
-    /**
      * Close the scene and signal scene manager
      * to remove it from the screen and scene stack.
      */
     virtual void close() {
         emit onClose(this);
     }
-
-    Q_SLOT virtual void addAction(bb::cascades::ActionItem* item) = 0;
 
     /**
      * The various states the scene can go
@@ -69,7 +62,11 @@ public:
         // being deactived and removed from the screen.
         // The root pane of the scene will be removed
         // and no longer drawn to the display.
-        STATE_BACKSTAGE
+        STATE_BACKSTAGE,
+
+        // Scene is closed and not attached to a scene manager.
+        // This is the initial state a scene enters upon creation.
+        STATE_CLOSED
     };
 
     /**

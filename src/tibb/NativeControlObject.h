@@ -130,11 +130,12 @@ public:
     static int getPoint(TiObject* obj, float* x, float* y);
     static int getDataModel(TiObject* obj, QVector<QVariant>& dataModel);
     static int getDateTime(TiObject* obj, QDateTime& dt);
-    void updateLayout(QRectF rect);
+    virtual void updateLayout(QRectF rect);
 
 protected:
     explicit NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType = N_TYPE_UNDEFINED);
     virtual ~NativeControlObject();
+    virtual void setContainer(bb::cascades::Container* container);
     virtual void setControl(bb::cascades::Control* control);
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
     int addChildImpl(NativeObject* obj);

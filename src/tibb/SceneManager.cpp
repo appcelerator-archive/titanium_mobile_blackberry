@@ -35,7 +35,7 @@ void SceneManager::presentScene(Scene* scene) {
 
     // Change the state of the new activate scene to
     // ONSTAGE now that it's being presented to the screen.
-    Q_ASSERT(scene->state() == Scene::STATE_BACKSTAGE);
+    Q_ASSERT(scene->state() != Scene::STATE_ONSTAGE);
     scene->changeState(Scene::STATE_ONSTAGE);
 
     scenes_.append(scene);
