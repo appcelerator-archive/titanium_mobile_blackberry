@@ -97,7 +97,7 @@ void NativeWindowObject::addAction(const QString& title, const QString& image, H
         item->setImageSource(getResourcePath(image));
     }
     QObject::connect(item, SIGNAL(triggered()), new ActionItemTriggerHandler(tiObject_, triggerCallback), SLOT(triggered()));
-    static_cast<titanium::Window*>(container_)->addAction(item);
+    scene_.addAction(item);
 }
 
 class FocusEventHandler : public EventHandler

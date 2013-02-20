@@ -8,7 +8,6 @@
 #ifndef TI_WINDOW_H
 #define TI_WINDOW_H
 
-#include <bb/cascades/ActionItem>
 #include <bb/cascades/Container>
 
 namespace titanium {
@@ -28,12 +27,9 @@ public:
     void focus();
     void blur();
 
-    void addAction(bb::cascades::ActionItem* item);
-
 signals:
     void onFocus();
     void onBlur();
-    void onActionAdded(bb::cascades::ActionItem* item);
 
 private:
     Scene* scene_;

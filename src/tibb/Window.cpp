@@ -25,9 +25,5 @@ void Window::blur() {
     emit onBlur();
 }
 
-void Window::addAction(ActionItem* item) {
-    // TODO(josh): move this out of window.
-}
-
 } // namespace titanium
 
