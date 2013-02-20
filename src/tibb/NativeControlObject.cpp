@@ -162,7 +162,7 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     layoutNode_.data = this;
 
 
-    if (objType == N_TYPE_WINDOW || objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW) {
+    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW) {
         layoutNode_.properties.width.valueType = Fill;
         layoutNode_.properties.height.valueType = Fill;
 	}
@@ -226,18 +226,26 @@ int NativeControlObject::initialize()
     return NATIVE_ERROR_OK;
 }
 
+void NativeControlObject::setContainer(bb::cascades::Container* container)
+{
+    container_ = container;
+
+    // Listen for frame size updates on the container.
+    layoutHandler_ = new NativeLayoutHandler(this);
+    LayoutUpdateHandler::create(container_)
+        .onLayoutFrameChanged(layoutHandler_,
+	                      SLOT(handleLayoutFrameUpdated(QRectF)));
+
+    container_->setLayout(new AbsoluteLayout());
+    container_->setLayoutProperties(new AbsoluteLayoutProperties());
+}
+
 void NativeControlObject::setControl(bb::cascades::Control* control)
 {
-    if (container_ == NULL)
-    {
-        container_ = bb::cascades::Container::create();
-        container_->setLayout(new bb::cascades::AbsoluteLayout());
-        layout_ = new bb::cascades::AbsoluteLayoutProperties;
-        container_->setLayoutProperties(layout_);
+    if (container_ == NULL) {
+        setContainer(new Container());
     }
     container_->add(control);
-    layoutHandler_ = new NativeLayoutHandler(this);
-    bb::cascades::LayoutUpdateHandler::create(container_).onLayoutFrameChanged(layoutHandler_, SLOT(handleLayoutFrameUpdated(QRectF)));
     control_ = control;
 }
 

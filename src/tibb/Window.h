@@ -8,43 +8,31 @@
 #ifndef TI_WINDOW_H
 #define TI_WINDOW_H
 
-#include <bb/cascades/ActionItem>
 #include <bb/cascades/Container>
 
 namespace titanium {
+
+class Scene;
 
 class Window : public bb::cascades::Container {
     Q_OBJECT
 
 public:
-    Window(struct Node* layout)
-        : layout_(layout) { }
+    Window(Scene* scene);
 
-    virtual void focus() {
-        emit onFocus();
+    Scene* scene() const {
+        return scene_;
     }
 
-    virtual void blur() {
-        emit onBlur();
-    }
-
-    virtual void addAction(bb::cascades::ActionItem* item) {
-        fprintf(stderr, "Widow::addAction()\n");
-        emit onActionAdded(item);
-    }
-
-    // Returns the root layout node for this window's view tree.
-    struct Node* layoutNode() const {
-        return layout_;
-    }
+    void focus();
+    void blur();
 
 signals:
     void onFocus();
     void onBlur();
-    void onActionAdded(bb::cascades::ActionItem* item);
 
 private:
-    struct Node* layout_;
+    Scene* scene_;
 };
 
 } // namespace titanium
