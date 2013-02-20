@@ -8,6 +8,7 @@
 #include "SceneManager.h"
 
 #include <bb/cascades/Application>
+#include <bb/cascades/OrientationSupport>
 
 #include "Scene.h"
 
@@ -19,7 +20,8 @@ SceneManager::SceneManager() {
 }
 
 void SceneManager::presentScene(Scene* scene) {
-    QObject::connect(scene, SIGNAL(onClose(Scene*)), this, SLOT(removeScene(Scene*)));
+    connect(scene, SIGNAL(orientationModesChanged(int)), SLOT(updateOrientationModes(int)));
+    connect(scene, SIGNAL(onClose(Scene*)), SLOT(removeScene(Scene*)));
 
     // Change the state of the currently active scene
     // to BACKSTAGE before removing it from the screen.
@@ -46,6 +48,33 @@ Scene* SceneManager::activeScene() const {
         return NULL;
     }
     return scenes_.last();
+}
+
+void SceneManager::updateOrientationModes(int modes) {
+    OrientationSupport* support = OrientationSupport::instance();
+
+    // Update the supported display orientation.
+    // The high nibble of the modes value should tell us
+    // what display orientations the active scene supports.
+    switch (modes & 0xF0) {
+        case 0x30:  // 0011 - landscape only
+            support->setSupportedDisplayOrientation(
+                SupportedDisplayOrientation::DisplayLandscape);
+            break;
+
+        case 0xC0:  // 1100 - portrait only
+            support->setSupportedDisplayOrientation(
+                SupportedDisplayOrientation::DisplayPortrait);
+            break;
+
+        case 0xF0:  // 1111 - landscape and portrait
+            support->setSupportedDisplayOrientation(
+                SupportedDisplayOrientation::All);
+            break;
+
+        default: // TODO(josh): restore default value
+            break;
+    }
 }
 
 bool SceneManager::removeScene(Scene* scene) {

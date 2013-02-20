@@ -44,6 +44,12 @@ public:
 
 public slots:
     /**
+     * Updates orientation modes supported by application
+     * to match those supported by the currently active scene.
+     */
+    void updateOrientationModes(int modes);
+
+    /**
      * Called once a scene is closed and should
      * be removed from the scene stack. If the scene
      * is active it will be removed from the screen.

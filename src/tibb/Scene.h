@@ -21,7 +21,8 @@ class Scene : public QObject {
 public:
     explicit Scene(bb::cascades::AbstractPane* pane)
         : pane_(pane)
-        , state_(STATE_CLOSED) {
+        , state_(STATE_CLOSED)
+        , orientationModes_(0) {
     }
 
     /**
@@ -81,6 +82,56 @@ public:
         return state_;
     }
 
+    /**
+     * Orientation mode bitwise flags constants.
+     * One or more of these may be OR'ed together
+     * to declare what orientation modes are supported.
+     *
+     * The orientation modes are applied in Cascades
+     * by updating the application's supported display
+     * orientation (portrait/landscape) and direction
+     * (left, right, normal, upside).
+     *
+     * Orientation modes are represented as a byte (8-bits).
+     * The high nibble is used to represent which display
+     * orientations are supported (landscape and/or portrait).
+     * The low nibble determines which display directions
+     * (left, right, normal, upside) are supported.
+     *
+     * High nibble (orientation layout):
+     *   0011 - landscape
+     *   1100 - portrait
+     *   1111 - both landscape and portrait
+     *   0000 - default
+     *
+     * Low nibble (direction):
+     *   1000 - left   0100 - right
+     *   0010 - normal 0001 - upside
+     */
+    enum OrientationModes {
+        LANDSCAPE_LEFT = 0x38,   // 0011 1000
+        LANDSCAPE_RIGHT = 0x34,  // 0011 0100
+        PORTRAIT_NORMAL = 0xC2,  // 1100 0010
+        UPSIDE_PORTRAIT = 0xC1   // 1100 0001
+    };
+
+    /**
+     * Returns the set of orientations this scene supports.
+     */
+    int orientationModes() const {
+        return orientationModes_;
+    }
+
+    /**
+     * Update the set of orientations supported by this scene.
+     */
+    virtual void setOrientationModes(int modes) {
+        orientationModes_ = modes;
+        if (state_ == STATE_ONSTAGE) {
+            emit orientationModesChanged(modes);
+        }
+    }
+
 protected:
     void setPane(bb::cascades::AbstractPane* pane) {
         pane->setParent(this);
@@ -88,6 +139,12 @@ protected:
     }
 
 signals:
+    /**
+     * Emitted when this scene is currently onstage
+     * and the orientations it supports has been updated.
+     */
+    void orientationModesChanged(int modes);
+
     /**
      * Emitted by a scene once it has closed and should
      * be removed from the screen by the scene manager.
@@ -97,6 +154,7 @@ signals:
 private:
     QScopedPointer<bb::cascades::AbstractPane> pane_;
     State state_;
+    int orientationModes_;
 };
 
 } // namespace titanium
