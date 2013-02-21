@@ -15,8 +15,6 @@
 
 namespace titanium {
 
-class WindowGroup;
-
 class Scene : public QObject {
     Q_OBJECT
 

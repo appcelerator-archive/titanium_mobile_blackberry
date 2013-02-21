@@ -46,7 +46,10 @@ int NativeWindowObject::addChildNativeObject(NativeObject* obj)
 void NativeWindowObject::updateLayout(QRectF rect) {
     layoutNode_.element._measuredWidth = rect.width();
     layoutNode_.element._measuredHeight = rect.height();
-    nodeLayout(&layoutNode_);
+    struct Node* root = nodeRequestLayout(&layoutNode_);
+    if (root) {
+        nodeLayout(root);
+    }
 }
 
 void NativeWindowObject::open()

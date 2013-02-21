@@ -162,12 +162,12 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     layoutNode_.data = this;
 
 
-    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW) {
+    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_LIST_VIEW) {
         layoutNode_.properties.width.valueType = Fill;
         layoutNode_.properties.height.valueType = Fill;
 	}
     else if (objType == N_TYPE_LABEL || objType == N_TYPE_BUTTON || objType == N_TYPE_TOGGLEBUTTON ||
-        objType == N_TYPE_SLIDER || objType == N_TYPE_PROGRESSBAR || objType == N_TYPE_TEXT_FIELD) {
+        objType == N_TYPE_SLIDER || objType == N_TYPE_PROGRESSBAR || objType == N_TYPE_TEXT_FIELD || objType == N_TYPE_WINDOW) {
         layoutNode_.properties.width.valueType = Defer;
         layoutNode_.properties.height.valueType = Defer;
     }
@@ -198,25 +198,20 @@ void NativeControlObject::updateLayout(QRectF rect)
 {
     rect_ = rect;
 
-	if (rect.width() != 0 && layoutNode_.properties.width.valueType == Defer) {
-		layoutNode_.properties.width.value = rect.width();
-		layoutNode_.properties.width.valueType = Fixed;
+    if (rect.width() != 0 && layoutNode_.properties.width.valueType == Defer) {
+        layoutNode_.properties.width.value = rect.width();
+        layoutNode_.properties.width.valueType = Fixed;
+    }
 
-		struct Node* root = nodeRequestLayout(&layoutNode_);
-		if (root) {
-			nodeLayout(root);
-		}
-	}
+    if (rect.height() != 0 && layoutNode_.properties.height.valueType == Defer) {
+        layoutNode_.properties.height.value = rect.height();
+        layoutNode_.properties.height.valueType = Fixed;
+    }
 
-	if (rect.height() != 0 && layoutNode_.properties.height.valueType == Defer) {
-		layoutNode_.properties.height.value = rect.height();
-		layoutNode_.properties.height.valueType = Fixed;
-
-		struct Node* root = nodeRequestLayout(&layoutNode_);
-		if (root) {
-			nodeLayout(root);
-		}
-	}
+    struct Node* root = nodeRequestLayout(&layoutNode_);
+    if (root) {
+        nodeLayout(root);
+    }
 }
 
 int NativeControlObject::initialize()
@@ -230,14 +225,14 @@ void NativeControlObject::setContainer(bb::cascades::Container* container)
 {
     container_ = container;
 
+    container_->setLayout(new AbsoluteLayout());
+    container_->setLayoutProperties(new AbsoluteLayoutProperties());
+
     // Listen for frame size updates on the container.
     layoutHandler_ = new NativeLayoutHandler(this);
     LayoutUpdateHandler::create(container_)
         .onLayoutFrameChanged(layoutHandler_,
 	                      SLOT(handleLayoutFrameUpdated(QRectF)));
-
-    container_->setLayout(new AbsoluteLayout());
-    container_->setLayoutProperties(new AbsoluteLayoutProperties());
 }
 
 void NativeControlObject::setControl(bb::cascades::Control* control)
