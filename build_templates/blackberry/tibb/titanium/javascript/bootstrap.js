@@ -5,8 +5,8 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-var require = function (module) { return globalRequire(module, "app/native/assets/") };
-Ti.include = function (module) { Ti.globalInclude(module, "app/native/assets/") };
+var require = function (id) { return globalRequire(id, "app/native/assets/") };
+Ti.include = function (id) { Ti.globalInclude(id, "app/native/assets/") };
 
 alert = function(msg)
 {
