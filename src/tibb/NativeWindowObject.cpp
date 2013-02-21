@@ -52,6 +52,25 @@ void NativeWindowObject::updateLayout(QRectF rect) {
     }
 }
 
+int NativeWindowObject::setOrientationModes(TiObject* obj) {
+    Handle<Value> val = obj->getValue();
+    if (!val->IsArray()) {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+
+    // Convert the array of modes into a bitwise flags value.
+    Handle<Array> modes = Handle<Array>::Cast(val);
+    uint32_t modeCount = modes->Length();
+    int flags = 0;
+    for (uint32_t i = 0; i < modeCount; i++) {
+        flags |= modes->Get(i)->Int32Value();
+    }
+
+    scene_.setOrientationModes(flags);
+
+    return NATIVE_ERROR_OK;
+}
+
 void NativeWindowObject::open()
 {
     SceneManager::instance()->presentScene(&scene_);

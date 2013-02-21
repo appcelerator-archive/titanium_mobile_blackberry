@@ -21,7 +21,8 @@ class Scene : public QObject {
 public:
     explicit Scene(bb::cascades::AbstractPane* pane)
         : pane_(pane)
-        , state_(STATE_CLOSED) {
+        , state_(STATE_CLOSED)
+        , orientationModes_(0) {
     }
 
     /**
@@ -81,6 +82,41 @@ public:
         return state_;
     }
 
+    /**
+     * Orientation mode flags constants.
+     *
+     * A scene may restrict what orientations are supported
+     * by calling setOrientationModes() passing a value which
+     * is a combination (bitwise OR) of one or more of these
+     * constant values.
+     *
+     * The manager will fallback to default orientation behavior
+     * if no orientation modes are provided by a scene or a value
+     * of zero is set. The default behavior is determined by
+     * the orientation settings in the application manifest file.
+     */
+    enum OrientationModes {
+        LANDSCAPE = 0x1,
+        PORTRAIT = 0x2
+    };
+
+    /**
+     * Returns the set of orientations this scene supports.
+     */
+    int orientationModes() const {
+        return orientationModes_;
+    }
+
+    /**
+     * Update the set of orientations supported by this scene.
+     */
+    virtual void setOrientationModes(int modes) {
+        orientationModes_ = modes;
+        if (state_ == STATE_ONSTAGE) {
+            emit orientationModesChanged(modes);
+        }
+    }
+
 protected:
     void setPane(bb::cascades::AbstractPane* pane) {
         pane->setParent(this);
@@ -88,6 +124,12 @@ protected:
     }
 
 signals:
+    /**
+     * Emitted when this scene is currently onstage
+     * and the orientations it supports has been updated.
+     */
+    void orientationModesChanged(int modes);
+
     /**
      * Emitted by a scene once it has closed and should
      * be removed from the screen by the scene manager.
@@ -97,6 +139,7 @@ signals:
 private:
     QScopedPointer<bb::cascades::AbstractPane> pane_;
     State state_;
+    int orientationModes_;
 };
 
 } // namespace titanium

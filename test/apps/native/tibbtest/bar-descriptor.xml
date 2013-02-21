@@ -41,6 +41,7 @@
     <authorId>gYAAgJvflT02FgVRZXrkzre4QQo</authorId>
    
     <initialWindow>
+        <autoOrients>true</autoOrients>
         <systemChrome>none</systemChrome>
         <transparent>false</transparent>
     </initialWindow>

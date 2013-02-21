@@ -7,6 +7,7 @@
 
 #include "TiUIObject.h"
 
+#include "Scene.h"
 #include "TiCascadesApp.h"
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
@@ -29,6 +30,8 @@
 #include "TiUIWindow.h"
 
 #include <string.h>
+
+using namespace titanium;
 
 TiUIObject::TiUIObject()
     : TiProxy("UI")
@@ -92,6 +95,11 @@ void TiUIObject::onCreateStaticMembers()
     ADD_STATIC_TI_VALUE("PICKER_TYPE_COUNT_DOWN_TIMER", Number::New(Ti::UI::PICKER_TYPE_COUNT_DOWN_TIMER), this);
     ADD_STATIC_TI_VALUE("FILL", String::NewSymbol("UI.FILL"), this);
     ADD_STATIC_TI_VALUE("SIZE", String::NewSymbol("UI.SIZE"), this);
+    ADD_STATIC_TI_VALUE("LANDSCAPE", Integer::New(Scene::LANDSCAPE), this);
+    ADD_STATIC_TI_VALUE("LANDSCAPE_LEFT", Integer::New(Scene::LANDSCAPE), this);
+    ADD_STATIC_TI_VALUE("LANDSCAPE_RIGHT", Integer::New(Scene::LANDSCAPE), this);
+    ADD_STATIC_TI_VALUE("PORTRAIT", Integer::New(Scene::PORTRAIT), this);
+    ADD_STATIC_TI_VALUE("UPSIDE_PORTRAIT", Integer::New(Scene::PORTRAIT), this);
 }
 
 Handle<Value> TiUIObject::_createControlHelper(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args)

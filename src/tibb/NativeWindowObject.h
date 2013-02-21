@@ -23,6 +23,8 @@ public:
     virtual int addChildNativeObject(NativeObject* obj);
     virtual void updateLayout(QRectF rect);
 
+    virtual int setOrientationModes(TiObject* obj);
+
     void open();
     void close();
 
