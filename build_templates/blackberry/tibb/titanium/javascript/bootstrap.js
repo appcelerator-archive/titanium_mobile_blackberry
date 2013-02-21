@@ -5,6 +5,9 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
+var require = function (module) { return globalRequire(module, "app/native/assets/") };
+Ti.include = function (module) { Ti.globalInclude(module, "app/native/assets/") };
+
 alert = function(msg)
 {
     Ti.UI.createAlertDialog({message: msg}).show();

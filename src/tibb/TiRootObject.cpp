@@ -22,7 +22,10 @@
 #include <QString>
 #include <QUrl>
 
+#include <unistd.h>
+
 static Handle<ObjectTemplate> g_rootTemplate;
+static const string rootFolder = "app/native/assets/";
 
 TiRootObject::TiRootObject()
     : TiObject("")
@@ -48,7 +51,7 @@ void TiRootObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "L", this, _L);   // TODO: use the same object as Ti.Locale.getString
     TiGenericFunctionObject::addGenericFunctionToParent(this, "clearInterval", this, _clearInterval);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "clearTimeout", this, _clearTimeout);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "require", this, _require);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "globalRequire", this, _globalRequire);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setInterval", this, _setInterval);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setTimeout", this, _setTimeout);
 }
@@ -213,66 +216,120 @@ void TiRootObject::clearTimeoutHelper(const Arguments& args, bool interval)
     timeoutManager->clearTimeout((int)number->Value(), interval);
 }
 
-Handle<Value> TiRootObject::_require(void*, TiObject*, const Arguments& args)
+Handle<Value> TiRootObject::_globalRequire(void*, TiObject*, const Arguments& args)
 {
-    if (args.Length() < 1)
-    {
-        return ThrowException(String::New(Ti::Msg::Missing_argument));
-    }
+	if (args.Length() < 2)
+	{
+		return ThrowException(String::New(Ti::Msg::Missing_argument));
+	}
 
-    Handle<String> v8Id = args[0]->ToString();
-    string id = *String::Utf8Value(v8Id);
+	string id = *String::Utf8Value(args[0]->ToString());
 
-    // check if cached
-    static map<string, Persistent<Value> > cache;
-    // FIXME: caching the value doesn't work, the resulting object is not a Function after the first time
-    /*map<string, Persistent<Value> >::const_iterator cachedValue = cache.find(id);
-    if (cachedValue != cache.end())
-    {
-        return cachedValue->second;
-    }*/
+	// check if cached
+	static map<string, Persistent<Value> > cache;
+	map<string, Persistent<Value> >::const_iterator cachedValue = cache.find(id);
+	if (cachedValue != cache.end())
+	{
+		return cachedValue->second;
+	}
 
-    string filename = id + ".js";
-    // TODO: need to make this relative and support com.example.module
-    static const string baseFolder = "app/native/assets/";
-    string javascript;
-    {
-        ifstream ifs((baseFolder + filename).c_str());
-        if (!ifs)
-        {
-            Local<Value> taggedMessage = String::New((string(Ti::Msg::No_such_native_module) + " " + id).c_str());
-            return ThrowException(taggedMessage);
-        }
-        getline(ifs, javascript, string::traits_type::to_char_type(string::traits_type::eof()));
-        ifs.close();
-    }
+	string parentFolder = *String::Utf8Value(args[1]->ToString());
 
-    // wrap the module
-    {
-        static const string preWrap = "(function () { var module = { exports: {} }; var exports = module.exports;\n";
-        static const string postWrap = "\nreturn module.exports; })();";
-        javascript = preWrap + javascript + postWrap;
-    }
+	// CommonJS path rules
+	if (id.find("/") == 0) {
+		id.replace(id.find("/"), std::string("/").length(), rootFolder);
+	}
+	else if (id.find("./") == 0) {
+		id.replace(id.find("./"), std::string("./").length(), parentFolder);
+	}
+	else if (id.find("../") == 0) {
+		// count ../../../ in id and strip off back of parentFolder
+		int count = 0;
+		size_t idx = 0;
+		size_t pos = 0;
+		while (true) {
+			idx = id.find("../", pos);
+			if (idx == std::string::npos) {
+				break;
+			} else {
+				pos = idx + 3;
+				count++;
+			}
+		}
 
-    // TODO: set the correct context
+		// strip leading ../../ off module id
+		id = id.substr(pos);
 
-    TryCatch tryCatch;
-    Handle<Script> compiledScript = Script::Compile(String::New(javascript.c_str()), String::New(filename.c_str()));
-    if (compiledScript.IsEmpty())
-    {
-        DisplayExceptionLine(tryCatch);
-        return tryCatch.ReThrow();
-    }
-    Persistent<Value> result = (Persistent<Value>)compiledScript->Run();
-    if (result.IsEmpty())
-    {
-        return tryCatch.ReThrow();
-    }
+		// strip paths off the parent folder
+		idx = 0;
+		pos = parentFolder.size();
+		for (int i = 0; i < count; i++) {
+			idx = parentFolder.find_last_of("/", pos);
+			pos = idx - 1;
+		}
 
-    // cache result
-    cache.insert(pair<string, Persistent<Value> >(id, result));
+		if (idx == std::string::npos) {
+			return ThrowException(String::New("Unable to find module"));
+		}
 
-    return result;
+		parentFolder = parentFolder.substr(0, idx + 1);
+
+		id = parentFolder + id;
+	}
+	else {
+		string module = rootFolder + id;
+
+		ifstream ifs((module + ".js").c_str());
+		if (!ifs) {
+			id = parentFolder + id;
+		}
+		else {
+			id = rootFolder + id;
+		}
+	}
+
+	string filename = id + ".js";
+
+	string javascript;
+	{
+		ifstream ifs((filename).c_str());
+		if (!ifs)
+		{
+			Local<Value> taggedMessage = String::New((string(Ti::Msg::No_such_native_module) + " " + id).c_str());
+			return ThrowException(taggedMessage);
+		}
+		getline(ifs, javascript, string::traits_type::to_char_type(string::traits_type::eof()));
+		ifs.close();
+	}
+
+	// wrap the module
+	{
+		size_t idx = filename.find_last_of("/");
+		parentFolder = filename.substr(0, idx + 1);
+		static const string preWrap = "var require = function (module) { return globalRequire(module, '" + parentFolder + "')};\n";
+		static const string preWrap2 = "(function () { var module = { exports: {} }; var exports = module.exports;\n";
+		static const string postWrap = "\nreturn module.exports; })();";
+		javascript = preWrap + preWrap2 + javascript + postWrap;
+	}
+
+	TryCatch tryCatch;
+	Handle<Script> compiledScript = Script::Compile(String::New(javascript.c_str()), String::New(filename.c_str()));
+	if (compiledScript.IsEmpty())
+	{
+		DisplayExceptionLine(tryCatch);
+		return tryCatch.ReThrow();
+	}
+
+	Persistent<Value> result = Persistent<Value>::New(compiledScript->Run());
+	if (result.IsEmpty())
+	{
+		return tryCatch.ReThrow();
+	}
+
+	// cache result
+	cache.insert(pair<string, Persistent<Value> >(id, result));
+
+	return result;
 }
 
 Handle<Value> TiRootObject::_setInterval(void*, TiObject*, const Arguments& args)

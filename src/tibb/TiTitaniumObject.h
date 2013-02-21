@@ -31,7 +31,8 @@ private:
     explicit TiTitaniumObject();
     TiTitaniumObject(const TiTitaniumObject&);
     TiTitaniumObject& operator=(const TiTitaniumObject&);
-    static Handle<Value> _include(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _globalInclude(void* userContext, TiObject* caller, const Arguments& args);
+    //static Handle<Value> _include(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createBuffer(void* userContext, TiObject* caller, const Arguments& args);
     NativeObjectFactory* objectFactory_;
 };
