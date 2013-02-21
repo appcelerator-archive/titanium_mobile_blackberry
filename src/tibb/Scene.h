@@ -83,36 +83,21 @@ public:
     }
 
     /**
-     * Orientation mode bitwise flags constants.
-     * One or more of these may be OR'ed together
-     * to declare what orientation modes are supported.
+     * Orientation mode flags constants.
      *
-     * The orientation modes are applied in Cascades
-     * by updating the application's supported display
-     * orientation (portrait/landscape) and direction
-     * (left, right, normal, upside).
+     * A scene may restrict what orientations are supported
+     * by calling setOrientationModes() passing a value which
+     * is a combination (bitwise OR) of one or more of these
+     * constant values.
      *
-     * Orientation modes are represented as a byte (8-bits).
-     * The high nibble is used to represent which display
-     * orientations are supported (landscape and/or portrait).
-     * The low nibble determines which display directions
-     * (left, right, normal, upside) are supported.
-     *
-     * High nibble (orientation layout):
-     *   0011 - landscape
-     *   1100 - portrait
-     *   1111 - both landscape and portrait
-     *   0000 - default
-     *
-     * Low nibble (direction):
-     *   1000 - left   0100 - right
-     *   0010 - normal 0001 - upside
+     * The manager will fallback to default orientation behavior
+     * if no orientation modes are provided by a scene or a value
+     * of zero is set. The default behavior is determined by
+     * the orientation settings in the application manifest file.
      */
     enum OrientationModes {
-        LANDSCAPE_LEFT = 0x38,   // 0011 1000
-        LANDSCAPE_RIGHT = 0x34,  // 0011 0100
-        PORTRAIT_NORMAL = 0xC2,  // 1100 0010
-        UPSIDE_PORTRAIT = 0xC1   // 1100 0001
+        LANDSCAPE = 0x1,
+        PORTRAIT = 0x2
     };
 
     /**

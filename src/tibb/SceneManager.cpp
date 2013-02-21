@@ -7,6 +7,8 @@
 
 #include "SceneManager.h"
 
+#include <QTimer>
+
 #include <bb/cascades/Application>
 #include <bb/cascades/OrientationSupport>
 
@@ -16,7 +18,13 @@ using namespace bb::cascades;
 
 namespace titanium {
 
+// The default supported orientation of the application.
+// We keep a copy of this so we can later restore it if
+// a scene doesn't override what orientations are supported.
+static SupportedDisplayOrientation::Type defaultDisplayOrientation;
+
 SceneManager::SceneManager() {
+    defaultDisplayOrientation = OrientationSupport::instance()->supportedDisplayOrientation();
 }
 
 void SceneManager::presentScene(Scene* scene) {
@@ -40,6 +48,10 @@ void SceneManager::presentScene(Scene* scene) {
     Q_ASSERT(scene->state() != Scene::STATE_ONSTAGE);
     scene->changeState(Scene::STATE_ONSTAGE);
 
+    // Need to update the supported orientations
+    // when we change which scene is onstage.
+    updateOrientationModes(scene->orientationModes());
+
     scenes_.append(scene);
 }
 
@@ -52,27 +64,27 @@ Scene* SceneManager::activeScene() const {
 
 void SceneManager::updateOrientationModes(int modes) {
     OrientationSupport* support = OrientationSupport::instance();
-
-    // Update the supported display orientation.
-    // The high nibble of the modes value should tell us
-    // what display orientations the active scene supports.
-    switch (modes & 0xF0) {
-        case 0x30:  // 0011 - landscape only
+    switch (modes) {
+        case Scene::LANDSCAPE:
             support->setSupportedDisplayOrientation(
                 SupportedDisplayOrientation::DisplayLandscape);
             break;
 
-        case 0xC0:  // 1100 - portrait only
+        case Scene::PORTRAIT:
             support->setSupportedDisplayOrientation(
                 SupportedDisplayOrientation::DisplayPortrait);
             break;
 
-        case 0xF0:  // 1111 - landscape and portrait
+        case Scene::PORTRAIT | Scene::LANDSCAPE:
             support->setSupportedDisplayOrientation(
                 SupportedDisplayOrientation::All);
             break;
 
-        default: // TODO(josh): restore default value
+        default:
+            // Use the application default supported orientation
+            // if the scene does not provide its own modes.
+            support->setSupportedDisplayOrientation(
+                defaultDisplayOrientation);
             break;
     }
 }
