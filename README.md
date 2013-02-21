@@ -52,30 +52,20 @@ How to Create Titanium Applications using the BlackBerry SDK
 
 1) Get the latest Titanium Studio at http://preview.appcelerator.com/studio/bb. The Studio team will be posting frequent updates.
 
-2) Download the most recent BlackBerry Titanium SDK from http://preview.appcelerator.com/studio/bb. The BB team will be posting frequent updates.
+2) Download and unzip the most recent BlackBerry Titanium SDK from http://preview.appcelerator.com/studio/bb. The BB team will be posting frequent updates.
 
-3) Unzip the file down a location that does not include spaces in the path name. This has been fixed in release "3.1.0.300
+3) In the Preferences panel under Titanium Studio > Preferences from the main menu select Titanium Studio and then Titanium. In the Titanium SDK Home box put the path of downloaded BlackBerry Titanium SDK. Goto the BlackBerry tab and in the BlackBerry NDK Home box put the path to the NDK downloaded from step 2 BlackBerry tools setup above. It by default lives in /Applications/bbndk on Mac. In the Simulator IP box enter the IP address you noted in step 5 BlackBerry tools setup above.
 
-4) Unzip the StarterApp.zip file located at http://preview.appcelerator.com/studio/bb/ somewhere where it is easy to find (i.e. the Desktop) and no spaces in path. The StarterApp is listed under the install instructions.
+4) Use Titanium Studio to create a new BlackBerry project by select File->New. Pick a starter template. When done you can run your newly created project to the BlackBerry simulator by choosing Run As->BlackBerry Simulator.
 
-5) Launch Titanium Studio. You may wish to have a separate workspace for BB development to make it easy to switch between settings.
-In the Preferences panel under Titanium Studio > Preferences from the main menu select Titanium Studio and then Titanium. In the BlackBerry NDK Home box put the path to the NDK downloaded in step 2. It by default lives in /Applications/bbndk on MAc.
-In the Simulator IP box enter the IP address you noted in step 5 BlackBerry tools setup above.
-
-6) Still within Titanium Studio go to File > Import... > Titanium > Existing Titanium Project and in the Project Directory box enter the location of the StarterApp that was unzipped in step 6.
-
-7) Select the "StarterApp" Project in the project explorer, select the "Run" drop down and choose "BlackBerry Simulator".
-
-8) You may also use Titanium Studio to create a new BlackBerry project. Make sure when creating the new project there are no spaces in the project path. Spaces are allowed in release "3.1.0.300. Note most of the default templates are still being worked on and will not be displayed correctly on the simulator or device. Most of this has to do missing flow layout functionality that the team is busy working on.
-
-9) To display Ti.APP.info for your application you need to use the command line / BB tools for now until Studio can read the logs. Here's the steps:
+5) To display Ti.APP.info for your application you need to use the command line / BB tools for now until Studio can read the logs. Here's the steps:
 
 1. telnet <simulator ip>  (you can find the IP in the lower left corner of the simulator window)
 2. login: username = devuser password = devuser
 3. The log files are located at /accounts/1000/appdata/<your app id>/logs
 4. You can use tail -f to stream log updates. Note you will need to re-start tail between application runs. 
 
-10) The easiest way to target running on a device is to use Titanium Studio and follow the instructions on the preview site. You can also use the command utilities to do the same activities as in Titanium Studio.
+6) The easiest way to target running on a device is to use Titanium Studio but you can also use command-line utilities to do the same activities as in Titanium Studio.
 
 - Setup the BlackBerry 10 environment for code signing:
 
