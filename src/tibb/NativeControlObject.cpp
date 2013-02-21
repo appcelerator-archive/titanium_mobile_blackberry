@@ -686,6 +686,12 @@ int NativeControlObject::setOptions(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setOrientationModes)
+int NativeControlObject::setOrientationModes(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 PROP_SETGET(setPasswordMask)
 int NativeControlObject::setPasswordMask(TiObject*)
 {
@@ -937,6 +943,7 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_MINDATE, PROP_SETGET_FUNCTION(setMinDate), NULL},
     {N_PROP_OPACITY, PROP_SETGET_FUNCTION(setOpacity), NULL},
     {N_PROP_OPTIONS, PROP_SETGET_FUNCTION(setOptions), NULL},
+    {N_PROP_ORIENTATION_MODES, PROP_SETGET_FUNCTION(setOrientationModes), NULL},
     {N_PROP_PASSWORD_MASK, PROP_SETGET_FUNCTION(setPasswordMask), NULL},
     {N_PROP_RECT, NULL, PROP_SETGET_FUNCTION(getRect)},
     {N_PROP_RIGHT, PROP_SETGET_FUNCTION(setRight), NULL},
