@@ -7,6 +7,7 @@
 
 var require = function (id) { return globalRequire(id, "app/native/assets/") };
 Ti.include = function (id) { Ti.globalInclude(id, "app/native/assets/") };
+var global = {};
 
 alert = function(msg)
 {

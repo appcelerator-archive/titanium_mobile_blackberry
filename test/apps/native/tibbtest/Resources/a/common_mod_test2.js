@@ -1,4 +1,8 @@
 
+global.x = 'hey';
+
+xyz = 'hoist me';
+
 var mod_test2 = require('./b/common_mod_test3')(); 
 
 function fn_inner() {
