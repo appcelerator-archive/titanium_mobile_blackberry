@@ -121,6 +121,19 @@ public slots:
     }
 };
 
+class FocusChangeEventHandler : public titanium::EventHandler {
+    Q_OBJECT
+
+public:
+    FocusChangeEventHandler(TiEventContainer* container)
+        : titanium::EventHandler(container) { }
+
+public slots:
+    void focusChanged() {
+        getEventContainer()->fireEvent();
+    }
+};
+
 #include "NativeControlObject.moc"
 
 static void onPostLayout(struct Node* node) {
@@ -262,6 +275,17 @@ void NativeControlObject::setupEvents(TiEventContainerFactory* containerFactory)
     addTouchEvent("touchend", handler, SIGNAL(touchEnd(float,float)), containerFactory->createEventContainer());
     addTouchEvent("touchcancel", handler, SIGNAL(touchCancel(float,float)), containerFactory->createEventContainer());
     addTouchEvent("click", handler, SIGNAL(click(float,float)), containerFactory->createEventContainer());
+
+    TiEventContainer* container = containerFactory->createEventContainer();
+    FocusChangeEventHandler* focusHandler = new FocusChangeEventHandler(container);
+    QObject::connect(handler, SIGNAL(focus()), focusHandler, SLOT(focusChanged()));
+    events_.insert("focus", EventPairSmartPtr(container, focusHandler));
+
+    container = containerFactory->createEventContainer();
+    FocusChangeEventHandler* blurHandler = new FocusChangeEventHandler(container);
+    QObject::connect(handler, SIGNAL(blur()), blurHandler, SLOT(focusChanged()));
+    events_.insert("blur", EventPairSmartPtr(container, blurHandler));
+
 }
 
 int NativeControlObject::addChildNativeObject(NativeObject* obj)
@@ -896,6 +920,18 @@ PROP_SETGET(setMessage)
 int NativeControlObject::setMessage(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+void NativeControlObject::focus() {
+    if (control_) {
+        control_->requestFocus();
+    }
+}
+
+void NativeControlObject::blur() {
+    if (control_) {
+        control_->loseFocus();
+    }
 }
 
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,

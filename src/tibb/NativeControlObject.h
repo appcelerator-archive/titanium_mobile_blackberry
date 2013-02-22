@@ -121,6 +121,8 @@ public:
     virtual int setWindow(TiObject* obj);
     virtual int startLayout();
     virtual int setZIndex(TiObject* obj);
+    virtual void focus();
+    virtual void blur();
     static int getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a);
     static int getBoolean(TiObject* obj, bool* value);
     static int getString(TiObject* obj, QString& str);
@@ -176,6 +178,7 @@ public:
                          this, SLOT(dispatchTouch(bb::cascades::TouchEvent*)));
         QObject::connect(node, SIGNAL(destroyed(QObject*)),
                          this, SLOT(onNodeDestroyed()));
+        connect(node, SIGNAL(focusedChanged(bool)), SLOT(focusedChanged(bool)));
     }
 
 signals:
@@ -184,6 +187,9 @@ signals:
     void touchMove(float x, float y);
     void touchEnd(float x, float y);
     void touchCancel(float x, float y);
+
+    void focus();
+    void blur();
 
 private slots:
     void dispatchTouch(bb::cascades::TouchEvent* event) {
@@ -209,6 +215,14 @@ private slots:
             case bb::cascades::TouchType::Cancel:
                 emit touchCancel(x, y);
                 break;
+        }
+    }
+
+    void focusedChanged(bool focused) {
+        if (focused) {
+            emit focus();
+        } else {
+            emit blur();
         }
     }
 
