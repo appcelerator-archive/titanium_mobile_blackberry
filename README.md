@@ -110,15 +110,15 @@ Note: The following instructions are for Mac. For Windows you will need cygwin o
 
 6) Build tibb and test/tibbtest. When the builds are finished "Debug As" C/C++ Application. Also you need to setup the simulator using the Debug Configuration panel. Make sure to have the simulator running, you should see the simulator in the list of debug targets.
 
-How To Update BlackBerry SDK to latest Night Build
+How to Update BlackBerry SDK to latest Night Build
 -------------------------------------------------- 
 
 To get the latest prepackaged Titanium SDK including BlackBerry follow the steps below.
 
-1. Goto http://builds.appcelerator.com.s3.amazonaws.com/index.html
-2. Choose "master" in dropdown
-3. Choose the desired build and then copy the link. We will paste later in Titanium Studio to grab this SDK.
-4. Launch Titanium Studio and goto Help->Install Specific Titanium SDK and in the box past the link from 3 above. Choose Finish.
+1. Goto http://builds.appcelerator.com.s3.amazonaws.com/index.html.
+2. Choose "master" in dropdown.
+3. Choose the desired build and then copy the link. 
+4. Launch Titanium Studio and goto Help->Install Specific Titanium SDK and in the box past the link copied from step 3 above. Choose Finish.
 
 Note: When using nightly builds and you have previous projects it is best if you do a project clean and build before running your application. Make sure to select the appropriate SDK in tiapp.xml.  
 
