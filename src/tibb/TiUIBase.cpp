@@ -7,6 +7,7 @@
 
 #include "TiUIBase.h"
 
+#include "NativeControlObject.h"
 #include "TiGenericFunctionObject.h"
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
@@ -405,6 +406,8 @@ void TiUIBase::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "startLayout", this, _startLayout);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "finishLayout", this, _finishLayout);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "updateLayout", this, _updateLayout);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "focus", this, _focus);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "blur", this, _blur);
     setTiMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
     TiObject* value = TiPropertyGetObject::createGetProperty(this, "children", this, _getChildren);
     TiPropertyGetFunctionObject::addPropertyGetter(this, value, "getChildren");
@@ -591,3 +594,20 @@ Handle<Value> TiUIBase::_updateLayout(void* userContext, TiObject*, const Argume
     }
     return Undefined();
 }
+
+Handle<Value> TiUIBase::_focus(void* userContext, TiObject* caller, const Arguments& args)
+{
+    TiUIBase* obj = static_cast<TiUIBase*>(userContext);
+    NativeControlObject* control = static_cast<NativeControlObject*>(obj->getNativeObject());
+    control->focus();
+    return Undefined();
+}
+
+Handle<Value> TiUIBase::_blur(void* userContext, TiObject* caller, const Arguments& args)
+{
+    TiUIBase* obj = static_cast<TiUIBase*>(userContext);
+    NativeControlObject* control = static_cast<NativeControlObject*>(obj->getNativeObject());
+    control->blur();
+    return Undefined();
+}
+
