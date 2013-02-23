@@ -7,6 +7,7 @@
 
 #include "NativeTextFieldObject.h"
 
+#include "KeyboardType.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 #include <bb/cascades/AbsoluteLayoutProperties>
@@ -14,6 +15,9 @@
 #include <bb/cascades/TextField>
 #include <bb/cascades/TextFieldInputMode>
 #include <QString>
+
+using namespace bb::cascades;
+using namespace titanium;
 
 NativeTextFieldObject::NativeTextFieldObject(TiObject* tiObject)
     : NativeAbstractTextControlObject(tiObject, N_TYPE_TEXT_FIELD)
@@ -51,6 +55,44 @@ int NativeTextFieldObject::setHintText(TiObject* obj)
         return error;
     }
     textField_->setHintText(strHint);
+    return NATIVE_ERROR_OK;
+}
+
+int NativeTextFieldObject::setKeyboardType(TiObject* obj)
+{
+    Handle<Value> value = obj->getValue();
+    if (!value->IsNumber()) {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+
+    TextFieldInputMode::Type type;
+    switch (value->Int32Value()) {
+        case KeyboardType::DEFAULT:
+            type = TextFieldInputMode::Default;
+            break;
+        case KeyboardType::ASCII:
+            type = TextFieldInputMode::Text;
+            break;
+        case KeyboardType::EMAIL:
+            type = TextFieldInputMode::EmailAddress;
+            break;
+        case KeyboardType::NUMBERS_PUNCTUATION:
+            type = TextFieldInputMode::NumbersAndPunctuation;
+            break;
+        case KeyboardType::NAMEPHONE_PAD:
+        case KeyboardType::PHONE_PAD:
+            type = TextFieldInputMode::PhoneNumber;
+            break;
+        case KeyboardType::URL:
+            type = TextFieldInputMode::Url;
+            break;
+        default:
+            // Ignore any constants not supported.
+            return NATIVE_ERROR_OK;
+    }
+
+    fprintf(stderr, "type = %i\n", type);
+    textField_->setInputMode(type);
     return NATIVE_ERROR_OK;
 }
 
