@@ -6,8 +6,12 @@
  */
 
 #include "NativeActivityIndicatorObject.h"
-#include "TiEventContainerFactory.h"
+
 #include <bb/cascades/ActivityIndicator>
+
+#include "TiEventContainerFactory.h"
+
+using namespace bb::cascades;
 
 NativeActivityIndicatorObject::NativeActivityIndicatorObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_ACTIVITYINDICATOR)
@@ -31,7 +35,7 @@ NATIVE_TYPE NativeActivityIndicatorObject::getObjectType() const
 
 int NativeActivityIndicatorObject::initialize()
 {
-    indicator_ = bb::cascades::ActivityIndicator::create();
+    indicator_ = ActivityIndicator::create();
     setControl(indicator_);
     return NATIVE_ERROR_OK;
 }
@@ -48,7 +52,13 @@ int NativeActivityIndicatorObject::stop()
     return NATIVE_ERROR_OK;
 }
 
-NAHANDLE NativeActivityIndicatorObject::getNativeHandle() const
+void NativeActivityIndicatorObject::updateLayout(QRectF rect)
 {
-    return indicator_;
+    NativeControlObject::updateLayout(rect);
+
+    // Request that the indicator be the same size as the container.
+    // If it does not fully fill the container it will center itself.
+    indicator_->setPreferredWidth(rect.width());
+    indicator_->setPreferredHeight(rect.height());
 }
+

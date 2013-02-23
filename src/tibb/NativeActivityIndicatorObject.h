@@ -31,7 +31,7 @@ public:
     static NativeActivityIndicatorObject* createActivityIndicator(TiObject* tiObject);
     virtual NATIVE_TYPE getObjectType() const;
     virtual int initialize();
-    virtual NAHANDLE getNativeHandle() const;
+    virtual void updateLayout(QRectF rect);
     virtual int start();
     virtual int stop();
 
