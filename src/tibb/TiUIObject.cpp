@@ -7,6 +7,7 @@
 
 #include "TiUIObject.h"
 
+#include "KeyboardType.h"
 #include "Scene.h"
 #include "TiCascadesApp.h"
 #include "TiConstants.h"
@@ -100,6 +101,13 @@ void TiUIObject::onCreateStaticMembers()
     ADD_STATIC_TI_VALUE("LANDSCAPE_RIGHT", Integer::New(Scene::LANDSCAPE), this);
     ADD_STATIC_TI_VALUE("PORTRAIT", Integer::New(Scene::PORTRAIT), this);
     ADD_STATIC_TI_VALUE("UPSIDE_PORTRAIT", Integer::New(Scene::PORTRAIT), this);
+    ADD_STATIC_TI_VALUE("KEYBOARD_DEFAULT", Integer::New(KeyboardType::DEFAULT), this);
+    ADD_STATIC_TI_VALUE("KEYBOARD_ASCII", Integer::New(KeyboardType::ASCII), this);
+    ADD_STATIC_TI_VALUE("KEYBOARD_EMAIL", Integer::New(KeyboardType::EMAIL), this);
+    ADD_STATIC_TI_VALUE("KEYBOARD_NAMEPHONE_PAD", Integer::New(KeyboardType::NAMEPHONE_PAD), this);
+    ADD_STATIC_TI_VALUE("KEYBOARD_NUMBERS_PUNCTUATION", Integer::New(KeyboardType::NUMBERS_PUNCTUATION), this);
+    ADD_STATIC_TI_VALUE("KEYBOARD_PHONE_PAD", Integer::New(KeyboardType::PHONE_PAD), this);
+    ADD_STATIC_TI_VALUE("KEYBOARD_URL", Integer::New(KeyboardType::URL), this);
 }
 
 Handle<Value> TiUIObject::_createControlHelper(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args)

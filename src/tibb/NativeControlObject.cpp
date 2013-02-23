@@ -603,6 +603,12 @@ int NativeControlObject::setImage(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setKeyboardType)
+int NativeControlObject::setKeyboardType(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 PROP_SETGET(setLabel)
 int NativeControlObject::setLabel(TiObject*)
 {
@@ -968,6 +974,7 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_HINT_TEXT, PROP_SETGET_FUNCTION(setHintText), NULL},
     {N_PROP_ICON, PROP_SETGET_FUNCTION(setIcon), NULL},
     {N_PROP_IMAGE, PROP_SETGET_FUNCTION(setImage), NULL},
+    {N_PROP_KEYBOARD_TYPE, PROP_SETGET_FUNCTION(setKeyboardType), NULL},
     {N_PROP_LABEL, PROP_SETGET_FUNCTION(setLabel), NULL},
     {N_PROP_LAYOUT, PROP_SETGET_FUNCTION(setLayout), NULL},
     {N_PROP_LEFT, PROP_SETGET_FUNCTION(setLeft), NULL},

@@ -85,6 +85,7 @@ public:
     virtual int setHtml(TiObject* obj);
     virtual int setIcon(TiObject* obj);
     virtual int setImage(TiObject* obj);
+    virtual int setKeyboardType(TiObject* obj);
     virtual int setLabel(TiObject* obj);
     virtual int setLayout(TiObject* obj);
     virtual int setLeft(TiObject* obj);
