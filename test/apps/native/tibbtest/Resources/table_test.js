@@ -1,10 +1,10 @@
 var win1 = Titanium.UI.createWindow({  
-   backgroundColor:'#000'
+   backgroundColor:'green'
 });
   
   
   var self = Ti.UI.createView({
-       backgroundColor:'white'
+       backgroundColor:'red'
    });
    
 var tableData = [

@@ -216,7 +216,7 @@ class BlackberryNDK:
 		return retCode
 
 	def _getBuildID(self, buildDir):
-		manifestPath = os.path.join(buildDir, 'assets', 'Ti.Manifest')
+		manifestPath = os.path.join(buildDir, 'Resources', 'blackberry', 'Ti.Manifest')
 		if os.path.exists(manifestPath):
 			try:
 				f = open(manifestPath, 'rU')
@@ -235,7 +235,7 @@ class BlackberryNDK:
 		projectDir = os.path.abspath(os.path.join(buildDir, '..', '..'))
 
 		# BuildID is is a 0-65535 value that identifies this package it must be incremented before bar signing 
-		buildID = self._getBuildID(buildDir)
+		buildID = self._getBuildID(projectDir)
 
 		# Copy the framework's JavaScript
 		frameworkDir = os.path.join(buildDir, 'framework')

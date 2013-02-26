@@ -225,14 +225,6 @@ Handle<Value> TiRootObject::_globalRequire(void*, TiObject*, const Arguments& ar
 
 	string id = *String::Utf8Value(args[0]->ToString());
 
-	// check if cached
-	static map<string, Persistent<Value> > cache;
-	map<string, Persistent<Value> >::const_iterator cachedValue = cache.find(id);
-	if (cachedValue != cache.end())
-	{
-		return cachedValue->second;
-	}
-
 	string parentFolder = *String::Utf8Value(args[1]->ToString());
 
 	// CommonJS path rules
@@ -289,6 +281,14 @@ Handle<Value> TiRootObject::_globalRequire(void*, TiObject*, const Arguments& ar
 	}
 
 	string filename = id + ".js";
+
+	// check if cached
+	static map<string, Persistent<Value> > cache;
+	map<string, Persistent<Value> >::const_iterator cachedValue = cache.find(id);
+	if (cachedValue != cache.end())
+	{
+		return cachedValue->second;
+	}
 
 	string javascript;
 	{
