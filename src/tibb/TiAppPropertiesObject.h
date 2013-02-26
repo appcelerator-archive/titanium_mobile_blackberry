@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -9,8 +9,6 @@
 #define TIAPPPROPERTIESOBJECT_H_
 
 #include "TiObject.h"
-
-#include "NativeSimpleDBInterface.h"
 
 /*
  * TiAppPropertiesObject
@@ -35,8 +33,6 @@ private:
     TiAppPropertiesObject();
     TiAppPropertiesObject(const TiAppPropertiesObject&);
     TiAppPropertiesObject& operator=(const TiAppPropertiesObject&);
-
-    static NativeSimpleDBInterface db;
 
     static Handle<Value> _get(const Arguments& args, PropertyType type);
     static Handle<Value> _set(const Arguments& args, PropertyType type);

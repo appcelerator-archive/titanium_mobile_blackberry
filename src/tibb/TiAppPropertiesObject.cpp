@@ -1,16 +1,20 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 
 #include "TiAppPropertiesObject.h"
 
-#include "NativeException.h"
+#include <QSettings>
+#include <QStringList>
+
 #include "TiGenericFunctionObject.h"
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
+
+static QSettings settings;
 
 TiAppPropertiesObject::TiAppPropertiesObject()
     : TiObject("Properties")
@@ -46,8 +50,6 @@ void TiAppPropertiesObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "removeProperty", this, _removeProperty);
 }
 
-NativeSimpleDBInterface TiAppPropertiesObject::db("app/native/framework/TiAppProperties.db", "TiAppProperties");
-
 // TODO: move these to a util file
 static Local<String> stringify(Handle<Value> object)
 {
@@ -62,7 +64,7 @@ static Local<String> stringify(Handle<Value> object)
     return scope.Close(JSON_stringify->Call(JSON, 1, &object)->ToString());
 }
 
-static Local<Value> parseJson(const string& json)
+static Local<Value> parseJson(const QString& json)
 {
     Handle<Context> context = Context::GetCurrent();
     Handle<Object> global = context->Global();
@@ -70,7 +72,7 @@ static Local<Value> parseJson(const string& json)
     Handle<Object> JSON = global->Get(String::New("JSON"))->ToObject();
     Handle<Function> JSON_parse = Handle<Function>::Cast(JSON->Get(String::New("parse")));
 
-    Handle<Value> value = String::New(json.c_str());
+    Handle<Value> value = String::New(json.toUtf8());
 
     return JSON_parse->Call(JSON, 1, &value);
 }
@@ -103,19 +105,17 @@ Handle<Value> TiAppPropertiesObject::_get(const Arguments& args, PropertyType ty
         return Undefined();
     }
 
-    string json;
-    try {
-        json = db.get(*String::Utf8Value(key));
-    } catch (NativeException& ne) {
-        return ThrowException(String::New(ne.what()));
-    }
+    // Lookup property value from the application settings.
+    QVariant value = settings.value(
+        QString::fromUtf8(*String::Utf8Value(key)));
 
-    if (json.empty()) {
+    // If no property is found return the default value.
+    if (!value.isValid()) {
         return defaultValue;
     }
 
     // Parse JSON value and return value as type requested by caller.
-    return scope.Close(convertType(type, parseJson(json)));
+    return scope.Close(convertType(type, parseJson(value.toString())));
 }
 
 Handle<Value> TiAppPropertiesObject::_set(const Arguments& args, PropertyType type)
@@ -130,18 +130,16 @@ Handle<Value> TiAppPropertiesObject::_set(const Arguments& args, PropertyType ty
 
     // Remove property if value is set to null or undefined.
     if (value->IsUndefined() || value->IsNull()) {
-        db.remove(*String::Utf8Value(key));
+        settings.remove(QString::fromUtf8(*String::Utf8Value(key)));
         return Undefined();
     }
 
     // Serialize the property value to JSON.
     Local<String> json = stringify(convertType(type, value));
 
-    try {
-        db.set(*String::Utf8Value(key), *String::Utf8Value(json));
-    } catch (NativeException& ne) {
-        return ThrowException(String::New(ne.what()));
-    }
+    // Update the application settings with the new property value.
+    settings.setValue(QString::fromUtf8(*String::Utf8Value(key)),
+                      QString::fromUtf8(*String::Utf8Value(json)));
 
     return Undefined();
 }
@@ -223,36 +221,24 @@ Handle<Value> TiAppPropertiesObject::_hasProperty(void* /*userContext*/, TiObjec
         return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "String").c_str()));
     }
 
-    string key = *String::Utf8Value(args[0]);
-    try
-    {
-        return db.contains(key) ? True() : False();
-    }
-    catch (NativeException& ne)
-    {
-        return ThrowException(String::New(ne.what()));
-    }
+    QString key = QString::fromUtf8(*String::Utf8Value(args[0]));
+    return settings.contains(key) ? True() : False();
 }
 
 Handle<Value> TiAppPropertiesObject::_listProperties(void* /*userContext*/, TiObject* /*caller*/, const Arguments& /*args*/)
 {
-    list<string> keys;
-    try
-    {
-        keys = db.keys();
-    }
-    catch (NativeException& ne)
-    {
-        return ThrowException(String::New(ne.what()));
-    }
-
     HandleScope scope;
+
+    // Fetch all property keys from application settings.
+    QStringList keys = settings.allKeys();
+
+    // Convert key list to a JavaScript array.
     Local<Array> properties = Array::New(keys.size());
     uint32_t index = 0;
-    for (list<string>::const_iterator it = keys.begin(); it != keys.end(); it++)
-    {
-        properties->Set(index++, String::New((*it).c_str()));
+    for (QStringList::const_iterator it = keys.begin(); it != keys.end(); it++) {
+        properties->Set(index++, String::New((*it).toUtf8()));
     }
+
     return scope.Close(properties);
 }
 
@@ -267,14 +253,9 @@ Handle<Value> TiAppPropertiesObject::_removeProperty(void* /*userContext*/, TiOb
         return ThrowException(String::New((string(Ti::Msg::Invalid_argument_expected_) + "String").c_str()));
     }
 
-    string key = *String::Utf8Value(args[0]);
-    try
-    {
-        db.remove(key);
-    }
-    catch (NativeException& ne)
-    {
-        return ThrowException(String::New(ne.what()));
-    }
+    QString key = QString::fromUtf8(*String::Utf8Value(args[0]));
+    settings.remove(key);
+
     return Undefined();
 }
+
