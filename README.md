@@ -118,7 +118,7 @@ To get the latest prepackaged Titanium SDK including BlackBerry follow the steps
 1. Goto http://builds.appcelerator.com.s3.amazonaws.com/index.html.
 2. Choose "master" in dropdown.
 3. Choose the desired build and then copy the link. 
-4. Launch Titanium Studio and goto Help->Install Specific Titanium SDK and in the box past the link copied from step 3 above. Choose Finish.
+4. Launch Titanium Studio and goto Help->Install Specific Titanium SDK and in the box paste the link copied from step 3 above. Choose Finish.
 
 Note: When using nightly builds and you have previous projects it is best if you do a project clean and build before running your application. Make sure to select the appropriate SDK in tiapp.xml.  
 

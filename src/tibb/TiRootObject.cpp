@@ -306,10 +306,10 @@ Handle<Value> TiRootObject::_globalRequire(void*, TiObject*, const Arguments& ar
 	{
 		size_t idx = filename.find_last_of("/");
 		parentFolder = filename.substr(0, idx + 1);
-		static const string preWrap = "var require = function (id) { return globalRequire(id, '" + parentFolder + "')};\n";
-		static const string preWrap2 = "(function () { var module = { exports: {} }; var exports = module.exports;\n";
+		static const string requireWithParent = "var require = function (id) { return globalRequire(id, '" + parentFolder + "')};\n";
+		static const string preWrap = "(function () {" + requireWithParent + "\nvar module = { exports: {} }; var exports = module.exports;\n";
 		static const string postWrap = "\nreturn module.exports; })();";
-		javascript = preWrap + preWrap2 + javascript + postWrap;
+		javascript =  preWrap + javascript + postWrap;
 	}
 
 	TryCatch tryCatch;
