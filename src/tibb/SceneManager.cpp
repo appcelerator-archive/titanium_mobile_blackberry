@@ -105,8 +105,8 @@ bool SceneManager::removeScene(Scene* scene) {
         scene->changeState(Scene::STATE_BACKSTAGE);
 
         Scene* nextScene = activeScene();
-        Application::instance()->setScene(nextScene->pane());
         nextScene->changeState(Scene::STATE_ONSTAGE);
+        Application::instance()->setScene(nextScene->pane());
     }
 
     return true;

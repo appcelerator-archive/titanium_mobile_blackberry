@@ -20,9 +20,9 @@ class Scene : public QObject {
 
 public:
     explicit Scene(bb::cascades::AbstractPane* pane)
-        : pane_(pane)
-        , state_(STATE_CLOSED)
+        : state_(STATE_CLOSED)
         , orientationModes_(0) {
+        setPane(pane);
     }
 
     /**
