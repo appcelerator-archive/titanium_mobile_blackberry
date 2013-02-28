@@ -14,7 +14,13 @@
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
 
+// Application properties set at runtime are stored here.
 static QSettings settings;
+
+// Application properties defined at compile in tiapp.xml
+// can be read using this setttings instance. It is read only.
+static QSettings defaultSettings("app/native/assets/app_properties.ini",
+                                 QSettings::IniFormat);
 
 TiAppPropertiesObject::TiAppPropertiesObject()
     : TiObject("Properties")
@@ -99,19 +105,23 @@ Handle<Value> TiAppPropertiesObject::_get(const Arguments& args, PropertyType ty
 {
     HandleScope scope;
 
-    Local<Value> key = args[0], defaultValue = args[1];
+    Local<Value> k = args[0], defaultValue = args[1];
 
-    if (key->IsUndefined() || key->IsNull()) {
+    // If key is undefined or null do nothing.
+    if (k->IsUndefined() || k->IsNull()) {
         return Undefined();
     }
 
     // Lookup property value from the application settings.
-    QVariant value = settings.value(
-        QString::fromUtf8(*String::Utf8Value(key)));
+    QString key = QString::fromUtf8(*String::Utf8Value(k));
+    QVariant value = settings.value(key);
 
-    // If no property is found return the default value.
+    // Fallback to default settings if no property found.
     if (!value.isValid()) {
-        return defaultValue;
+        value = defaultSettings.value(key);
+        if (!value.isValid()) {
+            return defaultValue;
+        }
     }
 
     // Parse JSON value and return value as type requested by caller.
