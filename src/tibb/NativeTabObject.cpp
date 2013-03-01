@@ -82,7 +82,13 @@ int NativeTabObject::addChildNativeObject(NativeObject* obj)
     if (obj->getObjectType() == N_TYPE_WINDOW)
     {
         Window* window = static_cast<Window*>(obj->getNativeHandle());
-        navigationPane_->push(static_cast<Page*>(window->scene()->pane()));
+        Page* page = static_cast<Page*>(window->scene()->pane());
+
+        // The ownership of the page must be cleared before pushing,
+        // otherwise navigation pane will do nothing.
+        page->setParent(0);
+
+        navigationPane_->push(page);
         return NATIVE_ERROR_OK;
     }
     return NATIVE_ERROR_NOTSUPPORTED;
