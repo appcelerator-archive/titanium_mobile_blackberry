@@ -115,17 +115,21 @@ Handle<Value> TiAppPropertiesObject::_get(const Arguments& args, PropertyType ty
     // Lookup property value from the application settings.
     QString key = QString::fromUtf8(*String::Utf8Value(k));
     QVariant value = settings.value(key);
-
-    // Fallback to default settings if no property found.
-    if (!value.isValid()) {
-        value = defaultSettings.value(key);
-        if (!value.isValid()) {
-            return defaultValue;
-        }
+    if (value.isValid()) {
+        // Parse JSON value and return value as type requested by caller.
+        return scope.Close(convertType(type, parseJson(value.toString())));
     }
 
-    // Parse JSON value and return value as type requested by caller.
-    return scope.Close(convertType(type, parseJson(value.toString())));
+    // Fallback to default settings if no property found.
+    value = defaultSettings.value(key);
+    if (value.isValid()) {
+        // The default property values should be valid strings, not JSON.
+        // We still must convert the type if the user requests a non-string type.
+        Q_ASSERT(value.canConvert(QVariant::String));
+        return scope.Close(convertType(type, String::New(value.toString().toUtf8())));
+    }
+
+    return defaultValue;
 }
 
 Handle<Value> TiAppPropertiesObject::_set(const Arguments& args, PropertyType type)
