@@ -259,6 +259,9 @@ class BlackberryNDK:
 				else:
 					shutil.copy2(fullEntry, os.path.join(assetsDir, entry))
 
+		# Copy application properties file into assets.
+		shutil.copy(os.path.join(buildDir, 'app_properties.ini'), assetsDir)
+
 		# copy the blackberry dir after so it will overwrite, if necessary
 		if os.path.exists(blackberryResourcesDir):
 			for root, dirs, files in os.walk(blackberryResourcesDir):

@@ -9,6 +9,7 @@
 # General builder script for staging, packaging, deploying,
 # and debugging Titanium Mobile applications on Blackberry
 #
+from ConfigParser import SafeConfigParser
 import os, sys, shutil
 from optparse import OptionParser
 import re
@@ -18,6 +19,7 @@ top_support_dir = os.path.dirname(template_dir)
 sys.path.append(top_support_dir)
 sys.path.append(os.path.join(top_support_dir, 'common'))
 
+from app_properties import write_app_properties
 from tilogger import TiLogger
 from tiapp import TiAppXML
 from blackberryndk import BlackberryNDK
@@ -99,6 +101,11 @@ class Builder(object):
 			except Exception, e:
 				print >>sys.stderr, e
 				sys.exit(1)
+
+			# Write application properties to INI file.
+			write_app_properties(
+				self.tiappxml.app_properties.items(),
+				os.path.join(self.buildDir, 'app_properties.ini'))
 
 		# Change current directory to do relative operations
 		os.chdir("%s" % self.buildDir)
