@@ -21,7 +21,7 @@ using namespace bb::cascades;
 using namespace bb::platform::geo;
 
 NativeMapViewObject::NativeMapViewObject(TiObject* tiObject)
-    : NativeControlObject(tiObject, N_TYPE_MAPVIEW)
+    : NativeControlObject(tiObject, N_TYPE_MAPVIEW), renderOkay(false)
 {
 	mapview_ = NULL;
 }
@@ -53,7 +53,7 @@ int NativeMapViewObject::initialize()
 
 void NativeMapViewObject::updateMarkers()
 {
-	if (annotations_.size() > 0) {
+	if (annotations_.size() > 0 && renderOkay) {
         for (int i = 0; i < annotations_.size(); i++) {
 			NativeAnnotationObject* annotation = (NativeAnnotationObject*)annotations_[i];
 			container_->remove(annotation->pin);
@@ -74,7 +74,6 @@ void NativeMapViewObject::updateMarkers()
 			}
         }
 	}
-
 }
 
 QPoint NativeMapViewObject::worldToPixel(float latitude, float longitude) const
@@ -160,6 +159,8 @@ void NativeMapViewObject::setupEvents(TiEventContainerFactory* containerFactory)
 	events_.insert(tetCLICK, EventPairSmartPtr(click, new MapViewEventHandler(click, this)));
 
     QObject::connect(mapview_, SIGNAL(requestRender()), eventHandler_,  SLOT(requestRender()));
+
+    QTimer::singleShot(4000, eventHandler_, SLOT(setRenderOkay()));
 }
 
 

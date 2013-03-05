@@ -44,6 +44,8 @@ public:
     void updateMap();
     int removeAnnotation(NativeObject* annotation);
 
+    bool renderOkay;
+
 protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
@@ -72,6 +74,10 @@ public:
 
 public slots:
     void requestRender();
+    void setRenderOkay() {
+    	mapviewObject_->renderOkay = true;
+    	mapviewObject_->updateMap();
+    }
 
 private:
     TiEventContainer* eventContainer_;
