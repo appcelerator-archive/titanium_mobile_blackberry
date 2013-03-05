@@ -24,7 +24,7 @@ class TiDatabase : public TiProxy
 {
 public:
     static void addObjectToParent(TiObject* parent, NativeObjectFactory* objectFactory);
-    static Handle<Value> open(void* userContext, TiObject* caller, const Arguments& args);
+    //static Handle<Value> open(void* userContext, TiObject* caller, const Arguments& args);
 
 protected:
     virtual ~TiDatabase();

@@ -55,8 +55,6 @@ public:
     int setPropertyValue(size_t propertyNumber, TiObject* obj, void* userContext);
     int getPropertyValue(size_t propertyNumber, TiObject* obj, void* userContext);
 
-
-    //int setPort(TiObject* obj, void* userContext);
     int getRowCount(TiObject* obj, void* userContext);
     int getFieldCount(TiObject* obj, void* userContext);
 

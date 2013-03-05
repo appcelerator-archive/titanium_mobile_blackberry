@@ -122,6 +122,21 @@ public:
     virtual int setWindow(TiObject* obj);
     virtual int startLayout();
     virtual int setZIndex(TiObject* obj);
+    // MapView properties
+    virtual int setRegion(TiObject* obj);
+    virtual int setMapType(TiObject* obj);
+    virtual int setAnnotations(TiObject* obj);
+    //////////////////////
+    // Annotation properties
+    virtual int setPincolor(TiObject* obj);
+    virtual int setLatitude(TiObject* obj);
+    virtual int setLongitude(TiObject* obj);
+    //virtual int setTitle(TiObject* obj);
+    virtual int setSubtitle(TiObject* obj);
+    virtual int setLeftView(TiObject* obj);
+    virtual int setRightView(TiObject* obj);
+    ////////////////////////
+
     virtual void focus();
     virtual void blur();
     static int getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a);
@@ -131,10 +146,14 @@ public:
     static int getInteger(TiObject* obj, int* value);
     static int getStringArray(TiObject* obj, QVector<QString>& value);
     static int getMapObject(TiObject* obj, QMap<QString, QString>& props);
+    static int getObjectArray(TiObject* obj, QVector<NativeObject*>& value);
+    static int getRegion(TiObject* obj, float* latitude, float* longitude);
     static int getPoint(TiObject* obj, float* x, float* y);
     static int getDataModel(TiObject* obj, QVector<QVariant>& dataModel);
     static int getDateTime(TiObject* obj, QDateTime& dt);
     virtual void updateLayout(QRectF rect);
+
+    bb::cascades::Container* container_;
 
 protected:
     explicit NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType = N_TYPE_UNDEFINED);
@@ -157,7 +176,6 @@ private:
     void addTouchEvent(const char* name, const QObject* source, const char* signal, TiEventContainer* container);
     void updateLayoutProperty(ValueName name, TiObject* val);
 
-    bb::cascades::Container* container_;
     bb::cascades::Control* control_;
     bb::cascades::AbsoluteLayoutProperties* layout_;
     bb::cascades::Color backgroundColor_;

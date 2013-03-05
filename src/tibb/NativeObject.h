@@ -43,6 +43,8 @@ enum NATIVE_TYPE
     , N_TYPE_TOGGLEBUTTON
     , N_TYPE_VIEW
     , N_TYPE_WEBVIEW
+    , N_TYPE_MAPVIEW
+    , N_TYPE_ANNOTATION
     , N_TYPE_WINDOW
     , N_TYPE_DB
     , N_TYPE_RESULTSET
@@ -127,7 +129,21 @@ enum NATIVE_PROP
     , N_PROP_WORD_WRAP
     , N_PROP_ZINDEX
     , N_PROP_URL
-    //TODO: need to place alfabetically
+    // MapView properties
+    , N_PROP_MAPTYPE
+    , N_PROP_REGION
+    , N_PROP_ANNOTATIONS
+    /////////////////////
+    // Annotation properties
+    , N_PROP_PINCOLOR
+    , N_PROP_LATITUDE
+    , N_PROP_LONGITUDE
+    //, N_PROP_TITLE
+    , N_PROP_SUBTITLE
+    , N_PROP_LEFTVIEW
+    , N_PROP_RIGHTVIEW
+    ////////////////////////
+    //TODO: need to place alphabetically
     , N_PROP_DISABLE_BOUNCE
     , N_PROP_ENABLE_ZOOM_CONTROLS
     , N_PROP_HIDE_LOAD_INDICATOR

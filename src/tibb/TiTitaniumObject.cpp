@@ -18,6 +18,7 @@
 #include "TiPlatformObject.h"
 #include "TiStreamObject.h"
 #include "TiUIObject.h"
+#include "TiMap.h"
 #include "TiNetwork.h"
 #include "TiDatabase.h"
 #include "TiV8EventContainerFactory.h"
@@ -55,6 +56,7 @@ void TiTitaniumObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "include", this, _globalInclude);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createBuffer", this, _createBuffer);
     TiUIObject::addObjectToParent(this, objectFactory_);
+    TiMap::addObjectToParent(this, objectFactory_);
     TiAPIObject::addObjectToParent(this);
     TiAppObject::addObjectToParent(this);
     TiPlatformObject::addObjectToParent(this);

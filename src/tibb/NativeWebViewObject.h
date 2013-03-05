@@ -27,13 +27,6 @@ class ActivityIndicator;
 }
 }
 
-
-/*
- * NativeButtonObject
- *
- * UI: Button control
- */
-
 class NativeWebViewObject : public NativeControlObject
 {
 public:

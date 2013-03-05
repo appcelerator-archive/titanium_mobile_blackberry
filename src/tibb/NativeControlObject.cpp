@@ -25,6 +25,7 @@
 #include <bb/cascades/LayoutUpdateHandler>
 #include <bb/device/DisplayInfo>
 #include <QRectF>
+#include "TiObject.h"
 
 using namespace bb::cascades;
 
@@ -175,7 +176,7 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     layoutNode_.data = this;
 
 
-    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_LIST_VIEW) {
+    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_LIST_VIEW || objType == N_TYPE_MAPVIEW) {
         layoutNode_.properties.width.valueType = Fill;
         layoutNode_.properties.height.valueType = Fill;
 	}
@@ -929,6 +930,90 @@ int NativeControlObject::setMessage(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+// MapView properties
+PROP_SETGET(setRegion)
+int NativeControlObject::setRegion(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setMapType)
+int NativeControlObject::setMapType(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+/*
+PROP_SETGET(setAnimate)
+int NativeControlObject::setAnimate(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setRegionFit)
+int NativeControlObject::setRegionFit(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setUserLocation)
+int NativeControlObject::setUserLocation(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+*/
+
+PROP_SETGET(setAnnotations)
+int NativeControlObject::setAnnotations(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+//////////////////////
+
+// Annotation properties
+PROP_SETGET(setPincolor)
+int NativeControlObject::setPincolor(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setLatitude)
+int NativeControlObject::setLatitude(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setLongitude)
+int NativeControlObject::setLongitude(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+//PROP_SETGET(setTitle)
+//int NativeControlObject::setTitle(TiObject*)
+//{
+//    return NATIVE_ERROR_NOTSUPPORTED;
+//}
+
+PROP_SETGET(setSubtitle)
+int NativeControlObject::setSubtitle(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setLeftView)
+int NativeControlObject::setLeftView(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setRightView)
+int NativeControlObject::setRightView(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+/////////////////////////
+
 void NativeControlObject::focus() {
     if (control_) {
         control_->requestFocus();
@@ -1004,6 +1089,20 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setWindow), NULL},
     {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setUrl), NULL},
     {N_PROP_URL, PROP_SETGET_FUNCTION(setUrl), NULL},
+    // MapView properties
+    {N_PROP_MAPTYPE, PROP_SETGET_FUNCTION(setMapType), NULL},
+    {N_PROP_REGION, PROP_SETGET_FUNCTION(setRegion), NULL},
+    {N_PROP_ANNOTATIONS, PROP_SETGET_FUNCTION(setAnnotations), NULL},
+    /////////////////////
+    // Annotation properties
+    {N_PROP_LATITUDE, PROP_SETGET_FUNCTION(setLatitude), NULL},
+    {N_PROP_LONGITUDE, PROP_SETGET_FUNCTION(setLongitude), NULL},
+   // {N_PROP_TITLE, PROP_SETGET_FUNCTION(setTitle), NULL},
+    {N_PROP_SUBTITLE, PROP_SETGET_FUNCTION(setSubtitle), NULL},
+    {N_PROP_PINCOLOR, PROP_SETGET_FUNCTION(setPincolor), NULL},
+    {N_PROP_LEFTVIEW, PROP_SETGET_FUNCTION(setLeftView), NULL},
+    {N_PROP_RIGHTVIEW, PROP_SETGET_FUNCTION(setRightView), NULL},
+    ////////////////////////
     {N_PROP_ZINDEX, PROP_SETGET_FUNCTION(setZIndex), PROP_SETGET_FUNCTION(getZIndex)}
 };
 
@@ -1129,6 +1228,59 @@ int NativeControlObject::getStringArray(TiObject* obj, QVector<QString>& value)
     return NATIVE_ERROR_OK;
 }
 
+int NativeControlObject::getObjectArray(TiObject* obj, QVector<NativeObject*>& value)
+{
+    Handle<Value> v8value = obj->getValue();
+    if (v8value.IsEmpty() || !v8value->IsArray())
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    Handle<Array> array = Handle<Array>::Cast(v8value);
+    unsigned int uiLength = array->Length();
+    for (unsigned int i = 0; i < uiLength; ++i)
+    {
+        Handle<Value> item = array->Get(Integer::New(i));
+        if (item.IsEmpty() || !item->IsObject())
+        {
+            return NATIVE_ERROR_INVALID_ARG;
+        }
+        Handle<Object> v8obj = Handle<Object>::Cast(item);
+        //value.append(TiObject::getTiObjectFromJsObject(v8obj));
+        TiObject* tiObj = TiObject::getTiObjectFromJsObject(v8obj);
+        value.append(tiObj->getNativeObject());
+    }
+    return NATIVE_ERROR_OK;
+}
+
+int NativeControlObject::getRegion(TiObject* obj, float* latitude, float* longitude)
+{
+    Handle<Value> v8value = obj->getValue();
+    if ((v8value.IsEmpty()) || (!v8value->IsObject()))
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    Handle<Object> v8obj = Handle<Object>::Cast(v8value);
+    Handle<Value> v8lat = v8obj->Get(String::New("latitude"));
+    if ((v8lat.IsEmpty()) || (!v8lat->IsNumber()))
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    Handle<Value> v8lon = v8obj->Get(String::New("longitude"));
+    if ((v8lon.IsEmpty()) || (!v8lon->IsNumber()))
+    {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    if (latitude != NULL)
+    {
+        *latitude = (float)v8lat->ToNumber()->Value();
+    }
+    if (longitude != NULL)
+    {
+        *longitude = (float)v8lon->ToNumber()->Value();
+    }
+    return NATIVE_ERROR_OK;
+}
+
 int NativeControlObject::getPoint(TiObject* obj, float* x, float* y)
 {
     Handle<Value> v8value = obj->getValue();
@@ -1138,12 +1290,12 @@ int NativeControlObject::getPoint(TiObject* obj, float* x, float* y)
     }
     Handle<Object> v8obj = Handle<Object>::Cast(v8value);
     Handle<Value> v8x = v8obj->Get(String::New("x"));
-    if ((v8x.IsEmpty()) || (!v8x->IsNumber()) || (!v8x->IsNumberObject()))
+    if ((v8x.IsEmpty()) || (!v8x->IsNumber()))
     {
         return NATIVE_ERROR_INVALID_ARG;
     }
     Handle<Value> v8y = v8obj->Get(String::New("y"));
-    if ((v8y.IsEmpty()) || (!v8y->IsNumber()) || (!v8y->IsNumberObject()))
+    if ((v8y.IsEmpty()) || (!v8y->IsNumber()))
     {
         return NATIVE_ERROR_INVALID_ARG;
     }

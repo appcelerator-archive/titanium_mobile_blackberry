@@ -32,6 +32,8 @@
 #include "NativeDBObject.h"
 #include "NativeResultSetObject.h"
 #include "NativeWebViewObject.h"
+#include "NativeMapViewObject.h"
+#include "NativeAnnotationObject.h"
 #include "TiCascadesApp.h"
 
 #include <bb/cascades/Container>
@@ -158,9 +160,18 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
     case N_TYPE_VIEW:
         obj = NativeControlObject::createView(tiObj);
         break;
+
     case N_TYPE_WEBVIEW:
         obj = NativeWebViewObject::createWebView(tiObj);
         break;
+
+    case N_TYPE_MAPVIEW:
+           obj = NativeMapViewObject::createMapView(tiObj);
+           break;
+
+    case N_TYPE_ANNOTATION:
+       		obj = NativeAnnotationObject::createAnnotationObject(tiObj);
+      		break;
 
     }
     if (obj != NULL)

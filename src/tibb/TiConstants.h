@@ -72,6 +72,26 @@ namespace ResultSet
 
 } // namespace Database
 
+namespace Map
+{
+// Map Annotation constants
+enum TI_MAP_MARKER_COLOR
+{
+	ANNOTATION_GREEN = 0,
+	ANNOTATION_RED,
+	ANNOTATION_PURPLE,
+}; // enum TI_MAP_MARKER_COLOR
+
+namespace View
+{
+} // namespace View
+namespace Annotation
+{
+} // namespace Annotation
+
+} // namespace Map
+
+
 namespace Platform
 {
 // Battery states constants
