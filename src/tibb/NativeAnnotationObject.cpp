@@ -215,8 +215,8 @@ void NativeAnnotationObject::setupEvents(TiEventContainerFactory* containerFacto
 	events_.insert(tetCLICK, EventPairSmartPtr(click, new AnnotationObjectEventHandler(click, this)));
 
 	QObject::connect(pin, SIGNAL(clicked()), events_[tetCLICK]->handler(), SLOT(clicked()));
-	QObject::connect(leftView_, SIGNAL(clicked()), events_[tetCLICK]->handler(), SLOT(viewClicked()));
-	QObject::connect(rightView_, SIGNAL(clicked()), events_[tetCLICK]->handler(), SLOT(viewClicked()));
+	QObject::connect(leftView_, SIGNAL(clicked()), events_[tetCLICK]->handler(), SLOT(leftViewClicked()));
+	QObject::connect(rightView_, SIGNAL(clicked()), events_[tetCLICK]->handler(), SLOT(rightViewClicked()));
 }
 
 
@@ -243,8 +243,19 @@ void AnnotationObjectEventHandler::clicked()
 	eventContainer_->fireEvent();
 }
 
-void AnnotationObjectEventHandler::viewClicked()
+void AnnotationObjectEventHandler::leftViewClicked()
 {
+	eventContainer_->setDataProperty("clicksource", "leftView");
 	eventContainer_->fireEvent();
 }
+
+void AnnotationObjectEventHandler::rightViewClicked()
+{
+	eventContainer_->setDataProperty("clicksource", "rightView");
+	eventContainer_->fireEvent();
+}
+
+
+
+
 

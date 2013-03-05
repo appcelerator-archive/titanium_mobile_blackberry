@@ -86,7 +86,8 @@ public:
 
 public slots:
     void clicked();
-    void viewClicked();
+    void leftViewClicked();
+    void rightViewClicked();
 
 private:
     TiEventContainer* eventContainer_;

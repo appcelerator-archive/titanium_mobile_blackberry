@@ -42,6 +42,7 @@ public:
     void updateMarkers();
     QPoint worldToPixel(float latitude, float longitude) const;
     void updateMap();
+    int removeAnnotation(NativeObject* annotation);
 
 protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);

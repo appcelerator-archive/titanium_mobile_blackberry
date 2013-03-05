@@ -33,19 +33,12 @@ win.add(mapview);
 
 
 // Handle click events on any annotations on this map.
-mapview.addEventListener('click', function(evt) {
+tlBeerGarden.addEventListener('click', function(evt) {
 
-	mapview.removeAnnotation(tlBeerGarden);
+	//mapview.removeAnnotation(tlBeerGarden);
 	
-	Ti.API.info("Annotation click event works");
+	Ti.API.info("Annotation click event recieved");
 	
-    // Ti.API.info("Annotation " + evt.title + " clicked, id: " + evt.annotation.myid);
-
-    // Check for all of the possible names that clicksouce
-    // can report for the left button/view.
-    //if (evt.clicksource == 'leftView') {
-    //    Ti.API.info("Annotation " + evt.title + ", left view clicked.");
-    //}
 });
 
 

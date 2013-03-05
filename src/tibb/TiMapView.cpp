@@ -7,6 +7,7 @@
 
 #include "TiMapView.h"
 #include "TiGenericFunctionObject.h"
+#include "NativeMapViewObject.h"
 
 TiMapView::TiMapView(const char* name)
     : TiUIBase(name)
@@ -33,6 +34,7 @@ TiMapView* TiMapView::createMapView(NativeObjectFactory* nativeObjectFactory)
 void TiMapView::onCreateStaticMembers()
 {
     TiUIBase::onCreateStaticMembers();
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "removeAnnotation", this, _removeAnnotation);
 }
 
 
@@ -45,4 +47,17 @@ void TiMapView::initializeTiObject(TiObject* parentContext)
         setNativeObject(obj);
         obj->release();
     }
+}
+
+Handle<Value> TiMapView::_removeAnnotation(void* userContext, TiObject*, const Arguments& args) {
+	HandleScope handleScope;
+	TiMapView* obj = (TiMapView*) userContext;
+	NativeMapViewObject* nativeMapViewObject = (NativeMapViewObject*) obj->getNativeObject();
+
+	TiObject* tiObj = TiObject::getTiObjectFromJsObject(args[0]);
+	NativeObject* annotation = (NativeObject*)tiObj->getNativeObject();
+
+	nativeMapViewObject->removeAnnotation(annotation);
+
+	return Undefined();
 }

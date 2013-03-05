@@ -1245,7 +1245,6 @@ int NativeControlObject::getObjectArray(TiObject* obj, QVector<NativeObject*>& v
             return NATIVE_ERROR_INVALID_ARG;
         }
         Handle<Object> v8obj = Handle<Object>::Cast(item);
-        //value.append(TiObject::getTiObjectFromJsObject(v8obj));
         TiObject* tiObj = TiObject::getTiObjectFromJsObject(v8obj);
         value.append(tiObj->getNativeObject());
     }

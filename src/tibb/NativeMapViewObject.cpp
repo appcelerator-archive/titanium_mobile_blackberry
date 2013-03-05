@@ -116,6 +116,27 @@ int NativeMapViewObject::setAnnotations(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+int NativeMapViewObject::removeAnnotation(NativeObject* annotation)
+{
+	int pos = -1;
+	int i = 0;
+	for (; i < annotations_.size(); ++i) {
+	     if ((NativeAnnotationObject*)annotations_.at(i) == (NativeAnnotationObject*)annotation) {
+	         pos = i;
+	         container_->remove(((NativeAnnotationObject*)annotations_.at(i))->pin);
+	         container_->remove(((NativeAnnotationObject*)annotations_.at(i))->bubble);
+	     }
+	 }
+
+	if (pos != -1) {
+		annotations_.remove(pos);
+	}
+
+	updateMap();
+
+	return NATIVE_ERROR_OK;
+}
+
 bb::cascades::maps::MapView* NativeMapViewObject::getMapView()
 {
 	return mapview_;
