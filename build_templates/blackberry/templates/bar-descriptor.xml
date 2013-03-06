@@ -44,7 +44,11 @@
     <!-- <authorId>ABC1234YjsnUk235h</authorId> -->
 
     <initialWindow>
+        % if config['orientation'] == 'auto':
         <autoOrients>true</autoOrients>
+        % elif config['orientation'] != 'default':
+        <aspectRatio>${config['orientation']}</aspectRatio>
+        % endif
         <systemChrome>none</systemChrome>
         <transparent>false</transparent>
     </initialWindow>

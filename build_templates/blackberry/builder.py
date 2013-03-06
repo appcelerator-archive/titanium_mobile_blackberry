@@ -94,7 +94,8 @@ class Builder(object):
 			'author':(self.tiappxml.properties['publisher'] or 'not specified'),
 			'category':'core.games',
 			'icon':'assets/%s' %(self.tiappxml.properties['icon'] or 'appicon.png'),
-			'splashScreens':splashScreens
+			'splashScreens':splashScreens,
+			'orientation': self.tiappxml.blackberry.get('orientation', 'default')
 			}
 			try:
 				Blackberry.renderTemplate(os.path.join(self.buildDir,'bar-descriptor.xml'), newConfig)
