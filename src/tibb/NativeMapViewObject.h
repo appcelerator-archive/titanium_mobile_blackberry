@@ -40,7 +40,7 @@ public:
     // method
     bb::cascades::maps::MapView *getMapView();
     void updateMarkers();
-    QPoint worldToPixel(float latitude, float longitude) const;
+    //QPoint worldToPixel(float latitude, float longitude) const;
     void updateMap();
     int removeAnnotation(NativeObject* annotation);
 

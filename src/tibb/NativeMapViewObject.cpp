@@ -59,6 +59,8 @@ void NativeMapViewObject::updateMarkers()
 			container_->remove(annotation->pin);
 			container_->remove(annotation->bubble);
 
+			// 10.1 Beta only call
+			/*
 			QPoint pt = worldToPixel(annotation->latitude, annotation->longitude);
 
 			bb::cascades::AbsoluteLayoutProperties* layoutProperties = static_cast<bb::cascades::AbsoluteLayoutProperties*>(annotation->pin->layoutProperties());
@@ -72,15 +74,18 @@ void NativeMapViewObject::updateMarkers()
 				layoutProperties->setPositionY(pt.y() - annotation->bubbleOffsetY);
 				container_->add(annotation->bubble);
 			}
+			*/
         }
 	}
 }
 
+/*
 QPoint NativeMapViewObject::worldToPixel(float latitude, float longitude) const
 {
 	const Point worldCoordinates = Point(latitude, longitude);
     return mapview_->worldToWindow(worldCoordinates);
 }
+*/
 
 int NativeMapViewObject::setRegion(TiObject* obj)
 {
