@@ -26,5 +26,15 @@ void PageScene::addAction(ActionItem* item) {
     static_cast<Page*>(pane())->addAction(item, ActionBarPlacement::OnBar);
 }
 
+TitleBar* PageScene::titleBar() {
+    Page* page = static_cast<Page*>(pane());
+    TitleBar* titleBar = page->titleBar();
+    if (!titleBar) {
+        titleBar = new TitleBar();
+        page->setTitleBar(titleBar);
+    }
+    return titleBar;
+}
+
 } // namespace titanium
 

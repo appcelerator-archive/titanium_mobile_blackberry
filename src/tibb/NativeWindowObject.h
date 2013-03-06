@@ -24,6 +24,7 @@ public:
     virtual void updateLayout(QRectF rect);
 
     virtual int setOrientationModes(TiObject* obj);
+    virtual int setTitle(TiObject* obj);
 
     void open();
     void close();
