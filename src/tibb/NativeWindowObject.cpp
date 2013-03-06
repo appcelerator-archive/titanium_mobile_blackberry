@@ -13,6 +13,7 @@
 #include <bb/cascades/Application>
 #include <bb/cascades/Image>
 #include <bb/cascades/Page>
+#include <bb/cascades/TitleBar>
 #include <bb/device/DisplayInfo>
 
 #include "EventHandler.h"
@@ -68,6 +69,12 @@ int NativeWindowObject::setOrientationModes(TiObject* obj) {
 
     scene_.setOrientationModes(flags);
 
+    return NATIVE_ERROR_OK;
+}
+
+int NativeWindowObject::setTitle(TiObject* obj) {
+    QString title(*String::Utf8Value(obj->getValue()));
+    scene_.titleBar()->setTitle(title);
     return NATIVE_ERROR_OK;
 }
 

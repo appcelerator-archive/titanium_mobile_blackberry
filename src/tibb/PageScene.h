@@ -8,6 +8,8 @@
 #ifndef TI_PAGE_SCENE_H
 #define TI_PAGE_SCENE_H
 
+#include <bb/cascades/TitleBar>
+
 #include "Scene.h"
 
 namespace titanium {
@@ -26,6 +28,10 @@ public:
     }
 
     void addAction(bb::cascades::ActionItem* item);
+
+    // Returns the title bar for the page of this scene.
+    // If the page has no title bar one will be created.
+    bb::cascades::TitleBar* titleBar();
 
 private:
     Window* window_;
