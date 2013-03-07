@@ -1,6 +1,22 @@
 Release Notes
 =============
 
+New Features in this Release (3.1.0.v20130305173300):
+-----------------------------------------------------
+
+TUE MAR 05, 2013 5:33:00 PM PST
+
+* Keyboard Type Support  
+* Orientation
+* Support All Default Studio Templates
+* Relative CommonJS Support and Scoping 
+* Overlapping Window Support
+
+
+Notes on this Release (3.1.0.v20130305173300):
+----------------------------------------------
+
+* Ti.Map.View has been added along with Ti.Map.Annotation, however in this release Annotations will not work because support for Annotations is not available in the Golden Master build for the Z10. We are working with BlackBerry to get clarity on this issue.
 
 New Features in this Release (3.1.0.v20130213122031):
 -----------------------------------------------------
