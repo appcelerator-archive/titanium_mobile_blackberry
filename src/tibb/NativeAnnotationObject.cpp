@@ -12,6 +12,7 @@
 #include <bb/cascades/ImageButton>
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/DockLayout>
+#include <bb/cascades/StackLayout>
 #include <bb/cascades/Container>
 #include <bb/cascades/ImageView>
 #include <bb/cascades/maps/MapView>
@@ -23,7 +24,7 @@
 using namespace bb::cascades;
 
 NativeAnnotationObject::NativeAnnotationObject(TiObject* tiObject)
-    : NativeControlObject(tiObject, N_TYPE_ANNOTATION), pinImageSource_("assets/blackberry/map/red_pin.png"),
+    : NativeControlObject(tiObject, N_TYPE_ANNOTATION), pinImageSource_("assets/map/red_pin.png"),
       showBubble(false)
 {
 	pin = NULL;
@@ -54,13 +55,17 @@ int NativeAnnotationObject::initialize()
     // create the bubbles
     bubble = new Container();
     bubble->setLayoutProperties(new AbsoluteLayoutProperties());
-	//bubble->setFocusPolicy(bb::cascades::FocusPolicy::KeyAndTouch);
 
 	ImageView* bubbleBackground = new ImageView();
-	bubbleBackground->setImageSource(QUrl("assets/blackberry/map/bubble.png"));
+	bubbleBackground->setImageSource(QUrl("assets/map/bubble.png"));
 
-    Container* bubbleContent = new Container();
-    bubbleContent->setLayout(new bb::cascades::DockLayout());
+	bubbleContent = new Container();
+	bubbleContent->setLayoutProperties(new AbsoluteLayoutProperties());
+
+    Container* innerBubbleContent = new Container();
+    innerBubbleContent->setPreferredWidth(400);
+    innerBubbleContent->setPreferredHeight(130);
+    innerBubbleContent->setLayout(new bb::cascades::DockLayout());
 
     label_ = new Label();
     TextStyle* style = new TextStyle(SystemDefaults::TextStyles::smallText());
@@ -71,20 +76,19 @@ int NativeAnnotationObject::initialize()
     label_->setVerticalAlignment(VerticalAlignment::Center);
 
     leftView_ = new ImageButton();
-    //leftView->setFocusPolicy(bb::cascades::FocusPolicy::KeyAndTouch);
     leftView_->setHorizontalAlignment(HorizontalAlignment::Left);
     leftView_->setVerticalAlignment(VerticalAlignment::Center);
 
     rightView_ = new ImageButton();
-	//rightView_->setFocusPolicy(bb::cascades::FocusPolicy::KeyAndTouch);
 	rightView_->setHorizontalAlignment(HorizontalAlignment::Right);
 	rightView_->setVerticalAlignment(VerticalAlignment::Center);
 
-	bubbleContent->add(bubbleBackground);
-	bubbleContent->add(leftView_);
-    bubbleContent->add(label_);
-    bubbleContent->add(rightView_);
-	bubble->add(bubbleContent);
+	bubble->add(bubbleBackground);
+	innerBubbleContent->add(leftView_);
+	innerBubbleContent->add(label_);
+	innerBubbleContent->add(rightView_);
+
+	bubbleContent->add(innerBubbleContent);
 
     return NATIVE_ERROR_OK;
 }
@@ -101,13 +105,13 @@ int NativeAnnotationObject::setPincolor(TiObject* obj)
 	 switch (value)
 	    {
 	    case Ti::Map::ANNOTATION_GREEN:
-	    	pinImageSource_ = "assets/blackberry/map/green_pin.png";
+	    	pinImageSource_ = "assets/map/green_pin.png";
 	        break;
 	    case  Ti::Map::ANNOTATION_RED:
-	    	pinImageSource_ = "assets/blackberry/map/red_pin.png";
+	    	pinImageSource_ = "assets/map/red_pin.png";
 	        break;
 	    case  Ti::Map::ANNOTATION_PURPLE:
-	    	pinImageSource_ = "assets/blackberry/map/purple_pin.png";
+	    	pinImageSource_ = "assets/map/purple_pin.png";
 	        break;
 	    default:
 	        N_DEBUG(Native::Msg::Unknown_value_received << ": " << value);

@@ -45,6 +45,7 @@ public:
 
 	bb::cascades::ImageButton* pin;
     bb::cascades::Container* bubble;
+    bb::cascades::Container* bubbleContent;
     bool showBubble;
 
     NativeMapViewObject* mapViewObj;
@@ -56,6 +57,8 @@ public:
     static const int pinOffsetY = 58;
     static const int bubbleOffsetX = 105;
     static const int bubbleOffsetY = 225;
+    static const int bubbleContentOffsetX = 85;
+    static const int bubbleContentOffsetY = 220;
 
 protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
@@ -75,7 +78,7 @@ private:
     AnnotationObjectEventHandler* eventHandler_;
 };
 
-//Event handler for MAPview object
+//Event handler for map view object
 class AnnotationObjectEventHandler : public QObject
 {
     Q_OBJECT

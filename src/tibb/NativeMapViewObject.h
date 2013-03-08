@@ -40,11 +40,15 @@ public:
     // method
     bb::cascades::maps::MapView *getMapView();
     void updateMarkers();
-    //QPoint worldToPixel(float latitude, float longitude) const;
+    QPoint worldToPixel(float latitude, float longitude) const;
     void updateMap();
     int removeAnnotation(NativeObject* annotation);
 
     bool renderOkay;
+    QTimer *timer;
+    float latitude;
+    float longitude;
+    bb::cascades::maps::MapView* mapview_;
 
 protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
@@ -58,7 +62,7 @@ private:
 
 
     QVector<NativeObject*> annotations_;
-    bb::cascades::maps::MapView* mapview_;
+
     MapViewEventHandler* eventHandler_;
 };
 
@@ -74,10 +78,7 @@ public:
 
 public slots:
     void requestRender();
-    void setRenderOkay() {
-    	mapviewObject_->renderOkay = true;
-    	mapviewObject_->updateMap();
-    }
+    void setRenderOkay();
 
 private:
     TiEventContainer* eventContainer_;
@@ -86,6 +87,7 @@ private:
     // Disable copy ctor & assignment operator
     MapViewEventHandler(const MapViewEventHandler& eHandler);
     MapViewEventHandler& operator=(const MapViewEventHandler& eHandler);
+    int cnt_;
 };
 
 

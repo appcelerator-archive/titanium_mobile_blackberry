@@ -16,7 +16,7 @@
 #include <NativeAnnotationObject.h>
 #include <bb/platform/geo/Point.hpp>
 #include <QPoint>
-
+#include "stdio.h"
 using namespace bb::cascades;
 using namespace bb::platform::geo;
 
@@ -58,9 +58,8 @@ void NativeMapViewObject::updateMarkers()
 			NativeAnnotationObject* annotation = (NativeAnnotationObject*)annotations_[i];
 			container_->remove(annotation->pin);
 			container_->remove(annotation->bubble);
+			container_->remove(annotation->bubbleContent);
 
-			// 10.1 Beta only call
-			/*
 			QPoint pt = worldToPixel(annotation->latitude, annotation->longitude);
 
 			bb::cascades::AbsoluteLayoutProperties* layoutProperties = static_cast<bb::cascades::AbsoluteLayoutProperties*>(annotation->pin->layoutProperties());
@@ -73,24 +72,26 @@ void NativeMapViewObject::updateMarkers()
 				layoutProperties->setPositionX(pt.x() - annotation->bubbleOffsetX);
 				layoutProperties->setPositionY(pt.y() - annotation->bubbleOffsetY);
 				container_->add(annotation->bubble);
+
+				layoutProperties = static_cast<bb::cascades::AbsoluteLayoutProperties*>(annotation->bubbleContent->layoutProperties());
+				layoutProperties->setPositionX(pt.x() - annotation->bubbleContentOffsetX);
+				layoutProperties->setPositionY(pt.y() - annotation->bubbleContentOffsetY);
+				container_->add(annotation->bubbleContent);
 			}
-			*/
         }
 	}
 }
 
-/*
 QPoint NativeMapViewObject::worldToPixel(float latitude, float longitude) const
 {
 	const Point worldCoordinates = Point(latitude, longitude);
     return mapview_->worldToWindow(worldCoordinates);
 }
-*/
 
 int NativeMapViewObject::setRegion(TiObject* obj)
 {
-	float latitude;
-	float longitude;
+	//float latitude;
+	//float longitude;
 	int error = NativeControlObject::getRegion(obj, &latitude, &longitude);
 	if (error != NATIVE_ERROR_OK)
 	{
@@ -151,8 +152,8 @@ void NativeMapViewObject::updateMap()
 	// Todo call the render to force an update
 	mapview_->setTilt(1);
 	mapview_->setTilt(0);
-
 }
+
 void NativeMapViewObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
 	NativeControlObject::setupEvents(containerFactory);
@@ -165,7 +166,9 @@ void NativeMapViewObject::setupEvents(TiEventContainerFactory* containerFactory)
 
     QObject::connect(mapview_, SIGNAL(requestRender()), eventHandler_,  SLOT(requestRender()));
 
-    QTimer::singleShot(4000, eventHandler_, SLOT(setRenderOkay()));
+    timer = new QTimer(eventHandler_);
+    QObject::connect(timer, SIGNAL(timeout()), eventHandler_,  SLOT(setRenderOkay()));
+    timer->start(1000);
 }
 
 
@@ -174,6 +177,7 @@ MapViewEventHandler::MapViewEventHandler(TiEventContainer* eventContainer, Nativ
     eventContainer_ = eventContainer;
     mapviewObject_ = mapviewObject;
     mapview_ = mapviewObject->getMapView();
+    cnt_ = 0;
 }
 
 MapViewEventHandler::~MapViewEventHandler() {
@@ -182,5 +186,22 @@ MapViewEventHandler::~MapViewEventHandler() {
 void MapViewEventHandler::requestRender()
 {
 	mapviewObject_->updateMarkers();
+}
+
+void MapViewEventHandler::setRenderOkay() {
+
+	// give the map some time to comeup
+	if (cnt_ > 3) {
+       mapviewObject_->renderOkay = true;
+       mapviewObject_->timer->stop();
+    }
+
+	// Todo remove once maps become more stable. Sometimes at startup the map display gets
+	// messed up, this is a hack to force the display to show the correct values
+    mapviewObject_->mapview_->setLatitude(mapviewObject_->latitude);
+    mapviewObject_->mapview_->setLongitude(mapviewObject_->longitude);
+
+    cnt_++;
+   	mapviewObject_->updateMap();
 }
 
