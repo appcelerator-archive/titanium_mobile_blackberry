@@ -95,7 +95,6 @@ public slots:
 private:
     TiEventContainer* eventContainer_;
     NativeAnnotationObject* annotationObject_;
-    //bb::cascades::ImageButton *pin_;
     // Disable copy ctor & assignment operator
     AnnotationObjectEventHandler(const AnnotationObjectEventHandler& eHandler);
     AnnotationObjectEventHandler& operator=(const AnnotationObjectEventHandler& eHandler);

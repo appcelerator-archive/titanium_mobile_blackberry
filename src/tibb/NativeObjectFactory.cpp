@@ -26,6 +26,7 @@
 #include "NativeTCPSocketObject.h"
 #include "NativeUDPSocketObject.h"
 #include "NativeTextFieldObject.h"
+#include "NativeTextAreaObject.h"
 #include "NativeToggleButtonObject.h"
 #include "NativeWindowObject.h"
 #include "NativeHTTPClientObject.h"
@@ -96,6 +97,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
     case N_TYPE_TEXT_FIELD:
         obj = NativeTextFieldObject::createTextField(tiObj);
         break;
+
+    case N_TYPE_TEXT_AREA:
+            obj = NativeTextAreaObject::createTextArea(tiObj);
+            break;
 
     case N_TYPE_IMAGEVIEW:
         obj = NativeImageViewObject::createImageView(tiObj);

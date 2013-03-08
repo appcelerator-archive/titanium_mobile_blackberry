@@ -194,7 +194,7 @@ void MapViewEventHandler::requestRender()
 void MapViewEventHandler::setRenderOkay() {
 
 	// give the map some time to come up
-	if (cnt_ >= 2) {
+	if (cnt_ >= 3) {
        mapviewObject_->renderOkay = true;
        mapviewObject_->timer->stop();
     }

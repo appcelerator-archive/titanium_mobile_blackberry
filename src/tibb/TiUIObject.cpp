@@ -27,6 +27,7 @@
 #include "TiUITableView.h"
 #include "TiUITableViewRow.h"
 #include "TiUITextField.h"
+#include "TiUITextArea.h"
 #include "TiUIWebView.h"
 #include "TiUIWindow.h"
 
@@ -74,6 +75,7 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSlider", this, _createSlider);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createProgressBar", this, _createProgressBar);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTextField", this, _createTextField);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTextArea", this, _createTextArea);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createImageView", this, _createImageView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createActivityIndicator", this, _createActivityIndicator);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSwitch", this, _createSwitch);
@@ -156,6 +158,11 @@ Handle<Value> TiUIObject::_createProgressBar(void* userContext, TiObject*, const
 Handle<Value> TiUIObject::_createTextField(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUITextField::createTextField, args);
+}
+
+Handle<Value> TiUIObject::_createTextArea(void* userContext, TiObject*, const Arguments& args)
+{
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUITextArea::createTextArea, args);
 }
 
 Handle<Value> TiUIObject::_createImageView(void* userContext, TiObject*, const Arguments& args)

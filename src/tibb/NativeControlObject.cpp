@@ -182,7 +182,8 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
 	}
     else if (objType == N_TYPE_LABEL || objType == N_TYPE_BUTTON || objType == N_TYPE_TOGGLEBUTTON ||
         objType == N_TYPE_SLIDER || objType == N_TYPE_PROGRESSBAR || objType == N_TYPE_TEXT_FIELD ||
-        objType == N_TYPE_ACTIVITYINDICATOR || objType == N_TYPE_WINDOW || objType == N_TYPE_MAPVIEW) {
+        objType == N_TYPE_ACTIVITYINDICATOR || objType == N_TYPE_WINDOW || objType == N_TYPE_MAPVIEW ||
+        objType == N_TYPE_TEXT_AREA) {
         layoutNode_.properties.width.valueType = Defer;
         layoutNode_.properties.height.valueType = Defer;
     }
