@@ -33,6 +33,7 @@ private:
 	TiMapView(const char* name);
 
 	static Handle<Value> _removeAnnotation(void* userContext, TiObject*, const Arguments& args);
+	static Handle<Value> _addAnnotation(void* userContext, TiObject*, const Arguments& args);
 };
 
 #endif /* TIMAPVIEW_H_ */

@@ -33,6 +33,7 @@ public:
     virtual ~NativeMapViewObject();
     virtual NATIVE_TYPE getObjectType() const;
     virtual int initialize();
+
     // properties
     virtual int setAnnotations(TiObject* obj);
     virtual int setRegion(TiObject* obj);
@@ -43,6 +44,7 @@ public:
     QPoint worldToPixel(float latitude, float longitude) const;
     void updateMap();
     int removeAnnotation(NativeObject* annotation);
+    int addAnnotation(NativeObject* annotation);
 
     bool renderOkay;
     QTimer *timer;
@@ -63,8 +65,7 @@ private:
     MapViewEventHandler* eventHandler_;
 };
 
-
-//Event handler for MAPview object
+//Event handler for Mapview object
 class MapViewEventHandler : public QObject
 {
     Q_OBJECT

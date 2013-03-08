@@ -121,7 +121,18 @@ int NativeMapViewObject::setAnnotations(TiObject* obj)
 		}
 	}
 
-    return NATIVE_ERROR_OK;
+	updateMap();
+
+	return NATIVE_ERROR_OK;
+}
+
+int NativeMapViewObject::addAnnotation(NativeObject* annotation)
+{
+	annotations_.append(annotation);
+
+	updateMap();
+
+	return NATIVE_ERROR_OK;
 }
 
 int NativeMapViewObject::removeAnnotation(NativeObject* annotation)

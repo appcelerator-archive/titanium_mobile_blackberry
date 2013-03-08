@@ -66,12 +66,15 @@ int NativeAnnotationObject::initialize()
     innerBubbleContent->setPreferredWidth(400);
     innerBubbleContent->setPreferredHeight(130);
     innerBubbleContent->setLayout(new bb::cascades::DockLayout());
+    innerBubbleContent->setRightPadding(10);
+    innerBubbleContent->setLeftPadding(10);
 
     label_ = new Label();
     TextStyle* style = new TextStyle(SystemDefaults::TextStyles::smallText());
     style->setColor(Color::White);
     label_->textStyle()->setBase(*style);
     label_->setMultiline(true);
+    label_->setRightPadding(20);
     label_->setHorizontalAlignment(HorizontalAlignment::Center);
     label_->setVerticalAlignment(VerticalAlignment::Center);
 

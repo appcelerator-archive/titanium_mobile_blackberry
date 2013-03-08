@@ -1,18 +1,59 @@
-var win = Ti.UI.createWindow({
-  backgroundColor: 'green'
+
+var win = Titanium.UI.createWindow({orientationModes:[Ti.UI.PORTRAIT]});
+
+var mountainView = Titanium.Map.createAnnotation({
+    latitude:37.389493,
+    longitude:-122.050166,
+    title:'Appcelerator Headquarters',
+    subtitle:'Mountain View, CA',
+    pincolor:Ti.Map.ANNOTATION_GREEN,
+    //rightView: 'images/appcelerator_small.png',
+    leftView: 'images/appcelerator_small.png'
+});
+
+var waitersOnWheels = Titanium.Map.createAnnotation({
+    latitude:37.390749,
+    longitude:-122.051651,
+    title:'Waiters On Wheels',
+    subtitle:'Mountain View, CA',
+    pincolor:Ti.Map.ANNOTATION_RED,
+    //rightView: 'images/appcelerator_small.png',
+    leftView: 'images/appcelerator_small.png'
+});
+
+var tlBeerGarden = Titanium.Map.createAnnotation({
+    latitude:37.39504,
+    longitude:-122.02937,
+    title:'TL Beer Garden',
+    subtitle:'Sunnyvale, CA',
+    pincolor:Ti.Map.ANNOTATION_PURPLE,
+    //rightView: 'images/appcelerator_small.png',
+    leftView: 'images/photo.jpg'
+});
+
+var mapview = Titanium.Map.createView({
+    region: {latitude:37.390749, longitude:-122.051651},
+    annotations:[mountainView, waitersOnWheels, tlBeerGarden]
+});
+
+win.add(mapview);
+
+//mapview.addAnnotation(tlBeerGarden);
+
+// Handle click events on any annotations on this map.
+waitersOnWheels.addEventListener('click', function(evt) {
+	
+	//mapview.addAnnotation(tlBeerGarden);
+	
+	if (evt.clicksource == 'leftView') {
+		Ti.API.info('Annotation ' + evt.clicksource + ', left view clicked.');
+	}
+	
+	if (evt.clicksource == 'rightView') {
+        Ti.API.info('Annotation ' + evt.clicksource + ', right view clicked.');
+	}
+	
 });
 
 
-var textArea = Ti.UI.createTextArea({
-  color: '#888',
-  font: {fontSize:10, fontWeight:'bold'},
-  keyboardType: Ti.UI.KEYBOARD_NUMBER_PAD,
-  returnKeyType: Ti.UI.RETURNKEY_GO,
-  textAlign: 'left',
-  value: 'I am a textarea',
-  top: 60,
-  width: 100, height : 70
-});
-
-win.add(textArea);
 win.open();
