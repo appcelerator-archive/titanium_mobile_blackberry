@@ -129,6 +129,7 @@ int NativeMapViewObject::setAnnotations(TiObject* obj)
 int NativeMapViewObject::addAnnotation(NativeObject* annotation)
 {
 	annotations_.append(annotation);
+	((NativeAnnotationObject*)annotation)->mapViewObj = this;
 
 	updateMap();
 

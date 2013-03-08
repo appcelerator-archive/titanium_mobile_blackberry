@@ -33,17 +33,15 @@ var tlBeerGarden = Titanium.Map.createAnnotation({
 
 var mapview = Titanium.Map.createView({
     region: {latitude:37.390749, longitude:-122.051651},
-    annotations:[mountainView, waitersOnWheels, tlBeerGarden]
+    annotations:[mountainView, waitersOnWheels]
 });
 
 win.add(mapview);
 
-//mapview.addAnnotation(tlBeerGarden);
-
 // Handle click events on any annotations on this map.
 waitersOnWheels.addEventListener('click', function(evt) {
 	
-	//mapview.addAnnotation(tlBeerGarden);
+	mapview.addAnnotation(tlBeerGarden);
 	
 	if (evt.clicksource == 'leftView') {
 		Ti.API.info('Annotation ' + evt.clicksource + ', left view clicked.');
