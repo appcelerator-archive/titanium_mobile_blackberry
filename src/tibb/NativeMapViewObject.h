@@ -46,9 +46,7 @@ public:
 
     bool renderOkay;
     QTimer *timer;
-    float latitude;
-    float longitude;
-    bb::cascades::maps::MapView* mapview_;
+
 
 protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
@@ -60,9 +58,8 @@ private:
     NativeMapViewObject(const NativeMapViewObject&);
     void operator=(const NativeMapViewObject&);
 
-
     QVector<NativeObject*> annotations_;
-
+    bb::cascades::maps::MapView* mapview_;
     MapViewEventHandler* eventHandler_;
 };
 

@@ -1,38 +1,46 @@
-var win = Titanium.UI.createWindow();
+
+
+var win = Titanium.UI.createWindow({orientationModes:[Ti.UI.PORTRAIT]});
 
 var mountainView = Titanium.Map.createAnnotation({
-    latitude:37.390749,
-    longitude:-122.081651,
-    title:"Appcelerator Headquarters",
+    latitude:37.389493,
+    longitude:-122.050166,
+    title:'Appcelerator Headquarters',
     subtitle:'Mountain View, CA',
-    pincolor:Titanium.Map.ANNOTATION_RED,
-    animate:true,
-    leftButton: '../images/appcelerator_small.png',
-    myid:1 // Custom property to uniquely identify this annotation.
+    pincolor:Ti.Map.ANNOTATION_GREEN,
+   // rightView: 'images/appcelerator_small.png',
+    leftView: 'images/appcelerator_small.png'
+});
+
+var waitersOnWheels = Titanium.Map.createAnnotation({
+    latitude:37.390749,
+    longitude:-122.051651,
+    title:'Waiters On Wheels',
+    subtitle:'Mountain View, CA',
+    pincolor:Ti.Map.ANNOTATION_RED,
+   // rightView: 'images/appcelerator_small.png',
+    leftView: 'images/appcelerator_small.png'
 });
 
 var mapview = Titanium.Map.createView({
-    mapType: Titanium.Map.STANDARD_TYPE,
-    region: {/*latitude:33.74511, longitude:-84.38993,*/ 
-    	    latitude:37.39511, longitude:-122.081993, 
-            latitudeDelta:0.01, longitudeDelta:0.01},
-    animate:true,
-    regionFit:true,
-    userLocation:true,
-    annotations:[mountainView]
+    region: {latitude:37.390749, longitude:-122.051651},
+    annotations:[mountainView, waitersOnWheels]
 });
 
 win.add(mapview);
+
 // Handle click events on any annotations on this map.
-mapview.addEventListener('click', function(evt) {
-
-    Ti.API.info("Annotation " + evt.title + " clicked, id: " + evt.annotation.myid);
-
-    // Check for all of the possible names that clicksouce
-    // can report for the left button/view.
-    if (evt.clicksource == 'leftButton' || evt.clicksource == 'leftPane' ||
-        evt.clicksource == 'leftView') {
-        Ti.API.info("Annotation " + evt.title + ", left button clicked.");
-    }
+waitersOnWheels.addEventListener('click', function(evt) {
+	
+	if (evt.clicksource == 'leftView') {
+		Ti.API.info('Annotation ' + evt.clicksource + ', left view clicked.');
+	}
+	
+	if (evt.clicksource == 'rightView') {
+        Ti.API.info('Annotation ' + evt.clicksource + ', right view clicked.');
+	}
+	
 });
+
+
 win.open();

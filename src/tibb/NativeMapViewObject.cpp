@@ -46,6 +46,7 @@ int NativeMapViewObject::initialize()
     mapview_->setAltitude(3000);
     mapview_->setTilt(0);
 
+
     setControl(mapview_);
 
     return NATIVE_ERROR_OK;
@@ -90,8 +91,8 @@ QPoint NativeMapViewObject::worldToPixel(float latitude, float longitude) const
 
 int NativeMapViewObject::setRegion(TiObject* obj)
 {
-	//float latitude;
-	//float longitude;
+	float latitude;
+	float longitude;
 	int error = NativeControlObject::getRegion(obj, &latitude, &longitude);
 	if (error != NATIVE_ERROR_OK)
 	{
@@ -99,6 +100,8 @@ int NativeMapViewObject::setRegion(TiObject* obj)
 	}
 	mapview_->setLatitude(latitude);
 	mapview_->setLongitude(longitude);
+
+
 	return NATIVE_ERROR_OK;
 }
 
@@ -168,7 +171,7 @@ void NativeMapViewObject::setupEvents(TiEventContainerFactory* containerFactory)
 
     timer = new QTimer(eventHandler_);
     QObject::connect(timer, SIGNAL(timeout()), eventHandler_,  SLOT(setRenderOkay()));
-    timer->start(1000);
+    timer->start(500);
 }
 
 
@@ -190,16 +193,11 @@ void MapViewEventHandler::requestRender()
 
 void MapViewEventHandler::setRenderOkay() {
 
-	// give the map some time to comeup
-	if (cnt_ > 3) {
+	// give the map some time to come up
+	if (cnt_ >= 2) {
        mapviewObject_->renderOkay = true;
        mapviewObject_->timer->stop();
     }
-
-	// Todo remove once maps become more stable. Sometimes at startup the map display gets
-	// messed up, this is a hack to force the display to show the correct values
-    mapviewObject_->mapview_->setLatitude(mapviewObject_->latitude);
-    mapviewObject_->mapview_->setLongitude(mapviewObject_->longitude);
 
     cnt_++;
    	mapviewObject_->updateMap();
