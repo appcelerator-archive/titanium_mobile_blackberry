@@ -185,6 +185,7 @@ private:
     QRectF rect_;
     bool batchUpdating_;
     NATIVE_TYPE objType_;
+    float ppi_; // pixels per inch
 };
 
 // Event handler for Ti.UI.View

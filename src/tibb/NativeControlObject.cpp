@@ -31,8 +31,6 @@ using namespace bb::cascades;
 
 #define ZINDEX_PROPERTY_NAME            "tizindex"
 
-static const float device_resolution = 355;
-
 
 #define PROP_SETGET_FUNCTION(NAME)      prop_##NAME
 
@@ -189,6 +187,25 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     }
 
     objType_ = objType;
+
+    // calculate the pixels per inch (PPI)
+	bb::device::DisplayInfo display;
+
+	const float MMPERINCH = 25.4f;
+
+	QSize pixelSize = display.pixelSize();
+	QSizeF physicalSize = display.physicalSize();
+
+	const float physicalWidth = physicalSize.width();
+	const float physicalHeight = physicalSize.height();
+	const float pixelWidth = pixelSize.width();
+	const float pixelHeight = pixelSize.height();
+
+	// Calculate pixels density
+	const float diagonalWidth = sqrtf(physicalWidth * physicalWidth + physicalHeight * physicalHeight) / MMPERINCH;
+	const float diagonalPixels = sqrtf(pixelWidth * pixelWidth + pixelHeight * pixelHeight);
+
+	ppi_ = diagonalPixels / diagonalWidth;
 }
 
 NativeControlObject::~NativeControlObject()
@@ -428,8 +445,7 @@ void NativeControlObject::updateLayoutProperty(ValueName name, TiObject* val) {
     property.name = name;
     property.value = *String::Utf8Value(val->getValue());
 
-    // TODO(josh): query the real DPI value from hardware.
-    populateLayoutPoperties(property, &layoutNode_.properties, device_resolution);
+    populateLayoutPoperties(property, &layoutNode_.properties, ppi_);
 
     struct Node* root = nodeRequestLayout(&layoutNode_);
     if (root) {
@@ -943,26 +959,6 @@ int NativeControlObject::setMapType(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
-
-/*
-PROP_SETGET(setAnimate)
-int NativeControlObject::setAnimate(TiObject*)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
-PROP_SETGET(setRegionFit)
-int NativeControlObject::setRegionFit(TiObject*)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
-PROP_SETGET(setUserLocation)
-int NativeControlObject::setUserLocation(TiObject*)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-*/
 
 PROP_SETGET(setAnnotations)
 int NativeControlObject::setAnnotations(TiObject*)
