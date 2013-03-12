@@ -74,6 +74,8 @@ public:
     virtual int setButtonNames(TiObject* obj);
     virtual int setCancel(TiObject* obj);
     virtual int setColor(TiObject* obj);
+    virtual int setContentHeight(TiObject* obj);
+    virtual int setContentWidth(TiObject* obj);
     virtual int setData(TiObject* obj);
     virtual int setDisableBounce(TiObject* obj);
     virtual int setEnabled(TiObject* obj);

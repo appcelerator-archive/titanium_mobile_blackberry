@@ -72,6 +72,16 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "contentWidth", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_CONTENT_WIDTH
+    },
+
+    {
+        "contentHeight", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_CONTENT_HEIGHT
+    },
+
+    {
         "data", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_DATA
     },

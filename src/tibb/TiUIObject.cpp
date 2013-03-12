@@ -21,6 +21,7 @@
 #include "TiUIPicker.h"
 #include "TiUIProgressBar.h"
 #include "TiUISlider.h"
+#include "TiUIScrollView.h"
 #include "TiUISwitch.h"
 #include "TiUITab.h"
 #include "TiUITabGroup.h"
@@ -85,6 +86,7 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createAlertDialog", this, _createAlertDialog);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createView", this, _createView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createWebView", this, _createWebView);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createScrollView", this, _createScrollView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setBackgroundColor", this, _setBackgroundColor);
 
     // Adding javascript constants from Ti.UI
@@ -223,6 +225,11 @@ Handle<Value> TiUIObject::_createView(void* userContext, TiObject*, const Argume
 Handle<Value> TiUIObject::_createWebView(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIWebView::createWebView), args);
+}
+
+Handle<Value> TiUIObject::_createScrollView(void* userContext, TiObject*, const Arguments& args)
+{
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIScrollView::createScrollView), args);
 }
 
 Handle<Value> TiUIObject::_setBackgroundColor(void* userContext, TiObject* caller, const Arguments& args)

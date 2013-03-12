@@ -155,6 +155,7 @@ static void onPostLayout(struct Node* node) {
     control->setMaxWidth(width);
     control->setMinHeight(height);
     control->setMaxHeight(height);
+
     bb::cascades::AbsoluteLayoutProperties* layoutProperties = static_cast<bb::cascades::AbsoluteLayoutProperties*>(control->layoutProperties());
 
     if (layoutProperties != NULL) {
@@ -176,7 +177,7 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     layoutNode_.data = this;
 
 
-    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_LIST_VIEW) {
+    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_LIST_VIEW || objType == N_TYPE_SCROLL_VIEW) {
         layoutNode_.properties.width.valueType = Fill;
         layoutNode_.properties.height.valueType = Fill;
 	}
@@ -328,7 +329,7 @@ int NativeControlObject::removeChildNativeObject(NativeObject* obj)
     if (getObjectType() != N_TYPE_VIEW)
     {
         /* remove not supported for children types */
-        return NativeObject::addChildNativeObject(obj);
+        return NativeObject::removeChildNativeObject(obj);
     }
     return removeChildImpl(obj);
 }
@@ -850,13 +851,25 @@ int NativeControlObject::getSize(TiObject* obj)
 PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
-	// auto uses defaults that have already been set
-	string str = *String::Utf8Value(obj->getValue());
-	if (str != "auto") {
-		updateLayoutProperty(Width, obj);
-	}
+    // auto uses defaults that have already been set
+    string str = *String::Utf8Value(obj->getValue());
+    if (str != "auto") {
+        updateLayoutProperty(Width, obj);
+    }
 
     return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(setContentWidth)
+int NativeControlObject::setContentWidth(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setContentHeight)
+int NativeControlObject::setContentHeight(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setType)
@@ -1043,9 +1056,6 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_SHOW_SCROLL_BARS, PROP_SETGET_FUNCTION(setShowScrollbars), NULL},
     {N_PROP_USER_AGENT, PROP_SETGET_FUNCTION(setUserAgent), NULL},
     {N_PROP_WILL_HANDLE_TOUCHES, PROP_SETGET_FUNCTION(setWillHandleTouches), NULL},
-
-
-
     {N_PROP_ANCHOR_POINT, PROP_SETGET_FUNCTION(setAnchorPoint), NULL},
     {N_PROP_BACKGROUND_IMAGE, PROP_SETGET_FUNCTION(setBackgroundImage), NULL},
     {N_PROP_BACKGROUND_COLOR, PROP_SETGET_FUNCTION(setBackgroundColor), NULL},
@@ -1053,6 +1063,8 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_BOTTOM, PROP_SETGET_FUNCTION(setBottom), NULL},
     {N_PROP_BUTTONNAMES, PROP_SETGET_FUNCTION(setButtonNames), NULL},
     {N_PROP_CANCEL, PROP_SETGET_FUNCTION(setCancel), NULL},
+    {N_PROP_CONTENT_HEIGHT, PROP_SETGET_FUNCTION(setContentHeight), NULL},
+    {N_PROP_CONTENT_WIDTH, PROP_SETGET_FUNCTION(setContentWidth), NULL},
     {N_PROP_COLOR, PROP_SETGET_FUNCTION(setColor), NULL},
     {N_PROP_DATA, PROP_SETGET_FUNCTION(setData), NULL},
     {N_PROP_ENABLED, PROP_SETGET_FUNCTION(setEnabled), NULL},
