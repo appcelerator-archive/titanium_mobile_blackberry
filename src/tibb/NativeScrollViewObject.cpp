@@ -17,12 +17,18 @@
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/LayoutUpdateHandler>
 
-NativeScrollViewContentObject::NativeScrollViewContentObject(TiObject* tiObject)
+NativeScrollViewContentObject::NativeScrollViewContentObject(TiObject* tiObject, NativeScrollViewObject* scrollView)
 	: NativeControlObject(tiObject, N_TYPE_VIEW)
 {
  	setContainer(bb::cascades::Container::create());
+ 	scrollView_ = scrollView;
 }
 
+void NativeScrollViewContentObject::updateLayout(QRectF rect)
+{
+    NativeControlObject::updateLayout(rect);
+    scrollView_->setContentWidthAndHeight(rect.width(), rect.height());
+}
 NativeScrollViewObject::NativeScrollViewObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_SCROLL_VIEW)
 {
@@ -48,11 +54,26 @@ int NativeScrollViewObject::setLayout(TiObject *obj)
 	int err = contentViewProxy_->setLayout(obj);
 	return err;
 }
+void NativeScrollViewObject::setContentWidthAndHeight(float width, float height)
+{
+    contentSize_.setHeight(height);
+    contentSize_.setWidth(width);
+
+    if(contentSize_.width() > scrollViewSize_.width() && contentSize_.height() <= scrollViewSize_.height())
+    {
+    	scrollViewProperties_->setScrollMode(bb::cascades::ScrollMode::Horizontal);
+    } else if(contentSize_.height() > scrollViewSize_.height() && contentSize_.width() <= scrollViewSize_.width())
+    {
+       	scrollViewProperties_->setScrollMode(bb::cascades::ScrollMode::Vertical);
+   	} else {
+       	scrollViewProperties_->setScrollMode(bb::cascades::ScrollMode::Both);
+   	}
+}
 
 int NativeScrollViewObject::initialize()
 {
 
-	contentViewProxy_ = new NativeScrollViewContentObject(tiObject_);
+	contentViewProxy_ = new NativeScrollViewContentObject(tiObject_, this);
 	contentView_ = (bb::cascades::Container*)contentViewProxy_->getNativeHandle();
 
 
@@ -75,7 +96,7 @@ int NativeScrollViewObject::initialize()
     bb::cascades::LayoutUpdateHandler::create(nativeContentView_).onLayoutFrameChanged(eventHandler_, SLOT(onContainerLayoutChange(QRectF)));
 
     contentSize_ = QSize(0,0);
-
+    scrollViewSize_ = QSize(0,0);
     return NATIVE_ERROR_OK;
 }
 
@@ -103,19 +124,9 @@ void NativeScrollViewObject::updateLayout(QRectF rect)
 
     scrollView_->setPreferredHeight(h);
     scrollView_->setPreferredWidth(w);
-    scrollView_->setMinWidth(w);
-    scrollView_->setMaxWidth(w);
-    scrollView_->setMinHeight(h);
-    scrollView_->setMaxHeight(h);
-
+    scrollViewSize_.setHeight(h);
+    scrollViewSize_.setWidth(w);
 }
-/*
-NAHANDLE NativeScrollViewObject::getNativeHandle() const
-{
-    return scrollView_;
-}
- */
-
 
 int NativeScrollViewObject::setBackgroundColor(TiObject* obj)
 {

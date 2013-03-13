@@ -24,6 +24,7 @@ class LayoutUpdateHandler;
 class ScrollViewProperties;
 }
 }
+class NativeScrollViewObject;
 
 
 /*
@@ -35,8 +36,9 @@ class ScrollViewProperties;
 class NativeScrollViewContentObject : public NativeControlObject
 {
 public:
-    explicit NativeScrollViewContentObject(TiObject* tiObject);
-
+    explicit NativeScrollViewContentObject(TiObject* tiObject, NativeScrollViewObject* scrollView);
+    virtual void updateLayout(QRectF rect);
+    NativeScrollViewObject *scrollView_;
 };
 
 class NativeScrollViewObject : public NativeControlObject
@@ -52,11 +54,14 @@ public:
     virtual int setContentHeight(TiObject *obj);
     virtual int setBackgroundColor(TiObject *obj);
     virtual int setLayout(TiObject *obj);
+    void setContentWidthAndHeight(float w, float h);
     bb::cascades::ScrollViewProperties* scrollViewProperties_;
     bb::cascades::ScrollView* scrollView_;
     bb::cascades::Container* contentView_;
     bb::cascades::Container* nativeContentView_;
     NativeScrollViewContentObject *contentViewProxy_;
+
+
 
     void onContentViewSizeChange(QRectF rect);
 protected:
@@ -68,7 +73,7 @@ private:
     NativeScrollViewObject(const NativeScrollViewObject&);
     void operator=(const NativeScrollViewObject&);
     QSize contentSize_;
-    bb::cascades::Button* btn_;
+    QSize scrollViewSize_;
 };
 
 
