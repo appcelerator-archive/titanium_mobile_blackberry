@@ -88,8 +88,6 @@ int NativeScrollViewObject::initialize()
     scrollView_->setContent(nativeContentView_);
 
     scrollViewProperties_ = scrollView_->scrollViewProperties();
-	scrollViewProperties_->setScrollMode(bb::cascades::ScrollMode::Both);
-	scrollViewProperties_->setOverScrollEffectMode(bb::cascades::OverScrollEffectMode::None);
 
     ScrollViewEventHandler *eventHandler_ = new ScrollViewEventHandler(this);
 
@@ -99,7 +97,18 @@ int NativeScrollViewObject::initialize()
     scrollViewSize_ = QSize(0,0);
     return NATIVE_ERROR_OK;
 }
-
+/*
+	Not implemented yet
+int NariveScrollViewObject::setDisableBounce(TiObject* obj)
+{
+    bool bounces;
+    getBoolean(obj, &bounces);
+    if(bounces) {
+    	scrollViewProperties_->setOverScrollEffectMode(bb::cascades::OverScrollEffectMode::None);
+    }
+    return NATIVE_ERROR_OK;
+}
+*/
 
 int NativeScrollViewObject::setContentWidth(TiObject* obj)
 {
