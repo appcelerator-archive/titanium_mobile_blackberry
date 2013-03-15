@@ -5,12 +5,15 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "NativeObjectFactory.h"
 #include "NativeTabGroupObject.h"
+
+#include <bb/cascades/TabbedPane>
+
+#include "NativeObjectFactory.h"
+#include "NativeTabObject.h"
 #include "SceneManager.h"
 #include "TabbedScene.h"
 #include "TiCascadesApp.h"
-#include <bb/cascades/TabbedPane>
 
 using namespace bb::cascades;
 using namespace titanium;
@@ -71,7 +74,9 @@ int NativeTabGroupObject::addChildNativeObject(NativeObject* obj)
     {
         if (obj->getNativeHandle())
         {
-            tabGroup_->add((bb::cascades::Tab*) obj->getNativeHandle());
+            NativeTabObject* tab = static_cast<NativeTabObject*>(obj);
+            tabGroup_->add((bb::cascades::Tab*) tab->getNativeHandle());
+            tab->setTabbedPane(tabGroup_);
             return NATIVE_ERROR_OK;
         }
     }

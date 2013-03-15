@@ -153,6 +153,10 @@ public:
     static int getDateTime(TiObject* obj, QDateTime& dt);
     virtual void updateLayout(QRectF rect);
 
+    // Tabs properties
+    virtual int setActive(TiObject* obj);
+    virtual int isActive(TiObject* obj);
+
     bb::cascades::Container* container_;
 
 protected:
