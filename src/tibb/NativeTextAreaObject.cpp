@@ -74,7 +74,7 @@ int NativeTextAreaObject::setKeyboardType(TiObject* obj)
             type = TextAreaInputMode::Text;
             break;
         case KeyboardType::EMAIL:
-           // type = TextAreaInputMode::EmailAddress;
+            type = TextAreaInputMode::EmailAddress;
             break;
         /*
         case KeyboardType::NUMBERS_PUNCTUATION:
