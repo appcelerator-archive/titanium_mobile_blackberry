@@ -186,7 +186,6 @@ void TiRootObject::createStringMethods()
 /* Methods defined by Global */
 Handle<Value> TiRootObject::_L(void* arg1, TiObject* arg2, const Arguments& arg3)
 {
-    // TODO: finish this
     return TiLocaleObject::_getString(arg1, arg2, arg3);
 }
 

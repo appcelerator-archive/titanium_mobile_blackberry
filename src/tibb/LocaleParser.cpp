@@ -1,8 +1,8 @@
-/*
- * LocaleParser.cpp
- *
- *  Created on: Mar 15, 2013
- *      Author: penrique
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #include "LocaleParser.h"
@@ -26,13 +26,6 @@ QString LocaleParser::getString(QString value1, QString value2)
 		return value2;
 
 	return value1;
-}
-
-LocaleParser *LocaleParser::sharedInstance()
-{
-	if(_instance == NULL)
-		_instance = new LocaleParser();
-	return _instance;
 }
 
 QString LocaleParser::getLocale() {
@@ -69,4 +62,11 @@ void LocaleParser::setLocale(QString value)
     	stringsMap_.insert(item.value("name").toString(), item.value(".data").toString());
     }
 
+}
+
+LocaleParser *LocaleParser::sharedInstance()
+{
+	if(_instance == NULL)
+		_instance = new LocaleParser();
+	return _instance;
 }

@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -33,7 +33,6 @@ void TiLocaleObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "getCurrentCountry", this, _getCurrentCountry);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "getCurrentLocale", this, _getCurrentLocale);
 
-    // void ADD_STATUS_TI_VALUE(const char* name, Handle<Value> value, TiObject* parent)
     ADD_STATIC_TI_VALUE("currentLanguage", TiLocaleObject::_getCurrentLanguage(), this);
     ADD_STATIC_TI_VALUE("currentCountry", TiLocaleObject::_getCurrentCountry(), this);
     ADD_STATIC_TI_VALUE("currentLocale", TiLocaleObject::_getCurrentLocale(), this);

@@ -248,7 +248,7 @@
 							<tool id="com.qnx.qcc.tool.assembler.361548406" name="QCC Assembler" superClass="com.qnx.qcc.tool.assembler">
 								<option id="com.qnx.qcc.option.assembler.includePath.344240156" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/qt4&quot;"/>
-									<listOptionValue builtIn="false" value="/Applications/bbndk/target_10_0_9_1673/qnx6/usr/include/bb/data"/>
+									<listOptionValue builtIn="false" value="{QNX_TARGET}/usr/include/bb/data"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.assembler.537373931" superClass="com.qnx.qcc.inputType.assembler"/>
 							</tool>
