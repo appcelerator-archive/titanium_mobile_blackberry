@@ -9,6 +9,7 @@
 
 #include "NativeStringInterface.h"
 #include "TiGenericFunctionObject.h"
+#include "TiLocaleObject.h"
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
 #include "TiTitaniumObject.h"
@@ -183,10 +184,10 @@ void TiRootObject::createStringMethods()
 }
 
 /* Methods defined by Global */
-Handle<Value> TiRootObject::_L(void*, TiObject*, const Arguments& args)
+Handle<Value> TiRootObject::_L(void* arg1, TiObject* arg2, const Arguments& arg3)
 {
     // TODO: finish this
-    return args[0];
+    return TiLocaleObject::_getString(arg1, arg2, arg3);
 }
 
 Handle<Value> TiRootObject::_clearInterval(void*, TiObject*, const Arguments& args)

@@ -86,7 +86,7 @@ void NativeMapViewObject::updateMarkers()
 QPoint NativeMapViewObject::worldToPixel(float latitude, float longitude) const
 {
 	const Point worldCoordinates = Point(latitude, longitude);
-    return mapview_->worldToWindow(worldCoordinates);
+    return QPoint(0,0); //mapview_->worldToWindow(worldCoordinates);
 }
 
 int NativeMapViewObject::setRegion(TiObject* obj)

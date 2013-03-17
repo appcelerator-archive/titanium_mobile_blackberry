@@ -39,6 +39,7 @@
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/tibb/include}&quot;"/>
+									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
 								</option>
 								<option id="com.qnx.qcc.option.compiler.defines.1265970181" name="Defines (-D)" superClass="com.qnx.qcc.option.compiler.defines" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="_REENTRANT"/>
@@ -57,6 +58,7 @@
 								<option id="com.qnx.qcc.option.assembler.includePath.2003111605" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include"/>
+									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.assembler.1271507818" superClass="com.qnx.qcc.inputType.assembler"/>
 							</tool>
@@ -102,6 +104,7 @@
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/tibb/include}&quot;"/>
+									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
 								</option>
 								<option id="com.qnx.qcc.option.compiler.defines.329860137" superClass="com.qnx.qcc.option.compiler.defines" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="_REENTRANT"/>
@@ -162,6 +165,7 @@
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/tibb/include}&quot;"/>
+									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
 								</option>
 								<option id="com.qnx.qcc.option.compiler.defines.940981227" superClass="com.qnx.qcc.option.compiler.defines" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="_REENTRANT"/>
@@ -226,6 +230,7 @@
 									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/qt4/cpp&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/qt4/cpp/c&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/qt4/cpp/embedded&quot;"/>
+									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
 								</option>
 								<option id="com.qnx.qcc.option.compiler.defines.1807513299" name="Defines (-D)" superClass="com.qnx.qcc.option.compiler.defines" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="_REENTRANT"/>
@@ -243,6 +248,7 @@
 							<tool id="com.qnx.qcc.tool.assembler.361548406" name="QCC Assembler" superClass="com.qnx.qcc.tool.assembler">
 								<option id="com.qnx.qcc.option.assembler.includePath.344240156" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/qt4&quot;"/>
+									<listOptionValue builtIn="false" value="/Applications/bbndk/target_10_0_9_1673/qnx6/usr/include/bb/data"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.assembler.537373931" superClass="com.qnx.qcc.inputType.assembler"/>
 							</tool>

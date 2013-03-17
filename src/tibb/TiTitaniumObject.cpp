@@ -16,6 +16,7 @@
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
 #include "TiPlatformObject.h"
+#include "TiLocaleObject.h"
 #include "TiStreamObject.h"
 #include "TiUIObject.h"
 #include "TiMap.h"
@@ -65,6 +66,7 @@ void TiTitaniumObject::onCreateStaticMembers()
     TiDatabase::addObjectToParent(this, objectFactory_);
     TiBufferStreamObject::addObjectToParent(this);
     TiStreamObject::addObjectToParent(this);
+    TiLocaleObject::addObjectToParent(this);
 }
 
 bool TiTitaniumObject::canAddMembers() const
