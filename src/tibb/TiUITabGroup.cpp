@@ -32,7 +32,6 @@ void TiUITabGroup::onCreateStaticMembers()
     TiUIBase::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "open", this, _open);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "addTab", this, _addTab);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "setActiveTab", this, _setActiveTab);
 }
 
 void TiUITabGroup::initializeTiObject(TiObject* parentContext)
@@ -62,36 +61,3 @@ Handle<Value> TiUITabGroup::_addTab(void* userContext, TiObject* caller, const A
     return Undefined();
 }
 
-Handle<Value> TiUITabGroup::_setActiveTab(void* userContext, TiObject*, const Arguments& args)
-{
-    HandleScope handleScope;
-    TiUITabGroup* obj = (TiUITabGroup*) userContext;
-    NativeObject* no = obj->getNativeObject();
-    if ((args.Length() > 0) && args[0]->IsNumber())
-    {
-        Local<Integer> index = args[0]->ToInteger();
-        no->setActiveTab(index->Value());
-    }
-    else
-    {
-        HandleScope handleScope;
-        if ((args.Length() > 0) && (args[0]->IsObject()))
-        {
-            TiObject* addObj = getTiObjectFromJsObject(args[0]);
-            if ((addObj == NULL) || (!addObj->isUIObject()))
-            {
-                return Undefined();
-            }
-            TiUIBase* uiObj = (TiUIBase*) addObj;
-            NativeObject* childNO = uiObj->getNativeObject();
-            no->setActiveTab(childNO);
-            childNO->release();
-        }
-        else
-        {
-            ThrowException(String::New(Native::Msg::Expected_argument_of_type_object_or_external));
-        }
-    }
-    no->release();
-    return Undefined();
-}

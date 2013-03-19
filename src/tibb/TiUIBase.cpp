@@ -27,6 +27,11 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "activeTab", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_ACTIVE_TAB
+    },
+
+    {
         "anchorPoint", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_ANCHOR_POINT
     },

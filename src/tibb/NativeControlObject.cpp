@@ -1035,6 +1035,18 @@ int NativeControlObject::isActive(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setActiveTab)
+int NativeControlObject::setActiveTab(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(getActiveTab)
+int NativeControlObject::getActiveTab(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
@@ -1115,7 +1127,10 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_ZINDEX, PROP_SETGET_FUNCTION(setZIndex), PROP_SETGET_FUNCTION(getZIndex)},
 
     // Tab properties
-    {N_PROP_ACTIVE, PROP_SETGET_FUNCTION(setActive), PROP_SETGET_FUNCTION(isActive)}
+    {N_PROP_ACTIVE, PROP_SETGET_FUNCTION(setActive), PROP_SETGET_FUNCTION(isActive)},
+
+    // TabGroup properties
+    {N_PROP_ACTIVE_TAB, PROP_SETGET_FUNCTION(setActiveTab), PROP_SETGET_FUNCTION(getActiveTab)}
 };
 
 static SetGetProperties g_props(g_propSetGet, GET_ARRAY_SIZE(g_propSetGet));
