@@ -453,7 +453,6 @@ Handle<Value> TiObject::setPropHelper(const char* propString, Local<Value> value
         destObj = srcObj;
     }
     (destObj->*cb)(value);
-    setTiObjectToJsObject(value, destObj);
     addMember(destObj, propString);
     onSetProperty(propString, value);
     srcObj->release();

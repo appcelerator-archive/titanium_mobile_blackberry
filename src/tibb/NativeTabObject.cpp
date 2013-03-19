@@ -15,6 +15,7 @@
 #include <bb/cascades/Tab>
 
 #include "Scene.h"
+#include "TiObject.h"
 #include "Window.h"
 
 using namespace bb::cascades;
@@ -51,32 +52,6 @@ NAHANDLE NativeTabObject::getNativeHandle() const
     return tab_;
 }
 
-int NativeTabObject::setTitle(TiObject* obj)
-{
-    QString str;
-
-    int error = NativeControlObject::getString(obj, str);
-    if (!N_SUCCEEDED(error))
-    {
-        return error;
-    }
-    tab_->setTitle(str);
-    return NATIVE_ERROR_OK;
-}
-
-int NativeTabObject::setIcon(TiObject* obj)
-{
-    QString iconPath;
-    int error = NativeControlObject::getString(obj, iconPath);
-    if (!N_SUCCEEDED(error))
-    {
-        return error;
-    }
-    iconPath = getResourcePath(iconPath);
-    tab_->setImage(bb::cascades::Image(QUrl(iconPath)));
-    return NATIVE_ERROR_OK;
-}
-
 int NativeTabObject::addChildNativeObject(NativeObject* obj)
 {
     if (obj->getObjectType() == N_TYPE_WINDOW)
@@ -99,6 +74,47 @@ int NativeTabObject::openWindowOnTab(NativeObject* obj)
     return addChildNativeObject(obj);
 }
 
+int NativeTabObject::setIcon(TiObject* obj)
+{
+    QString iconPath;
+    int error = NativeControlObject::getString(obj, iconPath);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+    iconPath = getResourcePath(iconPath);
+    tab_->setImage(bb::cascades::Image(QUrl(iconPath)));
+    return NATIVE_ERROR_OK;
+}
+
+int NativeTabObject::setTitle(TiObject* obj)
+{
+    QString str;
+
+    int error = NativeControlObject::getString(obj, str);
+    if (!N_SUCCEEDED(error))
+    {
+        return error;
+    }
+    tab_->setTitle(str);
+    return NATIVE_ERROR_OK;
+}
+
+int NativeTabObject::setActive(TiObject* obj)
+{
+    if (!tabPane_.isNull() && obj->getValue()->IsTrue()) {
+        tabPane_->setActiveTab(tab_);
+    }
+    return NATIVE_ERROR_OK;
+}
+
+int NativeTabObject::isActive(TiObject* obj)
+{
+    bool active = !tabPane_.isNull() && tabPane_->activeTab() == tab_;
+    obj->setValue(Boolean::New(active));
+    return NATIVE_ERROR_OK;
+}
+
 int NativeTabObject::initialize()
 {
     tab_ = Tab::create();
@@ -113,3 +129,4 @@ int NativeTabObject::initialize()
     }
     return NATIVE_ERROR_OK;
 }
+
