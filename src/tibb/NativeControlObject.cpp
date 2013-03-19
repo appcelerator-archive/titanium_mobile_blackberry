@@ -31,8 +31,6 @@ using namespace bb::cascades;
 
 #define ZINDEX_PROPERTY_NAME            "tizindex"
 
-static const float device_resolution = 355;
-
 
 #define PROP_SETGET_FUNCTION(NAME)      prop_##NAME
 
@@ -155,6 +153,7 @@ static void onPostLayout(struct Node* node) {
     control->setMaxWidth(width);
     control->setMinHeight(height);
     control->setMaxHeight(height);
+
     bb::cascades::AbsoluteLayoutProperties* layoutProperties = static_cast<bb::cascades::AbsoluteLayoutProperties*>(control->layoutProperties());
 
     if (layoutProperties != NULL) {
@@ -176,7 +175,7 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     layoutNode_.data = this;
 
 
-    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_LIST_VIEW) {
+    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_LIST_VIEW || objType == N_TYPE_SCROLL_VIEW) {
         layoutNode_.properties.width.valueType = Fill;
         layoutNode_.properties.height.valueType = Fill;
 	}
@@ -189,6 +188,25 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     }
 
     objType_ = objType;
+
+    // calculate the pixels per inch (PPI)
+	bb::device::DisplayInfo display;
+
+	const float MMPERINCH = 25.4f;
+
+	QSize pixelSize = display.pixelSize();
+	QSizeF physicalSize = display.physicalSize();
+
+	const float physicalWidth = physicalSize.width();
+	const float physicalHeight = physicalSize.height();
+	const float pixelWidth = pixelSize.width();
+	const float pixelHeight = pixelSize.height();
+
+	// Calculate pixels density
+	const float diagonalWidth = sqrtf(physicalWidth * physicalWidth + physicalHeight * physicalHeight) / MMPERINCH;
+	const float diagonalPixels = sqrtf(pixelWidth * pixelWidth + pixelHeight * pixelHeight);
+
+	ppi_ = diagonalPixels / diagonalWidth;
 }
 
 NativeControlObject::~NativeControlObject()
@@ -328,7 +346,7 @@ int NativeControlObject::removeChildNativeObject(NativeObject* obj)
     if (getObjectType() != N_TYPE_VIEW)
     {
         /* remove not supported for children types */
-        return NativeObject::addChildNativeObject(obj);
+        return NativeObject::removeChildNativeObject(obj);
     }
     return removeChildImpl(obj);
 }
@@ -428,8 +446,7 @@ void NativeControlObject::updateLayoutProperty(ValueName name, TiObject* val) {
     property.name = name;
     property.value = *String::Utf8Value(val->getValue());
 
-    // TODO(josh): query the real DPI value from hardware.
-    populateLayoutPoperties(property, &layoutNode_.properties, device_resolution);
+    populateLayoutPoperties(property, &layoutNode_.properties, ppi_);
 
     struct Node* root = nodeRequestLayout(&layoutNode_);
     if (root) {
@@ -850,13 +867,25 @@ int NativeControlObject::getSize(TiObject* obj)
 PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
-	// auto uses defaults that have already been set
-	string str = *String::Utf8Value(obj->getValue());
-	if (str != "auto") {
-		updateLayoutProperty(Width, obj);
-	}
+    // auto uses defaults that have already been set
+    string str = *String::Utf8Value(obj->getValue());
+    if (str != "auto") {
+        updateLayoutProperty(Width, obj);
+    }
 
     return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(setContentWidth)
+int NativeControlObject::setContentWidth(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setContentHeight)
+int NativeControlObject::setContentHeight(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 PROP_SETGET(setType)
@@ -944,26 +973,6 @@ int NativeControlObject::setMapType(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-/*
-PROP_SETGET(setAnimate)
-int NativeControlObject::setAnimate(TiObject*)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
-PROP_SETGET(setRegionFit)
-int NativeControlObject::setRegionFit(TiObject*)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-
-PROP_SETGET(setUserLocation)
-int NativeControlObject::setUserLocation(TiObject*)
-{
-    return NATIVE_ERROR_NOTSUPPORTED;
-}
-*/
-
 PROP_SETGET(setAnnotations)
 int NativeControlObject::setAnnotations(TiObject*)
 {
@@ -990,12 +999,6 @@ int NativeControlObject::setLongitude(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-//PROP_SETGET(setTitle)
-//int NativeControlObject::setTitle(TiObject*)
-//{
-//    return NATIVE_ERROR_NOTSUPPORTED;
-//}
-
 PROP_SETGET(setSubtitle)
 int NativeControlObject::setSubtitle(TiObject*)
 {
@@ -1015,6 +1018,38 @@ int NativeControlObject::setRightView(TiObject*)
 }
 /////////////////////////
 
+// Media properties
+PROP_SETGET(getPlaying)
+int NativeControlObject::getPlaying(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(getPaused)
+int NativeControlObject::getPaused(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(getProgress)
+int NativeControlObject::getProgress(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(getVolume)
+int NativeControlObject::getVolume(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setVolume)
+int NativeControlObject::setVolume(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+//////////////////////////
+
 void NativeControlObject::focus() {
     if (control_) {
         control_->requestFocus();
@@ -1025,6 +1060,30 @@ void NativeControlObject::blur() {
     if (control_) {
         control_->loseFocus();
     }
+}
+
+PROP_SETGET(setActive)
+int NativeControlObject::setActive(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(isActive)
+int NativeControlObject::isActive(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setActiveTab)
+int NativeControlObject::setActiveTab(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(getActiveTab)
+int NativeControlObject::getActiveTab(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
 }
 
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
@@ -1043,9 +1102,6 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_SHOW_SCROLL_BARS, PROP_SETGET_FUNCTION(setShowScrollbars), NULL},
     {N_PROP_USER_AGENT, PROP_SETGET_FUNCTION(setUserAgent), NULL},
     {N_PROP_WILL_HANDLE_TOUCHES, PROP_SETGET_FUNCTION(setWillHandleTouches), NULL},
-
-
-
     {N_PROP_ANCHOR_POINT, PROP_SETGET_FUNCTION(setAnchorPoint), NULL},
     {N_PROP_BACKGROUND_IMAGE, PROP_SETGET_FUNCTION(setBackgroundImage), NULL},
     {N_PROP_BACKGROUND_COLOR, PROP_SETGET_FUNCTION(setBackgroundColor), NULL},
@@ -1053,6 +1109,8 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_BOTTOM, PROP_SETGET_FUNCTION(setBottom), NULL},
     {N_PROP_BUTTONNAMES, PROP_SETGET_FUNCTION(setButtonNames), NULL},
     {N_PROP_CANCEL, PROP_SETGET_FUNCTION(setCancel), NULL},
+    {N_PROP_CONTENT_HEIGHT, PROP_SETGET_FUNCTION(setContentHeight), NULL},
+    {N_PROP_CONTENT_WIDTH, PROP_SETGET_FUNCTION(setContentWidth), NULL},
     {N_PROP_COLOR, PROP_SETGET_FUNCTION(setColor), NULL},
     {N_PROP_DATA, PROP_SETGET_FUNCTION(setData), NULL},
     {N_PROP_ENABLED, PROP_SETGET_FUNCTION(setEnabled), NULL},
@@ -1098,13 +1156,23 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     // Annotation properties
     {N_PROP_LATITUDE, PROP_SETGET_FUNCTION(setLatitude), NULL},
     {N_PROP_LONGITUDE, PROP_SETGET_FUNCTION(setLongitude), NULL},
-   // {N_PROP_TITLE, PROP_SETGET_FUNCTION(setTitle), NULL},
     {N_PROP_SUBTITLE, PROP_SETGET_FUNCTION(setSubtitle), NULL},
     {N_PROP_PINCOLOR, PROP_SETGET_FUNCTION(setPincolor), NULL},
     {N_PROP_LEFTVIEW, PROP_SETGET_FUNCTION(setLeftView), NULL},
     {N_PROP_RIGHTVIEW, PROP_SETGET_FUNCTION(setRightView), NULL},
     ////////////////////////
-    {N_PROP_ZINDEX, PROP_SETGET_FUNCTION(setZIndex), PROP_SETGET_FUNCTION(getZIndex)}
+    {N_PROP_PLAYING,  NULL, PROP_SETGET_FUNCTION(getPlaying)},
+    {N_PROP_PAUSED, NULL, PROP_SETGET_FUNCTION(getPaused)},
+    {N_PROP_PROGRESS, NULL, PROP_SETGET_FUNCTION(getProgress)},
+    {N_PROP_VOLUME, PROP_SETGET_FUNCTION(setVolume),PROP_SETGET_FUNCTION(getVolume)},
+    //////////////////////
+    {N_PROP_ZINDEX, PROP_SETGET_FUNCTION(setZIndex), PROP_SETGET_FUNCTION(getZIndex)},
+
+    // Tab properties
+    {N_PROP_ACTIVE, PROP_SETGET_FUNCTION(setActive), PROP_SETGET_FUNCTION(isActive)},
+
+    // TabGroup properties
+    {N_PROP_ACTIVE_TAB, PROP_SETGET_FUNCTION(setActiveTab), PROP_SETGET_FUNCTION(getActiveTab)}
 };
 
 static SetGetProperties g_props(g_propSetGet, GET_ARRAY_SIZE(g_propSetGet));

@@ -129,6 +129,7 @@ int NativeMapViewObject::setAnnotations(TiObject* obj)
 int NativeMapViewObject::addAnnotation(NativeObject* annotation)
 {
 	annotations_.append(annotation);
+	((NativeAnnotationObject*)annotation)->mapViewObj = this;
 
 	updateMap();
 
@@ -205,7 +206,7 @@ void MapViewEventHandler::requestRender()
 void MapViewEventHandler::setRenderOkay() {
 
 	// give the map some time to come up
-	if (cnt_ >= 3) {
+	if (cnt_ >= 5) {
        mapviewObject_->renderOkay = true;
        mapviewObject_->timer->stop();
     }

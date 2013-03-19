@@ -5,15 +5,23 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "NativeObjectFactory.h"
 #include "NativeTabGroupObject.h"
+
+#include <bb/cascades/TabbedPane>
+
+#include <v8.h>
+
+#include "NativeObjectFactory.h"
+#include "NativeTabObject.h"
 #include "SceneManager.h"
 #include "TabbedScene.h"
 #include "TiCascadesApp.h"
-#include <bb/cascades/TabbedPane>
+#include "TiObject.h"
+#include "TiUITabGroup.h"
 
 using namespace bb::cascades;
 using namespace titanium;
+using namespace v8;
 
 NativeTabGroupObject::NativeTabGroupObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_TABGROUP)
@@ -71,11 +79,37 @@ int NativeTabGroupObject::addChildNativeObject(NativeObject* obj)
     {
         if (obj->getNativeHandle())
         {
-            tabGroup_->add((bb::cascades::Tab*) obj->getNativeHandle());
+            NativeTabObject* tab = static_cast<NativeTabObject*>(obj);
+            tabGroup_->add((bb::cascades::Tab*) tab->getNativeHandle());
+            tab->setTabbedPane(tabGroup_);
             return NATIVE_ERROR_OK;
         }
     }
     return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+int NativeTabGroupObject::setActiveTab(TiObject* obj)
+{
+    HandleScope scope;
+
+    Handle<Value> val = obj->getValue();
+    if (val->IsObject()) {
+        TiObject* obj = TiObject::getTiObjectFromJsObject(val);
+        if (!obj || !obj->isUIObject()) {
+            // Not the right type of object.
+            return NATIVE_ERROR_INVALID_ARG;
+        }
+        setActiveTab(obj->getNativeObject());
+    } else {
+        Local<Number> index = val->ToInteger();
+        if (index.IsEmpty()) {
+            // Not a valid number.
+            return NATIVE_ERROR_INVALID_ARG;
+        }
+        setActiveTab(index->Value());
+    }
+
+    return NATIVE_ERROR_OK;
 }
 
 int NativeTabGroupObject::setActiveTab(NativeObject* tab)
@@ -99,6 +133,17 @@ int NativeTabGroupObject::setActiveTab(int index)
         return NATIVE_ERROR_OK;
     }
     return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+int NativeTabGroupObject::getActiveTab(TiObject* obj)
+{
+    Tab* activeTab = tabGroup_->activeTab();
+    if (activeTab) {
+        TiUITabGroup* tabGroup = static_cast<TiUITabGroup*>(tiObject_);
+        TiObject* tabObj = tabGroup->getChildAt(tabGroup_->indexOf(activeTab));
+        obj->setValue(tabObj->getValue());
+    }
+    return NATIVE_ERROR_OK;
 }
 
 int NativeTabGroupObject::open()

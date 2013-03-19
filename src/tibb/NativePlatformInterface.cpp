@@ -268,3 +268,4 @@ static vector<NATIVE_PROPGET_CALLBACK> initFunctionMap()
     vect[N_PLATFORM_PROP_VERSION]                  = PROP_GETTING_FUNCTION(getVersion);
     return vect;
 }
+

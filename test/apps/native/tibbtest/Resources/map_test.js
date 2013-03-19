@@ -1,5 +1,4 @@
 
-
 var win = Titanium.UI.createWindow({orientationModes:[Ti.UI.PORTRAIT]});
 
 var mountainView = Titanium.Map.createAnnotation({
@@ -8,7 +7,7 @@ var mountainView = Titanium.Map.createAnnotation({
     title:'Appcelerator Headquarters',
     subtitle:'Mountain View, CA',
     pincolor:Ti.Map.ANNOTATION_GREEN,
-    rightView: 'images/appcelerator_small.png',
+    //rightView: 'images/appcelerator_small.png',
     leftView: 'images/appcelerator_small.png'
 });
 
@@ -18,8 +17,18 @@ var waitersOnWheels = Titanium.Map.createAnnotation({
     title:'Waiters On Wheels',
     subtitle:'Mountain View, CA',
     pincolor:Ti.Map.ANNOTATION_RED,
-    rightView: 'images/appcelerator_small.png',
+    //rightView: 'images/appcelerator_small.png',
     leftView: 'images/appcelerator_small.png'
+});
+
+var tlBeerGarden = Titanium.Map.createAnnotation({
+    latitude:37.39504,
+    longitude:-122.02937,
+    title:'TL Beer Garden',
+    subtitle:'Sunnyvale, CA',
+    pincolor:Ti.Map.ANNOTATION_PURPLE,
+    //rightView: 'images/appcelerator_small.png',
+    leftView: 'images/photo.jpg'
 });
 
 var mapview = Titanium.Map.createView({
@@ -32,6 +41,8 @@ win.add(mapview);
 // Handle click events on any annotations on this map.
 waitersOnWheels.addEventListener('click', function(evt) {
 	
+	mapview.addAnnotation(tlBeerGarden);
+	
 	if (evt.clicksource == 'leftView') {
 		Ti.API.info('Annotation ' + evt.clicksource + ', left view clicked.');
 	}
@@ -41,6 +52,5 @@ waitersOnWheels.addEventListener('click', function(evt) {
 	}
 	
 });
-
 
 win.open();

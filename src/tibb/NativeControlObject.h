@@ -74,6 +74,8 @@ public:
     virtual int setButtonNames(TiObject* obj);
     virtual int setCancel(TiObject* obj);
     virtual int setColor(TiObject* obj);
+    virtual int setContentHeight(TiObject* obj);
+    virtual int setContentWidth(TiObject* obj);
     virtual int setData(TiObject* obj);
     virtual int setDisableBounce(TiObject* obj);
     virtual int setEnabled(TiObject* obj);
@@ -131,12 +133,17 @@ public:
     virtual int setPincolor(TiObject* obj);
     virtual int setLatitude(TiObject* obj);
     virtual int setLongitude(TiObject* obj);
-    //virtual int setTitle(TiObject* obj);
     virtual int setSubtitle(TiObject* obj);
     virtual int setLeftView(TiObject* obj);
     virtual int setRightView(TiObject* obj);
     ////////////////////////
-
+     // Media properties
+    virtual int getPlaying(TiObject* obj);
+    virtual int getPaused(TiObject* obj);
+    virtual int getProgress(TiObject* obj);
+    virtual int getVolume(TiObject* obj);
+    virtual int setVolume(TiObject* obj);
+    ////////////////////////
     virtual void focus();
     virtual void blur();
     static int getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a);
@@ -152,6 +159,14 @@ public:
     static int getDataModel(TiObject* obj, QVector<QVariant>& dataModel);
     static int getDateTime(TiObject* obj, QDateTime& dt);
     virtual void updateLayout(QRectF rect);
+
+    // Tab properties
+    virtual int setActive(TiObject* obj);
+    virtual int isActive(TiObject* obj);
+
+    // TabGroup properties
+    virtual int setActiveTab(TiObject* obj);
+    virtual int getActiveTab(TiObject* obj);
 
     bb::cascades::Container* container_;
 
@@ -185,6 +200,7 @@ private:
     QRectF rect_;
     bool batchUpdating_;
     NATIVE_TYPE objType_;
+    float ppi_; // pixels per inch
 };
 
 // Event handler for Ti.UI.View

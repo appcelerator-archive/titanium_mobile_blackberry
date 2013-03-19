@@ -63,18 +63,17 @@ int NativeAnnotationObject::initialize()
 	bubbleContent->setLayoutProperties(new AbsoluteLayoutProperties());
 
     Container* innerBubbleContent = new Container();
-    innerBubbleContent->setPreferredWidth(400);
+    innerBubbleContent->setPreferredWidth(430);
     innerBubbleContent->setPreferredHeight(130);
     innerBubbleContent->setLayout(new bb::cascades::DockLayout());
-    innerBubbleContent->setRightPadding(10);
-    innerBubbleContent->setLeftPadding(10);
+    //innerBubbleContent->setRightPadding(10);
+    //innerBubbleContent->setLeftPadding(10);
 
     label_ = new Label();
     TextStyle* style = new TextStyle(SystemDefaults::TextStyles::smallText());
     style->setColor(Color::White);
     label_->textStyle()->setBase(*style);
     label_->setMultiline(true);
-    label_->setRightPadding(20);
     label_->setHorizontalAlignment(HorizontalAlignment::Center);
     label_->setVerticalAlignment(VerticalAlignment::Center);
 
@@ -214,8 +213,6 @@ int NativeAnnotationObject::setRightView(TiObject* obj)
 void NativeAnnotationObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
 	NativeControlObject::setupEvents(containerFactory);
-
-	eventHandler_ = new AnnotationObjectEventHandler(NULL, this);
 
 	TiEventContainer* click = containerFactory->createEventContainer();
 	click->setDataProperty("type", tetCLICK);

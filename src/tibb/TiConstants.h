@@ -91,6 +91,25 @@ namespace Annotation
 
 } // namespace Map
 
+namespace Media
+{
+// Media constants
+enum TI_MEDIA_CONSTANTS
+{
+	AUDIO_FILEFORMAT_MP3 = 0,
+	AUDIO_FILEFORMAT_MP4,
+	AUDIO_FILEFORMAT_WAVE,
+}; // enum TI_MEDIA_CONSTANTS
+
+namespace AudioPlayer
+{
+} // namespace AudioPlayer
+
+namespace Sound
+{
+} // namespace Sound
+
+} // namespace media
 
 namespace Platform
 {

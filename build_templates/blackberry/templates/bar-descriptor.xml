@@ -100,10 +100,10 @@
     <!--  <action>record_audio</action> -->
     <!--  <action>read_geolocation</action> -->
     <!--  <action>use_camera</action> -->
-    <!--  <action>access_internet</action> -->
-    <!--  <action>play_audio</action> -->
+    <action>access_internet</action>
+    <action>play_audio</action> 
     <!--  <action>post_notification</action> -->
-    <!--  <action>set_audio_volume</action> -->
+    <action>set_audio_volume</action>
     <!--  <action>read_device_identifying_information</action> -->
 
     <!-- Ensure that shared libraries in the package are found at run-time. -->

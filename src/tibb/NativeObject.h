@@ -39,12 +39,14 @@ enum NATIVE_TYPE
     , N_TYPE_TCPSOCKET
     , N_TYPE_UDPSOCKET
     , N_TYPE_HTTPCLIENT
+    , N_TYPE_SCROLL_VIEW
     , N_TYPE_TEXT_FIELD
     , N_TYPE_TEXT_AREA
     , N_TYPE_TOGGLEBUTTON
     , N_TYPE_VIEW
     , N_TYPE_WEBVIEW
     , N_TYPE_MAPVIEW
+    , N_TYPE_AUDIOPLAYER
     , N_TYPE_ANNOTATION
     , N_TYPE_WINDOW
     , N_TYPE_DB
@@ -54,6 +56,8 @@ enum NATIVE_TYPE
 enum NATIVE_PROP
 {
     N_PROP_UNDEFINED
+    , N_PROP_ACTIVE
+    , N_PROP_ACTIVE_TAB
     , N_PROP_ANCHOR_POINT
     , N_PROP_ANIMATED_CENTER_POINT
     , N_PROP_AUTO_LINK
@@ -82,6 +86,8 @@ enum NATIVE_PROP
     , N_PROP_CENTER
     , N_PROP_CHILDREN
     , N_PROP_COLOR
+    , N_PROP_CONTENT_HEIGHT
+    , N_PROP_CONTENT_WIDTH
     , N_PROP_DATA
     , N_PROP_ELLIPSIZE
     , N_PROP_ENABLED
@@ -143,6 +149,12 @@ enum NATIVE_PROP
     , N_PROP_SUBTITLE
     , N_PROP_LEFTVIEW
     , N_PROP_RIGHTVIEW
+    ////////////////////////
+     // Media properties
+    , N_PROP_PLAYING
+    , N_PROP_PAUSED
+    , N_PROP_PROGRESS
+    , N_PROP_VOLUME
     ////////////////////////
     //TODO: need to place alphabetically
     , N_PROP_DISABLE_BOUNCE

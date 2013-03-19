@@ -29,6 +29,10 @@ public:
     virtual bool isUIObject() const;
     virtual void setTiMappingProperties(const TiProperty* props, int propertyCount);
 
+    TiObject* getChildAt(int index) const {
+        return childControls_[index].getObject();
+    }
+
 protected:
     TiUIBase(const char* name);
     TiUIBase();
