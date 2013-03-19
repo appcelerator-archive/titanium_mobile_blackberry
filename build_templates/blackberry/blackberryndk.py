@@ -246,6 +246,8 @@ class BlackberryNDK:
 		# Copy all needed resources to assets
 		assetsDir = os.path.join(buildDir, 'assets')
 		resourcesDir = os.path.join(projectDir, 'Resources')
+		i18n = os.path.join(projectDir, 'i18n')
+		i18nAssetsDir = os.path.join(assetsDir, 'i18n')
 		blackberryResourcesDir = os.path.join(resourcesDir, 'blackberry')
 		if os.path.exists(assetsDir):
 			shutil.rmtree(assetsDir)
@@ -258,6 +260,15 @@ class BlackberryNDK:
 						shutil.copytree(fullEntry, os.path.join(assetsDir, entry))
 				else:
 					shutil.copy2(fullEntry, os.path.join(assetsDir, entry))
+
+		# Copy the i18n folder to assets
+		if os.path.exists(i18n):
+			for entry in os.listdir(i18n):
+				fullEntry = os.path.join(i18n, entry)
+				if os.path.isdir(fullEntry):
+					shutil.copytree(fullEntry, os.path.join(i18nAssetsDir, entry))
+				else:
+					shutil.copy2(fullEntry, os.path.join(i18nAssetsDir, entry))
 
 		# Copy application properties file into assets.
 		shutil.copy(os.path.join(buildDir, 'app_properties.ini'), assetsDir)

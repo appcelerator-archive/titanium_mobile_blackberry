@@ -24,7 +24,7 @@ HEADERS += \
 	./*.h \
 	TableView/BasicListItem.h \
 	TableView/ListItemData.h
-LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia
+LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata
 
 device {
 	CONFIG(release, debug|release) {
