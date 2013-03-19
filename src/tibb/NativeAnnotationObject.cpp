@@ -214,8 +214,6 @@ void NativeAnnotationObject::setupEvents(TiEventContainerFactory* containerFacto
 {
 	NativeControlObject::setupEvents(containerFactory);
 
-	eventHandler_ = new AnnotationObjectEventHandler(NULL, this);
-
 	TiEventContainer* click = containerFactory->createEventContainer();
 	click->setDataProperty("type", tetCLICK);
 	events_.insert(tetCLICK, EventPairSmartPtr(click, new AnnotationObjectEventHandler(click, this)));

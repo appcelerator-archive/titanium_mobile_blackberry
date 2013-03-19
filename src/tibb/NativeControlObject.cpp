@@ -986,12 +986,6 @@ int NativeControlObject::setLongitude(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-//PROP_SETGET(setTitle)
-//int NativeControlObject::setTitle(TiObject*)
-//{
-//    return NATIVE_ERROR_NOTSUPPORTED;
-//}
-
 PROP_SETGET(setSubtitle)
 int NativeControlObject::setSubtitle(TiObject*)
 {
@@ -1010,6 +1004,38 @@ int NativeControlObject::setRightView(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 /////////////////////////
+
+// Media properties
+PROP_SETGET(getPlaying)
+int NativeControlObject::getPlaying(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(getPaused)
+int NativeControlObject::getPaused(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(getProgress)
+int NativeControlObject::getProgress(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(getVolume)
+int NativeControlObject::getVolume(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setVolume)
+int NativeControlObject::setVolume(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+//////////////////////////
 
 void NativeControlObject::focus() {
     if (control_) {
@@ -1118,12 +1144,16 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     // Annotation properties
     {N_PROP_LATITUDE, PROP_SETGET_FUNCTION(setLatitude), NULL},
     {N_PROP_LONGITUDE, PROP_SETGET_FUNCTION(setLongitude), NULL},
-   // {N_PROP_TITLE, PROP_SETGET_FUNCTION(setTitle), NULL},
     {N_PROP_SUBTITLE, PROP_SETGET_FUNCTION(setSubtitle), NULL},
     {N_PROP_PINCOLOR, PROP_SETGET_FUNCTION(setPincolor), NULL},
     {N_PROP_LEFTVIEW, PROP_SETGET_FUNCTION(setLeftView), NULL},
     {N_PROP_RIGHTVIEW, PROP_SETGET_FUNCTION(setRightView), NULL},
     ////////////////////////
+    {N_PROP_PLAYING,  NULL, PROP_SETGET_FUNCTION(getPlaying)},
+    {N_PROP_PAUSED, NULL, PROP_SETGET_FUNCTION(getPaused)},
+    {N_PROP_PROGRESS, NULL, PROP_SETGET_FUNCTION(getProgress)},
+    {N_PROP_VOLUME, PROP_SETGET_FUNCTION(setVolume),PROP_SETGET_FUNCTION(getVolume)},
+    //////////////////////
     {N_PROP_ZINDEX, PROP_SETGET_FUNCTION(setZIndex), PROP_SETGET_FUNCTION(getZIndex)},
 
     // Tab properties

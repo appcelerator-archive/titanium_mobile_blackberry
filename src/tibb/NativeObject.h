@@ -45,6 +45,7 @@ enum NATIVE_TYPE
     , N_TYPE_VIEW
     , N_TYPE_WEBVIEW
     , N_TYPE_MAPVIEW
+    , N_TYPE_AUDIOPLAYER
     , N_TYPE_ANNOTATION
     , N_TYPE_WINDOW
     , N_TYPE_DB
@@ -145,6 +146,12 @@ enum NATIVE_PROP
     , N_PROP_SUBTITLE
     , N_PROP_LEFTVIEW
     , N_PROP_RIGHTVIEW
+    ////////////////////////
+     // Media properties
+    , N_PROP_PLAYING
+    , N_PROP_PAUSED
+    , N_PROP_PROGRESS
+    , N_PROP_VOLUME
     ////////////////////////
     //TODO: need to place alphabetically
     , N_PROP_DISABLE_BOUNCE

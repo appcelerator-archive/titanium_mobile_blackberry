@@ -315,6 +315,29 @@ const static TiProperty g_tiProperties[] =
 	},
     /////////////////////
 
+
+    // Media properties
+    {
+        "playing", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_PLAYING
+    },
+
+    {
+        "paused", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_PAUSED
+    },
+
+    {
+        "progress", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_PROGRESS
+    },
+
+    {
+        "volume", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+        N_PROP_VOLUME
+    },
+    /////////////////////
+
     {
         "willHandleTouches", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_WILL_HANDLE_TOUCHES
