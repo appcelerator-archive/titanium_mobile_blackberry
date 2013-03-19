@@ -1,7 +1,3 @@
-/*
-var player = Ti.Media.createSound({url:"sound.wav"});
-player.play();
-*/
 
 var win = Titanium.UI.createWindow({  
     title:'Audio Test',
@@ -58,6 +54,7 @@ pauseResumeButton.addEventListener('click', function() {
     }
 });
 
+/* Not implemented
 audioPlayer.addEventListener('progress',function(e) {
     Ti.API.info('Time Played: ' + Math.round(e.progress) + ' milliseconds');
 });
@@ -66,6 +63,7 @@ audioPlayer.addEventListener('change',function(e)
 {
     Ti.API.info('State: ' + e.description + ' (' + e.state + ')');
 });
+*/
 
 win.addEventListener('close',function() {
 

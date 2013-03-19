@@ -87,7 +87,14 @@ int NativeAudioPlayerObject::setUrl(TiObject* obj)
 		return error;
 	}
 
-	audioSource_ = url;
+	if (url.startsWith("www.", Qt::CaseInsensitive) || url.startsWith("http://", Qt::CaseInsensitive)) {
+		audioSource_ = url;
+	}
+	else {
+		audioSource_ = "app/native/assets/" + url; // local file
+	}
+
+
     player_->setSourceUrl(QUrl(audioSource_));
 
 	return NATIVE_ERROR_OK;

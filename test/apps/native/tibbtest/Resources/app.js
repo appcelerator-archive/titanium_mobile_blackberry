@@ -30,7 +30,8 @@ win.add(pauseResumeButton);
 
 
 var audioPlayer = Ti.Media.createAudioPlayer({ 
-    url: 'http://www.villagegeek.com/downloads/webwavs/adios.wav'
+	url: 'http://www.villagegeek.com/downloads/webwavs/adios.wav'
+	 //url: 'sounds/moo.wav'
 });
           
     
