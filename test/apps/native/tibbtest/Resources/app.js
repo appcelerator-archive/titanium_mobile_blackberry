@@ -69,7 +69,6 @@ audioPlayer.addEventListener('change',function(e)
     Ti.API.info('State: ' + e.description + ' (' + e.state + ')');
 });
 
-
 audioPlayer.addEventListener('completed',function(e)
 {
     Ti.API.info('media completed');
