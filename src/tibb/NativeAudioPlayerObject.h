@@ -45,6 +45,8 @@ public:
    	int pause();
    	int mediaRelease();
 
+   	void alwaysPrepare();
+
 protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
@@ -57,6 +59,7 @@ private:
 
     QString audioSource_;
     bb::multimedia::MediaPlayer* player_;
+    bool alwaysPrepare_;
 
     AudioPlayerObjectEventHandler* eventHandler_;
 };

@@ -1,7 +1,7 @@
 
 /*
-var player = Ti.Media.createSound({url:"sound.wav"});
-player.play();
+var audioPlayer = Ti.Media.createSound({url:'sounds/moo.wav'});
+audioPlayer.play();
 */
 
 var win = Titanium.UI.createWindow({  
@@ -67,6 +67,12 @@ audioPlayer.addEventListener('progress',function(e) {
 audioPlayer.addEventListener('change',function(e)
 {
     Ti.API.info('State: ' + e.description + ' (' + e.state + ')');
+});
+
+
+audioPlayer.addEventListener('completed',function(e)
+{
+    Ti.API.info('media completed');
 });
 
 win.addEventListener('close',function() {

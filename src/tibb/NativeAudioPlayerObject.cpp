@@ -21,7 +21,7 @@ using namespace bb::multimedia;
 
 
 NativeAudioPlayerObject::NativeAudioPlayerObject(TiObject* tiObject)
-    : NativeControlObject(tiObject, N_TYPE_AUDIOPLAYER)
+    : NativeControlObject(tiObject, N_TYPE_AUDIOPLAYER), alwaysPrepare_(false)
 {
 }
 
@@ -97,6 +97,10 @@ int NativeAudioPlayerObject::setUrl(TiObject* obj)
 
     player_->setSourceUrl(QUrl(audioSource_));
 
+    if (alwaysPrepare_) {
+    	player_->prepare();
+    }
+
 	return NATIVE_ERROR_OK;
 }
 
@@ -145,6 +149,11 @@ int NativeAudioPlayerObject::mediaRelease()
 	player_->reset();
 
 	return NATIVE_ERROR_OK;
+}
+
+void NativeAudioPlayerObject::alwaysPrepare()
+{
+	alwaysPrepare_ = true;
 }
 
 void NativeAudioPlayerObject::setupEvents(TiEventContainerFactory* containerFactory)

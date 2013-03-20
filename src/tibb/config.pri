@@ -5,10 +5,12 @@ device {
     CONFIG(debug, debug|release) {
         INCLUDEPATH +=  $$quote($$BASEDIR/..//tibb/include) \
                  $$quote(${QNX_TARGET}/../target-override/usr/include) \
+                 $$quote(${QNX_TARGET}/usr/include/bb/data) \
                  $$quote(${QNX_TARGET}/usr/include/freetype2)
 
         DEPENDPATH +=  $$quote($$BASEDIR/..//tibb/include) \
                  $$quote(${QNX_TARGET}/../target-override/usr/include) \
+                 $$quote(${QNX_TARGET}/usr/include/bb/data) \
                  $$quote(${QNX_TARGET}/usr/include/freetype2)
 
         HEADERS +=  $$quote($$BASEDIR/include/tibb.h)
@@ -18,10 +20,12 @@ device {
     CONFIG(release, debug|release) {
         INCLUDEPATH +=  $$quote($$BASEDIR/..//tibb/include) \
                  $$quote(${QNX_TARGET}/../target-override/usr/include) \
+                 $$quote(${QNX_TARGET}/usr/include/bb/data) \
                  $$quote(${QNX_TARGET}/usr/include/freetype2)
 
         DEPENDPATH +=  $$quote($$BASEDIR/..//tibb/include) \
                  $$quote(${QNX_TARGET}/../target-override/usr/include) \
+                 $$quote(${QNX_TARGET}/usr/include/bb/data) \
                  $$quote(${QNX_TARGET}/usr/include/freetype2)
 
         HEADERS +=  $$quote($$BASEDIR/include/tibb.h)
@@ -36,18 +40,22 @@ simulator {
                  $$quote("${QNX_TARGET}/usr/include/qt4/") \
                  $$quote(${QNX_TARGET}/../target-override/usr/include) \
                  $$quote("${QNX_TARGET}/usr/include/qt4") \
+                 $$quote(${QNX_TARGET}/usr/include/bb/data) \
                  $$quote("${QNX_TARGET}/usr/include/qt4/cpp/c") \
                  $$quote("${QNX_TARGET}/usr/include/qt4/cpp") \
                  $$quote("${QNX_TARGET}/usr/include/qt4/QtCore") \
+                 $$quote({QNX_TARGET}/usr/include/bb/data) \
                  $$quote("${QNX_TARGET}/usr/include/qt4/cpp/embedded")
 
         DEPENDPATH +=  $$quote($$BASEDIR/..//tibb/include) \
                  $$quote("${QNX_TARGET}/usr/include/qt4/") \
                  $$quote(${QNX_TARGET}/../target-override/usr/include) \
                  $$quote("${QNX_TARGET}/usr/include/qt4") \
+                 $$quote(${QNX_TARGET}/usr/include/bb/data) \
                  $$quote("${QNX_TARGET}/usr/include/qt4/cpp/c") \
                  $$quote("${QNX_TARGET}/usr/include/qt4/cpp") \
                  $$quote("${QNX_TARGET}/usr/include/qt4/QtCore") \
+                 $$quote({QNX_TARGET}/usr/include/bb/data) \
                  $$quote("${QNX_TARGET}/usr/include/qt4/cpp/embedded")
 
         HEADERS +=  $$quote($$BASEDIR/include/tibb.h)

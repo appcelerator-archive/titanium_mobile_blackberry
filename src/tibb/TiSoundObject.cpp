@@ -48,6 +48,7 @@ void TiSoundObject::initializeTiObject(TiObject* parentContext)
         TiUIBase::initializeTiObject(parentContext);
         NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_AUDIOPLAYER, this);
         setNativeObject(obj);
+        ((NativeAudioPlayerObject*)obj)->alwaysPrepare();
         obj->release();
     }
 }
