@@ -1,37 +1,6 @@
 Release Notes
 =============
 
-New Features in this Release (3.1.0.v20130320125153)
-----------------------------------------------------
-
-WED MAR 20, 2013 12:51:53 PM PST
-
-* Media 
-    Audio and Sound Support
-    Streaming
-    Filesystem
-* Titanium Studio Console Logging Support
-* TextArea 
-* ScrollView
-* Map Annotation
-* Tab Active Support
-* Locale Support
-
-
-Notes on Upgrading BlackBerry Golden Release for Map Annotation Support
------------------------------------------------------------------------
-
-This release has added support for Map Annotations. For developers using the Golden Release build or prior builds there are a few important steps that must be followed to make sure your application builds and runs. This only applies to the BlackBerry 10 release not the BlackBerry 10 Beta.
-
-1) Download and install the latest BlackBerry SDK/NDK from http://developer.blackberry.com/native/downloads/#blackberry10.
-
-2) Make sure to follow the instructions to upgrade the Golden Release builds. We have tested build 10.0.9.2372 but any later builds should be fine. The instructions are located at http://developer.blackberry.com/native/downloads/bb10/releasenotes_nativesdk.html. 
-
-3) Download and install the simulator that matches the build number you downloaded. A list of simulators can be found at http://developer.blackberry.com/native/downloads/bb10allsimversions/
-
-4) Edit the bbndk_env.sh file so the QNX_TARGET matched the updated build for example QNX_TARGET_VERSION=${QNX_TARGET_VERSION:=10_0_9_2372}. You can find the file at the root of the BlackBerry NDK folder. On OSX it's typically /Applications/bbndk/bbndk-env.sh, on Windows it's c://bbndk/bbndk-env.bat.
-
-
 New Features in this Release (3.1.0.v20130305173300)
 ----------------------------------------------------
 
