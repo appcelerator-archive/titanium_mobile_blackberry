@@ -88,14 +88,14 @@ int NativeAudioPlayerObject::setUrl(TiObject* obj)
 	}
 
 	if (url.startsWith("www.", Qt::CaseInsensitive) || url.startsWith("http://", Qt::CaseInsensitive)) {
-		audioSource_ = url;
+		audioSource = url;
 	}
 	else {
-		audioSource_ = "app/native/assets/" + url; // local file
+		audioSource = "app/native/assets/" + url; // local file
 	}
 
 
-    player_->setSourceUrl(QUrl(audioSource_));
+    player_->setSourceUrl(QUrl(audioSource));
 
     if (alwaysPrepare_) {
     	player_->prepare();
@@ -164,8 +164,12 @@ void NativeAudioPlayerObject::setupEvents(TiEventContainerFactory* containerFact
 	change->setDataProperty("type", tetCHANGE);
 	events_.insert(tetCHANGE, EventPairSmartPtr(change, new AudioPlayerObjectEventHandler(change, this)));
 
-	QObject::connect(player_, SIGNAL(bufferStatusChanged(bb::multimedia::BufferStatus::Type bufferState)), events_[tetCHANGE]->handler(), SLOT(changed(bb::multimedia::BufferStatus::Type bufferStatus)));
-	QObject::connect(player_, SIGNAL(playbackCompleted()), events_[tetCHANGE]->handler(), SLOT(completed()));
+	TiEventContainer* completed = containerFactory->createEventContainer();
+	change->setDataProperty("type", tetCOMPLETED);
+	events_.insert(tetCOMPLETED, EventPairSmartPtr(completed,  new AudioPlayerObjectEventHandler(completed, this)));
+
+	QObject::connect(player_, SIGNAL(bufferStatusChanged(bb::multimedia::BufferStatus::Type)), events_[tetCHANGE]->handler(), SLOT(changed(bb::multimedia::BufferStatus::Type)));
+	QObject::connect(player_, SIGNAL(playbackCompleted()), events_[tetCOMPLETED]->handler(), SLOT(completed()));
 }
 
 
@@ -185,7 +189,25 @@ void AudioPlayerObjectEventHandler::completed()
 
 void AudioPlayerObjectEventHandler::changed(bb::multimedia::BufferStatus::Type bufferStatus)
 {
-	eventContainer_->setDataProperty("description", "playing");
+	char* trackName = new char [playerObject_->audioSource.length()+8];
+	sprintf(trackName, "track: %s", playerObject_->audioSource.toStdString().c_str());
+	eventContainer_->setDataProperty("description", trackName);
+
+	switch (bufferStatus)
+	{
+		case bb::multimedia::BufferStatus::Playing:
+			eventContainer_->setDataProperty("state", "Playing");
+			break;
+		case  bb::multimedia::BufferStatus::Idle:
+			eventContainer_->setDataProperty("state", "Idle");
+			break;
+		case  bb::multimedia::BufferStatus::Buffering:
+			eventContainer_->setDataProperty("state", "Buffering");
+			break;
+		default:
+			eventContainer_->setDataProperty("state", "Unknown");
+			break;
+	}
 
 	eventContainer_->fireEvent();
 }

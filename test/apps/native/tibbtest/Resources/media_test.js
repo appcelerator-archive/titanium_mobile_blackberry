@@ -1,4 +1,9 @@
 
+/*
+var audioPlayer = Ti.Media.createSound({url:'sounds/moo.wav'});
+audioPlayer.play();
+*/
+
 var win = Titanium.UI.createWindow({  
     title:'Audio Test',
     backgroundColor:'#fff',
@@ -25,7 +30,8 @@ win.add(pauseResumeButton);
 
 
 var audioPlayer = Ti.Media.createAudioPlayer({ 
-    url: 'http://www.villagegeek.com/downloads/webwavs/adios.wav'
+	url: 'http://www.villagegeek.com/downloads/webwavs/adios.wav'
+	 //url: 'sounds/moo.wav'
 });
           
     
@@ -54,7 +60,6 @@ pauseResumeButton.addEventListener('click', function() {
     }
 });
 
-/* Not implemented
 audioPlayer.addEventListener('progress',function(e) {
     Ti.API.info('Time Played: ' + Math.round(e.progress) + ' milliseconds');
 });
@@ -63,7 +68,11 @@ audioPlayer.addEventListener('change',function(e)
 {
     Ti.API.info('State: ' + e.description + ' (' + e.state + ')');
 });
-*/
+
+audioPlayer.addEventListener('completed',function(e)
+{
+    Ti.API.info('media completed');
+});
 
 win.addEventListener('close',function() {
 

@@ -47,6 +47,8 @@ public:
 
    	void alwaysPrepare();
 
+    QString audioSource;
+
 protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
@@ -57,7 +59,6 @@ private:
     NativeAudioPlayerObject(const NativeAudioPlayerObject&);
     void operator=(const NativeAudioPlayerObject&);
 
-    QString audioSource_;
     bb::multimedia::MediaPlayer* player_;
     bool alwaysPrepare_;
 
@@ -74,7 +75,7 @@ public:
     virtual ~AudioPlayerObjectEventHandler();
 
 public slots:
-    void changed(bb::multimedia::BufferStatus::Type bufferStatus);
+    void changed(bb::multimedia::BufferStatus::Type);
     void completed();
 
 private:

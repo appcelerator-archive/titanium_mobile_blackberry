@@ -96,6 +96,7 @@ public:
     static const char* tetREADYSTATECHANGE;
     static const char* tetSTARTED;
     static const char* tetDATA;
+    static const char* tetCOMPLETED;
 
 
 protected:

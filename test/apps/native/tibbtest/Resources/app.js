@@ -60,16 +60,19 @@ pauseResumeButton.addEventListener('click', function() {
     }
 });
 
+// progress event not implemented
+/*
 audioPlayer.addEventListener('progress',function(e) {
     Ti.API.info('Time Played: ' + Math.round(e.progress) + ' milliseconds');
 });
+*/
 
 audioPlayer.addEventListener('change',function(e)
 {
     Ti.API.info('State: ' + e.description + ' (' + e.state + ')');
 });
 
-audioPlayer.addEventListener('completed',function(e)
+audioPlayer.addEventListener('completed',function()
 {
     Ti.API.info('media completed');
 });
