@@ -146,6 +146,21 @@ int NativeTabGroupObject::getActiveTab(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+int NativeTabGroupObject::getTabs(TiObject* obj)
+{
+    Local<Array> tabs = Array::New();
+    obj->setValue(tabs);
+
+    TiUITabGroup* tabGroup = static_cast<TiUITabGroup*>(tiObject_);
+    int count = tabGroup->childCount();
+    for (int i = 0; i < count; i++) {
+        TiObject* tab = tabGroup->getChildAt(i);
+        tabs->Set(i, tab->getValue());
+    }
+
+    return NATIVE_ERROR_OK;
+}
+
 int NativeTabGroupObject::open()
 {
     //Q_ASSERT(nativeObjectFactory_ != NULL);

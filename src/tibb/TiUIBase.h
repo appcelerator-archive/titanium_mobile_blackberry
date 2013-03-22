@@ -32,6 +32,9 @@ public:
     TiObject* getChildAt(int index) const {
         return childControls_[index].getObject();
     }
+    int childCount() const {
+        return childControls_.size();
+    }
 
 protected:
     TiUIBase(const char* name);

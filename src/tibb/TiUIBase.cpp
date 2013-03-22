@@ -207,6 +207,11 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+        "tabs", TI_PROP_PERMISSION_READ,
+        N_PROP_TABS
+    },
+
+    {
         "text", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_TEXT
     },
