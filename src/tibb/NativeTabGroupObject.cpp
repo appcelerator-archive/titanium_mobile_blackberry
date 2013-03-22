@@ -88,6 +88,18 @@ int NativeTabGroupObject::addChildNativeObject(NativeObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+int NativeTabGroupObject::removeChildNativeObject(NativeObject* obj)
+{
+    if (obj && obj->getObjectType() != N_TYPE_TAB) {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+
+    Tab* tab = static_cast<Tab*>(obj->getNativeHandle());
+    tabGroup_->remove(tab);
+
+    return NATIVE_ERROR_OK;
+}
+
 int NativeTabGroupObject::setActiveTab(TiObject* obj)
 {
     HandleScope scope;

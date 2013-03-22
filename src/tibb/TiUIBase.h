@@ -45,6 +45,7 @@ protected:
     virtual void onCreateStaticMembers();
     // FIXME move back to private once TiUITabGroup has been modified to not abuse it for addTab
     static Handle<Value> _add(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _remove(void* userContext, TiObject* caller, const Arguments& args);
 
     Persistent<Object> createConfig_;
     vector<ObjectEntry> childControls_;
@@ -54,7 +55,6 @@ private:
     static Handle<Value> _getValue(int propertyNumber, void* context);
     static Handle<Value> _getChildren(void* userContext);
     static Handle<Value> _hide(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> _remove(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _show(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _startLayout(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _finishLayout(void* userContext, TiObject* caller, const Arguments& args);
