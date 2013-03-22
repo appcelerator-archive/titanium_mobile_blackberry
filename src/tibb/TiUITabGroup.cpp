@@ -32,6 +32,7 @@ void TiUITabGroup::onCreateStaticMembers()
     TiUIBase::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "open", this, _open);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "addTab", this, _addTab);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "removeTab", this, _removeTab);
 }
 
 void TiUITabGroup::initializeTiObject(TiObject* parentContext)
@@ -58,6 +59,12 @@ Handle<Value> TiUITabGroup::_open(void* userContext, TiObject*, const Arguments&
 Handle<Value> TiUITabGroup::_addTab(void* userContext, TiObject* caller, const Arguments& args)
 {
     TiUIBase::_add(userContext, caller, args);
+    return Undefined();
+}
+
+Handle<Value> TiUITabGroup::_removeTab(void* userContext, TiObject* caller, const Arguments& args)
+{
+    TiUIBase::_remove(userContext, caller, args);
     return Undefined();
 }
 

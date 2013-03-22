@@ -37,6 +37,7 @@ public:
     virtual NATIVE_TYPE getObjectType() const;
     virtual NAHANDLE getNativeHandle() const;
     virtual int addChildNativeObject(NativeObject* obj);
+    virtual int removeChildNativeObject(NativeObject* obj);
     virtual int setActiveTab(TiObject* obj);
     virtual int setActiveTab(NativeObject* tab);
     virtual int setActiveTab(int index);
