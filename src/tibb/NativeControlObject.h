@@ -167,6 +167,7 @@ public:
     // TabGroup properties
     virtual int setActiveTab(TiObject* obj);
     virtual int getActiveTab(TiObject* obj);
+    virtual int getTabs(TiObject* obj);
 
     bb::cascades::Container* container_;
 
