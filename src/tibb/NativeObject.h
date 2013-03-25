@@ -47,6 +47,7 @@ enum NATIVE_TYPE
     , N_TYPE_WEBVIEW
     , N_TYPE_MAPVIEW
     , N_TYPE_AUDIOPLAYER
+    , N_TYPE_AUDIORECORDER
     , N_TYPE_ANNOTATION
     , N_TYPE_WINDOW
     , N_TYPE_DB
@@ -154,7 +155,10 @@ enum NATIVE_PROP
      // Media properties
     , N_PROP_PLAYING
     , N_PROP_PAUSED
+    , N_PROP_RECORDING
     , N_PROP_PROGRESS
+    , N_PROP_BITRATE
+    , N_PROP_REPEATMODE
     , N_PROP_VOLUME
     ////////////////////////
     //TODO: need to place alphabetically

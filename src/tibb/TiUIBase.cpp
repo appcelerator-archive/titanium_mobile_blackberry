@@ -343,9 +343,24 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
+		"recording", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+		N_PROP_RECORDING
+    },
+
+    {
         "progress", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_PROGRESS
     },
+
+    {
+	   "bitRate", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+	   N_PROP_BITRATE
+    },
+
+    {
+	   "repeatMode", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+	   N_PROP_REPEATMODE
+	},
 
     {
         "volume", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,

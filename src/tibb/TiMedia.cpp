@@ -14,6 +14,7 @@
 #include "TiGenericFunctionObject.h"
 #include "TiAudioPlayerObject.h"
 #include "TiSoundObject.h"
+#include "TiAudioRecorderObject.h"
 
 #include <string.h>
 
@@ -51,6 +52,7 @@ void TiMedia::onCreateStaticMembers()
     TiProxy::onCreateStaticMembers();
 
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createAudioPlayer", this, _createAudioPlayer);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createAudioRecorder", this, _createAudioRecorder);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSound", this, _createSound);
 
     // Todo fill in contants
@@ -86,6 +88,11 @@ Handle<Value> TiMedia::_createAudioPlayer(void* userContext, TiObject*, const Ar
 Handle<Value> TiMedia::_createSound(void* userContext, TiObject*, const Arguments& args)
 {
 	 return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiSoundObject::createSoundObject, args);
+}
+
+Handle<Value> TiMedia::_createAudioRecorder(void* userContext, TiObject*, const Arguments& args)
+{
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiAudioRecorderObject::createAudioRecorderObject, args);
 }
 
 

@@ -81,10 +81,10 @@
     <action system="true">run_native</action>    
     
     <!--  The permissions requested by your application. -->
-    <!--  <action>access_shared</action> -->
-    <!--  <action>record_audio</action> -->
-    <!--  <action>read_geolocation</action> -->
-    <!--  <action>use_camera</action> -->
+    <action>access_shared</action>
+    <action>record_audio</action>
+    <action>read_geolocation</action>
+    <action>use_camera</action>
     <action>access_internet</action>
     <action>play_audio</action>
     <!--  <action>post_notification</action> -->

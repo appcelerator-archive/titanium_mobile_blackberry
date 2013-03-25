@@ -12,6 +12,7 @@
 #include <QtCore/QObject>
 #include "TiLogger.h"
 #include <bb/multimedia/BufferStatus>
+#include <bb/multimedia/RepeatMode>
 
 namespace bb
 {
@@ -36,6 +37,8 @@ public:
 	virtual int getPlaying(TiObject* obj);
 	virtual int getProgress(TiObject* obj);
 	virtual int setUrl(TiObject* obj);
+	virtual int setBitRate(TiObject* obj);
+	virtual int setRepeatMode(TiObject* obj);
 	virtual int getVolume(TiObject* obj);
 	virtual int setVolume(TiObject* obj);
 
@@ -77,6 +80,7 @@ public:
 public slots:
     void changed(bb::multimedia::BufferStatus::Type);
     void completed();
+    void repeatModeChanged(bb::multimedia::RepeatMode::Type);
 
 private:
     TiEventContainer* eventContainer_;

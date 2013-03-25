@@ -37,6 +37,7 @@
 #include "NativeMapViewObject.h"
 #include "NativeAnnotationObject.h"
 #include "NativeAudioPlayerObject.h"
+#include "NativeAudioRecorderObject.h"
 #include "TiCascadesApp.h"
 
 #include <bb/cascades/Container>
@@ -184,6 +185,9 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
     case N_TYPE_AUDIOPLAYER:
            obj = NativeAudioPlayerObject::createAudioPlayerObject(tiObj);
            break;
+    case N_TYPE_AUDIORECORDER:
+		   obj = NativeAudioRecorderObject::createAudioRecorderObject(tiObj);
+		   break;
 
     }
     if (obj != NULL)

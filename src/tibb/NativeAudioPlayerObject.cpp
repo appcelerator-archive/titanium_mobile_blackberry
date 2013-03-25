@@ -37,7 +37,7 @@ NativeAudioPlayerObject* NativeAudioPlayerObject::createAudioPlayerObject(TiObje
 
 NATIVE_TYPE NativeAudioPlayerObject::getObjectType() const
 {
-    return N_TYPE_ANNOTATION;
+    return N_TYPE_AUDIOPLAYER;
 }
 
 int NativeAudioPlayerObject::initialize()
@@ -100,6 +100,39 @@ int NativeAudioPlayerObject::setUrl(TiObject* obj)
     if (alwaysPrepare_) {
     	player_->prepare();
     }
+
+	return NATIVE_ERROR_OK;
+}
+
+int NativeAudioPlayerObject::setBitRate(TiObject* obj)
+{
+	float bitRate;
+	int error = NativeControlObject::getFloat(obj, &bitRate);
+
+	if (error != NATIVE_ERROR_OK) {
+		return error;
+	}
+
+    player_->setSpeed(bitRate);
+
+	return NATIVE_ERROR_OK;
+}
+
+int NativeAudioPlayerObject::setRepeatMode(TiObject* obj)
+{
+	bool repeat;
+	int error = NativeControlObject::getBoolean(obj, &repeat);
+
+	if (error != NATIVE_ERROR_OK) {
+		return error;
+	}
+
+	if (repeat) {
+		player_->setRepeatMode(bb::multimedia::RepeatMode::All);
+	} else {
+		player_->setRepeatMode(bb::multimedia::RepeatMode::None);
+	}
+
 
 	return NATIVE_ERROR_OK;
 }
@@ -170,6 +203,7 @@ void NativeAudioPlayerObject::setupEvents(TiEventContainerFactory* containerFact
 
 	QObject::connect(player_, SIGNAL(bufferStatusChanged(bb::multimedia::BufferStatus::Type)), events_[tetCHANGE]->handler(), SLOT(changed(bb::multimedia::BufferStatus::Type)));
 	QObject::connect(player_, SIGNAL(playbackCompleted()), events_[tetCOMPLETED]->handler(), SLOT(completed()));
+	QObject::connect(player_, SIGNAL(repeatModeChanged(bb::multimedia::RepeatMode::Type)), events_[tetCHANGE]->handler(), SLOT(repeatModeChanged(bb::multimedia::RepeatMode::Type)));
 }
 
 
@@ -213,7 +247,16 @@ void AudioPlayerObjectEventHandler::changed(bb::multimedia::BufferStatus::Type b
 }
 
 
+void AudioPlayerObjectEventHandler::repeatModeChanged(bb::multimedia::RepeatMode::Type repeatMode)
+{
+	char* trackName = new char [playerObject_->audioSource.length()+8];
+	sprintf(trackName, "track: %s", playerObject_->audioSource.toStdString().c_str());
+	eventContainer_->setDataProperty("description", trackName);
 
+	eventContainer_->setDataProperty("state", "Repeating");
+
+	eventContainer_->fireEvent();
+}
 
 
 

@@ -141,6 +141,9 @@ public:
     virtual int getPlaying(TiObject* obj);
     virtual int getPaused(TiObject* obj);
     virtual int getProgress(TiObject* obj);
+    virtual int getRecording(TiObject* obj);
+    virtual int setBitRate(TiObject* obj);
+    virtual int setRepeatMode(TiObject* obj);
     virtual int getVolume(TiObject* obj);
     virtual int setVolume(TiObject* obj);
     ////////////////////////

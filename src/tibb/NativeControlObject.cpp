@@ -1031,8 +1031,26 @@ int NativeControlObject::getPaused(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(getRecording)
+int NativeControlObject::getRecording(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 PROP_SETGET(getProgress)
 int NativeControlObject::getProgress(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setBitRate)
+int NativeControlObject::setBitRate(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setRepeatMode)
+int NativeControlObject::setRepeatMode(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -1167,9 +1185,13 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_LEFTVIEW, PROP_SETGET_FUNCTION(setLeftView), NULL},
     {N_PROP_RIGHTVIEW, PROP_SETGET_FUNCTION(setRightView), NULL},
     ////////////////////////
+    // Media properties
     {N_PROP_PLAYING,  NULL, PROP_SETGET_FUNCTION(getPlaying)},
     {N_PROP_PAUSED, NULL, PROP_SETGET_FUNCTION(getPaused)},
     {N_PROP_PROGRESS, NULL, PROP_SETGET_FUNCTION(getProgress)},
+    {N_PROP_RECORDING, NULL, PROP_SETGET_FUNCTION(getRecording)},
+    {N_PROP_BITRATE, PROP_SETGET_FUNCTION(setBitRate), NULL},
+    {N_PROP_REPEATMODE, PROP_SETGET_FUNCTION(setRepeatMode), NULL},
     {N_PROP_VOLUME, PROP_SETGET_FUNCTION(setVolume),PROP_SETGET_FUNCTION(getVolume)},
     //////////////////////
     {N_PROP_ZINDEX, PROP_SETGET_FUNCTION(setZIndex), PROP_SETGET_FUNCTION(getZIndex)},

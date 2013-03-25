@@ -32,6 +32,7 @@ private:
     static Handle<Value> _createControlHelper(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args);
     static Handle<Value> _createAudioPlayer(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createSound(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createAudioRecorder(void* userContext, TiObject* caller, const Arguments& args);
 
     NativeObjectFactory* objectFactory_;
     NativeObject* contentContainer_;
