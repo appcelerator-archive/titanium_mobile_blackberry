@@ -35,10 +35,6 @@ private:
     TiBufferObject(const TiBufferObject&);
     TiBufferObject& operator=(const TiBufferObject&);
 
-    void setTiBufferMappingProperties(const TiProperty* props, int propertyCount);
-    static VALUE_MODIFY _valueModify(int propertyNumber, TiObject* value, void* context);
-    static Handle<Value> _getValue(int propertyNumber, void* context);
-
     static Handle<Value> _append(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _copy(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _fill(void* userContext, TiObject* caller, const Arguments& args);
