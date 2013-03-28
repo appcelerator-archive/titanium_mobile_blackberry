@@ -5,8 +5,12 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "TiObject.h"
 #include <malloc.h>
+
+#include "TiObject.h"
+#include "TiPropertyGetFunctionObject.h"
+#include "TiPropertyMapObject.h"
+#include "TiPropertySetFunctionObject.h"
 
 #define HIDDEN_TI_OBJECT_PROPERTY           "ti_"
 #define HIDDEN_TEMP_OBJECT_PROPERTY         "globalTemplate_"
@@ -432,6 +436,43 @@ void TiObject::forceSetProp(const char* propString, Local<Value> value)
     setPropHelper(propString, value, &TiObject::forceSetValue);
 }
 
+Handle<Value> TiObject::_getValue(int propertyNumber, void* context)
+{
+    TiObject* self = static_cast<TiObject*>(context);
+    NativeObject* object = self->getNativeObject();
+    TiObject value;
+    if (object != NULL)
+    {
+        object->getPropertyValue(propertyNumber, &value);
+    }
+    return value.getValue();
+}
+
+VALUE_MODIFY TiObject::_valueModify(int propertyNumber, TiObject* value, void* context)
+{
+    TiObject* self = static_cast<TiObject*>(context);
+    NativeObject* object = self->getNativeObject();
+    if (object == NULL)
+    {
+        return VALUE_MODIFY_NOT_SUPPORTED;
+    }
+    VALUE_MODIFY modify = VALUE_MODIFY_ALLOW;
+    switch (object->setPropertyValue(propertyNumber, value))
+    {
+    case NATIVE_ERROR_OK:
+        modify = VALUE_MODIFY_ALLOW;
+        break;
+    case NATIVE_ERROR_NOTSUPPORTED:
+        modify = VALUE_MODIFY_NOT_SUPPORTED;
+        break;
+    default:
+        modify = VALUE_MODIFY_INVALID;
+        break;
+    }
+    object->release();
+    return modify;
+}
+
 Handle<Value> TiObject::setPropHelper(const char* propString, Local<Value> value, SET_VALUE_CALLBACK cb)
 {
     TiObject* destObj = onLookupMember(propString);
@@ -495,8 +536,36 @@ bool TiObject::isUIObject() const
     return false;
 }
 
-void TiObject::setTiMappingProperties(const TiProperty*, int)
+void TiObject::setTiMappingProperties(const TiProperty* props, int propertyCount)
 {
+    string name;
+    char c[2];
+    c[1] = 0;
+    for (int i = 0; i < propertyCount; i++)
+    {
+        TiObject* value = TiPropertyMapObject::addProperty(this, props[i].propertyName, props[i].nativePropertyNumber,
+                          (props[i].permissions & TI_PROP_FLAG_WRITE_NO_BRIDGE) ? NULL : _valueModify,
+                          (props[i].permissions & TI_PROP_FLAG_READ_NO_BRIDGE) ? NULL : _getValue, this);
+        // For all properties that have write permissions, add a setter method, e.g., myLabel.text=<my text>; myLabel.setText(<my text>);
+        if (props[i].permissions & TI_PROP_PERMISSION_WRITE)
+        {
+            c[0] = toupper(props[i].propertyName[0]);
+            name = "set";
+            name += c;
+            name += props[i].propertyName + 1;
+            TiPropertySetFunctionObject::addPropertySetter(this, value, name.c_str());
+        }
+        // For all properties that have read permissions, add a getter method, e.g., var test=myLabel.text; var test=myLabel.getText();
+        if (props[i].permissions & TI_PROP_PERMISSION_READ)
+        {
+            c[0] = toupper(props[i].propertyName[0]);
+            name = "get";
+            name += c;
+            name += props[i].propertyName + 1;
+            TiPropertyGetFunctionObject::addPropertyGetter(this, value, name.c_str());
+        }
+        value->release();
+    }
 }
 
 TiObject* TiObject::getParentObject() const

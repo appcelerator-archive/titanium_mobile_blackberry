@@ -137,6 +137,9 @@ public:
     void forceSetProp(const char* propString, Local<Value> value);
 
 protected:
+    static VALUE_MODIFY _valueModify(int propertyNumber, TiObject* value, void* context);
+    static Handle<Value> _getValue(int propertyNumber, void* context);
+
     virtual void initializeTiObject(TiObject* parentObject);
     virtual Handle<Value> onFunctionCall(const Arguments& args);
     virtual void onCreateStaticMembers();

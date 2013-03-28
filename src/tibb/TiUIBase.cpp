@@ -9,12 +9,10 @@
 
 #include "NativeControlObject.h"
 #include "TiGenericFunctionObject.h"
-#include "TiLogger.h"
-#include "TiMessageStrings.h"
 #include "TiPropertyGetFunctionObject.h"
 #include "TiPropertyGetObject.h"
-#include "TiPropertyMapObject.h"
-#include "TiPropertySetFunctionObject.h"
+#include "TiLogger.h"
+#include "TiMessageStrings.h"
 #include "TiV8Event.h"
 #include <ctype.h>
 #include <string>
@@ -477,44 +475,6 @@ bool TiUIBase::canAddMembers() const
     return true;
 }
 
-/**
- * FIXME: This function has been duplicated in sibling classes with a modified
- * name (setTi*MappingProperties).  It should really be moved to a common parent
- * class (TiProxy) and shared amongst all classes needing it.  Also consider
- * sharing _valueModify and _getValue
- */
-void TiUIBase::setTiMappingProperties(const TiProperty* props, int propertyCount)
-{
-    string name;
-    char c[2];
-    c[1] = 0;
-    for (int i = 0; i < propertyCount; i++)
-    {
-        TiObject* value = TiPropertyMapObject::addProperty(this, props[i].propertyName, props[i].nativePropertyNumber,
-                          (props[i].permissions & TI_PROP_FLAG_WRITE_NO_BRIDGE) ? NULL : _valueModify,
-                          (props[i].permissions & TI_PROP_FLAG_READ_NO_BRIDGE) ? NULL : _getValue, this);
-        // For all properties that have write permissions, add a setter method, e.g., myLabel.text=<my text>; myLabel.setText(<my text>);
-        if (props[i].permissions & TI_PROP_PERMISSION_WRITE)
-        {
-            c[0] = toupper(props[i].propertyName[0]);
-            name = "set";
-            name += c;
-            name += props[i].propertyName + 1;
-            TiPropertySetFunctionObject::addPropertySetter(this, value, name.c_str());
-        }
-        // For all properties that have read permissions, add a getter method, e.g., var test=myLabel.text; var test=myLabel.getText();
-        if (props[i].permissions & TI_PROP_PERMISSION_READ)
-        {
-            c[0] = toupper(props[i].propertyName[0]);
-            name = "get";
-            name += c;
-            name += props[i].propertyName + 1;
-            TiPropertyGetFunctionObject::addPropertyGetter(this, value, name.c_str());
-        }
-        value->release();
-    }
-}
-
 void TiUIBase::onCreateStaticMembers()
 {
     TiProxy::onCreateStaticMembers();
@@ -531,44 +491,6 @@ void TiUIBase::onCreateStaticMembers()
     TiObject* value = TiPropertyGetObject::createGetProperty(this, "children", this, _getChildren);
     TiPropertyGetFunctionObject::addPropertyGetter(this, value, "getChildren");
     value->release();
-}
-
-Handle<Value> TiUIBase::_getValue(int propertyNumber, void* context)
-{
-
-    TiUIBase* self = (TiUIBase*) context;
-    NativeObject* object = self->getNativeObject();
-    TiObject value;
-    if (object != NULL)
-    {
-        object->getPropertyValue(propertyNumber, &value);
-    }
-    return value.getValue();
-}
-
-VALUE_MODIFY TiUIBase::_valueModify(int propertyNumber, TiObject* value, void* context)
-{
-    TiUIBase* self = (TiUIBase*) context;
-    NativeObject* object = self->getNativeObject();
-    if (object == NULL)
-    {
-        return VALUE_MODIFY_NOT_SUPPORTED;
-    }
-    VALUE_MODIFY modify = VALUE_MODIFY_ALLOW;
-    switch (object->setPropertyValue(propertyNumber, value))
-    {
-    case NATIVE_ERROR_OK:
-        modify = VALUE_MODIFY_ALLOW;
-        break;
-    case NATIVE_ERROR_NOTSUPPORTED:
-        modify = VALUE_MODIFY_NOT_SUPPORTED;
-        break;
-    default:
-        modify = VALUE_MODIFY_INVALID;
-        break;
-    }
-    object->release();
-    return modify;
 }
 
 Handle<Value> TiUIBase::_add(void* userContext, TiObject*, const Arguments& args)

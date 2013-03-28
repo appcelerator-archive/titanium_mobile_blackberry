@@ -27,7 +27,6 @@ public:
     static TiUIBase* createView(NativeObjectFactory* nativeObjectFactory);
     virtual void initializeTiObject(TiObject* parentContext);
     virtual bool isUIObject() const;
-    virtual void setTiMappingProperties(const TiProperty* props, int propertyCount);
 
     TiObject* getChildAt(int index) const {
         return childControls_[index].getObject();
@@ -51,8 +50,6 @@ protected:
     vector<ObjectEntry> childControls_;
 
 private:
-    static VALUE_MODIFY _valueModify(int propertyNumber, TiObject* value, void* context);
-    static Handle<Value> _getValue(int propertyNumber, void* context);
     static Handle<Value> _getChildren(void* userContext);
     static Handle<Value> _hide(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _show(void* userContext, TiObject* caller, const Arguments& args);
