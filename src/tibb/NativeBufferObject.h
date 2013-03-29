@@ -8,20 +8,15 @@
 #ifndef NATIVEBUFFEROBJECT_H_
 #define NATIVEBUFFEROBJECT_H_
 
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#include <v8.h>
-#pragma GCC diagnostic warning "-Wunused-parameter"
-
-#include "NativeProxyObject.h"
-#include "TiConstants.h"
 #include <QByteArray>
 
-using namespace v8;
+#include "NativeProxyObject.h"
+#include "PropertyDelegate.h"
+#include "TiConstants.h"
 
 enum NATIVE_BUFFER_PROP
 {
-    N_BUFFER_PROP_UNDEFINED
-    , N_BUFFER_PROP_BYTEORDER
+    N_BUFFER_PROP_BYTEORDER
     , N_BUFFER_PROP_LENGTH
     , N_BUFFER_PROP_TYPE
     , N_BUFFER_PROP_VALUE
@@ -38,7 +33,8 @@ class TiEventContainerFactory;
  *
  * NativeBufferObject methods
  */
-class NativeBufferObject : public NativeProxyObject
+class NativeBufferObject : public NativeProxyObject,
+                           public titanium::PropertyDelegateBase<NativeBufferObject>
 {
 public:
     static NativeBufferObject* createBuffer(TiObject* tiObject);
@@ -69,7 +65,7 @@ protected:
     virtual ~NativeBufferObject();
 
 private:
-    explicit NativeBufferObject(TiObject* tiObject) : NativeProxyObject(tiObject) {};
+    explicit NativeBufferObject(TiObject* tiObject);
     NativeBufferObject(const NativeBufferObject&);
     NativeBufferObject& operator=(const NativeBufferObject&);
 

@@ -12,74 +12,33 @@
 #include "NativeMessageStrings.h"
 #include "TiObject.h"
 
-#define PROP_SETGET_FUNCTION(NAME)      prop_##NAME
-
-#define PROP_SETGET(NAME)               static int prop_##NAME(NativeBufferObject* buffer, TiObject* obj) \
-    {\
-        return buffer->NAME(obj);\
+static NativeBufferObject::PropertyInfo properties[] = {
+    {
+        N_BUFFER_PROP_BYTEORDER,
+        &NativeBufferObject::getByteOrder,
+        &NativeBufferObject::setByteOrder
+    },
+    {
+        N_BUFFER_PROP_LENGTH,
+        &NativeBufferObject::getLength,
+        &NativeBufferObject::setLength
+    },
+    {
+        N_BUFFER_PROP_TYPE,
+        &NativeBufferObject::getType,
+        &NativeBufferObject::setType
+    },
+    {
+        N_BUFFER_PROP_VALUE,
+        &NativeBufferObject::getValue,
+        &NativeBufferObject::setValue
     }
-
-#define GET_ARRAY_SIZE(ARRAY)           (int)(sizeof(ARRAY)/sizeof(*(ARRAY)))
-
-typedef int (*NATIVE_PROPSETGET_CALLBACK)(NativeBufferObject*, TiObject*);
-
-struct NATIVE_PROPSETGET_SETTING
-{
-    NATIVE_BUFFER_PROP propNumber;
-    NATIVE_PROPSETGET_CALLBACK setter;
-    NATIVE_PROPSETGET_CALLBACK getter;
 };
 
-class SetGetBufferProperties
-{
-public:
-    SetGetBufferProperties(const NATIVE_PROPSETGET_SETTING* map, int mapEntries)
-    {
-        setters_ = new NATIVE_PROPSETGET_CALLBACK[N_BUFFER_PROP_LAST];
-        memset(setters_, 0, sizeof(NATIVE_PROPSETGET_CALLBACK) * N_BUFFER_PROP_LAST);
-        getters_ = new NATIVE_PROPSETGET_CALLBACK[N_BUFFER_PROP_LAST];
-        memset(getters_, 0, sizeof(NATIVE_PROPSETGET_CALLBACK) * N_BUFFER_PROP_LAST);
-        for (int i = 0; i < mapEntries; i++)
-        {
-            setters_[map[i].propNumber] = map[i].setter;
-            getters_[map[i].propNumber] = map[i].getter;
-        }
-    }
-    ~SetGetBufferProperties()
-    {
-        if (setters_ != NULL)
-        {
-            delete[] setters_;
-            setters_ = NULL;
-        }
-        if (getters_ != NULL)
-        {
-            delete[] getters_;
-            getters_ = NULL;
-        }
-    }
-    NATIVE_PROPSETGET_CALLBACK GetSetterCallback(size_t prop)
-    {
-        if (prop >= (std::size_t)N_BUFFER_PROP_LAST)
-        {
-            return NULL;
-        }
-        return setters_[prop];
-    }
-    NATIVE_PROPSETGET_CALLBACK GetGetterCallback(size_t prop)
-    {
-        if (prop >= (std::size_t)N_BUFFER_PROP_LAST)
-        {
-            return NULL;
-        }
-        return getters_[prop];
-    }
-private:
-    SetGetBufferProperties(const SetGetBufferProperties&);
-    SetGetBufferProperties& operator=(const SetGetBufferProperties&);
-    NATIVE_PROPSETGET_CALLBACK* setters_;
-    NATIVE_PROPSETGET_CALLBACK* getters_;
-};
+NativeBufferObject::NativeBufferObject(TiObject* object)
+  : NativeProxyObject(object)
+  , PropertyDelegateBase<NativeBufferObject>(this, properties, N_BUFFER_PROP_LAST) {
+}
 
 NativeBufferObject::~NativeBufferObject()
 {
@@ -95,14 +54,12 @@ NativeBufferObject* NativeBufferObject::createBuffer(TiObject* tiObject)
     return new NativeBufferObject(tiObject);
 }
 
-PROP_SETGET(getByteOrder)
 int NativeBufferObject::getByteOrder(TiObject* obj)
 {
     obj->setValue(Number::New(byteOrder_));
     return NATIVE_ERROR_OK;
 }
 
-PROP_SETGET(setByteOrder)
 int NativeBufferObject::setByteOrder(TiObject* /*obj*/)
 {
     /* COMMENTED OUT FOR NOW. IT IS NOT USED IN ANVIL
@@ -118,14 +75,12 @@ int NativeBufferObject::setByteOrder(TiObject* /*obj*/)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETGET(getLength)
 int NativeBufferObject::getLength(TiObject* obj)
 {
     obj->setValue(Number::New(internalData_.size()));
     return NATIVE_ERROR_OK;
 }
 
-PROP_SETGET(setLength)
 int NativeBufferObject::setLength(TiObject* obj)
 {
     int lengthValue;
@@ -146,19 +101,16 @@ int NativeBufferObject::setLength(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-PROP_SETGET(getType)
 int NativeBufferObject::getType(TiObject* /*obj*/)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETGET(setType)
 int NativeBufferObject::setType(TiObject* /*obj*/)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-PROP_SETGET(setValue)
 int NativeBufferObject::setValue(TiObject* obj)
 {
     Handle<Value> v8Value = obj->getValue();
@@ -191,7 +143,6 @@ int NativeBufferObject::setValue(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
-PROP_SETGET(getValue)
 int NativeBufferObject::getValue(TiObject* /*obj*/)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
@@ -369,34 +320,14 @@ void NativeBufferObject::replaceInternalData(const QByteArray& newArray, int off
     internalData_ = internalData_.replace(offset, length, newArray);
 }
 
-const static NATIVE_PROPSETGET_SETTING g_BufferPropSetGet[] =
-{
-    {N_BUFFER_PROP_BYTEORDER, PROP_SETGET_FUNCTION(setByteOrder), PROP_SETGET_FUNCTION(getByteOrder)},
-    {N_BUFFER_PROP_LENGTH, PROP_SETGET_FUNCTION(setLength), PROP_SETGET_FUNCTION(getLength)},
-    {N_BUFFER_PROP_TYPE, PROP_SETGET_FUNCTION(setType), PROP_SETGET_FUNCTION(getType)},
-    {N_BUFFER_PROP_VALUE, PROP_SETGET_FUNCTION(setValue), PROP_SETGET_FUNCTION(getValue)}
-};
-
-static SetGetBufferProperties g_BufferProps(g_BufferPropSetGet, GET_ARRAY_SIZE(g_BufferPropSetGet));
-
 int NativeBufferObject::setPropertyValue(size_t propertyNumber, TiObject* obj)
 {
-    NATIVE_PROPSETGET_CALLBACK cb = g_BufferProps.GetSetterCallback(propertyNumber);
-    if (cb == NULL)
-    {
-        return NATIVE_ERROR_NOTSUPPORTED;
-    }
-    return (cb)(this, obj);
+    return setProperty(propertyNumber, obj);
 }
 
 int NativeBufferObject::getPropertyValue(size_t propertyNumber, TiObject* obj)
 {
-    NATIVE_PROPSETGET_CALLBACK cb = g_BufferProps.GetGetterCallback(propertyNumber);
-    if (cb == NULL)
-    {
-        return NATIVE_ERROR_NOTSUPPORTED;
-    }
-    return (cb)(this, obj);
+    return getProperty(propertyNumber, obj);
 }
 
 void NativeBufferObject::setupEvents(TiEventContainerFactory* containerFactory)
