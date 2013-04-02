@@ -66,12 +66,13 @@ class Blackberry(object):
 		# copy bar-descriptor.xml
 		shutil.copy2(os.path.join(templates,'bar-descriptor.xml'), build_dir)
 		renderTemplate(os.path.join(build_dir,'bar-descriptor.xml'), configDescriptor)
+		
 		# copy project file
-		shutil.copy2(os.path.join(templates,'project'), os.path.join(build_dir, '.project'))
-		renderTemplate(os.path.join(build_dir,'.project'), configProject)
+		#shutil.copy2(os.path.join(templates,'project'), os.path.join(build_dir, '.project'))
+		#renderTemplate(os.path.join(build_dir,'.project'), configProject)
 
 		# import project into workspace so it can be built with mkbuild
-		self.ndk.importProject(build_dir)
+		#self.ndk.importProject(build_dir)
 
 		# TODO Mac: not sure what this is trying to accomplish
 		# create the blackberry resources
