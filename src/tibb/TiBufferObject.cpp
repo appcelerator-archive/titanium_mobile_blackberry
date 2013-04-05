@@ -7,6 +7,7 @@
 
 #include "TiBufferObject.h"
 
+#include "TiBlobObject.h"
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
 #include "TiMessageStrings.h"
@@ -83,6 +84,7 @@ void TiBufferObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "clear", this, _clear);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "toString", this, _toString);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "release", this, _release);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "toBlob", this, _toBlob);
 }
 
 Handle<Value> TiBufferObject::_append(void* userContext, TiObject* /*caller*/, const Arguments& args)
@@ -365,3 +367,22 @@ Handle<Value> TiBufferObject::_release(void* /*userContext*/, TiObject* /*caller
 {
     return ThrowException(String::New(Ti::Msg::Not_implemented));
 }
+
+Handle<Value> TiBufferObject::_toBlob(void* userContext, TiObject* caller, const Arguments& args) {
+    HandleScope scope;
+    TiBufferObject* buffer = static_cast<TiBufferObject*>(userContext);
+
+    // Create a new empty blob instance.
+    TiBlobObject* blob = TiBlobObject::createBlob(buffer->getNativeObjectFactory());
+    Handle<ObjectTemplate> templ = TiObject::getObjectTemplateFromJsObject(buffer->getValue());
+    Local<Object> proxy = templ->NewInstance();
+    blob->setValue(proxy);
+    TiObject::setTiObjectToJsObject(proxy, blob);
+
+    // Initialize the blob with the buffer's data.
+    blob->setData(static_cast<NativeBufferObject*>(buffer->getNativeObject())->data(),
+                  "application/octet-stream");
+
+    return scope.Close(proxy);
+}
+

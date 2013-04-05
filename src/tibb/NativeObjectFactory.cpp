@@ -9,6 +9,7 @@
 
 #include "NativeActivityIndicatorObject.h"
 #include "NativeAlertDialogObject.h"
+#include "NativeBlobObject.h"
 #include "NativeBufferObject.h"
 #include "NativeButtonObject.h"
 #include "NativeDateTimePickerObject.h"
@@ -79,6 +80,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 
     case N_TYPE_LOGGER:
         obj = NativeLoggerObject::getInstance();
+        break;
+
+    case N_TYPE_BLOB:
+        obj = NativeBlobObject::createBlob(tiObj);
         break;
 
     case N_TYPE_BUFFER:

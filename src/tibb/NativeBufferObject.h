@@ -52,6 +52,9 @@ public:
     void setupEvents(TiEventContainerFactory* containerFactory);
 
     void clear();
+    const QByteArray& data() const {
+        return internalData_;
+    }
     void fill(char fillByte, int offset = -1, int length = -1);
     const char* toString() const;
     int copy(NativeBufferObject* sourceBuffer, int offset, int sourceOffset = -1, int sourceLength = -1);
