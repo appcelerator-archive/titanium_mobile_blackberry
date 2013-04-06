@@ -43,7 +43,7 @@ var generateTmpName = function(suffix) {
 	return name;
 }
 
-var runCommandFromArray = function(commandArray, callback) {
+var runCommandFromArray = function(commandArray, showCommand, callback) {
 
     var len = commandArray.length;
     var command = '';
@@ -51,7 +51,9 @@ var runCommandFromArray = function(commandArray, callback) {
 		command += commandArray[i] + ' ';
 	}
 
-	console.log('[Command] :' + command);
+    if (showCommand === true) {
+		console.log('[Command] :' + command);
+	}
 
 	exec(command, function(err, stdout) {
 
@@ -118,78 +120,6 @@ var package = function(builder) {
     fs.writeFileSync(appPropsFile, builder.appProps);
 }
 
-var sleep = function(delay) {
-    var start = new Date().getTime();
-    while (new Date().getTime() < start + delay);
-}
-
-var  isAppRunning = function(ndk, deviceIP, barFile, password, callback) {
-
-	// setup the build environment and then run the ndk command
-    var srccmd;
-    var ndkcmd;
-    if (process.platform === 'win32') {
-    	srccmd = path.join(ndk, 'bbndk-env.bat');
-		ndkcmd = 'blackberry-deploy.bat';
-	} else {
-		srccmd = 'source ' + path.join(ndk, 'bbndk-env.sh');
-		ndkcmd = 'blackberry-deploy';
-	}
-
-	var command = [srccmd, '&&', ndkcmd, '-isAppRunning', '-device', deviceIP, '-package', barFile];
-
-	if (typeof password !== 'undefined') {
-		command.concat(['-password', password])
-	}
-
-	runCommandFromArray(command, function(err, stdout) { 
-		console.log('kkkkk: ' + stdout.trim());
-	   if (stdout.trim().indexOf('result::true') !== -1) {
-           callback(true);
-	   } else {
-	   	   callback(false);
-	   }
-	});
-}
-
-var printAppLog = function(ndk, deviceIP, barFile, password, callback) {
-
-	// setup the build environment and then run the ndk command
-    var srccmd;
-    var ndkcmd;
-    if (process.platform === 'win32') {
-    	srccmd = path.join(ndk, 'bbndk-env.bat');
-		ndkcmd = 'blackberry-deploy.bat';
-	} else {
-		srccmd = 'source ' + path.join(ndk, 'bbndk-env.sh');
-		ndkcmd = 'blackberry-deploy';
-	}
-
-	var hostFile = "-";
-	var deviceFile = "logs/log";
-	var command = [srccmd, '&&', ndkcmd, '-getFile', deviceFile, hostFile, '-device', deviceIP, '-package', barFile];
-
-	if (typeof password !== 'undefined') {
-		command.concat(['-password', password])
-	}
-
-	runCommandFromArray(command, function(err, stdout) {                       
-		console.log('kkkkk' + stdout.trim());
-
-		/*
-		output = subprocess.check_output(command)
-		output = output.split('\n')
-
-		for k in range (len(output)):
-			if k > self.lastLineCount:
-				print output[k]
-				self.lastLineCount = k
-	*/
-
-
-	});
-}
-
 var getAppLog = function(ndk, deviceIP, barFile, password, callback) {
 
 	// setup the build environment and then run the ndk command
@@ -211,23 +141,23 @@ var getAppLog = function(ndk, deviceIP, barFile, password, callback) {
 		command.concat(['-password', password])
 	}
 
-	runCommandFromArray(command, function(err, stdout) {                       
-		console.log('kkkkk' + stdout.trim());
+	runCommandFromArray(command, showCmd = false, function(err, stdout) {  
 
-		/*
-		output = subprocess.check_output(command)
-		output = output.split('\n')
-
-		for k in range (len(output)):
-			if k > self.lastLineCount:
-				print output[k]
-				self.lastLineCount = k
-	*/
-
+	    if (err != null) {
+	    	callback(/* if there was an error, pass it to finished */); // finished
+	    } 
+	    else {                    
+		
+			var logFile = stdout.trim().split('\n');
+			var len = logFile.length;
+	        for (i = 0; i < len; i++){
+	        	if (i > lastLineCount) {
+	        		console.log(logFile[i]);
+	        	}
+	        }       
+		}
 
 	});
-
-	console.log('shdhsiudhsiuhisuhsdiusdhidsuhsi' + deviceIP);
 }
 
 function BlackberryNDK(builder) {
@@ -284,7 +214,7 @@ function BlackberryNDK(builder) {
 				srccmd = 'source ' + path.join(ndk, 'bbndk-env.sh');
 			}
 
-			runCommandFromArray([srccmd, '&&', 'make', tiappName, cpuList, bbRoot, debug], function() {
+			runCommandFromArray([srccmd, '&&', 'make', tiappName, cpuList, bbRoot, debug], showCmd = true, function() {
 				afs.copyDirSyncRecursive(tmpPathProj, projectDir, {logger: logger.debug});
 
 				try {
@@ -400,7 +330,7 @@ function BlackberryNDK(builder) {
              
             var oldPath = process.cwd();
             process.chdir(buildDir);	
-            runCommandFromArray(command, function() {  
+            runCommandFromArray(command, showCmd = true, function() {  
 
             	if (type !== 'distribute') {                      
 
@@ -416,7 +346,7 @@ function BlackberryNDK(builder) {
 						command.concat(['-password', password])
 					}
 
-					runCommandFromArray(command, function() {  
+					runCommandFromArray(command, showCmd = true, function() {  
 						setInterval(getAppLog, 2000, ndk, deviceIP, barFile, password, finished);                     
 					});
 
@@ -431,7 +361,7 @@ function BlackberryNDK(builder) {
                     var signedBarFile = appBinaryFile + '.bar'; // path with cpu and variant
 					command = [srccmd, '&&', ndkcmd, '-storepass', builder.keystorePassword, signedBarFile];
 
-					runCommandFromArray(command, function() { 
+					runCommandFromArray(command, showCmd = true, function() { 
 
 						if (typeof builder.outputDir !== 'undefined') {
                         	fs.mkDir(signedBarFile);           
