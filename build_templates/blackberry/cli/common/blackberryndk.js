@@ -256,7 +256,7 @@ function BlackberryNDK(builder) {
         	var autoOrient = false;
         	var orientation = '';
         	if (typeof tiapp.blackberry !== 'undefined' && typeof tiapp.blackberry.orientation !== 'undefined') {
-	        	orientation = builder.tiapp.blackberry.orientation['orientation'];
+	        	orientation = builder.tiapp.blackberry['orientation'];
 	        	if (orientation === 'auto') {
 	        		autoOrient = true;
 	        	}
@@ -314,7 +314,7 @@ function BlackberryNDK(builder) {
 			// BuildID is is a 0-65535 value that identifies this package it must be incremented before bar signing 
 			var buildID = 1;
         	if (typeof tiapp.blackberry !== 'undefined' && typeof tiapp.blackberry.buildID !== 'undefined') {
-	        	buildID = builder.tiapp.blackberry.buildID['buildID'];
+	        	buildID = builder.tiapp.blackberry['buildID'];
 	        }
 
             var command = [srccmd, '&&', ndkcmd, '-package', barFile, 'bar-descriptor.xml', '-e', appBinaryFile , projectName, 
