@@ -23,7 +23,7 @@ exports.config = function (logger, config, cli) {
             'ip-address': {
                 abbr: 'A',
                 //default: '192.168.137.159',
-                desc: __('the internet address of the simulator or device'),
+                desc: __('the internet address of simulator or device target'),
                 hint: __('address')
             },
             'target': {
@@ -34,7 +34,7 @@ exports.config = function (logger, config, cli) {
             },
             'debug-token': {
                 abbr: 'D',
-                desc: __('the path to the debug token bar file'),
+                desc: __('the path to the debug token bar file when running on the device'),
                 hint: __('path')
             },
             'ndk': {
@@ -44,17 +44,17 @@ exports.config = function (logger, config, cli) {
             },
             'password': {
                 abbr: 'P',
-                desc: __('the password used on the simulator or device'),
+                desc: __('the password used when running on device'),
                 hint: __('value')
             },
             'keystore-password': {
                 abbr: 'K',
-                desc: __('the password given while registering the application signing keys'),
+                desc: __('the password given while registering the application signing keys, used only for distribute target'),
                 hint: __('value')
             },
             'output-dir': {
                 abbr: 'O',
-                desc: __('the path containing the signed bar file'),
+                desc: __('the path containing the signed bar file, used only for distribute target'),
                 hint: __('path')
             }
         }

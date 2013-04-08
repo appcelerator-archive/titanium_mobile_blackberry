@@ -20,7 +20,7 @@ exports.run = function (logger, config, cli, projectConfig) {
 		projectDir = afs.resolvePath(cli.argv['workspace-dir'], cli.argv.name);
 	if (afs.exists(templatePath)) {
 		var resPath = path.join(projectDir, 'Resources', 'blackberry');
-		templatePath = path.join(templatePath, 'Resources');
+		templatePath = path.join(templatePath, 'Resources', 'blackberry');
 		afs.copyDirSyncRecursive(templatePath, resPath, { preserve: true, logger: logger.debug });
 	}
 };
