@@ -73,7 +73,7 @@ int NativeWindowObject::setOrientationModes(TiObject* obj) {
 }
 
 int NativeWindowObject::setTitle(TiObject* obj) {
-    QString title(*String::Utf8Value(obj->getValue()));
+    QString title = QString::fromUtf8(*String::Utf8Value(obj->getValue()));
     scene_.titleBar()->setTitle(title);
     return NATIVE_ERROR_OK;
 }
