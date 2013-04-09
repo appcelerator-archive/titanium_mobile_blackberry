@@ -1268,14 +1268,10 @@ int NativeControlObject::getString(TiObject* obj, QString& str)
     {
         return NATIVE_ERROR_INVALID_ARG;
     }
-    if (!value->IsString())
-    {
-        value = obj->getValue()->ToString();
-    }
-    Handle<String> v8string = Handle<String>::Cast(value);
-    String::Utf8Value v8UtfString(v8string);
-    const char* cStr = *v8UtfString;
-    str = cStr;
+
+    Handle<String> jsString = value->ToString();
+    str = QString::fromUtf8(*String::Utf8Value(jsString));
+
     return NATIVE_ERROR_OK;
 }
 
