@@ -149,10 +149,7 @@ static void onPostLayout(struct Node* node) {
 
     float width = node->element._measuredWidth,
           height = node->element._measuredHeight;
-    control->setMinWidth(width);
-    control->setMaxWidth(width);
-    control->setMinHeight(height);
-    control->setMaxHeight(height);
+    native->resize(width, height);
 
     bb::cascades::AbsoluteLayoutProperties* layoutProperties = static_cast<bb::cascades::AbsoluteLayoutProperties*>(control->layoutProperties());
 
@@ -230,21 +227,26 @@ NAHANDLE NativeControlObject::getNativeHandle() const
 
 void NativeControlObject::updateLayout(QRectF rect)
 {
+    bool requestLayout = false;
     rect_ = rect;
 
     if (rect.width() != 0 && layoutNode_.properties.width.valueType == Defer) {
         layoutNode_.properties.width.value = rect.width();
         layoutNode_.properties.width.valueType = Fixed;
+        requestLayout = true;
     }
 
     if (rect.height() != 0 && layoutNode_.properties.height.valueType == Defer) {
         layoutNode_.properties.height.value = rect.height();
         layoutNode_.properties.height.valueType = Fixed;
+        requestLayout = true;
     }
 
-    struct Node* root = nodeRequestLayout(&layoutNode_);
-    if (root) {
-        nodeLayout(root);
+    if (requestLayout) {
+        struct Node* root = nodeRequestLayout(&layoutNode_);
+        if (root) {
+            nodeLayout(root);
+        }
     }
 }
 
@@ -437,6 +439,15 @@ int NativeControlObject::finishLayout()
         //updateViewLayout();
     }
     return NATIVE_ERROR_OK;
+}
+
+void NativeControlObject::resize(float width, float height)
+{
+    Control* control = static_cast<Control*>(getNativeHandle());
+    control->setMinWidth(width);
+    control->setMaxWidth(width);
+    control->setMinHeight(height);
+    control->setMaxHeight(height);
 }
 
 void NativeControlObject::updateLayoutProperty(ValueName name, TiObject* val) {
