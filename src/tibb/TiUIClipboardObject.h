@@ -21,10 +21,12 @@ protected:
 private:
     TiUIClipboardObject();
 
-    Handle<Value> clipboardData(const QString& type) const;
+    Handle<Value> getData(const QString& type) const;
 
     static Handle<Value> _getData(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _getText(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _hasData(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _hasText(void* userContext, TiObject* caller, const Arguments& args);
 };
 
 #endif

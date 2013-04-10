@@ -33,9 +33,11 @@ void TiUIClipboardObject::onCreateStaticMembers() {
 
     TiGenericFunctionObject::addGenericFunctionToParent(this, "getData", this, _getData);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "getText", this, _getText);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "hasData", this, _hasData);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "hasText", this, _hasText);
 }
 
-Handle<Value> TiUIClipboardObject::clipboardData(const QString& type) const {
+Handle<Value> TiUIClipboardObject::getData(const QString& type) const {
     HandleScope scope;
     Clipboard clipboard;
 
@@ -68,13 +70,30 @@ Handle<Value> TiUIClipboardObject::_getData(void* userContext, TiObject* caller,
     }
 
     Local<String> type = args[0]->ToString();
-    Handle<Value> data = self->clipboardData(TiObject::getStringFromValue(type));
+    Handle<Value> data = self->getData(TiObject::getStringFromValue(type));
 
     return scope.Close(data);
 }
 
 Handle<Value> TiUIClipboardObject::_getText(void* userContext, TiObject* caller, const Arguments& args) {
     TiUIClipboardObject* self = static_cast<TiUIClipboardObject*>(userContext);
-    return self->clipboardData("text/plain");
+    return self->getData("text/plain");
+}
+
+Handle<Value> TiUIClipboardObject::_hasData(void* userContext, TiObject* caller, const Arguments& args) {
+    HandleScope scope;
+    Clipboard clipboard;
+
+    if (args.Length() < 1) {
+        return ThrowException(String::New(Ti::Msg::Invalid_arguments));
+    }
+
+    QString type = TiObject::getStringFromValue(args[0]->ToString());
+    return clipboard.contains(type, 0) ? True() : False();
+}
+
+Handle<Value> TiUIClipboardObject::_hasText(void* userContext, TiObject* caller, const Arguments& args) {
+    Clipboard clipboard;
+    return clipboard.contains("text/plain", 0) ? True() : False();
 }
 
