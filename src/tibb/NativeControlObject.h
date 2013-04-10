@@ -62,6 +62,7 @@ public:
     virtual int addChildNativeObject(NativeObject* obj);
     virtual int removeChildNativeObject(NativeObject* obj);
     virtual int finishLayout();
+    virtual void resize(float width, float height);
     virtual int getPropertyValue(size_t propertyNumber, TiObject* obj);
     virtual int getRect(TiObject* obj);
     virtual int getSize(TiObject* obj);
