@@ -15,6 +15,7 @@
 #include "TiUIActivityIndicator.h"
 #include "TiUIAlertDialog.h"
 #include "TiUIButton.h"
+#include "TiUIClipboardObject.h"
 #include "TiUIImageView.h"
 #include "TiUILabel.h"
 #include "TiUIOptionDialog.h"
@@ -112,6 +113,8 @@ void TiUIObject::onCreateStaticMembers()
     ADD_STATIC_TI_VALUE("KEYBOARD_NUMBERS_PUNCTUATION", Integer::New(KeyboardType::NUMBERS_PUNCTUATION), this);
     ADD_STATIC_TI_VALUE("KEYBOARD_PHONE_PAD", Integer::New(KeyboardType::PHONE_PAD), this);
     ADD_STATIC_TI_VALUE("KEYBOARD_URL", Integer::New(KeyboardType::URL), this);
+
+    TiUIClipboardObject::addObjectToParent(this, objectFactory_);
 }
 
 Handle<Value> TiUIObject::_createControlHelper(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args)
