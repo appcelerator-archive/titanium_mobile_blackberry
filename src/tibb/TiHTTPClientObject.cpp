@@ -256,8 +256,13 @@ Handle<Value> TiHTTPClientObject::_open(void* userContext, TiObject* /*caller*/,
     TiHTTPClientObject* obj = (TiHTTPClientObject*) userContext;
     NativeHTTPClientObject* nhttp = (NativeHTTPClientObject*) obj->getNativeObject();
 
+    // The URL is expected to be valid and percent encoded.
+    String::AsciiValue url(args[1]);
+    QUrl encodedUrl = QUrl::fromEncoded(QByteArray::fromRawData(*url, url.length()));
+    Q_ASSERT(encodedUrl.isValid());
+
     try {
-        nhttp->open(TiObject::getStringFromValue(args[0]), TiObject::getStringFromValue(args[1]));
+        nhttp->open(TiObject::getStringFromValue(args[0]), encodedUrl);
     } catch (NativeException& ne) {
         return ThrowException(String::New(ne.what()));
     }

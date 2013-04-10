@@ -190,12 +190,19 @@ int NativeHTTPClientObject::getReadyState(TiObject* obj, void* /*userContext*/)
 PROP_SETGET(getResponseText)
 int NativeHTTPClientObject::getResponseText(TiObject* obj, void* /*userContext*/)
 {
-	if (reply_ == NULL) {
-		return NATIVE_ERROR_INVALID_ARG;
-	}
-	QByteArray byteArray = reply_->readAll();
-	QString responseData = QString::fromUtf8(byteArray.constData(), byteArray.size());
-    obj->setValue(String::New(responseData.toUtf8().constData()));
+    if (reply_ == NULL) {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+
+    if (responseData_.isEmpty()) {
+        if (reply_ == NULL) {
+            return NATIVE_ERROR_INVALID_ARG;
+        }
+        responseData_ = reply_->readAll();
+    }
+
+    obj->setValue(String::New(responseData_.constData(), responseData_.size()));
+
     return NATIVE_ERROR_OK;
 }
 
@@ -251,16 +258,16 @@ int NativeHTTPClientObject::abort()
 	return NATIVE_ERROR_OK;
 }
 
-int NativeHTTPClientObject::open(const QString& method, const QString& url)
+int NativeHTTPClientObject::open(const QString& method, const QUrl& url)
 {
-	request_.setUrl(QUrl(url));
+    request_.setUrl(url);
     method_ = N_HTTPCLIENT_METHOD_GET;
     if (method == "PUT") {
-    	method_ = N_HTTPCLIENT_METHOD_PUT;
+        method_ = N_HTTPCLIENT_METHOD_PUT;
     } else if (method == "POST") {
-    	method_ = N_HTTPCLIENT_METHOD_POST;
+        method_ = N_HTTPCLIENT_METHOD_POST;
     }
-	return NATIVE_ERROR_OK;
+        return NATIVE_ERROR_OK;
 }
 
 int NativeHTTPClientObject::send(const QString& data)
