@@ -50,3 +50,8 @@ void TiBlobObject::setData(const QByteArray& data, const QString& mimeType) {
     blob->setData(data, mimeType);
 }
 
+QByteArray TiBlobObject::data() const {
+    NativeBlobObject* blob = static_cast<NativeBlobObject*>(getNativeObject());
+    return blob->data();
+}
+
