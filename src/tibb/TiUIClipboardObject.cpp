@@ -14,6 +14,8 @@
 
 using namespace bb::system;
 
+#define MIME_TEXT_PLAIN "text/plain"
+
 TiUIClipboardObject::TiUIClipboardObject()
     : TiProxy("Clipboard") {
 }
@@ -31,6 +33,8 @@ void TiUIClipboardObject::addObjectToParent(TiObject* parent, NativeObjectFactor
 void TiUIClipboardObject::onCreateStaticMembers() {
     TiProxy::onCreateStaticMembers();
 
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "clearData", this, _clearData);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "clearText", this, _clearText);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "getData", this, _getData);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "getText", this, _getText);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "hasData", this, _hasData);
@@ -46,7 +50,7 @@ Handle<Value> TiUIClipboardObject::getData(const QString& type) const {
         return Undefined();
     }
 
-    if (type == "text/plain") {
+    if (type == MIME_TEXT_PLAIN) {
         return String::New(data.constData(), data.size());
     }
 
@@ -59,6 +63,26 @@ Handle<Value> TiUIClipboardObject::getData(const QString& type) const {
     blob->setData(data, type);
 
     return scope.Close(proxy);
+}
+
+Handle<Value> TiUIClipboardObject::_clearData(void* userContext, TiObject* caller, const Arguments& args) {
+    HandleScope scope;
+    Clipboard clipboard;
+
+    if (args.Length() == 0) {
+        clipboard.clear();
+    } else {
+        QString type = TiObject::getStringFromValue(args[0]->ToString());
+        clipboard.remove(type);
+    }
+
+    return Undefined();
+}
+
+Handle<Value> TiUIClipboardObject::_clearText(void* userContext, TiObject* caller, const Arguments& args) {
+    Clipboard clipboard;
+    clipboard.remove(MIME_TEXT_PLAIN);
+    return Undefined();
 }
 
 Handle<Value> TiUIClipboardObject::_getData(void* userContext, TiObject* caller, const Arguments& args) {
@@ -77,7 +101,7 @@ Handle<Value> TiUIClipboardObject::_getData(void* userContext, TiObject* caller,
 
 Handle<Value> TiUIClipboardObject::_getText(void* userContext, TiObject* caller, const Arguments& args) {
     TiUIClipboardObject* self = static_cast<TiUIClipboardObject*>(userContext);
-    return self->getData("text/plain");
+    return self->getData(MIME_TEXT_PLAIN);
 }
 
 Handle<Value> TiUIClipboardObject::_hasData(void* userContext, TiObject* caller, const Arguments& args) {
@@ -94,6 +118,6 @@ Handle<Value> TiUIClipboardObject::_hasData(void* userContext, TiObject* caller,
 
 Handle<Value> TiUIClipboardObject::_hasText(void* userContext, TiObject* caller, const Arguments& args) {
     Clipboard clipboard;
-    return clipboard.contains("text/plain", 0) ? True() : False();
+    return clipboard.contains(MIME_TEXT_PLAIN, 0) ? True() : False();
 }
 

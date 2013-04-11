@@ -23,6 +23,8 @@ private:
 
     Handle<Value> getData(const QString& type) const;
 
+    static Handle<Value> _clearData(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _clearText(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _getData(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _getText(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _hasData(void* userContext, TiObject* caller, const Arguments& args);
