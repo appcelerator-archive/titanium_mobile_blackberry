@@ -39,6 +39,8 @@ void TiUIClipboardObject::onCreateStaticMembers() {
     TiGenericFunctionObject::addGenericFunctionToParent(this, "getText", this, _getText);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "hasData", this, _hasData);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "hasText", this, _hasText);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "setData", this, _setData);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "setText", this, _setText);
 }
 
 Handle<Value> TiUIClipboardObject::getData(const QString& type) const {
@@ -119,5 +121,48 @@ Handle<Value> TiUIClipboardObject::_hasData(void* userContext, TiObject* caller,
 Handle<Value> TiUIClipboardObject::_hasText(void* userContext, TiObject* caller, const Arguments& args) {
     Clipboard clipboard;
     return clipboard.contains(MIME_TEXT_PLAIN, 0) ? True() : False();
+}
+
+Handle<Value> TiUIClipboardObject::_setData(void* userContext, TiObject* caller, const Arguments& args) {
+    HandleScope scope;
+    Clipboard clipboard;
+
+    if (args.Length() < 2) {
+        return ThrowException(String::New(Ti::Msg::Invalid_arguments));
+    }
+
+    Local<Value> dataValue = args[1];
+    QByteArray data;
+    if (dataValue->IsObject()) {
+        // Insert data from a blob object.
+        TiObject* object = TiObject::getTiObjectFromJsObject(dataValue);
+        if (object && strcmp(object->getName(), "Blob") == 0) {
+            data = static_cast<TiBlobObject*>(object)->data();
+        }
+    } else {
+        // Convert and insert data as a string.
+      String::Utf8Value uf8Str(dataValue);
+      data = QByteArray(*uf8Str, uf8Str.length());
+    }
+
+    QString type = TiObject::getStringFromValue(args[0]->ToString());
+    clipboard.insert(type, data);
+
+    return Undefined();
+}
+
+Handle<Value> TiUIClipboardObject::_setText(void* userContext, TiObject* caller, const Arguments& args) {
+    HandleScope scope;
+    Clipboard clipboard;
+
+    if (args.Length() < 1) {
+        return ThrowException(String::New(Ti::Msg::Invalid_arguments));
+    }
+
+    String::Utf8Value text(args[0]);
+    QByteArray data = QByteArray::fromRawData(*text, text.length());
+    clipboard.insert(MIME_TEXT_PLAIN, data);
+
+    return Undefined();
 }
 
