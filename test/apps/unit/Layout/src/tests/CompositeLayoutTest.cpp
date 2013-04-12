@@ -3,20 +3,21 @@
 #include <stdio.h>
 #include <math.h>
 #include "CUnit.h"
-#include "../ParseProperty.h"
-#include "../Element.h"
-#include "../Common.h"
-#include "../Vertical.h"
+#include "../Layout/ParseProperty.h"
+#include "../Layout/Element.h"
+#include "../Layout/Common.h"
+#include "../Layout/Composite.h"
 
-std::string _test_measure_vertical_node_fill_properties() {
+std::string _test_measure_composite_node_fill_properties() {
 	struct LayoutProperties layoutProperties;
 	layoutPropertiesInitialize(&layoutProperties);
-	struct Element* element = createElement(vertical);
-	layoutProperties.width.valueType = fill;
+	struct Element* element = new Element();
+	elementInitialize(element, Composite);
+	layoutProperties.width.valueType = Fill;
 	layoutProperties.width.value = NAN;
-	layoutProperties.height.valueType = fill;
+	layoutProperties.height.valueType = Fill;
 	layoutProperties.height.value = NAN;
-	measureNodeForVerticalLayout(layoutProperties, element);
+	measureNodeForCompositeLayout(layoutProperties, element);
 	// width height rule
 	ut_assert("error, layout width coefficient x1", (*element)._layoutCoefficients.width.x1 == 1);
 	ut_assert("error, layout width coefficient x2", (*element)._layoutCoefficients.width.x2 == 0);
@@ -37,13 +38,14 @@ std::string _test_measure_vertical_node_fill_properties() {
 	return "";
 }
 
-std::string _test_measure_vertical_node() {
+std::string _test_measure_composite_node() {
 	struct LayoutProperties layoutProperties;
 	layoutPropertiesInitialize(&layoutProperties);
-	struct Element* element = createElement(vertical);
-	layoutProperties.width = {fixed, 100};
-	layoutProperties.height = {fixed, 100};
-	measureNodeForVerticalLayout(layoutProperties, element);
+	struct Element* element = new Element();
+	elementInitialize(element, Composite);
+	layoutProperties.width = {Fixed, 100};
+	layoutProperties.height = {Fixed, 100};
+	measureNodeForCompositeLayout(layoutProperties, element);
 	// width height rule
 	ut_assert("error, layout width coefficient x1", (*element)._layoutCoefficients.width.x1 == 0);
 	ut_assert("error, layout width coefficient x2", (*element)._layoutCoefficients.width.x2 == 100);
@@ -64,23 +66,26 @@ std::string _test_measure_vertical_node() {
 	return "";
 }
 
-std::string _test_vertical_layout() {
+std::string _test_composite_layout() {
 	struct LayoutProperties layoutProperties;
 	layoutPropertiesInitialize(&layoutProperties);
-	struct Element* e1 = createElement(composite); // Device - top level window
-	layoutProperties.width.valueType = fill;
+	struct Element* e1 = new Element();
+	elementInitialize(e1, Composite); // Device - top level window
+	layoutProperties.width.valueType = Fill;
 	layoutProperties.width.value = NAN;
-	layoutProperties.height.valueType = fill;
+	layoutProperties.height.valueType = Fill;
 	layoutProperties.height.value = NAN;
-	struct Element* e2 = createElement(composite);
-	measureNodeForVerticalLayout(layoutProperties, e2);
-	layoutProperties.width = {fixed, 100};
-	layoutProperties.height = {fixed, 100};
-	struct Element* e3 = createElement(composite);
-	measureNodeForVerticalLayout(layoutProperties, e3);
+	struct Element* e2 = new Element();
+	elementInitialize(e2, Composite);
+	measureNodeForCompositeLayout(layoutProperties, e2);
+	layoutProperties.width = {Fixed, 100};
+	layoutProperties.height = {Fixed, 100};
+	struct Element* e3 = new Element();
+	elementInitialize(e3, Composite);
+	measureNodeForCompositeLayout(layoutProperties, e3);
 	addChildElement(e1, e2);
 	addChildElement(e2, e3);
-	doVerticalLayout((*e1)._children, 449, 662, false, false);
+	doCompositeLayout((*e1)._children, 449, 662, false, false);
 	ut_assert("error, absolute position top e2", (*e3)._measuredTop == 281);
 	ut_assert("error, absolute position left e2", (*e3)._measuredLeft == 174.5);
 	ut_assert("error, absolute width e2", (*e3)._measuredWidth == 100);
@@ -92,9 +97,9 @@ std::string _test_vertical_layout() {
 	return "";
 }
 
-std::string run_all_vertical_layout_tests() {
-	//ut_run_test(_test_measure_vertical_node_fill_properties);
-	//ut_run_test(_test_measure_vertical_node);
-	//ut_run_test(_test_vertical_layout);
+std::string run_all_composite_layout_tests() {
+	ut_run_test(_test_measure_composite_node_fill_properties);
+	ut_run_test(_test_measure_composite_node);
+	ut_run_test(_test_composite_layout);
 	return "";
 }

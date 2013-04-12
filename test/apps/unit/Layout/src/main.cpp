@@ -22,6 +22,7 @@ int main(int argc, char** argv)
 	 else {
 		 printf("ALL COMPOSITE LAYOUT TESTS PASSED\n");
 	 }
+
 	 printf("Tests run: %d\n", tests_run);
 
 	 result = run_all_horizontal_layout_tests();
@@ -33,6 +34,7 @@ int main(int argc, char** argv)
 	 }
 	 printf("Tests run: %d\n", tests_run);
 
+	 /*
 	 result = run_all_vertical_layout_tests();
 	 if (!result.empty()) {
 		 printf("%s\n", result.c_str());
@@ -40,7 +42,9 @@ int main(int argc, char** argv)
 	 else {
 		 printf("ALL VERTICAL LAYOUT TESTS PASSED\n");
 	 }
+
 	 printf("Tests run: %d\n", tests_run);
+	 */
 
     return 0;
 }
