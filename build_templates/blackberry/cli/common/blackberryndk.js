@@ -332,7 +332,7 @@ function BlackberryNDK(builder) {
 			
 			// BuildID is is a 0-65535 value that identifies this package it must be incremented before bar signing 
 			var buildID = 1;
-        	if (typeof tiapp.blackberry !== 'undefined' && typeof tiapp.blackberry.buildID !== 'undefined') {
+        	if (typeof builder.tiapp.blackberry['build-id'] !== 'undefined') {
 	        	buildID = builder.tiapp.blackberry['build-id'];
 	        }
 
@@ -383,7 +383,8 @@ function BlackberryNDK(builder) {
 
 						if (typeof builder.outputDir !== 'undefined') {
                         	fs.mkdir(builder.outputDir); 
-                        	fs.createReadStream(path.join(barFile)).pipe(fs.createWriteStream(path.join(builder.outputDir, projectName + '.bar')));						
+                        	barFile = path.join(buildDir, cpu, variant, projectName + '.bar'); 
+                        	fs.createReadStream(barFile).pipe(fs.createWriteStream(path.join(builder.outputDir, projectName + '.bar')));						
 						}      
 
 						process.chdir(oldPath);
