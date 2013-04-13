@@ -332,7 +332,7 @@ function BlackberryNDK(builder) {
 			
 			// BuildID is is a 0-65535 value that identifies this package it must be incremented before bar signing 
 			var buildID = 1;
-        	if (typeof builder.tiapp.blackberry['build-id'] !== 'undefined') {
+        	if (typeof tiapp.blackberry !== 'undefined' && typeof builder.tiapp.blackberry['build-id'] !== 'undefined') {
 	        	buildID = builder.tiapp.blackberry['build-id'];
 	        }
 
