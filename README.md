@@ -117,7 +117,7 @@ The older Python CLI described above will still work, but as of 3.2 release the 
 
 		titanium build --platform blackberry -T distribute --keystore-password STORE_PASSWORD --output-dir PATH_TO_SIGNED_BAR_FILE
 
-The tiapp.xml configuration file has been extended to make it easier to edit applications settings, and the buildID that had previously be updated in the Ti.Manifest file is now updated through tiapp.xml. Below is sample of the BlackBerry extensions.
+The tiapp.xml configuration file has been extended to make it easier to edit applications settings, and the buildID that had previously been updated in the Ti.Manifest file is now updated through tiapp.xml. Below is sample of the BlackBerry extensions.
 
 		 <blackberry>
 		    <orientation>auto</orientation>
