@@ -92,7 +92,7 @@ Command Line Interface (CLI)
 
 		PATH_TO_PLATFORM_SDK/blackberry/builder.py run -t device -d PATH_TO_PROJECT -p PATH_TO_BB_NDK --ip_address=DEVICE_IP --device_password=DEVICE_PASSWORD --debug_token PATH_TO_DEBUG_TOKEN/debugtoken.bar 
 
-- Build a release bar file and sign it so it can be published to 'App World' or deployed to device:
+- Build a release bar file and sign it so it can be published to 'BlackBerry World' or deployed to device:
 
 		PATH_TO_PLATFORM_SDK/blackberry/builder.py" run -t distribute -d PATH_TO_PROJECT -p PATH_TO_BB_NDK --store_password STORE_PASSWORD --output_dir PATH_TO_SIGNED_BAR_FILE
 
@@ -113,7 +113,7 @@ The older Python CLI described above will still work, but as of 3.2 release the 
 
 		titanium build --platform blackberry -T device -A DEVICE_IP --debug-token PATH_TO_DEBUG_TOKEN/debugtoken.bar --password DEVICE_PASSWORD
 
-- To build for BlackBerry World:
+- Build a release bar file and sign it so it can be published to 'BlackBerry World' or deployed to device:
 
 		titanium build --platform blackberry -T distribute --keystore-password STORE_PASSWORD --output-dir PATH_TO_SIGNED_BAR_FILE
 
