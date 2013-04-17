@@ -70,9 +70,7 @@ How to Create Titanium Applications using the BlackBerry SDK
 3. The log files are located at /accounts/1000/appdata/<your app id>/logs
 4. You can use tail -f to stream log updates. Note you will need to re-start tail between application runs. 
 
-6) The easiest way to target running on a device is to use Titanium Studio but you can also use command-line utilities to do the same activities as in Titanium Studio.
-
-- Setup the BlackBerry 10 environment for code signing:
+6) If you want to run your application on a device or distribute to BlackBerry World you must setup :wqthe BlackBerry 10 environment for code signing:
 
 1. Register for a set of signing keys at https://www.blackberry.com/SignedKeys/codesigning.html (note the signing pin number)
 2. After receiving the signing certs put them somewhere locally.
@@ -80,6 +78,8 @@ How to Create Titanium Applications using the BlackBerry SDK
 4. From a command window run "./blackberry-signer -register -csjpin SIGNING_PIN -storepass STORAGE_PASSWORD PATH_TO_RDK_KEYS.csj PATH_TO_PBDT_KEYS.csj"
 5. From a command window run "./blackberry-debugtokenrequest -storepass STORE_PASSWORD -devicepin DEVICE_PIN debugtoken.bar"
 6. From a command window run "./blackberry-deploy -installDebugToken PATH_TO_DEBUG_TOKEN/debugtoken.bar -device DEVICE_IP  -password DEVICE_PASSWORD
+
+7) The easiest way to target running applications is to use Titanium Studio but you can also use command-line utilities to do the same activities as in Studio.
 
 Command Line Interface (CLI)
 -----------------------------
