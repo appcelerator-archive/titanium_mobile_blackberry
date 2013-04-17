@@ -23,7 +23,7 @@ exports.config = function (logger, config, cli) {
             'ip-address': {
                 abbr: 'A',
                 //default: '192.168.137.159',
-                desc: __('the internet address of simulator or device target'),
+                desc: __('the internet address of the simulator or device'),
                 hint: __('address')
             },
             'target': {
@@ -34,7 +34,7 @@ exports.config = function (logger, config, cli) {
             },
             'debug-token': {
                 abbr: 'D',
-                desc: __('the path to the debug token bar file when running on the device'),
+                desc: __('the path to the debug token bar file'),
                 hint: __('path')
             },
             'ndk': {
@@ -44,17 +44,17 @@ exports.config = function (logger, config, cli) {
             },
             'password': {
                 abbr: 'P',
-                desc: __('the password used when running on device'),
+                desc: __('the password used on the simulator or device'),
                 hint: __('value')
             },
             'keystore-password': {
                 abbr: 'K',
-                desc: __('the password given while registering the application signing keys, used only for distribute target'),
+                desc: __('the password given while registering the application signing keys'),
                 hint: __('value')
             },
             'output-dir': {
                 abbr: 'O',
-                desc: __('the path containing the signed bar file, used only for distribute target'),
+                desc: __('the path containing the signed bar file'),
                 hint: __('path')
             }
         }
@@ -124,11 +124,19 @@ function build(logger, config, cli, finished) {
                      'distribute': ['o.le-v7', 'arm']};
     this.ndk = cli.argv['ndk'];
 
-    var bbndk = new BlackBerryNDK(this);
+    cli.fireHook('build.pre.compile', this, function (e) {
+        // Make sure we have an app.js. This used to be validated in validate(), but since plugins like
+        // Alloy generate an app.js, it may not have existed during validate(), but should exist now
+        // that build.pre.compile was fired.
+        ti.validateAppJsExists(this.projectDir, this.logger);
 
-    var projectBuildPath = path.join(this.projectDir, 'build', 'blackberry');
-    // permission errors can be thrown here if the projectDir folder is private
-    afs.copyDirSyncRecursive(path.join(this.titaniumBBSdkPath, 'tibbapp'), projectBuildPath, { preserve: true, logger: logger.debug });
 
-    bbndk.build(finished);
+        var bbndk = new BlackBerryNDK(this);
+
+        var projectBuildPath = path.join(this.projectDir, 'build', 'blackberry');
+        // permission errors can be thrown here if the projectDir folder is private
+        afs.copyDirSyncRecursive(path.join(this.titaniumBBSdkPath, 'tibbapp'), projectBuildPath, { preserve: true, logger: logger.debug });
+
+        bbndk.build(finished);
+    }.bind(this));
 }
