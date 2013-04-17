@@ -19,16 +19,20 @@ Notes on Using new CLI
 The older Python CLI will still work as previously, but BlackBerry now supports the newer CLI that the iOS platform uses. Below are some of the more common build commands.
 
 To create a project:
-titanium create -p blackberry --id YOUR_APP_ID -n PROJECT_NAME -t app
+
+		titanium create -p blackberry --id YOUR_APP_ID -n PROJECT_NAME -t app
 
 To build and deploy to simulator:
-titanium build --platform blackberry -T simulator -A DEVICE_IP
+
+		titanium build --platform blackberry -T simulator -A DEVICE_IP
 
 To build and deploy to device:
-titanium build --platform blackberry -T device -A DEVICE_IP --debug-token PATH_TO_DEBUG_TOKEN/debugtoken.bar --password DEVICE_PASSWORD
+
+		titanium build --platform blackberry -T device -A DEVICE_IP --debug-token PATH_TO_DEBUG_TOKEN/debugtoken.bar --password DEVICE_PASSWORD
 
 To build for BlackBerry World:
-ti build --platform blackberry -T distribute --keystore-password STORE_PASSWORD --output-dir PATH_TO_SIGNED_BAR_FILE
+
+		titanium build --platform blackberry -T distribute --keystore-password STORE_PASSWORD --output-dir PATH_TO_SIGNED_BAR_FILE
 
 The tiapp.xml configuration file has been extended to make it easier to edit applications settings, and the buildID that had previously be updated in the Ti.Manifest file is now updated through tiapp.xml. Below is sample of the BlackBerry extensions.
 
