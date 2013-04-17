@@ -32,6 +32,9 @@ public:
         data_ = data;
         mimeType_ = mimeType;
     }
+    QByteArray data() const {
+        return data_;
+    }
 
     int setPropertyValue(size_t propertyNumber, TiObject* obj);
     int getPropertyValue(size_t propertyNumber, TiObject* obj);

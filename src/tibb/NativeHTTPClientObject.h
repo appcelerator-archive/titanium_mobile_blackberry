@@ -8,9 +8,11 @@
 #ifndef NATIVEHTTPCLIENTOBJECT_H_
 #define NATIVEHTTPCLIENTOBJECT_H_
 
+#include <QByteArray>
+#include <QObject>
+#include <QNetworkReply>
+
 #include "NativeProxyObject.h"
-#include <QtCore/QObject>
-#include <QtNetwork/QNetworkReply>
 #include "TiConstants.h"
 #include "TiV8Event.h"
 #include "TiHTTPClientObject.h"
@@ -91,7 +93,7 @@ public:
 
     // HTTPClient methods
     int abort();
-    int open(const QString& method, const QString& url);
+    int open(const QString& method, const QUrl& url);
     int send(const QString& data);
     int clearCookies(const QString& host);
     int setRequestHeader(const QString& header, const QString& value);
@@ -111,6 +113,7 @@ private:
     QNetworkReply* reply_;
     QNetworkAccessManager networkAccessManager_;
     HTTPClientEventHandler* eventHandler_;
+    QByteArray responseData_;
 };
 
 // Event handler for Ti.Network.HTTPClient

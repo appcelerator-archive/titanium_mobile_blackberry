@@ -56,7 +56,7 @@ int NativeBlobObject::getMIMEType(TiObject* value) {
 
 int NativeBlobObject::getText(TiObject* value) {
     // Assume the data is encoded using ASCII or UTF-8.
-    value->setValue(String::New(data_.constData()));
+    value->setValue(String::New(data_.constData(), data_.size()));
     return NATIVE_ERROR_OK;
 }
 

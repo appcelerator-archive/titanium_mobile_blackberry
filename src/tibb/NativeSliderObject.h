@@ -32,6 +32,7 @@ public:
     virtual ~NativeSliderObject();
     virtual NATIVE_TYPE getObjectType() const;
     virtual int initialize();
+    virtual void resize(float width, float height);
     virtual int setMax(TiObject* obj);
     virtual int setMin(TiObject* obj);
     virtual int setValue(TiObject* obj);

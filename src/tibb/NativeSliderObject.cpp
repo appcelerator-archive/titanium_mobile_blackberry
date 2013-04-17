@@ -37,6 +37,17 @@ int NativeSliderObject::initialize()
     return NATIVE_ERROR_OK;
 }
 
+void NativeSliderObject::resize(float width, float height)
+{
+    NativeControlObject::resize(width, height);
+
+    // We must explicitly set the slider's width, otherwise
+    // it will not size to fit within its container.
+    // Don't bother setting height since Slider does not support it.
+    slider_->setMinWidth(width);
+    slider_->setMaxWidth(height);
+}
+
 int NativeSliderObject::setMax(TiObject* obj)
 {
     float value;
