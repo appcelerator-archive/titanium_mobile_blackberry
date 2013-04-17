@@ -49,7 +49,7 @@ var runCommandFromArray = function(commandArray, showCommand, callback) {
     var len = commandArray.length;
     var command = '';
 	for (i = 0; i < len; i++) {
-		command += commandArray[i] + ' ';
+		command += commandArray[i]  + ' ';
 	}
 
     if (showCommand === true) {
@@ -324,8 +324,8 @@ function BlackberryNDK(builder) {
 			var variant = builder.type2variantCpu[builder.target][0];
         	var cpu = builder.type2variantCpu[builder.target][1];
         	var projectName = builder.projectName;
-        	var barFile = path.join(buildDir, cpu, variant, projectName + '.bar');
-        	var appBinaryFile = path.join(buildDir, cpu, variant, projectName);
+        	var barFile = '"' + path.join(buildDir, cpu, variant, projectName + '.bar') + '"';
+        	var appBinaryFile = '"' + path.join(buildDir, cpu, variant, projectName) + '"';
         	var type = builder.target;
         	var password = builder.password;
         	var debugToken = builder.debugToken;
