@@ -81,7 +81,7 @@ How to Create Titanium Applications using the BlackBerry SDK
 5. From a command window run "./blackberry-debugtokenrequest -storepass STORE_PASSWORD -devicepin DEVICE_PIN debugtoken.bar"
 6. From a command window run "./blackberry-deploy -installDebugToken PATH_TO_DEBUG_TOKEN/debugtoken.bar -device DEVICE_IP  -password DEVICE_PASSWORD
 
- Command Line Interface (CLI)
+Command Line Interface (CLI)
 -----------------------------
 
 - Run the application on the BlackBerry 10 simulator:
