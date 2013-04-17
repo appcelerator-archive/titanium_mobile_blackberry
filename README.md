@@ -11,7 +11,12 @@ Current Status
 Release Notes
 -------------
 
-Notes: Currently the platform is in it's early stage of development and  missing many of the Titanium APIs. Please work closely with the BB team to get the missing APIs available for your application. The supported platforms for development are Mac 10.7 and greater and Windows7/8.
+The Beta release is being made available to encourage developers to start building new applications and port existing Titanium applications to the new BlackBerry 10 Platform. 
+
+In the last few months BlackBerry released its new operating system, BlackBerry 10 as well as the first BlackBerry 10 phone, the Z10. The phone has garnered critical praise for its technical chops, with a fast OS and well-integrated user interface. If you want to try out the Titanium BlackBerry beta but don't have access to a Z10, the simulator that ships with the BlackBerry 10 Native SDK is easy to use and represents the phone nicely.
+
+In this beta release we believe there are the majority of features to get you started, including Alloy support, MapView, WebView, Database, Localization Support, and much, much more. 
+
 
 The latest release and API status notes are at [Release Notes](https://github.com/appcelerator/titanium_mobile_blackberry/blob/master/CHANGELOG.md).
 
@@ -36,7 +41,7 @@ How to get Started with Titanium BlackBerry Development
 
 1) Download and install VMware Fusion for Mac and if doing development on Microsoft Windows VMware Player. This is for the BlackBerry 10 simulator. We have tested using the most recent version 5.0.0.
 
-2) From the BlackBerry developer site download and install the BlackBerry 10 Native SDK. The site is located at http://developer.blackberry.com/native/downloads/ . 
+2) From the BlackBerry developer site download and install the BlackBerry 10 Native SDK. The site is located at http://developer.blackberry.com/native/downloads/. 
 
 3) From the BlackBerry developer site download and install the BlackBerry 10 Dev Alpha Simulator. The site is located at http://developer.blackberry.com/native/downloads/ (scroll a bit down the page).
 
@@ -79,15 +84,53 @@ How to Create Titanium Applications using the BlackBerry SDK
 
 - Run the application on the BlackBerry 10 simulator:
 
-PATH_TO_PLATFORM_SDK/blackberry/builder.py run -t simulator -d PATH_TO_PROJECT -p PATH_TO_BB_NDK --ip_address=SIMULATOR_IP --device_password=DEVICE_PASSWORD
+		PATH_TO_PLATFORM_SDK/blackberry/builder.py run -t simulator -d PATH_TO_PROJECT -p PATH_TO_BB_NDK --ip_address=SIMULATOR_IP --device_password=device_password
 
 - Run on a development device:
 
-PATH_TO_PLATFORM_SDK/blackberry/builder.py run -t device -d PATH_TO_PROJECT -p PATH_TO_BB_NDK --ip_address=DEVICE_IP --device_password=DEVICE_PASSWORD --debug_token PATH_TO_DEBUG_TOKEN/debugtoken.bar 
+		PATH_TO_PLATFORM_SDK/blackberry/builder.py run -t device -d PATH_TO_PROJECT -p PATH_TO_BB_NDK --ip_address=DEVICE_IP --device_password=DEVICE_PASSWORD --debug_token PATH_TO_DEBUG_TOKEN/debugtoken.bar 
 
 - Build a release bar file and sign it so it can be published to 'App World' or deployed to device:
 
-PATH_TO_PLATFORM_SDK/blackberry/builder.py" run -t distribute -d PATH_TO_PROJECT -p PATH_TO_BB_NDK --store_password STORE_PASSWORD --output_dir PATH_TO_SIGNED_BAR_FILE
+		PATH_TO_PLATFORM_SDK/blackberry/builder.py" run -t distribute -d PATH_TO_PROJECT -p PATH_TO_BB_NDK --store_password STORE_PASSWORD --output_dir PATH_TO_SIGNED_BAR_FILE
+
+Notes on New CLI
+----------------------
+
+The older Python CLI as described above will still work, but as of 3.2 release the BlackBerry SDK now supports the newer Node.js CLI. Below are some of the more common build commands. A more complete description can be found at http://docs.appcelerator.com/titanium/latest/#!/guide/Titanium_Command-Line_Interface_Reference.
+
+- To create a project:
+
+		titanium create -p blackberry --id YOUR_APP_ID -n PROJECT_NAME -t app
+
+- Run the application on the BlackBerry 10 simulator:
+
+		titanium build --platform blackberry -T simulator -A DEVICE_IP
+
+- Run on a development device:
+
+		titanium build --platform blackberry -T device -A DEVICE_IP --debug-token PATH_TO_DEBUG_TOKEN/debugtoken.bar --password DEVICE_PASSWORD
+
+To build for BlackBerry World:
+
+		titanium build --platform blackberry -T distribute --keystore-password STORE_PASSWORD --output-dir PATH_TO_SIGNED_BAR_FILE
+
+The tiapp.xml configuration file has been extended to make it easier to edit applications settings, and the buildID that had previously be updated in the Ti.Manifest file is now updated through tiapp.xml. Below is sample of the BlackBerry extensions.
+
+		 <blackberry>
+		    <orientation>auto</orientation>
+		    <build-id>1</build-id>
+		    <permissions>
+		        <permission>access_shared</permission>
+		        <permission>record_audio</permission>
+		        <permission>use_camera</permission>
+		        <permission>access_internet</permission>
+		        <permission>play_audio</permission>
+		        <permission>post_notification</permission>          
+		        <permission>set_audio_volume</permission>
+		        <permission>read_device_identifying_information</permission>
+		    </permissions>
+		</blackberry>
 
 
 How to Setup, Build and Test the Titanium BlackBerry SDK
