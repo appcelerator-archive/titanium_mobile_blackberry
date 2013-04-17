@@ -7,6 +7,7 @@ var path = require('path'),
     wrench = require('wrench'),
 	exec = require('child_process').exec,
 	lastLineCount = 0;
+	timerID = 0;
 
 var findNDK = function() {
 
@@ -55,15 +56,20 @@ var runCommandFromArray = function(commandArray, showCommand, callback) {
 		console.log('[Command] :' + command);
 	}
 
-	exec(command, function(err, stdout) {
+	exec(command, function(err, stdout, stderr) {
 
 		callback(err, stdout);
-	    if (err != null) {
-			util.puts(err);
+		if (showCommand === true) {
+		    if (err != null) {
+				util.puts(err);
+			}
+			if (stderr != null) {
+				util.puts(stderr);
+			}
+			if (stdout != null) {
+				util.puts(stdout.trim());
+		    }
 		}
-		if (stdout != null) {
-			util.puts(stdout.trim());
-	    }
 	});	
 }
 
@@ -133,30 +139,42 @@ var getAppLog = function(ndk, deviceIP, barFile, password, callback) {
 		ndkcmd = 'blackberry-deploy';
 	}
 
-	var hostFile = "-";
-	var deviceFile = "logs/log";
-	var command = [srccmd, '&&', ndkcmd, '-getFile', deviceFile, hostFile, '-device', deviceIP, '-package', barFile];
+	var command = [srccmd, '&&', ndkcmd, '-isAppRunning', '-device', deviceIP, '-package', barFile];
 
 	if (typeof password !== 'undefined') {
 		command = command.concat(['-password', password])
 	}
 
-	runCommandFromArray(command, showCmd = false, function(err, stdout) {  
+	runCommandFromArray(command, showCmd = false, function(err, stdout) { 
 
-	    if (err != null) {
-	    	callback(/* if there was an error, pass it to finished */); // finished
-	    } 
-	    else {                    
-		debugToken
-			var logFile = stdout.trim().split('\n');
-			var len = logFile.length;
-	        for (i = 0; i < len; i++){
-	        	if (i > lastLineCount) {
-	        		console.log(logFile[i]);
-	        	}
-	        }       
+		if (stdout.indexOf('result::true') != -1) {
+
+			var hostFile = "-";
+			var deviceFile = "logs/log";
+			command = [srccmd, '&&', ndkcmd, '-getFile', deviceFile, hostFile, '-device', deviceIP, '-package', barFile];
+
+			if (typeof password !== 'undefined') {
+				command = command.concat(['-password', password])
+			}
+
+			runCommandFromArray(command, showCmd = false, function(err, stdout) {  
+              
+				var logFile = stdout.trim().split('\n');
+				var len = logFile.length;
+		        for (i = 0; i < len; i++){
+		        	if (i > lastLineCount) {
+		        		console.log(logFile[i]);
+		        	}
+		        }
+		        lastLineCount = i;       
+				
+
+			});
+		} else {
+			clearInterval(timerID);
+			callback(/* finished */);
+
 		}
-
 	});
 }
 
@@ -348,7 +366,7 @@ function BlackberryNDK(builder) {
 					}
 
 					runCommandFromArray(command, showCmd = true, function() {  
-						setInterval(getAppLog, 2000, ndk, deviceIP, barFile, password, finished);                     
+						timerID = setInterval(getAppLog, 2000, ndk, deviceIP, barFile, password, finished);                     
 					});
 
 	            } else {
@@ -365,9 +383,8 @@ function BlackberryNDK(builder) {
 					runCommandFromArray(command, showCmd = true, function() { 
 
 						if (typeof builder.outputDir !== 'undefined') {
-                        	fs.mkDir(signedBarFile);           
-                        	fs.createReadStream(signedBarFile).pipe(fs.createWriteStream(path.join(signedBarFile, projectName + '.bar')));
-						
+                        	fs.mkdir(builder.outputDir); 
+                        	fs.createReadStream(path.join(signedBarFile)).pipe(fs.createWriteStream(path.join(builder.outputDir, projectName + '.bar')));						
 						}      
 
 						process.chdir(oldPath);
