@@ -81,6 +81,8 @@ How to Create Titanium Applications using the BlackBerry SDK
 5. From a command window run "./blackberry-debugtokenrequest -storepass STORE_PASSWORD -devicepin DEVICE_PIN debugtoken.bar"
 6. From a command window run "./blackberry-deploy -installDebugToken PATH_TO_DEBUG_TOKEN/debugtoken.bar -device DEVICE_IP  -password DEVICE_PASSWORD
 
+ Command Line Interface (CLI)
+-----------------------------
 
 - Run the application on the BlackBerry 10 simulator:
 
@@ -94,10 +96,10 @@ How to Create Titanium Applications using the BlackBerry SDK
 
 		PATH_TO_PLATFORM_SDK/blackberry/builder.py" run -t distribute -d PATH_TO_PROJECT -p PATH_TO_BB_NDK --store_password STORE_PASSWORD --output_dir PATH_TO_SIGNED_BAR_FILE
 
-Notes on New CLI
-----------------------
+3.2 CLI
+-------
 
-The older Python CLI as described above will still work, but as of 3.2 release the BlackBerry SDK now supports the newer Node.js CLI. Below are some of the more common build commands. A more complete description can be found at http://docs.appcelerator.com/titanium/latest/#!/guide/Titanium_Command-Line_Interface_Reference.
+The older Python CLI described above will still work, but as of 3.2 release the BlackBerry SDK now supports the newer Node.js CLI. Below are some of the more common build commands. A more complete description can be found at http://docs.appcelerator.com/titanium/latest/#!/guide/Titanium_Command-Line_Interface_Reference.
 
 - To create a project:
 
@@ -111,7 +113,7 @@ The older Python CLI as described above will still work, but as of 3.2 release t
 
 		titanium build --platform blackberry -T device -A DEVICE_IP --debug-token PATH_TO_DEBUG_TOKEN/debugtoken.bar --password DEVICE_PASSWORD
 
-To build for BlackBerry World:
+- To build for BlackBerry World:
 
 		titanium build --platform blackberry -T distribute --keystore-password STORE_PASSWORD --output-dir PATH_TO_SIGNED_BAR_FILE
 
