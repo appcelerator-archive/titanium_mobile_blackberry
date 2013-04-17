@@ -6,7 +6,7 @@ Titanium Mobile BlackBerry is the Titanium platform support for the latest Black
 Current Status
 --------------
 
-* 2012-08-05 - _Development_
+* 2013-04-16 - _BETA 3.2_
 
 Release Notes
 -------------
@@ -36,9 +36,9 @@ How to get Started with Titanium BlackBerry Development
 
 1) Download and install VMware Fusion for Mac and if doing development on Microsoft Windows VMware Player. This is for the BlackBerry 10 simulator. We have tested using the most recent version 5.0.0.
 
-2) From the BlackBerry developer site download and install the BlackBerry 10 Native SDK. The site is located at http://developer.blackberry.com/native/beta/download/. 
+2) From the BlackBerry developer site download and install the BlackBerry 10 Native SDK. The site is located at http://developer.blackberry.com/native/downloads/ . 
 
-3) From the BlackBerry developer site download and install the BlackBerry 10 Dev Alpha Simulator. The site is located at http://developer.blackberry.com/native/beta/download/ (scroll a bit down the page).
+3) From the BlackBerry developer site download and install the BlackBerry 10 Dev Alpha Simulator. The site is located at http://developer.blackberry.com/native/downloads/ (scroll a bit down the page).
 
 4) Start up the simulator. On Mac it can be started by running the following command: BlackBerry10Simulator-BB10_0_09.vmwarevm. The command is typically located at ~/Virtual Machines.localized/BlackBerry10Simulator-BB10_0_09-386, though it will also install by default an alias on your desktop.
 
