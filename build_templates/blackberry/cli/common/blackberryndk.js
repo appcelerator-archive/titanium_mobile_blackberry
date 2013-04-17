@@ -138,7 +138,7 @@ var getAppLog = function(ndk, deviceIP, barFile, password, callback) {
 	var command = [srccmd, '&&', ndkcmd, '-getFile', deviceFile, hostFile, '-device', deviceIP, '-package', barFile];
 
 	if (typeof password !== 'undefined') {
-		command.concat(['-password', password])
+		command = command.concat(['-password', password])
 	}
 
 	runCommandFromArray(command, showCmd = false, function(err, stdout) {  
@@ -147,7 +147,7 @@ var getAppLog = function(ndk, deviceIP, barFile, password, callback) {
 	    	callback(/* if there was an error, pass it to finished */); // finished
 	    } 
 	    else {                    
-		
+		debugToken
 			var logFile = stdout.trim().split('\n');
 			var len = logFile.length;
 	        for (i = 0; i < len; i++){
@@ -309,6 +309,7 @@ function BlackberryNDK(builder) {
         	var barFile = path.join(buildDir, cpu, variant, projectName + '.bar');
         	var appBinaryFile = path.join(buildDir, cpu, variant, projectName);
         	var type = builder.target;
+        	var password = builder.password;
         	var debugToken = builder.debugToken;
 			
 			// BuildID is is a 0-65535 value that identifies this package it must be incremented before bar signing 
@@ -325,9 +326,9 @@ function BlackberryNDK(builder) {
 			}
 
 			if (typeof debugToken !== 'undefined') {
-				command.concat(['-debugToken', debugToken])
+				command = command.concat(['-debugToken', debugToken])
 			}
-             
+           
             var oldPath = process.cwd();
             process.chdir(buildDir);	
             runCommandFromArray(command, showCmd = true, function() {  
@@ -343,7 +344,7 @@ function BlackberryNDK(builder) {
 					command = [srccmd, '&&', ndkcmd, '-installApp', '-launchApp', '-device', deviceIP, '-package', barFile];
 
 					if (typeof password !== 'undefined') {
-						command.concat(['-password', password])
+						command = command.concat(['-password', password]);
 					}
 
 					runCommandFromArray(command, showCmd = true, function() {  
