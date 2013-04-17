@@ -1,6 +1,55 @@
 Release Notes
 =============
 
+
+Beta Release (3.2.0.v20130412191647)
+----------------------------------------------------
+
+FRI APR 12, 2013 7:16:47 PM PST
+
+* Alloy Support
+* Node.js Based CLI Build Support
+* Titanium Studio 3.1.1 Updated to use Node.js CLI
+* API permissions are contained in tiapp.xml 
+* Numerous Bug Fixes in preparation for Beta 
+
+Notes on Using new CLI
+----------------------
+
+The older Python CLI will still work as previously, but BlackBerry now supports the newer CLI that the iOS platform uses. Below are some of the more common build commands.
+
+To create a project:
+titanium create -p blackberry --id YOUR_APP_ID -n PROJECT_NAME -t app
+
+To build and deploy to simulator:
+titanium build --platform blackberry -T simulator -A DEVICE_IP
+
+To build and deploy to device:
+titanium build --platform blackberry -T device -A DEVICE_IP --debug-token PATH_TO_DEBUG_TOKEN/debugtoken.bar --password DEVICE_PASSWORD
+
+To build for BlackBerry World:
+ti build --platform blackberry -T distribute --keystore-password STORE_PASSWORD --output-dir PATH_TO_SIGNED_BAR_FILE
+
+The tiapp.xml configuration file has been extended to make it easier to edit applications settings, and the buildID that had previously be updated in the Ti.Manifest file is now updated through tiapp.xml. Below is sample of the BlackBerry extensions.
+
+		 <blackberry>
+		    <orientation>auto</orientation>
+		    <build-id>1</build-id>
+		    <permissions>
+		        <permission>access_shared</permission>
+		        <permission>record_audio</permission>
+		        <permission>use_camera</permission>
+		        <permission>access_internet</permission>
+		        <permission>play_audio</permission>
+		        <permission>post_notification</permission>          
+		        <permission>set_audio_volume</permission>
+		        <permission>read_device_identifying_information</permission>
+		    </permissions>
+		</blackberry>
+
+
+
+
 New Features in this Release (3.1.0.v20130320125153)
 ----------------------------------------------------
 
@@ -101,24 +150,18 @@ Previous Releases
 * Titanium Studio Integration (Project creation, Deploy Simulator/Device, BlackBerry World Publish)
 
 
-Remaining Functionality for Beta Release
-----------------------------------------
-
-* TableViewSection (TIMOB-8840)
-* Geolocation (TIMOB-12234)
-* Additional Window/TabGroup/ImageView/Blob and Network functionality (TIMOB-9605, TIMOB-9604, TIMOB-10275, TIMOB-10873, TIMOB-10083, TIMOB-10871)
-
-
 Additional Functionality for GA Release
 ---------------------------------------
 
+* Analytics (TIMOB-12236)
+* TableViewSection (TIMOB-8840)
+* Geolocation (TIMOB-12234)
 * Facebook (TIMOB-12225)
 * Toolbar (TIMOB-12516)
 * Filesystem (TIMOB-8580)
 * XML (TIMOB-8592)
 * ScrollableView (TIMOB-8831)
 * Accelerometer (TIMOB-12233)
-* Analytics (TIMOB-12236)
 * Additional Media APIs
 * Native modules (TIMOB-12224)
 * VideoPlayer (TIMOB-12230)

@@ -1,53 +1,73 @@
-
-
 /*
-var win = Ti.UI.createWindow({});
-//Horizontal Layout behavior. Green child centered vertically (No positioning pins)
-var parent = Ti.UI.createView({backgroundColor:'red',layout:'horizontal',width:100, height:100});
-var child1 =Ti.UI.createView({backgroundColor:'green',height:20,width:50});
-var child2 =Ti.UI.createView({backgroundColor:'blue',height:40,width:50});
-parent.add(child1);
-parent.add(child2);
-win.add(parent);
+Ti.API.info('running');
+ 
+var win = Ti.UI.createWindow({backgroundColor: 'red'});
 win.open();
+ 
+function showAlert() {
+    Ti.API.info('opening alert...');
+    var alert = Ti.UI.createAlertDialog({
+        title: 'Click a button...'
+    });
+    alert.addEventListener('click', function(e) {
+        Ti.API.info('index = ' + e.index);
+    });
+    alert.show();
+}
+
+ 
+setTimeout(showAlert, 2000);
+
+
+
+var window = Titanium.UI.createWindow({
+	//backgroundImage:'default.png'
+	backgroundColor:'#7a24db'
+});
+
+var button = Titanium.UI.createButton({
+	title: 'www.youtube.com',
+	//backgroundImage:'KS_nav_ui.png',
+	top: 10,
+	width: 200,
+	height: 50,
+	left:60
+});
+
+window.add(button);
+window.open();
 */
 
+var win2 = Ti.UI.createWindow({
+	backgroundColor: 'yellow',
+	//fullscreen: true
+});
 
-var win = Ti.UI.createWindow({});
-     
-    var view = Ti.UI.createView({
-        height:300,
-        width:320,
-        layout:'horizontal'
-         
-    });
-    win.add(view);
-     
-    var l1 = Ti.UI.createLabel({
-        text:'I am the first label',
-        left:5,
-        width:'auto',
-        height:20
-    });
-     
-    view.add(l1);
-     
-    var l2 = Ti.UI.createLabel({
-        text:'I am the second label',
-        left:2,
-        width:'auto',
-        height:20
-    });
-     
-    view.add(l2);
-     
-    var l3 = Ti.UI.createLabel({
-        text:'I am the third label',
-        left:2,
-        width:'auto',
-        height:20
-    });
-     
-    view.add(l3);
- 
-win.open();
+var button = Titanium.UI.createButton({
+	title: 'www.youtube.com is calling you',
+	//backgroundImage:'blackberry/KS_nav_ui.png',
+	top: 10,
+	//width:Ti.UI.SIZE,
+	//height:Ti.UI.SIZE,
+	//left:55
+});
+
+win2.add(button);
+
+button.addEventListener('click',function(e){
+	//alert('Yoo Hoo');
+	var dialog = Ti.UI.createAlertDialog({
+		message: 'The file has been deleted',
+		ok: 'Okay',
+		title: 'File Deleted'
+	 });
+	
+	 dialog.addEventListener('click', function(e) {
+	        Ti.API.info('index = ' + e.index);
+	    });
+		
+	dialog.show();
+});
+
+
+win2.open();

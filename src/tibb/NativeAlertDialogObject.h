@@ -51,42 +51,28 @@ private:
     int cancelIndex_;
 };
 
-
 //Event handler for alert dialog object
-class AlertDialogEventHandler : public QObject
+class NativeAlertDialogEventHandler : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit AlertDialogEventHandler(TiEventContainer* eventContainer)
-    {
-        eventContainer_ = eventContainer;
-    }
-    virtual ~AlertDialogEventHandler() {}
+    explicit  NativeAlertDialogEventHandler(TiEventContainer* eventContainer);
+    virtual ~NativeAlertDialogEventHandler();
 
 public slots:
-    void buttonSelected(bb::system::SystemUiResult::Type type)
-    {
-        bb::system::SystemDialog* dialog = static_cast<bb::system::SystemDialog*>(sender());
-        bb::system::SystemUiButton* selectedButton = dialog->buttonSelection();
-        if (selectedButton == NULL) {
-            return;
-        }
+    void buttonSelected(bb::system::SystemUiResult::Type);
 
-        QVariant index = selectedButton->property("index");
-        QVariant cancel = selectedButton->property("cancel");
-        eventContainer_->setDataProperty("index", index.toInt(NULL));
-        eventContainer_->setDataProperty("cancel", cancel.toBool());
-        eventContainer_->fireEvent();
-    }
 
 private:
     TiEventContainer* eventContainer_;
 
     // Disable copy ctor & assignment operator
-    AlertDialogEventHandler(const AlertDialogEventHandler&);
-    AlertDialogEventHandler& operator=(const AlertDialogEventHandler&);
+    NativeAlertDialogEventHandler(const  NativeAlertDialogEventHandler&);
+    NativeAlertDialogEventHandler& operator=(const  NativeAlertDialogEventHandler&);
 };
-#include <QObjectUserData>
+
+
+//#include <QObjectUserData>
 
 #endif /* NATIVEALERTDIALOGOBJECT_H_ */

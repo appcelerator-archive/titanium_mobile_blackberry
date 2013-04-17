@@ -10,6 +10,7 @@
 #include "NativeControlObject.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
+#include "stdio.h"
 
 NativeAlertDialogObject::NativeAlertDialogObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_ALERTDIALOG)
@@ -48,6 +49,7 @@ int NativeAlertDialogObject::setTitle(TiObject* obj)
         return error;
     }
     nativeDialog_->setTitle(title);
+
     return NATIVE_ERROR_OK;
 }
 
@@ -61,6 +63,7 @@ int NativeAlertDialogObject::setMessage(TiObject* obj)
         return error;
     }
     nativeDialog_->setBody(message);
+
     return NATIVE_ERROR_OK;
 }
 
@@ -87,6 +90,7 @@ int NativeAlertDialogObject::setButtonNames(TiObject* obj)
         button->setProperty("cancel", QVariant::fromValue(cancelIndex_ != -1 && cancelIndex_ == i));
         nativeDialog_->appendButton(button);
     }
+
     return NATIVE_ERROR_OK;
 }
 
@@ -125,8 +129,34 @@ NAHANDLE NativeAlertDialogObject::getNativeHandle() const
 
 void NativeAlertDialogObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
-    TiEventContainer* eventClick = containerFactory->createEventContainer();
+	NativeControlObject::setupEvents(containerFactory);
+
+	TiEventContainer* eventClick = containerFactory->createEventContainer();
+
     eventClick->setDataProperty("type", tetCLICK);
-    events_.insert(tetCLICK, EventPairSmartPtr(eventClick, new AlertDialogEventHandler(eventClick)));
+    events_.insert(tetCLICK, EventPairSmartPtr(eventClick, new NativeAlertDialogEventHandler(eventClick)));
     QObject::connect(nativeDialog_, SIGNAL(finished(bb::system::SystemUiResult::Type)), events_[tetCLICK]->handler(), SLOT(buttonSelected(bb::system::SystemUiResult::Type)));
+}
+
+
+NativeAlertDialogEventHandler::NativeAlertDialogEventHandler(TiEventContainer* eventContainer)
+{
+    eventContainer_ = eventContainer;
+}
+
+NativeAlertDialogEventHandler::~NativeAlertDialogEventHandler(){}
+
+void  NativeAlertDialogEventHandler::buttonSelected(bb::system::SystemUiResult::Type type)
+{
+	bb::system::SystemDialog* dialog = static_cast<bb::system::SystemDialog*>(sender());
+	bb::system::SystemUiButton* selectedButton = dialog->buttonSelection();
+	if (selectedButton == NULL) {
+		return;
+	}
+
+	QVariant index = selectedButton->property("index");
+	QVariant cancel = selectedButton->property("cancel");
+	eventContainer_->setDataProperty("index", index.toInt(NULL));
+	eventContainer_->setDataProperty("cancel", cancel.toBool());
+	eventContainer_->fireEvent();
 }
