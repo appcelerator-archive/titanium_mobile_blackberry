@@ -25,6 +25,8 @@ public:
         return N_TYPE_LIST_ITEM;
     }
 
+    virtual int addChildNativeObject(NativeObject* obj);
+
     virtual int setLeftImage(TiObject* obj);
     virtual int setTitle(TiObject* obj);
 

@@ -7,11 +7,15 @@
 
 #include "NativeListItemObject.h"
 
+#include <bb/cascades/VisualNode>
+
 #include "TableView/ListItemData.h"
 #include "TiObject.h"
 #include "V8Utils.h"
 
 using namespace titanium;
+
+using namespace bb::cascades;
 
 NativeListItemObject::NativeListItemObject(TiObject* object)
     : NativeControlObject(object, N_TYPE_LIST_ITEM)
@@ -23,6 +27,13 @@ NativeListItemObject::NativeListItemObject(TiObject* object)
 }
 
 NativeListItemObject::~NativeListItemObject() {
+}
+
+int NativeListItemObject::addChildNativeObject(NativeObject* obj) {
+    if (!data_->content()) {
+        data_->setContent(container_);
+    }
+    return addChildImpl(obj);
 }
 
 int NativeListItemObject::setLeftImage(TiObject* obj) {

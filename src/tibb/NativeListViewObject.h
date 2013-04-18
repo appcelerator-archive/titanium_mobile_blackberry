@@ -27,6 +27,7 @@ class VisualNode;
 };
 
 #include <bb/cascades/ListItemProvider>
+#include <bb/cascades/ListItemTypeMapper>
 #include <bb/cascades/StandardListItem>
 
 class TiEventContainer;
@@ -57,13 +58,17 @@ private:
     bb::cascades::ListView* listView_;
 };
 
-class ListViewItemFactory: public bb::cascades::ListItemProvider
+class ListViewItemFactory : public bb::cascades::ListItemProvider,
+                            public bb::cascades::ListItemTypeMapper
 {
 public:
     ListViewItemFactory() {};
+
     bb::cascades::VisualNode* createItem(bb::cascades::ListView* list, const QString& type);
     void updateItem(bb::cascades::ListView* list, bb::cascades::VisualNode* listItem, const QString& type,
                     const QVariantList& indexPath, const QVariant& data);
+
+    QString itemType(const QVariant &data, const QVariantList &indexPat);
 };
 
 //Event handler for button object
