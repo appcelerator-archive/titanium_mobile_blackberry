@@ -243,18 +243,18 @@ private slots:
 
         switch (event->touchType()) {
             case bb::cascades::TouchType::Down:
-            	startPointX = x;
-            	startPointY = y;
+                startPointX = x;
+                startPointY = y;
                 emit touchStart(x, y);
                 break;
             case bb::cascades::TouchType::Move:
                 emit touchMove(x, y);
                 break;
             case bb::cascades::TouchType::Up:
-            	if(startPointX == x && startPointY == y) {
+                if(startPointX == x && startPointY == y) {
                     emit click(x, y);
                     break;
-            	}
+                }
                 emit touchEnd(x, y);
                 break;
             case bb::cascades::TouchType::Cancel:
