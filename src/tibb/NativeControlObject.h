@@ -220,6 +220,9 @@ public:
                          this, SLOT(onNodeDestroyed()));
         connect(node, SIGNAL(focusedChanged(bool)), SLOT(focusedChanged(bool)));
     }
+private:
+    float startPointX;
+    float startPointY;
 
 signals:
     void click(float x, float y);
@@ -237,19 +240,21 @@ private slots:
               y = event->localY();
 
         // TODO(josh): Include coordinates of "click".
-        // TODO(josh): Click should only happen with no movement (down & up).
-        if (event->touchType() == bb::cascades::TouchType::Up) {
-            emit click(x, y);
-        }
 
         switch (event->touchType()) {
             case bb::cascades::TouchType::Down:
+            	startPointX = x;
+            	startPointY = y;
                 emit touchStart(x, y);
                 break;
             case bb::cascades::TouchType::Move:
                 emit touchMove(x, y);
                 break;
             case bb::cascades::TouchType::Up:
+            	if(startPointX == x && startPointY == y) {
+                    emit click(x, y);
+                    break;
+            	}
                 emit touchEnd(x, y);
                 break;
             case bb::cascades::TouchType::Cancel:
