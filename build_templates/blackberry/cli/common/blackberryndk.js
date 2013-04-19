@@ -333,7 +333,7 @@ function BlackberryNDK(builder) {
 			// BuildID is is a 0-65535 value that identifies this package it must be incremented before bar signing 
 			var buildID = 1;
         	if (typeof tiapp.blackberry !== 'undefined' && typeof tiapp.blackberry.buildID !== 'undefined') {
-	        	buildID = builder.tiapp.blackberry['buildID'];
+	        	buildID = builder.tiapp.blackberry['build-id'];
 	        }
 
             var command = [srccmd, '&&', ndkcmd, '-package', barFile, 'bar-descriptor.xml', '-e', appBinaryFile , projectName, 
@@ -377,14 +377,13 @@ function BlackberryNDK(builder) {
 						ndkcmd = 'blackberry-signer';
 					}
 
-                    var signedBarFile = appBinaryFile + '.bar'; // path with cpu and variant
-					command = [srccmd, '&&', ndkcmd, '-storepass', builder.keystorePassword, signedBarFile];
+					command = [srccmd, '&&', ndkcmd, '-storepass', builder.keystorePassword, barFile];
 
 					runCommandFromArray(command, showCmd = true, function() { 
 
 						if (typeof builder.outputDir !== 'undefined') {
                         	fs.mkdir(builder.outputDir); 
-                        	fs.createReadStream(path.join(signedBarFile)).pipe(fs.createWriteStream(path.join(builder.outputDir, projectName + '.bar')));						
+                        	fs.createReadStream(path.join(barFile)).pipe(fs.createWriteStream(path.join(builder.outputDir, projectName + '.bar')));						
 						}      
 
 						process.chdir(oldPath);
