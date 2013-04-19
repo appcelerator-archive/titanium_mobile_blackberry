@@ -41,7 +41,7 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
 	double verticalAlignmentOffset = 0;
 	int len = children.size();
 	int rowLen = 0;
-	int rowsLen = 1;
+	int rowsLen = (len > 0 ) ? 1: 0;
 
 	// Calculate horizontal size and position for the children
 	for(i = 0; i < len; i++) {
@@ -85,17 +85,16 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
 
 		measuredLeft = leftLayoutCoefficients.x1 * width + leftLayoutCoefficients.x2 + runningWidth;
 
-		if (!isWidthSize && (int)(measuredSandboxWidth + runningWidth) > width) {
+		if (!isWidthSize && width > 0 && (int)(measuredSandboxWidth + runningWidth) > width) {
 			rowsLen++;
 			measuredLeft -= runningWidth;
 			runningWidth = 0;
-			elementsPerRow[rowsLen] = 0;
 		}
 
 		(*child)._measuredLeft = measuredLeft;
 		rows[rowsLen - 1][rowLen] = child;
 		rowLen++;
-		elementsPerRow[rowLen] = rowLen;
+		elementsPerRow[rowsLen -1] = rowLen;
 		runningWidth += measuredSandboxWidth;
 		runningWidth > computedSize.width && (computedSize.width = runningWidth);
 	}
@@ -148,7 +147,6 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
 	// Second pass, if necessary, to determine the top values
 	runningHeight = 0;
 	len = rowsLen;
-
 	for(i = 0; i < len; i++) {
 		rowLen = elementsPerRow[i];
 		memcpy(&row, &rows[i], rowLen * sizeof(struct Element*));
