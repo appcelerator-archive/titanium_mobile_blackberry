@@ -7,14 +7,16 @@
 
 #include "NativeTextAreaObject.h"
 
-#include "KeyboardType.h"
-#include "TiEventContainerFactory.h"
-#include "TiObject.h"
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/TextArea>
 #include <bb/cascades/TextAreaInputMode>
 #include <QString>
+
+#include "KeyboardType.h"
+#include "TiEventContainerFactory.h"
+#include "TiObject.h"
+#include "V8Utils.h"
 
 using namespace bb::cascades;
 using namespace titanium;
@@ -48,12 +50,7 @@ int NativeTextAreaObject::initialize()
 
 int NativeTextAreaObject::setHintText(TiObject* obj)
 {
-    QString strHint;
-    int error = NativeControlObject::getString(obj, strHint);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
+    QString strHint = V8ValueToQString(obj->getValue());
     textArea_->setHintText(strHint);
     return NATIVE_ERROR_OK;
 }
@@ -116,12 +113,7 @@ int NativeTextAreaObject::setPasswordMask(TiObject* obj)
 
 int NativeTextAreaObject::setValue(TiObject* obj)
 {
-    QString text;
-    int error = NativeControlObject::getString(obj, text);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
+    QString text = V8ValueToQString(obj->getValue());
     textArea_->setText(text);
     return NATIVE_ERROR_OK;
 }

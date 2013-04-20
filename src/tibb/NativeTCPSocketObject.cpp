@@ -13,11 +13,13 @@
 #include "NativeMessageStrings.h"
 #include "TiObject.h"
 #include "TiV8Event.h"
+#include "V8Utils.h"
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #include <v8.h>
 #pragma GCC diagnostic warning "-Wunused-parameter"
 
+using namespace titanium;
 using namespace v8;
 
 #define PROP_SETGET_FUNCTION(NAME)      prop_##NAME
@@ -94,11 +96,7 @@ int NativeTCPSocketObject::setHost(TiObject* obj, void* /*userContext*/)
 {
     if (socketState_ == SOCKET_STATE_INITIALIZED)
     {
-        int error = NativeControlObject::getString(obj, hostName_);
-        if (!N_SUCCEEDED(error))
-        {
-            return error;
-        }
+        hostName_ = V8ValueToQString(obj->getValue());
         return NATIVE_ERROR_OK;
     }
     return NATIVE_ERROR_INVALID_ARG;

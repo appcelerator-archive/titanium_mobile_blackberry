@@ -6,9 +6,15 @@
  */
 
 #include "NativeDropDownObject.h"
-#include "TiEventContainerFactory.h"
+
 #include <bb/cascades/DropDown>
 #include <QVector>
+
+#include "TiEventContainerFactory.h"
+#include "TiObject.h"
+#include "V8Utils.h"
+
+using namespace titanium;
 
 NativeDropDownObject::NativeDropDownObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_DROPDOWN)
@@ -39,12 +45,7 @@ int NativeDropDownObject::initialize()
 
 int NativeDropDownObject::setTitle(TiObject* obj)
 {
-    QString title;
-    int error = NativeControlObject::getString(obj, title);
-    if (!N_SUCCEEDED(error))
-    {
-        return error;
-    }
+    QString title = V8ValueToQString(obj->getValue());
     dropdown_->setTitle(title);
     return NATIVE_ERROR_OK;
 }

@@ -7,14 +7,16 @@
 
 #include "NativeTextFieldObject.h"
 
-#include "KeyboardType.h"
-#include "TiEventContainerFactory.h"
-#include "TiObject.h"
-#include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
+#include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/TextField>
 #include <bb/cascades/TextFieldInputMode>
 #include <QString>
+
+#include "KeyboardType.h"
+#include "TiEventContainerFactory.h"
+#include "TiObject.h"
+#include "V8Utils.h"
 
 using namespace bb::cascades;
 using namespace titanium;
@@ -48,12 +50,7 @@ int NativeTextFieldObject::initialize()
 
 int NativeTextFieldObject::setHintText(TiObject* obj)
 {
-    QString strHint;
-    int error = NativeControlObject::getString(obj, strHint);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
+    QString strHint = V8ValueToQString(obj->getValue());
     textField_->setHintText(strHint);
     return NATIVE_ERROR_OK;
 }
@@ -112,12 +109,7 @@ int NativeTextFieldObject::setPasswordMask(TiObject* obj)
 
 int NativeTextFieldObject::setValue(TiObject* obj)
 {
-    QString text;
-    int error = NativeControlObject::getString(obj, text);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
+    QString text = V8ValueToQString(obj->getValue());
     textField_->setText(text);
     return NATIVE_ERROR_OK;
 }

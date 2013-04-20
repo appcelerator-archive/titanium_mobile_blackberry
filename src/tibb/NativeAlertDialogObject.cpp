@@ -10,7 +10,9 @@
 #include "NativeControlObject.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
-#include "stdio.h"
+#include "V8Utils.h"
+
+using namespace titanium;
 
 NativeAlertDialogObject::NativeAlertDialogObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_ALERTDIALOG)
@@ -42,12 +44,7 @@ int NativeAlertDialogObject::initialize()
 int NativeAlertDialogObject::setTitle(TiObject* obj)
 {
     Q_ASSERT(nativeDialog_ != NULL);
-    QString title;
-    int error = NativeControlObject::getString(obj, title);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
+    QString title = V8ValueToQString(obj->getValue());
     nativeDialog_->setTitle(title);
 
     return NATIVE_ERROR_OK;
@@ -56,12 +53,7 @@ int NativeAlertDialogObject::setTitle(TiObject* obj)
 int NativeAlertDialogObject::setMessage(TiObject* obj)
 {
     Q_ASSERT(nativeDialog_ != NULL);
-    QString message;
-    int error = NativeControlObject::getString(obj, message);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
+    QString message = V8ValueToQString(obj->getValue());
     nativeDialog_->setBody(message);
 
     return NATIVE_ERROR_OK;

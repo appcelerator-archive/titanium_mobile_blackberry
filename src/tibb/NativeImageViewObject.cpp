@@ -6,10 +6,16 @@
  */
 
 #include "NativeImageViewObject.h"
-#include "TiEventContainerFactory.h"
+
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/ImageView>
+
+#include "TiEventContainerFactory.h"
+#include "TiObject.h"
+#include "V8Utils.h"
+
+using namespace titanium;
 
 NativeImageViewObject::NativeImageViewObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_IMAGEVIEW)
@@ -40,13 +46,7 @@ int NativeImageViewObject::initialize()
 
 int NativeImageViewObject::setImage(TiObject* obj)
 {
-    QString imagePath;
-    int error = NativeControlObject::getString(obj, imagePath);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
-
+    QString imagePath = V8ValueToQString(obj->getValue());
     imagePath = getResourcePath(imagePath);
     imageView_->setImage(QUrl(imagePath));
     return NATIVE_ERROR_OK;

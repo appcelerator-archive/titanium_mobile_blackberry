@@ -152,7 +152,6 @@ public:
     virtual void blur();
     static int getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a);
     static int getBoolean(TiObject* obj, bool* value);
-    static int getString(TiObject* obj, QString& str);
     static int getFloat(TiObject* obj, float* value);
     static int getInteger(TiObject* obj, int* value);
     static int getStringArray(TiObject* obj, QVector<QString>& value);
