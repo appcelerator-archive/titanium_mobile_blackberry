@@ -9,6 +9,9 @@
 
 #include "TableView/ListItemData.h"
 #include "TiObject.h"
+#include "V8Utils.h"
+
+using namespace titanium;
 
 NativeListItemObject::NativeListItemObject(TiObject* object)
     : NativeControlObject(object, N_TYPE_LIST_ITEM)
@@ -23,13 +26,13 @@ NativeListItemObject::~NativeListItemObject() {
 }
 
 int NativeListItemObject::setLeftImage(TiObject* obj) {
-    QString imagePath = TiObject::getStringFromValue(obj->getValue());
+    QString imagePath = V8ValueToQString(obj->getValue());
     data_->setProperty("leftImage", QUrl(getResourcePath(imagePath)));
     return NATIVE_ERROR_OK;
 }
 
 int NativeListItemObject::setTitle(TiObject* obj) {
-    data_->setProperty("title", TiObject::getStringFromValue(obj->getValue()));
+    data_->setProperty("title", V8ValueToQString(obj->getValue()));
     return NATIVE_ERROR_OK;
 }
 
