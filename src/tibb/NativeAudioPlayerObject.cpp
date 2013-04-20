@@ -6,19 +6,22 @@
  */
 
 #include "NativeAudioPlayerObject.h"
-#include "TiEvent.h"
-#include "TiConstants.h"
-#include "TiEventContainerFactory.h"
-#include "NativeLoggerObject.h"
-#include "NativeMessageStrings.h"
+
 #include <bb/cascades/SystemDefaults>
+#include <bb/multimedia/BufferStatus>
 #include <bb/multimedia/MediaPlayer>
 #include <bb/multimedia/MediaState>
-#include <bb/multimedia/BufferStatus>
+
+#include "NativeLoggerObject.h"
+#include "NativeMessageStrings.h"
+#include "TiConstants.h"
+#include "TiEvent.h"
+#include "TiEventContainerFactory.h"
 #include "TiObject.h"
+#include "V8Utils.h"
 
 using namespace bb::multimedia;
-
+using namespace titanium;
 
 NativeAudioPlayerObject::NativeAudioPlayerObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_AUDIOPLAYER), alwaysPrepare_(false)
@@ -79,14 +82,7 @@ int NativeAudioPlayerObject::getProgress(TiObject* obj)
 
 int NativeAudioPlayerObject::setUrl(TiObject* obj)
 {
-	QString url;
-	int error = NativeControlObject::getString(obj, url);
-
-	if (error != NATIVE_ERROR_OK)
-	{
-		return error;
-	}
-
+	QString url = V8ValueToQString(obj->getValue());
 	if (url.startsWith("www.", Qt::CaseInsensitive) || url.startsWith("http://", Qt::CaseInsensitive)) {
 		audioSource = url;
 	}

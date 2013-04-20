@@ -28,6 +28,8 @@
 
 #include <fstream>
 
+using namespace titanium;
+
 static const string rootFolder = "app/native/assets/";
 
 TiTitaniumObject::TiTitaniumObject()

@@ -25,6 +25,8 @@
 
 using namespace v8;
 
+namespace titanium {
+
 void DisplayExceptionLine (TryCatch &try_catch) {
   // Prevent re-entry into this function.
   static bool displayed_error = false;
@@ -96,3 +98,13 @@ void ReportException(TryCatch &try_catch, bool show_line) {
 
   fflush(stderr);
 }
+
+QString V8StringToQString(Handle<String> v8Str) {
+    QString qStr;
+    qStr.resize(v8Str->Length());
+    v8Str->Write(reinterpret_cast<uint16_t*>(qStr.data()));
+    return qStr;
+}
+
+}  // namespace titanium
+

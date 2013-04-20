@@ -11,8 +11,10 @@
 #include "TiGenericFunctionObject.h"
 #include "TiMessageStrings.h"
 #include "TiUIClipboardObject.h"
+#include "V8Utils.h"
 
 using namespace bb::system;
+using namespace titanium;
 
 #define MIME_TEXT_PLAIN "text/plain"
 
@@ -74,7 +76,7 @@ Handle<Value> TiUIClipboardObject::_clearData(void* userContext, TiObject* calle
     if (args.Length() == 0) {
         clipboard.clear();
     } else {
-        QString type = TiObject::getStringFromValue(args[0]->ToString());
+        QString type = V8ValueToQString(args[0]);
         clipboard.remove(type);
     }
 
@@ -95,8 +97,8 @@ Handle<Value> TiUIClipboardObject::_getData(void* userContext, TiObject* caller,
         return ThrowException(String::New(Ti::Msg::Invalid_arguments));
     }
 
-    Local<String> type = args[0]->ToString();
-    Handle<Value> data = self->getData(TiObject::getStringFromValue(type));
+    QString type = V8ValueToQString(args[0]);
+    Handle<Value> data = self->getData(type);
 
     return scope.Close(data);
 }
@@ -114,7 +116,7 @@ Handle<Value> TiUIClipboardObject::_hasData(void* userContext, TiObject* caller,
         return ThrowException(String::New(Ti::Msg::Invalid_arguments));
     }
 
-    QString type = TiObject::getStringFromValue(args[0]->ToString());
+    QString type = V8ValueToQString(args[0]);
     return clipboard.contains(type, 0) ? True() : False();
 }
 
@@ -145,7 +147,7 @@ Handle<Value> TiUIClipboardObject::_setData(void* userContext, TiObject* caller,
       data = QByteArray(*uf8Str, uf8Str.length());
     }
 
-    QString type = TiObject::getStringFromValue(args[0]->ToString());
+    QString type = V8ValueToQString(args[0]);
     clipboard.insert(type, data);
 
     return Undefined();

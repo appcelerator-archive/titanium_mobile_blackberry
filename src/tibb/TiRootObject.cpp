@@ -25,6 +25,8 @@
 
 #include <unistd.h>
 
+using namespace titanium;
+
 static Handle<ObjectTemplate> g_rootTemplate;
 static const string rootFolder = "app/native/assets/";
 
