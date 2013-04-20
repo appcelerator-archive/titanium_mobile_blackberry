@@ -14,6 +14,9 @@
 #include "TiPropertyMapObject.h"
 #include "TiPropertySetFunctionObject.h"
 #include "TiMessageStrings.h"
+#include "V8Utils.h"
+
+using namespace titanium;
 
 const static TiProperty g_tiProperties[] =
 {
@@ -199,20 +202,20 @@ Handle<Value> TiUDPSocketObject::_sendString(void* userContext, TiObject* /*call
     Handle<Value> value = args[0];
     QString data;
     if (!value->IsObject()) {
-    	return ThrowException(String::New(Ti::Msg::Missing_argument));
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
     Handle<Object> dict = Handle<Object>::Cast(value);
     if (!dict->Has(String::New("data"))) {
-    	return ThrowException(String::New(Ti::Msg::Missing_argument));
+        return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
-    data = TiObject::getStringFromValue(dict->Get(String::New("data")));
+    data = V8ValueToQString(dict->Get(String::New("data")));
     int port = -1;
     if (dict->Has(String::New("port"))) {
-    	port = Handle<Number>::Cast(dict->Get(String::New("port")))->Value();
+        port = Handle<Number>::Cast(dict->Get(String::New("port")))->Value();
     }
     QString host;
     if (dict->Has(String::New("host"))) {
-    	host = TiObject::getStringFromValue(dict->Get(String::New("host")));
+        host = V8ValueToQString(dict->Get(String::New("host")));
     }
 
     HandleScope handleScope;
@@ -248,7 +251,7 @@ Handle<Value> TiUDPSocketObject::_sendBytes(void* userContext, TiObject* /*calle
     }
     QString host;
     if (dict->Has(String::New("host"))) {
-    	host = TiObject::getStringFromValue(dict->Get(String::New("host")));
+    	host = V8ValueToQString(dict->Get(String::New("host")));
     }
 
     HandleScope handleScope;
