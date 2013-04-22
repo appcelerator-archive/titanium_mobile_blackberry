@@ -7,12 +7,39 @@
 
 #include "NativeAlertDialogObject.h"
 
+#include "EventHandler.h"
 #include "NativeControlObject.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 #include "V8Utils.h"
 
 using namespace titanium;
+
+class NativeAlertDialogEventHandler : public EventHandler {
+    Q_OBJECT
+
+public:
+    explicit  NativeAlertDialogEventHandler(TiEventContainer* eventContainer)
+      : EventHandler(eventContainer) { }
+
+public slots:
+    void buttonSelected(bb::system::SystemUiResult::Type) {
+        bb::system::SystemDialog* dialog = static_cast<bb::system::SystemDialog*>(sender());
+        bb::system::SystemUiButton* selectedButton = dialog->buttonSelection();
+        if (selectedButton == NULL) {
+          return;
+        }
+
+        QVariant index = selectedButton->property("index");
+        QVariant cancel = selectedButton->property("cancel");
+        TiEventContainer* container = getEventContainer();
+        container->setDataProperty("index", index.toInt(NULL));
+        container->setDataProperty("cancel", cancel.toBool());
+        container->fireEvent();
+    }
+};
+
+#include "NativeAlertDialogObject.moc"
 
 NativeAlertDialogObject::NativeAlertDialogObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_ALERTDIALOG)
@@ -30,32 +57,22 @@ NativeAlertDialogObject* NativeAlertDialogObject::createAlertDialog(TiObject* ti
     return new NativeAlertDialogObject(tiObject);
 }
 
-NATIVE_TYPE NativeAlertDialogObject::getObjectType() const
-{
-    return N_TYPE_ALERTDIALOG;
-}
-
 int NativeAlertDialogObject::initialize()
 {
-    nativeDialog_ = new bb::system::SystemDialog();
+    // By default the dialog should have a single "OK" button.
+    nativeDialog_ = new bb::system::SystemDialog("OK");
     return NATIVE_ERROR_OK;
 }
 
-int NativeAlertDialogObject::setTitle(TiObject* obj)
+int NativeAlertDialogObject::show()
 {
-    Q_ASSERT(nativeDialog_ != NULL);
-    QString title = V8ValueToQString(obj->getValue());
-    nativeDialog_->setTitle(title);
-
+    nativeDialog_->show();
     return NATIVE_ERROR_OK;
 }
 
-int NativeAlertDialogObject::setMessage(TiObject* obj)
+int NativeAlertDialogObject::hide()
 {
-    Q_ASSERT(nativeDialog_ != NULL);
-    QString message = V8ValueToQString(obj->getValue());
-    nativeDialog_->setBody(message);
-
+    nativeDialog_->cancel();
     return NATIVE_ERROR_OK;
 }
 
@@ -88,67 +105,48 @@ int NativeAlertDialogObject::setButtonNames(TiObject* obj)
 
 int NativeAlertDialogObject::setCancel(TiObject* obj)
 {
-    Q_ASSERT(nativeDialog_ != NULL);
-    int error = NativeControlObject::getInteger(obj, &cancelIndex_);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
+    Local<Number> index = obj->getValue()->ToNumber();
+    if (index.IsEmpty()) {
+        return NATIVE_ERROR_INVALID_ARG;
     }
+
     bb::system::SystemUiButton* button = nativeDialog_->buttonAt(cancelIndex_);
-    if (button)
-    {
-        button->setProperty("cancel", QVariant::fromValue(true));
+    if (button) {
+        button->setProperty("cancel", false);
     }
+
+    cancelIndex_ = index->Value();
+    button = nativeDialog_->buttonAt(cancelIndex_);
+    if (button) {
+        button->setProperty("cancel", true);
+    }
+
     return NATIVE_ERROR_OK;
 }
 
-int NativeAlertDialogObject::show()
+int NativeAlertDialogObject::setMessage(TiObject* obj)
 {
-    nativeDialog_->show();
+    QString message = V8ValueToQString(obj->getValue());
+    nativeDialog_->setBody(message);
+
     return NATIVE_ERROR_OK;
 }
 
-int NativeAlertDialogObject::hide()
+int NativeAlertDialogObject::setTitle(TiObject* obj)
 {
-    nativeDialog_->cancel();
-    return NATIVE_ERROR_OK;
-}
+    QString title = V8ValueToQString(obj->getValue());
+    nativeDialog_->setTitle(title);
 
-NAHANDLE NativeAlertDialogObject::getNativeHandle() const
-{
-    return nativeDialog_;
+    return NATIVE_ERROR_OK;
 }
 
 void NativeAlertDialogObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
-	NativeControlObject::setupEvents(containerFactory);
+    NativeControlObject::setupEvents(containerFactory);
 
-	TiEventContainer* eventClick = containerFactory->createEventContainer();
-
+    TiEventContainer* eventClick = containerFactory->createEventContainer();
     eventClick->setDataProperty("type", tetCLICK);
     events_.insert(tetCLICK, EventPairSmartPtr(eventClick, new NativeAlertDialogEventHandler(eventClick)));
     QObject::connect(nativeDialog_, SIGNAL(finished(bb::system::SystemUiResult::Type)), events_[tetCLICK]->handler(), SLOT(buttonSelected(bb::system::SystemUiResult::Type)));
 }
 
-
-NativeAlertDialogEventHandler::NativeAlertDialogEventHandler(TiEventContainer* eventContainer)
-{
-    eventContainer_ = eventContainer;
-}
-
-NativeAlertDialogEventHandler::~NativeAlertDialogEventHandler(){}
-
-void  NativeAlertDialogEventHandler::buttonSelected(bb::system::SystemUiResult::Type type)
-{
-	bb::system::SystemDialog* dialog = static_cast<bb::system::SystemDialog*>(sender());
-	bb::system::SystemUiButton* selectedButton = dialog->buttonSelection();
-	if (selectedButton == NULL) {
-		return;
-	}
-
-	QVariant index = selectedButton->property("index");
-	QVariant cancel = selectedButton->property("cancel");
-	eventContainer_->setDataProperty("index", index.toInt(NULL));
-	eventContainer_->setDataProperty("cancel", cancel.toBool());
-	eventContainer_->fireEvent();
-}
