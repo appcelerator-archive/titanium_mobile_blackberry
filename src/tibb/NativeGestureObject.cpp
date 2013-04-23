@@ -7,11 +7,41 @@
 
 #include "NativeGestureObject.h"
 
+#include <bb/device/DeviceInfo>
+
+#include "EventHandler.h"
+#include "TiEventContainerFactory.h"
+
+using namespace bb::device;
 using namespace titanium;
 
 static NativeGestureObject::PropertyInfo properties[] = {
 };
 static const int propertyCount = sizeof(properties) / sizeof(properties[0]);
+
+class GestureEventHandler : public EventHandler {
+    Q_OBJECT
+
+public:
+    explicit GestureEventHandler(TiEventContainer* container)
+      : EventHandler(container) {
+        connect(&deviceInfo_,
+                SIGNAL(orientationChanged(bb::device::DeviceOrientation::Type)),
+                SLOT(orientationChanged(bb::device::DeviceOrientation::Type)));
+    }
+
+private slots:
+    void orientationChanged(bb::device::DeviceOrientation::Type orientation) {
+        TiEventContainer* container = getEventContainer();
+        container->setDataProperty("orientation", orientation);
+        container->fireEvent();
+    }
+
+private:
+    DeviceInfo deviceInfo_;
+};
+
+#include "NativeGestureObject.moc"
 
 NativeGestureObject::NativeGestureObject(TiObject* obj)
   : NativeProxyObject(obj)
@@ -20,5 +50,12 @@ NativeGestureObject::NativeGestureObject(TiObject* obj)
 
 NativeGestureObject* NativeGestureObject::createGesture(TiObject* obj) {
     return new NativeGestureObject(obj);
+}
+
+void NativeGestureObject::setupEvents(TiEventContainerFactory* containerFactory) {
+    TiEventContainer* orientationChange = containerFactory->createEventContainer();
+    orientationChange->setDataProperty("type", "orientationchange");
+    GestureEventHandler* handler = new GestureEventHandler(orientationChange);
+    events_.insert("orientationchange", EventPairSmartPtr(orientationChange, handler));
 }
 

@@ -22,6 +22,9 @@ public:
         return N_TYPE_GESTURE;
     }
 
+protected:
+    virtual void setupEvents(TiEventContainerFactory* containerFactory);
+
 private:
     NativeGestureObject(TiObject* obj);
 };
