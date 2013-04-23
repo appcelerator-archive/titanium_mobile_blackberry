@@ -22,6 +22,7 @@
 #include "TiEventContainer.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
+#include "TiOrientation.h"
 #include "Window.h"
 
 using namespace bb::cascades;
@@ -64,7 +65,8 @@ int NativeWindowObject::setOrientationModes(TiObject* obj) {
     uint32_t modeCount = modes->Length();
     int flags = 0;
     for (uint32_t i = 0; i < modeCount; i++) {
-        flags |= modes->Get(i)->Int32Value();
+        int32_t flag = modes->Get(i)->Int32Value();
+        flags |= Orientation::toSceneMode(static_cast<Orientation::Type>(flag));
     }
 
     scene_.setOrientationModes(flags);

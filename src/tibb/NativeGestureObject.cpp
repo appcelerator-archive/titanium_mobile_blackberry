@@ -8,9 +8,11 @@
 #include "NativeGestureObject.h"
 
 #include <bb/device/DeviceInfo>
+#include <bb/device/DisplayInfo>
 
 #include "EventHandler.h"
 #include "TiEventContainerFactory.h"
+#include "TiOrientation.h"
 
 using namespace bb::device;
 using namespace titanium;
@@ -25,6 +27,9 @@ class GestureEventHandler : public EventHandler {
 public:
     explicit GestureEventHandler(TiEventContainer* container)
       : EventHandler(container) {
+        DisplayInfo displayInfo;
+        aspectType_ = displayInfo.aspectType();
+
         connect(&deviceInfo_,
                 SIGNAL(orientationChanged(bb::device::DeviceOrientation::Type)),
                 SLOT(orientationChanged(bb::device::DeviceOrientation::Type)));
@@ -33,12 +38,14 @@ public:
 private slots:
     void orientationChanged(bb::device::DeviceOrientation::Type orientation) {
         TiEventContainer* container = getEventContainer();
-        container->setDataProperty("orientation", orientation);
+        container->setDataProperty("orientation",
+                                   Orientation::fromDevice(orientation));
         container->fireEvent();
     }
 
 private:
     DeviceInfo deviceInfo_;
+    DisplayAspectType::Type aspectType_;
 };
 
 #include "NativeGestureObject.moc"
