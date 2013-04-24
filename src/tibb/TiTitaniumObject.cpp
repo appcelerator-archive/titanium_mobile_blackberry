@@ -13,6 +13,7 @@
 #include "TiBufferStreamObject.h"
 #include "TiCodecObject.h"
 #include "TiGenericFunctionObject.h"
+#include "TiGesture.h"
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
 #include "TiPlatformObject.h"
@@ -71,6 +72,7 @@ void TiTitaniumObject::onCreateStaticMembers()
     TiBufferStreamObject::addObjectToParent(this);
     TiStreamObject::addObjectToParent(this);
     TiLocaleObject::addObjectToParent(this);
+    TiGesture::addObjectToParent(this, objectFactory_);
 }
 
 bool TiTitaniumObject::canAddMembers() const
