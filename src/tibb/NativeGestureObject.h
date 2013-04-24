@@ -12,6 +12,7 @@
 #include "PropertyDelegate.h"
 
 enum N_GESTURE_PROPS {
+    N_GESTURE_PROP_ORIENTATION
 };
 
 class NativeGestureObject : public NativeProxyObject,
@@ -21,6 +22,11 @@ public:
     NATIVE_TYPE getObjectType() const {
         return N_TYPE_GESTURE;
     }
+
+    int setPropertyValue(size_t propertyNumber, TiObject* obj);
+    int getPropertyValue(size_t propertyNumber, TiObject* obj);
+
+    int getOrientation(TiObject* value);
 
 protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);

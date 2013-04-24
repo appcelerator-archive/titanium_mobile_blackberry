@@ -7,6 +7,12 @@
 
 #include "TiGesture.h"
 
+#include "NativeGestureObject.h"
+
+const static TiProperty g_tiProperties[] = {
+    { "orientation", TI_PROP_PERMISSION_READ, N_GESTURE_PROP_ORIENTATION }
+};
+
 TiGesture::TiGesture()
   : TiProxy("Gesture") {
 }
@@ -20,6 +26,7 @@ void TiGesture::addObjectToParent(TiObject* parent, NativeObjectFactory* factory
 
 void TiGesture::onCreateStaticMembers() {
     TiProxy::onCreateStaticMembers();
+    setTiMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
 }
 
 void TiGesture::initializeTiObject(TiObject* parentContext) {

@@ -12,12 +12,14 @@
 
 #include "EventHandler.h"
 #include "TiEventContainerFactory.h"
+#include "TiObject.h"
 #include "TiOrientation.h"
 
 using namespace bb::device;
 using namespace titanium;
 
 static NativeGestureObject::PropertyInfo properties[] = {
+    { N_GESTURE_PROP_ORIENTATION, &NativeGestureObject::getOrientation, 0}
 };
 static const int propertyCount = sizeof(properties) / sizeof(properties[0]);
 
@@ -57,6 +59,21 @@ NativeGestureObject::NativeGestureObject(TiObject* obj)
 
 NativeGestureObject* NativeGestureObject::createGesture(TiObject* obj) {
     return new NativeGestureObject(obj);
+}
+
+int NativeGestureObject::setPropertyValue(size_t propertyNumber, TiObject* obj) {
+    return setProperty(propertyNumber, obj);
+}
+
+int NativeGestureObject::getPropertyValue(size_t propertyNumber, TiObject* obj) {
+    return getProperty(propertyNumber, obj);
+}
+
+int NativeGestureObject::getOrientation(TiObject* value) {
+    DeviceInfo info;
+    int orientation = Orientation::fromDevice(info.orientation());
+    value->setValue(Integer::New(orientation));
+    return NATIVE_ERROR_OK;
 }
 
 void NativeGestureObject::setupEvents(TiEventContainerFactory* containerFactory) {
