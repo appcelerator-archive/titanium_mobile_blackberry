@@ -10,6 +10,11 @@
 #include <bb/device/DeviceInfo>
 #include <bb/device/DisplayInfo>
 
+#include <QDateTime>
+#include <QtSensors/QAccelerometer>
+#include <QtSensors/QAccelerometerFilter>
+#include <QtSensors/QAccelerometerReading>
+
 #include "EventHandler.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
@@ -17,6 +22,7 @@
 
 using namespace bb::device;
 using namespace titanium;
+using namespace QtMobility;
 
 static NativeGestureObject::PropertyInfo properties[] = {
     { N_GESTURE_PROP_ORIENTATION, &NativeGestureObject::getOrientation, 0}
@@ -50,6 +56,81 @@ private:
     DisplayAspectType::Type aspectType_;
 };
 
+class ShakeEventHandler : public EventHandler,
+                          public QAccelerometerFilter {
+    Q_OBJECT
+
+public:
+    enum Sensitivity {
+        Low = 20,
+        Medium = 30,
+        High = 40
+    };
+
+    // Create a shake event handler with a default
+    // sensitivity of Medium and interval of 500 ms.
+    explicit ShakeEventHandler(TiEventContainer* container)
+      : EventHandler(container)
+      , sensitivity_(Medium)
+      , interval_(500)
+      , lastShake_(0) {
+        connect(&sensor_, SIGNAL(readingChanged()), SLOT(shake()));
+
+        sensor_.setAccelerationMode(QAccelerometer::User);
+        sensor_.addFilter(this);
+        sensor_.start();
+    }
+
+    void setSensitivity(Sensitivity sensitivity) {
+        sensitivity_ = sensitivity;
+    }
+
+    void setInterval(qint64 interval) {
+        interval_ = interval;
+    }
+
+    virtual bool filter(QAccelerometerReading* reading) {
+        // Compute the time since the last shake event.
+        qint64 now = QDateTime::currentMSecsSinceEpoch(),
+               diff = now - lastShake_;
+
+        // Compute how much force the device was shaken.
+        // Note the force value is left squared.
+        float x = reading->x(),
+              y = reading->y(),
+              z = reading->z(),
+              force = (x * x) + (y * y) + (z * z);
+
+        // If user shakes the device with enough force
+        // and the interval of time between shake events
+        // has been reached we will fire a shake event.
+        if (force > (sensitivity_ * sensitivity_) && diff > interval_) {
+            lastShake_ = now;
+            return true;
+        }
+
+        return false;
+    }
+
+private slots:
+    // A shake was detected and a new sensor reading is ready.
+    void shake() {
+        QAccelerometerReading* reading = sensor_.reading();
+
+        TiEventContainer* container = getEventContainer();
+        container->setDataProperty("x", (float) reading->x());
+        container->setDataProperty("y", (float) reading->y());
+        container->setDataProperty("z", (float) reading->z());
+        container->fireEvent();
+    }
+
+private:
+    float sensitivity_;
+    qint64 interval_;
+    qint64 lastShake_;
+    QAccelerometer sensor_;
+};
+
 #include "NativeGestureObject.moc"
 
 NativeGestureObject::NativeGestureObject(TiObject* obj)
@@ -77,9 +158,16 @@ int NativeGestureObject::getOrientation(TiObject* value) {
 }
 
 void NativeGestureObject::setupEvents(TiEventContainerFactory* containerFactory) {
-    TiEventContainer* orientationChange = containerFactory->createEventContainer();
-    orientationChange->setDataProperty("type", "orientationchange");
-    GestureEventHandler* handler = new GestureEventHandler(orientationChange);
-    events_.insert("orientationchange", EventPairSmartPtr(orientationChange, handler));
+    TiEventContainer* orientationContainer = containerFactory->createEventContainer();
+    orientationContainer->setDataProperty("type", "orientationchange");
+    GestureEventHandler* orientationHandler =
+        new GestureEventHandler(orientationContainer);
+    events_.insert("orientationchange",
+                   EventPairSmartPtr(orientationContainer, orientationHandler));
+
+    TiEventContainer* shakeContainer = containerFactory->createEventContainer();
+    shakeContainer->setDataProperty("type", "shake");
+    ShakeEventHandler* shakeHandler = new ShakeEventHandler(shakeContainer);
+    events_.insert("shake", EventPairSmartPtr(shakeContainer, shakeHandler));
 }
 
