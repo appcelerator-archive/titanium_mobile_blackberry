@@ -78,7 +78,13 @@ public:
 
         sensor_.setAccelerationMode(QAccelerometer::User);
         sensor_.addFilter(this);
-        sensor_.start();
+    }
+
+    void enable(bool on) {
+        if (on)
+            sensor_.start();
+        else
+            sensor_.stop();
     }
 
     void setSensitivity(Sensitivity sensitivity) {
@@ -135,7 +141,8 @@ private:
 
 NativeGestureObject::NativeGestureObject(TiObject* obj)
   : NativeProxyObject(obj)
-  , PropertyDelegateBase<NativeGestureObject>(this, properties, propertyCount) {
+  , PropertyDelegateBase<NativeGestureObject>(this, properties, propertyCount)
+  , shakeListenerCount_(0) {
 }
 
 NativeGestureObject* NativeGestureObject::createGesture(TiObject* obj) {
@@ -148,6 +155,28 @@ int NativeGestureObject::setPropertyValue(size_t propertyNumber, TiObject* obj) 
 
 int NativeGestureObject::getPropertyValue(size_t propertyNumber, TiObject* obj) {
     return getProperty(propertyNumber, obj);
+}
+
+int NativeGestureObject::setEventHandler(const char* eventName, TiEvent* event) {
+    NativeProxyObject::setEventHandler(eventName, event);
+
+    if (strcmp("shake", eventName) == 0) {
+        shakeListenerCount_++;
+        if (shakeListenerCount_ == 1) {
+            shakeHandler_->enable(true);
+        }
+    }
+}
+
+int NativeGestureObject::removeEventHandler(const char* eventName, int eventId) {
+    NativeProxyObject::removeEventHandler(eventName, eventId);
+
+    if (strcmp("shake", eventName) == 0) {
+        shakeListenerCount_--;
+        if (shakeListenerCount_ == 0) {
+            shakeHandler_->enable(false);
+        }
+    }
 }
 
 int NativeGestureObject::getOrientation(TiObject* value) {
@@ -167,7 +196,7 @@ void NativeGestureObject::setupEvents(TiEventContainerFactory* containerFactory)
 
     TiEventContainer* shakeContainer = containerFactory->createEventContainer();
     shakeContainer->setDataProperty("type", "shake");
-    ShakeEventHandler* shakeHandler = new ShakeEventHandler(shakeContainer);
-    events_.insert("shake", EventPairSmartPtr(shakeContainer, shakeHandler));
+    shakeHandler_ = new ShakeEventHandler(shakeContainer);
+    events_.insert("shake", EventPairSmartPtr(shakeContainer, shakeHandler_));
 }
 

@@ -15,6 +15,8 @@ enum N_GESTURE_PROPS {
     N_GESTURE_PROP_ORIENTATION
 };
 
+class ShakeEventHandler;
+
 class NativeGestureObject : public NativeProxyObject,
                             public titanium::PropertyDelegateBase<NativeGestureObject> {
 public:
@@ -25,6 +27,8 @@ public:
 
     int setPropertyValue(size_t propertyNumber, TiObject* obj);
     int getPropertyValue(size_t propertyNumber, TiObject* obj);
+    virtual int setEventHandler(const char* eventName, TiEvent* event);
+    virtual int removeEventHandler(const char* eventName, int eventId);
 
     int getOrientation(TiObject* value);
 
@@ -33,6 +37,9 @@ protected:
 
 private:
     NativeGestureObject(TiObject* obj);
+
+    ShakeEventHandler* shakeHandler_;
+    int shakeListenerCount_;
 };
 
 #endif
