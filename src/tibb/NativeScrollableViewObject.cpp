@@ -65,7 +65,7 @@ int NativeScrollableViewObject::setViews(TiObject* obj)
         return error;
     }
 
-	for (int i = 0; len = views_.size(); i < len; i++) {
+	for (int i = 0, len = views_.size(); i < len; i++) {
 		NativeObject* view = (NativeObject*)views_[i];
 		addChildNativeObject(view);
 	}
