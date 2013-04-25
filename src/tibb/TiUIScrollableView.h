@@ -16,6 +16,7 @@
  * Represents a Titanium button object
  *
  */
+class NativeScrollableViewObject;
 
 class TiUIScrollableView : public TiUIBase
 {
@@ -25,9 +26,15 @@ public:
 protected:
     virtual ~TiUIScrollableView();
     virtual void initializeTiObject(TiObject* parentContext);
+    virtual void onCreateStaticMembers();
 
 private:
     TiUIScrollableView();
+	TiUIScrollableView(const char* name);
+	static Handle<Value> _addView(void* userContext, TiObject* caller, const Arguments& args);
+	static Handle<Value> _moveNext(void* userContext, TiObject* caller, const Arguments& args);
+	static Handle<Value> _movePrevious(void* userContext, TiObject* caller, const Arguments& args);
+	static Handle<Value> _scrollToView(void* userContext, TiObject* caller, const Arguments& args);
 };
 
 #endif /* TIUISCROLLABLEVIEW_H_ */

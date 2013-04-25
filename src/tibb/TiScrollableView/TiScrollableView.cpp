@@ -14,7 +14,7 @@
 #include <bb/cascades/DockLayout>
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/AbsoluteLayoutProperties>
-
+#include <iostream>
 
 TiScrollableView::~TiScrollableView() { }
 //	for (int i = 0, len = this->views.size(); i < len; ++i) {
@@ -24,9 +24,10 @@ TiScrollableView::~TiScrollableView() { }
 // }
 
 TiScrollableView::TiScrollableView() {
-
+	this->startIndex = 0;
 	this->contentOffsetX = 0;
 	this->width = 0;
+	this->currentIndex = 0;
 	bb::cascades::ScrollViewProperties *scrollProps = this->scrollViewProperties();
 	scrollProps->setScrollMode(bb::cascades::ScrollMode::Horizontal);
 
@@ -42,6 +43,9 @@ TiScrollableView::TiScrollableView() {
 
 }
 
+void TiScrollableView::startAt(int index) {
+	this->startIndex = index;
+}
 void TiScrollableView::onScrolling(const QRectF & rect, float meh) {
 	/*
 	TiScrollableViewPage *item = this->views.at(3);
@@ -51,6 +55,8 @@ void TiScrollableView::onScrolling(const QRectF & rect, float meh) {
 
 void TiScrollableView::onScroll(const QRectF & rect, float meh)
 {
+	// Avoid scrolling to "currentPage"
+	this->startIndex = 0;
 	float x = rect.x();
 	float width = this->width;
 	this->contentOffsetX = x;
@@ -71,6 +77,7 @@ void TiScrollableView::onScroll(const QRectF & rect, float meh)
 }
 
 void TiScrollableView::scrollToIndex(int index, bool animated) {
+	this->currentIndex = index;
 	this->scrollToPoint(index * this->width, 0.0, animated ? bb::cascades::ScrollAnimation::Smooth : bb::cascades::ScrollAnimation::None );
 	for (int i = 0, len = this->views.size(); i < len; ++i) {
 		TiScrollableViewPage *item = this->views.at(i);
@@ -89,10 +96,13 @@ void TiScrollableView::handleLayoutFrameUpdated(QRectF rect)
 }
 
 void TiScrollableView::arrangeViews() {
-	bb::cascades::AbsoluteLayoutProperties *layoutProps;
 	for (int i = 0, len = this->views.size(); i < len; ++i) {
 		TiScrollableViewPage *item = this->views.at(i);
 		item->setLeft(i * this->width);
+	}
+
+	if(this->startIndex > 0 && this->startIndex <= this->indexCount) {
+		this->scrollToIndex(this->startIndex, false);
 	}
 }
 
@@ -104,4 +114,5 @@ void TiScrollableView::addView(bb::cascades::Container* view) {
 	if(this->width != 0) {
 		this->arrangeViews();
 	}
+	this->indexCount = views.size();
 }

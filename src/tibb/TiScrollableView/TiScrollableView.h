@@ -26,12 +26,16 @@ public:
 	virtual ~TiScrollableView();
 	void addView(bb::cascades::Container* view);
 	void scrollToIndex(int index, bool animated);
+	int currentIndex;
+	int indexCount;
+	void startAt(int index);
 private:
 	QList<TiScrollableViewPage*> views;
 	bb::cascades::Container* contentView;
 	void arrangeViews();
 	float width;
 	float contentOffsetX;
+	int startIndex;
 public slots:
     void handleLayoutFrameUpdated(QRectF rect);
     void onScroll(const QRectF & rect, float);

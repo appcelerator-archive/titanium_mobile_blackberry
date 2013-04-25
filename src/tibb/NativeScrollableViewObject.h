@@ -36,6 +36,26 @@ public:
     virtual int initialize();
     virtual int addChildNativeObject(NativeObject* obj);
     virtual void updateLayout(QRectF rect);
+    virtual int setViews(TiObject* obj);
+
+    virtual int setCurrentPage(TiObject* obj);
+    virtual int setDisableBounce(TiObject* obj);
+    virtual int setOverScrollMode(TiObject* obj);
+    virtual int setOverlayEnabled(TiObject* obj);
+    virtual int setPagingControlAlpha(TiObject* obj);
+    virtual int setPagingControlColor(TiObject* obj);
+    virtual int setPagingControlHeight(TiObject* obj);
+    virtual int setPagingControlOnTop(TiObject* obj);
+    virtual int setPagingControlTimeout(TiObject* obj);
+    virtual int setScrollingEnabled(TiObject* obj);
+    virtual int setShowPagingControl(TiObject* obj);
+
+    virtual void scrollToIndex(int index, bool animated);
+    virtual void scrollToView(NativeObject *view, bool animated);
+
+    virtual void moveNext();
+    virtual void movePrevious();
+
 
 protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
@@ -46,6 +66,7 @@ private:
     NativeScrollableViewObject(const NativeScrollableViewObject&);
     void operator=(const NativeScrollableViewObject&);
     TiScrollableView *scrollableView_;
+    QVector<NativeObject*> allViews_;
 };
 
 
