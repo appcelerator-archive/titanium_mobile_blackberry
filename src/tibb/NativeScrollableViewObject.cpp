@@ -12,6 +12,11 @@
 #include "TiScrollableView/TiScrollableView.h"
 #include <v8.h>
 
+NATIVE_TYPE NativeScrollableViewObject::getObjectType() const
+{
+    return N_TYPE_SCROLLABLE_VIEW;
+}
+
 NativeScrollableViewObject::NativeScrollableViewObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_SCROLLABLE_VIEW)
 {
@@ -25,20 +30,6 @@ NativeScrollableViewObject::~NativeScrollableViewObject()
 NativeScrollableViewObject* NativeScrollableViewObject::createScrollableView(TiObject* tiObject)
 {
     return new NativeScrollableViewObject(tiObject);
-}
-
-NATIVE_TYPE NativeScrollableViewObject::getObjectType() const
-{
-    return N_TYPE_SCROLLABLE_VIEW;
-}
-
-void NativeScrollableViewObject::moveNext() {
-	if(scrollableView_->currentIndex == scrollableView_->indexCount - 1) return;
-	scrollableView_->scrollToIndex(scrollableView_->currentIndex + 1, true);
-}
-void NativeScrollableViewObject::movePrevious() {
-	if(scrollableView_->currentIndex == 0) return;
-	scrollableView_->scrollToIndex(scrollableView_->currentIndex - 1, true);
 }
 
 int NativeScrollableViewObject::initialize()
@@ -56,7 +47,6 @@ void NativeScrollableViewObject::updateLayout(QRectF rect)
     scrollableView_->setPreferredSize(w, h);
 }
 
-
 int NativeScrollableViewObject::addChildNativeObject(NativeObject* obj)
 {
 	addChildImpl(obj);
@@ -65,6 +55,7 @@ int NativeScrollableViewObject::addChildNativeObject(NativeObject* obj)
 	return NATIVE_ERROR_OK;
 }
 
+// Javascript methods:
 int NativeScrollableViewObject::setViews(TiObject* obj)
 {
     QVector<NativeObject*> views_;
@@ -74,27 +65,31 @@ int NativeScrollableViewObject::setViews(TiObject* obj)
         return error;
     }
 
-    if (views_.size() > 0) {
-        for (int i = 0; i < views_.size(); i++) {
-            NativeObject* view = (NativeObject*)views_[i];
-            addChildNativeObject(view);
-        }
-    }
+	for (int i = 0; len = views_.size(); i < len; i++) {
+		NativeObject* view = (NativeObject*)views_[i];
+		addChildNativeObject(view);
+	}
     return NATIVE_ERROR_OK;
 }
 
-void NativeScrollableViewObject::scrollToView(NativeObject *view, bool animated) {
-/*
-	for(int i = 0, len = allViews_.size(); i < len; ++i) {
-		NativeObject* a = allViews_.at(i);
-		NativeObject& myView = *view;
-		NativeObject& myA = *a;
-		if(myView == myA) {
-			scrollToIndex(i, animated);
-			return;
-		}
+void NativeScrollableViewObject::moveNext()
+{
+	if(scrollableView_->currentIndex == scrollableView_->indexCount - 1) return;
+	scrollableView_->scrollToIndex(scrollableView_->currentIndex + 1, true);
+}
+
+void NativeScrollableViewObject::movePrevious()
+{
+	if(scrollableView_->currentIndex == 0) return;
+	scrollableView_->scrollToIndex(scrollableView_->currentIndex - 1, true);
+}
+
+void NativeScrollableViewObject::scrollToView(NativeObject *view, bool animated)
+{
+	if(allViews_.contains(view)) {
+		int index = allViews_.indexOf(view);
+		scrollToIndex(index, animated);
 	}
-	*/
 }
 
 void NativeScrollableViewObject::scrollToIndex(int index, bool animated) {
@@ -165,26 +160,10 @@ int NativeScrollableViewObject::setShowPagingControl(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
-/*
-int NativeScrollableViewObject::setImage(TiObject* obj)
-{
-    QString str;
-    int error = NativeControlObject::getString(obj, str);
-    if (!N_SUCCEEDED(error))
-    {
-        return error;
-    }
-    str = getResourcePath(str);
-    const bb::cascades::Image image = bb::cascades::Image(QUrl(str));
-    button_->setImage(image);
-    return NATIVE_ERROR_OK;
-}
-*/
+// TODO events
 void NativeScrollableViewObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
     NativeControlObject::setupEvents(containerFactory);
-
-
     /*
     TiEventContainer* eventClick = containerFactory->createEventContainer();
     eventClick->setDataProperty("type", tetCLICK);
@@ -192,5 +171,3 @@ void NativeScrollableViewObject::setupEvents(TiEventContainerFactory* containerF
     QObject::connect(button_, SIGNAL(clicked()), events_[tetCLICK]->handler(), SLOT(clicked(void)));
     */
 }
-
-

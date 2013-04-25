@@ -10,6 +10,7 @@
 
 #include "NativeControlObject.h"
 #include <QtCore/QObject>
+#include <iostream>
 
 namespace bb
 {
@@ -62,11 +63,10 @@ protected:
 
 private:
     explicit NativeScrollableViewObject(TiObject* tiObject);
-    // Disable copy ctor & assignment operator
     NativeScrollableViewObject(const NativeScrollableViewObject&);
     void operator=(const NativeScrollableViewObject&);
     TiScrollableView *scrollableView_;
-    QVector<NativeObject*> allViews_;
+    QList<NativeObject*>allViews_;
 };
 
 

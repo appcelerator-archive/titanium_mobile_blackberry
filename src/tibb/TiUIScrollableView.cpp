@@ -100,7 +100,7 @@ Handle<Value> TiUIScrollableView::_scrollToView(void* userContext, TiObject*, co
     else
     {
     	TiObject* tiObj = TiObject::getTiObjectFromJsObject(args[0]);
-    	scrollableView->scrollToView((NativeObject*)tiObj, animated);
+    	scrollableView->scrollToView(tiObj->getNativeObject(), animated);
     }
 
 

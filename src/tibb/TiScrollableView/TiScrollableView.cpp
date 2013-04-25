@@ -17,13 +17,9 @@
 #include <iostream>
 
 TiScrollableView::~TiScrollableView() { }
-//	for (int i = 0, len = this->views.size(); i < len; ++i) {
-//		TiScrollableViewPage *page = this->views.at(i);
-//		page = NULL;
-//	}
-// }
 
-TiScrollableView::TiScrollableView() {
+TiScrollableView::TiScrollableView()
+{
 	this->startIndex = 0;
 	this->contentOffsetX = 0;
 	this->width = 0;
@@ -39,18 +35,26 @@ TiScrollableView::TiScrollableView() {
 
 	QObject::connect(this,SIGNAL(viewableAreaChanged(const QRectF &, float) ),this,SLOT(onScroll(const QRectF &, float)));
 	QObject::connect(this,SIGNAL(viewableAreaChanging(const QRectF &, float) ),this,SLOT(onScrolling(const QRectF &, float)));
-
-
 }
 
-void TiScrollableView::startAt(int index) {
+void TiScrollableView::handleLayoutFrameUpdated(QRectF rect)
+{
+	this->width = rect.width();
+	for (int i = 0, len = this->views.size(); i < len; ++i) {
+		TiScrollableViewPage *item = this->views.at(i);
+		item->setSize(rect.width(), rect.height());
+	}
+	this->arrangeViews();
+}
+
+void TiScrollableView::startAt(int index)
+{
 	this->startIndex = index;
 }
-void TiScrollableView::onScrolling(const QRectF & rect, float meh) {
-	/*
-	TiScrollableViewPage *item = this->views.at(3);
-	std::cout << "Current is 0 " << item->getIsCurrentItem() << std::endl;
-	*/
+
+void TiScrollableView::onScrolling(const QRectF & rect, float meh)
+{
+	// TODO something useful
 }
 
 void TiScrollableView::onScroll(const QRectF & rect, float meh)
@@ -76,23 +80,14 @@ void TiScrollableView::onScroll(const QRectF & rect, float meh)
 	}
 }
 
-void TiScrollableView::scrollToIndex(int index, bool animated) {
+void TiScrollableView::scrollToIndex(int index, bool animated)
+{
 	this->currentIndex = index;
 	this->scrollToPoint(index * this->width, 0.0, animated ? bb::cascades::ScrollAnimation::Smooth : bb::cascades::ScrollAnimation::None );
 	for (int i = 0, len = this->views.size(); i < len; ++i) {
 		TiScrollableViewPage *item = this->views.at(i);
 		item->setIsCurrentItem(i == index);
 	}
-}
-
-void TiScrollableView::handleLayoutFrameUpdated(QRectF rect)
-{
-	this->width = rect.width();
-	for (int i = 0, len = this->views.size(); i < len; ++i) {
-		TiScrollableViewPage *item = this->views.at(i);
-		item->setSize(rect.width(), rect.height());
-	}
-	this->arrangeViews();
 }
 
 void TiScrollableView::arrangeViews() {
