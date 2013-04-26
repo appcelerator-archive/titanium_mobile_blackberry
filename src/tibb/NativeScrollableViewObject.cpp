@@ -34,8 +34,8 @@ NativeScrollableViewObject* NativeScrollableViewObject::createScrollableView(TiO
 
 int NativeScrollableViewObject::initialize()
 {
-	scrollableView_ = new TiScrollableView();
-	setControl(scrollableView_);
+    scrollableView_ = new TiScrollableView();
+    setControl(scrollableView_);
     return NATIVE_ERROR_OK;
 }
 
@@ -49,10 +49,10 @@ void NativeScrollableViewObject::updateLayout(QRectF rect)
 
 int NativeScrollableViewObject::addChildNativeObject(NativeObject* obj)
 {
-	addChildImpl(obj);
-	scrollableView_->addView((bb::cascades::Container*)obj->getNativeHandle());
-	allViews_.append(obj);
-	return NATIVE_ERROR_OK;
+    addChildImpl(obj);
+    scrollableView_->addView((bb::cascades::Container*)obj->getNativeHandle());
+    allViews_.append(obj);
+    return NATIVE_ERROR_OK;
 }
 
 // Javascript methods:
@@ -65,31 +65,31 @@ int NativeScrollableViewObject::setViews(TiObject* obj)
         return error;
     }
 
-	for (int i = 0, len = views_.size(); i < len; i++) {
-		NativeObject* view = (NativeObject*)views_[i];
-		addChildNativeObject(view);
-	}
+    for (int i = 0, len = views_.size(); i < len; i++) {
+        NativeObject* view = (NativeObject*)views_[i];
+        addChildNativeObject(view);
+    }
     return NATIVE_ERROR_OK;
 }
 
 void NativeScrollableViewObject::moveNext()
 {
-	if(scrollableView_->currentIndex == scrollableView_->indexCount - 1) return;
-	scrollableView_->scrollToIndex(scrollableView_->currentIndex + 1, true);
+    if(scrollableView_->currentIndex == scrollableView_->indexCount - 1) return;
+    scrollableView_->scrollToIndex(scrollableView_->currentIndex + 1, true);
 }
 
 void NativeScrollableViewObject::movePrevious()
 {
-	if(scrollableView_->currentIndex == 0) return;
-	scrollableView_->scrollToIndex(scrollableView_->currentIndex - 1, true);
+    if(scrollableView_->currentIndex == 0) return;
+    scrollableView_->scrollToIndex(scrollableView_->currentIndex - 1, true);
 }
 
 void NativeScrollableViewObject::scrollToView(NativeObject *view, bool animated)
 {
-	if(allViews_.contains(view)) {
-		int index = allViews_.indexOf(view);
-		scrollToIndex(index, animated);
-	}
+    if(allViews_.contains(view)) {
+        int index = allViews_.indexOf(view);
+        scrollToIndex(index, animated);
+    }
 }
 
 void NativeScrollableViewObject::scrollToIndex(int index, bool animated) {
@@ -98,7 +98,7 @@ void NativeScrollableViewObject::scrollToIndex(int index, bool animated) {
 
 int NativeScrollableViewObject::setCurrentPage(TiObject* obj)
 {
-	int index;
+    int index;
     int error = NativeControlObject::getInteger(obj, &index);
     if (error != NATIVE_ERROR_OK)
     {

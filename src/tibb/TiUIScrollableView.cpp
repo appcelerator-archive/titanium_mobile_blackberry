@@ -76,7 +76,7 @@ Handle<Value> TiUIScrollableView::_addView(void* userContext, TiObject*, const A
     NativeScrollableViewObject* scrollableView = static_cast<NativeScrollableViewObject*>(self->getNativeObject());
 
     TiObject* tiObj = TiObject::getTiObjectFromJsObject(args[0]);
-	NativeObject* view = (NativeObject*)tiObj->getNativeObject();
+    NativeObject* view = (NativeObject*)tiObj->getNativeObject();
     scrollableView->addChildNativeObject(view);
     return Undefined();
 }
@@ -99,8 +99,8 @@ Handle<Value> TiUIScrollableView::_scrollToView(void* userContext, TiObject*, co
     }
     else
     {
-    	TiObject* tiObj = TiObject::getTiObjectFromJsObject(args[0]);
-    	scrollableView->scrollToView(tiObj->getNativeObject(), animated);
+        TiObject* tiObj = TiObject::getTiObjectFromJsObject(args[0]);
+        scrollableView->scrollToView(tiObj->getNativeObject(), animated);
     }
 
 

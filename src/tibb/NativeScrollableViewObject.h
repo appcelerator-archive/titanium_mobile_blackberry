@@ -12,19 +12,11 @@
 #include <QtCore/QObject>
 #include <iostream>
 
-namespace bb
-{
-namespace cascades
-{
-class Button;
-}
-}
-
 
 /*
  * NativeScrollableViewObject
  *
- * UI: Button control
+ * UI: ScrollableView control
  */
 class TiScrollableView;
 

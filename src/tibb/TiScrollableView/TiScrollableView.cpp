@@ -1,8 +1,8 @@
-/*
- * TiScrollableView.cpp
- *
- *  Created on: Apr 23, 2013
- *      Author: penrique
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2013 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #include "TiScrollableView.h"
@@ -20,94 +20,94 @@ TiScrollableView::~TiScrollableView() { }
 
 TiScrollableView::TiScrollableView()
 {
-	this->startIndex = 0;
-	this->contentOffsetX = 0;
-	this->width = 0;
-	this->currentIndex = 0;
-	bb::cascades::ScrollViewProperties *scrollProps = this->scrollViewProperties();
-	scrollProps->setScrollMode(bb::cascades::ScrollMode::Horizontal);
+    startIndex = 0;
+    contentOffsetX = 0;
+    width = 0;
+    currentIndex = 0;
+    bb::cascades::ScrollViewProperties *scrollProps = scrollViewProperties();
+    scrollProps->setScrollMode(bb::cascades::ScrollMode::Horizontal);
 
-	this->contentView = bb::cascades::Container::create();
-	this->contentView->setLayout(new bb::cascades::AbsoluteLayout());
-	this->setContent(this->contentView);
+    contentView = bb::cascades::Container::create();
+    contentView->setLayout(new bb::cascades::AbsoluteLayout());
+    setContent(contentView);
 
-	bb::cascades::LayoutUpdateHandler::create(this).onLayoutFrameChanged(this, SLOT(handleLayoutFrameUpdated(QRectF)));
+    bb::cascades::LayoutUpdateHandler::create(this).onLayoutFrameChanged(this, SLOT(handleLayoutFrameUpdated(QRectF)));
 
-	QObject::connect(this,SIGNAL(viewableAreaChanged(const QRectF &, float) ),this,SLOT(onScroll(const QRectF &, float)));
-	QObject::connect(this,SIGNAL(viewableAreaChanging(const QRectF &, float) ),this,SLOT(onScrolling(const QRectF &, float)));
+    QObject::connect(this,SIGNAL(viewableAreaChanged(const QRectF &, float) ),this,SLOT(onScroll(const QRectF &, float)));
+    QObject::connect(this,SIGNAL(viewableAreaChanging(const QRectF &, float) ),this,SLOT(onScrolling(const QRectF &, float)));
 }
 
 void TiScrollableView::handleLayoutFrameUpdated(QRectF rect)
 {
-	this->width = rect.width();
-	for (int i = 0, len = this->views.size(); i < len; ++i) {
-		TiScrollableViewPage *item = this->views.at(i);
-		item->setSize(rect.width(), rect.height());
-	}
-	this->arrangeViews();
+    width = rect.width();
+    for (int i = 0, len = views.size(); i < len; ++i) {
+        TiScrollableViewPage *item = views.at(i);
+        item->setSize(rect.width(), rect.height());
+    }
+    arrangeViews();
 }
 
 void TiScrollableView::startAt(int index)
 {
-	this->startIndex = index;
+    startIndex = index;
 }
 
 void TiScrollableView::onScrolling(const QRectF & rect, float meh)
 {
-	// TODO something useful
+    // TODO something useful
 }
 
 void TiScrollableView::onScroll(const QRectF & rect, float meh)
 {
-	// Avoid scrolling to "currentPage"
-	this->startIndex = 0;
-	float x = rect.x();
-	float width = this->width;
-	this->contentOffsetX = x;
-	for (int i = 0, len = this->views.size(); i < len; ++i) {
-		float currentX = this->width * i;
-		if(x > currentX && x < currentX + width) {
-			float diff1 = std::abs(currentX - x);
-			float diff2 = std::abs(currentX + width - x);
+    // Avoid scrolling to "currentPage"
+    startIndex = 0;
+    float x = rect.x();
+    float width = width;
+    contentOffsetX = x;
+    for (int i = 0, len = views.size(); i < len; ++i) {
+        float currentX = width * i;
+        if(x > currentX && x < currentX + width) {
+            float diff1 = std::abs(currentX - x);
+            float diff2 = std::abs(currentX + width - x);
 
-			if(diff1 < diff2) {
-				this->scrollToIndex(i, true);
-			} else {
-				this->scrollToIndex(i + 1, true);
-			}
-			break;
-		}
-	}
+            if(diff1 < diff2) {
+                scrollToIndex(i, true);
+            } else {
+                scrollToIndex(i + 1, true);
+            }
+            break;
+        }
+    }
 }
 
 void TiScrollableView::scrollToIndex(int index, bool animated)
 {
-	this->currentIndex = index;
-	this->scrollToPoint(index * this->width, 0.0, animated ? bb::cascades::ScrollAnimation::Smooth : bb::cascades::ScrollAnimation::None );
-	for (int i = 0, len = this->views.size(); i < len; ++i) {
-		TiScrollableViewPage *item = this->views.at(i);
-		item->setIsCurrentItem(i == index);
-	}
+    currentIndex = index;
+    scrollToPoint(index * width, 0.0, animated ? bb::cascades::ScrollAnimation::Smooth : bb::cascades::ScrollAnimation::None );
+    for (int i = 0, len = views.size(); i < len; ++i) {
+        TiScrollableViewPage *item = views.at(i);
+        item->setIsCurrentItem(i == index);
+    }
 }
 
 void TiScrollableView::arrangeViews() {
-	for (int i = 0, len = this->views.size(); i < len; ++i) {
-		TiScrollableViewPage *item = this->views.at(i);
-		item->setLeft(i * this->width);
-	}
+    for (int i = 0, len = views.size(); i < len; ++i) {
+        TiScrollableViewPage *item = views.at(i);
+        item->setLeft(i * width);
+    }
 
-	if(this->startIndex > 0 && this->startIndex <= this->indexCount) {
-		this->scrollToIndex(this->startIndex, false);
-	}
+    if(startIndex > 0 && startIndex <= indexCount) {
+        scrollToIndex(startIndex, false);
+    }
 }
 
 void TiScrollableView::addView(bb::cascades::Container* view) {
-	TiScrollableViewPage *item = new TiScrollableViewPage();
-	item->addView(view);
-	views.append(item);
-	this->contentView->add(item);
-	if(this->width != 0) {
-		this->arrangeViews();
-	}
-	this->indexCount = views.size();
+    TiScrollableViewPage *item = new TiScrollableViewPage();
+    item->addView(view);
+    views.append(item);
+    contentView->add(item);
+    if(width != 0) {
+        arrangeViews();
+    }
+    indexCount = views.size();
 }
