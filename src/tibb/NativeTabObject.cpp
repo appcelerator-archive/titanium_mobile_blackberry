@@ -90,6 +90,13 @@ int NativeTabObject::setTitle(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+int NativeTabObject::setDescription(TiObject* obj)
+{
+    QString desc = V8ValueToQString(obj->getValue());
+    tab_->setDescription(desc);
+    return NATIVE_ERROR_OK;
+}
+
 int NativeTabObject::setActive(TiObject* obj)
 {
     if (!tabPane_.isNull() && obj->getValue()->IsTrue()) {

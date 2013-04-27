@@ -166,11 +166,13 @@ public:
     // Tab properties
     virtual int setActive(TiObject* obj);
     virtual int isActive(TiObject* obj);
+    virtual int setDescription(TiObject* obj);
 
     // TabGroup properties
     virtual int setActiveTab(TiObject* obj);
     virtual int getActiveTab(TiObject* obj);
     virtual int getTabs(TiObject* obj);
+    virtual int setShowTabsOnActionBar(TiObject* obj);
 
     bb::cascades::Container* container_;
 
