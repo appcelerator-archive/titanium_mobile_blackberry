@@ -42,6 +42,7 @@ public:
     virtual int setActiveTab(NativeObject* tab);
     virtual int setActiveTab(int index);
     virtual int getActiveTab(TiObject* obj);
+	virtual int setShowTabsOnActionBar(TiObject* obj);
     virtual int getTabs(TiObject* obj);
     virtual int open();
 

@@ -1101,6 +1101,12 @@ int NativeControlObject::isActive(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setDescription)
+int NativeControlObject::setDescription(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 PROP_SETGET(setActiveTab)
 int NativeControlObject::setActiveTab(TiObject* obj)
 {
@@ -1109,6 +1115,12 @@ int NativeControlObject::setActiveTab(TiObject* obj)
 
 PROP_SETGET(getActiveTab)
 int NativeControlObject::getActiveTab(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setShowTabsOnActionBar)
+int NativeControlObject::setShowTabsOnActionBar(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -1207,9 +1219,11 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
 
     // Tab properties
     {N_PROP_ACTIVE, PROP_SETGET_FUNCTION(setActive), PROP_SETGET_FUNCTION(isActive)},
+    {N_PROP_DESCRIPTION, PROP_SETGET_FUNCTION(setDescription), NULL},
 
     // TabGroup properties
     {N_PROP_ACTIVE_TAB, PROP_SETGET_FUNCTION(setActiveTab), PROP_SETGET_FUNCTION(getActiveTab)},
+    {N_PROP_SHOW_TABS_ON_ACTION_BAR, PROP_SETGET_FUNCTION(setShowTabsOnActionBar), NULL},
     {N_PROP_TABS, NULL, PROP_SETGET_FUNCTION(getTabs)}
 };
 

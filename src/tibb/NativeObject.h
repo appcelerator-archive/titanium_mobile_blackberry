@@ -174,6 +174,10 @@ enum NATIVE_PROP
     , N_PROP_SHOW_SCROLL_BARS
     , N_PROP_USER_AGENT
     , N_PROP_WILL_HANDLE_TOUCHES
+	// TabbedPane properties
+	, N_PROP_SHOW_TABS_ON_ACTION_BAR
+	//Tab properties
+	, N_PROP_DESCRIPTION
 
     /* This MUST be the last element */
     , N_PROP_LAST
