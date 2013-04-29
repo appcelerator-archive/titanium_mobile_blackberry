@@ -12,6 +12,7 @@
 #include "TiCascadesApp.h"
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
+#include "TiOrientation.h"
 #include "TiUIActivityIndicator.h"
 #include "TiUIAlertDialog.h"
 #include "TiUIButton.h"
@@ -101,11 +102,12 @@ void TiUIObject::onCreateStaticMembers()
     ADD_STATIC_TI_VALUE("PICKER_TYPE_COUNT_DOWN_TIMER", Number::New(Ti::UI::PICKER_TYPE_COUNT_DOWN_TIMER), this);
     ADD_STATIC_TI_VALUE("FILL", String::NewSymbol("UI.FILL"), this);
     ADD_STATIC_TI_VALUE("SIZE", String::NewSymbol("UI.SIZE"), this);
-    ADD_STATIC_TI_VALUE("LANDSCAPE", Integer::New(Scene::LANDSCAPE), this);
-    ADD_STATIC_TI_VALUE("LANDSCAPE_LEFT", Integer::New(Scene::LANDSCAPE), this);
-    ADD_STATIC_TI_VALUE("LANDSCAPE_RIGHT", Integer::New(Scene::LANDSCAPE), this);
-    ADD_STATIC_TI_VALUE("PORTRAIT", Integer::New(Scene::PORTRAIT), this);
-    ADD_STATIC_TI_VALUE("UPSIDE_PORTRAIT", Integer::New(Scene::PORTRAIT), this);
+    ADD_STATIC_TI_VALUE("LANDSCAPE_LEFT", Integer::New(Orientation::LANDSCAPE_LEFT), this);
+    ADD_STATIC_TI_VALUE("LANDSCAPE_RIGHT", Integer::New(Orientation::LANDSCAPE_RIGHT), this);
+    ADD_STATIC_TI_VALUE("PORTRAIT", Integer::New(Orientation::PORTRAIT), this);
+    ADD_STATIC_TI_VALUE("UPSIDE_PORTRAIT", Integer::New(Orientation::UPSIDE_PORTRAIT), this);
+    ADD_STATIC_TI_VALUE("FACE_UP", Integer::New(Orientation::FACE_UP), this);
+    ADD_STATIC_TI_VALUE("FACE_DOWN", Integer::New(Orientation::FACE_DOWN), this);
     ADD_STATIC_TI_VALUE("KEYBOARD_DEFAULT", Integer::New(KeyboardType::DEFAULT), this);
     ADD_STATIC_TI_VALUE("KEYBOARD_ASCII", Integer::New(KeyboardType::ASCII), this);
     ADD_STATIC_TI_VALUE("KEYBOARD_EMAIL", Integer::New(KeyboardType::EMAIL), this);

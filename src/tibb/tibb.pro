@@ -2,7 +2,9 @@ TEMPLATE = lib
 
 QMAKE_CC = $(NDK_CCACHE) $${QMAKE_CC}
 QMAKE_CXX = $(NDK_CCACHE) $${QMAKE_CXX}
-CONFIG += qt staticlib warn_on debug_and_release cascades
+
+CONFIG += qt staticlib warn_on debug_and_release cascades mobility
+MOBILITY += sensors
 
 INCLUDEPATH += \
 	. \
@@ -24,6 +26,7 @@ HEADERS += \
 	./*.h \
 	TableView/BasicListItem.h \
 	TableView/ListItemData.h
+
 LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata
 
 device {
