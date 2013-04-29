@@ -123,6 +123,7 @@ public:
     virtual int setWidth(TiObject* obj);
     virtual int setWillHandleTouches(TiObject* obj);
     virtual int setWindow(TiObject* obj);
+    virtual int setWordWrap(TiObject* obj);
     virtual int startLayout();
     virtual int setZIndex(TiObject* obj);
     // MapView properties

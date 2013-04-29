@@ -909,6 +909,12 @@ int NativeControlObject::setWindow(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setWordWrap)
+int NativeControlObject::setWordWrap(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 PROP_SETGET(setZIndex)
 int NativeControlObject::setZIndex(TiObject* obj)
 {
@@ -1192,6 +1198,7 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), NULL},
     {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setWindow), NULL},
     {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setUrl), NULL},
+    {N_PROP_WORD_WRAP, PROP_SETGET_FUNCTION(setWordWrap), NULL},
     {N_PROP_URL, PROP_SETGET_FUNCTION(setUrl), NULL},
     // MapView properties
     {N_PROP_MAPTYPE, PROP_SETGET_FUNCTION(setMapType), NULL},

@@ -50,7 +50,7 @@ const static TiProperty g_tiProperties[] =
     },
 
     {
-        "background/", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        "backgroundColor", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_BACKGROUND_COLOR
     },
 
@@ -431,6 +431,12 @@ const static TiProperty g_tiProperties[] =
 	{
 		"showTabsOnActionBar", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
 		N_PROP_SHOW_TABS_ON_ACTION_BAR
+	},
+
+	// Label properties
+	{
+		"wordWrap", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+		N_PROP_WORD_WRAP
 	},
 
 };
