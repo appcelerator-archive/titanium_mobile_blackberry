@@ -7,6 +7,16 @@
 
 #include "TiGeolocation.h"
 
+#include "NativeGeolocationObject.h"
+
+const static TiProperty g_tiProperties[] = {
+    {
+        "locationServicesEnabled",
+        TI_PROP_PERMISSION_READ,
+        N_GEOLOCATION_PROP_LOCATION_SERVICES_ENABLED
+    }
+};
+
 TiGeolocation::TiGeolocation()
   : TiProxy("Geolocation") {
 }
@@ -20,6 +30,7 @@ void TiGeolocation::addObjectToParent(TiObject* parent, NativeObjectFactory* fac
 
 void TiGeolocation::onCreateStaticMembers() {
     TiProxy::onCreateStaticMembers();
+    setTiMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
 }
 
 void TiGeolocation::initializeTiObject(TiObject* parentContext) {
