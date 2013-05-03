@@ -26,7 +26,6 @@ private:
     TiUIAnimation();
     TiUIAnimation(const TiUIAnimation&);
     TiUIAnimation& operator=(const TiUIAnimation&);
-    static Handle<Value> _printValues(void* userContext, TiObject* caller, const Arguments& args);
 };
 
 #endif TIUIANIMATION_H_
