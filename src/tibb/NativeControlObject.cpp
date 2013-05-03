@@ -29,6 +29,9 @@
 #include "TiEventContainer.h"
 #include "TiObject.h"
 #include "V8Utils.h"
+#include "TiUIAnimation.h"
+#include "NativeAnimationObject.h"
+#include "TiUtils.h"
 
 using namespace bb::cascades;
 using namespace titanium;
@@ -190,24 +193,8 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
 
     objType_ = objType;
 
-    // calculate the pixels per inch (PPI)
-	bb::device::DisplayInfo display;
-
-	const float MMPERINCH = 25.4f;
-
-	QSize pixelSize = display.pixelSize();
-	QSizeF physicalSize = display.physicalSize();
-
-	const float physicalWidth = physicalSize.width();
-	const float physicalHeight = physicalSize.height();
-	const float pixelWidth = pixelSize.width();
-	const float pixelHeight = pixelSize.height();
-
-	// Calculate pixels density
-	const float diagonalWidth = sqrtf(physicalWidth * physicalWidth + physicalHeight * physicalHeight) / MMPERINCH;
-	const float diagonalPixels = sqrtf(pixelWidth * pixelWidth + pixelHeight * pixelHeight);
-
-	ppi_ = diagonalPixels / diagonalWidth;
+    TiUtils *tiUtils = TiUtils::getInstance();
+    ppi_ = tiUtils->getPPI();
 }
 
 NativeControlObject::~NativeControlObject()
@@ -264,7 +251,7 @@ int NativeControlObject::initialize()
 void NativeControlObject::setContainer(bb::cascades::Container* container)
 {
     container_ = container;
-
+    container_->setImplicitLayoutAnimationsEnabled(false);
     container_->setLayout(new AbsoluteLayout());
     container_->setLayoutProperties(new AbsoluteLayoutProperties());
 
@@ -1289,6 +1276,19 @@ int NativeControlObject::getInteger(TiObject* obj, int* value)
     return NATIVE_ERROR_OK;
 }
 
+int NativeControlObject::getStdString(TiObject* obj, std::string* value)
+{
+    Handle<Value> v8value = obj->getValue();
+    if (v8value.IsEmpty())
+    {
+    	*value = "";
+        return NATIVE_ERROR_OK;
+    }
+
+    *value = *String::Utf8Value(v8value);
+    return NATIVE_ERROR_OK;
+}
+
 int NativeControlObject::getStringArray(TiObject* obj, QVector<QString>& value)
 {
     Handle<Value> v8value = obj->getValue();
@@ -1515,4 +1515,30 @@ QString NativeControlObject::getResourcePath(const QString& path)
         }
     }
     return rPath;
+}
+
+void NativeControlObject::animate(NativeObject* obj)
+{
+	NativeAnimationObject *animation = static_cast<NativeAnimationObject*>(obj);
+	animation->animate(this, layoutNode_);
+}
+
+void NativeControlObject::animate(Local<Object> obj)
+{
+
+    NativeObjectFactory* factory = tiObject_->getNativeObjectFactory();
+    TiUIAnimation* animation = TiUIAnimation::createAnimation(factory);
+    TiObject *itemObject = static_cast<TiObject*>(animation);
+
+    // Create a JavaScript proxy for the new animation object.
+    Handle<ObjectTemplate> templ = TiObject::getObjectTemplateFromJsObject(tiObject_->getValue());
+    Local<Object> proxy = templ->NewInstance();
+    animation->setValue(proxy);
+    TiObject::setTiObjectToJsObject(proxy, animation);
+
+    // Apply the properties in the dictionary to the new animation object.
+    animation->setParametersFromObject(animation, obj->ToObject());
+
+    animate(animation->getNativeObject());
+
 }

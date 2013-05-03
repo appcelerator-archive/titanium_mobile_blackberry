@@ -154,6 +154,7 @@ public:
     static int getBoolean(TiObject* obj, bool* value);
     static int getFloat(TiObject* obj, float* value);
     static int getInteger(TiObject* obj, int* value);
+    static int getStdString(TiObject* obj, std::string* value);
     static int getStringArray(TiObject* obj, QVector<QString>& value);
     static int getMapObject(TiObject* obj, QMap<QString, QString>& props);
     static int getObjectArray(TiObject* obj, QVector<NativeObject*>& value);
@@ -172,6 +173,8 @@ public:
     virtual int getActiveTab(TiObject* obj);
     virtual int getTabs(TiObject* obj);
 
+    virtual void animate(NativeObject* obj);
+    virtual void animate(v8::Local<v8::Object> obj);
     bb::cascades::Container* container_;
 
 protected:

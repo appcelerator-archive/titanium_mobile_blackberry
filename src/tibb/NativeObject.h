@@ -54,6 +54,7 @@ enum NATIVE_TYPE
     , N_TYPE_WINDOW
     , N_TYPE_DB
     , N_TYPE_RESULTSET
+    , N_TYPE_ANIMATION
 };
 
 enum NATIVE_PROP
