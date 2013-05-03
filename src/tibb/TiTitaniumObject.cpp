@@ -24,6 +24,7 @@
 #include "TiMedia.h"
 #include "TiNetwork.h"
 #include "TiDatabase.h"
+ #include "TiAnalyticsObject.h"
 #include "TiV8EventContainerFactory.h"
 #include "V8Utils.h"
 
@@ -68,6 +69,7 @@ void TiTitaniumObject::onCreateStaticMembers()
     TiPlatformObject::addObjectToParent(this);
     TiCodecObject::addObjectToParent(this);
     TiNetwork::addObjectToParent(this, objectFactory_);
+    TiAnalyticsObject::addObjectToParent(this, objectFactory_);
     TiDatabase::addObjectToParent(this, objectFactory_);
     TiBufferStreamObject::addObjectToParent(this);
     TiStreamObject::addObjectToParent(this);

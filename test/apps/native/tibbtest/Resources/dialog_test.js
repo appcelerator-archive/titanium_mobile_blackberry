@@ -1,3 +1,24 @@
+/*
+Ti.API.info('running');
+ 
+var win = Ti.UI.createWindow({backgroundColor: 'red'});
+win.open();
+ 
+function showAlert() {
+    Ti.API.info('opening alert...');
+    var alert = Ti.UI.createAlertDialog({
+        title: 'Click a button...'
+    });
+    alert.addEventListener('click', function(e) {
+        Ti.API.info('index = ' + e.index);
+    });
+    alert.show();
+}
+
+ 
+setTimeout(showAlert, 2000);
+
+
 
 var window = Titanium.UI.createWindow({
 	//backgroundImage:'default.png'
@@ -15,6 +36,7 @@ var button = Titanium.UI.createButton({
 
 window.add(button);
 window.open();
+*/
 
 var win2 = Ti.UI.createWindow({
 	backgroundColor: 'yellow',
@@ -39,6 +61,11 @@ button.addEventListener('click',function(e){
 		ok: 'Okay',
 		title: 'File Deleted'
 	 });
+	
+	 dialog.addEventListener('click', function(e) {
+	        Ti.API.info('index = ' + e.index);
+	    });
+		
 	dialog.show();
 });
 

@@ -61,6 +61,10 @@ enum TI_HTTPCLIENT_STATE
 
 } // namespace Network
 
+namespace Analytics
+{
+} // namespace Analytics
+
 namespace Database
 {
 namespace DB
