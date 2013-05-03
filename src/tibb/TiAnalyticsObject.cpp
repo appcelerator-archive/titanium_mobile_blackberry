@@ -25,7 +25,6 @@
 	 type - the name of the event, ti.enroll (app first runs), ti.start, ti.end, ti.foreground, ti.background, featureEvent
 	 ts - UTC time stamp of event
 	 platform - always blackberry
-	 target - simulator or device
 	 deploytype - development or production
 */
 
@@ -63,12 +62,8 @@ TiAnalyticsObject::TiAnalyticsObject(NativeObjectFactory* objectFactory)
 		sid.replace("}", "");
 		sid_ = sid.toLocal8Bit();
 
-		// get target if simulator or device
-		QString target = defaultSettings.value("target").toString();
-		target_ = target.toLocal8Bit();
-
 		// get deploy type if development or production
-		QString deployType = defaultSettings.value("target").toString();
+		QString deployType = defaultSettings.value("deploytype").toString();
 		deployType_ = deployType.toLocal8Bit();
 
 		QUrl analyticsSite("https://api.appcelerator.net/p/v2/mobile-track");
@@ -182,8 +177,8 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 
 	// TODO guard against 1024 overrun
 	char json[1024];
-	sprintf(json, "[{\"seq\":%d,\"ver\":\"2\",\"id\":\"%s\",\"sid\":\"%s\",\"mid\":\"%s\",\"aguid\":\"%s\",\"type\":\"%s\",\"ts\":\"%s\",\"data\":{\"platform\":\"blackberry\",\"model\":\"Z10\",\"deploytype\":\"development\"}}]",
-				sequence_, id.data(), sid_.data(), mid_.data(), aguid_.data(), name.c_str(), ts.data());
+	sprintf(json, "[{\"seq\":%d,\"ver\":\"2\",\"id\":\"%s\",\"sid\":\"%s\",\"mid\":\"%s\",\"aguid\":\"%s\",\"type\":\"%s\",\"ts\":\"%s\",\"data\":{\"platform\":\"blackberry\",\"deploytype\":\"%s\"}}]",
+				sequence_, id.data(), sid_.data(), mid_.data(), aguid_.data(), name.c_str(), ts.data(), deployType_.data());
 
 	sqlite3_bind_text(stmt, 1, id.data(), strlen(id.data()), 0);
 	sqlite3_bind_text(stmt, 2, json, strlen(json), 0);

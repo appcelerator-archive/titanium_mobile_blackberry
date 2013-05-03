@@ -56,7 +56,6 @@ private:
 	QByteArray mid_;
 	QByteArray sid_;
 	QByteArray aguid_;
-	QByteArray target_;
 	QByteArray deployType_;
 };
 
