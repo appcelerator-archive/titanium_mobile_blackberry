@@ -90,7 +90,7 @@ TiAnalyticsObject::TiAnalyticsObject(NativeObjectFactory* objectFactory)
 		TiAnalyticsHandler* eventHandler = new TiAnalyticsHandler(this);
 		timer_ = new QTimer(eventHandler);
 		QObject::connect(timer_, SIGNAL(timeout()), eventHandler,  SLOT(sendPendingRequests()));
-		timer_->start(60000);
+		timer_->start(60000*10);
     }
 }
 
@@ -169,16 +169,15 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 	QByteArray ts = displayDate.toLocal8Bit();
 
 	// generate the uid
-	//QUuid uid = QUuid::createUuid();
-	QString uid = QUuid::createUuid().toString(); //uid.toString();
+	QString uid = QUuid::createUuid().toString();
 	uid.replace("{", "");
 	uid.replace("}", "");
 	QByteArray id = uid.toLocal8Bit();
 
 	// TODO guard against 1024 overrun
 	char json[1024];
-	sprintf(json, "[{\"seq\":%d,\"ver\":\"2\",\"id\":\"%s\",\"sid\":\"%s\",\"mid\":\"%s\",\"aguid\":\"%s\",\"type\":\"%s\",\"ts\":\"%s\",\"data\":{\"platform\":\"blackberry\",\"deploytype\":\"%s\"}}]",
-				sequence_, id.data(), sid_.data(), mid_.data(), aguid_.data(), name.c_str(), ts.data(), deployType_.data());
+	sprintf(json, "[{\"seq\":%d,\"ver\":\"2\",\"id\":\"%s\",\"sid\":\"%s\",\"mid\":\"%s\",\"aguid\":\"%s\",\"type\":\"%s\",\"event\":\"%s\",\"ts\":\"%s\",\"data\":{\"platform\":\"blackberry\",\"deploytype\":\"%s\",\"customdata\":\"%s\"}}]",
+				sequence_, id.data(), sid_.data(), mid_.data(), aguid_.data(), name.c_str(), name.c_str(), ts.data(), deployType_.data(), customData.c_str());
 
 	sqlite3_bind_text(stmt, 1, id.data(), strlen(id.data()), 0);
 	sqlite3_bind_text(stmt, 2, json, strlen(json), 0);
@@ -235,7 +234,12 @@ void TiAnalyticsObject::sendPendingAnalyticsEvents()
 
 Handle<Value> TiAnalyticsObject::_featureEvent(void* userContext, TiObject*, const Arguments& args)
 {
-	//addAnalyticsEvent("featureEvent", "featureData:{jjj:{}}");
+	TiAnalyticsObject* obj = (TiAnalyticsObject*) userContext;
+	string name = "app.feature." + TiObject::getSTDStringFromValue(args[0]);
+	string data = TiObject::getSTDStringFromValue(args[1]);
+
+	obj->addAnalyticsEvent(name, data);
+
 	return Undefined();
 }
 

@@ -270,6 +270,9 @@ function BlackberryNDK(builder) {
 	            	permissions += '<action>' + key + '</action>\n\t';
 	        	}
 	        }
+	        if (tiapp['analytics'] === 'true') {
+	        	permissions += '<action>read_device_identifying_information</action>\n\t';
+	        }
             
         	var autoOrient = false;
         	var orientation = '';
