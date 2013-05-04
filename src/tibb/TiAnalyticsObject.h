@@ -57,6 +57,7 @@ private:
 	QByteArray sid_;
 	QByteArray aguid_;
 	QByteArray deployType_;
+	QByteArray appVersion_;
 };
 
 //Event handler for TiAnalytics object

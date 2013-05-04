@@ -312,6 +312,7 @@ function BlackberryNDK(builder) {
 	        }
 	        appProps += 'analytics = ' + tiapp['analytics'] + '\n';
 	        appProps += 'aguid = ' + tiapp['guid'] + '\n';
+	        appProps += 'version = ' + tiapp['version'] + '\n';
 	        if (builder.target === 'distribute') {
 				appProps += 'deploytype = production\n';
 			}
