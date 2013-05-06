@@ -7,16 +7,12 @@
 
 #include "NativeControlObject.h"
 
-#include "EventHandler.h"
-#include "NativeLayoutHandler.h"
-#include "PersistentV8Value.h"
-#include "TiEventContainer.h"
-#include "TiConstants.h"
-#include "TiObject.h"
-#include "Layout/Composite.h"
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
+
+#include <QRectF>
+
 #include <bb/cascades/AbsoluteLayout>
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/Color>
@@ -24,10 +20,18 @@
 #include <bb/cascades/ImagePaint>
 #include <bb/cascades/LayoutUpdateHandler>
 #include <bb/device/DisplayInfo>
-#include <QRectF>
+
+#include "EventHandler.h"
+#include "Layout/Composite.h"
+#include "NativeLayoutHandler.h"
+#include "PersistentV8Value.h"
+#include "TiConstants.h"
+#include "TiEventContainer.h"
 #include "TiObject.h"
+#include "V8Utils.h"
 
 using namespace bb::cascades;
+using namespace titanium;
 
 #define ZINDEX_PROPERTY_NAME            "tizindex"
 
@@ -490,13 +494,7 @@ int NativeControlObject::setBackgroundImage(TiObject* obj)
 {
     Q_ASSERT(container_ != NULL);
 
-    QString imagePath;
-    int error = NativeControlObject::getString(obj, imagePath);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
-
+    QString imagePath = V8ValueToQString(obj->getValue());
     imagePath = getResourcePath(imagePath);
     container_->setBackground(bb::cascades::ImagePaint(QUrl(imagePath)));
     return NATIVE_ERROR_OK;
@@ -1321,12 +1319,7 @@ int NativeControlObject::getPropertyValue(size_t propertyNumber, TiObject* obj)
 
 int NativeControlObject::getColorComponents(TiObject* obj, float* r, float* g, float* b, float* a)
 {
-    QString qcolorString;
-    int error = getString(obj, qcolorString);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
+    QString qcolorString = V8ValueToQString(obj->getValue());
     if (!QColor::isValidColor(qcolorString))
     {
         return NATIVE_ERROR_INVALID_ARG;
@@ -1350,20 +1343,6 @@ int NativeControlObject::getBoolean(TiObject* obj, bool* value)
     }
     Handle<Boolean> b = v8value->ToBoolean();
     *value = b->Value();
-    return NATIVE_ERROR_OK;
-}
-
-int NativeControlObject::getString(TiObject* obj, QString& str)
-{
-    Handle<Value> value = obj->getValue();
-    if (value.IsEmpty())
-    {
-        return NATIVE_ERROR_INVALID_ARG;
-    }
-
-    Handle<String> jsString = value->ToString();
-    str = QString::fromUtf8(*String::Utf8Value(jsString));
-
     return NATIVE_ERROR_OK;
 }
 

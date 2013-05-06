@@ -2,7 +2,9 @@ TEMPLATE = lib
 
 QMAKE_CC = $(NDK_CCACHE) $${QMAKE_CC}
 QMAKE_CXX = $(NDK_CCACHE) $${QMAKE_CXX}
-CONFIG += qt staticlib warn_on debug_and_release cascades
+
+CONFIG += qt staticlib warn_on debug_and_release cascades mobility
+MOBILITY += sensors
 
 INCLUDEPATH += \
 	. \
@@ -19,17 +21,12 @@ SOURCES += \
 	./Layout/Node.cpp \
 	./Layout/ParseProperty.cpp \
 	./Layout/Vertical.cpp \
-	./TableView/BasicListItem.cpp \
-	./TiScrollableView/TiScrollableView.cpp \
-	./TiScrollableView/TiScrollableViewPage.cpp
-
-
+	./TableView/BasicListItem.cpp
 HEADERS += \
 	./*.h \
 	TableView/BasicListItem.h \
-	TableView/ListItemData.h \
-	TiScrollableView/TiScrollableView.h \
-	TiScrollableView/TiScrollableViewPage.h
+	TableView/ListItemData.h
+
 LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata
 
 device {

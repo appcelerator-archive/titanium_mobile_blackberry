@@ -7,13 +7,17 @@
 
 #include "NativePageObject.h"
 
-#include "NativeObjectFactory.h"
-#include "TiCascadesApp.h"
 #include <bb/cascades/Container>
 #include <bb/cascades/Page>
 #include <bb/cascades/TitleBar>
 
+#include "NativeObjectFactory.h"
+#include "TiCascadesApp.h"
+#include "TiObject.h"
+#include "V8Utils.h"
+
 using namespace bb::cascades;
+using namespace titanium;
 
 NativePageObject::NativePageObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_WINDOW)
@@ -87,13 +91,7 @@ int NativePageObject::removeChildNativeObject(NativeObject* obj)
 
 int NativePageObject::setTitle(TiObject* obj)
 {
-    QString title;
-
-    int error = NativeControlObject::getString(obj, title);
-    if (!N_SUCCEEDED(error))
-    {
-        return error;
-    }
+    QString title = V8ValueToQString(obj->getValue());
     if (titleBar_ == NULL)
     {
         titleBar_ = new bb::cascades::TitleBar();

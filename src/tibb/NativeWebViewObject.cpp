@@ -1,13 +1,12 @@
-/*
- * NativeWebViewObject.cpp
- *
- *  Created on: Jan 25, 2013
- *      Author: penrique
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #include "NativeWebViewObject.h"
-#include "TiEvent.h"
-#include "TiEventContainerFactory.h"
+
 #include <bb/cascades/ActivityIndicator>
 #include <bb/cascades/DockLayout>
 #include <bb/cascades/Container>
@@ -20,6 +19,13 @@
 #include <bb/cascades/WebLoadStatus>
 #include <bb/cascades/WebNavigationRequest>
 #include <bb/cascades/WebSettings>
+
+#include "TiEvent.h"
+#include "TiEventContainerFactory.h"
+#include "TiObject.h"
+#include "V8Utils.h"
+
+using namespace titanium;
 
 NativeWebViewObject::NativeWebViewObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_WEBVIEW)
@@ -100,13 +106,8 @@ int NativeWebViewObject::setHideLoadIndicator(TiObject* obj)
 // string
 int NativeWebViewObject::setHtml(TiObject* obj)
 {
-    QString str;
-    int error = NativeControlObject::getString(obj, str);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
-    webview_->setHtml(str, QUrl(""));
+    QString html = V8ValueToQString(obj->getValue());
+    webview_->setHtml(html, QUrl(""));
     // Needed?
     webview_->reload();
 
@@ -153,13 +154,8 @@ int NativeWebViewObject::setShowScrollbars(TiObject* obj)
 // string
 int NativeWebViewObject::setUrl(TiObject* obj)
 {
-    QString str;
-    int error = NativeControlObject::getString(obj, str);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
-    webview_->setUrl(QUrl(str));
+    QString url = V8ValueToQString(obj->getValue());
+    webview_->setUrl(QUrl(url));
   //  webview_->reload();
 
     return NATIVE_ERROR_OK;
@@ -168,15 +164,9 @@ int NativeWebViewObject::setUrl(TiObject* obj)
 // string
 int NativeWebViewObject::setUserAgent(TiObject* obj)
 {
-    QString str;
-    int error = NativeControlObject::getString(obj, str);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
-    webview_->settings()->setUserAgent(str);
+    QString userAgent = V8ValueToQString(obj->getValue());
+    webview_->settings()->setUserAgent(userAgent);
     return NATIVE_ERROR_OK;
-    
 }
 // bool
 int NativeWebViewObject::setWillHandleTouches(TiObject* obj)

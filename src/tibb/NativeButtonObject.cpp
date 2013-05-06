@@ -6,9 +6,15 @@
  */
 
 #include "NativeButtonObject.h"
+
+#include <bb/cascades/Button>
+
 #include "TiEvent.h"
 #include "TiEventContainerFactory.h"
-#include <bb/cascades/Button>
+#include "TiObject.h"
+#include "V8Utils.h"
+
+using namespace titanium;
 
 NativeButtonObject::NativeButtonObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_BUTTON)
@@ -39,27 +45,15 @@ int NativeButtonObject::initialize()
 
 int NativeButtonObject::setTitle(TiObject* obj)
 {
-    QString str;
-
-    int error = NativeControlObject::getString(obj, str);
-    if (!N_SUCCEEDED(error))
-    {
-        return error;
-    }
-    button_->setText(str);
+    QString title = V8ValueToQString(obj->getValue());
+    button_->setText(title);
     return NATIVE_ERROR_OK;
 }
 
 int NativeButtonObject::setImage(TiObject* obj)
 {
-    QString str;
-    int error = NativeControlObject::getString(obj, str);
-    if (!N_SUCCEEDED(error))
-    {
-        return error;
-    }
-    str = getResourcePath(str);
-    const bb::cascades::Image image = bb::cascades::Image(QUrl(str));
+    QString path = getResourcePath(V8ValueToQString(obj->getValue()));
+    const bb::cascades::Image image = bb::cascades::Image(QUrl(path));
     button_->setImage(image);
     return NATIVE_ERROR_OK;
 }
@@ -72,3 +66,4 @@ void NativeButtonObject::setupEvents(TiEventContainerFactory* containerFactory)
     events_.insert(tetCLICK, EventPairSmartPtr(eventClick, new ButtonEventHandler(eventClick)));
     QObject::connect(button_, SIGNAL(clicked()), events_[tetCLICK]->handler(), SLOT(clicked(void)));
 }
+

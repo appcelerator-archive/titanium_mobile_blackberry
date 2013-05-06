@@ -6,9 +6,7 @@
  */
 
 #include "NativeAnnotationObject.h"
-#include "TiEvent.h"
-#include "TiConstants.h"
-#include "TiEventContainerFactory.h"
+
 #include <bb/cascades/ImageButton>
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/DockLayout>
@@ -21,7 +19,14 @@
 #include "NativeMessageStrings.h"
 #include <bb/cascades/SystemDefaults>
 
+#include "TiConstants.h"
+#include "TiEvent.h"
+#include "TiEventContainerFactory.h"
+#include "TiObject.h"
+#include "V8Utils.h"
+
 using namespace bb::cascades;
+using namespace titanium;
 
 NativeAnnotationObject::NativeAnnotationObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_ANNOTATION), pinImageSource_("assets/map/red_pin.png"),
@@ -151,62 +156,32 @@ int NativeAnnotationObject::setLongitude(TiObject* obj)
 
 int NativeAnnotationObject::setTitle(TiObject* obj)
 {
-	QString title;
-	int error = NativeControlObject::getString(obj, title);
-
-	if (error != NATIVE_ERROR_OK)
-	{
-		return error;
-	}
-
-	label_->setText(title);
-	return NATIVE_ERROR_OK;
+  QString title = V8ValueToQString(obj->getValue());
+  label_->setText(title);
+  return NATIVE_ERROR_OK;
 }
 
 int NativeAnnotationObject::setSubtitle(TiObject* obj)
 {
-	QString subtitle;
-	int error = NativeControlObject::getString(obj, subtitle);
-
-	if (error != NATIVE_ERROR_OK)
-	{
-		return error;
-	}
-
-	label_->setText(label_->text() + "\n" + subtitle);
-	return NATIVE_ERROR_OK;
+  QString subtitle = V8ValueToQString(obj->getValue());
+  label_->setText(label_->text() + "\n" + subtitle);
+  return NATIVE_ERROR_OK;
 }
 
 int NativeAnnotationObject::setLeftView(TiObject* obj)
 {
-	QString leftView;
-	int error = NativeControlObject::getString(obj, leftView);
-
-	if (error != NATIVE_ERROR_OK)
-	{
-		return error;
-	}
-
-	leftView_->setDefaultImageSource(QUrl("assets/" + leftView));
-	leftView_->setPressedImage(QUrl("assets/" + leftView));
-
-	return NATIVE_ERROR_OK;
+  QString leftView = V8ValueToQString(obj->getValue());
+  leftView_->setDefaultImageSource(QUrl("assets/" + leftView));
+  leftView_->setPressedImage(QUrl("assets/" + leftView));
+  return NATIVE_ERROR_OK;
 }
 
 int NativeAnnotationObject::setRightView(TiObject* obj)
 {
-	QString rightView;
-	int error = NativeControlObject::getString(obj, rightView);
-
-	if (error != NATIVE_ERROR_OK)
-	{
-		return error;
-	}
-
-	rightView_->setDefaultImageSource(QUrl("assets/" + rightView));
-	rightView_->setPressedImage(QUrl("assets/" + rightView));
-
-	return NATIVE_ERROR_OK;
+  QString rightView = V8ValueToQString(obj->getValue());
+  rightView_->setDefaultImageSource(QUrl("assets/" + rightView));
+  rightView_->setPressedImage(QUrl("assets/" + rightView));
+  return NATIVE_ERROR_OK;
 }
 
 

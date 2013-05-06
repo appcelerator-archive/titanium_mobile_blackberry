@@ -7,13 +7,18 @@
 
 #include "NativeAbstractTextControlObject.h"
 
-#include "NativeLoggerObject.h"
-#include "NativeMessageStrings.h"
-#include "TiConstants.h"
 #include <bb/cascades/AbstractTextControl>
 #include <bb/cascades/FontSize>
 #include <QMap>
 #include <QString>
+
+#include "NativeLoggerObject.h"
+#include "NativeMessageStrings.h"
+#include "TiConstants.h"
+#include "TiObject.h"
+#include "V8Utils.h"
+
+using namespace titanium;
 
 static const char* FONT_FAMILY            = "fontFamily";
 static const char* FONT_SIZE              = "fontSize";
@@ -47,13 +52,8 @@ void NativeAbstractTextControlObject::setTextControl(bb::cascades::AbstractTextC
 
 int NativeAbstractTextControlObject::setText(TiObject* obj)
 {
-    QString str;
-    int error = NativeControlObject::getString(obj, str);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
-    textControl_->setText(str);
+    QString text = V8ValueToQString(obj->getValue());
+    textControl_->setText(text);
     return NATIVE_ERROR_OK;
 }
 

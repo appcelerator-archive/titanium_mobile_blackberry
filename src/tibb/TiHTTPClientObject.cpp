@@ -17,6 +17,9 @@
 #include "TiPropertyMapObject.h"
 #include "NativeException.h"
 #include "TiMessageStrings.h"
+#include "V8Utils.h"
+
+using namespace titanium;
 
 const static TiProperty g_tiProperties[] =
 {
@@ -262,7 +265,7 @@ Handle<Value> TiHTTPClientObject::_open(void* userContext, TiObject* /*caller*/,
     Q_ASSERT(encodedUrl.isValid());
 
     try {
-        nhttp->open(TiObject::getStringFromValue(args[0]), encodedUrl);
+        nhttp->open(V8ValueToQString(args[0]), encodedUrl);
     } catch (NativeException& ne) {
         return ThrowException(String::New(ne.what()));
     }
@@ -332,7 +335,7 @@ Handle<Value> TiHTTPClientObject::_setRequestHeader(void* userContext, TiObject*
     NativeHTTPClientObject* nhttp = (NativeHTTPClientObject*) obj->getNativeObject();
     try
     {
-        nhttp->setRequestHeader(TiObject::getStringFromValue(args[0]), TiObject::getStringFromValue(args[1]));
+        nhttp->setRequestHeader(V8ValueToQString(args[0]), V8ValueToQString(args[1]));
     }
     catch (NativeException& ne)
     {
@@ -351,7 +354,7 @@ Handle<Value> TiHTTPClientObject::_clearCookies(void* userContext, TiObject* /*c
     NativeHTTPClientObject* nhttp = (NativeHTTPClientObject*) obj->getNativeObject();
     try
     {
-        nhttp->clearCookies(TiObject::getStringFromValue(args[0]));
+        nhttp->clearCookies(V8ValueToQString(args[0]));
     }
     catch (NativeException& ne)
     {

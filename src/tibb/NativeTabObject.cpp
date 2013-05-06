@@ -16,6 +16,7 @@
 
 #include "Scene.h"
 #include "TiObject.h"
+#include "V8Utils.h"
 #include "Window.h"
 
 using namespace bb::cascades;
@@ -76,12 +77,7 @@ int NativeTabObject::openWindowOnTab(NativeObject* obj)
 
 int NativeTabObject::setIcon(TiObject* obj)
 {
-    QString iconPath;
-    int error = NativeControlObject::getString(obj, iconPath);
-    if (!N_SUCCEEDED(error))
-    {
-        return error;
-    }
+    QString iconPath = V8ValueToQString(obj->getValue());
     iconPath = getResourcePath(iconPath);
     tab_->setImage(bb::cascades::Image(QUrl(iconPath)));
     return NATIVE_ERROR_OK;
@@ -89,14 +85,8 @@ int NativeTabObject::setIcon(TiObject* obj)
 
 int NativeTabObject::setTitle(TiObject* obj)
 {
-    QString str;
-
-    int error = NativeControlObject::getString(obj, str);
-    if (!N_SUCCEEDED(error))
-    {
-        return error;
-    }
-    tab_->setTitle(str);
+    QString title = V8ValueToQString(obj->getValue());
+    tab_->setTitle(title);
     return NATIVE_ERROR_OK;
 }
 

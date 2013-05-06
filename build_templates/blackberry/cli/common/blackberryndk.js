@@ -270,6 +270,9 @@ function BlackberryNDK(builder) {
 	            	permissions += '<action>' + key + '</action>\n\t';
 	        	}
 	        }
+	        if (tiapp['analytics'] === 'true') {
+	        	permissions += '<action>read_device_identifying_information</action>\n\t';
+	        }
             
         	var autoOrient = false;
         	var orientation = '';
@@ -298,7 +301,8 @@ function BlackberryNDK(builder) {
 			}));
 
 			// write app_properties.ini file 
-			builder.appProps = '[General]\n';
+			appProps = builder.appProps;
+			appProps = '[General]\n';
 			for (key in tiapp.properties) {
 	            for (key2 in tiapp.properties[key]) {
 	                if (key2 == 'value') {
@@ -306,6 +310,15 @@ function BlackberryNDK(builder) {
 	                }
 	            }
 	        }
+	        appProps += 'analytics = ' + tiapp['analytics'] + '\n';
+	        appProps += 'aguid = ' + tiapp['guid'] + '\n';
+	        appProps += 'version = ' + tiapp['version'] + '\n';
+	        if (builder.target === 'distribute') {
+				appProps += 'deploytype = production\n';
+			}
+			else {
+				appProps += 'deploytype = development\n';
+			}
 		
             // create the bar package
             package(builder);

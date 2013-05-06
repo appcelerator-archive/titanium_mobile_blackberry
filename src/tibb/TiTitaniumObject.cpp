@@ -7,12 +7,14 @@
 
 #include "TiTitaniumObject.h"
 
+#include "TiAccelerometer.h"
 #include "TiAPIObject.h"
 #include "TiAppObject.h"
 #include "TiBufferObject.h"
 #include "TiBufferStreamObject.h"
 #include "TiCodecObject.h"
 #include "TiGenericFunctionObject.h"
+#include "TiGesture.h"
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
 #include "TiPlatformObject.h"
@@ -23,10 +25,13 @@
 #include "TiMedia.h"
 #include "TiNetwork.h"
 #include "TiDatabase.h"
+ #include "TiAnalyticsObject.h"
 #include "TiV8EventContainerFactory.h"
 #include "V8Utils.h"
 
 #include <fstream>
+
+using namespace titanium;
 
 static const string rootFolder = "app/native/assets/";
 
@@ -65,10 +70,13 @@ void TiTitaniumObject::onCreateStaticMembers()
     TiPlatformObject::addObjectToParent(this);
     TiCodecObject::addObjectToParent(this);
     TiNetwork::addObjectToParent(this, objectFactory_);
+    TiAnalyticsObject::addObjectToParent(this, objectFactory_);
     TiDatabase::addObjectToParent(this, objectFactory_);
     TiBufferStreamObject::addObjectToParent(this);
     TiStreamObject::addObjectToParent(this);
     TiLocaleObject::addObjectToParent(this);
+    TiGesture::addObjectToParent(this, objectFactory_);
+    TiAccelerometer::addObjectToParent(this, objectFactory_);
 }
 
 bool TiTitaniumObject::canAddMembers() const
