@@ -7,6 +7,7 @@
 
 #include "TiTitaniumObject.h"
 
+#include "TiAccelerometer.h"
 #include "TiAPIObject.h"
 #include "TiAppObject.h"
 #include "TiBufferObject.h"
@@ -75,6 +76,7 @@ void TiTitaniumObject::onCreateStaticMembers()
     TiStreamObject::addObjectToParent(this);
     TiLocaleObject::addObjectToParent(this);
     TiGesture::addObjectToParent(this, objectFactory_);
+    TiAccelerometer::addObjectToParent(this, objectFactory_);
 }
 
 bool TiTitaniumObject::canAddMembers() const
