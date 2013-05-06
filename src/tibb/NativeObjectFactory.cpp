@@ -7,6 +7,7 @@
 
 #include "NativeObjectFactory.h"
 
+#include "NativeAccelerometerObject.h"
 #include "NativeActivityIndicatorObject.h"
 #include "NativeAlertDialogObject.h"
 #include "NativeBlobObject.h"
@@ -40,8 +41,6 @@
 #include "NativeAnnotationObject.h"
 #include "NativeAudioPlayerObject.h"
 #include "NativeAudioRecorderObject.h"
- #include "NativeAnimationObject.h"
- 
 #include "TiCascadesApp.h"
 
 #include <bb/cascades/Container>
@@ -134,8 +133,8 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
         break;
 
     case N_TYPE_LIST_ITEM:
-    	obj = new NativeListItemObject(tiObj);
-    	break;
+        obj = new NativeListItemObject(tiObj);
+        break;
 
     case N_TYPE_TAB:
         obj = NativeTabObject::createTab(tiObj);
@@ -162,12 +161,12 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
         break;
 
     case N_TYPE_DB:
-		obj = NativeDBObject::createDB(tiObj);
-		break;
+        obj = NativeDBObject::createDB(tiObj);
+        break;
 
     case N_TYPE_RESULTSET:
-   		obj = NativeResultSetObject::createResultSet(tiObj);
-   		break;
+        obj = NativeResultSetObject::createResultSet(tiObj);
+        break;
 
     case N_TYPE_DATE_TIME_PICKER:
         obj = NativeDateTimePickerObject::createDateTimePicker(tiObj);
@@ -180,36 +179,42 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
     case N_TYPE_VIEW:
         obj = NativeControlObject::createView(tiObj);
         break;
+
     case N_TYPE_WEBVIEW:
         obj = NativeWebViewObject::createWebView(tiObj);
         break;
 
     case N_TYPE_MAPVIEW:
-           obj = NativeMapViewObject::createMapView(tiObj);
-           break;
+        obj = NativeMapViewObject::createMapView(tiObj);
+        break;
+
     case N_TYPE_ANNOTATION:
-       		obj = NativeAnnotationObject::createAnnotationObject(tiObj);
-      		break;
+        obj = NativeAnnotationObject::createAnnotationObject(tiObj);
+        break;
+
     case N_TYPE_AUDIOPLAYER:
-           obj = NativeAudioPlayerObject::createAudioPlayerObject(tiObj);
-           break;
+        obj = NativeAudioPlayerObject::createAudioPlayerObject(tiObj);
+        break;
+
     case N_TYPE_AUDIORECORDER:
 		   obj = NativeAudioRecorderObject::createAudioRecorderObject(tiObj);
 		   break;
+
     case N_TYPE_GESTURE:
-           obj = NativeGestureObject::createGesture(tiObj);
-           break;
+       obj = NativeGestureObject::createGesture(tiObj);
+       break;
 
-    case N_TYPE_ANIMATION:
-           obj = NativeAnimationObject::createAnimation(tiObj);
-           break;
-
+    case N_TYPE_ACCELEROMETER:
+        obj = new NativeAccelerometerObject(tiObj);
+        break;
     }
+
     if (obj != NULL)
     {
         obj->initialize();
         obj->setupEvents(eventContainerFactory_);
     }
+
     return obj;
 }
 

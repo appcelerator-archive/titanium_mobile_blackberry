@@ -13,8 +13,6 @@ device {
                  $$quote(${QNX_TARGET}/usr/include/bb/data) \
                  $$quote(${QNX_TARGET}/usr/include/freetype2)
 
-        LIBS += -lQtSensors
-
         HEADERS +=  $$quote($$BASEDIR/include/tibb.h)
     }
 
@@ -28,8 +26,6 @@ device {
                  $$quote(${QNX_TARGET}/../target-override/usr/include) \
                  $$quote(${QNX_TARGET}/usr/include/bb/data) \
                  $$quote(${QNX_TARGET}/usr/include/freetype2)
-
-        LIBS += -lQtSensors
 
         HEADERS +=  $$quote($$BASEDIR/include/tibb.h)
     }
@@ -58,8 +54,6 @@ simulator {
                  $$quote("${QNX_TARGET}/usr/include/qt4/QtCore") \
                  $$quote({QNX_TARGET}/usr/include/bb/data) \
                  $$quote("${QNX_TARGET}/usr/include/qt4/cpp/embedded")
-
-        LIBS += -lQtSensors
 
         HEADERS +=  $$quote($$BASEDIR/include/tibb.h)
     }

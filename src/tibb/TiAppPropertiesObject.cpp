@@ -9,6 +9,7 @@
 
 #include <QSettings>
 #include <QStringList>
+#include <bb/device/HardwareInfo>
 
 #include "TiGenericFunctionObject.h"
 #include "TiLogger.h"
