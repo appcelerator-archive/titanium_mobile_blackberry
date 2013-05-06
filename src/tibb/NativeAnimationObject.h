@@ -14,6 +14,7 @@
 #include <bb/cascades/Control>
 #include <bb/cascades/TranslateTransition>
 #include <bb/cascades/FadeTransition>
+#include <bb/cascades/ScaleTransition>
 #include "Layout/Node.h"
 #include "TiV8Event.h"
 #include <QMap>
@@ -88,6 +89,7 @@ public:
 	void setNativeControlObject(NativeControlObject *obj);
 	void removeAnimations();
 	NativeControlObject* getNativeControlObject();
+	bb::cascades::ScaleTransition *getScaleAnimation();
 	bb::cascades::TranslateTransition *getTranslateAnimation();
 	bb::cascades::FadeTransition *getFadeAnimation();
 	QMap<N_ANIMATION_PROPS, TiObject*> getAnimationProperies();
@@ -104,6 +106,7 @@ private:
     NativeControlObject *_nativeControlObject;
     bb::cascades::TranslateTransition *_transitionAnimation;
     bb::cascades::FadeTransition *_fadeAnimation;
+    bb::cascades::ScaleTransition *_scaleAnimation;
 	QMap<N_ANIMATION_PROPS, TiObject*> _animationProperties;
 	TiV8Event* _callback;
 	bool _hasCallback;

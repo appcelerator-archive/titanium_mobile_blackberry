@@ -68,6 +68,7 @@ NativeAnimationObject::NativeAnimationObject(TiObject* object)
 	_fadeAnimation = NULL;
 	_transitionAnimation = NULL;
 	_nativeControlObject = NULL;
+	_scaleAnimation = NULL;
 }
 /*
 int NativeAnimationObject::setPropertyValue(size_t propertyNumber, TiObject* obj) {
@@ -146,7 +147,7 @@ int NativeAnimationObject::setDuration(TiObject* obj)
 int NativeAnimationObject::setHeight(TiObject* obj)
 {
 	addToMap(N_ANIMATION_PROP_HEIGHT, obj);
-	return NATIVE_ERROR_NOTSUPPORTED;
+	return NATIVE_ERROR_OK;
 }
 int NativeAnimationObject::setLeft(TiObject* obj)
 {
@@ -201,7 +202,7 @@ int NativeAnimationObject::setVisible(TiObject* obj)
 int NativeAnimationObject::setWidth(TiObject* obj)
 {
 	addToMap(N_ANIMATION_PROP_WIDTH, obj);
-	return NATIVE_ERROR_NOTSUPPORTED;
+	return NATIVE_ERROR_OK;
 }
 int NativeAnimationObject::setZIndex(TiObject* obj)
 {
@@ -230,6 +231,12 @@ bb::cascades::FadeTransition *NativeAnimationObject::getFadeAnimation()
 	if(_fadeAnimation == NULL)
 		_fadeAnimation = bb::cascades::FadeTransition::create().autoDeleted(true);
 	return _fadeAnimation;
+}
+bb::cascades::ScaleTransition *NativeAnimationObject::getScaleAnimation()
+{
+	if(_scaleAnimation == NULL)
+		_scaleAnimation = bb::cascades::ScaleTransition::create().autoDeleted(true);
+	return _scaleAnimation;
 }
 QMap<N_ANIMATION_PROPS, TiObject*> NativeAnimationObject::getAnimationProperies()
 {
@@ -281,7 +288,6 @@ void NativeAnimationObject::animate(NativeControlObject *obj, Node layoutNode)
 
 	float x = layoutNode.element._measuredLeft;
 	float y = layoutNode.element._measuredTop;
-
 	float parentWidth = layoutNode.parent->element._measuredWidth;
 	float objectWidth = layoutNode.element._measuredWidth;
 	float parentHeight = layoutNode.parent->element._measuredHeight;
@@ -292,6 +298,29 @@ void NativeAnimationObject::animate(NativeControlObject *obj, Node layoutNode)
 
 	TiUtils *tiUtils = TiUtils::getInstance();
 
+	if(_animationProperties.contains(N_ANIMATION_PROP_WIDTH)) {
+		NativeControlObject::getStdString(_animationProperties[N_ANIMATION_PROP_WIDTH], &stringValue);
+		float width = tiUtils->getCalculatedDimension(stringValue);
+		getScaleAnimation()->setToX(width / objectWidth);
+		if(layoutNode.properties.right.value > 0) {
+			view->setPivotX(objectWidth/2);
+		} else
+		if(layoutNode.properties.left.value > 0) {
+			view->setPivotX(-(objectWidth/2));
+		}
+	}
+
+	if(_animationProperties.contains(N_ANIMATION_PROP_HEIGHT)) {
+		NativeControlObject::getStdString(_animationProperties[N_ANIMATION_PROP_HEIGHT], &stringValue);
+		float height = tiUtils->getCalculatedDimension(stringValue);
+		getScaleAnimation()->setToY(height / objectHeight);
+		if(layoutNode.properties.top.value > 0) {
+			view->setPivotY(-(objectHeight/2));
+		} else
+		if(layoutNode.properties.top.value > 0) {
+			view->setPivotY(objectHeight/2);
+		}
+	}
 
 	if(_animationProperties.contains(N_ANIMATION_PROP_LEFT)) {
 		NativeControlObject::getStdString(_animationProperties[N_ANIMATION_PROP_LEFT], &stringValue);
@@ -323,6 +352,8 @@ void NativeAnimationObject::animate(NativeControlObject *obj, Node layoutNode)
 			_transitionAnimation->setDuration((int)floatValue);
 		if(_fadeAnimation != NULL)
 			_fadeAnimation->setDuration((int)floatValue);
+		if(_scaleAnimation != NULL)
+			_scaleAnimation->setDuration((int)floatValue);
 	}
 	if(_animationProperties.contains(N_ANIMATION_PROP_DELAY)) {
 		NativeControlObject::getFloat(_animationProperties[N_ANIMATION_PROP_DELAY], &floatValue);
@@ -330,6 +361,8 @@ void NativeAnimationObject::animate(NativeControlObject *obj, Node layoutNode)
 			_transitionAnimation->setDelay((int)floatValue);
 		if(_fadeAnimation != NULL)
 			_fadeAnimation->setDelay((int)floatValue);
+		if(_scaleAnimation != NULL)
+			_scaleAnimation->setDelay((int)floatValue);
 	}
 	if(_animationProperties.contains(N_ANIMATION_PROP_REPEAT)) {
 		NativeControlObject::getFloat(_animationProperties[N_ANIMATION_PROP_REPEAT], &floatValue);
@@ -337,6 +370,8 @@ void NativeAnimationObject::animate(NativeControlObject *obj, Node layoutNode)
 			_transitionAnimation->setRepeatCount((int)floatValue);
 		if(_fadeAnimation != NULL)
 			_fadeAnimation->setRepeatCount((int)floatValue);
+		if(_scaleAnimation != NULL)
+			_scaleAnimation->setRepeatCount((int)floatValue);
 	}
 
 	NativeAnimationEventHandler *events = new NativeAnimationEventHandler(this);
@@ -349,6 +384,11 @@ void NativeAnimationObject::animate(NativeControlObject *obj, Node layoutNode)
 		view->addAnimation(_fadeAnimation);
 		QObject::connect(_fadeAnimation, SIGNAL(ended()), events, SLOT(onAnimationEnd()));
 	    _fadeAnimation->play();
+	}
+	if(_scaleAnimation != NULL) {
+		view->addAnimation(_scaleAnimation);
+		QObject::connect(_scaleAnimation, SIGNAL(ended()), events, SLOT(onAnimationEnd()));
+		_scaleAnimation->play();
 	}
 
 }
@@ -386,6 +426,17 @@ void NativeAnimationEventHandler::onAnimationEnd()
 	if(_animationProperties.contains(N_ANIMATION_PROP_OPACITY)) {
 		_nativeObject->setOpacity(_animationProperties[N_ANIMATION_PROP_OPACITY]);
 	}
+	if(_animationProperties.contains(N_ANIMATION_PROP_WIDTH)) {
+		_nativeObject->setWidth(_animationProperties[N_ANIMATION_PROP_WIDTH]);
+		_view->setScaleX(1);
+		_view->setPivotX(0);
+	}
+	if(_animationProperties.contains(N_ANIMATION_PROP_HEIGHT)) {
+		_nativeObject->setHeight(_animationProperties[N_ANIMATION_PROP_HEIGHT]);
+		_view->setScaleY(1);
+		_view->setPivotY(0);
+	}
+
 	if(_animationObject->hasCallback()) {
 		// Fire only once
 		_animationObject->setHasCallback(false);
