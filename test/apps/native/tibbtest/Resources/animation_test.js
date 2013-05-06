@@ -1,75 +1,52 @@
-// Global variable for device width
-var viewWidth = 200;
-// Main Window
 var win = Ti.UI.createWindow({
-	title : 'Main Window',
+	title : 'Window',
 	backgroundColor : '#28292c',
 	barColor : '#28292c'
 });
+
+var view = Ti.UI.createView({
+	top: 10,
+	left: 10,
+	width: 100,
+	height: 100,
+	backgroundColor: 'red'
+});
+
+var btn1 = Ti.UI.createButton({
+	title: 'left 10, top: 10, opacity: 0.3',
+	bottom: 60
+});
+
+var btn2 = Ti.UI.createButton({
+	title: 'left: 200, top: 100, duration: 2000, opacity: 1',
+	bottom: 0,
+});
+
+win.add(btn1);
+win.add(btn2);
+win.add(view);
+
+btn1.addEventListener('click', function(){
+	var animation = Ti.UI.createAnimation({
+		left: 10,
+		top: 10,
+		opacity: 0.3,
+		duration: 1000
+	});
+	view.animate(animation);
+});
+
+btn2.addEventListener('click', function(){
+	view.animate({
+		left: 200,
+		top: 100,
+		duration: 2000,
+		opacity: 1
+	}, function(e){
+		alert('end');
+		Ti.API.info(this);
+		Ti.API.info(JSON.stringify(this));
+	});
+});
+
 win.open();
-Ti.API.info(viewWidth);
-// View for Menu items
-var menuView = Ti.UI.createView({
-	top : 0,
-	left : viewWidth,
-	width : 150,
-	backgroundColor : 'red',
-
-});
-var menuTitles = [{
-	title : 'Menu 1'
-}, {
-	title : 'Menu 2'
-}, {
-	title : 'Menu 3'
-}, {
-	title : 'Menu 4'
-}, {
-	title : 'Menu 5'
-}, {
-	title : 'Menu 6'
-}];
-// Tableview
-var tableView = Ti.UI.createTableView({
-	data : menuTitles
-});
-menuView.add(tableView);
-
-//Another view
-var View = Ti.UI.createView({
-	top : 0,
-	right : 0,
-	backgroundColor : 'white',
-
-});
-win.add(View);
-var menuButton = Ti.UI.createButton({
-	title : 'Menu',
-	toggle : false // Custom property for menu toggle
-});
-View.add(menuButton);
-win.add(menuView);
-menuButton.addEventListener('click', function(e) {
-	// If the menu is opened
-	if (e.source.toggle == true) {
-		Ti.API.info('----> ' + viewWidth);
-		menuView.animate({
-			left : viewWidth,
-			duration : 200,
-
-		});
-		e.source.toggle = false;
-
-	}
-	// If the menu isn't opened
-	else {
-		Ti.API.info('<---- ' + (viewWidth - 150));
-		menuView.animate({
-			left : 100,
-			duration : 200,
-
-		});
-		e.source.toggle = true;
-
-	}
-}); 

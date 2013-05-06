@@ -7,7 +7,6 @@
 
 #include "NativeAnimationObject.h"
 
-#include <v8.h>
 #include <iostream>
 #include <string>
 #include "TiObject.h"
@@ -64,6 +63,8 @@ NativeAnimationObject::NativeAnimationObject(TiObject* object)
   : NativeProxyObject(object)
   , PropertyDelegateBase<NativeAnimationObject>(this, properties, propertyCount) {
 
+	_jsObject = object;
+	_hasCallback = false;
 	_fadeAnimation = NULL;
 	_transitionAnimation = NULL;
 	_nativeControlObject = NULL;
@@ -235,6 +236,27 @@ QMap<N_ANIMATION_PROPS, TiObject*> NativeAnimationObject::getAnimationProperies(
 	return _animationProperties;
 }
 
+void NativeAnimationObject::setCallback(TiV8Event* callback)
+{
+	std::cout << "function " << std::endl;
+	_callback = callback;
+	_hasCallback = true;
+}
+
+void NativeAnimationObject::setHasCallback(bool hasCallback)
+{
+	_hasCallback = hasCallback;
+}
+
+bool NativeAnimationObject::hasCallback()
+{
+	return _hasCallback;
+}
+TiV8Event* NativeAnimationObject::getCallback()
+{
+	return _callback;
+}
+
 void NativeAnimationObject::removeAnimations()
 {
 	if(_nativeControlObject == NULL) return;
@@ -245,6 +267,11 @@ void NativeAnimationObject::removeAnimations()
 	if(_fadeAnimation != NULL)
 		view->removeAnimation(_fadeAnimation);
 
+}
+
+TiObject *NativeAnimationObject::getJSObject()
+{
+	return _jsObject;
 }
 
 void NativeAnimationObject::animate(NativeControlObject *obj, Node layoutNode)
@@ -359,5 +386,10 @@ void NativeAnimationEventHandler::onAnimationEnd()
 	if(_animationProperties.contains(N_ANIMATION_PROP_OPACITY)) {
 		_nativeObject->setOpacity(_animationProperties[N_ANIMATION_PROP_OPACITY]);
 	}
-
+	if(_animationObject->hasCallback()) {
+		// Fire only once
+		_animationObject->setHasCallback(false);
+	    TiV8Event* callback = _animationObject->getCallback();
+		callback->fire();
+	}
 }

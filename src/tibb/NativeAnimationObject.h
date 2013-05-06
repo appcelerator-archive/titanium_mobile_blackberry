@@ -15,7 +15,9 @@
 #include <bb/cascades/TranslateTransition>
 #include <bb/cascades/FadeTransition>
 #include "Layout/Node.h"
+#include "TiV8Event.h"
 #include <QMap>
+#include <v8.h>
 
 class NativeControlObject;
 
@@ -78,7 +80,11 @@ public:
 	int setVisible(TiObject* obj);
 	int setWidth(TiObject* obj);
 	int setZIndex(TiObject* obj);
-
+	void setHasCallback(bool hasCallback);
+    TiObject *getJSObject();
+	bool hasCallback();
+	TiV8Event* getCallback();
+	void setCallback(TiV8Event* event);
 	void setNativeControlObject(NativeControlObject *obj);
 	void removeAnimations();
 	NativeControlObject* getNativeControlObject();
@@ -99,11 +105,12 @@ private:
     bb::cascades::TranslateTransition *_transitionAnimation;
     bb::cascades::FadeTransition *_fadeAnimation;
 	QMap<N_ANIMATION_PROPS, TiObject*> _animationProperties;
-
-
+	TiV8Event* _callback;
+	bool _hasCallback;
     explicit NativeAnimationObject(TiObject* tiObject);
     NativeAnimationObject(const NativeAnimationObject&);
     NativeAnimationObject& operator=(const NativeAnimationObject&);
+    TiObject *_jsObject;
 };
 
 class NativeAnimationEventHandler : public QObject

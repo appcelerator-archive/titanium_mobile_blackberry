@@ -1517,15 +1517,9 @@ QString NativeControlObject::getResourcePath(const QString& path)
     return rPath;
 }
 
-void NativeControlObject::animate(NativeObject* obj)
-{
-	NativeAnimationObject *animation = static_cast<NativeAnimationObject*>(obj);
-	animation->animate(this, layoutNode_);
-}
 
-void NativeControlObject::animate(Local<Object> obj)
+NativeAnimationObject * NativeControlObject::createAnimationObject(Local<Object> obj)
 {
-
     NativeObjectFactory* factory = tiObject_->getNativeObjectFactory();
     TiUIAnimation* animation = TiUIAnimation::createAnimation(factory);
     TiObject *itemObject = static_cast<TiObject*>(animation);
@@ -1538,7 +1532,25 @@ void NativeControlObject::animate(Local<Object> obj)
 
     // Apply the properties in the dictionary to the new animation object.
     animation->setParametersFromObject(animation, obj->ToObject());
+    return (NativeAnimationObject *)animation->getNativeObject();
+}
 
-    animate(animation->getNativeObject());
+void NativeControlObject::animate(NativeObject* obj)
+{
+	NativeAnimationObject *animation = static_cast<NativeAnimationObject*>(obj);
+	animation->animate(this, layoutNode_);
+}
 
+void NativeControlObject::animate(Local<Object> obj, TiV8Event* event)
+{
+	NativeAnimationObject *animation = createAnimationObject(obj);
+	animation->setCallback(event);
+	animation->animate(this, layoutNode_);
+
+}
+
+void NativeControlObject::animate(Local<Object> obj)
+{
+	NativeAnimationObject *animation = createAnimationObject(obj);
+	animation->animate(this, layoutNode_);
 }

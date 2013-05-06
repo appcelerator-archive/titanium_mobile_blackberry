@@ -601,7 +601,14 @@ Handle<Value> TiUIBase::_animate(void* userContext, TiObject*, const Arguments& 
 
     if(!tiObject) {
         Local<Object> jsObject = Local<Object>::Cast(args[0]);
-        native->animate(jsObject);
+        if(args.Length() > 1 && args[1]->IsFunction()) {
+        	Handle<Function> callback = Handle<Function>::Cast(args[1]);
+        	Handle<Object> source = Handle<Object>::Cast(self->getValue());
+            TiV8Event* event = TiV8Event::createEvent("complete", callback, source);
+        	native->animate(jsObject, event);
+        } else {
+            native->animate(jsObject);
+        }
     } else {
         native->animate(tiObject->getNativeObject());
     }

@@ -9,7 +9,6 @@
 #define NATIVECONTROLOBJECT_H_
 
 #include "NativeProxyObject.h"
-
 #include <bb/cascades/Color>
 #include <bb/cascades/TouchEvent>
 #include <bb/cascades/VisualNode>
@@ -17,11 +16,12 @@
 
 #include <Layout/Node.h>
 
-
+class TiV8Event;
 class QString;
 class TiObject;
 class UIViewEventHandler;
 class NativeLayoutHandler;
+class NativeAnimationObject;
 
 namespace bb
 {
@@ -175,6 +175,7 @@ public:
 
     virtual void animate(NativeObject* obj);
     virtual void animate(v8::Local<v8::Object> obj);
+    virtual void animate(v8::Local<v8::Object> obj, TiV8Event* event);
     bb::cascades::Container* container_;
 
 protected:
@@ -198,6 +199,7 @@ private:
     void addTouchEvent(const char* name, const QObject* source, const char* signal, TiEventContainer* container);
     void updateLayoutProperty(ValueName name, TiObject* val);
 
+    NativeAnimationObject *createAnimationObject(v8::Local<v8::Object> obj);
     bb::cascades::Control* control_;
     bb::cascades::AbsoluteLayoutProperties* layout_;
     bb::cascades::Color backgroundColor_;
