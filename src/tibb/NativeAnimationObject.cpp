@@ -17,14 +17,7 @@
 #include "TiUtils.h"
 
 using namespace v8;
-/*
 
-enum N_ANIMATION_PROPS {
-    N_ANIMATION_PROP_TOP,
-    N_ANIMATION_PROP_LEFT,
-};
-
- */
 static NativeAnimationObject::PropertyInfo properties[] = {
 		{N_ANIMATION_PROP_ANCHORPOINT, 0, &NativeAnimationObject::setAnchorPoint},
 		{N_ANIMATION_PROP_AUTOREVERSE, 0, &NativeAnimationObject::setAutoreverse},
@@ -245,7 +238,6 @@ QMap<N_ANIMATION_PROPS, TiObject*> NativeAnimationObject::getAnimationProperies(
 
 void NativeAnimationObject::setCallback(TiV8Event* callback)
 {
-	std::cout << "function " << std::endl;
 	_callback = callback;
 	_hasCallback = true;
 }
