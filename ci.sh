@@ -12,32 +12,6 @@ then
     cd titanium_mobile_blackberry
 fi
 
-# Check OS
-OS=$(uname -s)
-
-BB_PATH="/Applications" 
-
-# Set bbndk path
-if [ "$OS" == 'Linux' ]; then
-    BB_PATH="/opt"
-fi
-
-# Set source for build
-source $BB_PATH/bbndk/bbndk-env.sh
-
-# Build v8 runtime
-cd runtime && make
-
-# Move to sdk build file directory
-cd ../cli/commands
-
-# Create temp package.json to install wrench dep
-#echo "{\"name\":\"tmp\",\"version\":\"0.0.1\"}" > package.json
-
-# Install node.js wrench module
-#npm install wrench && rm package.json
-
-# Build sdk and Move to build output directory
-#./create_sdk && cd ../../build/sdk
-
 ./create_sdk
+
+cd build/sdk
