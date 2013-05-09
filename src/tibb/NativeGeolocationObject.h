@@ -32,6 +32,8 @@ public:
 
     virtual int setPropertyValue(size_t propertyNumber, TiObject* obj);
     virtual int getPropertyValue(size_t propertyNumber, TiObject* obj);
+    virtual int setEventHandler(const char* eventName, TiEvent* event);
+    virtual int removeEventHandler(const char* eventName, int eventId);
 
     int isLocationServicesEnabled(TiObject* value);
 
@@ -40,6 +42,7 @@ protected:
 
 private:
     QScopedPointer<GeolocationSession> session_;
+    int locationListenerCount_;
 };
 
 #endif

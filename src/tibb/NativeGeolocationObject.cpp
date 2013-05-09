@@ -22,7 +22,8 @@ static const int propertyCount = sizeof(properties) / sizeof(properties[0]);
 
 NativeGeolocationObject::NativeGeolocationObject(TiObject* obj)
   : NativeProxyObject(obj)
-  , PropertyDelegateBase<NativeGeolocationObject>(this, properties, propertyCount) {
+  , PropertyDelegateBase<NativeGeolocationObject>(this, properties, propertyCount)
+  , locationListenerCount_(0) {
 }
 
 int NativeGeolocationObject::setPropertyValue(size_t propertyNumber, TiObject* obj) {
@@ -31,6 +32,28 @@ int NativeGeolocationObject::setPropertyValue(size_t propertyNumber, TiObject* o
 
 int NativeGeolocationObject::getPropertyValue(size_t propertyNumber, TiObject* obj) {
     return getProperty(propertyNumber, obj);
+}
+
+int NativeGeolocationObject::setEventHandler(const char* eventName, TiEvent* event) {
+    NativeProxyObject::setEventHandler(eventName, event);
+
+    if (strcmp("location", eventName) == 0) {
+        locationListenerCount_++;
+        if (locationListenerCount_ == 1) {
+            session_->enableUpdates(true);
+        }
+    }
+}
+
+int NativeGeolocationObject::removeEventHandler(const char* eventName, int eventId) {
+    NativeProxyObject::removeEventHandler(eventName, eventId);
+
+    if (strcmp("location", eventName) == 0) {
+        locationListenerCount_--;
+        if (locationListenerCount_ == 0) {
+            session_->enableUpdates(false);
+        }
+    }
 }
 
 int NativeGeolocationObject::isLocationServicesEnabled(TiObject* value) {
@@ -46,7 +69,5 @@ void NativeGeolocationObject::setupEvents(TiEventContainerFactory* containerFact
     container->setDataProperty("type", "location");
     session_.reset(new GeolocationSession(container));
     events_.insert("location", EventPairSmartPtr(container, session_.data()));
-
-    session_->enableUpdates(true);
 }
 
