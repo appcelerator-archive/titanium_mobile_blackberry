@@ -176,7 +176,7 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     layoutNode_.data = this;
 
 
-    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_LIST_VIEW || objType == N_TYPE_SCROLL_VIEW) {
+    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_LIST_VIEW || objType == N_TYPE_SCROLL_VIEW || objType == N_TYPE_SCROLLABLE_VIEW) {
         layoutNode_.properties.width.valueType = Fill;
         layoutNode_.properties.height.valueType = Fill;
 	}
@@ -987,6 +987,12 @@ int NativeControlObject::setAnnotations(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
+
+PROP_SETGET(setViews)
+int NativeControlObject::setViews(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
 //////////////////////
 
 // Annotation properties
@@ -1119,12 +1125,72 @@ int NativeControlObject::getTabs(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+// ScrollableView
+PROP_SETGET(setCurrentPage)
+int NativeControlObject::setCurrentPage(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setOverScrollMode)
+int NativeControlObject::setOverScrollMode(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setOverlayEnabled)
+int NativeControlObject::setOverlayEnabled(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setPagingControlAlpha)
+int NativeControlObject::setPagingControlAlpha(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setPagingControlColor)
+int NativeControlObject::setPagingControlColor(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setPagingControlHeight)
+int NativeControlObject::setPagingControlHeight(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setPagingControlOnTop)
+int NativeControlObject::setPagingControlOnTop(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setPagingControlTimeout)
+int NativeControlObject::setPagingControlTimeout(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setScrollingEnabled)
+int NativeControlObject::setScrollingEnabled(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setShowPagingControl)
+int NativeControlObject::setShowPagingControl(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
 const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
 {
-    {N_PROP_DISABLE_BOUNCE, PROP_SETGET_FUNCTION(setDisableBounce), NULL},
     {N_PROP_ENABLE_ZOOM_CONTROLS, PROP_SETGET_FUNCTION(setEnableZoomControls), NULL},
     {N_PROP_HIDE_LOAD_INDICATOR, PROP_SETGET_FUNCTION(setHideLoadIndicator), NULL},
     {N_PROP_HTML, PROP_SETGET_FUNCTION(setHtml), NULL},
@@ -1210,7 +1276,22 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
 
     // TabGroup properties
     {N_PROP_ACTIVE_TAB, PROP_SETGET_FUNCTION(setActiveTab), PROP_SETGET_FUNCTION(getActiveTab)},
-    {N_PROP_TABS, NULL, PROP_SETGET_FUNCTION(getTabs)}
+    {N_PROP_TABS, NULL, PROP_SETGET_FUNCTION(getTabs)},
+
+    // ScrollableView
+    {N_PROP_VIEWS, PROP_SETGET_FUNCTION(setViews), NULL},
+    {N_PROP_CURRENT_PAGE, PROP_SETGET_FUNCTION(setCurrentPage), NULL},
+    {N_PROP_DISABLE_BOUNCE, PROP_SETGET_FUNCTION(setDisableBounce), NULL},
+    {N_PROP_OVER_SCROLL_MODE, PROP_SETGET_FUNCTION(setOverScrollMode), NULL},
+    {N_PROP_OVERLAY_ENABLED, PROP_SETGET_FUNCTION(setOverlayEnabled), NULL},
+    {N_PROP_PAGING_CONTROL_ALPHA, PROP_SETGET_FUNCTION(setPagingControlAlpha), NULL},
+    {N_PROP_PAGING_CONTROL_COLOR, PROP_SETGET_FUNCTION(setPagingControlColor), NULL},
+    {N_PROP_PAGING_CONTROL_HEIGHT, PROP_SETGET_FUNCTION(setPagingControlHeight), NULL},
+    {N_PROP_PAGING_CONTROL_ON_TOP, PROP_SETGET_FUNCTION(setPagingControlOnTop), NULL},
+    {N_PROP_PAGING_CONTROL_TIMEOUT, PROP_SETGET_FUNCTION(setPagingControlTimeout), NULL},
+    {N_PROP_SCROLLING_ENABLED, PROP_SETGET_FUNCTION(setScrollingEnabled), NULL},
+    {N_PROP_SHOW_PAGING_CONTROL, PROP_SETGET_FUNCTION(setShowPagingControl), NULL},
+
 };
 
 static SetGetProperties g_props(g_propSetGet, GET_ARRAY_SIZE(g_propSetGet));
