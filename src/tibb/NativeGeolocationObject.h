@@ -13,6 +13,7 @@
 #include "NativeProxyObject.h"
 #include "PropertyDelegate.h"
 
+class CompassEventHandler;
 class GeolocationSession;
 
 enum N_GEOLOCATION_PROPS {
@@ -42,7 +43,9 @@ protected:
 
 private:
     QScopedPointer<GeolocationSession> session_;
+    QScopedPointer<CompassEventHandler> compass_;
     int locationListenerCount_;
+    int headingListenerCount_;
 };
 
 #endif
