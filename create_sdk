@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# we should be at repo root
+VAR_PWD=`pwd`
+
+# Check OS
+OS=$(uname -s)
+
+BB_PATH="/Applications"
+
+# Set bbndk path
+if [ "$OS" == 'Linux' ]; then
+    BB_PATH="/opt"
+fi
+
+echo "Creating Libraries"
+source $BB_PATH/bbndk/bbndk-env.sh
+
+echo "Creating V8 Libraries"
+cd runtime
+make clean
+make
+
+cd $VAR_PWD
+source $BB_PATH/bbndk/bbndk-env.sh
+
+echo "Creating Titanium BlackBerry Libraries"
+cd src/tibb
+make clean
+make
+
+echo "Creating the BlackBerry drop-in folder at build/sdk/blackberry"
+
+cd $VAR_PWD
+
+mkdir -p build/sdk/blackberry
+
+cp -r build_templates/blackberry/. build/sdk/blackberry
+
+mkdir -p build/sdk/blackberry/tibb/arm/a.le-v7
+mkdir -p build/sdk/blackberry/tibb/arm/a.le-v7-g
+mkdir -p build/sdk/blackberry/tibb/x86/a
+mkdir -p build/sdk/blackberry/tibb/x86/a-g/
+
+cp src/tibb/arm/a.le-v7/libtibb.a  build/sdk/blackberry/tibb/arm/a.le-v7/libtibb.a
+cp src/tibb/arm/a.le-v7-g/libtibb.a build/sdk/blackberry/tibb/arm/a.le-v7-g/libtibb.a
+cp src/tibb/x86/a/libtibb.a build/sdk/blackberry/tibb/x86/a/libtibb.a
+cp src/tibb/x86/a-g/libtibb.a build/sdk/blackberry/tibb/x86/a-g/libtibb.a
+
+mkdir -p build/sdk/blackberry/libv8/lib/arm
+mkdir -p build/sdk/blackberry/libv8/lib/x86
+
+cp runtime/v8/arm/libv8.a build/sdk/blackberry/libv8/lib/arm/libv8.a
+cp runtime/v8/x86/libv8.a build/sdk/blackberry/libv8/lib/x86/libv8.a
+
+cp package.json build/sdk/blackberry/package.json
+
+
