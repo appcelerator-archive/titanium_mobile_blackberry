@@ -24,6 +24,7 @@
 #include "TiUIProgressBar.h"
 #include "TiUISlider.h"
 #include "TiUIScrollView.h"
+#include "TiUIScrollableView.h"
 #include "TiUISwitch.h"
 #include "TiUITab.h"
 #include "TiUITabGroup.h"
@@ -90,6 +91,7 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createView", this, _createView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createWebView", this, _createWebView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createScrollView", this, _createScrollView);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createScrollableView", this, _createScrollableView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setBackgroundColor", this, _setBackgroundColor);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createAnimation", this, _createAnimation);
 
@@ -242,6 +244,11 @@ Handle<Value> TiUIObject::_createScrollView(void* userContext, TiObject*, const 
 Handle<Value> TiUIObject::_createAnimation(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIAnimation::createAnimation), args);
+}
+
+Handle<Value> TiUIObject::_createScrollableView(void* userContext, TiObject*, const Arguments& args)
+{
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIScrollableView::createScrollableView), args);
 }
 
 Handle<Value> TiUIObject::_setBackgroundColor(void* userContext, TiObject* caller, const Arguments& args)

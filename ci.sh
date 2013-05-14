@@ -9,6 +9,7 @@ then
 
     # Enter repo root directory
     cd titanium_mobile_blackberry
+    git checkout $1
 fi
 
 # Check OS

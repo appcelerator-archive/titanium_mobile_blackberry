@@ -105,7 +105,10 @@ var package = function(builder) {
 
     // copy resources into assets folder
     var assetsDir = path.join(buildDir, 'assets');
+    var i18nDir = path.join(projectDir, 'i18n');
 	var resourcesDir = path.join(projectDir, 'Resources');
+	
+	afs.copyDirSyncRecursive(i18nDir, path.join(assetsDir, 'i18n'), { preserve: true, logger: logger.debug });
 
 	afs.copyDirSyncRecursive(resourcesDir, assetsDir, { preserve: true, logger: logger.debug });
 
@@ -270,7 +273,8 @@ function BlackberryNDK(builder) {
 	            	permissions += '<action>' + key + '</action>\n\t';
 	        	}
 	        }
-	        if (tiapp['analytics'] === 'true') {
+
+	        if (tiapp['analytics'] === true) {
 	        	permissions += '<action>read_device_identifying_information</action>\n\t';
 	        }
             

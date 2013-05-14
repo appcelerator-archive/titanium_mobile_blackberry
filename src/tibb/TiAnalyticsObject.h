@@ -30,7 +30,7 @@ class TiAnalyticsObject : public TiProxy
 public:
 	static void addObjectToParent(TiObject* parent, NativeObjectFactory* objectFactory);
 	bool createAnalyticsDatabase();
-	void addAnalyticsEvent(std::string const& name, std::string const& customData = "");
+	void addAnalyticsEvent(std::string const& name, std::string const& data = "");
 	void sendPendingAnalyticsEvents();
 	sqlite3* db_;
 

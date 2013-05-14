@@ -78,7 +78,6 @@ public:
     virtual int setContentHeight(TiObject* obj);
     virtual int setContentWidth(TiObject* obj);
     virtual int setData(TiObject* obj);
-    virtual int setDisableBounce(TiObject* obj);
     virtual int setEnabled(TiObject* obj);
     virtual int setEnableZoomControls(TiObject* obj);
     virtual int setFont(TiObject* obj);
@@ -138,7 +137,7 @@ public:
     virtual int setLeftView(TiObject* obj);
     virtual int setRightView(TiObject* obj);
     ////////////////////////
-     // Media properties
+    // Media properties
     virtual int getPlaying(TiObject* obj);
     virtual int getPaused(TiObject* obj);
     virtual int getProgress(TiObject* obj);
@@ -172,6 +171,19 @@ public:
     virtual int setActiveTab(TiObject* obj);
     virtual int getActiveTab(TiObject* obj);
     virtual int getTabs(TiObject* obj);
+    // ScrollableView
+    virtual int setCurrentPage(TiObject* obj);
+    virtual int setDisableBounce(TiObject* obj);
+    virtual int setOverScrollMode(TiObject* obj);
+    virtual int setOverlayEnabled(TiObject* obj);
+    virtual int setPagingControlAlpha(TiObject* obj);
+    virtual int setPagingControlColor(TiObject* obj);
+    virtual int setPagingControlHeight(TiObject* obj);
+    virtual int setPagingControlOnTop(TiObject* obj);
+    virtual int setPagingControlTimeout(TiObject* obj);
+    virtual int setScrollingEnabled(TiObject* obj);
+    virtual int setShowPagingControl(TiObject* obj);
+    virtual int setViews(TiObject* obj);
 
     virtual void animate(NativeObject* obj);
     virtual void animate(v8::Local<v8::Object> obj);

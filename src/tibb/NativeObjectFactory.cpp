@@ -36,6 +36,7 @@
 #include "NativeDBObject.h"
 #include "NativeResultSetObject.h"
 #include "NativeScrollViewObject.h"
+#include "NativeScrollableViewObject.h"
 #include "NativeWebViewObject.h"
 #include "NativeMapViewObject.h"
 #include "NativeAnnotationObject.h"
@@ -159,6 +160,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 
     case N_TYPE_SCROLL_VIEW:
         obj = NativeScrollViewObject::createScrollView(tiObj);
+        break;
+
+    case N_TYPE_SCROLLABLE_VIEW:
+        obj = NativeScrollableViewObject::createScrollableView(tiObj);
         break;
 
     case N_TYPE_DB:

@@ -43,6 +43,7 @@ enum NATIVE_TYPE
     , N_TYPE_UDPSOCKET
     , N_TYPE_HTTPCLIENT
     , N_TYPE_SCROLL_VIEW
+    , N_TYPE_SCROLLABLE_VIEW
     , N_TYPE_TEXT_FIELD
     , N_TYPE_TEXT_AREA
     , N_TYPE_TOGGLEBUTTON
@@ -166,7 +167,6 @@ enum NATIVE_PROP
     , N_PROP_VOLUME
     ////////////////////////
     //TODO: need to place alphabetically
-    , N_PROP_DISABLE_BOUNCE
     , N_PROP_ENABLE_ZOOM_CONTROLS
     , N_PROP_HIDE_LOAD_INDICATOR
     , N_PROP_HTML

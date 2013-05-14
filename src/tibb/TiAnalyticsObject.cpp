@@ -22,10 +22,13 @@
 	 sid - a unique value that identifies the entire life-cycle of the app
 	 mid - mobile device id, every BlackBerry device has a unique id
 	 aguid - the id of the application, generated when the application is first created
+	 event - the name of the event, ti.enroll (app first runs), ti.start, ti.end, ti.foreground, ti.background, featureEvent
 	 type - the name of the event, ti.enroll (app first runs), ti.start, ti.end, ti.foreground, ti.background, featureEvent
 	 ts - UTC time stamp of event
 	 platform - always blackberry
 	 deploytype - development or production
+	 app_version - the version of the application as it appears in the tiapp.xml file
+	 feature_data - when users call Ti.Analytics.featureEvent(name, data) feature_data holds the json data
 */
 
 // Application properties defined at compile in tiapp.xml
@@ -155,7 +158,7 @@ bool TiAnalyticsObject::createAnalyticsDatabase()
 	return dbCreate ;
 }
 
-void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string const& customData)
+void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string const& data)
 {
 	sqlite3_stmt* stmt;
 	int rc;
@@ -180,9 +183,9 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 
 	// TODO guard against 1024 overrun
 	char json[1024];
-	sprintf(json, "[{\"seq\":%d,\"ver\":\"2\",\"id\":\"%s\",\"sid\":\"%s\",\"mid\":\"%s\",\"aguid\":\"%s\",\"type\":\"%s\",\"event\":\"%s\",\"ts\":\"%s\",\"data\":{\"platform\":\"blackberry\",\"deploytype\":\"%s\",\"app_version\":\"%s\",\"customdata\":\"%s\"}}]",
+	sprintf(json, "[{\"seq\":%d,\"ver\":\"2\",\"id\":\"%s\",\"sid\":\"%s\",\"mid\":\"%s\",\"aguid\":\"%s\",\"type\":\"%s\",\"event\":\"%s\",\"ts\":\"%s\",\"data\":{\"platform\":\"blackberry\",\"deploytype\":\"%s\",\"app_version\":\"%s\",\"feature_data\":\"%s\"}}]",
 				sequence_, id.data(), sid_.data(), mid_.data(), aguid_.data(), name.c_str(), name.c_str(), ts.data(),
-				deployType_.data(), appVersion_.data(), customData.c_str());
+				deployType_.data(), appVersion_.data(), data.c_str());
 
 	sqlite3_bind_text(stmt, 1, id.data(), strlen(id.data()), 0);
 	sqlite3_bind_text(stmt, 2, json, strlen(json), 0);
