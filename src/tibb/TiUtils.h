@@ -5,7 +5,7 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#import <iostream>
+#include <QObject>
 
 class TiUtils
 {
@@ -13,7 +13,7 @@ public:
 	TiUtils();
 	~TiUtils();
 	static TiUtils* getInstance();
-	float getCalculatedDimension(std::string);
+	float getCalculatedDimension(QString);
 	float getPPI();
 private:
 

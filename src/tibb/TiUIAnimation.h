@@ -15,8 +15,6 @@ class TiUIAnimation : public TiProxy
 public:
     static TiUIAnimation* createAnimation(NativeObjectFactory* objectFactory);
 
-//    void setData(const QByteArray& data, const QString& mimeType);
-
 protected:
     virtual ~TiUIAnimation();
     virtual void onCreateStaticMembers();

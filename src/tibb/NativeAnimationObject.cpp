@@ -15,6 +15,7 @@
 #include <bb/device/DisplayInfo>
 #include <bb/cascades/ImplicitAnimationController>
 #include "TiUtils.h"
+#include "V8Utils.h"
 
 using namespace v8;
 
@@ -285,13 +286,13 @@ void NativeAnimationObject::animate(NativeControlObject *obj, Node layoutNode)
 	float parentHeight = layoutNode.parent->element._measuredHeight;
 	float objectHeight = layoutNode.element._measuredHeight;
 
-	std::string stringValue;
+	QString stringValue;
 	float floatValue;
 
 	TiUtils *tiUtils = TiUtils::getInstance();
 
 	if(_animationProperties.contains(N_ANIMATION_PROP_WIDTH)) {
-		NativeControlObject::getStdString(_animationProperties[N_ANIMATION_PROP_WIDTH], &stringValue);
+		stringValue = titanium::V8ValueToQString(_animationProperties[N_ANIMATION_PROP_WIDTH]->getValue());
 		float width = tiUtils->getCalculatedDimension(stringValue);
 		getScaleAnimation()->setToX(width / objectWidth);
 		if(layoutNode.properties.right.value > 0) {
@@ -301,36 +302,34 @@ void NativeAnimationObject::animate(NativeControlObject *obj, Node layoutNode)
 			view->setPivotX(-(objectWidth/2));
 		}
 	}
-
 	if(_animationProperties.contains(N_ANIMATION_PROP_HEIGHT)) {
-		NativeControlObject::getStdString(_animationProperties[N_ANIMATION_PROP_HEIGHT], &stringValue);
+		stringValue = titanium::V8ValueToQString(_animationProperties[N_ANIMATION_PROP_HEIGHT]->getValue());
 		float height = tiUtils->getCalculatedDimension(stringValue);
 		getScaleAnimation()->setToY(height / objectHeight);
 		if(layoutNode.properties.top.value > 0) {
 			view->setPivotY(-(objectHeight/2));
 		} else
-		if(layoutNode.properties.top.value > 0) {
+		if(layoutNode.properties.bottom.value > 0) {
 			view->setPivotY(objectHeight/2);
 		}
 	}
-
 	if(_animationProperties.contains(N_ANIMATION_PROP_LEFT)) {
-		NativeControlObject::getStdString(_animationProperties[N_ANIMATION_PROP_LEFT], &stringValue);
+		stringValue = titanium::V8ValueToQString(_animationProperties[N_ANIMATION_PROP_LEFT]->getValue());
 		float left = tiUtils->getCalculatedDimension(stringValue);
 		getTranslateAnimation()->setToX(-x + left);
 	}
 	if(_animationProperties.contains(N_ANIMATION_PROP_TOP)) {
-		NativeControlObject::getStdString(_animationProperties[N_ANIMATION_PROP_TOP], &stringValue);
+		stringValue = titanium::V8ValueToQString(_animationProperties[N_ANIMATION_PROP_TOP]->getValue());
 		float top = tiUtils->getCalculatedDimension(stringValue);
 		getTranslateAnimation()->setToY(-y + top);
 	}
 	if(_animationProperties.contains(N_ANIMATION_PROP_RIGHT)) {
-		NativeControlObject::getStdString(_animationProperties[N_ANIMATION_PROP_RIGHT], &stringValue);
+		stringValue = titanium::V8ValueToQString(_animationProperties[N_ANIMATION_PROP_RIGHT]->getValue());
 		float right = tiUtils->getCalculatedDimension(stringValue);
 		getTranslateAnimation()->setToX(-x + parentWidth - objectWidth - right);
 	}
 	if(_animationProperties.contains(N_ANIMATION_PROP_BOTTOM)) {
-		NativeControlObject::getStdString(_animationProperties[N_ANIMATION_PROP_BOTTOM], &stringValue);
+		stringValue = titanium::V8ValueToQString(_animationProperties[N_ANIMATION_PROP_BOTTOM]->getValue());
 		float bottom = tiUtils->getCalculatedDimension(stringValue);
 		getTranslateAnimation()->setToY(-y + parentHeight - objectHeight - bottom);
 	}

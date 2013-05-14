@@ -44,9 +44,9 @@ float TiUtils::getPPI()
 	return ppi_;
 }
 
-float TiUtils::getCalculatedDimension(std::string str)
+float TiUtils::getCalculatedDimension(QString str)
 {
-	return getDimensionValue(str, ppi_);
+	return getDimensionValue(str.toUtf8().constData(), ppi_);
 }
 
 TiUtils* TiUtils::getInstance()

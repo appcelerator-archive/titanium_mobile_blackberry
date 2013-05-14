@@ -151,3 +151,4 @@ float getDimensionValue(std::string value, double ppi) {
 	ValueType type = _getValueType(value);
 	return (float)_computeValue(value, type, ppi);
 }
+
