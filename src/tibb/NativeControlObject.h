@@ -122,6 +122,7 @@ public:
     virtual int setWidth(TiObject* obj);
     virtual int setWillHandleTouches(TiObject* obj);
     virtual int setWindow(TiObject* obj);
+    virtual int setWordWrap(TiObject* obj);
     virtual int startLayout();
     virtual int setZIndex(TiObject* obj);
     // MapView properties
@@ -153,7 +154,6 @@ public:
     static int getBoolean(TiObject* obj, bool* value);
     static int getFloat(TiObject* obj, float* value);
     static int getInteger(TiObject* obj, int* value);
-    static int getStdString(TiObject* obj, std::string* value);
     static int getStringArray(TiObject* obj, QVector<QString>& value);
     static int getMapObject(TiObject* obj, QMap<QString, QString>& props);
     static int getObjectArray(TiObject* obj, QVector<NativeObject*>& value);
@@ -166,11 +166,13 @@ public:
     // Tab properties
     virtual int setActive(TiObject* obj);
     virtual int isActive(TiObject* obj);
+    virtual int setDescription(TiObject* obj);
 
     // TabGroup properties
     virtual int setActiveTab(TiObject* obj);
     virtual int getActiveTab(TiObject* obj);
     virtual int getTabs(TiObject* obj);
+
     // ScrollableView
     virtual int setCurrentPage(TiObject* obj);
     virtual int setDisableBounce(TiObject* obj);
@@ -184,6 +186,10 @@ public:
     virtual int setScrollingEnabled(TiObject* obj);
     virtual int setShowPagingControl(TiObject* obj);
     virtual int setViews(TiObject* obj);
+
+    // Show tab description 
+    virtual int setShowTabsOnActionBar(TiObject* obj);
+
 
     virtual void animate(NativeObject* obj);
     virtual void animate(v8::Local<v8::Object> obj);

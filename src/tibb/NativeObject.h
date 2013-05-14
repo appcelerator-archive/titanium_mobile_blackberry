@@ -29,6 +29,7 @@ enum NATIVE_TYPE
     , N_TYPE_BUTTON
     , N_TYPE_DATE_TIME_PICKER
     , N_TYPE_DROPDOWN
+    , N_TYPE_GEOLOCATION
     , N_TYPE_GESTURE
     , N_TYPE_IMAGEVIEW
     , N_TYPE_LABEL
@@ -177,6 +178,7 @@ enum NATIVE_PROP
     , N_PROP_SHOW_SCROLL_BARS
     , N_PROP_USER_AGENT
     , N_PROP_WILL_HANDLE_TOUCHES
+
     // ScrollableView
     , N_PROP_CURRENT_PAGE
     , N_PROP_DISABLE_BOUNCE
@@ -190,6 +192,11 @@ enum NATIVE_PROP
     , N_PROP_SCROLLING_ENABLED
     , N_PROP_SHOW_PAGING_CONTROL
     , N_PROP_VIEWS
+
+	// TabbedPane properties
+	, N_PROP_SHOW_TABS_ON_ACTION_BAR
+	//Tab properties
+	, N_PROP_DESCRIPTION
 
     /* This MUST be the last element */
     , N_PROP_LAST

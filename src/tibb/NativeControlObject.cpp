@@ -896,6 +896,12 @@ int NativeControlObject::setWindow(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setWordWrap)
+int NativeControlObject::setWordWrap(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 PROP_SETGET(setZIndex)
 int NativeControlObject::setZIndex(TiObject* obj)
 {
@@ -1094,6 +1100,12 @@ int NativeControlObject::isActive(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setDescription)
+int NativeControlObject::setDescription(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 PROP_SETGET(setActiveTab)
 int NativeControlObject::setActiveTab(TiObject* obj)
 {
@@ -1102,6 +1114,12 @@ int NativeControlObject::setActiveTab(TiObject* obj)
 
 PROP_SETGET(getActiveTab)
 int NativeControlObject::getActiveTab(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setShowTabsOnActionBar)
+int NativeControlObject::setShowTabsOnActionBar(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -1233,6 +1251,7 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), NULL},
     {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setWindow), NULL},
     {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setUrl), NULL},
+    {N_PROP_WORD_WRAP, PROP_SETGET_FUNCTION(setWordWrap), NULL},
     {N_PROP_URL, PROP_SETGET_FUNCTION(setUrl), NULL},
     // MapView properties
     {N_PROP_MAPTYPE, PROP_SETGET_FUNCTION(setMapType), NULL},
@@ -1260,10 +1279,12 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
 
     // Tab properties
     {N_PROP_ACTIVE, PROP_SETGET_FUNCTION(setActive), PROP_SETGET_FUNCTION(isActive)},
+    {N_PROP_DESCRIPTION, PROP_SETGET_FUNCTION(setDescription), NULL},
 
     // TabGroup properties
     {N_PROP_ACTIVE_TAB, PROP_SETGET_FUNCTION(setActiveTab), PROP_SETGET_FUNCTION(getActiveTab)},
     {N_PROP_TABS, NULL, PROP_SETGET_FUNCTION(getTabs)},
+    {N_PROP_SHOW_TABS_ON_ACTION_BAR, PROP_SETGET_FUNCTION(setShowTabsOnActionBar), NULL},
 
     // ScrollableView
     {N_PROP_VIEWS, PROP_SETGET_FUNCTION(setViews), NULL},
@@ -1277,8 +1298,7 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_PAGING_CONTROL_ON_TOP, PROP_SETGET_FUNCTION(setPagingControlOnTop), NULL},
     {N_PROP_PAGING_CONTROL_TIMEOUT, PROP_SETGET_FUNCTION(setPagingControlTimeout), NULL},
     {N_PROP_SCROLLING_ENABLED, PROP_SETGET_FUNCTION(setScrollingEnabled), NULL},
-    {N_PROP_SHOW_PAGING_CONTROL, PROP_SETGET_FUNCTION(setShowPagingControl), NULL}
-
+    {N_PROP_SHOW_PAGING_CONTROL, PROP_SETGET_FUNCTION(setShowPagingControl), NULL},
 };
 
 static SetGetProperties g_props(g_propSetGet, GET_ARRAY_SIZE(g_propSetGet));

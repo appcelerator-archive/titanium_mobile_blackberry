@@ -158,6 +158,15 @@ int NativeTabGroupObject::getActiveTab(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+int NativeTabGroupObject::setShowTabsOnActionBar(TiObject* obj)
+{
+	bool show;
+    getBoolean(obj, &show);
+
+	tabGroup_->setShowTabsOnActionBar(show);
+    return NATIVE_ERROR_OK;
+}
+
 int NativeTabGroupObject::getTabs(TiObject* obj)
 {
     Local<Array> tabs = Array::New();
