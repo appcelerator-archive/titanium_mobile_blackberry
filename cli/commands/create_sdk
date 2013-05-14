@@ -19,8 +19,30 @@ cd ../../src/tibb
 make clean
 make
 
-cd $VAR_PWD
+echo "Creating the BlackBerry drop-in folder at build/sdk/blackberry"
 
-echo "Creating the BlackBerry drop-in folder at /build/sdk/blackberry"
-node create_sdk.js
+# we are at repo root
+cd ../../
+
+cp -r build_templates/blackberry/. build/sdk/blackberry
+
+mkdir -p build/sdk/blackberry/tibb/arm/a.le-v7
+mkdir -p build/sdk/blackberry/tibb/arm/a.le-v7-g
+mkdir -p build/sdk/blackberry/tibb/x86/a
+mkdir -p build/sdk/blackberry/tibb/x86/a-g/
+
+cp src/tibb/arm/a.le-v7/libtibb.a  build/sdk/blackberry/tibb/arm/a.le-v7/libtibb.a
+cp src/tibb/arm/a.le-v7-g/libtibb.a build/sdk/blackberry/tibb/arm/a.le-v7-g/libtibb.a
+cp src/tibb/x86/a/libtibb.a build/sdk/blackberry/tibb/x86/a/libtibb.a
+cp src/tibb/x86/a-g/libtibb.a build/sdk/blackberry/tibb/x86/a-g/libtibb.a
+
+mkdir -p build/sdk/blackberry/libv8/lib/arm
+mkdir -p build/sdk/blackberry/libv8/lib/x86
+
+cp runtime/v8/arm/libv8.a build/sdk/blackberry/libv8/lib/arm/libv8.a
+cp runtime/v8/x86/libv8.a build/sdk/blackberry/libv8/lib/x86/libv8.a
+
+cp package.json build/sdk/blackberry/package.json
+
+cd build/sdk
 
