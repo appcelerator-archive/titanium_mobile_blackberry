@@ -36,3 +36,12 @@ int NativeLabelObject::initialize()
     // TODO: Set label layout here
     return NATIVE_ERROR_OK;
 }
+
+int NativeLabelObject::setWordWrap(TiObject* obj)
+{
+	bool multilined;
+    getBoolean(obj, &multilined);
+
+	label_->setMultiline(multilined);
+    return NATIVE_ERROR_OK;
+}

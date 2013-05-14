@@ -23,7 +23,7 @@ public:
     static NativeLabelObject* createLabel(TiObject* tiObject);
     virtual NATIVE_TYPE getObjectType() const;
     virtual int initialize();
-
+    virtual int setWordWrap(TiObject* obj);
 protected:
     virtual ~NativeLabelObject();
 

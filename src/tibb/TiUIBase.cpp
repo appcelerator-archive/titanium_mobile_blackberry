@@ -420,6 +420,7 @@ const static TiProperty g_tiProperties[] =
         "disableBounce", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_DISABLE_BOUNCE
     },
+
     // ScrollableView
     {
         "views", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
@@ -472,7 +473,25 @@ const static TiProperty g_tiProperties[] =
     {
         "showPagingControl", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
         N_PROP_SHOW_PAGING_CONTROL
-    }
+    },
+
+    // Tab properties
+    {
+		"description", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+		N_PROP_DESCRIPTION
+	},
+
+    // TabGroup properties
+	{
+		"showTabsOnActionBar", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+		N_PROP_SHOW_TABS_ON_ACTION_BAR
+	},
+
+	// Label properties
+	{
+		"wordWrap", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+		N_PROP_WORD_WRAP
+	},
 
 };
 
