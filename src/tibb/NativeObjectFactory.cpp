@@ -15,6 +15,7 @@
 #include "NativeButtonObject.h"
 #include "NativeDateTimePickerObject.h"
 #include "NativeDropDownObject.h"
+#include "NativeGeolocationObject.h"
 #include "NativeGestureObject.h"
 #include "NativeImageViewObject.h"
 #include "NativeLabelObject.h"
@@ -208,6 +209,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
     case N_TYPE_GESTURE:
        obj = NativeGestureObject::createGesture(tiObj);
        break;
+
+    case N_TYPE_GEOLOCATION:
+           obj = new NativeGeolocationObject(tiObj);
+           break;
 
     case N_TYPE_ACCELEROMETER:
         obj = new NativeAccelerometerObject(tiObj);

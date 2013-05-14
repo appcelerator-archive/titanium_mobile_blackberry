@@ -14,6 +14,7 @@
 #include "TiBufferStreamObject.h"
 #include "TiCodecObject.h"
 #include "TiGenericFunctionObject.h"
+#include "TiGeolocation.h"
 #include "TiGesture.h"
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
@@ -77,6 +78,7 @@ void TiTitaniumObject::onCreateStaticMembers()
     TiLocaleObject::addObjectToParent(this);
     TiGesture::addObjectToParent(this, objectFactory_);
     TiAccelerometer::addObjectToParent(this, objectFactory_);
+    TiGeolocation::addObjectToParent(this, objectFactory_);
 }
 
 bool TiTitaniumObject::canAddMembers() const
