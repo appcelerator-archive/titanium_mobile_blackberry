@@ -1377,19 +1377,6 @@ int NativeControlObject::getInteger(TiObject* obj, int* value)
     return NATIVE_ERROR_OK;
 }
 
-int NativeControlObject::getStdString(TiObject* obj, std::string* value)
-{
-    Handle<Value> v8value = obj->getValue();
-    if (v8value.IsEmpty())
-    {
-    	*value = "";
-        return NATIVE_ERROR_OK;
-    }
-
-    *value = *String::Utf8Value(v8value);
-    return NATIVE_ERROR_OK;
-}
-
 int NativeControlObject::getStringArray(TiObject* obj, QVector<QString>& value)
 {
     Handle<Value> v8value = obj->getValue();
