@@ -161,3 +161,4 @@ void NativeScrollViewObject::setupEvents(TiEventContainerFactory* containerFacto
     QObject::connect(button_, SIGNAL(clicked()), events_[tetCLICK]->handler(), SLOT(clicked(void)));
      */
 }
+
