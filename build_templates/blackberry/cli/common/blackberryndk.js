@@ -108,7 +108,9 @@ var package = function(builder) {
     var i18nDir = path.join(projectDir, 'i18n');
 	var resourcesDir = path.join(projectDir, 'Resources');
 	
-	afs.copyDirSyncRecursive(i18nDir, path.join(assetsDir, 'i18n'), { preserve: true, logger: logger.debug });
+	if (fs.existsSync(i18nDir)) {
+		afs.copyDirSyncRecursive(i18nDir, path.join(assetsDir, 'i18n'), { preserve: true, logger: logger.debug });
+	}
 
 	afs.copyDirSyncRecursive(resourcesDir, assetsDir, { preserve: true, logger: logger.debug });
 
