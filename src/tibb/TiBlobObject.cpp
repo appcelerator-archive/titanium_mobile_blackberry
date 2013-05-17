@@ -55,3 +55,8 @@ QByteArray TiBlobObject::data() const {
     return blob->data();
 }
 
+QString TiBlobObject::mimeType() const {
+    NativeBlobObject* blob = static_cast<NativeBlobObject*>(getNativeObject());
+    return blob->mimeType();
+}
+
