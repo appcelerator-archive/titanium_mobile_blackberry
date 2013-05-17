@@ -43,6 +43,7 @@
 #include "NativeAnnotationObject.h"
 #include "NativeAudioPlayerObject.h"
 #include "NativeAudioRecorderObject.h"
+#include "NativeEmailDialogObject.h"
 #include "TiCascadesApp.h"
 
 #include <bb/cascades/Container>
@@ -124,6 +125,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 
     case N_TYPE_TOGGLEBUTTON:
         obj = NativeToggleButtonObject::createToggleButton(tiObj);
+        break;
+            
+    case N_TYPE_EMAILDIALOG:
+        obj = NativeEmailDialogObject::createEmailDialog(tiObj);
         break;
 
     case N_TYPE_DROPDOWN:
