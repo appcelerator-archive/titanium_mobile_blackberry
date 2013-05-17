@@ -34,6 +34,7 @@
 #include "TiUITextArea.h"
 #include "TiUIWebView.h"
 #include "TiUIWindow.h"
+#include "TiUIEmailDialog.h"
 
 #include <string.h>
 
@@ -81,6 +82,7 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTextField", this, _createTextField);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTextArea", this, _createTextArea);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createImageView", this, _createImageView);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createEmailDialog", this, _createEmailDialog);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createActivityIndicator", this, _createActivityIndicator);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSwitch", this, _createSwitch);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createOptionDialog", this, _createOptionDialog);
@@ -157,6 +159,11 @@ Handle<Value> TiUIObject::_createButton(void* userContext, TiObject*, const Argu
 Handle<Value> TiUIObject::_createSlider(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUISlider::createSlider, args);
+}
+
+Handle<Value> TiUIObject::_createEmailDialog(void* userContext, TiObject*, const Arguments& args)
+{
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIEmailDialog::createEmailDialog), args);
 }
 
 Handle<Value> TiUIObject::_createProgressBar(void* userContext, TiObject*, const Arguments& args)
