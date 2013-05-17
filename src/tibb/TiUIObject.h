@@ -51,6 +51,7 @@ private:
     static Handle<Value> _createView(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createWebView(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createScrollView(void* userContext, TiObject*, const Arguments& args);
+    static Handle<Value> _createAnimation(void* userContext, TiObject*, const Arguments& args);
     static Handle<Value> _createScrollableView(void* userContext, TiObject*, const Arguments& args);
 
     static Handle<Value> _setBackgroundColor(void* userContext, TiObject* caller, const Arguments& args);
