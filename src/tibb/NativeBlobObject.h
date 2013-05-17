@@ -36,6 +36,10 @@ public:
         return data_;
     }
 
+    QString mimeType() const {
+    	return mimeType_;
+    }
+
     int setPropertyValue(size_t propertyNumber, TiObject* obj);
     int getPropertyValue(size_t propertyNumber, TiObject* obj);
 
