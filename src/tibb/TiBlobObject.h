@@ -19,6 +19,7 @@ public:
 
     void setData(const QByteArray& data, const QString& mimeType);
     QByteArray data() const;
+    QString mimeType() const;
 
 protected:
     virtual ~TiBlobObject();

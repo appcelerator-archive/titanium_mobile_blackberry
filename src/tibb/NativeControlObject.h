@@ -9,7 +9,6 @@
 #define NATIVECONTROLOBJECT_H_
 
 #include "NativeProxyObject.h"
-
 #include <bb/cascades/Color>
 #include <bb/cascades/TouchEvent>
 #include <bb/cascades/VisualNode>
@@ -17,11 +16,12 @@
 
 #include <Layout/Node.h>
 
-
+class TiV8Event;
 class QString;
 class TiObject;
 class UIViewEventHandler;
 class NativeLayoutHandler;
+class NativeAnimationObject;
 
 namespace bb
 {
@@ -78,7 +78,6 @@ public:
     virtual int setContentHeight(TiObject* obj);
     virtual int setContentWidth(TiObject* obj);
     virtual int setData(TiObject* obj);
-    virtual int setDisableBounce(TiObject* obj);
     virtual int setEnabled(TiObject* obj);
     virtual int setEnableZoomControls(TiObject* obj);
     virtual int setFont(TiObject* obj);
@@ -123,6 +122,7 @@ public:
     virtual int setWidth(TiObject* obj);
     virtual int setWillHandleTouches(TiObject* obj);
     virtual int setWindow(TiObject* obj);
+    virtual int setWordWrap(TiObject* obj);
     virtual int startLayout();
     virtual int setZIndex(TiObject* obj);
     // MapView properties
@@ -138,7 +138,7 @@ public:
     virtual int setLeftView(TiObject* obj);
     virtual int setRightView(TiObject* obj);
     ////////////////////////
-     // Media properties
+    // Media properties
     virtual int getPlaying(TiObject* obj);
     virtual int getPaused(TiObject* obj);
     virtual int getProgress(TiObject* obj);
@@ -166,12 +166,34 @@ public:
     // Tab properties
     virtual int setActive(TiObject* obj);
     virtual int isActive(TiObject* obj);
+    virtual int setDescription(TiObject* obj);
 
     // TabGroup properties
     virtual int setActiveTab(TiObject* obj);
     virtual int getActiveTab(TiObject* obj);
     virtual int getTabs(TiObject* obj);
 
+    // ScrollableView
+    virtual int setCurrentPage(TiObject* obj);
+    virtual int setDisableBounce(TiObject* obj);
+    virtual int setOverScrollMode(TiObject* obj);
+    virtual int setOverlayEnabled(TiObject* obj);
+    virtual int setPagingControlAlpha(TiObject* obj);
+    virtual int setPagingControlColor(TiObject* obj);
+    virtual int setPagingControlHeight(TiObject* obj);
+    virtual int setPagingControlOnTop(TiObject* obj);
+    virtual int setPagingControlTimeout(TiObject* obj);
+    virtual int setScrollingEnabled(TiObject* obj);
+    virtual int setShowPagingControl(TiObject* obj);
+    virtual int setViews(TiObject* obj);
+
+    // Show tab description 
+    virtual int setShowTabsOnActionBar(TiObject* obj);
+
+
+    virtual void animate(NativeObject* obj);
+    virtual void animate(v8::Local<v8::Object> obj);
+    virtual void animate(v8::Local<v8::Object> obj, TiV8Event* event);
     bb::cascades::Container* container_;
 
 protected:
@@ -195,6 +217,7 @@ private:
     void addTouchEvent(const char* name, const QObject* source, const char* signal, TiEventContainer* container);
     void updateLayoutProperty(ValueName name, TiObject* val);
 
+    NativeAnimationObject *createAnimationObject(v8::Local<v8::Object> obj);
     bb::cascades::Control* control_;
     bb::cascades::AbsoluteLayoutProperties* layout_;
     bb::cascades::Color backgroundColor_;

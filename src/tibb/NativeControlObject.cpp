@@ -29,6 +29,9 @@
 #include "TiEventContainer.h"
 #include "TiObject.h"
 #include "V8Utils.h"
+#include "TiUIAnimation.h"
+#include "NativeAnimationObject.h"
+#include "TiUtils.h"
 
 using namespace bb::cascades;
 using namespace titanium;
@@ -176,7 +179,7 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     layoutNode_.data = this;
 
 
-    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_LIST_VIEW || objType == N_TYPE_SCROLL_VIEW) {
+    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_LIST_VIEW || objType == N_TYPE_SCROLL_VIEW || objType == N_TYPE_SCROLLABLE_VIEW) {
         layoutNode_.properties.width.valueType = Fill;
         layoutNode_.properties.height.valueType = Fill;
 	}
@@ -190,24 +193,8 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
 
     objType_ = objType;
 
-    // calculate the pixels per inch (PPI)
-	bb::device::DisplayInfo display;
-
-	const float MMPERINCH = 25.4f;
-
-	QSize pixelSize = display.pixelSize();
-	QSizeF physicalSize = display.physicalSize();
-
-	const float physicalWidth = physicalSize.width();
-	const float physicalHeight = physicalSize.height();
-	const float pixelWidth = pixelSize.width();
-	const float pixelHeight = pixelSize.height();
-
-	// Calculate pixels density
-	const float diagonalWidth = sqrtf(physicalWidth * physicalWidth + physicalHeight * physicalHeight) / MMPERINCH;
-	const float diagonalPixels = sqrtf(pixelWidth * pixelWidth + pixelHeight * pixelHeight);
-
-	ppi_ = diagonalPixels / diagonalWidth;
+    TiUtils *tiUtils = TiUtils::getInstance();
+    ppi_ = tiUtils->getPPI();
 }
 
 NativeControlObject::~NativeControlObject()
@@ -264,7 +251,7 @@ int NativeControlObject::initialize()
 void NativeControlObject::setContainer(bb::cascades::Container* container)
 {
     container_ = container;
-
+    container_->setImplicitLayoutAnimationsEnabled(false);
     container_->setLayout(new AbsoluteLayout());
     container_->setLayoutProperties(new AbsoluteLayoutProperties());
 
@@ -599,13 +586,16 @@ int NativeControlObject::setFont(TiObject*)
 PROP_SETGET(setHeight)
 int NativeControlObject::setHeight(TiObject* obj)
 {
-	// auto uses defaults that have already been set
+	// auto and Ti.UI.SIZE uses defaults that have already been set
 	string str = *String::Utf8Value(obj->getValue());
-	if (str != "auto") {
-		updateLayoutProperty(Height, obj);
+
+	if (str == "auto" || str == "UI.SIZE") {
+		return NATIVE_ERROR_OK;
 	}
 
-    return NATIVE_ERROR_OK;
+	updateLayoutProperty(Width, obj);
+
+	return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(setHideLoadIndicator)
@@ -876,13 +866,16 @@ int NativeControlObject::getSize(TiObject* obj)
 PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
-    // auto uses defaults that have already been set
-    string str = *String::Utf8Value(obj->getValue());
-    if (str != "auto") {
-        updateLayoutProperty(Width, obj);
-    }
+	// auto and Ti.UI.SIZE uses defaults that have already been set
+	string str = *String::Utf8Value(obj->getValue());
 
-    return NATIVE_ERROR_OK;
+	if (str == "auto" || str == "UI.SIZE") {
+		return NATIVE_ERROR_OK;
+	}
+
+	updateLayoutProperty(Width, obj);
+
+	return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(setContentWidth)
@@ -905,6 +898,12 @@ int NativeControlObject::setType(TiObject*)
 
 PROP_SETGET(setWindow)
 int NativeControlObject::setWindow(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setWordWrap)
+int NativeControlObject::setWordWrap(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -984,6 +983,12 @@ int NativeControlObject::setMapType(TiObject*)
 
 PROP_SETGET(setAnnotations)
 int NativeControlObject::setAnnotations(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setViews)
+int NativeControlObject::setViews(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -1101,6 +1106,12 @@ int NativeControlObject::isActive(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setDescription)
+int NativeControlObject::setDescription(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 PROP_SETGET(setActiveTab)
 int NativeControlObject::setActiveTab(TiObject* obj)
 {
@@ -1113,8 +1124,75 @@ int NativeControlObject::getActiveTab(TiObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setShowTabsOnActionBar)
+int NativeControlObject::setShowTabsOnActionBar(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 PROP_SETGET(getTabs)
 int NativeControlObject::getTabs(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+// ScrollableView
+PROP_SETGET(setCurrentPage)
+int NativeControlObject::setCurrentPage(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setOverScrollMode)
+int NativeControlObject::setOverScrollMode(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setOverlayEnabled)
+int NativeControlObject::setOverlayEnabled(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setPagingControlAlpha)
+int NativeControlObject::setPagingControlAlpha(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setPagingControlColor)
+int NativeControlObject::setPagingControlColor(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setPagingControlHeight)
+int NativeControlObject::setPagingControlHeight(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setPagingControlOnTop)
+int NativeControlObject::setPagingControlOnTop(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setPagingControlTimeout)
+int NativeControlObject::setPagingControlTimeout(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setScrollingEnabled)
+int NativeControlObject::setScrollingEnabled(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
+PROP_SETGET(setShowPagingControl)
+int NativeControlObject::setShowPagingControl(TiObject*)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
@@ -1124,7 +1202,6 @@ int NativeControlObject::getTabs(TiObject* obj)
 
 const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
 {
-    {N_PROP_DISABLE_BOUNCE, PROP_SETGET_FUNCTION(setDisableBounce), NULL},
     {N_PROP_ENABLE_ZOOM_CONTROLS, PROP_SETGET_FUNCTION(setEnableZoomControls), NULL},
     {N_PROP_HIDE_LOAD_INDICATOR, PROP_SETGET_FUNCTION(setHideLoadIndicator), NULL},
     {N_PROP_HTML, PROP_SETGET_FUNCTION(setHtml), NULL},
@@ -1180,6 +1257,7 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_WIDTH, PROP_SETGET_FUNCTION(setWidth), NULL},
     {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setWindow), NULL},
     {N_PROP_WINDOW, PROP_SETGET_FUNCTION(setUrl), NULL},
+    {N_PROP_WORD_WRAP, PROP_SETGET_FUNCTION(setWordWrap), NULL},
     {N_PROP_URL, PROP_SETGET_FUNCTION(setUrl), NULL},
     // MapView properties
     {N_PROP_MAPTYPE, PROP_SETGET_FUNCTION(setMapType), NULL},
@@ -1207,10 +1285,26 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
 
     // Tab properties
     {N_PROP_ACTIVE, PROP_SETGET_FUNCTION(setActive), PROP_SETGET_FUNCTION(isActive)},
+    {N_PROP_DESCRIPTION, PROP_SETGET_FUNCTION(setDescription), NULL},
 
     // TabGroup properties
     {N_PROP_ACTIVE_TAB, PROP_SETGET_FUNCTION(setActiveTab), PROP_SETGET_FUNCTION(getActiveTab)},
-    {N_PROP_TABS, NULL, PROP_SETGET_FUNCTION(getTabs)}
+    {N_PROP_TABS, NULL, PROP_SETGET_FUNCTION(getTabs)},
+    {N_PROP_SHOW_TABS_ON_ACTION_BAR, PROP_SETGET_FUNCTION(setShowTabsOnActionBar), NULL},
+
+    // ScrollableView
+    {N_PROP_VIEWS, PROP_SETGET_FUNCTION(setViews), NULL},
+    {N_PROP_CURRENT_PAGE, PROP_SETGET_FUNCTION(setCurrentPage), NULL},
+    {N_PROP_DISABLE_BOUNCE, PROP_SETGET_FUNCTION(setDisableBounce), NULL},
+    {N_PROP_OVER_SCROLL_MODE, PROP_SETGET_FUNCTION(setOverScrollMode), NULL},
+    {N_PROP_OVERLAY_ENABLED, PROP_SETGET_FUNCTION(setOverlayEnabled), NULL},
+    {N_PROP_PAGING_CONTROL_ALPHA, PROP_SETGET_FUNCTION(setPagingControlAlpha), NULL},
+    {N_PROP_PAGING_CONTROL_COLOR, PROP_SETGET_FUNCTION(setPagingControlColor), NULL},
+    {N_PROP_PAGING_CONTROL_HEIGHT, PROP_SETGET_FUNCTION(setPagingControlHeight), NULL},
+    {N_PROP_PAGING_CONTROL_ON_TOP, PROP_SETGET_FUNCTION(setPagingControlOnTop), NULL},
+    {N_PROP_PAGING_CONTROL_TIMEOUT, PROP_SETGET_FUNCTION(setPagingControlTimeout), NULL},
+    {N_PROP_SCROLLING_ENABLED, PROP_SETGET_FUNCTION(setScrollingEnabled), NULL},
+    {N_PROP_SHOW_PAGING_CONTROL, PROP_SETGET_FUNCTION(setShowPagingControl), NULL},
 };
 
 static SetGetProperties g_props(g_propSetGet, GET_ARRAY_SIZE(g_propSetGet));
@@ -1515,4 +1609,42 @@ QString NativeControlObject::getResourcePath(const QString& path)
         }
     }
     return rPath;
+}
+
+
+NativeAnimationObject * NativeControlObject::createAnimationObject(Local<Object> obj)
+{
+    NativeObjectFactory* factory = tiObject_->getNativeObjectFactory();
+    TiUIAnimation* animation = TiUIAnimation::createAnimation(factory);
+    TiObject *itemObject = static_cast<TiObject*>(animation);
+
+    // Create a JavaScript proxy for the new animation object.
+    Handle<ObjectTemplate> templ = TiObject::getObjectTemplateFromJsObject(tiObject_->getValue());
+    Local<Object> proxy = templ->NewInstance();
+    animation->setValue(proxy);
+    TiObject::setTiObjectToJsObject(proxy, animation);
+
+    // Apply the properties in the dictionary to the new animation object.
+    animation->setParametersFromObject(animation, obj->ToObject());
+    return (NativeAnimationObject *)animation->getNativeObject();
+}
+
+void NativeControlObject::animate(NativeObject* obj)
+{
+	NativeAnimationObject *animation = static_cast<NativeAnimationObject*>(obj);
+	animation->animate(this, layoutNode_);
+}
+
+void NativeControlObject::animate(Local<Object> obj, TiV8Event* event)
+{
+	NativeAnimationObject *animation = createAnimationObject(obj);
+	animation->setCallback(event);
+	animation->animate(this, layoutNode_);
+
+}
+
+void NativeControlObject::animate(Local<Object> obj)
+{
+	NativeAnimationObject *animation = createAnimationObject(obj);
+	animation->animate(this, layoutNode_);
 }

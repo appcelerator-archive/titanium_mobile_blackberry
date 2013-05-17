@@ -24,6 +24,7 @@
 #include "TiUIProgressBar.h"
 #include "TiUISlider.h"
 #include "TiUIScrollView.h"
+#include "TiUIScrollableView.h"
 #include "TiUISwitch.h"
 #include "TiUITab.h"
 #include "TiUITabGroup.h"
@@ -33,6 +34,8 @@
 #include "TiUITextArea.h"
 #include "TiUIWebView.h"
 #include "TiUIWindow.h"
+#include "TiUIAnimation.h"
+#include "TiUIEmailDialog.h"
 
 #include <string.h>
 
@@ -80,6 +83,7 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTextField", this, _createTextField);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTextArea", this, _createTextArea);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createImageView", this, _createImageView);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createEmailDialog", this, _createEmailDialog);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createActivityIndicator", this, _createActivityIndicator);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSwitch", this, _createSwitch);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createOptionDialog", this, _createOptionDialog);
@@ -89,7 +93,9 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createView", this, _createView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createWebView", this, _createWebView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createScrollView", this, _createScrollView);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createScrollableView", this, _createScrollableView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setBackgroundColor", this, _setBackgroundColor);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createAnimation", this, _createAnimation);
 
     // Adding javascript constants from Ti.UI
     ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_LEFT", Number::New(Ti::UI::TEXT_ALIGNMENT_LEFT), this);
@@ -155,6 +161,11 @@ Handle<Value> TiUIObject::_createButton(void* userContext, TiObject*, const Argu
 Handle<Value> TiUIObject::_createSlider(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUISlider::createSlider, args);
+}
+
+Handle<Value> TiUIObject::_createEmailDialog(void* userContext, TiObject*, const Arguments& args)
+{
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIEmailDialog::createEmailDialog), args);
 }
 
 Handle<Value> TiUIObject::_createProgressBar(void* userContext, TiObject*, const Arguments& args)
@@ -235,6 +246,16 @@ Handle<Value> TiUIObject::_createWebView(void* userContext, TiObject*, const Arg
 Handle<Value> TiUIObject::_createScrollView(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIScrollView::createScrollView), args);
+}
+
+Handle<Value> TiUIObject::_createAnimation(void* userContext, TiObject*, const Arguments& args)
+{
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIAnimation::createAnimation), args);
+}
+
+Handle<Value> TiUIObject::_createScrollableView(void* userContext, TiObject*, const Arguments& args)
+{
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIScrollableView::createScrollableView), args);
 }
 
 Handle<Value> TiUIObject::_setBackgroundColor(void* userContext, TiObject* caller, const Arguments& args)

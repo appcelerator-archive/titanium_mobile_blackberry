@@ -15,6 +15,7 @@
 #include "NativeButtonObject.h"
 #include "NativeDateTimePickerObject.h"
 #include "NativeDropDownObject.h"
+#include "NativeGeolocationObject.h"
 #include "NativeGestureObject.h"
 #include "NativeImageViewObject.h"
 #include "NativeLabelObject.h"
@@ -36,11 +37,14 @@
 #include "NativeDBObject.h"
 #include "NativeResultSetObject.h"
 #include "NativeScrollViewObject.h"
+#include "NativeScrollableViewObject.h"
 #include "NativeWebViewObject.h"
 #include "NativeMapViewObject.h"
 #include "NativeAnnotationObject.h"
 #include "NativeAudioPlayerObject.h"
 #include "NativeAudioRecorderObject.h"
+#include "NativeAnimationObject.h"
+#include "NativeEmailDialogObject.h"
 #include "TiCascadesApp.h"
 
 #include <bb/cascades/Container>
@@ -123,6 +127,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
     case N_TYPE_TOGGLEBUTTON:
         obj = NativeToggleButtonObject::createToggleButton(tiObj);
         break;
+            
+    case N_TYPE_EMAILDIALOG:
+        obj = NativeEmailDialogObject::createEmailDialog(tiObj);
+        break;
 
     case N_TYPE_DROPDOWN:
         obj = NativeDropDownObject::createDropDown(tiObj);
@@ -158,6 +166,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 
     case N_TYPE_SCROLL_VIEW:
         obj = NativeScrollViewObject::createScrollView(tiObj);
+        break;
+
+    case N_TYPE_SCROLLABLE_VIEW:
+        obj = NativeScrollableViewObject::createScrollableView(tiObj);
         break;
 
     case N_TYPE_DB:
@@ -203,6 +215,14 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
     case N_TYPE_GESTURE:
        obj = NativeGestureObject::createGesture(tiObj);
        break;
+
+    case N_TYPE_GEOLOCATION:
+           obj = new NativeGeolocationObject(tiObj);
+           break;
+
+    case N_TYPE_ANIMATION:
+           obj = NativeAnimationObject::createAnimation(tiObj);
+           break;
 
     case N_TYPE_ACCELEROMETER:
         obj = new NativeAccelerometerObject(tiObj);

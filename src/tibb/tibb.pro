@@ -21,13 +21,17 @@ SOURCES += \
 	./Layout/Node.cpp \
 	./Layout/ParseProperty.cpp \
 	./Layout/Vertical.cpp \
-	./TableView/BasicListItem.cpp
+	./TableView/BasicListItem.cpp \
+	./TiScrollableView/TiScrollableView.cpp \
+	./TiScrollableView/TiScrollableViewPage.cpp
 HEADERS += \
 	./*.h \
 	TableView/BasicListItem.h \
-	TableView/ListItemData.h
+	TableView/ListItemData.h \
+	TiScrollableView/TiScrollableView.h \
+	TiScrollableView/TiScrollableViewPage.h
 
-LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata
+LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata -lbbsystem
 
 device {
 	CONFIG(release, debug|release) {

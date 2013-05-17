@@ -47,6 +47,7 @@ public:
     virtual int setActive(TiObject* obj);
     virtual int setIcon(TiObject* obj);
     virtual int setTitle(TiObject* obj);
+	virtual int setDescription(TiObject* obj);
 
     virtual int isActive(TiObject* obj);
 

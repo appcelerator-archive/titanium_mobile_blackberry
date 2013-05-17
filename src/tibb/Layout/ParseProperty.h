@@ -41,5 +41,6 @@ struct LayoutProperties {
 
 void layoutPropertiesInitialize(struct LayoutProperties*);
 void populateLayoutPoperties(struct InputProperty, struct LayoutProperties*, double);
+float getDimensionValue(std::string value, double ppi);
 
 #endif /* PARSEPROPERTY */
