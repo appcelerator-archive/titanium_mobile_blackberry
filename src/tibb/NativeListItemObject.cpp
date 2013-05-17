@@ -7,6 +7,7 @@
 
 #include "NativeListItemObject.h"
 
+#include <bb/cascades/Container>
 #include <bb/cascades/VisualNode>
 
 #include "TableView/ListItemData.h"
@@ -31,7 +32,7 @@ NativeListItemObject::~NativeListItemObject() {
 
 int NativeListItemObject::addChildNativeObject(NativeObject* obj) {
     if (!data_->content()) {
-        data_->setContent(container_);
+        data_->setContent(this);
     }
     return addChildImpl(obj);
 }

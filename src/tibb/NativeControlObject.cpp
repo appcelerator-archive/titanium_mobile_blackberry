@@ -197,6 +197,11 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
         layoutNode_.properties.height.valueType = Defer;
     }
 
+    if (objType == N_TYPE_LIST_ITEM) {
+        layoutNode_.properties.width.valueType = Fill;
+        layoutNode_.properties.height.valueType = Defer;
+    }
+
     objType_ = objType;
 
     TiUtils *tiUtils = TiUtils::getInstance();

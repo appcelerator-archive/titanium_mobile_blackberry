@@ -14,6 +14,7 @@
 
 #include <bb/cascades/VisualNode>
 
+class NativeControlObject;
 class TiObject;
 
 class ListItemData : public QObject {
@@ -22,7 +23,6 @@ class ListItemData : public QObject {
     Q_PROPERTY(QString dataType READ dataType)
     Q_PROPERTY(QUrl leftImage READ leftImage WRITE setLeftImage NOTIFY leftImageChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
-    Q_PROPERTY(bb::cascades::VisualNode* content READ content WRITE setContent)
 
 public:
     explicit ListItemData(TiObject* row)
@@ -60,11 +60,11 @@ public:
         emit titleChanged(title);
     }
 
-    bb::cascades::VisualNode* content() const {
+    NativeControlObject* content() const {
         return content_;
     }
 
-    void setContent(bb::cascades::VisualNode* content) {
+    void setContent(NativeControlObject* content) {
         content_ = content;
     }
 
@@ -76,7 +76,7 @@ private:
     TiObject* row_;
     QUrl leftImage_;
     QString title_;
-    bb::cascades::VisualNode* content_;
+    NativeControlObject* content_;
 };
 
 #endif

@@ -190,10 +190,14 @@ public:
     // Show tab description 
     virtual int setShowTabsOnActionBar(TiObject* obj);
 
-
     virtual void animate(NativeObject* obj);
     virtual void animate(v8::Local<v8::Object> obj);
     virtual void animate(v8::Local<v8::Object> obj, TiV8Event* event);
+
+    Node* layout() {
+        return &layoutNode_;
+    }
+
     bb::cascades::Container* container_;
 
 protected:

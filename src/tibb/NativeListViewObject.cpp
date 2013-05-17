@@ -44,7 +44,7 @@ int NativeListViewObject::initialize()
     setControl(listView_);
     listView_->setDataModel(new ArrayDataModel());
 
-    ListViewItemFactory* factory = new ListViewItemFactory();
+    ListViewItemFactory* factory = new ListViewItemFactory(this);
     listView_->setListItemProvider(factory);
     listView_->setListItemTypeMapper(factory);
 
@@ -144,7 +144,7 @@ void NativeListViewObject::setupEvents(TiEventContainerFactory* containerFactory
 bb::cascades::VisualNode* ListViewItemFactory::createItem(bb::cascades::ListView*, const QString& type)
 {
     if (type == "custom") {
-        return new CustomListItem();
+        return new CustomListItem(listView_->layout());
     }
     return new BasicListItem();
 }
