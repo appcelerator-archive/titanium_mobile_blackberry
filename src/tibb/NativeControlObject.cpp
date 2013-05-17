@@ -586,13 +586,16 @@ int NativeControlObject::setFont(TiObject*)
 PROP_SETGET(setHeight)
 int NativeControlObject::setHeight(TiObject* obj)
 {
-	// auto uses defaults that have already been set
+	// auto and Ti.UI.SIZE uses defaults that have already been set
 	string str = *String::Utf8Value(obj->getValue());
-	if (str != "auto") {
-		updateLayoutProperty(Height, obj);
+
+	if (str == "auto" || str == "UI.SIZE") {
+		return NATIVE_ERROR_OK;
 	}
 
-    return NATIVE_ERROR_OK;
+	updateLayoutProperty(Width, obj);
+
+	return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(setHideLoadIndicator)
@@ -863,13 +866,16 @@ int NativeControlObject::getSize(TiObject* obj)
 PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
-    // auto uses defaults that have already been set
-    string str = *String::Utf8Value(obj->getValue());
-    if (str != "auto") {
-        updateLayoutProperty(Width, obj);
-    }
+	// auto and Ti.UI.SIZE uses defaults that have already been set
+	string str = *String::Utf8Value(obj->getValue());
 
-    return NATIVE_ERROR_OK;
+	if (str == "auto" || str == "UI.SIZE") {
+		return NATIVE_ERROR_OK;
+	}
+
+	updateLayoutProperty(Width, obj);
+
+	return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(setContentWidth)
