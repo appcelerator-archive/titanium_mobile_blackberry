@@ -14,6 +14,8 @@
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
 #include "TiV8Event.h"
+#include "TiUIAnimation.h"
+#include "NativeAnimationObject.h"
 #include <ctype.h>
 #include <string>
 
@@ -559,6 +561,7 @@ void TiUIBase::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "updateLayout", this, _updateLayout);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "focus", this, _focus);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "blur", this, _blur);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "animate", this, _animate);
     setTiMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
     TiObject* value = TiPropertyGetObject::createGetProperty(this, "children", this, _getChildren);
     TiPropertyGetFunctionObject::addPropertyGetter(this, value, "getChildren");
@@ -657,6 +660,31 @@ Handle<Value> TiUIBase::_remove(void* userContext, TiObject*, const Arguments& a
     {
         TI_WARNING(Ti::Msg::Remove_child_warning);
     }
+    return Undefined();
+}
+
+Handle<Value> TiUIBase::_animate(void* userContext, TiObject*, const Arguments& args)
+{
+    HandleScope handleScope;
+
+    TiUIBase* self = static_cast<TiUIBase*>(userContext);
+    NativeControlObject *native = static_cast<NativeControlObject*>(self->getNativeObject());
+    TiObject* tiObject = TiObject::getTiObjectFromJsObject(args[0]);
+
+    if(!tiObject) {
+        Local<Object> jsObject = Local<Object>::Cast(args[0]);
+        if(args.Length() > 1 && args[1]->IsFunction()) {
+        	Handle<Function> callback = Handle<Function>::Cast(args[1]);
+        	Handle<Object> source = Handle<Object>::Cast(self->getValue());
+            TiV8Event* event = TiV8Event::createEvent("complete", callback, source);
+        	native->animate(jsObject, event);
+        } else {
+            native->animate(jsObject);
+        }
+    } else {
+        native->animate(tiObject->getNativeObject());
+    }
+
     return Undefined();
 }
 

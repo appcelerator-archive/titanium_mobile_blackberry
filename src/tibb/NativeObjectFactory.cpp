@@ -43,6 +43,7 @@
 #include "NativeAnnotationObject.h"
 #include "NativeAudioPlayerObject.h"
 #include "NativeAudioRecorderObject.h"
+#include "NativeAnimationObject.h"
 #include "NativeEmailDialogObject.h"
 #include "TiCascadesApp.h"
 
@@ -217,6 +218,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 
     case N_TYPE_GEOLOCATION:
            obj = new NativeGeolocationObject(tiObj);
+           break;
+
+    case N_TYPE_ANIMATION:
+           obj = NativeAnimationObject::createAnimation(tiObj);
            break;
 
     case N_TYPE_ACCELEROMETER:
