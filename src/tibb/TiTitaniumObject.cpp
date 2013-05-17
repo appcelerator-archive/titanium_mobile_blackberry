@@ -13,6 +13,7 @@
 #include "TiBufferObject.h"
 #include "TiBufferStreamObject.h"
 #include "TiCodecObject.h"
+#include "TiFilesystemObject.h"
 #include "TiGenericFunctionObject.h"
 #include "TiGeolocation.h"
 #include "TiGesture.h"
@@ -68,6 +69,7 @@ void TiTitaniumObject::onCreateStaticMembers()
     TiMedia::addObjectToParent(this, objectFactory_);
     TiAPIObject::addObjectToParent(this);
     TiAppObject::addObjectToParent(this);
+    TiFilesystemObject::addObjectToParent(this, objectFactory_);
     TiPlatformObject::addObjectToParent(this);
     TiCodecObject::addObjectToParent(this);
     TiNetwork::addObjectToParent(this, objectFactory_);
