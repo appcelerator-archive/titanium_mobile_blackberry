@@ -606,7 +606,7 @@ int NativeControlObject::setHeight(TiObject* obj)
 		return NATIVE_ERROR_OK;
 	}
 
-	updateLayoutProperty(Width, obj);
+	updateLayoutProperty(Height, obj);
 
 	return NATIVE_ERROR_OK;
 }
