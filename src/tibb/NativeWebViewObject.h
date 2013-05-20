@@ -52,6 +52,12 @@ public:
     // methods
     virtual int evalJS(QString javascript);
 
+    bool canGoBack();
+    void goBack();
+    bool canGoForward();
+    void goForward();
+    void reload();
+
     bb::cascades::WebView *getWebView();
     bb::cascades::ScrollView *getScroller();
     bb::cascades::ActivityIndicator *getLoadingIndicator();
