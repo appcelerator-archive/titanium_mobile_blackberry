@@ -14,6 +14,7 @@
 #include <bb/cascades/ScrollView>
 #include <bb/cascades/ScrollViewProperties>
 #include <bb/cascades/ScrollAnimation>
+#include <bb/cascades/ScrollMode>
 #include <bb/cascades/WebView>
 #include <bb/cascades/WebLoadRequest>
 #include <bb/cascades/WebLoadStatus>
@@ -56,6 +57,9 @@ int NativeWebViewObject::initialize()
     webview_ = bb::cascades::WebView::create();
     scroller_ = bb::cascades::ScrollView::create(webview_);
 
+    bb::cascades::ScrollViewProperties *props = scroller_->scrollViewProperties();
+    props->setPinchToZoomEnabled(true);
+    props->setScrollMode(bb::cascades::ScrollMode::Both);
     loading_ = bb::cascades::ActivityIndicator::create();
 //    scroller_->setVerticalAlignment(bb::cascades::VerticalAlignment::Fill);
 //    scroller_->setHorizontalAlignment(bb::cascades::HorizontalAlignment::Fill);
@@ -161,6 +165,26 @@ int NativeWebViewObject::setUrl(TiObject* obj)
     return NATIVE_ERROR_OK;
     
 }
+
+void NativeWebViewObject::goBack() {
+	webview_->goBack();
+}
+
+bool NativeWebViewObject::canGoBack() {
+	return webview_->canGoBack();
+}
+
+void NativeWebViewObject::goForward() {
+	webview_->goForward();
+}
+
+bool NativeWebViewObject::canGoForward() {
+	return webview_->canGoForward();
+}
+
+void NativeWebViewObject::reload() {
+	webview_->reload();
+}
 // string
 int NativeWebViewObject::setUserAgent(TiObject* obj)
 {
@@ -199,7 +223,6 @@ bb::cascades::ActivityIndicator *NativeWebViewObject::getLoadingIndicator()
 void NativeWebViewObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
 
-    TiLogger::getInstance().log("Loading Events");
     NativeControlObject::setupEvents(containerFactory);
 
     // debug event
@@ -264,23 +287,19 @@ WebViewEventHandler::~WebViewEventHandler() {
 
 void WebViewEventHandler::onLoadingChanged(bb::cascades::WebLoadRequest* webRequest)
 {
-    TiLogger::getInstance().log("onLoadingChanged");
 
     if(webRequest->status() == bb::cascades::WebLoadStatus::Started)
     {
-        TiLogger::getInstance().log("WebLoadStatus::Type::Started");
     	return;
     }
     if(webRequest->status() == bb::cascades::WebLoadStatus::Succeeded)
     {
     	eventContainer_->fireEvent();
     	loading_->stop();
-        TiLogger::getInstance().log("WebLoadStatus::Type::Succeeded");
     	return;
     }
     if(webRequest->status() == bb::cascades::WebLoadStatus::Failed)
     {
-        TiLogger::getInstance().log("WebLoadStatus::Type::Succeeded");
     	return;
     }
 
@@ -289,70 +308,60 @@ void WebViewEventHandler::onLoadingChanged(bb::cascades::WebLoadRequest* webRequ
 void WebViewEventHandler::onLoadProgress(int a)
 {
 	eventContainer_->fireEvent();
-    TiLogger::getInstance().log("onLoadProgress");
 }
 
 void WebViewEventHandler::onTitleChanged (const QString &title)
 {
 	eventContainer_->fireEvent();
-    TiLogger::getInstance().log("onUrlChanged");
 }
 
 void WebViewEventHandler::onNavigationHistoryChanged ()
 {
 	eventContainer_->fireEvent();
-    TiLogger::getInstance().log("onUrlChanged");
 }
 
 void WebViewEventHandler::onUrlChanged (const QUrl &url)
 {
 	eventContainer_->fireEvent();
-    TiLogger::getInstance().log("onUrlChanged");
 }
 
 void WebViewEventHandler::onIconChanged (const QUrl &icon)
 {
 	eventContainer_->fireEvent();
-    TiLogger::getInstance().log("onIconChanged");
 }
 
 void WebViewEventHandler::onNavigationRequested (bb::cascades::WebNavigationRequest *request)
 {
 	eventContainer_->fireEvent();
-    TiLogger::getInstance().log("onNavigationRequested");
 }
 
 void WebViewEventHandler::onJavaScriptResult (int resultId, const QVariant &result)
 {
 	eventContainer_->fireEvent();
-    TiLogger::getInstance().log("onJavaScriptResult");
 }
 
 void WebViewEventHandler::onJavaScriptInterrupted ()
 {
 	eventContainer_->fireEvent();
-    TiLogger::getInstance().log("onJavaScriptInterrupted");
 }
 
 void WebViewEventHandler::onMessageReceived (const QVariantMap &message)
 {
 	eventContainer_->fireEvent();
-    TiLogger::getInstance().log("onMessageReceived");
 }
 
 void WebViewEventHandler::onMicroFocusChanged ()
 {
 	eventContainer_->fireEvent();
-    TiLogger::getInstance().log("onMicroFocusChanged");
 }
 
 void WebViewEventHandler::onMinContentScaleChanged (float minContentScale)
 {
 	eventContainer_->fireEvent();
-//	scroller_->scrollViewProperties()->setMinContentScale(minContentScale);
+	scroller_->scrollViewProperties()->setMinContentScale(minContentScale);
 }
 void WebViewEventHandler::onMaxContentScaleChanged (float maxContentScale)
 {
 	eventContainer_->fireEvent();
-//	scroller_->scrollViewProperties()->setMaxContentScale(maxContentScale);
+	scroller_->scrollViewProperties()->setMaxContentScale(maxContentScale);
 }
