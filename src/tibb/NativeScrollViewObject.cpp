@@ -55,17 +55,15 @@ int NativeScrollViewObject::setLayout(TiObject *obj)
 
 	int err;
 	if (str == "vertical" && !contentHeightSet_) {
-		TiObject *height = new TiObject();
-		height->setValue(String::New("UI.SIZE"));
-		err = contentViewProxy_->setHeight(height);
-		delete height;
+		TiObject height;
+		height.setValue(String::New("UI.SIZE"));
+		err = contentViewProxy_->setHeight(&height);
 	}
 
 	if (str == "horizontal" && !contentWidthSet_) {
-		TiObject *width = new TiObject();
-		width->setValue(String::New("UI.SIZE"));
-		err = contentViewProxy_->setWidth(width);
-		delete width;
+		TiObject width;
+		width.setValue(String::New("UI.SIZE"));
+		err = contentViewProxy_->setWidth(&width);
 	}
 	err = contentViewProxy_->setLayout(obj);
 	return err;
