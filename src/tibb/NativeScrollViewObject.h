@@ -74,6 +74,8 @@ private:
     void operator=(const NativeScrollViewObject&);
     QSize contentSize_;
     QSize scrollViewSize_;
+    bool contentWidthSet_;
+    bool contentHeightSet_;
 };
 
 
