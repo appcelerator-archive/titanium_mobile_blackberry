@@ -31,6 +31,11 @@ private:
 	TiUIWebView();
 	TiUIWebView(const char* name);
 	static Handle<Value> _evalJS(void* userContext, TiObject* caller, const Arguments& args);
+	static Handle<Value> _goBack(void* userContext, TiObject* caller, const Arguments& args);
+	static Handle<Value> _canGoBack(void* userContext, TiObject* caller, const Arguments& args);
+	static Handle<Value> _goForward(void* userContext, TiObject* caller, const Arguments& args);
+	static Handle<Value> _canGoForward(void* userContext, TiObject* caller, const Arguments& args);
+	static Handle<Value> _reload(void* userContext, TiObject* caller, const Arguments& args);
 };
 
 #endif /* TIUIWEBVIEW_H_ */
