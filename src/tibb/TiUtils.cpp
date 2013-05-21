@@ -6,10 +6,15 @@
  */
 
 #include "TiUtils.h"
-#include "Layout/ParseProperty.h"
+
+#include <math.h>
+
 #include <bb/device/DisplayInfo>
+
 #include <QObject>
 #include <QString>
+
+#include "Layout/ParseProperty.h"
 
 static TiUtils* sharedInstance = NULL;
 
