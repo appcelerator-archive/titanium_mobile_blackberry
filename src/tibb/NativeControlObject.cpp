@@ -156,6 +156,12 @@ static void onPostLayout(struct Node* node) {
 
     float width = node->element._measuredWidth,
           height = node->element._measuredHeight;
+
+    // Do not allow a control with Ti.UI.SIZE to go to 0 or the OS will not callback deferred sizes as the controls are hidden.
+	if ((node->properties.width.valueType == Size && width == 0) || (node->properties.height.valueType == Size && height == 0)) {
+		return;
+	}
+
     native->resize(width, height);
 
     bb::cascades::AbsoluteLayoutProperties* layoutProperties = static_cast<bb::cascades::AbsoluteLayoutProperties*>(control->layoutProperties());
@@ -589,7 +595,7 @@ int NativeControlObject::setHeight(TiObject* obj)
 	// auto and Ti.UI.SIZE uses defaults that have already been set
 	string str = *String::Utf8Value(obj->getValue());
 
-	if (str == "auto" || str == "UI.SIZE") {
+	if ((str == "auto" || str == "UI.SIZE") && layoutNode_.properties.height.valueType == Defer) {
 		return NATIVE_ERROR_OK;
 	}
 
@@ -869,7 +875,7 @@ int NativeControlObject::setWidth(TiObject* obj)
 	// auto and Ti.UI.SIZE uses defaults that have already been set
 	string str = *String::Utf8Value(obj->getValue());
 
-	if (str == "auto" || str == "UI.SIZE") {
+	if ((str == "auto" || str == "UI.SIZE") && layoutNode_.properties.width.valueType == Defer) {
 		return NATIVE_ERROR_OK;
 	}
 
