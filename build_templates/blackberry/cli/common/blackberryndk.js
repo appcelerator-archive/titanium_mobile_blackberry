@@ -203,12 +203,12 @@ function BlackberryNDK(builder) {
 	        logger.log('\n' + 'Path to BlackBerry NDK is: ' + ndk.cyan);
 
 	        // BB NDK makefiles do not allow spaces in path names and cause build problem.
-			// The solution is to use python temporary directories without spaces to do builds.
-			var tmpPathSDK = path.join(os.tmpDir(), generateTmpName(builder.projectName));
+			// The solution is to use temporary directories without spaces to do builds.
+			var tmpPathSDK = path.join(os.tmpDir(), generateTmpName(builder.tiapp['id'])); 
 
 			afs.copyDirSyncRecursive(path.join(builder.titaniumBBSdkPath, 'tibb'),
 								path.join(tmpPathSDK, 'tibb'), {logger: logger.debug});
-			afs.copyDirSyncRecursive(path.join(this.builder.titaniumBBSdkPath, 'libv8'),
+			afs.copyDirSyncRecursive(path.join(builder.titaniumBBSdkPath, 'libv8'),
 								path.join(tmpPathSDK, 'libv8'), {logger: logger.debug});
 							
 
@@ -224,7 +224,7 @@ function BlackberryNDK(builder) {
 			} 
 
 			var oldPath = process.cwd()	
-			var tmpPathProj = path.join(os.tmpDir(), generateTmpName(builder.projectName));
+			var tmpPathProj = path.join(os.tmpDir(), generateTmpName(builder.tiapp['id'])); 
 			var projectDir = this.builder.projectDir;
 			afs.copyDirSyncRecursive(projectDir, tmpPathProj, {logger: logger.debug});
 			process.chdir(path.join(tmpPathProj, 'build', 'blackberry'));
@@ -363,6 +363,7 @@ function BlackberryNDK(builder) {
 			}
 
 			if (typeof debugToken !== 'undefined') {
+				debugToken = '"' + debugToken + '"';
 				command = command.concat(['-debugToken', debugToken])
 			}
            
