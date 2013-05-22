@@ -51,7 +51,21 @@ NATIVE_TYPE NativeScrollViewObject::getObjectType() const
 
 int NativeScrollViewObject::setLayout(TiObject *obj)
 {
-	int err = contentViewProxy_->setLayout(obj);
+	std::string str = *String::Utf8Value(obj->getValue());
+
+	int err;
+	if (str == "vertical" && !contentHeightSet_) {
+		TiObject height;
+		height.setValue(String::New("UI.SIZE"));
+		err = contentViewProxy_->setHeight(&height);
+	}
+
+	if (str == "horizontal" && !contentWidthSet_) {
+		TiObject width;
+		width.setValue(String::New("UI.SIZE"));
+		err = contentViewProxy_->setWidth(&width);
+	}
+	err = contentViewProxy_->setLayout(obj);
 	return err;
 }
 void NativeScrollViewObject::setContentWidthAndHeight(float width, float height)
@@ -62,11 +76,18 @@ void NativeScrollViewObject::setContentWidthAndHeight(float width, float height)
     if(contentSize_.width() > scrollViewSize_.width() && contentSize_.height() <= scrollViewSize_.height())
     {
     	scrollViewProperties_->setScrollMode(bb::cascades::ScrollMode::Horizontal);
-    } else if(contentSize_.height() > scrollViewSize_.height() && contentSize_.width() <= scrollViewSize_.width())
+    }
+    else if(contentSize_.height() > scrollViewSize_.height() && contentSize_.width() <= scrollViewSize_.width())
     {
        	scrollViewProperties_->setScrollMode(bb::cascades::ScrollMode::Vertical);
-   	} else {
-       	scrollViewProperties_->setScrollMode(bb::cascades::ScrollMode::Both);
+    }
+    else if(contentSize_.width() <= scrollViewSize_.width() && contentSize_.height() <= scrollViewSize_.height())
+    {
+    	scrollViewProperties_->setScrollMode(bb::cascades::ScrollMode::None);
+    }
+    else
+    {
+      	scrollViewProperties_->setScrollMode(bb::cascades::ScrollMode::Both);
    	}
 }
 
@@ -112,11 +133,13 @@ int NariveScrollViewObject::setDisableBounce(TiObject* obj)
 
 int NativeScrollViewObject::setContentWidth(TiObject* obj)
 {
+	contentWidthSet_ = true;
     return contentViewProxy_->setWidth(obj);
 }
 
 int NativeScrollViewObject::setContentHeight(TiObject* obj)
 {
+	contentHeightSet_ = true;
     return contentViewProxy_->setHeight(obj);
 }
 
