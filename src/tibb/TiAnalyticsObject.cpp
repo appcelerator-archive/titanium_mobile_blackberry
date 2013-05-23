@@ -73,7 +73,7 @@ TiAnalyticsObject::TiAnalyticsObject(NativeObjectFactory* objectFactory)
 		QString appVersion = defaultSettings.value("version").toString();
 		appVersion_ = appVersion.toLocal8Bit();
 
-		QUrl analyticsSite("https://api.appcelerator.net/p/v2/mobile-track/" + aguid);
+		QUrl analyticsSite("https://api.appcelerator.net/p/v3/mobile-track/" + aguid);
 		request_.setUrl(analyticsSite);
 
 		// Async callbacks to notify application of HTTP events
