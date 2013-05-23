@@ -1,18 +1,21 @@
-var url = "http://www.appcelerator.com";
- var client = Ti.Network.createHTTPClient({
-     // function called when the response data is available
-     onload : function(e) {
-         Ti.API.info("Received text: " + this.responseText);
-         alert('success');
-     },
-     // function called when an error occurs, including a timeout
-     onerror : function(e) {
-         Ti.API.debug(e.error);
-         alert('error');
-     },
-     timeout : 5000  // in milliseconds
- });
- // Prepare the connection.
- client.open("GET", url);
- // Send the request.
- client.send();
+var win1 = Titanium.UI.createWindow({  
+   backgroundColor:'#000'
+});
+
+var view1 = Titanium.UI.createView({
+	backgroundColor:'red',
+	width: "100px",
+	height: "100px"
+});
+
+var view2 = Titanium.UI.createView({
+	backgroundColor:'blue',
+    top:"25px",
+    bottom:"25px",
+    left:"25px",
+    right:"25px"
+});
+
+view1.add(view2);
+win1.add(view1);
+win1.open();
