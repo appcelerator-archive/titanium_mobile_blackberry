@@ -4,19 +4,18 @@ var win1 = Titanium.UI.createWindow({
 
 var view1 = Titanium.UI.createView({
 	backgroundColor:'red',
-   width:Ti.UI.SIZE,
-   height:Ti.UI.SIZE
+	width: "100px",
+	height: "100px"
 });
 
-var label1 = Titanium.UI.createLabel({
+var view2 = Titanium.UI.createView({
 	backgroundColor:'blue',
-   color:'#999',
-   text:'Label Test',
-   font:{fontSize:20,fontFamily:'Helvetica Neue',fontStyle:'italic'},
-   width:Ti.UI.SIZE,
-   height:Ti.UI.SIZE
+    top:"25px",
+    bottom:"25px",
+    left:"25px",
+    right:"25px"
 });
 
-view1.add(label1);
+view1.add(view2);
 win1.add(view1);
 win1.open();

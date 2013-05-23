@@ -114,6 +114,7 @@ private:
     QNetworkAccessManager networkAccessManager_;
     HTTPClientEventHandler* eventHandler_;
     QByteArray responseData_;
+    QByteArray aguid_;
 };
 
 // Event handler for Ti.Network.HTTPClient
