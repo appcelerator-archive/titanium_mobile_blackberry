@@ -98,7 +98,7 @@ NativeHTTPClientObject::NativeHTTPClientObject(TiObject* tiObject)
     eventHandler_ = NULL;
 
     QString aguid = defaultSettings.value("aguid").toString();
-	aguid_ = aguid.toLocal8Bit();
+	aguid_ = aguid.toAscii();
 
     request_.setRawHeader("X-Titanium-ID", aguid_);
 }
