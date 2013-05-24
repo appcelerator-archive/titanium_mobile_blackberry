@@ -29,8 +29,11 @@ void NativeScrollViewContentObject::updateLayout(QRectF rect)
     NativeControlObject::updateLayout(rect);
     scrollView_->setContentWidthAndHeight(rect.width(), rect.height());
 }
+
 NativeScrollViewObject::NativeScrollViewObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_SCROLL_VIEW)
+    , contentWidthSet_(false)
+    , contentHeightSet_(false)
 {
     scrollView_ = NULL;
 }
@@ -66,6 +69,7 @@ int NativeScrollViewObject::setLayout(TiObject *obj)
 		err = contentViewProxy_->setWidth(&width);
 	}
 	err = contentViewProxy_->setLayout(obj);
+
 	return err;
 }
 void NativeScrollViewObject::setContentWidthAndHeight(float width, float height)
