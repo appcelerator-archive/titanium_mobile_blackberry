@@ -203,8 +203,10 @@ function BlackberryNDK(builder) {
 	        logger.log('\n' + 'Path to BlackBerry NDK is: ' + ndk.cyan);
 
 	        // BB NDK makefiles do not allow spaces in path names and cause build problem.
-			// The solution is to use temporary directories without spaces to do builds.
-			var tmpPathSDK = path.join(os.tmpDir(), generateTmpName(builder.tiapp['id'])); 
+			// The solution is to use temporary directories without spaces to do builds. Also
+			// the project name needs to have spaces removed.
+			projectName = builder.projectName.replace(' ', '_');
+			var tmpPathSDK = path.join(os.tmpDir(), generateTmpName(projectName)); 
 
 			afs.copyDirSyncRecursive(path.join(builder.titaniumBBSdkPath, 'tibb'),
 								path.join(tmpPathSDK, 'tibb'), {logger: logger.debug});
@@ -215,7 +217,8 @@ function BlackberryNDK(builder) {
 			var variant = builder.type2variantCpu[this.builder.target][0];
 			var cpu = builder.type2variantCpu[this.builder.target][1];
 
-			var tiappName = 'TIAPP_NAME=' + builder.projectName;
+            
+			var tiappName = 'TIAPP_NAME=' + projectName;
 			var cpuList = 'CPULIST=' + cpu;
 			var bbRoot = 'BB_ROOT=' + tmpPathSDK;
 			var debug = 'VARIANTLIST=';
@@ -224,7 +227,7 @@ function BlackberryNDK(builder) {
 			} 
 
 			var oldPath = process.cwd()	
-			var tmpPathProj = path.join(os.tmpDir(), generateTmpName(builder.tiapp['id'])); 
+			var tmpPathProj = path.join(os.tmpDir(), generateTmpName(projectName)); 
 			var projectDir = this.builder.projectDir;
 			afs.copyDirSyncRecursive(projectDir, tmpPathProj, {logger: logger.debug});
 			process.chdir(path.join(tmpPathProj, 'build', 'blackberry'));
@@ -259,12 +262,14 @@ function BlackberryNDK(builder) {
             var logger = builder.logger;
 			var ndk = builder.ndk;
 			var deviceIP = builder.deviceIP;
+			var projectName = builder.projectName.replace(' ', '_');
         	if (typeof ndk === 'undefined') {
 		        ndk = findNDK();
 		        if (typeof ndk === 'undefined') {
 		        	return  1;
 		        }
 	    	}
+
 	        logger.log('\n' + 'Path to BlackBerry NDK is: ' + ndk.cyan);
 
 			// write the bar-descriptor file
@@ -295,7 +300,7 @@ function BlackberryNDK(builder) {
 			var barDescriptorTmpl = path.join(builder.titaniumBBSdkPath, 'templates', 'bar-descriptor2.xml');
 			fs.writeFileSync(barDescriptor, renderTemplate(fs.readFileSync(barDescriptorTmpl).toString().trim(), {
 				id: tiapp['id'] || '',
-				appname: tiapp.name || '',
+				appname: projectName || '',
 				description: tiapp.description || 'not specified',
 				version: tiapp.version || '1.0',
 				author: tiapp.publisher || 'not specified',
@@ -342,7 +347,6 @@ function BlackberryNDK(builder) {
 
 			var variant = builder.type2variantCpu[builder.target][0];
         	var cpu = builder.type2variantCpu[builder.target][1];
-        	var projectName = builder.projectName;
         	var barFile = '"' + path.join(buildDir, cpu, variant, projectName + '.bar') + '"';
         	var appBinaryFile = '"' + path.join(buildDir, cpu, variant, projectName) + '"';
         	var type = builder.target;
@@ -355,6 +359,7 @@ function BlackberryNDK(builder) {
 	        	buildID = builder.tiapp.blackberry['build-id'];
 	        }
 
+            projectName = '"' + projectName + '"';
             var command = [srccmd, '&&', ndkcmd, '-package', barFile, 'bar-descriptor.xml', '-e', appBinaryFile , projectName, 
                                            '-buildID', buildID, 'assets', 'framework'];
 
