@@ -194,6 +194,9 @@ function BlackberryNDK(builder) {
             var builder = this.builder;
             var logger = builder.logger;
 			var ndk = builder.ndk;
+			// so BlackBerry NDK can build  projects with spaces do a space replace
+			var projectName = builder.projectName.replace(' ', '_');
+
 			if (typeof ndk === 'undefined') {
 		        ndk = findNDK();
 		        if (typeof ndk === 'undefined') {
@@ -205,9 +208,7 @@ function BlackberryNDK(builder) {
 	        // BB NDK makefiles do not allow spaces in path names and cause build problem.
 			// The solution is to use temporary directories without spaces to do builds. Also
 			// the project name needs to have spaces removed.
-			projectName = builder.projectName.replace(' ', '_');
 			var tmpPathSDK = path.join(os.tmpDir(), generateTmpName(projectName)); 
-
 			afs.copyDirSyncRecursive(path.join(builder.titaniumBBSdkPath, 'tibb'),
 								path.join(tmpPathSDK, 'tibb'), {logger: logger.debug});
 			afs.copyDirSyncRecursive(path.join(this.builder.titaniumBBSdkPath, 'libv8'),
@@ -263,6 +264,7 @@ function BlackberryNDK(builder) {
 			var ndk = builder.ndk;
 			var deviceIP = builder.deviceIP;
 			var projectName = builder.projectName.replace(' ', '_');
+
         	if (typeof ndk === 'undefined') {
 		        ndk = findNDK();
 		        if (typeof ndk === 'undefined') {
@@ -359,9 +361,8 @@ function BlackberryNDK(builder) {
 	        	buildID = builder.tiapp.blackberry['build-id'];
 	        }
 
-            projectName = '"' + projectName + '"';
-            var command = [srccmd, '&&', ndkcmd, '-package', barFile, 'bar-descriptor.xml', '-e', appBinaryFile , projectName, 
-                                           '-buildID', buildID, 'assets', 'framework'];
+            var command = [srccmd, '&&', ndkcmd, '-package', barFile, 'bar-descriptor.xml', '-e', appBinaryFile , 
+            					'"' + projectName + '"', '-buildID', buildID, 'assets', 'framework'];
 
             if (type !== 'distribute') {
 				command.push('-devMode');
