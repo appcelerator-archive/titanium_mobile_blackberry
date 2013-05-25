@@ -195,7 +195,7 @@ function BlackberryNDK(builder) {
             var logger = builder.logger;
 			var ndk = builder.ndk;
 			// so BlackBerry NDK can build  projects with spaces do a space replace
-			var projectName = builder.projectName.replace(' ', '_');
+			var projectName = builder.projectName.replace(/ /g, '_');
 
 			if (typeof ndk === 'undefined') {
 		        ndk = findNDK();
@@ -263,7 +263,7 @@ function BlackberryNDK(builder) {
             var logger = builder.logger;
 			var ndk = builder.ndk;
 			var deviceIP = builder.deviceIP;
-			var projectName = builder.projectName.replace(' ', '_');
+			var projectName = builder.projectName.replace(/ /g, '_');
 
         	if (typeof ndk === 'undefined') {
 		        ndk = findNDK();
