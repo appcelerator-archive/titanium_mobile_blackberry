@@ -184,11 +184,10 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     layoutNode_.onLayout = onPostLayout;
     layoutNode_.data = this;
 
-
     if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_LIST_VIEW || objType == N_TYPE_SCROLL_VIEW || objType == N_TYPE_SCROLLABLE_VIEW) {
-        layoutNode_.properties.width.valueType = Fill;
-        layoutNode_.properties.height.valueType = Fill;
-	}
+		layoutNode_.properties.defaultWidthType = Fill;
+		layoutNode_.properties.defaultHeightType  = Fill;
+    }
     else if (objType == N_TYPE_LABEL || objType == N_TYPE_BUTTON || objType == N_TYPE_TOGGLEBUTTON ||
         objType == N_TYPE_SLIDER || objType == N_TYPE_PROGRESSBAR || objType == N_TYPE_TEXT_FIELD ||
         objType == N_TYPE_ACTIVITYINDICATOR || objType == N_TYPE_WINDOW || objType == N_TYPE_MAPVIEW ||
@@ -201,6 +200,10 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
 
     TiUtils *tiUtils = TiUtils::getInstance();
     ppi_ = tiUtils->getPPI();
+
+    bb::device::DisplayInfo display;
+    displayWidth_ = display.pixelSize().width();
+    displayHeight_ = display.pixelSize().height();
 }
 
 NativeControlObject::~NativeControlObject()
@@ -242,6 +245,8 @@ void NativeControlObject::updateLayout(QRectF rect)
     if (requestLayout) {
         struct Node* root = nodeRequestLayout(&layoutNode_);
         if (root) {
+        	root->element._measuredWidth = displayWidth_;
+        	root->element._measuredHeight = displayHeight_;
             nodeLayout(root);
         }
     }
@@ -325,6 +330,8 @@ int NativeControlObject::addChildImpl(NativeObject* obj)
     nodeAddChild(&layoutNode_, &((NativeControlObject*) obj)->layoutNode_);
     struct Node* root = nodeRequestLayout(&layoutNode_);
     if (root) {
+    	root->element._measuredWidth = displayWidth_;
+    	root->element._measuredHeight = displayHeight_;
         nodeLayout(root);
     }
     TiObject* tmpObj = new TiObject;
@@ -356,6 +363,8 @@ int NativeControlObject::removeChildImpl(NativeObject* obj)
     nodeRemoveChild(&layoutNode_, &((NativeControlObject*) obj)->layoutNode_);
     struct Node* root = nodeRequestLayout(&layoutNode_);
     if (root) {
+    	root->element._measuredWidth = displayWidth_;
+    	root->element._measuredHeight = displayHeight_;
         nodeLayout(root);
     }
     bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
@@ -458,6 +467,8 @@ void NativeControlObject::updateLayoutProperty(ValueName name, TiObject* val) {
 
     struct Node* root = nodeRequestLayout(&layoutNode_);
     if (root) {
+    	root->element._measuredWidth = displayWidth_;
+    	root->element._measuredHeight = displayHeight_;
         nodeLayout(root);
     }
 }
