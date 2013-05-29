@@ -9,6 +9,7 @@
 
 #include "NativeProxyObject.h"
 #include "TiGenericFunctionObject.h"
+#include "TiPropertySetGetObject.h"
 #include "TiV8Event.h"
 
 
@@ -35,6 +36,37 @@ void TiProxy::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "addEventListener", this, _addEventListener);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "fireEvent", this, _fireEvent);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "removeEventListener", this, _removeEventListener);
+}
+
+void TiProxy::createSettersAndGetters(const char* name, SET_PROPERTY_CALLBACK setter, GET_PROPERTY_CALLBACK getter)
+{
+    TiPropertySetGetObject::createProperty(this, name, this, setter, getter);
+}
+
+Handle<Value> TiProxy::createProxy(void*, TiObject*, const Arguments&)
+{
+	// for subclass;
+	return Undefined();
+}
+
+Handle<Value> TiProxy::createProxy(TiProxy *proxy, void* userContext, const Arguments& args)
+{
+    
+    TiProxy *module = static_cast<TiProxy*>(userContext);
+    HandleScope handleScope;
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result = global->NewInstance();
+
+    proxy->setNativeObjectFactory(module->getNativeObjectFactory());
+    proxy->initializeTiObject(NULL);
+    proxy->setValue(result);
+    if ((args.Length() > 0) && (args[0]->IsObject()))
+    {
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
+        proxy->setParametersFromObject(proxy, settingsObj);
+    }
+    setTiObjectToJsObject(result, proxy);
+    return handleScope.Close(result);
 }
 
 Handle<Value> TiProxy::_addEventListener(void* userContext, TiObject*, const Arguments& args)

@@ -27,8 +27,10 @@
 #include "TiMedia.h"
 #include "TiNetwork.h"
 #include "TiDatabase.h"
- #include "TiAnalyticsObject.h"
+#include "TiAnalyticsObject.h"
 #include "TiV8EventContainerFactory.h"
+#include "Contacts/ContactsModule.h"
+
 #include "V8Utils.h"
 
 #include <fstream>
@@ -81,6 +83,7 @@ void TiTitaniumObject::onCreateStaticMembers()
     TiGesture::addObjectToParent(this, objectFactory_);
     TiAccelerometer::addObjectToParent(this, objectFactory_);
     TiGeolocation::addObjectToParent(this, objectFactory_);
+    ContactsModule::addObjectToParent(this, objectFactory_);
 }
 
 bool TiTitaniumObject::canAddMembers() const

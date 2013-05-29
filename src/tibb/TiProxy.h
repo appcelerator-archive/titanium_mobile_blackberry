@@ -10,6 +10,9 @@
 
 #include "TiObject.h"
 
+typedef void(*SET_PROPERTY_CALLBACK)(void*, Handle<Value>);
+typedef Handle<Value>(*GET_PROPERTY_CALLBACK)(void*);
+
 /*
  * Class TiProxy
  *
@@ -32,6 +35,12 @@ protected:
 
     virtual void onAddEventListener(const char* eventName, Handle<Function> eventFunction);
     virtual void onRemoveEventListener(const char* eventName, Handle<Function> eventFunction);
+
+    void createSettersAndGetters(const char*, SET_PROPERTY_CALLBACK, GET_PROPERTY_CALLBACK);
+
+    static Handle<Value> createProxy(TiProxy* proxy, void* userContext, const Arguments& args);
+    // for subclass
+    static Handle<Value> createProxy(void*, TiObject*, const Arguments& args);
 
 private:
     // Disable copy ctor & assignment operator
