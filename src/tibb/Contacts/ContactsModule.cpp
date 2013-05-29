@@ -9,11 +9,14 @@
 #include <bb/pim/contacts/ContactService>
 #include <bb/pim/contacts/Contact>
 #include "TiGenericFunctionObject.h"
+#include "NativeMessageStrings.h"
+#include "TiMessageStrings.h"
 #include <iostream>
 #include <QObject>
 #include "ContactsModule.h"
 #include "ContactsPersonProxy.h"
 
+using namespace bb::pim::contacts;
 
 ContactsModule::ContactsModule(NativeObjectFactory* objectFactory)
 	: TiProxy("Contacts")
@@ -34,11 +37,23 @@ void ContactsModule::onCreateStaticMembers()
     TiProxy::onCreateStaticMembers();
 
     TiGenericFunctionObject::addGenericFunctionToParent(this, "getAllPeople", this, _getAllPeople);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "getPersonByID", this, _getPersonByID);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createPerson", this, ContactsPersonProxy::createProxy);
 
 
 }
+Handle<Value> ContactsModule::_getPersonByID(void* userContext, TiObject*, const Arguments& args) {
 
+    if (args.Length() < 1 || (!args[0]->IsNumber() && !args[0]->IsNumberObject()))
+    {
+        v8::ThrowException(String::New(Native::Msg::Expected_argument_of_type_integer));
+        return Undefined();
+    }
+
+    Handle<Number> num = Handle<Number>::Cast(args[0]);
+	Contact c = ContactService().contactDetails((int)num->Value());
+	return ContactsPersonProxy::createPerson(c, userContext, args);
+}
 Handle<Value> ContactsModule::_getAllPeople(void* userContext, TiObject*, const Arguments& args) {
 
 	bb::pim::contacts::ContactService service;

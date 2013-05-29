@@ -209,8 +209,7 @@ Handle<Value> ContactsPersonProxy::_getFirstName(void* userContext)
 Handle<Value> ContactsPersonProxy::_getFirstPhonetic(void* userContext)
 {
 	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
-	return obj->getSubkind(
-			AttributeSubKind::NamePhoneticGiven);
+	return obj->getSubkind(AttributeSubKind::NamePhoneticGiven);
 }
 Handle<Value> ContactsPersonProxy::_getFullName(void* userContext)
 {

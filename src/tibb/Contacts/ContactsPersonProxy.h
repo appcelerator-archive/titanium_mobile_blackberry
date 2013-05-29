@@ -22,8 +22,6 @@ public:
 	virtual ~ContactsPersonProxy();
     virtual void onCreateStaticMembers();
 
-
-
 	static ContactsPersonProxy* createPerson(NativeObjectFactory* objectFactory);
 
 	static Handle<Value> createContact(bb::pim::contacts::Contact, const Arguments&);
@@ -33,8 +31,6 @@ public:
 
     static Handle<Value> _getLastName(void*);
     static void _setLastName(void*, Handle<Value>);
-
-
 
     static Handle<Value> createProxy(void* userContext, TiObject*, const Arguments& args)
     {
