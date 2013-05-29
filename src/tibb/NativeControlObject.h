@@ -228,6 +228,8 @@ private:
     bool batchUpdating_;
     NATIVE_TYPE objType_;
     float ppi_; // pixels per inch
+    int displayWidth_;
+    int displayHeight_;
 };
 
 // Event handler for Ti.UI.View
