@@ -273,7 +273,8 @@ private slots:
                 emit touchMove(x, y);
                 break;
             case bb::cascades::TouchType::Up:
-                if(startPointX == x && startPointY == y) {
+                // Give a little slack, otherwise it wont fire on device
+                if(startPointX > x - 20 && startPointX < x + 20 && startPointY > y - 20 && startPointY < y + 20) {
                     emit click(x, y);
                     break;
                 }
