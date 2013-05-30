@@ -26,11 +26,6 @@ public:
 
 	static Handle<Value> createContact(bb::pim::contacts::Contact, const Arguments&);
 
-    static Handle<Value> _getFirstName(void*);
-    static void _setFirstName(void*, Handle<Value>);
-
-    static Handle<Value> _getLastName(void*);
-    static void _setLastName(void*, Handle<Value>);
 
     static Handle<Value> createProxy(void* userContext, TiObject*, const Arguments& args)
     {
@@ -45,18 +40,25 @@ public:
 
 private:
 
-    static Handle<Value> _getFullName(void*);
+    static void _setFirstName(void*, Handle<Value>);
+    static void _setLastName(void*, Handle<Value>);
+    static void _setAddress(void*, Handle<Value>);
+
+
     static Handle<Value> _getAddress(void*);
     static Handle<Value> _getBirthday(void*);
     static Handle<Value> _getCreated(void*);
     static Handle<Value> _getDepartment(void*);
     static Handle<Value> _getEmail(void*);
+    static Handle<Value> _getFirstName(void*);
     static Handle<Value> _getFirstPhonetic(void*);
+    static Handle<Value> _getFullName(void*);
     static Handle<Value> _getId(void*);
     static Handle<Value> _getImage(void*);
     static Handle<Value> _getInstantMessage(void*);
     static Handle<Value> _getJobTitle(void*);
     static Handle<Value> _getKind(void*);
+    static Handle<Value> _getLastName(void*);
     static Handle<Value> _getLastPhonetic(void*);
     static Handle<Value> _getMiddleName(void*);
     static Handle<Value> _getMiddlePhonetic(void*);

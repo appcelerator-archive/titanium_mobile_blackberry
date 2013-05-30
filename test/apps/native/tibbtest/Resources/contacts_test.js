@@ -54,20 +54,10 @@ UI.createElement = function (TiElement, Options) {
 	for(var key in callbacks) {
 		addEvent(el, key, callbacks[key]);
 	}
-
-	// Yes, this is possible too (only in iOS as far as I'm aware)
-	// :)
-	/*
-	if((iPhone || iPad) && subviews.length) {
-		el.add(subviews);
-	} else {
-	*/
-		for(var i = 0, len = subviews.length; i < len; i++) {
-			el.add(subviews[i]);
-		}
+	for(var i = 0, len = subviews.length; i < len; i++) {
+		el.add(subviews[i]);
+	}
 		
-//	}
-	// Null out variables, not sure if necessary, who knows!
 	callbacks = null;
 	Options = null;
 	TiElement = null;
@@ -94,44 +84,142 @@ UI.Button = function(args) {
 	args = args || {};
 	return UI.createElement(Ti.UI.createButton, args);
 };
+UI.ScrollView = function(args) { 
+	args = args || {};
+	return UI.createElement(Ti.UI.createScrollView, args);
+};
+
+function Label(_title, _message) {
+	if(typeof _message == 'object') {
+		_message = JSON.stringify(_message)
+	}
+	return UI.Label({
+		top: 10,
+		left: 10,
+		text: _title + ': ' + _message
+	});
+}
 
 function ContactWindow(_contactId) {
 	
 	var contact = Ti.Contacts.getPersonByID(_contactId);
-	
+	Ti.API.info(JSON.stringify(contact.address));
 	var win = UI.Window({
-		layout: 'vertical',
 		subviews: [
-				    UI.Label({
-				    	top: 10,
-				    	height: 15,
-				    	width: Ti.UI.FILL,
-				    	text: 'First name: ' + contact.firstName
-				    }),
-				    UI.Label({
-				    	top: 10,
-				    	height: 15,
-				    	width: Ti.UI.FILL,
-				    	text: 'Last name: ' + contact.lastName
-				    }),
-				    UI.Label({
-				    	top: 10,
-				    	height: 15,
-				    	width: Ti.UI.FILL,
-				    	text: 'Full name: ' + contact.fullName
-				    }),
-				    UI.Label({
-				    	top: 10,
-				    	height: 15,
-				    	width: Ti.UI.FILL,
-				    	text: 'Email: ' + JSON.stringify(contact.email)
-				    }),
-				    UI.Button({
-				    	title: 'close',
-				    	onClick: closeWindow
-				    })
+		           UI.Button({
+		        	   title: 'create contact',
+		        	   onClick: createContact,
+		        	   top: 0
+		           })
+		           /*
+		           UI.ScrollView({
+		        	   top: 30,
+		        	   layout: 'vertical',
+		        	   subviews: [
+				           Label('address',contact.address),
+				           Label('birthday',contact.birthday),
+				           Label('created',contact.created),
+				           Label('department',contact.department),
+				           Label('email',contact.email),
+				           Label('firstName', contact.firstName),
+				           Label('fullName', contact.fullName),
+				           Label('firstPhonetic', contact.firstPhonetic),
+				           Label('id', contact.id),
+				           Label('image', contact.image),
+				           Label('instantMessage', contact.instantMessage),
+				           Label('jobTitle', contact.jobTitle),
+				           Label('kind', contact.kind),
+				           Label('lastName', contact.lastName),
+				           Label('lastPhonetic', contact.lastPhonetic),
+				           Label('middleName', contact.middleName),
+				           Label('middlePhonetic', contact.middlePhonetic),
+				           Label('modified', contact.modified),
+				           Label('nickname', contact.nickname),
+				           Label('note', contact.note),
+				           Label('organization', contact.organization),
+				           Label('phone', contact.phone),
+				           Label('prefix', contact.prefix),
+				           Label('recordId', contact.recordId),
+				           Label('relatedNames', contact.relatedNames),
+				           Label('suffix', contact.suffix),
+				           Label('url', contact.url),
+							
+						    UI.Button({
+						    	top: 10,
+						    	title: 'close',
+						    	onClick: closeWindow
+						    })
+						    ]
+		           })
+		           */
 		]
 	});
+	
+	function createContact(){
+		Ti.Contacts.createPerson({
+			  firstName: 'Paul',
+			  lastName: 'Dowsett',
+			  address:{
+			    work:[
+			      {
+			        CountryCode: 'gb', // determines how the address is displayed
+			        Street: '200 Brook Drive\nGreen Park',
+			        City: 'Reading',
+			        County: 'Berkshire',
+			        Country: 'England',
+			        ZIP: 'RG2 6UB'
+			      },
+			      {
+			        CountryCode: 'gb', // determines how the address is displayed
+			        Street: '1 St Pauls Road\nClerkenwell',
+			        City: 'City of London',
+			        State: 'London',
+			        Country: 'England',
+			        ZIP: 'EC1 1AA'
+			      }
+			    ],
+			    home:[
+			      {
+			        CountryCode: 'gb', // determines how the address is displayed
+			        Street: '2 Boleyn Court',
+			        City: 'London',
+			        State: 'Greenwich',
+			        Country: 'England',
+			        ZIP: 'SE10'
+			      }
+			    ]
+			  },
+			  birthday: '2012-01-01T12:00:00.000+0000',
+			  instantMessage:{
+			    home:[
+			      {
+			        service: 'AIM',
+			        username: 'leisureAIM'
+			      },
+			      {
+			        service: 'MSN',
+			        username: 'no_paul_here@msn.com'
+			      }
+			    ],
+			    work:[
+			      {
+			        service: 'AIM',
+			        username: 'seriousAIM'
+			      }
+			    ]
+			  },
+			  organization: 'Appcelerator',
+			  phone:{
+			    mobile: ['07900 000001', '07900 000002'],
+			    work: ['+44 (0)118 925 6128', '+44 (0)118 000 0000']
+			  },
+			  url:{
+			    homepage: ['www.google.com'],
+			    work: ['www.appcelerator.com', 'www.example.com']
+			  }
+			});
+
+	}
 	
 	function closeWindow() {
 		win.close();

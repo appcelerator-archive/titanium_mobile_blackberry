@@ -15,10 +15,12 @@
 #include <bb/pim/contacts/ContactService>
 #include <bb/pim/contacts/ContactBuilder>
 #include <bb/pim/contacts/ContactPhoto>
+#include <bb/pim/contacts/ContactPostalAddress>
 #include <bb/pim/contacts/ContactAttributeBuilder>
+#include <bb/pim/contacts/ContactPostalAddressBuilder>
 #include <QFile>
-#include <iostream>
 #include <QtAlgorithms>
+#include <iostream>
 
 using namespace bb::pim::contacts;
 
@@ -49,7 +51,7 @@ ContactsPersonProxy* ContactsPersonProxy::createPerson(
 void ContactsPersonProxy::onCreateStaticMembers() {
 	TiProxy::onCreateStaticMembers();
 
-	createSettersAndGetters("address", NULL, _getAddress);
+	createSettersAndGetters("address", _setAddress, _getAddress);
 	createSettersAndGetters("birthday", NULL, _getBirthday);
 	createSettersAndGetters("created", NULL, _getCreated);
 	createSettersAndGetters("department", NULL, _getDepartment);
@@ -95,7 +97,7 @@ Handle<Value> ContactsPersonProxy::getSubkind(AttributeSubKind::Type subkind)
 			return String::New(name.toUtf8().constData());
 		}
 	}
-	return Undefined();
+	return String::New("");
 }
 
 Handle<Value> ContactsPersonProxy::getKind(AttributeKind::Type kind)
@@ -109,7 +111,7 @@ Handle<Value> ContactsPersonProxy::getKind(AttributeKind::Type kind)
 			return String::New(name.toUtf8().constData());
 		}
 	}
-	return Undefined();
+	return String::New("");
 }
 
 void ContactsPersonProxy::_setFirstName(void* userContext, Handle<Value> value)
@@ -126,6 +128,138 @@ void ContactsPersonProxy::_setFirstName(void* userContext, Handle<Value> value)
 
 	builder.addAttribute(attribute);
 
+	ContactService().updateContact(obj->contact_);
+}
+
+void ContactsPersonProxy::_setAddress(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+    ContactBuilder contactBuilder = obj->contact_.edit();
+
+    // The value passed in *MUST* be an object containing arrays of objects
+    // http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.Contacts.Person-property-address
+    if(value->IsObject()) {
+
+    	// Get the JS Object and it's properties
+        Handle<Object> addressObject = Handle<Object>::Cast(value);
+        Local<Array> addressProperties = addressObject->GetPropertyNames();
+
+        // Look for properties, such as "work", "home", or "other"
+        for(int i = 0, len = addressProperties->Length(); i < len; i++)
+        {
+        	// Get the key and value or each main object
+        	// { work: [ ... ] }"
+            Local<String> addressKey = Local<String>::Cast(addressProperties->Get(i));
+            Local<Value> addressValue = addressObject->Get(addressKey);
+
+            // Create the subkind from the key of the object
+            AttributeSubKind::Type subKind = AttributeSubKind::Other;
+            String::Utf8Value _key(addressKey);
+            if(QString(*_key).toLower() == "work") {
+            	subKind = AttributeSubKind::Work;
+            }
+            if(QString(*_key).toLower() == "home") {
+            	subKind = AttributeSubKind::Home;
+            }
+
+            // The value of the individual address object *MUST* be an array of address objects
+            // [ { street: '12 Main St' }, { street: '21 Meh St' } ]
+            if(addressValue->IsArray())
+            {
+            	// Cast the value of the array to a v8 Array and look for addresses
+                Local<Array> addresses = Local<Array>::Cast(addressValue);
+                for(int i = 0, len = addresses->Length(); i < len; i++)
+                {
+                	// Create the new address builder object and set the subkind
+                	ContactPostalAddressBuilder addressBuilder;
+                	addressBuilder.setSubKind(subKind);
+
+                	// Get the actual address object from the array of address objects
+                	// This *MUST* be an object with keys and values
+                	// { street: '12 Main St' }
+                    Local<Value> currentAddress = addresses->Get(Number::New(i));
+                    if(currentAddress->IsObject())
+                    {
+                    	// Get the individual address object and look for it's properties
+                        Local<Object> currentAddressObject = Local<Object>::Cast(currentAddress);
+                        Local<Array> currentAddressProperties = currentAddressObject->GetPropertyNames();
+
+                        // Go through the keys and value of this object, one at a time
+                        for(int i = 0, len = currentAddressProperties->Length(); i < len; i++)
+                        {
+                            Local<String> currentAddressKey = Local<String>::Cast(currentAddressProperties->Get(i));
+                            Local<Value> currentAddressValue = currentAddressObject->Get(currentAddressKey);
+
+                            // The value *MUST* be a string
+                            if(currentAddressValue->IsString())
+                            {
+                            	// Cast it to a String and get the UTF8 strings
+                                Local<String> v = Local<String>::Cast(currentAddressValue);
+                                String::Utf8Value _v(v);
+                                String::Utf8Value _k(currentAddressKey);
+
+                                // Convert them to QStrings for better manipulation
+                                QString _key = QString(*_k);
+                                QString _value = QString(*_v);
+
+                                // Start populating the address builder
+                                if(_key.toLower() == "city"){
+                                	addressBuilder.setCity(_value);
+                                }
+                                if(_key.toLower() == "label"){
+                                	addressBuilder.setLabel(_value);
+                                }
+                                if(_key.toLower() == "line1"){
+                                	addressBuilder.setLine1(_value);
+                                }
+                                if(_key.toLower() == "line2") {
+                                	addressBuilder.setLine2(_value);
+                                }
+                                if(_key.toLower() == "street") {
+                                	if(_value.contains("\n")) {
+                                		QStringList l = _value.split('\n');
+                                		addressBuilder.setLine1(l.at(0));
+                                		l.removeAt(0);
+                                		addressBuilder.setLine2(l.join(""));
+                                	} else {
+                                		addressBuilder.setLine1(_value);
+                                	}
+                                }
+                                if(_key.toLower() == "zip"){
+                                	addressBuilder.setPostalCode(_value);
+                                }
+                                if(_key.toLower() == "county"){
+                                	addressBuilder.setRegion(_value);
+                                }
+                                if(_key.toLower() == "country"){
+                                	addressBuilder.setCountry(_value);
+                                }
+                            }
+                            else
+                            {
+                            	// Something goes here, throw an error?
+                            }
+                        }
+                        // Once finished with an address, add it to the contact
+                        contactBuilder.addPostalAddress(addressBuilder);
+                    }
+                    else
+                    {
+                    	// Something goes here, throw an error?
+                    }
+                }
+            }
+            else
+            {
+            	// Something goes here, throw an error?
+            }
+         }
+    }
+    else
+    {
+    	// Something goes here, throw an error?
+    }
+    // Once done, update the contact
 	ContactService().updateContact(obj->contact_);
 }
 
@@ -148,17 +282,33 @@ void ContactsPersonProxy::_setLastName(void* userContext, Handle<Value> value)
 Handle<Value> ContactsPersonProxy::_getAddress(void* userContext)
 {
 	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
-	ContactPostalAddress address =
-			obj->getFullContact().postalAddresses()[0];
-	QString add = address.label();
-	return String::New(add.toUtf8().constData());
+
+	QList<ContactPostalAddress> array = obj->getFullContact().postalAddresses();
+	Handle<Array> ar = Array::New(array.length());
+	for(int i = 0, len = array.length(); i < len; i++) {
+		ContactPostalAddress address = array.at(i);
+		Handle<Object> addressObject = Object::New();
+
+		addressObject->Set(String::New("label"), String::New(address.label().toUtf8().constData()));
+		addressObject->Set(String::New("line1"), String::New(address.line1().toUtf8().constData()));
+		addressObject->Set(String::New("line2"), String::New(address.line2().toUtf8().constData()));
+		addressObject->Set(String::New("city"), String::New(address.city().toUtf8().constData()));
+		addressObject->Set(String::New("region"), String::New(address.region().toUtf8().constData()));
+		addressObject->Set(String::New("country"), String::New(address.country().toUtf8().constData()));
+		addressObject->Set(String::New("postalCode"), String::New(address.postalCode().toUtf8().constData()));
+		addressObject->Set(String::New("latitude"), Number::New(address.latitude()));
+		addressObject->Set(String::New("longitude"), Number::New(address.longitude()));
+		ar->Set(i, addressObject);
+	}
+
+	return ar;
 }
 Handle<Value> ContactsPersonProxy::_getBirthday(void* userContext) {
 	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
 	return obj->getSubkind(AttributeSubKind::DateBirthday);
 }
 Handle<Value> ContactsPersonProxy::_getCreated(void* userContext) {
-	return Undefined();
+	return String::New("not supported");
 }
 Handle<Value> ContactsPersonProxy::_getDepartment(void* userContext) {
 	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
@@ -173,7 +323,7 @@ Handle<Value> ContactsPersonProxy::_getEmail(void* userContext) {
 	for (int i = 0, len = emails.length(); i < len; i++) {
 		ContactAttribute email = emails.at(i);
 		QString kind;
-		Handle < Object > jsObject = Object::New();
+		Handle <Object> jsObject = Object::New();
 		switch (email.subKind()) {
 		case AttributeSubKind::Other:
 			kind = "other";
@@ -194,8 +344,10 @@ Handle<Value> ContactsPersonProxy::_getEmail(void* userContext) {
 			kind = "other";
 			break;
 		}
-		jsObject->Set(String::New(kind.toUtf8().constData()),
-				String::New(email.value().toUtf8().constData()));
+		jsObject->Set(
+				String::New(kind.toUtf8().constData()),
+				String::New(email.value().toUtf8().constData())
+		);
 		emailArray->Set(i, jsObject);
 	}
 
@@ -284,8 +436,7 @@ Handle<Value> ContactsPersonProxy::_getJobTitle(void* userContext)
 }
 Handle<Value> ContactsPersonProxy::_getKind(void* userContext)
 {
-	// Not yet implemented
-	return Undefined();
+	return String::New("not supported");
 }
 Handle<Value> ContactsPersonProxy::_getLastName(void* userContext)
 {
@@ -304,13 +455,11 @@ Handle<Value> ContactsPersonProxy::_getMiddleName(void* userContext)
 }
 Handle<Value> ContactsPersonProxy::_getMiddlePhonetic(void* userContext)
 {
-	// Not supported
-	return Undefined();
+	return String::New("not supported");
 }
 Handle<Value> ContactsPersonProxy::_getModified(void* userContext)
 {
-	// Not supported
-	return Undefined();
+	return String::New("not supported");
 }
 Handle<Value> ContactsPersonProxy::_getNickname(void* userContext)
 {
@@ -357,11 +506,11 @@ Handle<Value> ContactsPersonProxy::_getPrefix(void* userContext)
 Handle<Value> ContactsPersonProxy::_getRecordId(void* userContext)
 {
 	// not supperted
-	return Undefined();
+	return ContactsPersonProxy::_getId(userContext);
 }
 Handle<Value> ContactsPersonProxy::_getRelatedNames(void* userContext)
 {
-	return ContactsPersonProxy::_getId(userContext);
+	return String::New("not supported");
 }
 Handle<Value> ContactsPersonProxy::_getSuffix(void* userContext)
 {
@@ -371,5 +520,5 @@ Handle<Value> ContactsPersonProxy::_getSuffix(void* userContext)
 Handle<Value> ContactsPersonProxy::_getUrl(void* userContext)
 {
 	// not supperted
-	return Undefined();
+	return String::New("not supported");
 }
