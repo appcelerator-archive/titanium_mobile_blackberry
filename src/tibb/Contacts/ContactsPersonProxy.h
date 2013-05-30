@@ -40,10 +40,33 @@ public:
 
 private:
 
-    static void _setFirstName(void*, Handle<Value>);
-    static void _setLastName(void*, Handle<Value>);
     static void _setAddress(void*, Handle<Value>);
-
+	static void _setBirthday(void*, Handle<Value>);
+	static void _setCreated(void*, Handle<Value>);
+    static void _setDepartment(void*, Handle<Value>);
+	static void _setEmail(void*, Handle<Value>);
+    static void _setFirstName(void*, Handle<Value>);
+    static void _setFirstPhonetic(void*, Handle<Value>);
+	static void _setFullName(void*, Handle<Value>);
+	static void _setId(void*, Handle<Value>);
+	static void _setImage(void*, Handle<Value>);
+	static void _setInstantMessage(void*, Handle<Value>);
+    static void _setJobTitle(void*, Handle<Value>);
+	static void _setKind(void*, Handle<Value>);
+    static void _setLastName(void*, Handle<Value>);
+    static void _setLastPhonetic(void*, Handle<Value>);
+    static void _setMiddleName(void*, Handle<Value>);
+    static void _setMiddlePhonetic(void*, Handle<Value>);
+	static void _setModified(void*, Handle<Value>);
+    static void _setNickname(void*, Handle<Value>);
+    static void _setNote(void*, Handle<Value>);
+    static void _setOrganization(void*, Handle<Value>);
+    static void _setPhone(void*, Handle<Value>);
+    static void _setPrefix(void*, Handle<Value>);
+    static void _setRecordId(void*, Handle<Value>);
+    static void _setRelatedNames(void*, Handle<Value>);
+    static void _setSuffix(void*, Handle<Value>);
+    static void _setUrl(void*, Handle<Value>);
 
     static Handle<Value> _getAddress(void*);
     static Handle<Value> _getBirthday(void*);
@@ -73,6 +96,7 @@ private:
     static Handle<Value> _getSuffix(void*);
     static Handle<Value> _getUrl(void*);
 
+    void setContactDetails(AttributeKind::Type, AttributeSubKind::Type, Handle<Value>);
     Handle<Value> getSubkind(bb::pim::contacts::AttributeSubKind::Type);
     Handle<Value> getKind(bb::pim::contacts::AttributeKind::Type);
     bb::pim::contacts::Contact getFullContact();

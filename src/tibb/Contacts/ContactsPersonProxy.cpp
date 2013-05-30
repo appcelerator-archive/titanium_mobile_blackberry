@@ -52,32 +52,32 @@ void ContactsPersonProxy::onCreateStaticMembers() {
 	TiProxy::onCreateStaticMembers();
 
 	createSettersAndGetters("address", _setAddress, _getAddress);
-	createSettersAndGetters("birthday", NULL, _getBirthday);
-	createSettersAndGetters("created", NULL, _getCreated);
-	createSettersAndGetters("department", NULL, _getDepartment);
-	createSettersAndGetters("email", NULL, _getEmail);
+	createSettersAndGetters("birthday", _setBirthday, _getBirthday);
+	createSettersAndGetters("created", _setCreated, _getCreated);
+	createSettersAndGetters("department", _setDepartment, _getDepartment);
+	createSettersAndGetters("email", _setEmail, _getEmail);
 	createSettersAndGetters("firstName", _setFirstName, _getFirstName);
-	createSettersAndGetters("fullName", NULL, _getFullName);
-	createSettersAndGetters("firstPhonetic", NULL, _getFirstPhonetic);
-	createSettersAndGetters("id", NULL, _getId);
-	createSettersAndGetters("image", NULL, _getImage);
-	createSettersAndGetters("instantMessage", NULL, _getInstantMessage);
-	createSettersAndGetters("jobTitle", NULL, _getJobTitle);
-	createSettersAndGetters("kind", NULL, _getKind);
+	createSettersAndGetters("fullName", _setFullName, _getFullName);
+	createSettersAndGetters("firstPhonetic", _setFirstPhonetic, _getFirstPhonetic);
+	createSettersAndGetters("id", _setId, _getId);
+	createSettersAndGetters("image", _setImage, _getImage);
+	createSettersAndGetters("instantMessage", _setInstantMessage, _getInstantMessage);
+	createSettersAndGetters("jobTitle", _setJobTitle, _getJobTitle);
+	createSettersAndGetters("kind", _setKind, _getKind);
 	createSettersAndGetters("lastName", _setLastName, _getLastName);
-	createSettersAndGetters("lastPhonetic", NULL, _getLastPhonetic);
-	createSettersAndGetters("middleName", NULL, _getMiddleName);
-	createSettersAndGetters("middlePhonetic", NULL, _getMiddlePhonetic);
-	createSettersAndGetters("modified", NULL, _getModified);
-	createSettersAndGetters("nickname", NULL, _getNickname);
-	createSettersAndGetters("note", NULL, _getNote);
-	createSettersAndGetters("organization", NULL, _getOrganization);
-	createSettersAndGetters("phone", NULL, _getPhone);
-	createSettersAndGetters("prefix", NULL, _getPrefix);
-	createSettersAndGetters("recordId", NULL, _getRecordId);
-	createSettersAndGetters("relatedNames", NULL, _getRelatedNames);
-	createSettersAndGetters("suffix", NULL, _getSuffix);
-	createSettersAndGetters("url", NULL, _getUrl);
+	createSettersAndGetters("lastPhonetic", _setLastPhonetic, _getLastPhonetic);
+	createSettersAndGetters("middleName", _setMiddleName, _getMiddleName);
+	createSettersAndGetters("middlePhonetic", _setMiddlePhonetic, _getMiddlePhonetic);
+	createSettersAndGetters("modified", _setModified, _getModified);
+	createSettersAndGetters("nickname", _setNickname, _getNickname);
+	createSettersAndGetters("note", _setNote, _getNote);
+	createSettersAndGetters("organization", _setOrganization, _getOrganization);
+	createSettersAndGetters("phone", _setPhone, _getPhone);
+	createSettersAndGetters("prefix", _setPrefix, _getPrefix);
+	createSettersAndGetters("recordId", _setRecordId, _getRecordId);
+	createSettersAndGetters("relatedNames", _setRelatedNames, _getRelatedNames);
+	createSettersAndGetters("suffix", _setSuffix, _getSuffix);
+	createSettersAndGetters("url", _setUrl, _getUrl);
 
 }
 
@@ -114,23 +114,19 @@ Handle<Value> ContactsPersonProxy::getKind(AttributeKind::Type kind)
 	return String::New("");
 }
 
-void ContactsPersonProxy::_setFirstName(void* userContext, Handle<Value> value)
+void ContactsPersonProxy::setContactDetails(AttributeKind::Type kind, AttributeSubKind::Type subKind, Handle<Value> value)
 {
-	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
 	QString val = titanium::V8ValueToQString(value);
-
-	ContactBuilder builder = obj->contact_.edit();
-
+	ContactBuilder builder = contact_.edit();
 	ContactAttributeBuilder attribute;
-	attribute.setKind(AttributeKind::Name);
-	attribute.setSubKind(AttributeSubKind::NameGiven);
+	attribute.setKind(kind);
+	attribute.setSubKind(subKind);
 	attribute.setValue(val);
-
 	builder.addAttribute(attribute);
-
-	ContactService().updateContact(obj->contact_);
+	ContactService().updateContact(contact_);
 }
 
+// SETTERS
 void ContactsPersonProxy::_setAddress(void* userContext, Handle<Value> value)
 {
 	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
@@ -262,23 +258,139 @@ void ContactsPersonProxy::_setAddress(void* userContext, Handle<Value> value)
     // Once done, update the contact
 	ContactService().updateContact(obj->contact_);
 }
-
+void ContactsPersonProxy::_setBirthday(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	// not implemented yet
+}
+void ContactsPersonProxy::_setCreated(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	// not supported
+}
+void ContactsPersonProxy::_setDepartment(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	obj->setContactDetails(AttributeKind::Group, AttributeSubKind::GroupDepartment, value);
+}
+void ContactsPersonProxy::_setEmail(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	// not implemented yet
+}
+void ContactsPersonProxy::_setFirstName(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	obj->setContactDetails(AttributeKind::Name, AttributeSubKind::NameGiven, value);
+}
+void ContactsPersonProxy::_setFirstPhonetic(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	obj->setContactDetails(AttributeKind::Name, AttributeSubKind::NamePhoneticGiven, value);
+}
+void ContactsPersonProxy::_setFullName(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	// not implemented yet
+}
+void ContactsPersonProxy::_setId(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	// not supported
+}
+void ContactsPersonProxy::_setImage(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	// not implemented yet
+}
+void ContactsPersonProxy::_setInstantMessage(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	// not implemented yet
+}
+void ContactsPersonProxy::_setJobTitle(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	obj->setContactDetails(AttributeKind::Name, AttributeSubKind::Title, value);
+}
+void ContactsPersonProxy::_setKind(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	// not implemented yet
+}
 void ContactsPersonProxy::_setLastName(void* userContext, Handle<Value> value)
 {
 	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
-	QString val = titanium::V8ValueToQString(value);
-
-	ContactBuilder builder = obj->contact_.edit();
-
-	ContactAttributeBuilder attribute;
-	attribute.setKind(AttributeKind::Name);
-	attribute.setSubKind(AttributeSubKind::NameSurname);
-	attribute.setValue(val);
-	builder.addAttribute(attribute);
-
-	ContactService service;
-	service.updateContact(obj->contact_);
+	obj->setContactDetails(AttributeKind::Name, AttributeSubKind::NameSurname, value);
 }
+void ContactsPersonProxy::_setLastPhonetic(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	obj->setContactDetails(AttributeKind::Name, AttributeSubKind::NamePhoneticSurname, value);
+}
+void ContactsPersonProxy::_setMiddleName(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	obj->setContactDetails(AttributeKind::Name, AttributeSubKind::NameMiddle, value);
+}
+void ContactsPersonProxy::_setMiddlePhonetic(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	// not supported
+}
+void ContactsPersonProxy::_setModified(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	// not supported
+}
+void ContactsPersonProxy::_setNickname(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	obj->setContactDetails(AttributeKind::Name, AttributeSubKind::NameNickname, value);
+}
+void ContactsPersonProxy::_setNote(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	obj->setContactDetails(AttributeKind::Note, AttributeSubKind::Other, value);
+}
+void ContactsPersonProxy::_setOrganization(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	obj->setContactDetails(AttributeKind::OrganizationAffiliation, AttributeSubKind::OrganizationAffiliationName, value);
+}
+void ContactsPersonProxy::_setPhone(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	// not implemented yet
+}
+void ContactsPersonProxy::_setPrefix(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	obj->setContactDetails(AttributeKind::Name, AttributeSubKind::NamePrefix, value);
+}
+void ContactsPersonProxy::_setRecordId(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	// not supported
+}
+void ContactsPersonProxy::_setRelatedNames(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	// not implemented yet
+}
+void ContactsPersonProxy::_setSuffix(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	obj->setContactDetails(AttributeKind::Name, AttributeSubKind::NameSuffix, value);
+}
+void ContactsPersonProxy::_setUrl(void* userContext, Handle<Value> value)
+{
+	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
+	// not implemented yet
+}
+
+// GETTERS
+
 Handle<Value> ContactsPersonProxy::_getAddress(void* userContext)
 {
 	ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
