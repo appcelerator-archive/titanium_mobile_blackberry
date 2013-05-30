@@ -150,15 +150,20 @@ static void onPostLayout(struct Node* node) {
       return;
     }
 
-    if (node->properties.width.valueType == Defer || node->properties.height.valueType == Defer) {
-    	return;
-    }
+    // Do not allow a control that has not had it's value type set do a control resize
+	//if (node->properties.width.valueType == -1 ||  node->properties.height.valueType == -1) {
+	//	return;
+	//}
+
+    //if (node->properties.width.valueType == Defer || node->properties.height.valueType == Defer) {
+    //	return;
+   // }
 
     float width = node->element._measuredWidth,
           height = node->element._measuredHeight;
 
-    // Do not allow a control with Ti.UI.SIZE to go to 0 or the OS will not callback deferred sizes as the controls are hidden.
-	if ((node->properties.width.valueType == Size && width == 0) || (node->properties.height.valueType == Size && height == 0)) {
+    // do not allow a control with Ti.UI.SIZE to go to 0 or the OS will not call back deferred sizes as the controls are hidden
+	if ((/*(node->properties.width.valueType == Size &&*/ width == 0) || (/*node->properties.height.valueType == Size &&*/ height == 0)) {
 		return;
 	}
 
@@ -184,16 +189,16 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     layoutNode_.onLayout = onPostLayout;
     layoutNode_.data = this;
 
-    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_LIST_VIEW || objType == N_TYPE_SCROLL_VIEW || objType == N_TYPE_SCROLLABLE_VIEW) {
+    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_LIST_VIEW || objType == N_TYPE_SCROLL_VIEW || objType == N_TYPE_SCROLLABLE_VIEW ||
+    		objType == N_TYPE_WINDOW || objType == N_TYPE_MAPVIEW || objType == N_TYPE_TEXT_AREA) {
 		layoutNode_.properties.defaultWidthType = Fill;
 		layoutNode_.properties.defaultHeightType  = Fill;
     }
     else if (objType == N_TYPE_LABEL || objType == N_TYPE_BUTTON || objType == N_TYPE_TOGGLEBUTTON ||
-        objType == N_TYPE_SLIDER || objType == N_TYPE_PROGRESSBAR || objType == N_TYPE_TEXT_FIELD ||
-        objType == N_TYPE_ACTIVITYINDICATOR || objType == N_TYPE_WINDOW || objType == N_TYPE_MAPVIEW ||
-        objType == N_TYPE_TEXT_AREA) {
-        layoutNode_.properties.width.valueType = Defer;
-        layoutNode_.properties.height.valueType = Defer;
+    		objType == N_TYPE_SLIDER || objType == N_TYPE_PROGRESSBAR || objType == N_TYPE_TEXT_FIELD ||
+        	objType == N_TYPE_ACTIVITYINDICATOR) {
+    	layoutNode_.properties.defaultWidthType = Size;
+    	layoutNode_.properties.defaultHeightType  = Size;
     }
 
     objType_ = objType;
@@ -230,16 +235,24 @@ void NativeControlObject::updateLayout(QRectF rect)
     bool requestLayout = false;
     rect_ = rect;
 
-    if (rect.width() != 0 && layoutNode_.properties.width.valueType == Defer) {
-        layoutNode_.properties.width.value = rect.width();
-        layoutNode_.properties.width.valueType = Fixed;
-        requestLayout = true;
+    if (rect.width() != 0 && (layoutNode_.properties.width.valueType == -1 || layoutNode_.properties.width.valueType == Size)) {
+    	// do not set width if it will be calculated from left and right properties
+    	if (!((layoutNode_.properties.left.valueType == Fixed || layoutNode_.properties.left.valueType == Percent) &&
+    			(layoutNode_.properties.right.valueType == Fixed || layoutNode_.properties.right.valueType == Percent))) {
+    		layoutNode_.properties.width.value = rect.width();
+    		layoutNode_.properties.width.valueType = Fixed;
+    		requestLayout = true;
+    	}
     }
 
-    if (rect.height() != 0 && layoutNode_.properties.height.valueType == Defer) {
-        layoutNode_.properties.height.value = rect.height();
-        layoutNode_.properties.height.valueType = Fixed;
-        requestLayout = true;
+    if (rect.height() != 0 && (layoutNode_.properties.height.valueType == -1 || layoutNode_.properties.height.valueType == Size)) {
+    	// do not set height if it will be calculated from top and bottom properties
+    	if (!((layoutNode_.properties.top.valueType == Fixed || layoutNode_.properties.top.valueType == Percent) &&
+    			(layoutNode_.properties.bottom.valueType == Fixed || layoutNode_.properties.bottom.valueType == Percent))) {
+			layoutNode_.properties.height.value = rect.height();
+			layoutNode_.properties.height.valueType = Fixed;
+			requestLayout = true;
+    	}
     }
 
     if (requestLayout) {
@@ -603,10 +616,10 @@ int NativeControlObject::setFont(TiObject*)
 PROP_SETGET(setHeight)
 int NativeControlObject::setHeight(TiObject* obj)
 {
-	// auto and Ti.UI.SIZE uses defaults that have already been set
+	// auto uses defaults that have already been set for the control type
 	string str = *String::Utf8Value(obj->getValue());
 
-	if ((str == "auto" || str == "UI.SIZE") && layoutNode_.properties.height.valueType == Defer) {
+	if (str == "auto") {
 		return NATIVE_ERROR_OK;
 	}
 
@@ -883,10 +896,10 @@ int NativeControlObject::getSize(TiObject* obj)
 PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
-	// auto and Ti.UI.SIZE uses defaults that have already been set
+	// auto uses defaults that have already been set for the control type
 	string str = *String::Utf8Value(obj->getValue());
 
-	if ((str == "auto" || str == "UI.SIZE") && layoutNode_.properties.width.valueType == Defer) {
+	if (str == "auto") {
 		return NATIVE_ERROR_OK;
 	}
 
