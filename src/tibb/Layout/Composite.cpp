@@ -125,7 +125,8 @@ struct ComputedSize doCompositeLayout(std::vector<struct Element*> children, dou
 
 void setDefaultCompositeWidthType(struct LayoutProperties layoutProperties, enum ValueType* measuredWidthType) {
 	if (*measuredWidthType == None) {
-		if (layoutProperties.left.valueType == Fixed && layoutProperties.right.valueType == Fixed) {
+		if ((layoutProperties.left.valueType == Fixed || layoutProperties.left.valueType == Percent) &&
+				(layoutProperties.right.valueType == Fixed || layoutProperties.right.valueType == Percent)) {
 			return;
 		}
 
@@ -135,7 +136,8 @@ void setDefaultCompositeWidthType(struct LayoutProperties layoutProperties, enum
 
 void setDefaultCompositeHeightType(struct LayoutProperties layoutProperties, enum ValueType* measuredHeightType) {
 	if (*measuredHeightType == None) {
-		if (layoutProperties.top.valueType == Fixed && layoutProperties.bottom.valueType == Fixed) {
+		if ((layoutProperties.top.valueType == Fixed || layoutProperties.top.valueType == Percent)
+				&& (layoutProperties.bottom.valueType == Fixed || layoutProperties.bottom.valueType == Percent)) {
 			return;
 		}
 
