@@ -17,47 +17,47 @@ using namespace bb::pim::contacts;
 class ContactsPersonProxy: public TiProxy
 {
 public:
-	ContactsPersonProxy();
-	ContactsPersonProxy(bb::pim::contacts::Contact);
-	virtual ~ContactsPersonProxy();
+    ContactsPersonProxy();
+    ContactsPersonProxy(bb::pim::contacts::Contact);
+    virtual ~ContactsPersonProxy();
     virtual void onCreateStaticMembers();
 
-	static ContactsPersonProxy* createPerson(NativeObjectFactory* objectFactory);
+    static ContactsPersonProxy* createPerson(NativeObjectFactory* objectFactory);
 
-	static Handle<Value> createContact(bb::pim::contacts::Contact, const Arguments&);
+    static Handle<Value> createContact(bb::pim::contacts::Contact, const Arguments&);
 
 
     static Handle<Value> createProxy(void* userContext, TiObject*, const Arguments& args)
     {
-    	return TiProxy::createProxy(new ContactsPersonProxy, userContext, args);
+        return TiProxy::createProxy(new ContactsPersonProxy, userContext, args);
     };
 
     static Handle<Value> createPerson(bb::pim::contacts::Contact contact, void* userContext, const Arguments& args)
     {
-    	return TiProxy::createProxy(new ContactsPersonProxy(contact), userContext, args);
+        return TiProxy::createProxy(new ContactsPersonProxy(contact), userContext, args);
     };
 
 
 private:
 
     static void _setAddress(void*, Handle<Value>);
-	static void _setBirthday(void*, Handle<Value>);
-	static void _setCreated(void*, Handle<Value>);
+    static void _setBirthday(void*, Handle<Value>);
+    static void _setCreated(void*, Handle<Value>);
     static void _setDepartment(void*, Handle<Value>);
-	static void _setEmail(void*, Handle<Value>);
+    static void _setEmail(void*, Handle<Value>);
     static void _setFirstName(void*, Handle<Value>);
     static void _setFirstPhonetic(void*, Handle<Value>);
-	static void _setFullName(void*, Handle<Value>);
-	static void _setId(void*, Handle<Value>);
-	static void _setImage(void*, Handle<Value>);
-	static void _setInstantMessage(void*, Handle<Value>);
+    static void _setFullName(void*, Handle<Value>);
+    static void _setId(void*, Handle<Value>);
+    static void _setImage(void*, Handle<Value>);
+    static void _setInstantMessage(void*, Handle<Value>);
     static void _setJobTitle(void*, Handle<Value>);
-	static void _setKind(void*, Handle<Value>);
+    static void _setKind(void*, Handle<Value>);
     static void _setLastName(void*, Handle<Value>);
     static void _setLastPhonetic(void*, Handle<Value>);
     static void _setMiddleName(void*, Handle<Value>);
     static void _setMiddlePhonetic(void*, Handle<Value>);
-	static void _setModified(void*, Handle<Value>);
+    static void _setModified(void*, Handle<Value>);
     static void _setNickname(void*, Handle<Value>);
     static void _setNote(void*, Handle<Value>);
     static void _setOrganization(void*, Handle<Value>);
