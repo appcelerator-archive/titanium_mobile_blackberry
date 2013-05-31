@@ -38,6 +38,7 @@ void ContactsModule::onCreateStaticMembers()
 
     TiGenericFunctionObject::addGenericFunctionToParent(this, "getAllPeople", this, _getAllPeople);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "getPersonByID", this, _getPersonByID);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "getPeopleWithName", this, _getPeopleWithName);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createPerson", this, ContactsPersonProxy::createProxy);
 
 
@@ -54,8 +55,8 @@ Handle<Value> ContactsModule::_getPersonByID(void* userContext, TiObject*, const
     Contact c = ContactService().contactDetails((int)num->Value());
     return ContactsPersonProxy::createPerson(c, userContext, args);
 }
-Handle<Value> ContactsModule::_getAllPeople(void* userContext, TiObject*, const Arguments& args) {
-
+Handle<Value> ContactsModule::_getAllPeople(void* userContext, TiObject*, const Arguments& args)
+{
     bb::pim::contacts::ContactService service;
     bb::pim::contacts::ContactListFilters filter;
 
@@ -69,6 +70,35 @@ Handle<Value> ContactsModule::_getAllPeople(void* userContext, TiObject*, const 
     }
 
     return array;
+}
+Handle<Value> ContactsModule::_getPeopleWithName(void* userContext, TiObject*, const Arguments& args)
+{
+	if(args.Length() > 0 && args[0]->IsString())
+	{
+		Local<String> str = Local<String>::Cast(args[0]);
+		String::Utf8Value _name(str);
+		QString name = QString(*_name);
+
+		bb::pim::contacts::ContactService service;
+		bb::pim::contacts::ContactListFilters filter;
+
+		QList<bb::pim::contacts::Contact> list = service.contacts(filter);
+		Local<Array> array = Array::New(0);
+		int index = 0;
+		for(int i = 0, len = list.size(); i < len; i++) {
+			bb::pim::contacts::Contact contact = list.at(i);
+			if(contact.firstName().contains(name, Qt::CaseInsensitive) ||
+			   contact.lastName().contains(name, Qt::CaseInsensitive) ||
+		       contact.displayName().contains(name, Qt::CaseInsensitive)
+			  ) {
+				array->Set(index, ContactsPersonProxy::createPerson(contact, userContext, args));
+				index++;
+			}
+		}
+		return array;
+	}
+	// Fail gracefullly
+	return Array::New(0);
 }
 
 ContactsModule::~ContactsModule() {
