@@ -125,14 +125,22 @@ var package = function(builder) {
     // blackberry resources start at assets
 	if (fs.existsSync(blackberryRes)) { wrench.rmdirSyncRecursive(blackberryRes); }
 
-	var blackberryResSrc = path.join(resourcesDir, 'blackberry');
-	if (!fs.existsSync(blackberryResSrc) ||
-	    fs.readdirSync(blackberryResSrc).length == 0) {
-		blackberryResSrc = path.join(titaniumBBSdkPath, 'templates', 'app', 'default', 'Resources', 'blackberry');
-	}
+	// Copy BlackBerry resources from SDK (templates).
+	afs.copyDirSyncRecursive(
+		path.join(titaniumBBSdkPath, 'templates', 'app', 'default', 'Resources', 'blackberry'),
+		assetsDir,
+		{ preserve: true, logger: logger.debug }
+	);
 
-	afs.copyDirSyncRecursive(blackberryResSrc,
-	 									path.join(buildDir, 'assets'), { preserve: true, logger: logger.debug });
+	// Copy any BlackBerry resources from the project.
+	var blackberryProjectRes = path.join(resourcesDir, 'blackberry');
+	if (fs.existsSync(blackberryProjectRes)) {
+		afs.copyDirSyncRecursive(
+			blackberryProjectRes,
+			assetsDir,
+			{ preserve: true, logger: logger.debug }
+		);
+	}
 
 	var appPropsFile = path.join(buildDir, 'assets', 'app_properties.ini');
     fs.writeFileSync(appPropsFile, builder.appProps);
