@@ -81,6 +81,10 @@ void ContactsPersonProxy::onCreateStaticMembers() {
 
 }
 
+ContactId ContactsPersonProxy::getPersonId()
+{
+	return contact_.id();
+}
 void ContactsPersonProxy::openConnection() {
     isEditing = true;
 	builder_ = contact_.edit();

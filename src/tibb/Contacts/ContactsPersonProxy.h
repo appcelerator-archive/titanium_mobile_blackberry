@@ -40,7 +40,7 @@ public:
     	contact->closeConnection();
     	return contactProxy;
     };
-
+    ContactId getPersonId();
 
 protected:
 

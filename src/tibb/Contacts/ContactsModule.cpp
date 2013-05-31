@@ -15,6 +15,7 @@
 #include <QObject>
 #include "ContactsModule.h"
 #include "ContactsPersonProxy.h"
+#include <bb/pim/contacts/ContactConsts>
 
 using namespace bb::pim::contacts;
 
@@ -40,7 +41,24 @@ void ContactsModule::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "getPersonByID", this, _getPersonByID);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "getPeopleWithName", this, _getPeopleWithName);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createPerson", this, ContactsPersonProxy::createProxy);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "removePerson", this, _removePerson);
 
+
+}
+
+
+Handle<Value> ContactsModule::_removePerson(void* userContext, TiObject*, const Arguments& args)
+{
+    if (args.Length() > 0 && args[0]->IsObject())
+    {
+        TiObject* itemObject = TiObject::getTiObjectFromJsObject(args[0]);
+    	ContactsPersonProxy *person = static_cast<ContactsPersonProxy*>(itemObject);
+    	bb::pim::contacts::ContactId contactId = person->getPersonId();
+    	bb::pim::contacts::ContactService service;
+    	service.deleteContact(contactId);
+    	return Boolean::New(true);
+    }
+    return Boolean::New(false);
 
 }
 Handle<Value> ContactsModule::_getPersonByID(void* userContext, TiObject*, const Arguments& args) {
