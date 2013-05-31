@@ -89,10 +89,18 @@ private:
     NATIVE_PROPSETGET_CALLBACK* getters_;
 };
 
+static QSettings defaultSettings("app/native/assets/app_properties.ini",
+                                 QSettings::IniFormat);
+
 NativeHTTPClientObject::NativeHTTPClientObject(TiObject* tiObject)
     : NativeProxyObject(tiObject)
 {
     eventHandler_ = NULL;
+
+    QString aguid = defaultSettings.value("aguid").toString();
+	aguid_ = aguid.toAscii();
+
+    request_.setRawHeader("X-Titanium-ID", aguid_);
 }
 
 NativeHTTPClientObject::~NativeHTTPClientObject()
@@ -299,6 +307,7 @@ int NativeHTTPClientObject::clearCookies(const QString& host)
 int NativeHTTPClientObject::setRequestHeader(const QString& header, const QString& value)
 {
 	request_.setRawHeader(header.toAscii(), value.toAscii());
+
 	return NATIVE_ERROR_OK;
 }
 
