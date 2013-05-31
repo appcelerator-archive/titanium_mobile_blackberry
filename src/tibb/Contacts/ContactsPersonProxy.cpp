@@ -9,6 +9,7 @@
 #include "TiGenericFunctionObject.h"
 #include "TiPropertyGetObject.h"
 #include "V8Utils.h"
+#include "TiUtils.h"
 #include "TiBlobObject.h"
 #include <bb/pim/contacts/Contact>
 #include <bb/pim/contacts/ContactConsts>
@@ -261,7 +262,22 @@ void ContactsPersonProxy::_setAddress(void* userContext, Handle<Value> value)
 void ContactsPersonProxy::_setBirthday(void* userContext, Handle<Value> value)
 {
     ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
-    // not implemented yet
+    QDateTime bd;
+    if(TiUtils::getDateTime(value, bd) == NATIVE_ERROR_OK)
+    {
+        QString val = titanium::V8ValueToQString(value);
+        ContactBuilder builder = obj->contact_.edit();
+        ContactAttributeBuilder attribute;
+        attribute.setKind(AttributeKind::Date);
+        attribute.setSubKind(AttributeSubKind::DateBirthday);
+        attribute.setValue(bd);
+        builder.addAttribute(attribute);
+        ContactService().updateContact(obj->contact_);
+    }
+    else
+    {
+        throw Exception::Error(String::New("birthday must be a JS Date object"));
+    }
 }
 void ContactsPersonProxy::_setCreated(void* userContext, Handle<Value> value)
 {
