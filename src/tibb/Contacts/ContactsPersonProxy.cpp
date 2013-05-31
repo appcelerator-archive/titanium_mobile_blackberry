@@ -375,7 +375,6 @@ void ContactsPersonProxy::_setImage(void* userContext, Handle<Value> value)
 void ContactsPersonProxy::_setInstantMessage(void* userContext, Handle<Value> value)
 {
     ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
-    ContactBuilder contactBuilder = obj->contact_.edit();
 
     if(value->IsObject())
     {
@@ -469,7 +468,7 @@ void ContactsPersonProxy::_setJobTitle(void* userContext, Handle<Value> value)
 void ContactsPersonProxy::_setKind(void* userContext, Handle<Value> value)
 {
     ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
-    // not implemented yet
+    // not supported
 }
 void ContactsPersonProxy::_setLastName(void* userContext, Handle<Value> value)
 {
@@ -514,7 +513,57 @@ void ContactsPersonProxy::_setOrganization(void* userContext, Handle<Value> valu
 void ContactsPersonProxy::_setPhone(void* userContext, Handle<Value> value)
 {
     ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
-    // not implemented yet
+
+    if(value->IsObject())
+    {
+        Handle<Object> phoneObject = Handle<Object>::Cast(value);
+        Local<Array> phoneProperties = phoneObject->GetPropertyNames();
+
+        for(int i = 0, len = phoneProperties->Length(); i < len; i++)
+        {
+            Local<String> phoneKey = Local<String>::Cast(phoneProperties->Get(i));
+            Local<Value> phoneValue = phoneObject->Get(phoneKey);
+
+            AttributeSubKind::Type subKind = AttributeSubKind::Other;
+            String::Utf8Value _key(phoneKey);
+            if(QString(*_key).toLower() == "home") {
+                subKind = AttributeSubKind::Home;
+            } else
+            if(QString(*_key).toLower() == "work") {
+                subKind = AttributeSubKind::Work;
+            } else
+            if(QString(*_key).toLower() == "mobile") {
+                subKind = AttributeSubKind::PhoneMobile;
+            }
+
+            if(phoneValue->IsArray())
+            {
+                Local<Array> phones = Local<Array>::Cast(phoneValue);
+                for(int i = 0, len = phones->Length(); i < len; i++)
+                {
+                    Local<Value> currentMessage = phones->Get(Number::New(i));
+                    if(currentMessage->IsString())
+                    {
+                        Local<String> currentMessageString = Local<String>::Cast(currentMessage);
+                        obj->setContactDetails(AttributeKind::Phone, subKind, currentMessageString);
+
+                    }
+                    else
+                    {
+                        // Something goes here, throw an error?
+                    }
+                }
+            }
+            else
+            {
+                // Something goes here, throw an error?
+            }
+         }
+    }
+    else
+    {
+        // Something goes here, throw an error?
+    }
 }
 void ContactsPersonProxy::_setPrefix(void* userContext, Handle<Value> value)
 {
@@ -529,7 +578,7 @@ void ContactsPersonProxy::_setRecordId(void* userContext, Handle<Value> value)
 void ContactsPersonProxy::_setRelatedNames(void* userContext, Handle<Value> value)
 {
     ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
-    // not implemented yet
+    // not supported
 }
 void ContactsPersonProxy::_setSuffix(void* userContext, Handle<Value> value)
 {
@@ -539,7 +588,7 @@ void ContactsPersonProxy::_setSuffix(void* userContext, Handle<Value> value)
 void ContactsPersonProxy::_setUrl(void* userContext, Handle<Value> value)
 {
     ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
-    // not implemented yet
+    // not supported
 }
 
 // GETTERS
