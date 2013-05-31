@@ -18,7 +18,16 @@ namespace titanium {
 class CustomListItem : public AbstractListItem {
 public:
     CustomListItem(Node* rootLayout)
-      : rootLayout_(rootLayout) {
+      : rootLayout_(rootLayout)
+      , root_(new bb::cascades::Container())
+      , content_(NULL) {
+        setRoot(root_);
+    }
+
+    virtual ~CustomListItem() {
+      // Prevent the content from being released with this list item.
+      // The content will be cleaned up once the data model is released.
+      releaseContent();
     }
 
     virtual void setData(QObject* newData) {
@@ -27,12 +36,38 @@ public:
         ListItemData* itemData = static_cast<ListItemData*>(newData);
         NativeControlObject* control = itemData->content();
 
-        setRoot(control->container_);
+        // Skip switching the content if the data object
+        // is already being displayed by this list item.
+        if (control->container_ == content_) {
+          return;
+        }
+
+        // Swap the old content out and replace with the new content.
+        releaseContent();
+        content_ = control->container_;
+        root_->add(content_);
+
+        // Add content into the layout tree for the list view.
         nodeAddChild(rootLayout_, control->layout());
+        Node* root = nodeRequestLayout(control->layout());
+        if (root) {
+          nodeLayout(root);
+        }
     }
 
 private:
+    void releaseContent() {
+      if (!content_) {
+        return;
+      }
+      root_->remove(content_);
+      content_->setParent(0);
+      content_ = NULL;
+    }
+
     Node* rootLayout_;
+    bb::cascades::Container* root_;
+    bb::cascades::Container* content_;
 };
 
 }  // namespace titanium
