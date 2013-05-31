@@ -1,8 +1,8 @@
-/*
- * ContactsContactProxy.cpp
- *
- *  Created on: May 23, 2013
- *      Author: penrique
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2013 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #include "ContactsPersonProxy.h"
@@ -11,7 +11,6 @@
 #include "V8Utils.h"
 #include "TiUtils.h"
 #include "TiBlobObject.h"
-#include <bb/pim/contacts/Contact>
 #include <bb/pim/contacts/ContactConsts>
 #include <bb/pim/contacts/ContactService>
 #include <bb/pim/contacts/ContactBuilder>
@@ -19,9 +18,8 @@
 #include <bb/pim/contacts/ContactPostalAddress>
 #include <bb/pim/contacts/ContactAttributeBuilder>
 #include <bb/pim/contacts/ContactPostalAddressBuilder>
-#include <QFile>
 #include <QtAlgorithms>
-#include <iostream>
+#include <QFile>
 
 using namespace bb::pim::contacts;
 

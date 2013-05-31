@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QDateTime>
 #include "TiObject.h"
+
 class TiUtils
 {
 public:

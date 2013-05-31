@@ -1,15 +1,14 @@
-/*
- * ContactsContactProxy.h
- *
- *  Created on: May 23, 2013
- *      Author: penrique
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2013 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #ifndef CONTACTSCONTACTPROXY_H_
 #define CONTACTSCONTACTPROXY_H_
 
 #include "TiProxy.h"
-
 #include <bb/pim/contacts/Contact>
 
 using namespace bb::pim::contacts;
