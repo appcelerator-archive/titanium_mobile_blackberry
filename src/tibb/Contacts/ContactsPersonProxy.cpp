@@ -128,6 +128,7 @@ void ContactsPersonProxy::setContactDetails(AttributeKind::Type kind, AttributeS
 }
 
 // SETTERS
+
 void ContactsPersonProxy::_setAddress(void* userContext, Handle<Value> value)
 {
     ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
@@ -292,7 +293,59 @@ void ContactsPersonProxy::_setDepartment(void* userContext, Handle<Value> value)
 void ContactsPersonProxy::_setEmail(void* userContext, Handle<Value> value)
 {
     ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
-    // not implemented yet
+
+    if(value->IsObject())
+    {
+        Handle<Object> emailObject = Handle<Object>::Cast(value);
+        Local<Array> emailProperties = emailObject->GetPropertyNames();
+        for(int i = 0, len = emailProperties->Length(); i < len; i++)
+        {
+            Local<String> allEmailsKey = Local<String>::Cast(emailProperties->Get(i));
+            Local<Value> allEmailsValue = emailObject->Get(allEmailsKey);
+
+            AttributeSubKind::Type subKind = AttributeSubKind::Other;
+            String::Utf8Value _key(allEmailsKey);
+            if(QString(*_key).toLower() == "work")
+            {
+                subKind = AttributeSubKind::Work;
+            }
+            else
+            if(QString(*_key).toLower() == "personal")
+            {
+                subKind = AttributeSubKind::Personal;
+            }
+            else
+            if(QString(*_key).toLower() == "home")
+            {
+                subKind = AttributeSubKind::Home;
+            }
+
+            if(allEmailsValue->IsArray())
+            {
+                Local<Array> emails = Local<Array>::Cast(allEmailsValue);
+                for(int i = 0, len = emails->Length(); i < len; i++)
+                {
+                	Local<Value> emailValue = emails->Get(Number::New(i));
+                	if(emailValue->IsString() || emailValue->IsNumber())
+                	{
+                		obj->setContactDetails(AttributeKind::Email, subKind, emailValue);
+                	}
+                	else
+                	{
+                        // Something goes here, throw an error?
+                	}
+                }
+            }
+            else
+            {
+                // Something goes here, throw an error?
+            }
+        }
+    }
+    else
+    {
+        // Something goes here, throw an error?
+    }
 }
 void ContactsPersonProxy::_setFirstName(void* userContext, Handle<Value> value)
 {
