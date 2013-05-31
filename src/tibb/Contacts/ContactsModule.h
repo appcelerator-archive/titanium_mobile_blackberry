@@ -13,14 +13,14 @@ typedef TiProxy* (*CREATEOBJECTCALLBACK)(NativeObjectFactory*);
 
 class ContactsModule: public TiProxy {
 public:
-	ContactsModule(NativeObjectFactory* objectFactory);
-	virtual ~ContactsModule();
-	virtual void onCreateStaticMembers();
+    ContactsModule(NativeObjectFactory* objectFactory);
+    virtual ~ContactsModule();
+    virtual void onCreateStaticMembers();
     static void addObjectToParent(TiObject* parent, NativeObjectFactory* objectFactory);
 
-	static Handle<Value> _createPerson(void*, TiObject*, const Arguments& args);
-	static Handle<Value> _getAllPeople(void*, TiObject*, const Arguments& args);
-	static Handle<Value> _getPersonByID(void*, TiObject*, const Arguments& args);
+    static Handle<Value> _createPerson(void*, TiObject*, const Arguments& args);
+    static Handle<Value> _getAllPeople(void*, TiObject*, const Arguments& args);
+    static Handle<Value> _getPersonByID(void*, TiObject*, const Arguments& args);
 
 };
 
