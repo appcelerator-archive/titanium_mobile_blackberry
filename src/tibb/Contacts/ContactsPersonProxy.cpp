@@ -13,7 +13,6 @@
 #include "TiBlobObject.h"
 #include <bb/pim/contacts/ContactConsts>
 #include <bb/pim/contacts/ContactService>
-#include <bb/pim/contacts/ContactBuilder>
 #include <bb/pim/contacts/ContactPhoto>
 #include <bb/pim/contacts/ContactPostalAddress>
 #include <bb/pim/contacts/ContactAttributeBuilder>
@@ -28,19 +27,21 @@ ContactsPersonProxy::ContactsPersonProxy() :
 {
     ContactService service;
     ContactBuilder builder;
+    isEditing = false;
     contact_ = service.createContact(builder, false);
+
 }
 ContactsPersonProxy::ContactsPersonProxy(Contact contact) :
         TiProxy()
 {
+	isEditing = false;
     contact_ = contact;
 }
 ContactsPersonProxy::~ContactsPersonProxy()
 {
     // TODO Auto-generated destructor stub
 }
-ContactsPersonProxy* ContactsPersonProxy::createPerson(
-        NativeObjectFactory* objectFactory) {
+ContactsPersonProxy* ContactsPersonProxy::createPerson(NativeObjectFactory* objectFactory) {
     ContactsPersonProxy* obj = new ContactsPersonProxy;
     obj->setNativeObjectFactory(objectFactory);
     obj->initializeTiObject(NULL);
@@ -80,6 +81,15 @@ void ContactsPersonProxy::onCreateStaticMembers() {
 
 }
 
+void ContactsPersonProxy::openConnection() {
+    isEditing = true;
+	builder_ = contact_.edit();
+}
+void ContactsPersonProxy::closeConnection() {
+	ContactService().updateContact(contact_);
+	isEditing = false;
+}
+
 Contact ContactsPersonProxy::getFullContact()
 {
     return ContactService().contactDetails(contact_.id());
@@ -116,13 +126,17 @@ Handle<Value> ContactsPersonProxy::getKind(AttributeKind::Type kind)
 void ContactsPersonProxy::setContactDetails(AttributeKind::Type kind, AttributeSubKind::Type subKind, Handle<Value> value)
 {
     QString val = titanium::V8ValueToQString(value);
-    ContactBuilder builder = contact_.edit();
+    if(!isEditing) {
+    	builder_ = contact_.edit();
+    }
     ContactAttributeBuilder attribute;
     attribute.setKind(kind);
     attribute.setSubKind(subKind);
     attribute.setValue(val);
-    builder.addAttribute(attribute);
-    ContactService().updateContact(contact_);
+    builder_.addAttribute(attribute);
+    if(!isEditing) {
+    	ContactService().updateContact(contact_);
+    }
 }
 
 // SETTERS
@@ -130,7 +144,9 @@ void ContactsPersonProxy::setContactDetails(AttributeKind::Type kind, AttributeS
 void ContactsPersonProxy::_setAddress(void* userContext, Handle<Value> value)
 {
     ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
-    ContactBuilder contactBuilder = obj->contact_.edit();
+    if(!obj->isEditing) {
+    	obj->builder_ = obj->contact_.edit();
+    }
 
     // The value passed in *MUST* be an object containing arrays of objects
     // http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.Contacts.Person-property-address
@@ -237,7 +253,7 @@ void ContactsPersonProxy::_setAddress(void* userContext, Handle<Value> value)
                             }
                         }
                         // Once finished with an address, add it to the contact
-                        contactBuilder.addPostalAddress(addressBuilder);
+                        obj->builder_.addPostalAddress(addressBuilder);
                     }
                     else
                     {
@@ -256,7 +272,9 @@ void ContactsPersonProxy::_setAddress(void* userContext, Handle<Value> value)
         // Something goes here, throw an error?
     }
     // Once done, update the contact
-    ContactService().updateContact(obj->contact_);
+    if(!obj->isEditing) {
+    	ContactService().updateContact(obj->contact_);
+    }
 }
 void ContactsPersonProxy::_setBirthday(void* userContext, Handle<Value> value)
 {
@@ -265,17 +283,22 @@ void ContactsPersonProxy::_setBirthday(void* userContext, Handle<Value> value)
     if(TiUtils::getDateTime(value, bd) == NATIVE_ERROR_OK)
     {
         QString val = titanium::V8ValueToQString(value);
-        ContactBuilder builder = obj->contact_.edit();
+        if(!obj->isEditing) {
+        	obj->builder_ = obj->contact_.edit();
+    	}
         ContactAttributeBuilder attribute;
         attribute.setKind(AttributeKind::Date);
         attribute.setSubKind(AttributeSubKind::DateBirthday);
         attribute.setValue(bd);
-        builder.addAttribute(attribute);
-        ContactService().updateContact(obj->contact_);
+        obj->builder_.addAttribute(attribute);
+        if(!obj->isEditing) {
+        	ContactService().updateContact(obj->contact_);
+        }
+
     }
     else
     {
-        throw Exception::Error(String::New("birthday must be a JS Date object"));
+    	std::cout << "[WARN] Birthday MUST be a Date object" << std::endl;;
     }
 }
 void ContactsPersonProxy::_setCreated(void* userContext, Handle<Value> value)

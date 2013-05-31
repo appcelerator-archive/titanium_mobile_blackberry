@@ -63,12 +63,10 @@ Handle<Value> ContactsModule::_getAllPeople(void* userContext, TiObject*, const 
 
     Local<Array> array = Array::New(list.size());
 
-    std::cout << "Creating array with " << list.size() << " items" << std::endl;
     for(int i = 0, len = list.size(); i < len; i++) {
         bb::pim::contacts::Contact contact = list.at(i);
         array->Set(i, ContactsPersonProxy::createPerson(contact,userContext, args));
     }
-    std::cout << "End loop" << std::endl;
 
     return array;
 }

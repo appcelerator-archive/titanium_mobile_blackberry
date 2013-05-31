@@ -10,6 +10,8 @@
 
 #include "TiProxy.h"
 #include <bb/pim/contacts/Contact>
+#include <bb/pim/contacts/ContactBuilder>
+#include <iostream>
 
 using namespace bb::pim::contacts;
 
@@ -21,23 +23,30 @@ public:
     virtual ~ContactsPersonProxy();
     virtual void onCreateStaticMembers();
 
+    void openConnection();
+    void closeConnection();
+
     static ContactsPersonProxy* createPerson(NativeObjectFactory* objectFactory);
-
     static Handle<Value> createContact(bb::pim::contacts::Contact, const Arguments&);
-
-
-    static Handle<Value> createProxy(void* userContext, TiObject*, const Arguments& args)
-    {
-        return TiProxy::createProxy(new ContactsPersonProxy, userContext, args);
-    };
-
     static Handle<Value> createPerson(bb::pim::contacts::Contact contact, void* userContext, const Arguments& args)
     {
         return TiProxy::createProxy(new ContactsPersonProxy(contact), userContext, args);
     };
+    static Handle<Value> createProxy(void* userContext, TiObject*, const Arguments& args)
+    {
+    	ContactsPersonProxy *contact = new ContactsPersonProxy();
+    	contact->openConnection();
+    	Handle<Value> contactProxy = TiProxy::createProxy(contact, userContext, args);
+    	contact->closeConnection();
+    	return contactProxy;
+    };
+
+
+protected:
 
 
 private:
+
 
     static void _setAddress(void*, Handle<Value>);
     static void _setBirthday(void*, Handle<Value>);
@@ -95,11 +104,13 @@ private:
     static Handle<Value> _getSuffix(void*);
     static Handle<Value> _getUrl(void*);
 
+    bool isEditing;
     void setContactDetails(AttributeKind::Type, AttributeSubKind::Type, Handle<Value>);
     Handle<Value> getSubkind(bb::pim::contacts::AttributeSubKind::Type);
     Handle<Value> getKind(bb::pim::contacts::AttributeKind::Type);
     bb::pim::contacts::Contact getFullContact();
     bb::pim::contacts::Contact contact_;
+    bb::pim::contacts::ContactBuilder builder_;
 };
 
 #endif /* CONTACTSCONTACTPROXY_H_ */
