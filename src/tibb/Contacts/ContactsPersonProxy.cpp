@@ -325,15 +325,15 @@ void ContactsPersonProxy::_setEmail(void* userContext, Handle<Value> value)
                 Local<Array> emails = Local<Array>::Cast(allEmailsValue);
                 for(int i = 0, len = emails->Length(); i < len; i++)
                 {
-                	Local<Value> emailValue = emails->Get(Number::New(i));
-                	if(emailValue->IsString() || emailValue->IsNumber())
-                	{
-                		obj->setContactDetails(AttributeKind::Email, subKind, emailValue);
-                	}
-                	else
-                	{
+                    Local<Value> emailValue = emails->Get(Number::New(i));
+                    if(emailValue->IsString() || emailValue->IsNumber())
+                    {
+                         obj->setContactDetails(AttributeKind::Email, subKind, emailValue);
+                    }
+                    else
+                    {
                         // Something goes here, throw an error?
-                	}
+                    }
                 }
             }
             else
@@ -375,7 +375,91 @@ void ContactsPersonProxy::_setImage(void* userContext, Handle<Value> value)
 void ContactsPersonProxy::_setInstantMessage(void* userContext, Handle<Value> value)
 {
     ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
-    // not implemented yet
+    ContactBuilder contactBuilder = obj->contact_.edit();
+
+    if(value->IsObject())
+    {
+        Handle<Object> messageObject = Handle<Object>::Cast(value);
+        Local<Array> messageProperties = messageObject->GetPropertyNames();
+
+        for(int i = 0, len = messageProperties->Length(); i < len; i++)
+        {
+            Local<String> messageKey = Local<String>::Cast(messageProperties->Get(i));
+            Local<Value> messageValue = messageObject->Get(messageKey);
+
+            AttributeSubKind::Type subKind = AttributeSubKind::Other;
+            String::Utf8Value _key(messageKey);
+            if(QString(*_key).toLower() == "aim") {
+                subKind = AttributeSubKind::InstantMessagingAim;
+            } else
+            if(QString(*_key).toLower() == "aliwangwang") {
+                subKind = AttributeSubKind::InstantMessagingAliwangwang;
+            } else
+            if(QString(*_key).toLower() == "bbmPin") {
+                subKind = AttributeSubKind::InstantMessagingBbmPin;
+            } else
+            if(QString(*_key).toLower() == "googleTalk") {
+                subKind = AttributeSubKind::InstantMessagingGoogleTalk;
+            } else
+            if(QString(*_key).toLower() == "icq") {
+                subKind = AttributeSubKind::InstantMessagingIcq;
+            } else
+            if(QString(*_key).toLower() == "irc") {
+                subKind = AttributeSubKind::InstantMessagingIrc;
+            } else
+            if(QString(*_key).toLower() == "jabber") {
+                subKind = AttributeSubKind::InstantMessagingJabber;
+            } else
+            if(QString(*_key).toLower() == "msLcs") {
+                subKind = AttributeSubKind::InstantMessagingMsLcs;
+            } else
+            if(QString(*_key).toLower() == "msn") {
+                subKind = AttributeSubKind::InstantMessagingMsn;
+            } else
+            if(QString(*_key).toLower() == "qq") {
+                subKind = AttributeSubKind::InstantMessagingQq;
+            } else
+            if(QString(*_key).toLower() == "sametime") {
+                subKind = AttributeSubKind::InstantMessagingSametime;
+            } else
+            if(QString(*_key).toLower() == "skype") {
+                subKind = AttributeSubKind::InstantMessagingSkype;
+            } else
+            if(QString(*_key).toLower() == "yahooMessenger") {
+                subKind = AttributeSubKind::InstantMessagingYahooMessenger;
+            } else
+            if(QString(*_key).toLower() == "yahooMessengerJapan") {
+                subKind = AttributeSubKind::InstantMessagingYahooMessengerJapan;
+            }
+
+            if(messageValue->IsArray())
+            {
+                Local<Array> messages = Local<Array>::Cast(messageValue);
+                for(int i = 0, len = messages->Length(); i < len; i++)
+                {
+                    Local<Value> currentMessage = messages->Get(Number::New(i));
+                    if(currentMessage->IsString())
+                    {
+                        Local<String> currentMessageString = Local<String>::Cast(currentMessage);
+                        obj->setContactDetails(AttributeKind::InstantMessaging, subKind, currentMessageString);
+
+                    }
+                    else
+                    {
+                        // Something goes here, throw an error?
+                    }
+                }
+            }
+            else
+            {
+                // Something goes here, throw an error?
+            }
+         }
+    }
+    else
+    {
+        // Something goes here, throw an error?
+    }
 }
 void ContactsPersonProxy::_setJobTitle(void* userContext, Handle<Value> value)
 {
