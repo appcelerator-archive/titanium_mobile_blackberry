@@ -194,9 +194,9 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
 
     	// in Cascades controls like labels and buttons there is no way to know the size of the control, and
     	// even if the container is larger then the control the actually control surface is based on the size
-    	// calculated during the Cascades rendering phase, to know the size os will calls back the size during the
-    	// updateLayout method, the deferRendering boolean allows the Titanium layout engine to hold off setting the
-    	// control size and any parents sized to content until rendering is complete,
+    	// calculated during the Cascades rendering phase, to know the size the os calls back the size during the
+    	// updateLayout() method, the Defer type allows the Titanium layout engine to hold off setting the
+    	// control size and any parents sized to content until rendering is complete
     	layoutNode_.properties.width.valueType = Defer;
     	layoutNode_.properties.height.valueType = Defer;
     }
