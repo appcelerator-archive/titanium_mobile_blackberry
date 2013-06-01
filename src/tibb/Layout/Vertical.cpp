@@ -104,8 +104,9 @@ struct ComputedSize doVerticalLayout(std::vector<struct Element*> children, doub
 }
 
 void setDefaultVerticalWidthType(struct LayoutProperties layoutProperties, enum ValueType* measuredWidthType) {
-	if (*measuredWidthType != Fixed) {
-		if (layoutProperties.left.valueType == Fixed && layoutProperties.right.valueType == Fixed) {
+	if (*measuredWidthType == None) {
+		if ((layoutProperties.left.valueType == Fixed || layoutProperties.left.valueType == Percent) &&
+				(layoutProperties.right.valueType == Fixed || layoutProperties.right.valueType == Percent)) {
 			return;
 		}
 
@@ -114,7 +115,7 @@ void setDefaultVerticalWidthType(struct LayoutProperties layoutProperties, enum 
 }
 
 void setDefaultVerticalHeightType(struct LayoutProperties layoutProperties, enum ValueType* measuredHeightType) {
-	if (*measuredHeightType != Fixed) {
+	if (*measuredHeightType == None) {
 		*measuredHeightType = layoutProperties.defaultHeightType;
 	}
 }
@@ -141,8 +142,8 @@ void measureNodeForVerticalLayout(struct LayoutProperties layoutProperties, stru
 	enum ValueType minHeightType = layoutProperties.minHeight.valueType;
 	double minHeightValue = layoutProperties.minHeight.value;
 
-	//setDefaultVerticalWidthType(layoutProperties, &widthType);
-	//setDefaultVerticalHeightType(layoutProperties, &heightType);
+	setDefaultVerticalWidthType(layoutProperties, &widthType);
+	setDefaultVerticalHeightType(layoutProperties, &heightType);
 
 	double x1 = 0;
 	double x2 = 0;
