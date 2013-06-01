@@ -142,7 +142,8 @@ public slots:
 
 #include "NativeControlObject.moc"
 
-static void onPostLayout(struct Node* node) {
+static void onPostLayout(struct Node* node)
+{
     NativeControlObject* native = static_cast<NativeControlObject*>(node->data);
     Control* control = static_cast<Control*>(native->getNativeHandle());
     if (!control) {
@@ -150,20 +151,11 @@ static void onPostLayout(struct Node* node) {
       return;
     }
 
-    // Do not allow a control that has not had it's value type set do a control resize
-	//if (node->properties.width.valueType == -1 ||  node->properties.height.valueType == -1) {
-	//	return;
-	//}
-
-    //if (node->properties.width.valueType == Defer || node->properties.height.valueType == Defer) {
-    //	return;
-   // }
-
     float width = node->element._measuredWidth,
           height = node->element._measuredHeight;
 
-    // do not allow a control with Ti.UI.SIZE to go to 0 or the OS will not call back deferred sizes as the controls are hidden
-	if ((/*(node->properties.width.valueType == Size &&*/ width == 0) || (/*node->properties.height.valueType == Size &&*/ height == 0)) {
+    // do not allow a control to go to 0 or the OS will not render control and will stop call back os deferred sizes
+	if (width == 0 || height == 0) {
 		return;
 	}
 
@@ -199,6 +191,14 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
         	objType == N_TYPE_ACTIVITYINDICATOR) {
     	layoutNode_.properties.defaultWidthType = Size;
     	layoutNode_.properties.defaultHeightType  = Size;
+
+    	// in Cascades controls like labels and buttons there is no way to know the size of the control, and
+    	// even if the container is larger then the control the actually control surface is based on the size
+    	// calculated during the Cascades rendering phase, to know the size os will calls back the size during the
+    	// updateLayout method, the deferRendering boolean allows the Titanium layout engine to hold off setting the
+    	// control size and any parents sized to content until rendering is complete,
+    	layoutNode_.properties.width.valueType = Defer;
+    	layoutNode_.properties.height.valueType = Defer;
     }
 
     objType_ = objType;
@@ -235,7 +235,7 @@ void NativeControlObject::updateLayout(QRectF rect)
     bool requestLayout = false;
     rect_ = rect;
 
-    if (rect.width() != 0 && (layoutNode_.properties.width.valueType == -1 || layoutNode_.properties.width.valueType == Size)) {
+    if (layoutNode_.properties.width.valueType == Defer && rect.width() != 0) {
     	// do not set width if it will be calculated from left and right properties
     	if (!((layoutNode_.properties.left.valueType == Fixed || layoutNode_.properties.left.valueType == Percent) &&
     			(layoutNode_.properties.right.valueType == Fixed || layoutNode_.properties.right.valueType == Percent))) {
@@ -245,7 +245,7 @@ void NativeControlObject::updateLayout(QRectF rect)
     	}
     }
 
-    if (rect.height() != 0 && (layoutNode_.properties.height.valueType == -1 || layoutNode_.properties.height.valueType == Size)) {
+    if (layoutNode_.properties.height.valueType == Defer && rect.height() != 0) {
     	// do not set height if it will be calculated from top and bottom properties
     	if (!((layoutNode_.properties.top.valueType == Fixed || layoutNode_.properties.top.valueType == Percent) &&
     			(layoutNode_.properties.bottom.valueType == Fixed || layoutNode_.properties.bottom.valueType == Percent))) {

@@ -136,8 +136,8 @@ void setDefaultCompositeWidthType(struct LayoutProperties layoutProperties, enum
 
 void setDefaultCompositeHeightType(struct LayoutProperties layoutProperties, enum ValueType* measuredHeightType) {
 	if (*measuredHeightType == None) {
-		if ((layoutProperties.top.valueType == Fixed || layoutProperties.top.valueType == Percent)
-				&& (layoutProperties.bottom.valueType == Fixed || layoutProperties.bottom.valueType == Percent)) {
+		if ((layoutProperties.top.valueType == Fixed || layoutProperties.top.valueType == Percent) &&
+				 (layoutProperties.bottom.valueType == Fixed || layoutProperties.bottom.valueType == Percent)) {
 			return;
 		}
 
