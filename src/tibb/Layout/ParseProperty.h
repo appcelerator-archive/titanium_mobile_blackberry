@@ -37,6 +37,8 @@ struct LayoutProperties {
     struct layoutProp minHeight;
     struct layoutProp centerX;
     struct layoutProp centerY;
+    enum ValueType defaultWidthType;
+    enum ValueType defaultHeightType;
 };
 
 void layoutPropertiesInitialize(struct LayoutProperties*);
