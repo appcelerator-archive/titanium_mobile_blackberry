@@ -88,106 +88,128 @@ bool TiTitaniumObject::canAddMembers() const
     return false;
 }
 
+static Handle<Value> includeJavaScript(string id, string parentFolder, bool* error) {
+    // CommonJS path rules
+    if (id.find("/") == 0) {
+        id.replace(id.find("/"), std::string("/").length(), rootFolder);
+    }
+    else if (id.find("./") == 0) {
+        id.replace(id.find("./"), std::string("./").length(), parentFolder);
+    }
+    else if (id.find("../") == 0) {
+        // count ../../../ in id and strip off back of parentFolder
+        int count = 0;
+        size_t idx = 0;
+        size_t pos = 0;
+        while (true) {
+            idx = id.find("../", pos);
+            if (idx == std::string::npos) {
+                break;
+            } else {
+                pos = idx + 3;
+                count++;
+            }
+        }
+
+        // strip leading ../../ off module id
+        id = id.substr(pos);
+
+        // strip paths off the parent folder
+        idx = 0;
+        pos = parentFolder.size();
+        for (int i = 0; i < count; i++) {
+            idx = parentFolder.find_last_of("/", pos);
+            pos = idx - 1;
+        }
+
+        if (idx == std::string::npos) {
+            *error = true;
+            return ThrowException(String::New("Unable to find module"));
+        }
+
+        parentFolder = parentFolder.substr(0, idx + 1);
+
+        id = parentFolder + id;
+    }
+    else {
+        string tempId = rootFolder + id;
+
+        ifstream ifs((tempId).c_str());
+        if (!ifs) {
+            id = parentFolder + id;
+        }
+        else {
+            id = rootFolder + id;
+        }
+    }
+
+    string filename = id;
+
+    string javascript;
+    {
+        ifstream ifs((filename).c_str());
+        if (!ifs)
+        {
+            *error = true;
+            Local<Value> taggedMessage = String::New((string(Ti::Msg::No_such_native_module) + " " + id).c_str());
+            return ThrowException(taggedMessage);
+        }
+        getline(ifs, javascript, string::traits_type::to_char_type(string::traits_type::eof()));
+        ifs.close();
+    }
+
+    // wrap the module
+    {
+        size_t idx = filename.find_last_of("/");
+        parentFolder = filename.substr(0, idx + 1);
+        static const string preWrap = "Ti.include = function () { Ti.globalInclude(Array.prototype.slice.call(arguments), '" + parentFolder + "')};\n";
+        javascript = preWrap + javascript;
+    }
+
+    TryCatch tryCatch;
+    Handle<Script> compiledScript = Script::Compile(String::New(javascript.c_str()), String::New(filename.c_str()));
+    if (compiledScript.IsEmpty())
+    {
+        *error = true;
+        DisplayExceptionLine(tryCatch);
+        return tryCatch.ReThrow();
+    }
+
+    Local<Value> result = compiledScript->Run();
+    if (result.IsEmpty())
+    {
+        *error = true;
+        return tryCatch.ReThrow();
+    }
+
+    return result;
+}
+
 Handle<Value> TiTitaniumObject::_globalInclude(void*, TiObject*, const Arguments& args)
 {
-	if (args.Length() < 2)
-	{
-		return ThrowException(String::New(Ti::Msg::Missing_argument));
-	}
+    if (!args.Length()) {
+        return Undefined();
+    }
 
-	string id = *String::Utf8Value(args[0]->ToString());
+    bool error = false;
 
-	string parentFolder = *String::Utf8Value(args[1]->ToString());
-
-	// CommonJS path rules
-	if (id.find("/") == 0) {
-		id.replace(id.find("/"), std::string("/").length(), rootFolder);
-	}
-	else if (id.find("./") == 0) {
-		id.replace(id.find("./"), std::string("./").length(), parentFolder);
-	}
-	else if (id.find("../") == 0) {
-		// count ../../../ in id and strip off back of parentFolder
-		int count = 0;
-		size_t idx = 0;
-		size_t pos = 0;
-		while (true) {
-			idx = id.find("../", pos);
-			if (idx == std::string::npos) {
-				break;
-			} else {
-				pos = idx + 3;
-				count++;
-			}
-		}
-
-		// strip leading ../../ off module id
-		id = id.substr(pos);
-
-		// strip paths off the parent folder
-		idx = 0;
-		pos = parentFolder.size();
-		for (int i = 0; i < count; i++) {
-			idx = parentFolder.find_last_of("/", pos);
-			pos = idx - 1;
-		}
-
-		if (idx == std::string::npos) {
-			return ThrowException(String::New("Unable to find module"));
-		}
-
-		parentFolder = parentFolder.substr(0, idx + 1);
-
-		id = parentFolder + id;
-	}
-	else {
-		string tempId = rootFolder + id;
-
-		ifstream ifs((tempId).c_str());
-		if (!ifs) {
-			id = parentFolder + id;
-		}
-		else {
-			id = rootFolder + id;
-		}
-	}
-
-	string filename = id;
-
-	string javascript;
-	{
-		ifstream ifs((filename).c_str());
-		if (!ifs)
-		{
-			Local<Value> taggedMessage = String::New((string(Ti::Msg::No_such_native_module) + " " + id).c_str());
-			return ThrowException(taggedMessage);
-		}
-		getline(ifs, javascript, string::traits_type::to_char_type(string::traits_type::eof()));
-		ifs.close();
-	}
-
-	// wrap the module
-	{
-		size_t idx = filename.find_last_of("/");
-		parentFolder = filename.substr(0, idx + 1);
-		static const string preWrap = "Ti.include = function (id) { Ti.globalInclude(id, '" + parentFolder + "')};\n";
-		javascript = preWrap + javascript;
-	}
-
-	TryCatch tryCatch;
-	Handle<Script> compiledScript = Script::Compile(String::New(javascript.c_str()), String::New(filename.c_str()));
-	if (compiledScript.IsEmpty())
-	{
-		DisplayExceptionLine(tryCatch);
-		return tryCatch.ReThrow();
-	}
-
-	Persistent<Value> result = Persistent<Value>::New(compiledScript->Run());
-	if (result.IsEmpty())
-	{
-		return tryCatch.ReThrow();
-	}
-
+    if (args[0]->IsArray()) {
+        Local<Array> ids = Local<Array>::Cast(args[0]);
+        uint32_t count = ids->Length();
+        string parentFolder = *String::Utf8Value(args[1]);
+        for (uint32_t i = 0; i < count; i++) {
+            string id = *String::Utf8Value(ids->Get(i));
+            Handle<Value> result = includeJavaScript(id, parentFolder, &error);
+            if (error) return result;
+        }
+    }
+    else {
+        for (uint32_t i = 0; i < args.Length(); i++) {
+            string id = *String::Utf8Value(args[i]);
+            Handle<Value> result = includeJavaScript(id, rootFolder, &error);
+            if (error) return result;
+        }
+    }
 
     return Undefined();
 }
