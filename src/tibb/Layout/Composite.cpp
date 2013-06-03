@@ -123,6 +123,28 @@ struct ComputedSize doCompositeLayout(std::vector<struct Element*> children, dou
 	return computedSize;
 }
 
+void setDefaultCompositeWidthType(struct LayoutProperties layoutProperties, enum ValueType* measuredWidthType) {
+	if (*measuredWidthType == None) {
+		if ((layoutProperties.left.valueType == Fixed || layoutProperties.left.valueType == Percent) &&
+				(layoutProperties.right.valueType == Fixed || layoutProperties.right.valueType == Percent)) {
+			return;
+		}
+
+		*measuredWidthType = layoutProperties.defaultWidthType;
+	}
+}
+
+void setDefaultCompositeHeightType(struct LayoutProperties layoutProperties, enum ValueType* measuredHeightType) {
+	if (*measuredHeightType == None) {
+		if ((layoutProperties.top.valueType == Fixed || layoutProperties.top.valueType == Percent) &&
+				 (layoutProperties.bottom.valueType == Fixed || layoutProperties.bottom.valueType == Percent)) {
+			return;
+		}
+
+		*measuredHeightType = layoutProperties.defaultHeightType;
+	}
+}
+
 void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, struct Element* element) {
 	enum ValueType widthType = layoutProperties.width.valueType;
 	double widthValue = layoutProperties.width.value;
@@ -145,14 +167,18 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
 	enum ValueType minHeightType = layoutProperties.minHeight.valueType;
 	double minHeightValue = layoutProperties.minHeight.value;
 
+	setDefaultCompositeWidthType(layoutProperties, &widthType);
+	setDefaultCompositeHeightType(layoutProperties, &heightType);
+
 	double x1 = 0;
 	double x2 = 0;
 	double x3 = 0;
+
 	if (widthType == Size) {
 		x1 = x2 = NAN;
 	} else if (widthType == Fill) {
 		x1 = 1;
-		if (widthType == Percent) {
+		if (leftType == Percent) {
 			x1 -= leftValue;
 		} else if (widthType == Fixed) {
 			x2 = -leftValue;
@@ -165,7 +191,7 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
 		x1 = widthValue;
 	} else if (widthType == Fixed) {
 		x2 = widthValue;
-	} else if (widthType == Percent) {
+	} else if (leftType == Percent) {
 		if (centerXType == Percent) {
 			x1 = 2 * (centerXValue - leftValue);
 		} else if (centerXType == Fixed) {
@@ -177,7 +203,7 @@ void measureNodeForCompositeLayout(struct LayoutProperties layoutProperties, str
 			x1 = 1 - leftValue;
 			x2 = -rightValue;
 		}
-	} else if (widthType == Fixed) {
+	} else if (leftType == Fixed) {
 		if (centerXType == Percent) {
 			x1 = 2 * centerXValue;
 			x2 = -2 * leftValue;
