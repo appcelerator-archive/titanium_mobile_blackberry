@@ -25,6 +25,10 @@ void nodeSetLayoutType(struct Node* node, const char* type) {
 }
 
 void nodeAddChild(struct Node* parent, struct Node* child) {
+    if (child->parent == parent) {
+      return;
+    }
+
     child->parent = parent;
     if (parent->lastChild) {
         child->prev = parent->lastChild;

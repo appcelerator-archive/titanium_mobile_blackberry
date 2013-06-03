@@ -9,24 +9,26 @@
 
 using namespace bb::cascades;
 
-BasicListItem::BasicListItem()
-    : data_(NULL) {
+namespace titanium {
+
+BasicListItem::BasicListItem() {
     item_ = new StandardListItem();
     setRoot(item_);
 }
 
-void BasicListItem::setData(QObject* data) {
-    updateImage(data->property("leftImage").value<QUrl>());
-    updateTitle(data->property("title").toString());
+void BasicListItem::setData(QObject* newData) {
+    updateImage(newData->property("leftImage").value<QUrl>());
+    updateTitle(newData->property("title").toString());
 
-    connect(data, SIGNAL(leftImageChanged(const QUrl&)), SLOT(updateImage(const QUrl&)));
-    connect(data, SIGNAL(titleChanged(const QString&)), SLOT(updateTitle(const QString&)));
+    connect(newData, SIGNAL(leftImageChanged(const QUrl&)), SLOT(updateImage(const QUrl&)));
+    connect(newData, SIGNAL(titleChanged(const QString&)), SLOT(updateTitle(const QString&)));
 
-    if (data_) {
+    if (data()) {
         // Remove any signals from the previous data object.
-        data_->disconnect(this);
+        data()->disconnect(this);
     }
-    data_ = data;
+
+    AbstractListItem::setData(newData);
 }
 
 void BasicListItem::updateImage(const QUrl& url) {
@@ -40,4 +42,6 @@ void BasicListItem::updateImage(const QUrl& url) {
 void BasicListItem::updateTitle(const QString& title) {
     item_->setTitle(title);
 }
+
+}  // namespace titanium
 

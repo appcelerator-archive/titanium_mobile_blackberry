@@ -13,6 +13,7 @@
 #include "NativeListItemObject.h"
 #include "NativeListViewObject.h"
 #include "TableView/BasicListItem.h"
+#include "TableView/CustomListItem.h"
 #include "TableView/ListItemData.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
@@ -20,6 +21,7 @@
 #include "TiUITableViewRow.h"
 
 using namespace bb::cascades;
+using namespace titanium;
 
 NativeListViewObject::NativeListViewObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_LIST_VIEW)
@@ -41,7 +43,11 @@ int NativeListViewObject::initialize()
     listView_ = bb::cascades::ListView::create();
     setControl(listView_);
     listView_->setDataModel(new ArrayDataModel());
-    listView_->setListItemProvider(new ListViewItemFactory());
+
+    ListViewItemFactory* factory = new ListViewItemFactory(this);
+    listView_->setListItemProvider(factory);
+    listView_->setListItemTypeMapper(factory);
+
     return NATIVE_ERROR_OK;
 }
 
@@ -135,17 +141,26 @@ void NativeListViewObject::setupEvents(TiEventContainerFactory* containerFactory
 }
 
 /*********** ListViewItemFactory class *************/
-bb::cascades::VisualNode* ListViewItemFactory::createItem(bb::cascades::ListView*, const QString&)
+bb::cascades::VisualNode* ListViewItemFactory::createItem(bb::cascades::ListView*, const QString& type)
 {
-    BasicListItem* item = new BasicListItem();
-    return item;
+    if (type == "custom") {
+        return new CustomListItem(listView_->layout());
+    }
+    return new BasicListItem();
 }
 
 void ListViewItemFactory::updateItem(bb::cascades::ListView*, bb::cascades::VisualNode* listItem, const QString&,
                                      const QVariantList&, const QVariant& data)
 {
-    BasicListItem* item = static_cast<BasicListItem*>(listItem);
+    Q_ASSERT(data.canConvert<QObject*>());
+    AbstractListItem* item = static_cast<AbstractListItem*>(listItem);
     item->setData(data.value<QObject*>());
+}
+
+QString ListViewItemFactory::itemType(const QVariant &data, const QVariantList &indexPat)
+{
+    Q_ASSERT(data.canConvert<QObject*>());
+    return data.value<QObject*>()->property("dataType").toString();
 }
 
 /*********** ListViewEventHandler class *************/
