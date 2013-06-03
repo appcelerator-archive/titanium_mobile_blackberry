@@ -32,7 +32,9 @@ public:
 	bool createAnalyticsDatabase();
 	void addAnalyticsEvent(std::string const& name, std::string const& data = "");
 	void sendPendingAnalyticsEvents();
-	sqlite3* db_;
+
+	sqlite3* db;
+	bool appStart;
 
 protected:
     virtual ~TiAnalyticsObject();
@@ -66,11 +68,11 @@ class TiAnalyticsHandler : public QObject
     Q_OBJECT
 
 public:
-    explicit TiAnalyticsHandler(TiAnalyticsObject* tiAnalyticsObject);
+    explicit TiAnalyticsHandler(TiAnalyticsObject* tiAnalyticsObject, string uid);
     virtual ~TiAnalyticsHandler();
 
 public slots:
-    void finished(QNetworkReply* reply);
+    void finished();
     void errors(QNetworkReply* reply);
     void sendPendingRequests();
     void thumbnail();
@@ -80,8 +82,9 @@ public slots:
 private:
     TiAnalyticsObject* tiAnalyticsObject_;
     // Disable copy ctor & assignment operator
-    TiAnalyticsHandler(const TiAnalyticsHandler& eHandler);
+    TiAnalyticsHandler(const TiAnalyticsHandler& eHandler, const unsigned char* uid);
     TiAnalyticsHandler& operator=(const TiAnalyticsHandler& eHandler);
+    string uid_;
 };
 
 #endif /* TIANALYTICSOBJECT_H_ */
