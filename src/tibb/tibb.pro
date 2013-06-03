@@ -23,13 +23,15 @@ SOURCES += \
 	./Layout/Vertical.cpp \
 	./TableView/BasicListItem.cpp \
 	./TiScrollableView/TiScrollableView.cpp \
-	./TiScrollableView/TiScrollableViewPage.cpp
+	./TiScrollableView/TiScrollableViewPage.cpp \
+	./UI/TiUINavigationGroupProxy.cpp
 HEADERS += \
 	./*.h \
 	TableView/BasicListItem.h \
 	TableView/ListItemData.h \
 	TiScrollableView/TiScrollableView.h \
-	TiScrollableView/TiScrollableViewPage.h
+    TiScrollableView/TiScrollableViewPage.h \
+    UI/TiUINavigationGroupProxy.h
 
 LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata -lbbsystem
 

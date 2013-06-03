@@ -36,7 +36,7 @@
 #include "TiUIWindow.h"
 #include "TiUIAnimation.h"
 #include "TiUIEmailDialog.h"
-
+#include "UI/TiUINavigationGroupProxy.h"
 #include <string.h>
 
 using namespace titanium;
@@ -96,6 +96,7 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createScrollableView", this, _createScrollableView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setBackgroundColor", this, _setBackgroundColor);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createAnimation", this, _createAnimation);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createNavigationGroup", this, _createNavigationGroup);
 
     // Adding javascript constants from Ti.UI
     ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_LEFT", Number::New(Ti::UI::TEXT_ALIGNMENT_LEFT), this);
@@ -256,6 +257,10 @@ Handle<Value> TiUIObject::_createAnimation(void* userContext, TiObject*, const A
 Handle<Value> TiUIObject::_createScrollableView(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIScrollableView::createScrollableView), args);
+}
+Handle<Value> TiUIObject::_createNavigationGroup(void* userContext, TiObject*, const Arguments& args)
+{
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUINavigationGroupProxy::createProxy), args);
 }
 
 Handle<Value> TiUIObject::_setBackgroundColor(void* userContext, TiObject* caller, const Arguments& args)
