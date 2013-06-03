@@ -198,7 +198,14 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 	sqlite3_reset(stmt);
 	sqlite3_clear_bindings(stmt);
 
-	sendPendingAnalyticsEvents();
+
+
+	if (name == "ti.end" ) {
+		bb::cascades::Application::instance()->exit(0);
+	}
+	else {
+		sendPendingAnalyticsEvents();
+	}
 }
 
 void TiAnalyticsObject::sendPendingAnalyticsEvents()
