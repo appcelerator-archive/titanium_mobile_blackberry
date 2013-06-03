@@ -1,8 +1,8 @@
-/*
- * TiUINavigationGroupProxy.h
- *
- *  Created on: May 31, 2013
- *      Author: penrique
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #ifndef TIUINAVIGATIONGROUPPROXY_H_
@@ -10,6 +10,7 @@
 
 #include <bb/cascades/NavigationPane>
 #include <bb/cascades/Page>
+#include <bb/cascades/Sheet>
 #include "TiProxy.h"
 #include "Scene.h"
 
@@ -44,6 +45,7 @@ private:
 
 	NavigationScene *getNavigationScene();
 	bb::cascades::Page *getPageFromTiObject(TiObject*);
+	bb::cascades::Sheet *modalSheet_;
 	NavigationScene *navigationScene_;
 };
 

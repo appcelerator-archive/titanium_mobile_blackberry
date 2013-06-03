@@ -1,17 +1,15 @@
-/*
- * TiUINavigationGroupProxy.cpp
- *
- *  Created on: May 31, 2013
- *      Author: penrique
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #include "TiUINavigationGroupProxy.h"
 #include "TiGenericFunctionObject.h"
 #include "SceneManager.h"
 #include "Window.h"
-#include "TiLogger.h"
 #include "NativeObject.h"
-
 
 /* How to create a NavigationGroup
  *
@@ -48,6 +46,7 @@
 
 TiUINavigationGroupProxy::TiUINavigationGroupProxy() {
 	navigationScene_ = NULL;
+	modalSheet_ = NULL;
 }
 
 TiUINavigationGroupProxy::~TiUINavigationGroupProxy() {
@@ -87,10 +86,10 @@ void TiUINavigationGroupProxy::onCreateStaticMembers()
 	TiGenericFunctionObject::addGenericFunctionToParent(this, "setBackButtonsVisible", this, _setBackButtonsVisible);
 	TiGenericFunctionObject::addGenericFunctionToParent(this, "setPeekEnabled", this, _setPeekEnabled);
 	TiGenericFunctionObject::addGenericFunctionToParent(this, "getPeekEnabled", this, _getPeekEnabled);
-//	createSettersAndGetters("window", _setWindow, NULL);
+	//	createSettersAndGetters("window", _setWindow, NULL);
 	//	createSettersAndGetters("rootWindow", _setRootWindow, NULL);
 	//	createSettersAndGetters("backButtonsVisible", _setBackButtonsVisible, NULL);
-	//	createSettersAndGetters("peekEnabled", _setPeekEnabled, NULL);
+	//	createSettersAndGetters("peekEnabled", _setPeekEnabled, _getPeekEnabled);
 
 }
 
@@ -141,8 +140,13 @@ Handle<Value> TiUINavigationGroupProxy::_setBackButtonsVisible(void* userContext
 Handle<Value> TiUINavigationGroupProxy::_close(void* userContext, TiObject*, const Arguments& args)
 {
 	TiUINavigationGroupProxy* proxy = (TiUINavigationGroupProxy*)userContext;
+
 	NavigationScene *nav = proxy->getNavigationScene();
-	if(args.Length() == 0)
+	if(args.Length() == 0 && proxy->modalSheet_ != NULL)
+	{
+		proxy->modalSheet_->close();
+	}
+	else if(args.Length() == 0)
 	{
 		titanium::SceneManager::instance()->removeScene(nav);
 		delete nav;
@@ -150,7 +154,12 @@ Handle<Value> TiUINavigationGroupProxy::_close(void* userContext, TiObject*, con
 	}
 	else if(args[0]->IsObject())
 	{
-		TiLogger::getInstance().log("[WARN] .close() is depricated, use .remove() instead.");
+		TiObject *obj = TiObject::getTiObjectFromJsObject(args[0]);
+		if(obj == NULL && proxy->modalSheet_ != NULL) {
+			proxy->modalSheet_->close();
+			return Undefined();
+		}
+		// depricated, use .remove() instead
 		return TiUINavigationGroupProxy::_remove(userContext, NULL, args);
 	}
 	return Undefined();
@@ -165,8 +174,18 @@ Handle<Value> TiUINavigationGroupProxy::_open(void* userContext, TiObject*, cons
 	}
 	else if(args.Length() > 0 && args[0]->IsObject())
 	{
-		TiLogger::getInstance().log("[WARN] .open() is depricated, use .push() instead.");
-		return TiUINavigationGroupProxy::_push(userContext, NULL, args);
+		TiObject *obj = TiObject::getTiObjectFromJsObject(args[0]);
+		if(obj == NULL) {
+			proxy->modalSheet_ = bb::cascades::Sheet::create();
+			proxy->modalSheet_->setContent(nav->pane());
+			proxy->modalSheet_->open();
+	    	return Undefined();
+		}
+		NativeObject *nativeObject = obj->getNativeObject();
+	    if (nativeObject->getObjectType() == N_TYPE_WINDOW) {
+			// depricated, use .push() instead
+	    	return TiUINavigationGroupProxy::_push(userContext, NULL, args);
+	    }
 	}
 	return Undefined();
 }
@@ -194,7 +213,6 @@ Handle<Value> TiUINavigationGroupProxy::_push(void* userContext, TiObject*, cons
 		return Undefined();
 	}
 
-	TiLogger::getInstance().log("[ERROR] .push() takes a Ti.UI.Window");
 	return Undefined();
 }
 Handle<Value> TiUINavigationGroupProxy::_remove(void* userContext, TiObject*, const Arguments& args)
@@ -212,7 +230,7 @@ Handle<Value> TiUINavigationGroupProxy::_remove(void* userContext, TiObject*, co
 }
 Handle<Value> TiUINavigationGroupProxy::_setWindow(void* userContext, TiObject*, const Arguments& args)
 {
-	TiLogger::getInstance().log("[WARN] .setWindow() is deprecated, use .setRootWindow() instead");
+	// deprecated, use .setRootWindow() instead
 	return TiUINavigationGroupProxy::_push(userContext, NULL, args);
 }
 Handle<Value> TiUINavigationGroupProxy::_setRootWindow(void* userContext, TiObject*, const Arguments& args)

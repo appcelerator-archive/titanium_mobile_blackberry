@@ -29,6 +29,10 @@ function GenericWindow(_windowNumber, _navGroup) {
 		top: 150,
 		title: 'set peek enabled: ' + (_navGroup.getPeekEnabled() ? 'true' : 'false')
 	});
+	var close = Ti.UI.createButton({
+		title: 'close',
+		top: 180
+	});
 
 	push.addEventListener('click', function(){
 		var nextWindow = GenericWindow(_windowNumber + 1, _navGroup);
@@ -52,21 +56,32 @@ function GenericWindow(_windowNumber, _navGroup) {
 		this.title = 'set peek enabled: ' + (isPeekEnaled ? 'true' : 'false')
 	});
 
+	close.addEventListener('click', function(){
+		_navGroup.close();
+	});
+
 	win.add(push);
+	win.add(close);
 	if(_windowNumber !== 1) {
 		win.add(pop);
 		win.add(remove);
 		win.add(backButton);
 		win.add(peek);
-	}
+	} 
 	return win;
 }
 
 function NavigationGroup() {
-	var nav = Ti.UI.createNavigationGroup();
-	var win = GenericWindow(1, nav);
-	nav.setRootWindow(win);
-	return nav;
+	var w = Ti.UI.createWindow();
+	var b = Ti.UI.createButton({title:'open'});
+	w.add(b);
+	b.addEventListener('click', function(){
+		var nav = Ti.UI.createNavigationGroup();
+		var win = GenericWindow(1, nav);
+		nav.setRootWindow(win);
+		nav.open({modal: true});
+	});
+	return w;
 }
 
 NavigationGroup().open();
