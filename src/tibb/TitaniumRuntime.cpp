@@ -62,7 +62,6 @@ int TitaniumRuntime::internalRun(int argc, char** argv)
     NativeObjectFactory objFactory(&mainApp);
     objectFactory_ = &objFactory;
     mainApp_ = &mainApp;
-    bb::cascades::Application::instance()->setAutoExit(false); //((bb::Application*)mainApp_)->setAutoExit(false);
     TiLogger::initialize(&objFactory);
     int ret = obj->executeScript(&objFactory, javaScript_, messageLoop, this);
     // TODO: handle non-zero return code here
