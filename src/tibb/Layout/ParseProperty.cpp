@@ -70,7 +70,7 @@ double _computeValue(std::string value, enum ValueType valueType, double ppi) {
 	  	  return parsedValue;
 	  }
 	  else if (units == "dp" || units == "dip") {
-	  	  return parsedValue * (ppi/96); // 96 - http://en.wikipedia.org/wiki/Dots_per_inch
+	  	  return parsedValue * (ppi / 160); // 160 - http://developer.blackberry.com/cascades/documentation/ui/webview/javascript.html
 	  }
 	}
 	else {
