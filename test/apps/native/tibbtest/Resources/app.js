@@ -1,25 +1,30 @@
-var win = Titanium.UI.createWindow();
+var win = Ti.UI.createWindow({layout:'vertical'});
  
-
-var scroll = Ti.UI.createScrollView({
-   backgroundColor: '#ccc',
-   width: Ti.UI.FILL,
-   height: Ti.UI.FILL,
-   layout: 'vertical',
-      
+var label = Ti.UI.createLabel({
+    text: 'Type some stuff...',
+    width: '75%', height: 50
 });
+win.add(label);
+ 
+var textField = Ti.UI.createTextField({
+    width: '75%', height: 75
+});
+win.add(textField);
+ 
+var button = Ti.UI.createButton({
+    title: 'Click, me!',
+    width: '75%', height: 100
+});
+win.add(button);
 
-
-function MyButton(title) {
-   return Ti.UI.createButton({
-       title: title,
-       top: 10
-   });
-}
-  
-for(var i = 0; i < 500; i++) {
-   scroll.add(MyButton('Button #' + (i + 1))); 
-}
-  
-win.add(scroll);
+button.addEventListener('click',function(e){
+	Ti.API.info('Sending feature event');
+	Titanium.Analytics.featureEvent('my.feature.blah');
+});
+ 
+var view = Ti.UI.createView({
+    backgroundColor: 'red'
+});
+win.add(view);
+ 
 win.open();
