@@ -33,6 +33,8 @@ public:
     virtual int setColor(TiObject* obj);
     virtual int setTextAlign(TiObject* obj);
 
+    virtual void resize(float width, float height);
+
 protected:
     explicit NativeAbstractTextControlObject(TiObject* tiObject, NATIVE_TYPE objType = N_TYPE_UNDEFINED);
     virtual ~NativeAbstractTextControlObject();
