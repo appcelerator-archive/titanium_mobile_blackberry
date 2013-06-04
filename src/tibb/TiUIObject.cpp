@@ -36,7 +36,7 @@
 #include "TiUIWindow.h"
 #include "TiUIAnimation.h"
 #include "TiUIEmailDialog.h"
-#include "UI/TiUINavigationGroupProxy.h"
+#include "TiUINavigationGroup.h"
 #include <string.h>
 
 using namespace titanium;
@@ -260,7 +260,7 @@ Handle<Value> TiUIObject::_createScrollableView(void* userContext, TiObject*, co
 }
 Handle<Value> TiUIObject::_createNavigationGroup(void* userContext, TiObject*, const Arguments& args)
 {
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUINavigationGroupProxy::createProxy), args);
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUINavigationGroup::createProxy), args);
 }
 
 Handle<Value> TiUIObject::_setBackgroundColor(void* userContext, TiObject* caller, const Arguments& args)

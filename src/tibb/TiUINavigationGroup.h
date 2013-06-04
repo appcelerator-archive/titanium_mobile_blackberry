@@ -5,8 +5,8 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef TIUINAVIGATIONGROUPPROXY_H_
-#define TIUINAVIGATIONGROUPPROXY_H_
+#ifndef TiUINavigationGroup_H_
+#define TiUINavigationGroup_H_
 
 #include <bb/cascades/NavigationPane>
 #include <bb/cascades/Page>
@@ -20,10 +20,10 @@ public:
     NavigationScene(): titanium::Scene(new bb::cascades::NavigationPane()){}
 };
 
-class TiUINavigationGroupProxy: public TiProxy {
+class TiUINavigationGroup: public TiProxy {
 public:
 
-	static TiUINavigationGroupProxy* createProxy(NativeObjectFactory* objectFactory);
+	static TiUINavigationGroup* createProxy(NativeObjectFactory* objectFactory);
 
 protected:
     virtual void onCreateStaticMembers();
@@ -40,8 +40,8 @@ private:
 	static Handle<Value> _setPeekEnabled(void* userContext, TiObject*, const Arguments& args);
 	static Handle<Value> _getPeekEnabled(void* userContext, TiObject*, const Arguments& args);
 
-	TiUINavigationGroupProxy();
-	virtual ~TiUINavigationGroupProxy();
+	TiUINavigationGroup();
+	virtual ~TiUINavigationGroup();
 
 	NavigationScene *getNavigationScene();
 	bb::cascades::Page *getPageFromTiObject(TiObject*);
@@ -49,4 +49,4 @@ private:
 	NavigationScene *navigationScene_;
 };
 
-#endif /* TIUINAVIGATIONGROUPPROXY_H_ */
+#endif /* TiUINavigationGroup_H_ */
