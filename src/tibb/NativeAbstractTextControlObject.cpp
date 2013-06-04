@@ -184,7 +184,7 @@ int NativeAbstractTextControlObject::setFont(TiObject* obj)
 void NativeAbstractTextControlObject::resize(float width, float height)
 {
     NativeControlObject::resize(width, height);
-    //textControl_->setPreferredWidth(width);
-    //textControl_->setPreferredHeight(height);
+    textControl_->setPreferredWidth(width);
+    textControl_->setPreferredHeight(height);
 }
 
