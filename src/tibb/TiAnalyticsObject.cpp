@@ -78,7 +78,10 @@ TiAnalyticsObject::TiAnalyticsObject(NativeObjectFactory* objectFactory)
 		QUrl analyticsSite("https://api.appcelerator.net/p/v3/mobile-track/" + aguid);
 		request_.setUrl(analyticsSite);
 
-		// Async callbacks to notify application of HTTP events
+		// hook the manualExit Cascades app  callback
+		bb::cascades::Application::instance()->setAutoExit(false);
+
+		// async callbacks to notify application of HTTP events
 		eventHandler_ = new TiAnalyticsHandler(this, "");
 		QObject::connect(&networkAccessManager_, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), eventHandler_, SLOT(errors(QNetworkReply*)));
 
