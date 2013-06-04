@@ -79,5 +79,6 @@ int TitaniumRuntime::messageLoop(void* context)
     {
         nativeObject->release();
     }
+
     return bb::cascades::Application::exec();
 }
