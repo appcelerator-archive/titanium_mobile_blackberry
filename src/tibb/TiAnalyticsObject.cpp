@@ -36,14 +36,16 @@
 static QSettings defaultSettings("app/native/assets/app_properties.ini",
                                  QSettings::IniFormat);
 
+// Singleton
 TiAnalyticsObject::TiAnalyticsObject()
-    : TiProxy("Analytics"), sequence_(1)
+    : TiProxy("Analytics"), appStart(true), sequence_(1)
 {
     objectFactory_ = NULL;
 }
 
+// Singleton
 TiAnalyticsObject::TiAnalyticsObject(NativeObjectFactory* objectFactory)
-    : TiProxy("Analytics"), sequence_(1)
+    : TiProxy("Analytics"), appStart(true), sequence_(1)
 {
     objectFactory_ = objectFactory;
 
@@ -77,8 +79,7 @@ TiAnalyticsObject::TiAnalyticsObject(NativeObjectFactory* objectFactory)
 		request_.setUrl(analyticsSite);
 
 		// Async callbacks to notify application of HTTP events
-		eventHandler_ = new TiAnalyticsHandler(this);
-		QObject::connect(&networkAccessManager_, SIGNAL(finished(QNetworkReply*)), eventHandler_, SLOT(finished(QNetworkReply*)));
+		eventHandler_ = new TiAnalyticsHandler(this, "");
 		QObject::connect(&networkAccessManager_, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), eventHandler_, SLOT(errors(QNetworkReply*)));
 
 		// Hook application life cycle events
@@ -88,16 +89,14 @@ TiAnalyticsObject::TiAnalyticsObject(NativeObjectFactory* objectFactory)
 
 		if (createAnalyticsDatabase()) {
 			addAnalyticsEvent("ti.enroll");
+			sendPendingAnalyticsEvents();
 		}
 
-		addAnalyticsEvent("ti.start");
-		sendPendingAnalyticsEvents();
-
 		//  Set up timer and every 10 minutes send out analytics events if any are pending
-		TiAnalyticsHandler* eventHandler = new TiAnalyticsHandler(this);
+		TiAnalyticsHandler* eventHandler = new TiAnalyticsHandler(this, "");
 		timer_ = new QTimer(eventHandler);
 		QObject::connect(timer_, SIGNAL(timeout()), eventHandler,  SLOT(sendPendingRequests()));
-		timer_->start(60000*10);
+		timer_->start(30000);
     }
 }
 
@@ -124,26 +123,26 @@ bool TiAnalyticsObject::createAnalyticsDatabase()
 	int rc;
 	bool dbCreate = false;
 
-	rc = sqlite3_open_v2("app/native/analytics.db", &db_, SQLITE_OPEN_READWRITE, NULL);
+	rc = sqlite3_open_v2("app/native/analytics.db", &db, SQLITE_OPEN_READWRITE, NULL);
 	if(rc){
-		TiLogger::getInstance().log(sqlite3_errmsg(db_));
-		sqlite3_close(db_);
+		//TiLogger::getInstance().log(sqlite3_errmsg(db));
+		sqlite3_close(db);
 
 		// TODO check errmsg and make sure that it's caused by no db, create if that is the error
 		dbCreate = true;
-		rc = sqlite3_open_v2("app/native/analytics.db", &db_, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, NULL);
+		rc = sqlite3_open_v2("app/native/analytics.db", &db, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, NULL);
 		if(rc){
-			TiLogger::getInstance().log(sqlite3_errmsg(db_));
-			sqlite3_close(db_);
+			TiLogger::getInstance().log(sqlite3_errmsg(db));
+			sqlite3_close(db);
 			return(false);
 		}
 
 		// create the events table
 		string cmd = "CREATE TABLE IF NOT EXISTS events (uid TEXT, event TEXT)";
-		rc = sqlite3_prepare_v2(db_, cmd.c_str(), strlen(cmd.c_str()) + 1, &stmt, NULL);
+		rc = sqlite3_prepare_v2(db, cmd.c_str(), strlen(cmd.c_str()) + 1, &stmt, NULL);
 		if( rc ) {
-			TiLogger::getInstance().log(sqlite3_errmsg(db_));
-			sqlite3_close(db_);
+			TiLogger::getInstance().log(sqlite3_errmsg(db));
+			sqlite3_close(db);
 			return(false);
 		}
 
@@ -164,10 +163,10 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 	int rc;
 
 	string cmd = "INSERT INTO events VALUES (?, ?)";
-	rc = sqlite3_prepare_v2(db_, cmd.c_str(), strlen(cmd.c_str()) + 1, &stmt, NULL);
+	rc = sqlite3_prepare_v2(db, cmd.c_str(), strlen(cmd.c_str()) + 1, &stmt, NULL);
 	if( rc ) {
-		TiLogger::getInstance().log(sqlite3_errmsg(db_));
-		sqlite3_close(db_);
+		TiLogger::getInstance().log(sqlite3_errmsg(db));
+		sqlite3_close(db);
 	}
 
 	// generate the event time stamp
@@ -198,6 +197,15 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 
 	sqlite3_reset(stmt);
 	sqlite3_clear_bindings(stmt);
+
+
+
+	if (name == "ti.end" ) {
+		bb::cascades::Application::instance()->exit(0);
+	}
+	else {
+		sendPendingAnalyticsEvents();
+	}
 }
 
 void TiAnalyticsObject::sendPendingAnalyticsEvents()
@@ -206,10 +214,10 @@ void TiAnalyticsObject::sendPendingAnalyticsEvents()
 	int rc;
 
 	string cmd = "SELECT * FROM events";
-	rc = sqlite3_prepare_v2(db_, cmd.c_str(), strlen(cmd.c_str()) + 1, &stmt, NULL);
+	rc = sqlite3_prepare_v2(db, cmd.c_str(), strlen(cmd.c_str()) + 1, &stmt, NULL);
 	if( rc ) {
-		TiLogger::getInstance().log(sqlite3_errmsg(db_));
-		sqlite3_close(db_);
+		TiLogger::getInstance().log(sqlite3_errmsg(db));
+		sqlite3_close(db);
 	}
 
 	while (true) {
@@ -222,11 +230,19 @@ void TiAnalyticsObject::sendPendingAnalyticsEvents()
 			uid = sqlite3_column_text (stmt, 0);
 			json = sqlite3_column_text (stmt, 1);
 
+			bool log = defaultSettings.value("analytics-log").toBool();
+			if (log) {
+				TiLogger::getInstance().log("Sending Analytic Event: ");
+				TiLogger::getInstance().log((const char*)json);
+			}
+
 			// Send HTTP POST Asynchronously
 			QByteArray postDataSize = QByteArray::number(strlen((const char*)json));
 			request_.setRawHeader("Content-Length", postDataSize);
 			QNetworkReply* reply = networkAccessManager_.post(request_, (const char*)json);
-			reply->setProperty("uid", QVariant(uid));
+
+			TiAnalyticsHandler* requestHandler = new TiAnalyticsHandler(this, (const char*)uid);
+			QObject::connect(reply, SIGNAL(finished()), requestHandler, SLOT(finished()));
 		}
 		else if (s == SQLITE_DONE) {
 			break;
@@ -243,7 +259,7 @@ void TiAnalyticsObject::sendPendingAnalyticsEvents()
 Handle<Value> TiAnalyticsObject::_featureEvent(void* userContext, TiObject*, const Arguments& args)
 {
 	TiAnalyticsObject* obj = (TiAnalyticsObject*) userContext;
-	string name = "app.feature." + TiObject::getSTDStringFromValue(args[0]);
+	string name = "feature.app." +TiObject::getSTDStringFromValue(args[0]);
 	string data = TiObject::getSTDStringFromValue(args[1]);
 
 	obj->addAnalyticsEvent(name, data);
@@ -251,31 +267,39 @@ Handle<Value> TiAnalyticsObject::_featureEvent(void* userContext, TiObject*, con
 	return Undefined();
 }
 
-TiAnalyticsHandler::TiAnalyticsHandler(TiAnalyticsObject* tiAnalyticsObject)
+TiAnalyticsHandler::TiAnalyticsHandler(TiAnalyticsObject* tiAnalyticsObject, string  uid)
 {
     tiAnalyticsObject_ = tiAnalyticsObject;
+    uid_ = uid;
 }
 
 TiAnalyticsHandler::~TiAnalyticsHandler()
 {
 }
 
-void TiAnalyticsHandler::finished(QNetworkReply* reply)
+void TiAnalyticsHandler::finished()
 {
 	sqlite3_stmt* stmt;
 	int rc;
 
 	string cmd = "DELETE FROM events WHERE uid=?";
-	rc = sqlite3_prepare_v2(tiAnalyticsObject_->db_, cmd.c_str(), strlen(cmd.c_str()) + 1, &stmt, NULL);
+	rc = sqlite3_prepare_v2(tiAnalyticsObject_->db, cmd.c_str(), strlen(cmd.c_str()) + 1, &stmt, NULL);
 	if( rc ) {
-		TiLogger::getInstance().log(sqlite3_errmsg(tiAnalyticsObject_->db_));
-		sqlite3_close(tiAnalyticsObject_->db_);
+		TiLogger::getInstance().log(sqlite3_errmsg(tiAnalyticsObject_->db));
+		sqlite3_close(tiAnalyticsObject_->db);
 	}
 
-	QString uid = reply->property("uid").toString();
-	QByteArray id = uid.toLocal8Bit();
+	sqlite3_bind_text(stmt, 1, uid_.c_str(), strlen(uid_.c_str()), 0);
 
-	sqlite3_bind_text(stmt, 1, id.data(), strlen(id.data()), 0);
+	int stepResult = sqlite3_step(stmt);
+
+	if (stepResult == SQLITE_DONE) {
+		bool log = defaultSettings.value("analytics-log").toBool();
+		if (log) {
+			TiLogger::getInstance().log("Clearing Analytic Event from DB for ID: ");
+			TiLogger::getInstance().log(uid_.c_str());
+		}
+	}
 
     sqlite3_reset(stmt);
     sqlite3_clear_bindings(stmt);
@@ -298,7 +322,12 @@ void TiAnalyticsHandler::thumbnail()
 
 void TiAnalyticsHandler::fullscreen()
 {
-	tiAnalyticsObject_->addAnalyticsEvent("ti.foreground");
+	if (tiAnalyticsObject_->appStart == true) {
+		tiAnalyticsObject_->addAnalyticsEvent("ti.start");
+		tiAnalyticsObject_->appStart = false;
+	} else {
+		tiAnalyticsObject_->addAnalyticsEvent("ti.foreground");
+	}
 }
 
 void TiAnalyticsHandler::manualExit()
