@@ -35,6 +35,7 @@ public:
     virtual int initialize();
     virtual int setTitle(TiObject* obj);
     virtual int setImage(TiObject* obj);
+    virtual void updateLayout(QRectF rect);
 
 protected:
     virtual void setupEvents(TiEventContainerFactory* containerFactory);

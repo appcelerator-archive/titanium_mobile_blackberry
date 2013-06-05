@@ -43,6 +43,12 @@ int NativeButtonObject::initialize()
     return NATIVE_ERROR_OK;
 }
 
+void NativeButtonObject::updateLayout(QRectF rect)
+{
+	NativeControlObject::updateLayout(rect);
+	button_->setPreferredSize(rect.width(), rect.height());
+}
+
 int NativeButtonObject::setTitle(TiObject* obj)
 {
     QString title = V8ValueToQString(obj->getValue());
