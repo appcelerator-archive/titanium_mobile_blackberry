@@ -99,7 +99,7 @@ function createContact(){
               }
             ]
           },
-          birthday: '2012-01-01T12:00:00.000+0000',
+          birthday: new Date(),
           instantMessage:{
         	  AIM: ['leisureAIM'],
         	  MSN: ['no_paul_here@msn.com', 'lala@lala.com'],

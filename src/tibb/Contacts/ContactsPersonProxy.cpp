@@ -11,6 +11,7 @@
 #include "V8Utils.h"
 #include "TiUtils.h"
 #include "TiBlobObject.h"
+#include "TiLogger.h"
 #include <bb/pim/contacts/ContactConsts>
 #include <bb/pim/contacts/ContactService>
 #include <bb/pim/contacts/ContactPhoto>
@@ -39,7 +40,6 @@ ContactsPersonProxy::ContactsPersonProxy(Contact contact) :
 }
 ContactsPersonProxy::~ContactsPersonProxy()
 {
-    // TODO Auto-generated destructor stub
 }
 ContactsPersonProxy* ContactsPersonProxy::createPerson(NativeObjectFactory* objectFactory) {
     ContactsPersonProxy* obj = new ContactsPersonProxy;
@@ -115,7 +115,7 @@ Handle<Value> ContactsPersonProxy::getSubkind(AttributeSubKind::Type subkind)
 
 Handle<Value> ContactsPersonProxy::getKind(AttributeKind::Type kind)
 {
-    QList<ContactAttribute> array =    getFullContact().attributes();
+    QList<ContactAttribute> array = getFullContact().attributes();
 
     for (int i = 0, len = array.length(); i < len; i++) {
         ContactAttribute attr = array.at(i);
@@ -154,127 +154,103 @@ void ContactsPersonProxy::_setAddress(void* userContext, Handle<Value> value)
 
     // The value passed in *MUST* be an object containing arrays of objects
     // http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.Contacts.Person-property-address
-    if(value->IsObject()) {
+    if(!value->IsObject()) return;
 
-        // Get the JS Object and it's properties
-        Handle<Object> addressObject = Handle<Object>::Cast(value);
-        Local<Array> addressProperties = addressObject->GetPropertyNames();
+	// Get the JS Object and it's properties
+	Local<Object> addressObject = value->ToObject();
+	Local<Array> addressProperties = addressObject->GetPropertyNames();
 
-        // Look for properties, such as "work", "home", or "other"
-        for(int i = 0, len = addressProperties->Length(); i < len; i++)
-        {
-            // Get the key and value or each main object
-            // { work: [ ... ] }"
-            Local<String> addressKey = Local<String>::Cast(addressProperties->Get(i));
-            Local<Value> addressValue = addressObject->Get(addressKey);
+	// Look for properties, such as "work", "home", or "other"
+	for(int i = 0, len = addressProperties->Length(); i < len; i++)
+	{
+		// Get the key and value or each main object
+		// { work: [ ... ] }"
+		Local<String> addressKey = addressProperties->Get(i)->ToString();
+		Local<Value> addressValue = addressObject->Get(addressKey);
 
-            // Create the subkind from the key of the object
-            AttributeSubKind::Type subKind = AttributeSubKind::Other;
-            String::Utf8Value _key(addressKey);
-            if(QString(*_key).toLower() == "work") {
-                subKind = AttributeSubKind::Work;
-            }
-            if(QString(*_key).toLower() == "home") {
-                subKind = AttributeSubKind::Home;
-            }
+		// Create the subkind from the key of the object
+		AttributeSubKind::Type subKind = AttributeSubKind::Other;
+		QString _key = titanium::V8ValueToQString(addressKey);
+		if(_key.toLower() == "work") {
+			subKind = AttributeSubKind::Work;
+		}
+		if(_key.toLower() == "home") {
+			subKind = AttributeSubKind::Home;
+		}
 
-            // The value of the individual address object *MUST* be an array of address objects
-            // [ { street: '12 Main St' }, { street: '21 Meh St' } ]
-            if(addressValue->IsArray())
-            {
-                // Cast the value of the array to a v8 Array and look for addresses
-                Local<Array> addresses = Local<Array>::Cast(addressValue);
-                for(int i = 0, len = addresses->Length(); i < len; i++)
-                {
-                    // Create the new address builder object and set the subkind
-                    ContactPostalAddressBuilder addressBuilder;
-                    addressBuilder.setSubKind(subKind);
+		// The value of the individual address object *MUST* be an array of address objects
+		// [ { street: '12 Main St' }, { street: '21 Meh St' } ]
+		if(!addressValue->IsArray()) return;
+		// Cast the value of the array to a v8 Array and look for addresses
+		Local<Array> addresses = Local<Array>::Cast(addressValue);
+		for(int i = 0, len = addresses->Length(); i < len; i++)
+		{
+			// Create the new address builder object and set the subkind
+			ContactPostalAddressBuilder addressBuilder;
+			addressBuilder.setSubKind(subKind);
 
-                    // Get the actual address object from the array of address objects
-                    // This *MUST* be an object with keys and values
-                    // { street: '12 Main St' }
-                    Local<Value> currentAddress = addresses->Get(Number::New(i));
-                    if(currentAddress->IsObject())
-                    {
-                        // Get the individual address object and look for it's properties
-                        Local<Object> currentAddressObject = Local<Object>::Cast(currentAddress);
-                        Local<Array> currentAddressProperties = currentAddressObject->GetPropertyNames();
+			// Get the actual address object from the array of address objects
+			// This *MUST* be an object with keys and values
+			// { street: '12 Main St' }
+			Local<Value> currentAddress = addresses->Get(Number::New(i));
+			if(!currentAddress->IsObject()) return;
+			// Get the individual address object and look for it's properties
+			Local<Object> currentAddressObject = currentAddress->ToObject();
+			Local<Array> currentAddressProperties = currentAddressObject->GetPropertyNames();
 
-                        // Go through the keys and value of this object, one at a time
-                        for(int i = 0, len = currentAddressProperties->Length(); i < len; i++)
-                        {
-                            Local<String> currentAddressKey = Local<String>::Cast(currentAddressProperties->Get(i));
-                            Local<Value> currentAddressValue = currentAddressObject->Get(currentAddressKey);
+			// Go through the keys and value of this object, one at a time
+			for(int i = 0, len = currentAddressProperties->Length(); i < len; i++)
+			{
+				Local<String> currentAddressKey = currentAddressProperties->Get(i)->ToString();
+				Local<Value> currentAddressValue = currentAddressObject->Get(currentAddressKey);
 
-                            // The value *MUST* be a string
-                            if(currentAddressValue->IsString())
-                            {
-                                // Cast it to a String and get the UTF8 strings
-                                Local<String> v = Local<String>::Cast(currentAddressValue);
-                                String::Utf8Value _v(v);
-                                String::Utf8Value _k(currentAddressKey);
+				// The value *MUST* be a string
+				if(!currentAddressValue->IsString()) return;
 
-                                // Convert them to QStrings for better manipulation
-                                QString _key = QString(*_k);
-                                QString _value = QString(*_v);
+				// Cast it to a String and get the UTF8 strings
+				Local<String> currentAddressStringValue = currentAddressValue->ToString();
 
-                                // Start populating the address builder
-                                if(_key.toLower() == "city"){
-                                    addressBuilder.setCity(_value);
-                                }
-                                if(_key.toLower() == "label"){
-                                    addressBuilder.setLabel(_value);
-                                }
-                                if(_key.toLower() == "line1"){
-                                    addressBuilder.setLine1(_value);
-                                }
-                                if(_key.toLower() == "line2") {
-                                    addressBuilder.setLine2(_value);
-                                }
-                                if(_key.toLower() == "street") {
-                                    if(_value.contains("\n")) {
-                                        QStringList l = _value.split('\n');
-                                        addressBuilder.setLine1(l.at(0));
-                                        l.removeAt(0);
-                                        addressBuilder.setLine2(l.join(""));
-                                    } else {
-                                        addressBuilder.setLine1(_value);
-                                    }
-                                }
-                                if(_key.toLower() == "zip"){
-                                    addressBuilder.setPostalCode(_value);
-                                }
-                                if(_key.toLower() == "county"){
-                                    addressBuilder.setRegion(_value);
-                                }
-                                if(_key.toLower() == "country"){
-                                    addressBuilder.setCountry(_value);
-                                }
-                            }
-                            else
-                            {
-                                // Something goes here, throw an error?
-                            }
-                        }
-                        // Once finished with an address, add it to the contact
-                        obj->builder_.addPostalAddress(addressBuilder);
-                    }
-                    else
-                    {
-                        // Something goes here, throw an error?
-                    }
-                }
-            }
-            else
-            {
-                // Something goes here, throw an error?
-            }
-         }
-    }
-    else
-    {
-        // Something goes here, throw an error?
-    }
+				// Convert them to QStrings for better manipulation
+				QString _key = titanium::V8ValueToQString(currentAddressKey);
+				QString _value = titanium::V8ValueToQString(currentAddressStringValue);
+
+				// Start populating the address builder
+				if(_key.toLower() == "city"){
+					addressBuilder.setCity(_value);
+				}
+				if(_key.toLower() == "label"){
+					addressBuilder.setLabel(_value);
+				}
+				if(_key.toLower() == "line1"){
+					addressBuilder.setLine1(_value);
+				}
+				if(_key.toLower() == "line2") {
+					addressBuilder.setLine2(_value);
+				}
+				if(_key.toLower() == "street") {
+					if(_value.contains("\n")) {
+						QStringList l = _value.split('\n');
+						addressBuilder.setLine1(l.at(0));
+						l.removeAt(0);
+						addressBuilder.setLine2(l.join(""));
+					} else {
+						addressBuilder.setLine1(_value);
+					}
+				}
+				if(_key.toLower() == "zip"){
+					addressBuilder.setPostalCode(_value);
+				}
+				if(_key.toLower() == "county"){
+					addressBuilder.setRegion(_value);
+				}
+				if(_key.toLower() == "country"){
+					addressBuilder.setCountry(_value);
+				}
+			}
+			// Once finished with an address, add it to the contact
+				obj->builder_.addPostalAddress(addressBuilder);
+		}
+	 }
     // Once done, update the contact
     if(!obj->isEditing) {
     	ContactService().updateContact(obj->contact_);
@@ -302,7 +278,7 @@ void ContactsPersonProxy::_setBirthday(void* userContext, Handle<Value> value)
     }
     else
     {
-    	std::cout << "[WARN] Birthday MUST be a Date object" << std::endl;;
+    	TiLogger::getInstance().log("WARN", "Birthday MUST be a Date object");
     }
 }
 void ContactsPersonProxy::_setCreated(void* userContext, Handle<Value> value)
@@ -319,58 +295,49 @@ void ContactsPersonProxy::_setEmail(void* userContext, Handle<Value> value)
 {
     ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
 
-    if(value->IsObject())
-    {
-        Handle<Object> emailObject = Handle<Object>::Cast(value);
-        Local<Array> emailProperties = emailObject->GetPropertyNames();
-        for(int i = 0, len = emailProperties->Length(); i < len; i++)
-        {
-            Local<String> allEmailsKey = Local<String>::Cast(emailProperties->Get(i));
-            Local<Value> allEmailsValue = emailObject->Get(allEmailsKey);
+    if(!value->IsObject()) return;
 
-            AttributeSubKind::Type subKind = AttributeSubKind::Other;
-            String::Utf8Value _key(allEmailsKey);
-            if(QString(*_key).toLower() == "work")
-            {
-                subKind = AttributeSubKind::Work;
-            }
-            else
-            if(QString(*_key).toLower() == "personal")
-            {
-                subKind = AttributeSubKind::Personal;
-            }
-            else
-            if(QString(*_key).toLower() == "home")
-            {
-                subKind = AttributeSubKind::Home;
-            }
+	Handle<Object> emailObject = value->ToObject();
+	Local<Array> emailProperties = emailObject->GetPropertyNames();
+	for(int i = 0, len = emailProperties->Length(); i < len; i++)
+	{
+		Local<String> allEmailsKey = emailProperties->Get(i)->ToString();
+		Local<Value> allEmailsValue = emailObject->Get(allEmailsKey);
 
-            if(allEmailsValue->IsArray())
-            {
-                Local<Array> emails = Local<Array>::Cast(allEmailsValue);
-                for(int i = 0, len = emails->Length(); i < len; i++)
-                {
-                    Local<Value> emailValue = emails->Get(Number::New(i));
-                    if(emailValue->IsString() || emailValue->IsNumber())
-                    {
-                         obj->setContactDetails(AttributeKind::Email, subKind, emailValue);
-                    }
-                    else
-                    {
-                        // Something goes here, throw an error?
-                    }
-                }
-            }
-            else
-            {
-                // Something goes here, throw an error?
-            }
-        }
-    }
-    else
-    {
-        // Something goes here, throw an error?
-    }
+		AttributeSubKind::Type subKind = AttributeSubKind::Other;
+
+		QString allEmailsKeyString = titanium::V8ValueToQString(allEmailsKey).toLower();
+		if(allEmailsKeyString == "work")
+		{
+			subKind = AttributeSubKind::Work;
+		}
+		else
+		if(allEmailsKeyString == "personal")
+		{
+			subKind = AttributeSubKind::Personal;
+		}
+		else
+		if(allEmailsKeyString == "home")
+		{
+			subKind = AttributeSubKind::Home;
+		}
+
+		if(!allEmailsValue->IsArray()) return;
+
+		Local<Array> emails = Local<Array>::Cast(allEmailsValue);
+		for(int i = 0, len = emails->Length(); i < len; i++)
+		{
+			Local<Value> emailValue = emails->Get(Number::New(i));
+			if(emailValue->IsString() || emailValue->IsNumber())
+			{
+				 obj->setContactDetails(AttributeKind::Email, subKind, emailValue);
+			}
+			else
+			{
+				// Something goes here, throw an error?
+			}
+		}
+	}
 }
 void ContactsPersonProxy::_setFirstName(void* userContext, Handle<Value> value)
 {
@@ -401,89 +368,73 @@ void ContactsPersonProxy::_setInstantMessage(void* userContext, Handle<Value> va
 {
     ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
 
-    if(value->IsObject())
-    {
-        Handle<Object> messageObject = Handle<Object>::Cast(value);
-        Local<Array> messageProperties = messageObject->GetPropertyNames();
+    if(!value->IsObject()) return;
 
-        for(int i = 0, len = messageProperties->Length(); i < len; i++)
-        {
-            Local<String> messageKey = Local<String>::Cast(messageProperties->Get(i));
-            Local<Value> messageValue = messageObject->Get(messageKey);
+    Handle<Object> messageObject = value->ToObject();
+	Local<Array> messageProperties = messageObject->GetPropertyNames();
 
-            AttributeSubKind::Type subKind = AttributeSubKind::Other;
-            String::Utf8Value _key(messageKey);
-            if(QString(*_key).toLower() == "aim") {
-                subKind = AttributeSubKind::InstantMessagingAim;
-            } else
-            if(QString(*_key).toLower() == "aliwangwang") {
-                subKind = AttributeSubKind::InstantMessagingAliwangwang;
-            } else
-            if(QString(*_key).toLower() == "bbmPin") {
-                subKind = AttributeSubKind::InstantMessagingBbmPin;
-            } else
-            if(QString(*_key).toLower() == "googleTalk") {
-                subKind = AttributeSubKind::InstantMessagingGoogleTalk;
-            } else
-            if(QString(*_key).toLower() == "icq") {
-                subKind = AttributeSubKind::InstantMessagingIcq;
-            } else
-            if(QString(*_key).toLower() == "irc") {
-                subKind = AttributeSubKind::InstantMessagingIrc;
-            } else
-            if(QString(*_key).toLower() == "jabber") {
-                subKind = AttributeSubKind::InstantMessagingJabber;
-            } else
-            if(QString(*_key).toLower() == "msLcs") {
-                subKind = AttributeSubKind::InstantMessagingMsLcs;
-            } else
-            if(QString(*_key).toLower() == "msn") {
-                subKind = AttributeSubKind::InstantMessagingMsn;
-            } else
-            if(QString(*_key).toLower() == "qq") {
-                subKind = AttributeSubKind::InstantMessagingQq;
-            } else
-            if(QString(*_key).toLower() == "sametime") {
-                subKind = AttributeSubKind::InstantMessagingSametime;
-            } else
-            if(QString(*_key).toLower() == "skype") {
-                subKind = AttributeSubKind::InstantMessagingSkype;
-            } else
-            if(QString(*_key).toLower() == "yahooMessenger") {
-                subKind = AttributeSubKind::InstantMessagingYahooMessenger;
-            } else
-            if(QString(*_key).toLower() == "yahooMessengerJapan") {
-                subKind = AttributeSubKind::InstantMessagingYahooMessengerJapan;
-            }
+	for(int i = 0, len = messageProperties->Length(); i < len; i++)
+	{
+		Local<String> messageKey = messageProperties->Get(i)->ToString();
+		Local<Value> messageValue = messageObject->Get(messageKey);
 
-            if(messageValue->IsArray())
-            {
-                Local<Array> messages = Local<Array>::Cast(messageValue);
-                for(int i = 0, len = messages->Length(); i < len; i++)
-                {
-                    Local<Value> currentMessage = messages->Get(Number::New(i));
-                    if(currentMessage->IsString())
-                    {
-                        Local<String> currentMessageString = Local<String>::Cast(currentMessage);
-                        obj->setContactDetails(AttributeKind::InstantMessaging, subKind, currentMessageString);
+		AttributeSubKind::Type subKind = AttributeSubKind::Other;
+		QString messageKeyString = titanium::V8ValueToQString(messageKey).toLower();
 
-                    }
-                    else
-                    {
-                        // Something goes here, throw an error?
-                    }
-                }
-            }
-            else
-            {
-                // Something goes here, throw an error?
-            }
-         }
-    }
-    else
-    {
-        // Something goes here, throw an error?
-    }
+		if(messageKeyString == "aim") {
+			subKind = AttributeSubKind::InstantMessagingAim;
+		} else
+		if(messageKeyString == "aliwangwang") {
+			subKind = AttributeSubKind::InstantMessagingAliwangwang;
+		} else
+		if(messageKeyString == "bbmpin") {
+			subKind = AttributeSubKind::InstantMessagingBbmPin;
+		} else
+		if(messageKeyString == "googletalk") {
+			subKind = AttributeSubKind::InstantMessagingGoogleTalk;
+		} else
+		if(messageKeyString == "icq") {
+			subKind = AttributeSubKind::InstantMessagingIcq;
+		} else
+		if(messageKeyString == "irc") {
+			subKind = AttributeSubKind::InstantMessagingIrc;
+		} else
+		if(messageKeyString == "jabber") {
+			subKind = AttributeSubKind::InstantMessagingJabber;
+		} else
+		if(messageKeyString == "msLcs") {
+			subKind = AttributeSubKind::InstantMessagingMsLcs;
+		} else
+		if(messageKeyString == "msn") {
+			subKind = AttributeSubKind::InstantMessagingMsn;
+		} else
+		if(messageKeyString == "qq") {
+			subKind = AttributeSubKind::InstantMessagingQq;
+		} else
+		if(messageKeyString == "sametime") {
+			subKind = AttributeSubKind::InstantMessagingSametime;
+		} else
+		if(messageKeyString == "skype") {
+			subKind = AttributeSubKind::InstantMessagingSkype;
+		} else
+		if(messageKeyString == "yahoomessenger") {
+			subKind = AttributeSubKind::InstantMessagingYahooMessenger;
+		} else
+		if(messageKeyString == "yahoomessengerjapan") {
+			subKind = AttributeSubKind::InstantMessagingYahooMessengerJapan;
+		}
+
+		if(!messageValue->IsArray()) return;
+
+		Local<Array> messages = Local<Array>::Cast(messageValue);
+		for(int i = 0, len = messages->Length(); i < len; i++)
+		{
+			Local<Value> currentMessage = messages->Get(Number::New(i));
+			if(!currentMessage->IsString()) return;
+
+			obj->setContactDetails(AttributeKind::InstantMessaging, subKind, currentMessage);
+		}
+	}
 }
 void ContactsPersonProxy::_setJobTitle(void* userContext, Handle<Value> value)
 {
@@ -539,56 +490,40 @@ void ContactsPersonProxy::_setPhone(void* userContext, Handle<Value> value)
 {
     ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
 
-    if(value->IsObject())
-    {
-        Handle<Object> phoneObject = Handle<Object>::Cast(value);
-        Local<Array> phoneProperties = phoneObject->GetPropertyNames();
+    if(!value->IsObject()) return;
 
-        for(int i = 0, len = phoneProperties->Length(); i < len; i++)
-        {
-            Local<String> phoneKey = Local<String>::Cast(phoneProperties->Get(i));
-            Local<Value> phoneValue = phoneObject->Get(phoneKey);
+    Handle<Object> phoneObject = value->ToObject();
+	Local<Array> phoneProperties = phoneObject->GetPropertyNames();
 
-            AttributeSubKind::Type subKind = AttributeSubKind::Other;
-            String::Utf8Value _key(phoneKey);
-            if(QString(*_key).toLower() == "home") {
-                subKind = AttributeSubKind::Home;
-            } else
-            if(QString(*_key).toLower() == "work") {
-                subKind = AttributeSubKind::Work;
-            } else
-            if(QString(*_key).toLower() == "mobile") {
-                subKind = AttributeSubKind::PhoneMobile;
-            }
+	for(int i = 0, len = phoneProperties->Length(); i < len; i++)
+	{
+		Local<String> phoneKey = phoneProperties->Get(i)->ToString();
+		Local<Value> phoneValue = phoneObject->Get(phoneKey);
 
-            if(phoneValue->IsArray())
-            {
-                Local<Array> phones = Local<Array>::Cast(phoneValue);
-                for(int i = 0, len = phones->Length(); i < len; i++)
-                {
-                    Local<Value> currentMessage = phones->Get(Number::New(i));
-                    if(currentMessage->IsString())
-                    {
-                        Local<String> currentMessageString = Local<String>::Cast(currentMessage);
-                        obj->setContactDetails(AttributeKind::Phone, subKind, currentMessageString);
+		AttributeSubKind::Type subKind = AttributeSubKind::Other;
+		QString phoneStringValue = titanium::V8ValueToQString(phoneKey);
 
-                    }
-                    else
-                    {
-                        // Something goes here, throw an error?
-                    }
-                }
-            }
-            else
-            {
-                // Something goes here, throw an error?
-            }
-         }
-    }
-    else
-    {
-        // Something goes here, throw an error?
-    }
+		if(phoneStringValue == "home") {
+			subKind = AttributeSubKind::Home;
+		} else
+		if(phoneStringValue == "work") {
+			subKind = AttributeSubKind::Work;
+		} else
+		if(phoneStringValue == "mobile") {
+			subKind = AttributeSubKind::PhoneMobile;
+		}
+
+		if(!phoneValue->IsArray()) return;
+
+		Local<Array> phones = Local<Array>::Cast(phoneValue);
+		for(int i = 0, len = phones->Length(); i < len; i++)
+		{
+			Local<Value> currentMessage = phones->Get(Number::New(i));
+			if(!currentMessage->IsString()) return;
+
+			obj->setContactDetails(AttributeKind::Phone, subKind, currentMessage);
+		}
+	}
 }
 void ContactsPersonProxy::_setPrefix(void* userContext, Handle<Value> value)
 {
@@ -624,7 +559,8 @@ Handle<Value> ContactsPersonProxy::_getAddress(void* userContext)
 
     QList<ContactPostalAddress> array = obj->getFullContact().postalAddresses();
     Handle<Array> ar = Array::New(array.length());
-    for(int i = 0, len = array.length(); i < len; i++) {
+    for(int i = 0, len = array.length(); i < len; i++)
+    {
         ContactPostalAddress address = array.at(i);
         Handle<Object> addressObject = Object::New();
 
@@ -656,10 +592,11 @@ Handle<Value> ContactsPersonProxy::_getDepartment(void* userContext) {
 Handle<Value> ContactsPersonProxy::_getEmail(void* userContext) {
     ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
 
-    QList<ContactAttribute> emails =
-            obj->getFullContact().emails();
-    Handle < Array > emailArray = Array::New(emails.length());
-    for (int i = 0, len = emails.length(); i < len; i++) {
+    QList<ContactAttribute> emails = obj->getFullContact().emails();
+    Handle <Array> emailArray = Array::New(emails.length());
+
+    for (int i = 0, len = emails.length(); i < len; i++)
+    {
         ContactAttribute email = emails.at(i);
         QString kind;
         Handle <Object> jsObject = Object::New();
@@ -733,7 +670,7 @@ Handle<Value> ContactsPersonProxy::_getImage(void* userContext)
         return scope.Close(proxy);
     }
 
-    return Boolean::New(false);
+    return False();
 }
 Handle<Value> ContactsPersonProxy::_getInstantMessage(void* userContext)
 {
