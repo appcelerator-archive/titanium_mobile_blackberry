@@ -12,6 +12,8 @@
 #include <bb/device/HardwareInfo>
 #include "TiGenericFunctionObject.h"
 #include <QUuid>
+#include <bps/bps.h>
+#include <bps/netstatus.h>
 
 
 /**
@@ -92,10 +94,10 @@ TiAnalyticsObject::TiAnalyticsObject(NativeObjectFactory* objectFactory)
 
 		if (createAnalyticsDatabase()) {
 			addAnalyticsEvent("ti.enroll");
-			sendPendingAnalyticsEvents();
 		}
 
-		//  Set up timer and every 10 minutes send out analytics events if any are pending
+		// set up timer and every 30 seconds send out analytics events if any are pending
+		// usually because of unavailable network access
 		TiAnalyticsHandler* eventHandler = new TiAnalyticsHandler(this, "");
 		timer_ = new QTimer(eventHandler);
 		QObject::connect(timer_, SIGNAL(timeout()), eventHandler,  SLOT(sendPendingRequests()));
@@ -160,10 +162,11 @@ bool TiAnalyticsObject::createAnalyticsDatabase()
 	return dbCreate ;
 }
 
-void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string const& data)
+void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string const& data, std::string const& typeArg)
 {
 	sqlite3_stmt* stmt;
 	int rc;
+	string type;
 
 	string cmd = "INSERT INTO events VALUES (?, ?)";
 	rc = sqlite3_prepare_v2(db, cmd.c_str(), strlen(cmd.c_str()) + 1, &stmt, NULL);
@@ -183,10 +186,16 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 	uid.replace("}", "");
 	QByteArray id = uid.toLocal8Bit();
 
+	if (name.find("app.feature") == std::string::npos) {
+		type = name;
+	} else {
+		type = typeArg;
+	}
+
 	// TODO guard against 1024 overrun
 	char json[1024];
 	sprintf(json, "[{\"seq\":%d,\"ver\":\"2\",\"id\":\"%s\",\"sid\":\"%s\",\"mid\":\"%s\",\"aguid\":\"%s\",\"type\":\"%s\",\"event\":\"%s\",\"ts\":\"%s\",\"data\":{\"platform\":\"blackberry\",\"deploytype\":\"%s\",\"app_version\":\"%s\",\"feature_data\":\"%s\"}}]",
-				sequence_, id.data(), sid_.data(), mid_.data(), aguid_.data(), name.c_str(), name.c_str(), ts.data(),
+				sequence_, id.data(), sid_.data(), mid_.data(), aguid_.data(), name.c_str(), type.c_str(), ts.data(),
 				deployType_.data(), appVersion_.data(), data.c_str());
 
 	sqlite3_bind_text(stmt, 1, id.data(), strlen(id.data()), 0);
@@ -200,8 +209,6 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 
 	sqlite3_reset(stmt);
 	sqlite3_clear_bindings(stmt);
-
-
 
 	if (name == "ti.end" ) {
 		bb::cascades::Application::instance()->exit(0);
@@ -233,19 +240,31 @@ void TiAnalyticsObject::sendPendingAnalyticsEvents()
 			uid = sqlite3_column_text (stmt, 0);
 			json = sqlite3_column_text (stmt, 1);
 
-			bool log = defaultSettings.value("analytics-log").toBool();
-			if (log) {
-				TiLogger::getInstance().log("Sending Analytic Event: ");
-				TiLogger::getInstance().log((const char*)json);
+			bool is_available = true;
+			netstatus_get_availability(&is_available);
+
+			if (is_available) {
+				// do not send an http post if a reply is pending
+				std::string id = std::string((const char*)uid, strlen((const char*)uid));
+				if (pendingHttpReplies.find(id) == pendingHttpReplies.end())
+				{
+					TiAnalyticsHandler* requestHandler = new TiAnalyticsHandler(this, (const char*)uid);
+					pendingHttpReplies[id] = requestHandler;
+
+					bool log = defaultSettings.value("analytics-log").toBool();
+					if (log) {
+						TiLogger::getInstance().log("Sending Analytic Event: ");
+						TiLogger::getInstance().log((const char*)json);
+					}
+
+
+					// send HTTP POST Asynchronously
+					QByteArray postDataSize = QByteArray::number(strlen((const char*)json));
+					request_.setRawHeader("Content-Length", postDataSize);
+					QNetworkReply* reply = networkAccessManager_.post(request_, (const char*)json);
+					QObject::connect(reply, SIGNAL(finished()), requestHandler, SLOT(finished()));
+				}
 			}
-
-			// Send HTTP POST Asynchronously
-			QByteArray postDataSize = QByteArray::number(strlen((const char*)json));
-			request_.setRawHeader("Content-Length", postDataSize);
-			QNetworkReply* reply = networkAccessManager_.post(request_, (const char*)json);
-
-			TiAnalyticsHandler* requestHandler = new TiAnalyticsHandler(this, (const char*)uid);
-			QObject::connect(reply, SIGNAL(finished()), requestHandler, SLOT(finished()));
 		}
 		else if (s == SQLITE_DONE) {
 			break;
@@ -262,10 +281,10 @@ void TiAnalyticsObject::sendPendingAnalyticsEvents()
 Handle<Value> TiAnalyticsObject::_featureEvent(void* userContext, TiObject*, const Arguments& args)
 {
 	TiAnalyticsObject* obj = (TiAnalyticsObject*) userContext;
-	string name = "feature.app." +TiObject::getSTDStringFromValue(args[0]);
+	string type = TiObject::getSTDStringFromValue(args[0]);
 	string data = TiObject::getSTDStringFromValue(args[1]);
 
-	obj->addAnalyticsEvent(name, data);
+	obj->addAnalyticsEvent("app.feature", data, type);
 
 	return Undefined();
 }
@@ -306,11 +325,17 @@ void TiAnalyticsHandler::finished()
 
     sqlite3_reset(stmt);
     sqlite3_clear_bindings(stmt);
+
+    // remove the pending http reply
+    tiAnalyticsObject_->pendingHttpReplies.erase(uid_);
+    this->deleteLater();
+
 }
 
 void TiAnalyticsHandler::errors(QNetworkReply* reply)
 {
 	TiLogger::getInstance().log("\nHTTP error while sending analytic event.\n");
+	this->deleteLater();
 }
 
 void TiAnalyticsHandler::sendPendingRequests()
