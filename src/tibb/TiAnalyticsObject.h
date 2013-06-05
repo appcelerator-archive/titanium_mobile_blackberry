@@ -30,11 +30,12 @@ class TiAnalyticsObject : public TiProxy
 public:
 	static void addObjectToParent(TiObject* parent, NativeObjectFactory* objectFactory);
 	bool createAnalyticsDatabase();
-	void addAnalyticsEvent(std::string const& name, std::string const& data = "");
+	void addAnalyticsEvent(std::string const& name, std::string const& data = "", std::string const& type = "");
 	void sendPendingAnalyticsEvents();
 
 	sqlite3* db;
 	bool appStart;
+	std::map <std::string, TiAnalyticsHandler*> pendingHttpReplies;
 
 protected:
     virtual ~TiAnalyticsObject();
