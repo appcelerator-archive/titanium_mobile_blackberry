@@ -7,16 +7,17 @@
 
 #include "TiMedia.h"
 
+#include <QPointer>
+
+#include "CameraInvocation.h"
 #include "KeyboardType.h"
 #include "Scene.h"
+#include "TiAudioPlayerObject.h"
+#include "TiAudioRecorderObject.h"
 #include "TiCascadesApp.h"
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
-#include "TiAudioPlayerObject.h"
 #include "TiSoundObject.h"
-#include "TiAudioRecorderObject.h"
-
-#include <string.h>
 
 using namespace titanium;
 
@@ -54,6 +55,8 @@ void TiMedia::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createAudioPlayer", this, _createAudioPlayer);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createAudioRecorder", this, _createAudioRecorder);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSound", this, _createSound);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "showCamera", this, _showCamera);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "hideCamera", this, _hideCamera);
 
     // Todo fill in contants
     // Adding javascript constants from Ti.Media
@@ -95,4 +98,38 @@ Handle<Value> TiMedia::_createAudioRecorder(void* userContext, TiObject*, const 
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiAudioRecorderObject::createAudioRecorderObject, args);
 }
 
+// If the camera is currently being shown this provides
+// a pointer to the camera invocation instance.
+static QPointer<CameraInvocation> cameraInvocation;
+
+Handle<Value> TiMedia::_showCamera(void* userContext, TiObject* caller, const Arguments& args)
+{
+    if (cameraInvocation && cameraInvocation->isVisible()) {
+        // The camera card is already visible to the user.
+        return Undefined();
+    }
+
+    // The first parameter may be the "options" object.
+    // See Media.showCamera() and CameraOptionsType documentation
+    // to see what properties to expect in this object.
+    TiObject* options = NULL;
+    if (args.Length() && args[0]->IsObject()) {
+        options = new TiObject("CameraOptionsType", args[0]);
+    }
+
+    // Create a new invocation so we can display the camera card.
+    cameraInvocation = new CameraInvocation(options);
+    cameraInvocation->show();
+
+    return Undefined();
+}
+
+Handle<Value> TiMedia::_hideCamera(void* userContext, TiObject* caller, const Arguments& args)
+{
+    if (cameraInvocation) {
+        cameraInvocation->hide();
+        cameraInvocation->deleteLater();
+    }
+    return Undefined();
+}
 
