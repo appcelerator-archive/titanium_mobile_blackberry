@@ -170,6 +170,18 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
 	return computedSize;
 }
 
+void setDefaultHorizontalWidthType(struct LayoutProperties layoutProperties, enum ValueType* measuredWidthType) {
+	if (*measuredWidthType == None) {
+		*measuredWidthType = layoutProperties.defaultWidthType;
+	}
+}
+
+void setDefaultHorizontalHeightType(struct LayoutProperties layoutProperties, enum ValueType* measuredHeightType) {
+	if (*measuredHeightType == None) {
+		*measuredHeightType = layoutProperties.defaultHeightType;
+	}
+}
+
 void measureNodeForHorizontalLayout(struct LayoutProperties layoutProperties, struct Element* element) {
 	enum ValueType widthType = layoutProperties.width.valueType;
 	double widthValue = layoutProperties.width.value;
@@ -191,6 +203,9 @@ void measureNodeForHorizontalLayout(struct LayoutProperties layoutProperties, st
 	double minWidthValue = layoutProperties.minWidth.value;
 	enum ValueType minHeightType = layoutProperties.minHeight.valueType;
 	double minHeightValue = layoutProperties.minHeight.value;
+
+	setDefaultHorizontalWidthType(layoutProperties, &widthType);
+	setDefaultHorizontalHeightType(layoutProperties, &heightType);
 
 	double x1 = 0;
 	double x2 = 0;
