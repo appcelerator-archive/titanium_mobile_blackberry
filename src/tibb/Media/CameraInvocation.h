@@ -12,11 +12,11 @@
 #include <QPointer>
 
 #include <bb/system/InvokeManager>
-#include <bb/system/InvokeReply>
-
-namespace titanium {
+#include <bb/system/InvokeTargetReply>
 
 class TiObject;
+
+namespace titanium {
 
 // Presents the camera application card so the end user
 // may take a picture. Once the picture is captured or
@@ -55,7 +55,7 @@ private slots:
 
 private:
     bb::system::InvokeManager invokeManager_;
-    QPointer<bb::system::InvokeReply> invokeReply_;
+    QPointer<bb::system::InvokeTargetReply> invokeReply_;
     TiObject* options_;
     bool visible_;
 };

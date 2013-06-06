@@ -7,7 +7,11 @@
 
 #include "CameraInvocation.h"
 
+#include <bb/system/CardDoneMessage>
 #include <bb/system/InvokeRequest>
+
+#include "TiObject.h"
+#include "V8Utils.h"
 
 using namespace bb::system;
 
@@ -16,14 +20,18 @@ namespace titanium {
 CameraInvocation::CameraInvocation(TiObject* options)
       : options_(options)
       , visible_(false) {
-    options_->addRef();
-    connect(invokeManager_,
+    if (options_) {
+        options_->addRef();
+    }
+    connect(&invokeManager_,
             SIGNAL(childCardDone(const bb::system::CardDoneMessage&)),
             SLOT(cameraCardDone(const bb::system::CardDoneMessage&)));
 }
 
 CameraInvocation::~CameraInvocation() {
-    options_->release();
+    if (options_) {
+        options_->release();
+    }
 }
 
 void CameraInvocation::show() {
@@ -36,10 +44,18 @@ void CameraInvocation::show() {
     request.setTarget("sys.camera.card");
     request.setAction("bb.action.CAPTURE");
     request.setData("photo");  // TODO: use CameraOptionsType.mediaTypes
-    invokeReply_ = invokeManager_->invoke(request);
+    invokeReply_ = invokeManager_.invoke(request);
+    if (!invokeReply_) {
+        fprintf(stderr, "Failed to send camera card invoke\n");
+        return;
+    }
+
+    connect(invokeReply_, SIGNAL(finished()), SLOT(cameraCardReplyFinished));
 }
 
 void CameraInvocation::hide() {
+    if (!ivisible_) return;
+    invokeManager_.closeChildCard();
 }
 
 void CameraInvocation::cameraCardReplyFinished() {
@@ -49,6 +65,9 @@ void CameraInvocation::cameraCardReplyFinished() {
         fprintf(stderr, "Error invoking camera card! %d\n", invokeReply_->error());
     }
 
+    // Since there doesn't appear to be a way to query if
+    // a card is visible directly, we'll consider a successful
+    // reply as confirmation the card is now displayed on screen.
     visible_ = true;
 
     // We don't need the reply anymore so free up memory.
@@ -56,7 +75,31 @@ void CameraInvocation::cameraCardReplyFinished() {
 }
 
 void CameraInvocation::cameraCardDone(const CardDoneMessage& message) {
+    // The camera card is now off screen so clear the visible flag.
     visible_ = false;
+
+    QString reason = message.reason();
+    Local<Object> options = options_->getValue()->ToObject();
+    if (reason == "done") {
+        // User closed the card without taking a picture or video.
+        CallV8ObjectProperty(options, "cancel", 0, 0);
+    } else if (reason == "close") {
+        Local<Object> data = Object::New();
+        QString errorMessage = message.data();
+        if (!errorMessage.isEmpty()) {
+            data->Set(String::NewSymbol("error"),
+                      String::New(errorMessage.toUtf8().constData()));
+        }
+        Handle<Value> argv[1] = { data };
+        CallV8ObjectProperty(options, "error", 1, argv);
+    } else if (reason == "save") {
+        QString mediaFile = message.data();
+        Local<Object> data = Object::New();
+        data->Set(String::NewSymbol("media"),
+                  String::New(mediaFile.toUtf8().constData()));
+        Handle<Value> argv[1] = { data };
+        CallV8ObjectProperty(options, "success", 1, argv);
+    }
 }
 
 }  // namespace titanium

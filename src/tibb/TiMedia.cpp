@@ -9,8 +9,8 @@
 
 #include <QPointer>
 
-#include "CameraInvocation.h"
 #include "KeyboardType.h"
+#include "Media/CameraInvocation.h"
 #include "Scene.h"
 #include "TiAudioPlayerObject.h"
 #include "TiAudioRecorderObject.h"
@@ -104,9 +104,14 @@ static QPointer<CameraInvocation> cameraInvocation;
 
 Handle<Value> TiMedia::_showCamera(void* userContext, TiObject* caller, const Arguments& args)
 {
-    if (cameraInvocation && cameraInvocation->isVisible()) {
+    if (cameraInvocation) {
         // The camera card is already visible to the user.
-        return Undefined();
+        if (cameraInvocation->isVisible()) {
+            return Undefined();
+        }
+
+        // Discard the previous invocation.
+        cameraInvocation->deleteLater();
     }
 
     // The first parameter may be the "options" object.

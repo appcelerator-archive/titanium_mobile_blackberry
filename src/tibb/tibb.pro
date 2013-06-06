@@ -21,12 +21,14 @@ SOURCES += \
 	./Layout/Node.cpp \
 	./Layout/ParseProperty.cpp \
 	./Layout/Vertical.cpp \
+	./Media/CameraInvocation.cpp \
 	./TableView/BasicListItem.cpp \
 	./TableView/CustomListItem.cpp \
 	./TiScrollableView/TiScrollableView.cpp \
 	./TiScrollableView/TiScrollableViewPage.cpp
 HEADERS += \
 	./*.h \
+	Media/CameraInvocation.h \
 	TableView/BasicListItem.h \
 	TableView/CustomListItem.h \
 	TableView/ListItemData.h \
