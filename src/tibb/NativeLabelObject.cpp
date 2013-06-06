@@ -32,6 +32,7 @@ NATIVE_TYPE NativeLabelObject::getObjectType() const
 int NativeLabelObject::initialize()
 {
     label_ = bb::cascades::Label::create();
+    label_->setMultiline(true);
     setTextControl(label_);
     // TODO: Set label layout here
     return NATIVE_ERROR_OK;
