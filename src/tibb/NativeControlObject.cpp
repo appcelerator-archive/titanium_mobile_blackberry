@@ -235,7 +235,7 @@ void NativeControlObject::updateLayout(QRectF rect)
     bool requestLayout = false;
     rect_ = rect;
 
-    if (layoutNode_.properties.width.valueType == Defer && rect.width() != 0) {
+    if ((layoutNode_.properties.width.valueType == Defer || layoutNode_.properties.width.valueType == Size) && rect.width() != 0) {
     	// do not set width if it will be calculated from left and right properties
     	if (!((layoutNode_.properties.left.valueType == Fixed || layoutNode_.properties.left.valueType == Percent) &&
     			(layoutNode_.properties.right.valueType == Fixed || layoutNode_.properties.right.valueType == Percent))) {
@@ -245,7 +245,7 @@ void NativeControlObject::updateLayout(QRectF rect)
     	}
     }
 
-    if (layoutNode_.properties.height.valueType == Defer && rect.height() != 0) {
+    if ((layoutNode_.properties.height.valueType == Defer || layoutNode_.properties.height.valueType == Size) && rect.height() != 0) {
     	// do not set height if it will be calculated from top and bottom properties
     	if (!((layoutNode_.properties.top.valueType == Fixed || layoutNode_.properties.top.valueType == Percent) &&
     			(layoutNode_.properties.bottom.valueType == Fixed || layoutNode_.properties.bottom.valueType == Percent))) {
