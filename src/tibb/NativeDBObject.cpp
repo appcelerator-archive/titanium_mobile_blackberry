@@ -12,7 +12,7 @@
 #include "TiObject.h"
 #include "TiLogger.h"
 
-#define N_FILEPATH "app/native/"
+#define N_FILEPATH "data/"
 #define N_SQLITE_ERROR 1
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
