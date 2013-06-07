@@ -253,7 +253,7 @@ void NativeControlObject::updateLayout(QRectF rect)
     	}
     }
 
-    if (deferWidth_ && rect.height() != 0) {
+    if (deferHeight_ && rect.height() != 0) {
     	// do not set height if it will be calculated from top and bottom properties
     	if (!((layoutNode_.properties.top.valueType == Fixed || layoutNode_.properties.top.valueType == Percent) &&
     			(layoutNode_.properties.bottom.valueType == Fixed || layoutNode_.properties.bottom.valueType == Percent))) {
