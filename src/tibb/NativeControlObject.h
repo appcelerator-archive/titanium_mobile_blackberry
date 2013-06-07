@@ -234,6 +234,8 @@ private:
     float ppi_; // pixels per inch
     int displayWidth_;
     int displayHeight_;
+    bool deferWidth_;
+    bool deferHeight_;
 };
 
 // Event handler for Ti.UI.View

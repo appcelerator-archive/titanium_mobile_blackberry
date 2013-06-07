@@ -175,6 +175,8 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     control_(NULL),
     layout_(NULL),
     layoutHandler_(0),
+    deferWidth_(false),
+    deferHeight_(false),
     batchUpdating_(false)
 {
     nodeInitialize(&layoutNode_);
@@ -197,8 +199,9 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     	// calculated during the Cascades rendering phase, to know the size the os calls back the size during the
     	// updateLayout() method, the Defer type allows the Titanium layout engine to hold off setting the
     	// control size and any parents sized to content until rendering is complete
-    	layoutNode_.properties.width.valueType = Defer;
-    	layoutNode_.properties.height.valueType = Defer;
+    	deferWidth_ = true;
+    	deferHeight_ = true;
+
     }
 
     if (objType == N_TYPE_LIST_ITEM) {
@@ -240,7 +243,7 @@ void NativeControlObject::updateLayout(QRectF rect)
     bool requestLayout = false;
     rect_ = rect;
 
-    if ((layoutNode_.properties.width.valueType == Defer || layoutNode_.properties.width.valueType == Size) && rect.width() != 0) {
+    if (deferWidth_ && rect.width() != 0) {
     	// do not set width if it will be calculated from left and right properties
     	if (!((layoutNode_.properties.left.valueType == Fixed || layoutNode_.properties.left.valueType == Percent) &&
     			(layoutNode_.properties.right.valueType == Fixed || layoutNode_.properties.right.valueType == Percent))) {
@@ -250,7 +253,7 @@ void NativeControlObject::updateLayout(QRectF rect)
     	}
     }
 
-    if ((layoutNode_.properties.height.valueType == Defer || layoutNode_.properties.height.valueType == Size) && rect.height() != 0) {
+    if (deferHeight_ && rect.height() != 0) {
     	// do not set height if it will be calculated from top and bottom properties
     	if (!((layoutNode_.properties.top.valueType == Fixed || layoutNode_.properties.top.valueType == Percent) &&
     			(layoutNode_.properties.bottom.valueType == Fixed || layoutNode_.properties.bottom.valueType == Percent))) {
