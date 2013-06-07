@@ -1,30 +1,30 @@
-var win = Ti.UI.createWindow({layout:'vertical'});
- 
-var label = Ti.UI.createLabel({
-    text: 'Type some stuff...',
-    width: '75%', height: 50
-});
-win.add(label);
- 
-var textField = Ti.UI.createTextField({
-    width: '75%', height: 75
-});
-win.add(textField);
- 
-var button = Ti.UI.createButton({
-    title: 'Click, me!',
-    width: '75%', height: 100
-});
-win.add(button);
 
-button.addEventListener('click',function(e){
-	Ti.API.info('Sending feature event');
-	Titanium.Analytics.featureEvent('my.feature.blah');
-});
- 
-var view = Ti.UI.createView({
-    backgroundColor: 'red'
-});
-win.add(view);
- 
-win.open();
+var db = Ti.Database.open('mydb1Installed');
+
+db.execute('CREATE TABLE IF NOT EXISTS people (name TEXT, phone_number TEXT, city TEXT)');
+db.execute('DELETE FROM people');
+
+var thisName = 'Arthur';
+var thisPhoneNo = '1-617-000-0000';
+var thisCity = 'Mountain View';
+var rows = db.execute('INSERT INTO people (name, phone_number, city) VALUES (?, ?, ?)', thisName, thisPhoneNo, thisCity);
+
+var personArray = ['Paul',300, 'London'];
+db.execute('INSERT INTO people (name, phone_number, city) VALUES (?, ?, ?)', personArray);
+
+rows = db.execute('SELECT rowid,name,phone_number,city FROM people');
+
+Ti.API.info('Row count: ' + rows.rowCount);
+
+var fieldCount;
+fieldCount = rows.fieldCount;
+
+Ti.API.info('Field count: ' + fieldCount);
+
+while (rows.isValidRow()){
+    Ti.API.info('Person ---> ROWID: ' + rows.fieldByName('rowid') + ', name:' + rows.field(1) + ', phone_number: ' + rows.fieldByName('phone_number') + ', city: ' + rows.field(3));
+  rows.next();
+}
+
+rows.close();
+
