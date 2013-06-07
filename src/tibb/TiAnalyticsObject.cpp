@@ -135,7 +135,7 @@ bool TiAnalyticsObject::createAnalyticsDatabase()
 
 		// TODO check errmsg and make sure that it's caused by no db, create if that is the error
 		dbCreate = true;
-		rc = sqlite3_open_v2("app/native/analytics.db", &db, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, NULL);
+		rc = sqlite3_open_v2("data/analytics.db", &db, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, NULL);
 		if(rc){
 			TiLogger::getInstance().log(sqlite3_errmsg(db));
 			sqlite3_close(db);
