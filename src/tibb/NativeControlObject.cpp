@@ -235,24 +235,16 @@ void NativeControlObject::updateLayout(QRectF rect)
     bool requestLayout = false;
     rect_ = rect;
 
-    if ((layoutNode_.properties.width.valueType == Defer || layoutNode_.properties.width.valueType == Size) && rect.width() != 0) {
-    	// do not set width if it will be calculated from left and right properties
-    	if (!((layoutNode_.properties.left.valueType == Fixed || layoutNode_.properties.left.valueType == Percent) &&
-    			(layoutNode_.properties.right.valueType == Fixed || layoutNode_.properties.right.valueType == Percent))) {
-    		layoutNode_.properties.width.value = rect.width();
-    		layoutNode_.properties.width.valueType = Fixed;
-    		requestLayout = true;
-    	}
+    if (deferWidth_ && rect.width() != 0) {
+		layoutNode_.properties.width.value = rect.width();
+		layoutNode_.properties.width.valueType = Fixed;
+		requestLayout = true;
     }
 
-    if ((layoutNode_.properties.height.valueType == Defer || layoutNode_.properties.height.valueType == Size) && rect.height() != 0) {
-    	// do not set height if it will be calculated from top and bottom properties
-    	if (!((layoutNode_.properties.top.valueType == Fixed || layoutNode_.properties.top.valueType == Percent) &&
-    			(layoutNode_.properties.bottom.valueType == Fixed || layoutNode_.properties.bottom.valueType == Percent))) {
-			layoutNode_.properties.height.value = rect.height();
-			layoutNode_.properties.height.valueType = Fixed;
-			requestLayout = true;
-    	}
+    if (deferHeight_ && rect.height() != 0) {
+		layoutNode_.properties.height.value = rect.height();
+		layoutNode_.properties.height.valueType = Fixed;
+		requestLayout = true;
     }
 
     if (requestLayout) {
@@ -619,7 +611,7 @@ int NativeControlObject::setHeight(TiObject* obj)
 	// auto uses defaults that have already been set for the control type
 	string str = *String::Utf8Value(obj->getValue());
 
-	if (str == "auto") {
+	if (str == "auto" || deferHeight_ == true) {
 		return NATIVE_ERROR_OK;
 	}
 
@@ -899,7 +891,7 @@ int NativeControlObject::setWidth(TiObject* obj)
 	// auto uses defaults that have already been set for the control type
 	string str = *String::Utf8Value(obj->getValue());
 
-	if (str == "auto") {
+	if (str == "auto" || deferWidth_ == true) {
 		return NATIVE_ERROR_OK;
 	}
 
