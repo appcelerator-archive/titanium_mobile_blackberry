@@ -181,7 +181,7 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     layoutNode_.onLayout = onPostLayout;
     layoutNode_.data = this;
 
-    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_LIST_VIEW || objType == N_TYPE_SCROLL_VIEW || objType == N_TYPE_SCROLLABLE_VIEW ||
+    if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_TABLE_VIEW || objType == N_TYPE_SCROLL_VIEW || objType == N_TYPE_SCROLLABLE_VIEW ||
     		objType == N_TYPE_WINDOW || objType == N_TYPE_MAPVIEW || objType == N_TYPE_TEXT_AREA) {
 		layoutNode_.properties.defaultWidthType = Fill;
 		layoutNode_.properties.defaultHeightType  = Fill;
@@ -201,7 +201,7 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     	layoutNode_.properties.height.valueType = Defer;
     }
 
-    if (objType == N_TYPE_LIST_ITEM) {
+    if (objType == N_TYPE_TABLE_VIEW_ROW) {
         layoutNode_.properties.width.valueType = Fill;
         layoutNode_.properties.height.valueType = Defer;
     }

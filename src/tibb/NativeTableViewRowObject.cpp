@@ -5,12 +5,12 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "NativeListItemObject.h"
+#include "NativeTableViewRowObject.h"
 
 #include <bb/cascades/Container>
 #include <bb/cascades/VisualNode>
 
-#include "TableView/ListItemData.h"
+#include "TableView/TableViewRowData.h"
 #include "TiObject.h"
 #include "V8Utils.h"
 
@@ -18,37 +18,37 @@ using namespace titanium;
 
 using namespace bb::cascades;
 
-NativeListItemObject::NativeListItemObject(TiObject* object)
-    : NativeControlObject(object, N_TYPE_LIST_ITEM)
-    , data_(new ListItemData(object)) {
+NativeTableViewRowObject::NativeTableViewRowObject(TiObject* object)
+    : NativeControlObject(object, N_TYPE_TABLE_VIEW_ROW)
+    , data_(new TableViewRowData(object)) {
     // Prevent the data object from getting destroyed
     // when it is removed from the data model. It should live
     // until this native object is deleted.
     data_->setParent(data_.data());
 }
 
-NativeListItemObject::~NativeListItemObject() {
+NativeTableViewRowObject::~NativeTableViewRowObject() {
 }
 
-int NativeListItemObject::addChildNativeObject(NativeObject* obj) {
+int NativeTableViewRowObject::addChildNativeObject(NativeObject* obj) {
     if (!data_->content()) {
         data_->setContent(this);
     }
     return addChildImpl(obj);
 }
 
-int NativeListItemObject::setLeftImage(TiObject* obj) {
+int NativeTableViewRowObject::setLeftImage(TiObject* obj) {
     QString imagePath = V8ValueToQString(obj->getValue());
     data_->setProperty("leftImage", QUrl(getResourcePath(imagePath)));
     return NATIVE_ERROR_OK;
 }
 
-int NativeListItemObject::setTitle(TiObject* obj) {
+int NativeTableViewRowObject::setTitle(TiObject* obj) {
     data_->setProperty("title", V8ValueToQString(obj->getValue()));
     return NATIVE_ERROR_OK;
 }
 
-QVariant NativeListItemObject::data() const {
+QVariant NativeTableViewRowObject::data() const {
     return QVariant::fromValue(static_cast<QObject*>(data_.data()));
 }
 

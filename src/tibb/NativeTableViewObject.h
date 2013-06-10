@@ -5,14 +5,14 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef NATIVELISTVIEWOBJECT_H_
-#define NATIVELISTVIEWOBJECT_H_
+#ifndef NATIVETABLEVIEWOBJECT_H_
+#define NATIVETABLEVIEWOBJECT_H_
 
 #include "NativeControlObject.h"
 #include <QObject>
 
 /*
- * NativeListView
+ * NativeTableView
  *
  * UI: TableView control
  */
@@ -32,38 +32,38 @@ class VisualNode;
 
 class TiEventContainer;
 class TiCascadesEventHandler;
-class ListViewEventHandler;
+class TableViewEventHandler;
 
-class NativeListViewObject : public NativeControlObject
+class NativeTableViewObject : public NativeControlObject
 {
 public:
-    static NativeListViewObject* createListView(TiObject* tiObject);
+    static NativeTableViewObject* createTableView(TiObject* tiObject);
     virtual NATIVE_TYPE getObjectType() const;
     virtual int setData(TiObject* obj);
     virtual int initialize();
-    virtual QVariant getListViewElementFromIndex(QVariantList var);
+    virtual QVariant getTableViewElementFromIndex(QVariantList var);
     virtual NAHANDLE getNativeHandle() const;
     virtual int scrollToIndex(int index);
 
 protected:
-    virtual ~NativeListViewObject();
+    virtual ~NativeTableViewObject();
     virtual void setupEvents(TiEventContainerFactory* containerFactory);
 
 private:
-    explicit NativeListViewObject(TiObject* tiObject);
+    explicit NativeTableViewObject(TiObject* tiObject);
     //Not copy-constructible; Not assignable.
-    NativeListViewObject(const NativeListViewObject& obj);
-    NativeListViewObject& operator=(const NativeListViewObject& obj);
+    NativeTableViewObject(const NativeTableViewObject& obj);
+    NativeTableViewObject& operator=(const NativeTableViewObject& obj);
 
-    bb::cascades::ListView* listView_;
+    bb::cascades::ListView* tableView_;
 };
 
-class ListViewItemFactory : public bb::cascades::ListItemProvider,
+class TableViewRowFactory : public bb::cascades::ListItemProvider,
                             public bb::cascades::ListItemTypeMapper
 {
 public:
-    ListViewItemFactory(NativeListViewObject* listView)
-      : listView_(listView) {
+    TableViewRowFactory(NativeTableViewObject* tableView)
+      : tableView_(tableView) {
     }
 
     bb::cascades::VisualNode* createItem(bb::cascades::ListView* list, const QString& type);
@@ -73,31 +73,31 @@ public:
     QString itemType(const QVariant &data, const QVariantList &indexPat);
 
 private:
-    NativeListViewObject* listView_;
+    NativeTableViewObject* tableView_;
 };
 
 //Event handler for button object
-class ListViewEventHandler : public QObject
+class TableViewEventHandler : public QObject
 {
     Q_OBJECT
 public:
-    explicit ListViewEventHandler(TiEventContainer* eventContainer, NativeListViewObject* owner)
+    explicit TableViewEventHandler(TiEventContainer* eventContainer, NativeTableViewObject* owner)
     {
         eventContainer_ = eventContainer;
         owner_ = owner;
     }
-    virtual ~ListViewEventHandler() {}
+    virtual ~TableViewEventHandler() {}
 
 public slots:
     void triggered(QVariantList var);
 
 private:
     TiEventContainer* eventContainer_;
-    NativeListViewObject* owner_;
+    NativeTableViewObject* owner_;
 
     // Disable copy ctor & assignment operator
-    ListViewEventHandler(const ListViewEventHandler& eHandler);
-    ListViewEventHandler& operator=(const ListViewEventHandler& eHandler);
+    TableViewEventHandler(const TableViewEventHandler& eHandler);
+    TableViewEventHandler& operator=(const TableViewEventHandler& eHandler);
 };
 
-#endif /* NATIVELISTVIEWOBJECT_H_ */
+#endif /* NATIVETABLEVIEWOBJECT_H_ */

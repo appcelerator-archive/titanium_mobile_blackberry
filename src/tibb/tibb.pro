@@ -21,15 +21,15 @@ SOURCES += \
 	./Layout/Node.cpp \
 	./Layout/ParseProperty.cpp \
 	./Layout/Vertical.cpp \
-	./TableView/BasicListItem.cpp \
-	./TableView/CustomListItem.cpp \
+	./TableView/BasicTableViewRow.cpp \
+	./TableView/CustomTableViewRow.cpp \
 	./TiScrollableView/TiScrollableView.cpp \
 	./TiScrollableView/TiScrollableViewPage.cpp
 HEADERS += \
 	./*.h \
-	TableView/BasicListItem.h \
-	TableView/CustomListItem.h \
-	TableView/ListItemData.h \
+	TableView/BasicTableViewRow.h \
+	TableView/CustomTableViewRow.h \
+	TableView/TableViewRowData.h \
 	TiScrollableView/TiScrollableView.h \
 	TiScrollableView/TiScrollableViewPage.h
 

@@ -5,22 +5,22 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef TI_BASIC_LIST_ITEM_H
-#define TI_BASIC_LIST_ITEM_H
+#ifndef TI_BASIC_TABLEVIEW_ROW_H
+#define TI_BASIC_TABLEVIEW_ROW_H
 
 #include <bb/cascades/StandardListItem>
 
-#include "AbstractListItem.h"
+#include "AbstractTableViewRow.h"
 
 namespace titanium {
 
 // The visual control for "basic" table view rows.
 // These provide their own layout for displaying a title, image, etc.
-class BasicListItem : public AbstractListItem {
+class BasicTableViewRow : public AbstractTableViewRow {
     Q_OBJECT
 
 public:
-    BasicListItem();
+    BasicTableViewRow();
 
     virtual void setData(QObject* data);
 
