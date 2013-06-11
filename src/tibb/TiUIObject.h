@@ -34,6 +34,7 @@ private:
     static Handle<Value> _createWindow(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createLabel(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createButton(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createImageButton(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createSlider(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createProgressBar(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createImageView(void* userContext, TiObject* caller, const Arguments& args);
