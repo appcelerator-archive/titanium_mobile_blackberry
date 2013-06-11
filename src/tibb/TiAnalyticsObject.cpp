@@ -177,7 +177,7 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 
 	// generate the event time stamp
 	QDateTime utc = QDateTime::currentDateTimeUtc();
-	QString displayDate = utc.toString("yyyy-MM-ddTHH:mm:ss.zzz+000");
+	QString displayDate = utc.toString("yyyy-MM-ddTHH:mm:ss.zzz+0000");
 	QByteArray ts = displayDate.toLocal8Bit();
 
 	// generate the uid
