@@ -7,6 +7,9 @@
 
 #include "NativeBlobObject.h"
 
+#include <QBuffer>
+#include <QFile>
+
 #include <v8.h>
 
 #include "TiObject.h"
@@ -30,6 +33,37 @@ NativeBlobObject::NativeBlobObject(TiObject* object)
   , PropertyDelegateBase<NativeBlobObject>(this, properties, propertyCount) {
 }
 
+void NativeBlobObject::setData(const QByteArray& data, const QString& mimeType) {
+    data_ = data;
+    device_.reset(new QBuffer(&data_));
+    mimeType_ = mimeType;
+}
+
+void NativeBlobObject::setData(const QString& filename) {
+    data_ = QByteArray();
+    device_.reset(new QFile(filename));
+    // TODO(josh) add MIME guessing by extension
+}
+
+QByteArray NativeBlobObject::data() {
+    if (!data_.isEmpty()) {
+        // Data is already loaded into memory.
+        return data_;
+    }
+
+    if (device_.isNull()) {
+        // If there is no valid device return nothing.
+        return QByteArray();
+    }
+
+    // Read all data available from the input device.
+    device_->open(QIODevice::ReadOnly);
+    data_ = device_->readAll();
+    device_->close();
+
+    return data_;
+}
+
 int NativeBlobObject::setPropertyValue(size_t propertyNumber, TiObject* obj) {
     return setProperty(propertyNumber, obj);
 }
@@ -39,13 +73,22 @@ int NativeBlobObject::getPropertyValue(size_t propertyNumber, TiObject* obj) {
 }
 
 int NativeBlobObject::isFile(TiObject* value) {
-    // File based blobs not yet supported.
-    value->setValue(Null());
+    bool isFile = false;
+    if (device_ && device_->inherits("QFile")) {
+        isFile = true;
+    }
+    value->setValue(Boolean::New(isFile));
     return NATIVE_ERROR_OK;
 }
 
 int NativeBlobObject::getLength(TiObject* value) {
-    value->setValue(Integer::New(data_.size()));
+    int32_t len;
+    if (data_.isEmpty() && device_) {
+        len = device_->size();
+    } else {
+        len = data_.size();
+    }
+    value->setValue(Integer::New(len));
     return NATIVE_ERROR_OK;
 }
 
@@ -56,7 +99,8 @@ int NativeBlobObject::getMIMEType(TiObject* value) {
 
 int NativeBlobObject::getText(TiObject* value) {
     // Assume the data is encoded using ASCII or UTF-8.
-    value->setValue(String::New(data_.constData(), data_.size()));
+    QByteArray d = data();
+    value->setValue(String::New(d.constData(), d.size()));
     return NATIVE_ERROR_OK;
 }
 
