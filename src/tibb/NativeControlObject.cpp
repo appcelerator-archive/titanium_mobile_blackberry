@@ -194,14 +194,14 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     	layoutNode_.properties.defaultWidthType = Size;
     	layoutNode_.properties.defaultHeightType  = Size;
 
+
     	// in Cascades controls like labels and buttons there is no way to know the size of the control, and
-    	// even if the container is larger then the control the actually control surface is based on the size
-    	// calculated during the Cascades rendering phase, to know the size the os calls back the size during the
-    	// updateLayout() method, the Defer type allows the Titanium layout engine to hold off setting the
-    	// control size and any parents sized to content until rendering is complete
+		// even if the container is larger then the control the actually control surface is based on the size
+		// calculated during the Cascades rendering phase, to know the size the os calls back the size during the
+		// updateLayout() method, the Defer type allows the Titanium layout engine to hold off setting the
+		// control size and any parents sized to content until rendering is complete
     	deferWidth_ = true;
     	deferHeight_ = true;
-
     }
 
     if (objType == N_TYPE_LIST_ITEM) {
@@ -243,16 +243,28 @@ void NativeControlObject::updateLayout(QRectF rect)
     bool requestLayout = false;
     rect_ = rect;
 
-    if (deferWidth_ && rect.width() != 0) {
-		layoutNode_.properties.width.value = rect.width();
-		layoutNode_.properties.width.valueType = Fixed;
-		requestLayout = true;
+    if (deferWidth_ == true && rect.width() != 0) {
+    	if ((layoutNode_.properties.left.valueType == Fixed || layoutNode_.properties.left.valueType == Percent) &&
+    	    			(layoutNode_.properties.right.valueType == Fixed || layoutNode_.properties.right.valueType == Percent) &&
+    	    					layoutNode_.properties.width.valueType != Size) {
+    	}
+    	else {
+			layoutNode_.properties.width.value = rect.width();
+			layoutNode_.properties.width.valueType = Fixed;
+			requestLayout = true;
+		}
     }
 
-    if (deferHeight_ && rect.height() != 0) {
-		layoutNode_.properties.height.value = rect.height();
-		layoutNode_.properties.height.valueType = Fixed;
-		requestLayout = true;
+    if (deferHeight_ == true && rect.height() != 0) {
+    	if ((layoutNode_.properties.top.valueType == Fixed || layoutNode_.properties.top.valueType == Percent) &&
+    	    	    			(layoutNode_.properties.bottom.valueType == Fixed || layoutNode_.properties.bottom.valueType == Percent) &&
+    	    	    					layoutNode_.properties.height.valueType != Size) {
+		}
+		else {
+			layoutNode_.properties.height.value = rect.height();
+			layoutNode_.properties.height.valueType = Fixed;
+			requestLayout = true;
+		}
     }
 
     if (requestLayout) {
@@ -619,7 +631,7 @@ int NativeControlObject::setHeight(TiObject* obj)
 	// auto uses defaults that have already been set for the control type
 	string str = *String::Utf8Value(obj->getValue());
 
-	if (str == "auto" || deferHeight_ == true) {
+	if (str == "auto" || (layoutNode_.properties.height.valueType == Defer && str == "UI.SIZE")) {
 		return NATIVE_ERROR_OK;
 	}
 
@@ -896,11 +908,15 @@ int NativeControlObject::getSize(TiObject* obj)
 PROP_SETGET(setWidth)
 int NativeControlObject::setWidth(TiObject* obj)
 {
-	// auto uses defaults that have already been set for the control type
 	string str = *String::Utf8Value(obj->getValue());
 
-	if (str == "auto" || deferWidth_ == true) {
+	if (str == "auto") {
 		return NATIVE_ERROR_OK;
+	}
+
+	if (deferWidth_ && str == "UI.SIZE") {
+			layoutNode_.properties.width.valueType = Size;
+			return NATIVE_ERROR_OK;
 	}
 
 	updateLayoutProperty(Width, obj);
