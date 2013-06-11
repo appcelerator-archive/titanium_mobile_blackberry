@@ -631,7 +631,12 @@ int NativeControlObject::setHeight(TiObject* obj)
 	// auto uses defaults that have already been set for the control type
 	string str = *String::Utf8Value(obj->getValue());
 
-	if (str == "auto" || (layoutNode_.properties.height.valueType == Defer && str == "UI.SIZE")) {
+	if (str == "auto") {
+		return NATIVE_ERROR_OK;
+	}
+
+	if (deferHeight_ && str == "UI.SIZE") {
+		layoutNode_.properties.height.valueType = Size;
 		return NATIVE_ERROR_OK;
 	}
 
