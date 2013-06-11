@@ -44,6 +44,11 @@ TitaniumRuntime::~TitaniumRuntime()
     }
 }
 
+TiRootObject* TitaniumRuntime::rootObject() const {
+    TiBase* root = rootObject_;
+    return static_cast<TiRootObject*>(root);
+}
+
 int TitaniumRuntime::run(const char* javaScript, int argc, char** argv)
 {
     TitaniumRuntime ti(javaScript);

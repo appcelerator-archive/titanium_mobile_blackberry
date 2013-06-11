@@ -19,6 +19,7 @@
 
 class NativeObjectFactory;
 class TiCascadesApp;
+class TiRootObject;
 
 class TitaniumRuntime
 {
@@ -32,6 +33,8 @@ public:
     NativeObjectFactory* objectFactory() const {
         return objectFactory_;
     }
+
+    TiRootObject* rootObject() const;
 
 private:
     TitaniumRuntime();
