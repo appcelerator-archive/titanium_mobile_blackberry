@@ -128,7 +128,7 @@ bool TiAnalyticsObject::createAnalyticsDatabase()
 	int rc;
 	bool dbCreate = false;
 
-	rc = sqlite3_open_v2("app/native/analytics.db", &db, SQLITE_OPEN_READWRITE, NULL);
+	rc = sqlite3_open_v2("data/analytics.db", &db, SQLITE_OPEN_READWRITE, NULL);
 	if(rc){
 		//TiLogger::getInstance().log(sqlite3_errmsg(db));
 		sqlite3_close(db);
