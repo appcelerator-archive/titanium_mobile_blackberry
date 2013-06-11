@@ -10,7 +10,10 @@
 #include <bb/system/CardDoneMessage>
 #include <bb/system/InvokeRequest>
 
+#include "TiBlobObject.h"
 #include "TiObject.h"
+#include "TiRootObject.h"
+#include "TitaniumRuntime.h"
 #include "V8Utils.h"
 
 using namespace bb::system;
@@ -54,7 +57,7 @@ void CameraInvocation::show() {
 }
 
 void CameraInvocation::hide() {
-    if (!ivisible_) return;
+    if (!visible_) return;
     invokeManager_.closeChildCard();
 }
 
@@ -93,10 +96,17 @@ void CameraInvocation::cameraCardDone(const CardDoneMessage& message) {
         Handle<Value> argv[1] = { data };
         CallV8ObjectProperty(options, "error", 1, argv);
     } else if (reason == "save") {
+        TitaniumRuntime* runtime = TitaniumRuntime::instance();
+        TiBlobObject* blob = TiBlobObject::createBlob(runtime->objectFactory());
+        Handle<Object> blobProxy = runtime->rootObject()->createProxyObject();
+        blob->setValue(blobProxy);
+        TiObject::setTiObjectToJsObject(blobProxy, blob);
+
         QString mediaFile = message.data();
+        blob->setData(mediaFile);
+
         Local<Object> data = Object::New();
-        data->Set(String::NewSymbol("media"),
-                  String::New(mediaFile.toUtf8().constData()));
+        data->Set(String::NewSymbol("media"), blobProxy);
         Handle<Value> argv[1] = { data };
         CallV8ObjectProperty(options, "success", 1, argv);
     }
