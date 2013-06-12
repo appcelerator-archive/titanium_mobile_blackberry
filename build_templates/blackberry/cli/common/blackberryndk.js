@@ -284,8 +284,6 @@ function BlackberryNDK(builder) {
 	        	}
 	        }
 
-	        permissions += '<permission>access_pimdomain_contacts</permission>\n\t';
-
 	        if (tiapp['analytics'] === true) {
 	        	permissions += '<permission>read_device_identifying_information</permission>\n\t';
 	        }
