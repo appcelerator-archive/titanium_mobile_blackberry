@@ -225,13 +225,14 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     bb::device::DisplayInfo display;
 	bb::device::DeviceInfo info;
 	int orientation = Orientation::fromDevice(info.orientation());
-	if (orientation == Orientation::PORTRAIT) {
-		displayWidth_ = display.pixelSize().width();
-		displayHeight_ = display.pixelSize().height();
-	}
-	else {
+	if (orientation != Orientation::PORTRAIT) {
 		displayWidth_ = display.pixelSize().height();
 		displayHeight_ =  display.pixelSize().width();
+	}
+	else {
+		displayWidth_ = display.pixelSize().width();
+		displayHeight_ = display.pixelSize().height();
+
 	}
 }
 
@@ -294,14 +295,15 @@ void NativeControlObject::updateLayout(QRectF rect)
         	bb::device::DisplayInfo display;
         	bb::device::DeviceInfo info;
         	int orientation = Orientation::fromDevice(info.orientation());
-        	if (orientation == Orientation::PORTRAIT) {
-				root->element._measuredWidth = display.pixelSize().width();
-				root->element._measuredHeight = display.pixelSize().height();
-        	}
-        	else {
-        		root->element._measuredWidth = display.pixelSize().height();
-        		root->element._measuredHeight = display.pixelSize().width();
-        	}
+        	if (orientation != Orientation::PORTRAIT) {
+				displayWidth_ = display.pixelSize().height();
+				displayHeight_ =  display.pixelSize().width();
+			}
+			else {
+				displayWidth_ = display.pixelSize().width();
+				displayHeight_ = display.pixelSize().height();
+
+			}
             nodeLayout(root);
         }
     }
