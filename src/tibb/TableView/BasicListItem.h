@@ -8,26 +8,30 @@
 #ifndef TI_BASIC_LIST_ITEM_H
 #define TI_BASIC_LIST_ITEM_H
 
-#include <bb/cascades/CustomControl>
 #include <bb/cascades/StandardListItem>
+
+#include "AbstractListItem.h"
+
+namespace titanium {
 
 // The visual control for "basic" table view rows.
 // These provide their own layout for displaying a title, image, etc.
-class BasicListItem : public bb::cascades::CustomControl {
+class BasicListItem : public AbstractListItem {
     Q_OBJECT
 
 public:
     BasicListItem();
 
-    void setData(QObject* data);
+    virtual void setData(QObject* data);
 
 private slots:
     void updateImage(const QUrl& url);
     void updateTitle(const QString& title);
 
 private:
-    QObject* data_;
     bb::cascades::StandardListItem* item_;
 };
+
+}  // namespace titanium
 
 #endif

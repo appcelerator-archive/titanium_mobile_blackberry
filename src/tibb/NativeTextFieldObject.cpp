@@ -48,6 +48,16 @@ int NativeTextFieldObject::initialize()
     return NATIVE_ERROR_OK;
 }
 
+int NativeTextFieldObject::setBackgroundColor(TiObject* obj)
+{
+	NativeAbstractTextControlObject::setBackgroundColor(obj);
+    Handle<Value> value = obj->getValue();
+    if(value->IsNull()) {
+    	textField_->setBackgroundVisible(true);
+    } else {
+    	textField_->setBackgroundVisible(false);
+    }
+}
 int NativeTextFieldObject::setHintText(TiObject* obj)
 {
     QString strHint = V8ValueToQString(obj->getValue());

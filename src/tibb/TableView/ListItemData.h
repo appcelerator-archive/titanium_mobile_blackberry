@@ -12,17 +12,31 @@
 #include <QString>
 #include <QUrl>
 
+#include <bb/cascades/VisualNode>
+
+class NativeControlObject;
 class TiObject;
 
 class ListItemData : public QObject {
     Q_OBJECT
 
+    Q_PROPERTY(QString dataType READ dataType)
     Q_PROPERTY(QUrl leftImage READ leftImage WRITE setLeftImage NOTIFY leftImageChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
 
 public:
     explicit ListItemData(TiObject* row)
-        : row_(row) { }
+        : row_(row)
+        , content_(0) { }
+
+    QString dataType() const {
+        // If the data has custom views for content,
+        // display using the "custom" list view control.
+        if (content_) {
+            return "custom";
+        }
+        return "basic";
+    }
 
     TiObject* row() const {
         return row_;
@@ -46,6 +60,14 @@ public:
         emit titleChanged(title);
     }
 
+    NativeControlObject* content() const {
+        return content_;
+    }
+
+    void setContent(NativeControlObject* content) {
+        content_ = content;
+    }
+
 signals:
     void leftImageChanged(const QUrl& image);
     void titleChanged(const QString& title);
@@ -54,6 +76,7 @@ private:
     TiObject* row_;
     QUrl leftImage_;
     QString title_;
+    NativeControlObject* content_;
 };
 
 #endif

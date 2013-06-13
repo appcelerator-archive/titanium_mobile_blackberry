@@ -90,7 +90,7 @@ int NativeAudioRecorderObject::getStopped(TiObject* obj)
 int NativeAudioRecorderObject::setUrl(TiObject* obj)
 {
 	QString url = V8ValueToQString(obj->getValue());
-	audioTarget =  "app/native/assets/" + url; // local file
+	audioTarget =  "data/" + url; // local file
 
   recorder_->setOutputUrl(QUrl(audioTarget));
 

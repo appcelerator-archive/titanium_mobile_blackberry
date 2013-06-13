@@ -190,10 +190,14 @@ public:
     // Show tab description 
     virtual int setShowTabsOnActionBar(TiObject* obj);
 
-
     virtual void animate(NativeObject* obj);
     virtual void animate(v8::Local<v8::Object> obj);
     virtual void animate(v8::Local<v8::Object> obj, TiV8Event* event);
+
+    Node* layout() {
+        return &layoutNode_;
+    }
+
     bb::cascades::Container* container_;
 
 protected:
@@ -228,6 +232,12 @@ private:
     bool batchUpdating_;
     NATIVE_TYPE objType_;
     float ppi_; // pixels per inch
+    int displayWidth_;
+    int displayHeight_;
+    bool deferWidth_;
+    bool deferHeight_;
+    enum ValueType deferWidthType_;
+    enum ValueType deferHeightType_;
 };
 
 // Event handler for Ti.UI.View

@@ -76,14 +76,25 @@ int NativeAbstractTextControlObject::setColor(TiObject* obj)
 
 int NativeAbstractTextControlObject::setTextAlign(TiObject* obj)
 {
-    int value;
-    int error = NativeControlObject::getInteger(obj, &value);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
+    Handle<Value> value = obj->getValue();
+    int alignment;
+
+    if (!value->IsNumber()) {
+        QString s = V8ValueToQString(value);
+        if (s == "left") {
+            alignment = Ti::UI::TEXT_ALIGNMENT_LEFT;
+        } else if (s == "center") {
+            alignment = Ti::UI::TEXT_ALIGNMENT_CENTER;
+        } else if (s == "right") {
+            alignment = Ti::UI::TEXT_ALIGNMENT_RIGHT;
+        } else {
+            return NATIVE_ERROR_INVALID_ARG;
+        }
+    } else {
+        alignment = value->IntegerValue();
     }
 
-    switch (value)
+    switch (alignment)
     {
     case Ti::UI::TEXT_ALIGNMENT_LEFT:
         textControl_->textStyle()->setTextAlign(bb::cascades::TextAlign::Left);
@@ -95,8 +106,7 @@ int NativeAbstractTextControlObject::setTextAlign(TiObject* obj)
         textControl_->textStyle()->setTextAlign(bb::cascades::TextAlign::Right);
         break;
     default:
-        N_DEBUG(Native::Msg::Unknown_value_received << ": " << value);
-        break;
+        return NATIVE_ERROR_INVALID_ARG;
     }
 
     return NATIVE_ERROR_OK;
@@ -170,3 +180,11 @@ int NativeAbstractTextControlObject::setFont(TiObject* obj)
 
     return NATIVE_ERROR_OK;
 }
+
+void NativeAbstractTextControlObject::resize(float width, float height)
+{
+    NativeControlObject::resize(width, height);
+    //textControl_->setPreferredWidth(width);
+    //textControl_->setPreferredHeight(height);
+}
+

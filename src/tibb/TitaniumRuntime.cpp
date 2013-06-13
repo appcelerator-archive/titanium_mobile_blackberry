@@ -22,6 +22,7 @@
 #include <QtCore/QObject>
 #include <stdio.h>
 #include <string.h>
+#include <bps/bps.h>
 
 TitaniumRuntime* TitaniumRuntime::runtime = 0;
 
@@ -53,6 +54,8 @@ int TitaniumRuntime::run(const char* javaScript, int argc, char** argv)
 
 int TitaniumRuntime::internalRun(int argc, char** argv)
 {
+	bps_initialize(); // initialize the bps services
+
     TiRootObject* obj;
     obj = TiRootObject::createRootObject();
     rootObject_.attachTiObject(obj);
@@ -79,5 +82,6 @@ int TitaniumRuntime::messageLoop(void* context)
     {
         nativeObject->release();
     }
+
     return bb::cascades::Application::exec();
 }

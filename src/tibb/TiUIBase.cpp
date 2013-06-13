@@ -18,6 +18,7 @@
 #include "NativeAnimationObject.h"
 #include <ctype.h>
 #include <string>
+#include "V8Utils.h"
 
 const static TiProperty g_tiProperties[] =
 {
@@ -562,12 +563,33 @@ void TiUIBase::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "focus", this, _focus);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "blur", this, _blur);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "animate", this, _animate);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "applyProperties", this, _applyProperties);
     setTiMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
     TiObject* value = TiPropertyGetObject::createGetProperty(this, "children", this, _getChildren);
     TiPropertyGetFunctionObject::addPropertyGetter(this, value, "getChildren");
     value->release();
 }
 
+Handle<Value> TiUIBase::_applyProperties(void* userContext, TiObject* caller, const Arguments& args)
+{
+    TiUIBase* proxy = (TiUIBase*) userContext;
+
+	if(args.Length() > 0 && args[0]->IsObject())
+	{
+		Local<Object> obj = args[0]->ToObject();
+		Local<Array> props = obj->GetPropertyNames();
+
+		for(uint32_t i = 0, len = props->Length(); i < len; i++)
+		{
+			Local<Value> key = props->Get(i);
+			Local<Value> value = obj->Get(key);
+			QString propName = titanium::V8ValueToQString(key);
+			const char* propString = propName.toLocal8Bit().data();
+			proxy->setPropHelper(propString, value, &TiObject::setValue);
+		}
+	}
+	return Undefined();
+}
 Handle<Value> TiUIBase::_add(void* userContext, TiObject*, const Arguments& args)
 {
     HandleScope handleScope;

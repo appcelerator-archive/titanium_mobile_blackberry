@@ -22,16 +22,23 @@ SOURCES += \
 	./Layout/ParseProperty.cpp \
 	./Layout/Vertical.cpp \
 	./TableView/BasicListItem.cpp \
+	./TableView/CustomListItem.cpp \
 	./TiScrollableView/TiScrollableView.cpp \
-	./TiScrollableView/TiScrollableViewPage.cpp
+	./TiScrollableView/TiScrollableViewPage.cpp \
+	./Contacts/ContactsModule.cpp \
+	./Contacts/ContactsPersonProxy.cpp
 HEADERS += \
 	./*.h \
 	TableView/BasicListItem.h \
+	TableView/CustomListItem.h \
 	TableView/ListItemData.h \
 	TiScrollableView/TiScrollableView.h \
-    TiScrollableView/TiScrollableViewPage.h
+	TiScrollableView/TiScrollableViewPage.h \
+	Contacts/ContactsModule.h \
+	Contacts/ContactsPersonProxy.h
 
 LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata -lbbsystem
+LIBS += -lbbpim
 
 device {
 	CONFIG(release, debug|release) {
