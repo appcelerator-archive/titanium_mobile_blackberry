@@ -34,11 +34,14 @@ private:
 	static Handle<Value> _pop(void* userContext, TiObject*, const Arguments& args);
 	static Handle<Value> _push(void* userContext, TiObject*, const Arguments& args);
 	static Handle<Value> _remove(void* userContext, TiObject*, const Arguments& args);
-	static Handle<Value> _setWindow(void* userContext, TiObject*, const Arguments& args);
-	static Handle<Value> _setRootWindow(void* userContext, TiObject*, const Arguments& args);
-	static Handle<Value> _setBackButtonsVisible(void* userContext, TiObject*, const Arguments& args);
-	static Handle<Value> _setPeekEnabled(void* userContext, TiObject*, const Arguments& args);
-	static Handle<Value> _getPeekEnabled(void* userContext, TiObject*, const Arguments& args);
+
+	static Handle<Value> _getPeekEnabled(void* userContext);
+	static Handle<Value> _getBackButtonsVisible(void* userContext);
+
+	static void _setWindow(void* userContext, Handle<Value> value);
+	static void _setRootWindow(void* userContext, Handle<Value> value);
+	static void _setBackButtonsVisible(void* userContext, Handle<Value> value);
+	static void _setPeekEnabled(void* userContext, Handle<Value> value);
 
 	TiUINavigationGroup();
 	virtual ~TiUINavigationGroup();

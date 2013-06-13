@@ -79,18 +79,10 @@ void TiUINavigationGroup::onCreateStaticMembers()
 	TiGenericFunctionObject::addGenericFunctionToParent(this, "remove", this, _remove);
 
 
-	// TODO: Replace these  with the setters and getters
-	// Waiting on https://github.com/appcelerator/titanium_mobile_blackberry/pull/63
-	TiGenericFunctionObject::addGenericFunctionToParent(this, "setWindow", this, _setWindow);
-	TiGenericFunctionObject::addGenericFunctionToParent(this, "setRootWindow", this, _setRootWindow);
-	TiGenericFunctionObject::addGenericFunctionToParent(this, "setBackButtonsVisible", this, _setBackButtonsVisible);
-	TiGenericFunctionObject::addGenericFunctionToParent(this, "setPeekEnabled", this, _setPeekEnabled);
-	TiGenericFunctionObject::addGenericFunctionToParent(this, "getPeekEnabled", this, _getPeekEnabled);
-	//	createSettersAndGetters("window", _setWindow, NULL);
-	//	createSettersAndGetters("rootWindow", _setRootWindow, NULL);
-	//	createSettersAndGetters("backButtonsVisible", _setBackButtonsVisible, NULL);
-	//	createSettersAndGetters("peekEnabled", _setPeekEnabled, _getPeekEnabled);
-
+	createSettersAndGetters("window", _setWindow, NULL);
+	createSettersAndGetters("rootWindow", _setRootWindow, NULL);
+	createSettersAndGetters("backButtonsVisible", _setBackButtonsVisible, _getBackButtonsVisible);
+	createSettersAndGetters("peekEnabled", _setPeekEnabled, _getPeekEnabled);
 }
 
 bb::cascades::Page* TiUINavigationGroup::getPageFromTiObject(TiObject* obj)
@@ -104,20 +96,7 @@ bb::cascades::Page* TiUINavigationGroup::getPageFromTiObject(TiObject* obj)
     return NULL;
 }
 
-Handle<Value> TiUINavigationGroup::_setPeekEnabled(void* userContext, TiObject*, const Arguments& args)
-{
-	if(args.Length() > 0 && args[0]->IsBoolean())
-	{
-		TiUINavigationGroup* proxy = (TiUINavigationGroup*)userContext;
-		NavigationScene *nav = proxy->getNavigationScene();
-		bb::cascades::NavigationPane *pane = static_cast<bb::cascades::NavigationPane*>(nav->pane());
-	    Local<Boolean> b = args[0]->ToBoolean();
-		pane->setPeekEnabled(b->Value());
-	}
-	return Undefined();
-}
-
-Handle<Value> TiUINavigationGroup::_getPeekEnabled(void* userContext, TiObject*, const Arguments& args)
+Handle<Value> TiUINavigationGroup::_getPeekEnabled(void* userContext)
 {
 	TiUINavigationGroup* proxy = (TiUINavigationGroup*)userContext;
 	NavigationScene *nav = proxy->getNavigationScene();
@@ -125,18 +104,56 @@ Handle<Value> TiUINavigationGroup::_getPeekEnabled(void* userContext, TiObject*,
 	return Boolean::New(pane->isPeekEnabled());
 }
 
-Handle<Value> TiUINavigationGroup::_setBackButtonsVisible(void* userContext, TiObject*, const Arguments& args)
+Handle<Value> TiUINavigationGroup::_getBackButtonsVisible(void* userContext)
 {
-	if(args.Length() > 0 && args[0]->IsBoolean())
+	TiUINavigationGroup* proxy = (TiUINavigationGroup*)userContext;
+	NavigationScene *nav = proxy->getNavigationScene();
+	bb::cascades::NavigationPane *pane = static_cast<bb::cascades::NavigationPane*>(nav->pane());
+	return Boolean::New(pane->backButtonsVisible());
+}
+
+void TiUINavigationGroup::_setPeekEnabled(void* userContext, Handle<Value> value)
+{
+	if(value->IsBoolean())
 	{
 		TiUINavigationGroup* proxy = (TiUINavigationGroup*)userContext;
 		NavigationScene *nav = proxy->getNavigationScene();
 		bb::cascades::NavigationPane *pane = static_cast<bb::cascades::NavigationPane*>(nav->pane());
-	    Local<Boolean> b = args[0]->ToBoolean();
+	    Local<Boolean> b = value->ToBoolean();
+		pane->setPeekEnabled(b->Value());
+	}
+}
+
+void TiUINavigationGroup::_setBackButtonsVisible(void* userContext, Handle<Value> value)
+{
+	if(value->IsBoolean())
+	{
+		TiUINavigationGroup* proxy = (TiUINavigationGroup*)userContext;
+		NavigationScene *nav = proxy->getNavigationScene();
+		bb::cascades::NavigationPane *pane = static_cast<bb::cascades::NavigationPane*>(nav->pane());
+	    Local<Boolean> b = value->ToBoolean();
 		pane->setBackButtonsVisible(b->Value());
 	}
-	return Undefined();
 }
+
+void TiUINavigationGroup::_setWindow(void* userContext, Handle<Value> value)
+{
+	TiUINavigationGroup* proxy = (TiUINavigationGroup*)userContext;
+	NavigationScene *nav = proxy->getNavigationScene();
+
+	TiObject *obj = TiObject::getTiObjectFromJsObject(value);
+	bb::cascades::Page* page = proxy->getPageFromTiObject(obj);
+	bb::cascades::NavigationPane *pane = static_cast<bb::cascades::NavigationPane*>(nav->pane());
+
+	page->setParent(0);
+	pane->push(page);
+
+}
+void TiUINavigationGroup::_setRootWindow(void* userContext, Handle<Value> value)
+{
+	TiUINavigationGroup::_setWindow(userContext, value);
+}
+
 Handle<Value> TiUINavigationGroup::_close(void* userContext, TiObject*, const Arguments& args)
 {
 	TiUINavigationGroup* proxy = (TiUINavigationGroup*)userContext;
@@ -169,23 +186,42 @@ Handle<Value> TiUINavigationGroup::_open(void* userContext, TiObject*, const Arg
 	TiUINavigationGroup* proxy = (TiUINavigationGroup*)userContext;
 	NavigationScene *nav = proxy->getNavigationScene();
 
+	// If no arguments, open the NavigationGroup
 	if(args.Length() == 0) {
 		titanium::SceneManager::instance()->presentScene(nav);
 	}
 	else if(args.Length() > 0 && args[0]->IsObject())
 	{
+		// Check if we have a window as an argument and open it in the stack
 		TiObject *obj = TiObject::getTiObjectFromJsObject(args[0]);
-		if(obj == NULL) {
+		if(obj != NULL)
+		{
+			NativeObject *nativeObject = obj->getNativeObject();
+			if (nativeObject->getObjectType() == N_TYPE_WINDOW) {
+				// depricated, use .push() instead
+				nativeObject->fireEvent("open", NULL);
+				return TiUINavigationGroup::_push(userContext, NULL, args);
+			}
+			return Undefined();
+		}
+		// Check for modal flag
+		Local<Object> modal = args[0]->ToObject();
+		Local<Boolean> isTrue = modal->Get(String::New("modal"))->ToBoolean();
+
+		// if true, open a modal NavigationGroup
+		if(isTrue->Value()) {
 			proxy->modalSheet_ = bb::cascades::Sheet::create();
+			proxy->modalSheet_->setPeekEnabled(false);
 			proxy->modalSheet_->setContent(nav->pane());
 			proxy->modalSheet_->open();
 	    	return Undefined();
 		}
-		NativeObject *nativeObject = obj->getNativeObject();
-	    if (nativeObject->getObjectType() == N_TYPE_WINDOW) {
-			// depricated, use .push() instead
-	    	return TiUINavigationGroup::_push(userContext, NULL, args);
-	    }
+		// If not, just show it
+		else
+		{
+			titanium::SceneManager::instance()->presentScene(nav);
+		}
+
 	}
 	return Undefined();
 }
@@ -199,18 +235,9 @@ Handle<Value> TiUINavigationGroup::_pop(void* userContext, TiObject*, const Argu
 }
 Handle<Value> TiUINavigationGroup::_push(void* userContext, TiObject*, const Arguments& args)
 {
-	TiUINavigationGroup* proxy = (TiUINavigationGroup*)userContext;
-	NavigationScene *nav = proxy->getNavigationScene();
-
 	if(args.Length() > 0 && args[0]->IsObject())
 	{
-		TiObject *obj = TiObject::getTiObjectFromJsObject(args[0]);
-		bb::cascades::Page* page = proxy->getPageFromTiObject(obj);
-		bb::cascades::NavigationPane *pane = static_cast<bb::cascades::NavigationPane*>(nav->pane());
-
-		page->setParent(0);
-		pane->push(page);
-		return Undefined();
+		_setWindow(userContext, args[0]);
 	}
 
 	return Undefined();
@@ -227,13 +254,4 @@ Handle<Value> TiUINavigationGroup::_remove(void* userContext, TiObject*, const A
 		pane->remove(page);
 	}
 	return Undefined();
-}
-Handle<Value> TiUINavigationGroup::_setWindow(void* userContext, TiObject*, const Arguments& args)
-{
-	// deprecated, use .setRootWindow() instead
-	return TiUINavigationGroup::_push(userContext, NULL, args);
-}
-Handle<Value> TiUINavigationGroup::_setRootWindow(void* userContext, TiObject*, const Arguments& args)
-{
-	return TiUINavigationGroup::_push(userContext, NULL, args);
 }
