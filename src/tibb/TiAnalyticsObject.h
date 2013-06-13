@@ -35,6 +35,7 @@ public:
 
 	sqlite3* db;
 	bool appStart;
+	bool dbCreate;
 	std::map <std::string, TiAnalyticsHandler*> pendingHttpReplies;
 
 protected:
