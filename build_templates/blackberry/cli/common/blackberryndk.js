@@ -294,12 +294,12 @@ function BlackberryNDK(builder) {
             var tiapp = builder.tiapp;
             if (typeof tiapp.blackberry !== 'undefined' && typeof tiapp.blackberry.permissions !== 'undefined') {
 	            for (key in tiapp.blackberry.permissions) {
-	            	permissions += '<action>' + key + '</action>\n\t';
+	            	permissions += '<permission>' + key + '</permission>\n\t';
 	        	}
 	        }
 
 	        if (tiapp['analytics'] === true) {
-	        	permissions += '<action>read_device_identifying_information</action>\n\t';
+	        	permissions += '<permission>read_device_identifying_information</permission>\n\t';
 	        }
             
         	var autoOrient = false;
