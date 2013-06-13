@@ -190,7 +190,7 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
 		layoutNode_.properties.defaultWidthType = Fill;
 		layoutNode_.properties.defaultHeightType  = Fill;
     }
-    else if (objType == N_TYPE_LABEL || objType == N_TYPE_BUTTON || objType == N_TYPE_TOGGLEBUTTON ||
+    else if (objType == N_TYPE_LABEL || objType == N_TYPE_BUTTON || objType == N_TYPE_IMAGE_BUTTON || objType == N_TYPE_TOGGLEBUTTON ||
     		objType == N_TYPE_SLIDER || objType == N_TYPE_PROGRESSBAR || objType == N_TYPE_TEXT_FIELD ||
         	objType == N_TYPE_ACTIVITYINDICATOR) {
     	layoutNode_.properties.defaultWidthType = Size;
@@ -1282,6 +1282,17 @@ int NativeControlObject::setShowPagingControl(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setImagePressed)
+int NativeControlObject::setImagePressed(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+PROP_SETGET(setImageDisabled)
+int NativeControlObject::setImageDisabled(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
@@ -1390,6 +1401,11 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_PAGING_CONTROL_TIMEOUT, PROP_SETGET_FUNCTION(setPagingControlTimeout), NULL},
     {N_PROP_SCROLLING_ENABLED, PROP_SETGET_FUNCTION(setScrollingEnabled), NULL},
     {N_PROP_SHOW_PAGING_CONTROL, PROP_SETGET_FUNCTION(setShowPagingControl), NULL},
+
+    // ImageButton
+    {N_PROP_IMAGE_PRESSED, PROP_SETGET_FUNCTION(setImagePressed), NULL},
+    {N_PROP_IMAGE_DISABLED, PROP_SETGET_FUNCTION(setImageDisabled), NULL}
+
 };
 
 static SetGetProperties g_props(g_propSetGet, GET_ARRAY_SIZE(g_propSetGet));

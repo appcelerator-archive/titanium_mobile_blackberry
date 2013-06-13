@@ -13,6 +13,7 @@
 #include "NativeBlobObject.h"
 #include "NativeBufferObject.h"
 #include "NativeButtonObject.h"
+#include "NativeImageButtonObject.h"
 #include "NativeDateTimePickerObject.h"
 #include "NativeDropDownObject.h"
 #include "NativeGeolocationObject.h"
@@ -98,6 +99,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 
     case N_TYPE_BUTTON:
         obj = NativeButtonObject::createButton(tiObj);
+        break;
+
+    case N_TYPE_IMAGE_BUTTON:
+        obj = NativeImageButtonObject::createButton(tiObj);
         break;
 
     case N_TYPE_SLIDER:

@@ -187,6 +187,10 @@ public:
     virtual int setShowPagingControl(TiObject* obj);
     virtual int setViews(TiObject* obj);
 
+    // ImageButton
+    virtual int setImagePressed(TiObject* obj);
+    virtual int setImageDisabled(TiObject* obj);
+
     // Show tab description 
     virtual int setShowTabsOnActionBar(TiObject* obj);
 

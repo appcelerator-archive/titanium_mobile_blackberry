@@ -496,6 +496,16 @@ const static TiProperty g_tiProperties[] =
 		N_PROP_WORD_WRAP
 	},
 
+    // ImageButton
+    {
+        "imagePressed", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_IMAGE_PRESSED
+    },
+    {
+        "imageDisabled", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE | TI_PROP_FLAG_READ_NO_BRIDGE,
+        N_PROP_IMAGE_DISABLED
+    }
+
 };
 
 TiUIBase::TiUIBase()
