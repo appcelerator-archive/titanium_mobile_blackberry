@@ -236,6 +236,8 @@ private:
     int displayHeight_;
     bool deferWidth_;
     bool deferHeight_;
+    enum ValueType deferWidthType_;
+    enum ValueType deferHeightType_;
 };
 
 // Event handler for Ti.UI.View
