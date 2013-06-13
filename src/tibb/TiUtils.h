@@ -6,6 +6,8 @@
  */
 
 #include <QObject>
+#include <QDateTime>
+#include "TiObject.h"
 
 class TiUtils
 {
@@ -15,6 +17,9 @@ public:
 	static TiUtils* getInstance();
 	float getCalculatedDimension(QString);
 	float getPPI();
+	static int getDateTime(TiObject* obj, QDateTime& dt);
+	static int getDateTime(Handle<Value> value, QDateTime& dt);
+
 private:
 
 	float ppi_;
