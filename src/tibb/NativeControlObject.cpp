@@ -19,6 +19,7 @@
 #include <bb/cascades/Container>
 #include <bb/cascades/ImagePaint>
 #include <bb/cascades/LayoutUpdateHandler>
+#include <bb/device/DeviceInfo>
 #include <bb/device/DisplayInfo>
 
 #include "EventHandler.h"
@@ -32,6 +33,7 @@
 #include "TiUIAnimation.h"
 #include "NativeAnimationObject.h"
 #include "TiUtils.h"
+#include "TiOrientation.h"
 
 using namespace bb::cascades;
 using namespace titanium;
@@ -221,8 +223,16 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     ppi_ = tiUtils->getPPI();
 
     bb::device::DisplayInfo display;
-    displayWidth_ = display.pixelSize().width();
-    displayHeight_ = display.pixelSize().height();
+	bb::device::DeviceInfo info;
+	int orientation = Orientation::fromDevice(info.orientation());
+	if (orientation == Orientation::PORTRAIT) {
+		displayWidth_ = display.pixelSize().width();
+		displayHeight_ = display.pixelSize().height();
+	}
+	else {
+		displayWidth_ = display.pixelSize().height();
+		displayHeight_ =  display.pixelSize().width();
+	}
 }
 
 NativeControlObject::~NativeControlObject()
@@ -277,11 +287,21 @@ void NativeControlObject::updateLayout(QRectF rect)
     	}
     }
 
+
     if (requestLayout) {
         struct Node* root = nodeRequestLayout(&layoutNode_);
         if (root) {
-        	root->element._measuredWidth = displayWidth_;
-        	root->element._measuredHeight = displayHeight_;
+        	bb::device::DisplayInfo display;
+        	bb::device::DeviceInfo info;
+        	int orientation = Orientation::fromDevice(info.orientation());
+        	if (orientation == Orientation::PORTRAIT) {
+				root->element._measuredWidth = display.pixelSize().width();
+				root->element._measuredHeight = display.pixelSize().height();
+        	}
+        	else {
+        		root->element._measuredWidth = display.pixelSize().height();
+        		root->element._measuredHeight = display.pixelSize().width();
+        	}
             nodeLayout(root);
         }
     }
@@ -487,8 +507,8 @@ void NativeControlObject::resize(float width, float height)
     Control* control = static_cast<Control*>(getNativeHandle());
 
     if (objType_ == N_TYPE_WINDOW) {
-    	return;
-    }
+   	    	return;
+   	 }
 
     if (!deferWidth_) {
 		control->setMinWidth(width);
