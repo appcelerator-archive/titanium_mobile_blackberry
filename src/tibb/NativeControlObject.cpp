@@ -204,6 +204,10 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
 		// control size and any parents sized to content until rendering is complete
     	deferWidth_ = true;
     	deferHeight_ = true;
+
+    	deferWidthType_ = Size;
+    	deferHeightType_ = Size;
+
     }
 
     if (objType == N_TYPE_LIST_ITEM) {
@@ -342,7 +346,6 @@ void NativeControlObject::setupEvents(TiEventContainerFactory* containerFactory)
     FocusChangeEventHandler* blurHandler = new FocusChangeEventHandler(container);
     QObject::connect(handler, SIGNAL(blur()), blurHandler, SLOT(focusChanged()));
     events_.insert("blur", EventPairSmartPtr(container, blurHandler));
-
 }
 
 int NativeControlObject::addChildNativeObject(NativeObject* obj)
@@ -482,6 +485,10 @@ int NativeControlObject::finishLayout()
 void NativeControlObject::resize(float width, float height)
 {
     Control* control = static_cast<Control*>(getNativeHandle());
+
+    if (objType_ == N_TYPE_WINDOW) {
+    	return;
+    }
 
     if (!deferWidth_) {
 		control->setMinWidth(width);
