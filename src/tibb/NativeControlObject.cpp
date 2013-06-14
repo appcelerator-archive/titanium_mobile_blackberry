@@ -19,6 +19,7 @@
 #include <bb/cascades/Container>
 #include <bb/cascades/ImagePaint>
 #include <bb/cascades/LayoutUpdateHandler>
+#include <bb/device/DeviceInfo>
 #include <bb/device/DisplayInfo>
 
 #include "EventHandler.h"
@@ -32,6 +33,7 @@
 #include "TiUIAnimation.h"
 #include "NativeAnimationObject.h"
 #include "TiUtils.h"
+#include "TiOrientation.h"
 
 using namespace bb::cascades;
 using namespace titanium;
@@ -190,7 +192,7 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
 		layoutNode_.properties.defaultWidthType = Fill;
 		layoutNode_.properties.defaultHeightType  = Fill;
     }
-    else if (objType == N_TYPE_LABEL || objType == N_TYPE_BUTTON || objType == N_TYPE_TOGGLEBUTTON ||
+    else if (objType == N_TYPE_LABEL || objType == N_TYPE_BUTTON || objType == N_TYPE_IMAGE_BUTTON || objType == N_TYPE_TOGGLEBUTTON ||
     		objType == N_TYPE_SLIDER || objType == N_TYPE_PROGRESSBAR || objType == N_TYPE_TEXT_FIELD ||
         	objType == N_TYPE_ACTIVITYINDICATOR) {
     	layoutNode_.properties.defaultWidthType = Size;
@@ -221,8 +223,17 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     ppi_ = tiUtils->getPPI();
 
     bb::device::DisplayInfo display;
-    displayWidth_ = display.pixelSize().width();
-    displayHeight_ = display.pixelSize().height();
+	bb::device::DeviceInfo info;
+	int orientation = Orientation::fromDevice(info.orientation());
+	if (orientation != Orientation::PORTRAIT) {
+		displayWidth_ = display.pixelSize().height();
+		displayHeight_ =  display.pixelSize().width();
+	}
+	else {
+		displayWidth_ = display.pixelSize().width();
+		displayHeight_ = display.pixelSize().height();
+
+	}
 }
 
 NativeControlObject::~NativeControlObject()
@@ -277,11 +288,22 @@ void NativeControlObject::updateLayout(QRectF rect)
     	}
     }
 
+
     if (requestLayout) {
         struct Node* root = nodeRequestLayout(&layoutNode_);
         if (root) {
-        	root->element._measuredWidth = displayWidth_;
-        	root->element._measuredHeight = displayHeight_;
+        	bb::device::DisplayInfo display;
+        	bb::device::DeviceInfo info;
+        	int orientation = Orientation::fromDevice(info.orientation());
+        	if (orientation != Orientation::PORTRAIT) {
+				displayWidth_ = display.pixelSize().height();
+				displayHeight_ =  display.pixelSize().width();
+			}
+			else {
+				displayWidth_ = display.pixelSize().width();
+				displayHeight_ = display.pixelSize().height();
+
+			}
             nodeLayout(root);
         }
     }
@@ -487,8 +509,8 @@ void NativeControlObject::resize(float width, float height)
     Control* control = static_cast<Control*>(getNativeHandle());
 
     if (objType_ == N_TYPE_WINDOW) {
-    	return;
-    }
+   	    	return;
+   	 }
 
     if (!deferWidth_) {
 		control->setMinWidth(width);
@@ -1282,6 +1304,17 @@ int NativeControlObject::setShowPagingControl(TiObject*)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+PROP_SETGET(setImagePressed)
+int NativeControlObject::setImagePressed(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+PROP_SETGET(setImageDisabled)
+int NativeControlObject::setImageDisabled(TiObject*)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
+
 // PROP_SETTING_FUNCTION resolves the static name of the function, e.g.,
 // PROP_SETTING_FUNCTION(setBackgroundColor) resolves to "prop_setBackgroundColor"
 
@@ -1390,6 +1423,11 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_PAGING_CONTROL_TIMEOUT, PROP_SETGET_FUNCTION(setPagingControlTimeout), NULL},
     {N_PROP_SCROLLING_ENABLED, PROP_SETGET_FUNCTION(setScrollingEnabled), NULL},
     {N_PROP_SHOW_PAGING_CONTROL, PROP_SETGET_FUNCTION(setShowPagingControl), NULL},
+
+    // ImageButton
+    {N_PROP_IMAGE_PRESSED, PROP_SETGET_FUNCTION(setImagePressed), NULL},
+    {N_PROP_IMAGE_DISABLED, PROP_SETGET_FUNCTION(setImageDisabled), NULL}
+
 };
 
 static SetGetProperties g_props(g_propSetGet, GET_ARRAY_SIZE(g_propSetGet));
