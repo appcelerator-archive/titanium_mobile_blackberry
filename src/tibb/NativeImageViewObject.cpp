@@ -9,12 +9,15 @@
 
 #include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/AbsoluteLayout>
+#include <bb/cascades/Image>
 #include <bb/cascades/ImageView>
 
+#include "TiBlobObject.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 #include "V8Utils.h"
 
+using namespace bb::cascades;
 using namespace titanium;
 
 NativeImageViewObject::NativeImageViewObject(TiObject* tiObject)
@@ -46,9 +49,20 @@ int NativeImageViewObject::initialize()
 
 int NativeImageViewObject::setImage(TiObject* obj)
 {
-    QString imagePath = V8ValueToQString(obj->getValue());
-    imagePath = getResourcePath(imagePath);
-    imageView_->setImage(QUrl(imagePath));
+    Handle<Value> img = obj->getValue();
+    if (img->IsString()) {
+        QString imagePath = V8ValueToQString(obj->getValue());
+        imagePath = getResourcePath(imagePath);
+        imageView_->setImage(QUrl(imagePath));
+    } else {
+        TiObject* obj = TiObject::getTiObjectFromJsObject(img);
+        if (obj == NULL) return NATIVE_ERROR_INVALID_ARG;
+        if (strcmp(obj->getName(), "Blob") == 0) {
+            TiBlobObject* blob = static_cast<TiBlobObject*>(obj);
+            Image image(blob->data());
+            imageView_->setImage(image);
+        }
+    }
     return NATIVE_ERROR_OK;
 }
 

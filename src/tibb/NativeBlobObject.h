@@ -9,6 +9,7 @@
 #define NATIVEBLOBOBJECT_H_
 
 #include <QByteArray>
+#include <QIODevice>
 
 #include "NativeProxyObject.h"
 #include "PropertyDelegate.h"
@@ -28,16 +29,13 @@ public:
         return N_TYPE_BLOB;
     }
 
-    void setData(const QByteArray& data, const QString& mimeType) {
-        data_ = data;
-        mimeType_ = mimeType;
-    }
-    QByteArray data() const {
-        return data_;
-    }
+    void setData(const QByteArray& data, const QString& mimeType);
+    void setData(const QString& filename);
+
+    QByteArray data();
 
     QString mimeType() const {
-    	return mimeType_;
+        return mimeType_;
     }
 
     int setPropertyValue(size_t propertyNumber, TiObject* obj);
@@ -56,6 +54,7 @@ private:
     NativeBlobObject(const NativeBlobObject&);
     NativeBlobObject& operator=(const NativeBlobObject&);
 
+    QScopedPointer<QIODevice> device_;
     QByteArray data_;
     QString mimeType_;
 };
