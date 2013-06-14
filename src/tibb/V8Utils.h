@@ -26,6 +26,15 @@ inline QString V8ValueToQString(v8::Handle<v8::Value> value) {
     return V8StringToQString(value->ToString());
 }
 
+// Looks up a property on an object and calls it.
+// The property must be a function, otherwise this will
+// return back an empty handle on failure.
+v8::Local<v8::Value> CallV8ObjectProperty(
+    v8::Handle<v8::Object> object,
+    const char* propertyName,
+    int argc,
+    v8::Handle<v8::Value> argv[]);
+
 }  // namespace titanium
 
 #endif

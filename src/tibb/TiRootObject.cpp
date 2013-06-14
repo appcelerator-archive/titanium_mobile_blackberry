@@ -168,6 +168,11 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     return (messageLoopEntry)(context);
 }
 
+Handle<Object> TiRootObject::createProxyObject()
+{
+    return globalTemplate_->NewInstance();
+}
+
 void TiRootObject::createStringMethods()
 {
     Local<Value> str = context_->Global()->Get(String::New("String"));

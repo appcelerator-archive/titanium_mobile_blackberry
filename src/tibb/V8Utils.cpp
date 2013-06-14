@@ -106,5 +106,24 @@ QString V8StringToQString(Handle<String> v8Str) {
     return qStr;
 }
 
+Local<Value> CallV8ObjectProperty(Handle<Object> object,
+                                  const char* propertyName,
+                                  int argc,
+                                  Handle<Value> argv[]) {
+    HandleScope scope;
+
+    // Lookup a property by name on the object.
+    // If the property is undefined or not a function then
+    // return an empty handle to indicate the error.
+    Local<Value> property = object->Get(String::NewSymbol(propertyName));
+    if (property.IsEmpty() || !property->IsFunction()) {
+        return Local<Value>();
+    }
+
+    Local<Function> callback = Local<Function>::Cast(property);
+    Local<Value> result = callback->Call(object, argc, argv);
+    return scope.Close(result);
+}
+
 }  // namespace titanium
 

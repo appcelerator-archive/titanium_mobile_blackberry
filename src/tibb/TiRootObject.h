@@ -28,6 +28,8 @@ public:
     int executeScript(NativeObjectFactory* objectFactory, const char* javaScript,
                       MESSAGELOOPENTRY messageLoopEntry, void* context);
 
+    Handle<Object> createProxyObject();
+
 protected:
     virtual ~TiRootObject();
     virtual void onCreateStaticMembers();
