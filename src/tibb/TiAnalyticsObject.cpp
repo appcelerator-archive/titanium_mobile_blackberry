@@ -24,8 +24,8 @@
 	 sid - a unique value that identifies the entire life-cycle of the app
 	 mid - mobile device id, every BlackBerry device has a unique id
 	 aguid - the id of the application, generated when the application is first created
-	 event - the name of the event, ti.enroll (app first runs), ti.start, ti.end, ti.foreground, ti.background, featureEvent
-	 type - the name of the event, ti.enroll (app first runs), ti.start, ti.end, ti.foreground, ti.background, featureEvent
+	 event - the name of the event, ti.enroll (app first runs), ti.start, ti.end, ti.foreground, ti.background, app.feature
+	 type - the name of the event, ti.enroll (app first runs), ti.start, ti.end, ti.foreground, ti.background, [feature event]
 	 ts - UTC time stamp of event
 	 platform - always blackberry
 	 deploytype - development or production
@@ -40,20 +40,22 @@ static QSettings defaultSettings("app/native/assets/app_properties.ini",
 
 // Singleton
 TiAnalyticsObject::TiAnalyticsObject()
-    : TiProxy("Analytics"), appStart(true), sequence_(1)
+    : TiProxy("Analytics"), appStart(true), dbCreate(false), sequence_(1)
 {
     objectFactory_ = NULL;
 }
 
 // Singleton
 TiAnalyticsObject::TiAnalyticsObject(NativeObjectFactory* objectFactory)
-    : TiProxy("Analytics"), appStart(true), sequence_(1)
+    : TiProxy("Analytics"), appStart(true), dbCreate(false), sequence_(1)
 {
     objectFactory_ = objectFactory;
 
     // if analytics is false just return
     bool analytics = defaultSettings.value("analytics").toBool();
     if (analytics == true) {
+    	createAnalyticsDatabase();
+
 		// get unique application id
 		QString aguid = defaultSettings.value("aguid").toString();
 		aguid_ = aguid.toLocal8Bit();
@@ -92,10 +94,6 @@ TiAnalyticsObject::TiAnalyticsObject(NativeObjectFactory* objectFactory)
 		QObject::connect(bb::cascades::Application::instance(), SIGNAL(fullscreen()), eventHandler_, SLOT(fullscreen()));
 		QObject::connect(bb::cascades::Application::instance(), SIGNAL(manualExit()), eventHandler_, SLOT(manualExit()));
 
-		if (createAnalyticsDatabase()) {
-			addAnalyticsEvent("ti.enroll");
-		}
-
 		// set up timer and every 30 seconds send out analytics events if any are pending
 		// usually because of unavailable network access
 		TiAnalyticsHandler* eventHandler = new TiAnalyticsHandler(this, "");
@@ -126,9 +124,8 @@ bool TiAnalyticsObject::createAnalyticsDatabase()
 {
 	sqlite3_stmt* stmt;
 	int rc;
-	bool dbCreate = false;
 
-	rc = sqlite3_open_v2("app/native/analytics.db", &db, SQLITE_OPEN_READWRITE, NULL);
+	rc = sqlite3_open_v2("data/analytics.db", &db, SQLITE_OPEN_READWRITE, NULL);
 	if(rc){
 		//TiLogger::getInstance().log(sqlite3_errmsg(db));
 		sqlite3_close(db);
@@ -153,13 +150,13 @@ bool TiAnalyticsObject::createAnalyticsDatabase()
 
 		if (sqlite3_step(stmt) != SQLITE_DONE) {
 			TiLogger::getInstance().log("\nCould not step (execute) stmt.\n");
-			return (false);
+			return(false);
 		}
 
 		sqlite3_reset(stmt);
 	}
 
-	return dbCreate ;
+	return 0;
 }
 
 void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string const& data, std::string const& typeArg)
@@ -177,7 +174,7 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 
 	// generate the event time stamp
 	QDateTime utc = QDateTime::currentDateTimeUtc();
-	QString displayDate = utc.toString("yyyy-MM-ddTHH:mm:ss.zzz+000");
+	QString displayDate = utc.toString("yyyy-MM-ddTHH:mm:ss.zzz+0000");
 	QByteArray ts = displayDate.toLocal8Bit();
 
 	// generate the uid
@@ -351,6 +348,9 @@ void TiAnalyticsHandler::thumbnail()
 void TiAnalyticsHandler::fullscreen()
 {
 	if (tiAnalyticsObject_->appStart == true) {
+		if (tiAnalyticsObject_->dbCreate) {
+			tiAnalyticsObject_->addAnalyticsEvent("ti.enroll");
+		}
 		tiAnalyticsObject_->addAnalyticsEvent("ti.start");
 		tiAnalyticsObject_->appStart = false;
 	} else {

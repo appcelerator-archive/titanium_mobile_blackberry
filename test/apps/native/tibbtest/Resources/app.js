@@ -1,30 +1,41 @@
+var win = Ti.UI.createWindow();
 
-var db = Ti.Database.open('mydb1Installed');
+var view = Ti.UI.createView({
+	backgroundColor: 'blue',
+	height: Ti.UI.SIZE
+});
 
-db.execute('CREATE TABLE IF NOT EXISTS people (name TEXT, phone_number TEXT, city TEXT)');
-db.execute('DELETE FROM people');
+var label = Ti.UI.createLabel({
+	text: 'hello world',
+	backgroundColor: 'red',
+	height: Ti.UI.SIZE
+});
 
-var thisName = 'Arthur';
-var thisPhoneNo = '1-617-000-0000';
-var thisCity = 'Mountain View';
-var rows = db.execute('INSERT INTO people (name, phone_number, city) VALUES (?, ?, ?)', thisName, thisPhoneNo, thisCity);
+view.add(label);
+win.add(view);
+win.open()
 
-var personArray = ['Paul',300, 'London'];
-db.execute('INSERT INTO people (name, phone_number, city) VALUES (?, ?, ?)', personArray);
 
-rows = db.execute('SELECT rowid,name,phone_number,city FROM people');
+/*
+var win = Ti.UI.createWindow({});
+ 
+var view = Ti.UI.createView({
+    backgroundColor: 'green',
+    width: 200,
+    height: 200
+});
 
-Ti.API.info('Row count: ' + rows.rowCount);
 
-var fieldCount;
-fieldCount = rows.fieldCount;
+var label = Ti.UI.createLabel({
+    top: 50,
+	backgroundColor: 'red',
+    text: 'kkkkkkkk',
+    width: Ti.UI.SIZE,
+    height: Ti.UI.SIZE
+});
 
-Ti.API.info('Field count: ' + fieldCount);
-
-while (rows.isValidRow()){
-    Ti.API.info('Person ---> ROWID: ' + rows.fieldByName('rowid') + ', name:' + rows.field(1) + ', phone_number: ' + rows.fieldByName('phone_number') + ', city: ' + rows.field(3));
-  rows.next();
-}
-
-rows.close();
-
+view.add(label);
+win.add(view);
+//win.add(label);
+win.open();
+*/

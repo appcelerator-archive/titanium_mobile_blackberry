@@ -187,6 +187,10 @@ public:
     virtual int setShowPagingControl(TiObject* obj);
     virtual int setViews(TiObject* obj);
 
+    // ImageButton
+    virtual int setImagePressed(TiObject* obj);
+    virtual int setImageDisabled(TiObject* obj);
+
     // Show tab description 
     virtual int setShowTabsOnActionBar(TiObject* obj);
 
@@ -234,6 +238,10 @@ private:
     float ppi_; // pixels per inch
     int displayWidth_;
     int displayHeight_;
+    bool deferWidth_;
+    bool deferHeight_;
+    enum ValueType deferWidthType_;
+    enum ValueType deferHeightType_;
 };
 
 // Event handler for Ti.UI.View

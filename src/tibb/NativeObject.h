@@ -27,6 +27,7 @@ enum NATIVE_TYPE
     , N_TYPE_BLOB
     , N_TYPE_BUFFER
     , N_TYPE_BUTTON
+    , N_TYPE_IMAGE_BUTTON
     , N_TYPE_DATE_TIME_PICKER
     , N_TYPE_DROPDOWN
     , N_TYPE_GEOLOCATION
@@ -198,6 +199,11 @@ enum NATIVE_PROP
 	, N_PROP_SHOW_TABS_ON_ACTION_BAR
 	//Tab properties
 	, N_PROP_DESCRIPTION
+
+    // ImageButton
+    , N_PROP_IMAGE_PRESSED
+    , N_PROP_IMAGE_DISABLED
+
 
     /* This MUST be the last element */
     , N_PROP_LAST
