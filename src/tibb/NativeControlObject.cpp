@@ -206,10 +206,6 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
 		// control size and any parents sized to content until rendering is complete
     	deferWidth_ = true;
     	deferHeight_ = true;
-
-    	deferWidthType_ = Size;
-    	deferHeightType_ = Size;
-
     }
 
     if (objType == N_TYPE_LIST_ITEM) {
@@ -696,6 +692,7 @@ int NativeControlObject::setHeight(TiObject* obj)
 		return NATIVE_ERROR_OK;
 	}
 
+	deferHeight_ = false;
 	updateLayoutProperty(Height, obj);
 
 	return NATIVE_ERROR_OK;
@@ -980,6 +977,7 @@ int NativeControlObject::setWidth(TiObject* obj)
 		return NATIVE_ERROR_OK;
 	}
 
+	deferWidth_ = false;
 	updateLayoutProperty(Width, obj);
 
 	return NATIVE_ERROR_OK;
