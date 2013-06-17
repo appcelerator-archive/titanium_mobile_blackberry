@@ -21,21 +21,21 @@ SOURCES += \
 	./Layout/Node.cpp \
 	./Layout/ParseProperty.cpp \
 	./Layout/Vertical.cpp \
-	./TableView/BasicTableViewRow.cpp \
-	./TableView/CustomTableViewRow.cpp \
 	./TiScrollableView/TiScrollableView.cpp \
 	./TiScrollableView/TiScrollableViewPage.cpp \
 	./Contacts/ContactsModule.cpp \
-	./Contacts/ContactsPersonProxy.cpp
+	./Contacts/ContactsPersonProxy.cpp \
+    ./TableView/BasicTableViewRow.cpp \
+    ./TableView/CustomTableViewRow.cpp
 HEADERS += \
 	./*.h \
-	TableView/BasicTableViewRow.h \
-	TableView/CustomTableViewRow.h \
-	TableView/TableViewRowData.h \
 	TiScrollableView/TiScrollableView.h \
 	TiScrollableView/TiScrollableViewPage.h \
 	Contacts/ContactsModule.h \
-	Contacts/ContactsPersonProxy.h
+	Contacts/ContactsPersonProxy.h \
+    TableView/BasicTableViewRow.h \
+    TableView/CustomTableViewRow.h \
+    TableView/TableViewRowData.h
 
 LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata -lbbsystem
 LIBS += -lbbpim
