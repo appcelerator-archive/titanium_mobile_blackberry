@@ -131,3 +131,9 @@ void NativeTextAreaObject::updateValue(QString value)
 {
     tiObject_->forceSetProp("value", String::New(value.toUtf8().constData()));
 }
+
+void NativeTextAreaObject::resize(float width, float height)
+{
+	NativeControlObject::resize(width, height);
+	textArea_->setPreferredSize(width, height);
+}
