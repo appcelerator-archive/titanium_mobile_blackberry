@@ -18,6 +18,7 @@ public:
     static TiBlobObject* createBlob(NativeObjectFactory* objectFactory);
 
     void setData(const QByteArray& data, const QString& mimeType);
+    void setData(const QString& filename);
     QByteArray data() const;
     QString mimeType() const;
 
