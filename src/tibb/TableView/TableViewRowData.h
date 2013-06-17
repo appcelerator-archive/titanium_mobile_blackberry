@@ -5,8 +5,8 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef TI_LIST_ITEM_DATA_H
-#define TI_LIST_ITEM_DATA_H
+#ifndef TI_TABLEVIEW_ROW_DATA_H
+#define TI_TABLEVIEW_ROW_DATA_H
 
 #include <QObject>
 #include <QString>
@@ -17,7 +17,7 @@
 class NativeControlObject;
 class TiObject;
 
-class ListItemData : public QObject {
+class TableViewRowData : public QObject {
     Q_OBJECT
 
     Q_PROPERTY(QString dataType READ dataType)
@@ -25,7 +25,7 @@ class ListItemData : public QObject {
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
 
 public:
-    explicit ListItemData(TiObject* row)
+    explicit TableViewRowData(TiObject* row)
         : row_(row)
         , content_(0) { }
 

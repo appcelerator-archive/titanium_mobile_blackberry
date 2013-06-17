@@ -5,16 +5,16 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef TI_TABLEVIEW_ABSTRACT_LIST_ITEM_H
-#define TI_TABLEVIEW_ABSTRACT_LIST_ITEM_H
+#ifndef TI_TABLEVIEW_ABSTRACT_ROW_H
+#define TI_TABLEVIEW_ABSTRACT_ROW_H
 
 #include <bb/cascades/CustomControl>
 
 namespace titanium {
 
-class AbstractListItem : public bb::cascades::CustomControl {
+class AbstractTableViewRow : public bb::cascades::CustomControl {
 public:
-    AbstractListItem() { }
+    AbstractTableViewRow() { }
 
     QObject* data() const {
         return data_;

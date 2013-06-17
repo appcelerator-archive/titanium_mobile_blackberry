@@ -5,16 +5,16 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "NativeListViewObject.h"
+#include "NativeTableViewObject.h"
 
 #include <bb/cascades/ArrayDataModel>
 #include <bb/cascades/ListView>
 
-#include "NativeListItemObject.h"
-#include "NativeListViewObject.h"
-#include "TableView/BasicListItem.h"
-#include "TableView/CustomListItem.h"
-#include "TableView/ListItemData.h"
+#include "NativeTableViewRowObject.h"
+#include "NativeTableViewObject.h"
+#include "TableView/BasicTableViewRow.h"
+#include "TableView/CustomTableViewRow.h"
+#include "TableView/TableViewRowData.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 #include "TiProxy.h"
@@ -23,35 +23,35 @@
 using namespace bb::cascades;
 using namespace titanium;
 
-NativeListViewObject::NativeListViewObject(TiObject* tiObject)
-    : NativeControlObject(tiObject, N_TYPE_LIST_VIEW)
+NativeTableViewObject::NativeTableViewObject(TiObject* tiObject)
+    : NativeControlObject(tiObject, N_TYPE_TABLE_VIEW)
 {
-    listView_ = NULL;
+    tableView_ = NULL;
 }
 
-NativeListViewObject::~NativeListViewObject()
+NativeTableViewObject::~NativeTableViewObject()
 {
 }
 
-NativeListViewObject* NativeListViewObject::createListView(TiObject* tiObject)
+NativeTableViewObject* NativeTableViewObject::createTableView(TiObject* tiObject)
 {
-    return new NativeListViewObject(tiObject);
+    return new NativeTableViewObject(tiObject);
 }
 
-int NativeListViewObject::initialize()
+int NativeTableViewObject::initialize()
 {
-    listView_ = bb::cascades::ListView::create();
-    setControl(listView_);
-    listView_->setDataModel(new ArrayDataModel());
+    tableView_ = bb::cascades::ListView::create();
+    setControl(tableView_);
+    tableView_->setDataModel(new ArrayDataModel());
 
-    ListViewItemFactory* factory = new ListViewItemFactory(this);
-    listView_->setListItemProvider(factory);
-    listView_->setListItemTypeMapper(factory);
+    TableViewRowFactory* factory = new TableViewRowFactory(this);
+    tableView_->setListItemProvider(factory);
+    tableView_->setListItemTypeMapper(factory);
 
     return NATIVE_ERROR_OK;
 }
 
-int NativeListViewObject::setData(TiObject* obj)
+int NativeTableViewObject::setData(TiObject* obj)
 {
     HandleScope scope;
 
@@ -60,7 +60,7 @@ int NativeListViewObject::setData(TiObject* obj)
         return NATIVE_ERROR_INVALID_ARG;
     }
 
-    ArrayDataModel* model = static_cast<ArrayDataModel*>(listView_->dataModel());
+    ArrayDataModel* model = static_cast<ArrayDataModel*>(tableView_->dataModel());
 
     Handle<Array> data = Handle<Array>::Cast(value);
     uint32_t length = data->Length();
@@ -93,82 +93,82 @@ int NativeListViewObject::setData(TiObject* obj)
         }
 
         NativeObject* native = itemObject->getNativeObject();
-        if (native->getObjectType() != N_TYPE_LIST_ITEM) {
+        if (native->getObjectType() != N_TYPE_TABLE_VIEW_ROW) {
             // Only allow row objects as table data.
             return NATIVE_ERROR_INVALID_ARG;
         }
 
-        NativeListItemObject* listItem = static_cast<NativeListItemObject*>(native);
+        NativeTableViewRowObject* listItem = static_cast<NativeTableViewRowObject*>(native);
         model->append(listItem->data());
     }
 
     return NATIVE_ERROR_OK;
 }
 
-NATIVE_TYPE NativeListViewObject::getObjectType() const
+NATIVE_TYPE NativeTableViewObject::getObjectType() const
 {
-    return N_TYPE_LIST_VIEW;
+    return N_TYPE_TABLE_VIEW;
 }
 
-NAHANDLE NativeListViewObject::getNativeHandle() const
+NAHANDLE NativeTableViewObject::getNativeHandle() const
 {
-    return listView_;
+    return tableView_;
 }
 
-QVariant NativeListViewObject::getListViewElementFromIndex(QVariantList var)
+QVariant NativeTableViewObject::getTableViewElementFromIndex(QVariantList var)
 {
-    bb::cascades::DataModel* dataM = listView_->dataModel();
+    bb::cascades::DataModel* dataM = tableView_->dataModel();
     QVariant property = dataM->data(var);
     return property;
 }
 
-int NativeListViewObject::scrollToIndex(int index)
+int NativeTableViewObject::scrollToIndex(int index)
 {
     QVariant variant(index);
     QVariantList scroll;
     scroll.append(variant);
-    listView_->scrollToItem(scroll);
+    tableView_->scrollToItem(scroll);
     return NATIVE_ERROR_OK;
 }
 
-void NativeListViewObject::setupEvents(TiEventContainerFactory* containerFactory)
+void NativeTableViewObject::setupEvents(TiEventContainerFactory* containerFactory)
 {
     NativeControlObject::setupEvents(containerFactory);
     TiEventContainer* eventClicked = containerFactory->createEventContainer();
     eventClicked->setDataProperty("type", tetCLICK);
-    events_.insert(tetCLICK, EventPairSmartPtr(eventClicked, new ListViewEventHandler(eventClicked, this)));
-    QObject::connect(listView_, SIGNAL(triggered(QVariantList)), events_[tetCLICK]->handler(), SLOT(triggered(QVariantList)));
+    events_.insert(tetCLICK, EventPairSmartPtr(eventClicked, new TableViewEventHandler(eventClicked, this)));
+    QObject::connect(tableView_, SIGNAL(triggered(QVariantList)), events_[tetCLICK]->handler(), SLOT(triggered(QVariantList)));
 }
 
-/*********** ListViewItemFactory class *************/
-bb::cascades::VisualNode* ListViewItemFactory::createItem(bb::cascades::ListView*, const QString& type)
+/*********** TableViewRowFactory class *************/
+bb::cascades::VisualNode* TableViewRowFactory::createItem(bb::cascades::ListView*, const QString& type)
 {
     if (type == "custom") {
-        return new CustomListItem(listView_->layout());
+        return new CustomTableViewRow(tableView_->layout());
     }
-    return new BasicListItem();
+    return new BasicTableViewRow();
 }
 
-void ListViewItemFactory::updateItem(bb::cascades::ListView*, bb::cascades::VisualNode* listItem, const QString&,
+void TableViewRowFactory::updateItem(bb::cascades::ListView*, bb::cascades::VisualNode* listItem, const QString&,
                                      const QVariantList&, const QVariant& data)
 {
     Q_ASSERT(data.canConvert<QObject*>());
-    AbstractListItem* item = static_cast<AbstractListItem*>(listItem);
+    AbstractTableViewRow* item = static_cast<AbstractTableViewRow*>(listItem);
     item->setData(data.value<QObject*>());
 }
 
-QString ListViewItemFactory::itemType(const QVariant &data, const QVariantList &indexPat)
+QString TableViewRowFactory::itemType(const QVariant &data, const QVariantList &indexPat)
 {
     Q_ASSERT(data.canConvert<QObject*>());
     return data.value<QObject*>()->property("dataType").toString();
 }
 
-/*********** ListViewEventHandler class *************/
-void ListViewEventHandler::triggered(QVariantList var)
+/*********** TableViewEventHandler class *************/
+void TableViewEventHandler::triggered(QVariantList var)
 {
     int index = var[0].toInt();
-    QVariant data = owner_->getListViewElementFromIndex(var);
-    ListItemData* itemData = static_cast<ListItemData*>(data.value<QObject*>());
+    QVariant data = owner_->getTableViewElementFromIndex(var);
+    TableViewRowData* itemData = static_cast<TableViewRowData*>(data.value<QObject*>());
     Handle<Value> row = itemData->row()->getValue();
 
     eventContainer_->setDataProperty("index", index);

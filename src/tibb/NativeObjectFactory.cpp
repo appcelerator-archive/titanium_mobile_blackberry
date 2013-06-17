@@ -20,8 +20,8 @@
 #include "NativeGestureObject.h"
 #include "NativeImageViewObject.h"
 #include "NativeLabelObject.h"
-#include "NativeListItemObject.h"
-#include "NativeListViewObject.h"
+#include "NativeTableViewRowObject.h"
+#include "NativeTableViewObject.h"
 #include "NativeLoggerObject.h"
 #include "NativeProgressBarObject.h"
 #include "NativeTabObject.h"
@@ -141,12 +141,12 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
         obj = NativeDropDownObject::createDropDown(tiObj);
         break;
 
-    case N_TYPE_LIST_VIEW:
-        obj = NativeListViewObject::createListView(tiObj);
+    case N_TYPE_TABLE_VIEW:
+        obj = NativeTableViewObject::createTableView(tiObj);
         break;
 
-    case N_TYPE_LIST_ITEM:
-        obj = new NativeListItemObject(tiObj);
+    case N_TYPE_TABLE_VIEW_ROW:
+        obj = new NativeTableViewRowObject(tiObj);
         break;
 
     case N_TYPE_TAB:
