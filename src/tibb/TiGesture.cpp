@@ -12,8 +12,6 @@
 #include "TiGenericFunctionObject.h"
 #include "NativeGestureObject.h"
 
-#include <iostream>
-
 const static TiProperty g_tiProperties[] = {
     { "orientation", TI_PROP_PERMISSION_READ, N_GESTURE_PROP_ORIENTATION }
 };
@@ -21,10 +19,6 @@ const static TiProperty g_tiProperties[] = {
 TiGesture::TiGesture()
   : TiProxy("Gesture") {
 }
-
-
-
-
 
 void TiGesture::addObjectToParent(TiObject* parent, NativeObjectFactory* factory) {
     TiGesture* gesture = new TiGesture();
@@ -100,5 +94,3 @@ Handle<Value> TiGesture::_isFaceUp(void* userContext, TiObject* caller, const Ar
     }
     return Boolean::New(false);
 }
-
-
