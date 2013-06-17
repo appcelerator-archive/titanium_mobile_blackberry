@@ -33,7 +33,7 @@ void TiUITableView::initializeTiObject(TiObject* parentContext)
     if (!isInitialized())
     {
         TiUIBase::initializeTiObject(parentContext);
-        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_LIST_VIEW, this);
+        NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_TABLE_VIEW, this);
         setNativeObject(obj);
         obj->release();
     }

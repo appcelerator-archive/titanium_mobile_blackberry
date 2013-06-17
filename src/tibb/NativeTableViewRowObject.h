@@ -5,24 +5,24 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef NATIVELISTITEMOBJECT_H_
-#define NATIVELISTITEMOBJECT_H_
+#ifndef NATIVETABLEVIEWROWOBJECT_H_
+#define NATIVETABLEVIEWROWOBJECT_H_
 
 #include "NativeControlObject.h"
 
 #include <QScopedPointer>
 #include <QVariant>
 
-class ListItemData;
+class TableViewRowData;
 class TiObject;
 
-class NativeListItemObject : public NativeControlObject {
+class NativeTableViewRowObject : public NativeControlObject {
 public:
-    NativeListItemObject(TiObject* object);
-    virtual ~NativeListItemObject();
+    NativeTableViewRowObject(TiObject* object);
+    virtual ~NativeTableViewRowObject();
 
     virtual NATIVE_TYPE getObjectType() const {
-        return N_TYPE_LIST_ITEM;
+        return N_TYPE_TABLE_VIEW_ROW;
     }
 
     virtual int addChildNativeObject(NativeObject* obj);
@@ -33,7 +33,7 @@ public:
     QVariant data() const;
 
 private:
-    QScopedPointer<ListItemData> data_;
+    QScopedPointer<TableViewRowData> data_;
 };
 
 #endif

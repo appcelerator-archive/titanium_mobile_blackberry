@@ -5,18 +5,18 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "BasicListItem.h"
+#include "BasicTableViewRow.h"
 
 using namespace bb::cascades;
 
 namespace titanium {
 
-BasicListItem::BasicListItem() {
+BasicTableViewRow::BasicTableViewRow() {
     item_ = new StandardListItem();
     setRoot(item_);
 }
 
-void BasicListItem::setData(QObject* newData) {
+void BasicTableViewRow::setData(QObject* newData) {
     updateImage(newData->property("leftImage").value<QUrl>());
     updateTitle(newData->property("title").toString());
 
@@ -28,10 +28,10 @@ void BasicListItem::setData(QObject* newData) {
         data()->disconnect(this);
     }
 
-    AbstractListItem::setData(newData);
+    AbstractTableViewRow::setData(newData);
 }
 
-void BasicListItem::updateImage(const QUrl& url) {
+void BasicTableViewRow::updateImage(const QUrl& url) {
     if (url.isEmpty()) {
         item_->resetImage();
         return;
@@ -39,7 +39,7 @@ void BasicListItem::updateImage(const QUrl& url) {
     item_->setImage(Image(url));
 }
 
-void BasicListItem::updateTitle(const QString& title) {
+void BasicTableViewRow::updateTitle(const QString& title) {
     item_->setTitle(title);
 }
 

@@ -21,23 +21,23 @@ SOURCES += \
 	./Layout/Node.cpp \
 	./Layout/ParseProperty.cpp \
 	./Layout/Vertical.cpp \
-	./Media/CameraInvocation.cpp \
-	./TableView/BasicListItem.cpp \
-	./TableView/CustomListItem.cpp \
 	./TiScrollableView/TiScrollableView.cpp \
 	./TiScrollableView/TiScrollableViewPage.cpp \
 	./Contacts/ContactsModule.cpp \
-	./Contacts/ContactsPersonProxy.cpp
+	./Contacts/ContactsPersonProxy.cpp \
+    ./TableView/BasicTableViewRow.cpp \
+    ./TableView/CustomTableViewRow.cpp \
+    ./Media/CameraInvocation.cpp
 HEADERS += \
 	./*.h \
-	Media/CameraInvocation.h \
-	TableView/BasicListItem.h \
-	TableView/CustomListItem.h \
-	TableView/ListItemData.h \
 	TiScrollableView/TiScrollableView.h \
 	TiScrollableView/TiScrollableViewPage.h \
 	Contacts/ContactsModule.h \
-	Contacts/ContactsPersonProxy.h
+	Contacts/ContactsPersonProxy.h \
+    TableView/BasicTableViewRow.h \
+    TableView/CustomTableViewRow.h \
+    TableView/TableViewRowData.h \
+    Media/CameraInvocation.cpp
 
 LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata -lbbsystem
 LIBS += -lbbpim

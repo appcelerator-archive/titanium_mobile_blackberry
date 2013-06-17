@@ -5,30 +5,30 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "CustomListItem.h"
+#include "CustomTableViewRow.h"
 
-#include "ListItemData.h"
+#include "TableViewRowData.h"
 #include "NativeControlObject.h"
 
 namespace titanium {
 
-CustomListItem::CustomListItem(Node* rootLayout)
+CustomTableViewRow::CustomTableViewRow(Node* rootLayout)
   : rootLayout_(rootLayout)
   , root_(new bb::cascades::Container())
   , content_(NULL) {
     setRoot(root_);
 }
 
-CustomListItem::~CustomListItem() {
+CustomTableViewRow::~CustomTableViewRow() {
     // Prevent the content from being released with this list item.
     // The content will be cleaned up once the data model is released.
     releaseContent();
 }
 
-void CustomListItem::setData(QObject* newData) {
-    AbstractListItem::setData(newData);
+void CustomTableViewRow::setData(QObject* newData) {
+    AbstractTableViewRow::setData(newData);
 
-    ListItemData* itemData = static_cast<ListItemData*>(newData);
+    TableViewRowData* itemData = static_cast<TableViewRowData*>(newData);
     NativeControlObject* control = itemData->content();
 
     // Skip switching the content if the data object
@@ -50,7 +50,7 @@ void CustomListItem::setData(QObject* newData) {
     }
 }
 
-void CustomListItem::releaseContent() {
+void CustomTableViewRow::releaseContent() {
     if (!content_) {
       return;
     }

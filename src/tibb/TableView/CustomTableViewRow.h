@@ -5,20 +5,20 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef TI_TABLEVIEW_CUSTOM_LIST_ITEM_H
-#define TI_TABLEVIEW_CUSTOM_LIST_ITEM_H
+#ifndef TI_TABLEVIEW_CUSTOM_ROW_H
+#define TI_TABLEVIEW_CUSTOM_ROW_H
 
 #include <bb/cascades/Container>
 
-#include "AbstractListItem.h"
+#include "AbstractTableViewRow.h"
 #include "Layout/Node.h"
 
 namespace titanium {
 
-class CustomListItem : public AbstractListItem {
+class CustomTableViewRow : public AbstractTableViewRow {
 public:
-    CustomListItem(Node* rootLayout);
-    virtual ~CustomListItem();
+    CustomTableViewRow(Node* rootLayout);
+    virtual ~CustomTableViewRow();
 
     virtual void setData(QObject* newData);
 
