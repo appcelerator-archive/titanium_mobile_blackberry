@@ -29,6 +29,7 @@ public:
     virtual NATIVE_TYPE getObjectType() const;
     virtual int initialize();
     virtual int setImage(TiObject* obj);
+    virtual void updateLayout(QRectF rect);
 
 protected:
     virtual ~NativeImageViewObject();
