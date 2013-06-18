@@ -32,8 +32,8 @@ public:
     virtual int setFont(TiObject* obj);
     virtual int setColor(TiObject* obj);
     virtual int setTextAlign(TiObject* obj);
-
-    virtual void resize(float width, float height);
+    virtual void updateLayout(QRectF rect);
+    //virtual void resize(float width, float height);
 
 protected:
     explicit NativeAbstractTextControlObject(TiObject* tiObject, NATIVE_TYPE objType = N_TYPE_UNDEFINED);
