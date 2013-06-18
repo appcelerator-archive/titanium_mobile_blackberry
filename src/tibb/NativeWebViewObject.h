@@ -58,6 +58,7 @@ public:
     void goForward();
     void reload();
 
+    bool isLocal_;
     bb::cascades::WebView *getWebView();
     bb::cascades::ScrollView *getScroller();
     bb::cascades::ActivityIndicator *getLoadingIndicator();
@@ -101,8 +102,6 @@ public slots:
 	void onMicroFocusChanged ();
 	void onMinContentScaleChanged (float minContentScale);
 	void onMaxContentScaleChanged (float maxContentScale);
-
-
 
 
 private:

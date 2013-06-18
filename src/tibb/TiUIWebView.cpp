@@ -31,6 +31,11 @@ TiUIWebView* TiUIWebView::createWebView(NativeObjectFactory* nativeObjectFactory
     return obj;
 }
 
+static Handle<Value> _meh(void* userContext, TiObject* caller, const Arguments& args)
+{
+    return String::New("webview!");
+}
+
 void TiUIWebView::onCreateStaticMembers()
 {
     TiUIBase::onCreateStaticMembers();
@@ -40,6 +45,7 @@ void TiUIWebView::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "canGoForward", this, _canGoForward);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "reload", this, _reload);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "evalJS", this, _evalJS);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "_meh", this, _meh);
 }
 
 

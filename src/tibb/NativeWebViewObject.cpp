@@ -20,7 +20,7 @@
 #include <bb/cascades/WebLoadStatus>
 #include <bb/cascades/WebNavigationRequest>
 #include <bb/cascades/WebSettings>
-
+#include <iostream>
 #include "TiEvent.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
@@ -32,6 +32,7 @@ NativeWebViewObject::NativeWebViewObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_WEBVIEW)
 {
 	webview_ = NULL;
+	isLocal_ = false;
 }
 
 NativeWebViewObject::~NativeWebViewObject()
@@ -61,8 +62,7 @@ int NativeWebViewObject::initialize()
     props->setPinchToZoomEnabled(true);
     props->setScrollMode(bb::cascades::ScrollMode::Both);
     loading_ = bb::cascades::ActivityIndicator::create();
-//    scroller_->setVerticalAlignment(bb::cascades::VerticalAlignment::Fill);
-//    scroller_->setHorizontalAlignment(bb::cascades::HorizontalAlignment::Fill);
+
 
     mainView->add(scroller_);
     mainView->add(loading_);
@@ -159,8 +159,20 @@ int NativeWebViewObject::setShowScrollbars(TiObject* obj)
 int NativeWebViewObject::setUrl(TiObject* obj)
 {
     QString url = V8ValueToQString(obj->getValue());
-    webview_->setUrl(QUrl(url));
-  //  webview_->reload();
+    if(url.startsWith("http://") || url.startsWith("https://"))
+    {
+    	webview_->setUrl(QUrl(url));
+        return NATIVE_ERROR_OK;
+   	}
+
+
+    QString localUrl = QString("local:///assets/").append(url);
+    localUrl.replace("local:///assets//", "local:///assets/");
+
+	webview_->setUrl(QUrl(localUrl));
+	isLocal_ = true;
+
+	std::cout << localUrl.toUtf8().constData() << std::endl;
 
     return NATIVE_ERROR_OK;
     
@@ -261,8 +273,7 @@ void NativeWebViewObject::setupEvents(TiEventContainerFactory* containerFactory)
     res = QObject::connect(webview_, SIGNAL(microFocusChanged()), events_[tetDATA]->handler(), SLOT(onMicroFocusChanged()));
 	res = QObject::connect(webview_, SIGNAL(maxContentScaleChanged(float)), events_[tetDATA]->handler(), SLOT(onMaxContentScaleChanged(float)));
 	res = QObject::connect(webview_, SIGNAL(minContentScaleChanged(float)), events_[tetDATA]->handler(), SLOT(onMinContentScaleChanged(float)));
-
-    Q_ASSERT(res);
+	Q_ASSERT(res);
     // Indicate that the variable res isn't used in the rest of the app, to prevent
     // a compiler warning
     Q_UNUSED(res);
@@ -284,7 +295,6 @@ WebViewEventHandler::~WebViewEventHandler() {
 
 }
 
-
 void WebViewEventHandler::onLoadingChanged(bb::cascades::WebLoadRequest* webRequest)
 {
 
@@ -296,6 +306,10 @@ void WebViewEventHandler::onLoadingChanged(bb::cascades::WebLoadRequest* webRequ
     {
     	eventContainer_->fireEvent();
     	loading_->stop();
+    	if(webviewObject_->isLocal_)
+    	{
+  //  		webviewObject_->evalJS("(function(){Ti={};Ti.API={};Ti.API.info=function(e){navigator.cascades.postMessage('Ti.API.info('+JSON.stringify(e)+')')};Ti.App={};Ti.App.addEventListener=function(e,t){navigator.cascades.postMessage('Ti.App.addEventListener('+JSON.stringify(e)+', '+t+')')};Ti.App.fireEvent=function(e,t){t=t||{};navigator.cascades.postMessage('Ti.App.fireEvent('+JSON.stringify(e)+', '+JSON.stringify(t)+')')}})();");
+    	}
     	return;
     }
     if(webRequest->status() == bb::cascades::WebLoadStatus::Failed)
@@ -347,7 +361,12 @@ void WebViewEventHandler::onJavaScriptInterrupted ()
 
 void WebViewEventHandler::onMessageReceived (const QVariantMap &message)
 {
-	eventContainer_->fireEvent();
+	QVariant m = message.value("data");
+	QString funct = m.toString();
+	webview_->postMessage("meh");
+	v8::HandleScope scope;
+    Handle<Script> script = Script::Compile(String::New(funct.toLocal8Bit().data()));
+    script->Run();
 }
 
 void WebViewEventHandler::onMicroFocusChanged ()
