@@ -1,0 +1,32 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+ 
+    <title>SomePage</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">     
+     
+       <!-- THE OFFENDING CODE SNIPPET -->
+    <script type="text/javascript">
+
+
+        window.onload = function(){
+            setTimeout(function(){
+                Ti.App.addEventListener('someEvent', function(e){
+                    alert(this._meh());
+                    // var el = document.getElementById("header_2");
+                    // el.innerHTML = e.message;
+                });
+                Ti.API.info('in timeout file');
+                Ti.App.fireEvent('someEvent');
+
+            },500);    
+        };
+         
+    </script>
+</head>
+<body>
+<h1>Testing webview</h1>
+<h2 id="header_2" />
+</body>
+</html>
