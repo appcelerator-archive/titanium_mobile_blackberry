@@ -137,12 +137,24 @@ int NariveScrollViewObject::setDisableBounce(TiObject* obj)
 
 int NativeScrollViewObject::setContentWidth(TiObject* obj)
 {
+	string str = *String::Utf8Value(obj->getValue());
+
+	if (str == "UI.SIZE") {
+		return NATIVE_ERROR_OK;
+	}
+
 	contentWidthSet_ = true;
     return contentViewProxy_->setWidth(obj);
 }
 
 int NativeScrollViewObject::setContentHeight(TiObject* obj)
 {
+	string str = *String::Utf8Value(obj->getValue());
+
+	if (str == "UI.SIZE") {
+		return NATIVE_ERROR_OK;
+	}
+
 	contentHeightSet_ = true;
     return contentViewProxy_->setHeight(obj);
 }
