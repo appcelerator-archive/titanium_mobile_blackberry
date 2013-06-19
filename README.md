@@ -72,11 +72,11 @@ The source command setups up the envrironment to do BlackBerry builds.
 
 To build V8 you will need to have Python and Scons available.
 
--  Launch QNX Momentics IDE. From "File->Import->General->Existing Projects into Workspace" import src/tibb and test/tibbtest projects from titanium_mobile_blackberry. There is more information on using the IDE at http://developer.blackberry.com/native/documentation/bb10/com.qnx.doc.ide.userguide/topic/about_howtouseguide_.html.
+-  Launch QNX Momentics IDE. From "File->Import->General->Existing Projects into Workspace" import src/tibb and test/native/tibbtest projects from titanium_mobile_blackberry. There is more information on using the IDE at http://developer.blackberry.com/native/documentation/bb10/com.qnx.doc.ide.userguide/topic/about_howtouseguide_.html.
 
 -  Set the Build Configuration -> Simulator Debug. 
 
-- Build tibb and test/tibbtest. When the builds are finished "Debug As" C/C++ Application. Also you need to setup the simulator using the Debug Configuration panel. Make sure to have the simulator running, you should see the simulator in the list of debug targets.
+- Build src/tibb and test/native/tibbtest. When the builds are finished "Debug As" C/C++ Application. Also you need to setup the simulator using the Debug Configuration panel. Make sure to have the simulator running, you should see the simulator in the list of debug targets.
 
 
 How to Update BlackBerry SDK to latest Night Build

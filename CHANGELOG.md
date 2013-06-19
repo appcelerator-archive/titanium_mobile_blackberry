@@ -4,6 +4,7 @@ Release Notes
 Beta Release (3.1.1)
 ----------------------------------------------------
 
+MON JUN 17, 2013 
 
 * Alignment of BlackBerry SDK 3.2.0 to Titanium 3.1.1
 * BlackBerry SDK is now completely integrated into Titanium Studio and SDK (3.1.1)
@@ -12,6 +13,11 @@ Beta Release (3.1.1)
 * Filesystem 
 * ScrollableView
 * Accelerometer
+
+Notes on Using 3.1.1
+--------------------
+
+See the developer blog post at http://developer.appcelerator.com/blog/2013/06/announcing-titanium-3-1-1-production-release.html
 
 
 Beta Release (3.2.0.v20130412191647)
