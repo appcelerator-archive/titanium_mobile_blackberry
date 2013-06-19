@@ -8,18 +8,28 @@
      
        <!-- THE OFFENDING CODE SNIPPET -->
     <script type="text/javascript">
-
+        
+        function onButtonClick() {
+            Ti.App.fireEvent('change_title', {title: 'something else'});
+        }
 
         window.onload = function(){
             setTimeout(function(){
-                Ti.App.addEventListener('someEvent', function(e){
-                    alert(this._meh());
-                    // var el = document.getElementById("header_2");
-                    // el.innerHTML = e.message;
+                Ti.App.addEventListener('change_title', function(e){
+                    var el = document.getElementById('header_2');
+                    el.innerHTML = e.title;
+                    Ti.API.info('Hello World!');
                 });
-                Ti.API.info('in timeout file');
-                Ti.App.fireEvent('someEvent');
-
+                Ti.App.addEventListener('web_view_event', function(e) {
+                    var el = document.getElementById('header_2');
+                    el.innerHTML = e.prop;
+                });
+                Ti.API.info('test info');
+                Ti.API.error('test error');
+                Ti.API.debug('test debug');
+                Ti.API.info({a: 'a'});
+                Ti.API.info(JSON.stringify({a:'a'}));
+                
             },500);    
         };
          
@@ -27,6 +37,7 @@
 </head>
 <body>
 <h1>Testing webview</h1>
-<h2 id="header_2" />
+<h2 id="header_2">meh</h2>
+<Button onClick="onButtonClick()">click here</Button>
 </body>
 </html>

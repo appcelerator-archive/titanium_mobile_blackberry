@@ -1,34 +1,26 @@
 var win = Titanium.UI.createWindow();
 
 var webView = Ti.UI.createWebView({
+    top: 50,
     url: 'web.html'
 });
 
-webView.addEventListener('load', function(){
-    var js =
-    "(function () {" +
-    "   navigator.cascades.onmessage = function onmessage(message) {\n" +
-    "   }\n" +
-
-    "    Ti = {};" +
-    "    Ti.API = {};" +
-    "    Ti.API.info = function (e) {" +
-    "        navigator.cascades.postMessage('Ti.API.info(' + JSON.stringify(e) + ')')" +
-    "    };" +
-    "    Ti.App = {};" +
-    "    Ti.App.addEventListener = function (e, t) {" +
-    "        navigator.cascades.postMessage('Ti.App.addEventListener(' + JSON.stringify(e) + ', ' + t + ')')" +
-    "    };" +
-    "    Ti.App.fireEvent = function (e, t) {" +
-    "        t = t || {};" +
-    "        navigator.cascades.postMessage('Ti.App.fireEvent(' + JSON.stringify(e) + ', ' + JSON.stringify(t) + ')')" +
-    "    }" +
-    "})();";
-    webView.evalJS(js);
+var btn = Ti.UI.createButton({
+    top: 0,
+    title: 'fire event'
 });
 
-win.add(webView);
+btn.addEventListener('click', function(){
+    Ti.App.fireEvent('web_view_event', {prop: 'prop_1'});
+});
 
+Ti.App.addEventListener('change_title', function(e){
+	btn.title = e.title;
+});
+
+win.add(btn);
+
+win.add(webView);
 
 win.open();
 
