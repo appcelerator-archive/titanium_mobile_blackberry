@@ -14,7 +14,6 @@
 #include <bb/cascades/Image>
 #include <bb/cascades/Page>
 #include <bb/cascades/TitleBar>
-#include <bb/cascades/Sheet>
 #include <bb/device/DisplayInfo>
 
 #include "EventHandler.h"
@@ -37,7 +36,7 @@ NativeObject* NativeWindowObject::createWindow(TiObject* tiObject, NativeObjectF
 }
 
 NativeWindowObject::NativeWindowObject(TiObject* tiObject)
-    : NativeControlObject(tiObject, N_TYPE_WINDOW), modalSheet_(NULL), title_(" ")
+    : NativeControlObject(tiObject, N_TYPE_WINDOW)
 {
 }
 
@@ -76,27 +75,14 @@ int NativeWindowObject::setOrientationModes(TiObject* obj) {
 }
 
 int NativeWindowObject::setTitle(TiObject* obj) {
-	title_ = QString::fromUtf8(*String::Utf8Value(obj->getValue()));
-    scene_.titleBar()->setTitle(title_);
+    QString title = QString::fromUtf8(*String::Utf8Value(obj->getValue()));
+    scene_.titleBar()->setTitle(title);
     return NATIVE_ERROR_OK;
 }
 
-void NativeWindowObject::open(bool modal)
+void NativeWindowObject::open()
 {
-	if(SceneManager::instance()->activeScene() == NULL) {
-		// At least one scene needs to be in place, AKA: one window needs to be opened.
-		modal = false;
-	}
-	if(modal) {
-	    scene_.titleBar()->setTitle(title_);
-		modalSheet_ = bb::cascades::Sheet::create();
-		modalSheet_->setContent(scene_.pane());
-		modalSheet_->setPeekEnabled(false);
-		modalSheet_->open();
-		scene_.changeState(Scene::STATE_ONSTAGE);
-	} else {
-	    SceneManager::instance()->presentScene(&scene_);
-	}
+    SceneManager::instance()->presentScene(&scene_);
     events_["open"]->container()->fireEvent();
 }
 
@@ -106,11 +92,7 @@ void NativeWindowObject::close()
         // This window is not currently open.
         return;
     }
-    if(modalSheet_ == NULL) {
-    	scene_.close();
-    } else {
-    	modalSheet_->close();
-    }
+    scene_.close();
     events_["close"]->container()->fireEvent();
 }
 
