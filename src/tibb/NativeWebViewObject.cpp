@@ -25,6 +25,7 @@
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 #include "V8Utils.h"
+#include "JSON.h"
 
 using namespace titanium;
 
@@ -308,7 +309,8 @@ void WebViewEventHandler::onLoadingChanged(bb::cascades::WebLoadRequest* webRequ
     	loading_->stop();
     	if(webviewObject_->isLocal_)
     	{
-  //  		webviewObject_->evalJS("(function(){Ti={};Ti.API={};Ti.API.info=function(e){navigator.cascades.postMessage('Ti.API.info('+JSON.stringify(e)+')')};Ti.App={};Ti.App.addEventListener=function(e,t){navigator.cascades.postMessage('Ti.App.addEventListener('+JSON.stringify(e)+', '+t+')')};Ti.App.fireEvent=function(e,t){t=t||{};navigator.cascades.postMessage('Ti.App.fireEvent('+JSON.stringify(e)+', '+JSON.stringify(t)+')')}})();");
+    		// Modify TiUIWebViewBindingJS.txt and compress with http://jscompress.com
+    		webviewObject_->evalJS("(function(){function e(e,t){if(typeof t=='string'||typeof t=='object')t=JSON.stringify(t);var t='log'+','+e+','+t;navigator.cascades.postMessage(t)}Ti={_event_listeners:[],createEventListener:function(e,t){var n={eventName:e,listener:t,systemId:-1,index:this._event_listeners.length};this._event_listeners.push(n);return n},getEventListenerByKey:function(e,t){for(var n=0;n<this._event_listeners.length;n++){if(this._event_listeners[n][e]==t){return this._event_listeners[n]}}return null},getEventListenerByName:function(e){for(var t=0;t<this._event_listeners.length;t++){if(this._event_listeners[t]['eventName']==e){return this._event_listeners[t]}}return null},API:{info:function(t){e('info',t)},debug:function(t){e('debug',t)},error:function(t){e('error',t)}},App:{addEventListener:function(e,t){var n=Ti.createEventListener(e,t);return n.systemId},removeEventListener:function(e,t){if(typeof t=='number'){var n=Ti.getEventListenerByKey('systemId',t);if(n!==null){Ti._event_listeners.splice(n.index,1)}}else{n=Ti.getEventListenerByKey('listener',t);if(n!==null){Ti._event_listeners.splice(n.index,1)}}},fireEvent:function(e,t){var n='event,'+e+','+JSON.stringify(t||{});navigator.cascades.postMessage(n)}},executeListener:function(e,t){var n=this.getEventListenerByName(e);if(n!==null){n.listener.call(n.listener,t)}}};navigator.cascades.onmessage=function(t){t=JSON.parse(t);Ti.executeListener(t.id,t.data)};Titanium=Ti})()");
     	}
     	return;
     }
@@ -361,12 +363,27 @@ void WebViewEventHandler::onJavaScriptInterrupted ()
 
 void WebViewEventHandler::onMessageReceived (const QVariantMap &message)
 {
-	QVariant m = message.value("data");
-	QString funct = m.toString();
-	webview_->postMessage("meh");
+	QString msg = message.value("data").toString();
+	QStringList parts = msg.split(',');
+	QString type = parts.at(0).toLower();
+
+	QString script_;
+	if(type == "event")
+	{
+		script_ = "Ti.App.fireEvent('";
+		script_.append(parts.at(1)).append("',");
+		script_.append(parts.at(2)).append(");");
+	}
+	else if(type == "log")
+	{
+		script_ = "Ti.API.";
+		script_.append(parts.at(1)).append("(");
+		script_.append(parts.at(2)).append(");");
+	}
+
 	v8::HandleScope scope;
-    Handle<Script> script = Script::Compile(String::New(funct.toLocal8Bit().data()));
-    script->Run();
+	Handle<Script> script = Script::Compile(String::New(script_.toLocal8Bit().data()));
+ 	scope.Close(script->Run());
 }
 
 void WebViewEventHandler::onMicroFocusChanged ()
