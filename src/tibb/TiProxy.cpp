@@ -11,7 +11,9 @@
 #include "TiGenericFunctionObject.h"
 #include "TiPropertySetGetObject.h"
 #include "TiV8Event.h"
-
+#include "TiUIWebView.h"
+#include "V8Utils.h"
+#include "JSON.h"
 
 const char* POINTER = "_event_ptr_";
 const char* OWNER   = "_event_owner_";
@@ -97,8 +99,31 @@ Handle<Value> TiProxy::_fireEvent(void* userContext, TiObject*, const Arguments&
     }
 
     const TiProxy* obj = (TiProxy*) userContext;
+
+    if(QString(obj->getName()) == "App")
+    {
+    	Local<Object> eventParams = Object::New();
+    	if(args.Length() > 1) {
+    		eventParams->Set(String::New("data"), args[1]->ToObject());
+    	} else {
+    		eventParams->Set(String::New("data"), Object::New());
+    	}
+    	eventParams->Set(String::New("id"), args[0]->ToString());
+
+    	Local<String> event = JSON::Stringify(eventParams);
+    	QString eventString = titanium::V8ValueToQString(event);
+    	QList<TiUIWebView*> webViews = TiUIWebView::getWebViews();
+
+    	for(int i = 0, len = webViews.length(); i < len; i++)
+    	{
+    		webViews.at(i)->getNativeWebView()->postMessage(eventString);
+    	}
+    }
+
+
     NativeObject* no = obj->getNativeObject();
     if (!no) return Undefined();
+
 
     const String::Utf8Value name(args[0]->ToString());
     if (args.Length() >= 2) {

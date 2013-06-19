@@ -9,6 +9,7 @@
 #define TIUIWEBVIEW_H_
 
 #include "TiUIBase.h"
+#include <bb/cascades/WebView>
 
 /*
  * TiUIWebView
@@ -17,11 +18,13 @@
  *
  */
 
+
 class TiUIWebView: public TiUIBase
 {
 public:
     static TiUIWebView* createWebView(NativeObjectFactory* nativeObjectFactory);
-
+    static QList<TiUIWebView*> getWebViews();
+    bb::cascades::WebView *getNativeWebView();
 protected:
     virtual ~TiUIWebView();
     virtual void initializeTiObject(TiObject* parentContext);

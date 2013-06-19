@@ -46,7 +46,7 @@ void TiUIWindow::initializeTiObject(TiObject* parentContext)
     }
 }
 
-Handle<Value> TiUIWindow::_open(void* userContext, TiObject*, const Arguments&)
+Handle<Value> TiUIWindow::_open(void* userContext, TiObject*, const Arguments& args)
 {
     HandleScope scope;
     TiUIWindow* self = static_cast<TiUIWindow*>(userContext);
@@ -58,7 +58,14 @@ Handle<Value> TiUIWindow::_open(void* userContext, TiObject*, const Arguments&)
         (*it)->setupEvents();
     }
 
-    window->open();
+    if(args.Length() > 0 && args[0]->IsObject())
+    {
+    	Local<Object> modal = args[0]->ToObject();
+    	Local<Boolean> isTrue = modal->Get(String::New("modal"))->ToBoolean();
+    	window->open(isTrue->Value());
+    } else {
+    	window->open(false);
+    }
     window->release(); // XXX(josh): Do we really want to release now?
 
     return Undefined();

@@ -8,6 +8,14 @@
 #include "TiUIWebView.h"
 #include "NativeWebViewObject.h"
 #include "TiGenericFunctionObject.h"
+#include "V8Utils.h"
+
+static QList<TiUIWebView*> webViews_;
+
+QList<TiUIWebView*> TiUIWebView::getWebViews()
+{
+	return webViews_;
+}
 
 TiUIWebView::TiUIWebView(const char* name)
     : TiUIBase(name)
@@ -21,6 +29,7 @@ TiUIWebView::TiUIWebView()
 
 TiUIWebView::~TiUIWebView()
 {
+   webViews_.removeOne(this);
 }
 
 TiUIWebView* TiUIWebView::createWebView(NativeObjectFactory* nativeObjectFactory)
@@ -28,6 +37,7 @@ TiUIWebView* TiUIWebView::createWebView(NativeObjectFactory* nativeObjectFactory
 	TiUIWebView* obj = new TiUIWebView;
     obj->setNativeObjectFactory(nativeObjectFactory);
     obj->initializeTiObject(NULL);
+    webViews_.append(obj);
     return obj;
 }
 
@@ -42,7 +52,6 @@ void TiUIWebView::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "evalJS", this, _evalJS);
 }
 
-
 void TiUIWebView::initializeTiObject(TiObject* parentContext)
 {
     if (!isInitialized())
@@ -52,6 +61,12 @@ void TiUIWebView::initializeTiObject(TiObject* parentContext)
         setNativeObject(obj);
         obj->release();
     }
+}
+
+bb::cascades::WebView* TiUIWebView::getNativeWebView()
+{
+	NativeWebViewObject* nativeWebView = static_cast<NativeWebViewObject*>(getNativeObject());
+	return nativeWebView->getWebView();
 }
 
 Handle<Value> TiUIWebView::_evalJS(void* userContext, TiObject* caller, const Arguments& args)
