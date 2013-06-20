@@ -15,8 +15,6 @@ The Beta release is being made available to encourage developers to start buildi
 
 In the last few months BlackBerry released its new operating system, BlackBerry 10 as well as the first BlackBerry 10 phone, the Z10. The phone has garnered critical praise for its technical chops, with a fast OS and well-integrated user interface. If you want to try out the Titanium BlackBerry beta but don't have access to a Z10, the simulator that ships with the BlackBerry 10 Native SDK is easy to use and represents the phone nicely.
 
-In this beta release we believe there are the majority of features to get you started, including Alloy support, MapView, WebView, Database, Localization Support, and much, much more. 
-
 The latest release and API status notes are at [Release Notes](https://github.com/appcelerator/titanium_mobile_blackberry/blob/master/CHANGELOG.md).
 
 
