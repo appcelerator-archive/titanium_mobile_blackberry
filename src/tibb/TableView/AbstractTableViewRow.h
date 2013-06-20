@@ -14,7 +14,7 @@ namespace titanium {
 
 class AbstractTableViewRow : public bb::cascades::CustomControl {
 public:
-    AbstractTableViewRow() { }
+    AbstractTableViewRow() : data_(NULL) { }
 
     QObject* data() const {
         return data_;
