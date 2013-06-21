@@ -6,8 +6,8 @@
  */
 
 #include "TiUITableViewRow.h"
-
 #include "NativeTableViewRowObject.h"
+#include "TiPropertySetGetObject.h"
 
 TiUITableViewRow::TiUITableViewRow()
     : TiUIBase("") { }
@@ -21,6 +21,26 @@ TiUITableViewRow* TiUITableViewRow::createTableViewRow(NativeObjectFactory* fact
     return row;
 }
 
+void TiUITableViewRow::_setHeader(void* userContext, Handle<Value> val)
+{
+	HandleScope scope;
+	TiUITableViewRow* row = static_cast<TiUITableViewRow*>(userContext);
+	NativeTableViewRowObject *rowObj = static_cast<NativeTableViewRowObject*>(row->getNativeObject());
+	TiObject obj;
+	obj.setValue(val);
+	rowObj->setHeader(&obj);
+}
+
+void TiUITableViewRow::_setSubHeader(void* userContext, Handle<Value> val)
+{
+	HandleScope scope;
+	TiUITableViewRow* row = static_cast<TiUITableViewRow*>(userContext);
+	NativeTableViewRowObject *rowObj = static_cast<NativeTableViewRowObject*>(row->getNativeObject());
+	TiObject obj;
+	obj.setValue(val);
+	rowObj->setSubHeader(&obj);
+}
+
 void TiUITableViewRow::initializeTiObject(TiObject* parentContext) {
     if (isInitialized()) return;
     TiUIBase::initializeTiObject(parentContext);
@@ -31,5 +51,7 @@ void TiUITableViewRow::initializeTiObject(TiObject* parentContext) {
 
 void TiUITableViewRow::onCreateStaticMembers() {
     TiUIBase::onCreateStaticMembers();
+    TiPropertySetGetObject::createProperty(this, "header", this, _setHeader, NULL);
+    TiPropertySetGetObject::createProperty(this, "subHeader", this, _setSubHeader, NULL);
 }
 

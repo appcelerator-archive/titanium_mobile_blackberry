@@ -15,6 +15,7 @@
 #include "TableView/BasicTableViewRow.h"
 #include "TableView/CustomTableViewRow.h"
 #include "TableView/TableViewRowData.h"
+#include "TableView/HeaderTableViewRow.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 #include "TiProxy.h"
@@ -51,6 +52,24 @@ int NativeTableViewObject::initialize()
     return NATIVE_ERROR_OK;
 }
 
+TiObject* NativeTableViewObject::createRowObject(Local<Object> item)
+{
+    // Convert the dictionary object into a row object.
+    NativeObjectFactory* factory = tiObject_->getNativeObjectFactory();
+    TiUITableViewRow* row = TiUITableViewRow::createTableViewRow(factory);
+
+    // Create a JavaScript proxy for the new row object.
+    Handle<ObjectTemplate> templ = TiObject::getObjectTemplateFromJsObject(tiObject_->getValue());
+    Local<Object> proxy = templ->NewInstance();
+    row->setValue(proxy);
+    TiObject::setTiObjectToJsObject(proxy, row);
+
+    // Apply the properties in the dictionary to the new row object.
+    row->setParametersFromObject(row, item);
+
+    return static_cast<TiObject*>(row);
+}
+
 int NativeTableViewObject::setData(TiObject* obj)
 {
     HandleScope scope;
@@ -61,11 +80,12 @@ int NativeTableViewObject::setData(TiObject* obj)
     }
 
     ArrayDataModel* model = static_cast<ArrayDataModel*>(tableView_->dataModel());
-
+    QVariantList allRows;
     Handle<Array> data = Handle<Array>::Cast(value);
     uint32_t length = data->Length();
+    int x = 0;
     for (uint32_t i = 0; i < length; i++) {
-        Local<Value> item = data->Get(i);
+        Local<Object> item = data->Get(i)->ToObject();
         if (!item->IsObject()) {
             // Silently ignore any invalid data items.
             continue;
@@ -73,23 +93,18 @@ int NativeTableViewObject::setData(TiObject* obj)
 
         TiObject* itemObject = TiObject::getTiObjectFromJsObject(item);
         if (!itemObject) {
-            // Convert the dictionary object into a row object.
-            NativeObjectFactory* factory = tiObject_->getNativeObjectFactory();
-            TiUITableViewRow* row = TiUITableViewRow::createTableViewRow(factory);
-            itemObject = static_cast<TiObject*>(row);
-
-            // Create a JavaScript proxy for the new row object.
-            Handle<ObjectTemplate> templ = TiObject::getObjectTemplateFromJsObject(tiObject_->getValue());
-            Local<Object> proxy = templ->NewInstance();
-            row->setValue(proxy);
-            TiObject::setTiObjectToJsObject(proxy, row);
-
-            // Apply the properties in the dictionary to the new row object.
-            row->setParametersFromObject(row, item->ToObject());
-
-            // Replace the dictionary object in the data array with the row object.
-            // This allows developers to later update properties on the row.
-            data->Set(i, itemObject->getValue());
+        	if(item->Has(String::New("header")))
+        	{
+        		TiObject* h = createRowObject(item);
+        		data->Set(x, h->getValue());
+                NativeTableViewRowObject* listItem = static_cast<NativeTableViewRowObject*>(h->getNativeObject());
+                allRows.append(listItem->data());
+                item->Delete(String::New("header"));
+        	}
+    		itemObject = createRowObject(item);
+    	    // Replace the dictionary object in the data array with the row object.
+    	    // This allows developers to later update properties on the row.
+    		data->Set(x, itemObject->getValue());
         }
 
         NativeObject* native = itemObject->getNativeObject();
@@ -99,8 +114,14 @@ int NativeTableViewObject::setData(TiObject* obj)
         }
 
         NativeTableViewRowObject* listItem = static_cast<NativeTableViewRowObject*>(native);
-        model->append(listItem->data());
+        TiObject o;
+        o.setValue(String::New(""));
+        listItem->setHeader(&o);
+        allRows.append(listItem->data());
+        x++;
     }
+    model->clear();
+    model->append(allRows);
 
     return NATIVE_ERROR_OK;
 }
@@ -145,6 +166,8 @@ bb::cascades::VisualNode* TableViewRowFactory::createItem(bb::cascades::ListView
 {
     if (type == "custom") {
         return new CustomTableViewRow(tableView_->layout());
+    } else if(type == "header") {
+    	return new HeaderTableViewRow();
     }
     return new BasicTableViewRow();
 }

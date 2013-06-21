@@ -54,7 +54,7 @@ private:
     //Not copy-constructible; Not assignable.
     NativeTableViewObject(const NativeTableViewObject& obj);
     NativeTableViewObject& operator=(const NativeTableViewObject& obj);
-
+    TiObject* createRowObject(v8::Local<v8::Object> item);
     bb::cascades::ListView* tableView_;
 };
 
