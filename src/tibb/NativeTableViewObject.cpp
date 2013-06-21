@@ -9,7 +9,7 @@
 
 #include <bb/cascades/ArrayDataModel>
 #include <bb/cascades/ListView>
-
+#include "V8Utils.h"
 #include "NativeTableViewRowObject.h"
 #include "NativeTableViewObject.h"
 #include "TableView/BasicTableViewRow.h"
@@ -20,6 +20,9 @@
 #include "TiObject.h"
 #include "TiProxy.h"
 #include "TiUITableViewRow.h"
+#include "TiUITableViewSection.h"
+#include <bb/cascades/SnapMode>
+#include <bb/cascades/GroupDataModel>
 
 using namespace bb::cascades;
 using namespace titanium;
@@ -44,7 +47,7 @@ int NativeTableViewObject::initialize()
     tableView_ = bb::cascades::ListView::create();
     setControl(tableView_);
     tableView_->setDataModel(new ArrayDataModel());
-
+    tableView_->setSnapMode(bb::cascades::SnapMode::LeadingEdge);
     TableViewRowFactory* factory = new TableViewRowFactory(this);
     tableView_->setListItemProvider(factory);
     tableView_->setListItemTypeMapper(factory);
@@ -79,32 +82,73 @@ int NativeTableViewObject::setData(TiObject* obj)
         return NATIVE_ERROR_INVALID_ARG;
     }
 
+
+
     ArrayDataModel* model = static_cast<ArrayDataModel*>(tableView_->dataModel());
     QVariantList allRows;
+    QVariantList section;
     Handle<Array> data = Handle<Array>::Cast(value);
-    uint32_t length = data->Length();
+    Handle<Array> newData;
+    Handle<Array> _sections = Array::New();
+    for(uint32_t i = 0, len = data->Length(); i < len; i++)
+    {
+        TiObject* sectionObject = TiObject::getTiObjectFromJsObject(data->Get(i));
+        if(sectionObject)
+        {
+        	TiUITableViewSection *sect = static_cast<TiUITableViewSection*>(sectionObject);
+        	if(sect == NULL) continue;
+        	Handle<Array> rowsInSection = sect->getRowsInSection();
+    		int index = _sections->Length();
+        	for(int ii = 0, llen = rowsInSection->Length(); ii < llen; ii++) {
+        		_sections->Set(index, rowsInSection->Get(ii));
+        		index++;
+        	}
+        }
+    }
+
+    if(_sections->Length() > 0)
+    {
+    	newData = Handle<Array>::Cast(_sections);
+    }
+    else
+    {
+    	newData = Handle<Array>::Cast(data);
+    }
     int x = 0;
-    for (uint32_t i = 0; i < length; i++) {
-        Local<Object> item = data->Get(i)->ToObject();
+    for (uint32_t i = 0, len = newData->Length(); i < len; i++)
+    {
+        Local<Object> item = newData->Get(i)->ToObject();
         if (!item->IsObject()) {
             // Silently ignore any invalid data items.
             continue;
         }
 
         TiObject* itemObject = TiObject::getTiObjectFromJsObject(item);
-        if (!itemObject) {
-        	if(item->Has(String::New("header")))
+        if (!itemObject)
+        {
+    		if(item->Has(String::New("header")) || item->Has(String::New("isHeader")))
         	{
+        		if(!section.isEmpty()) {
+        		    allRows.append(section);
+        		}
+        		section.empty();
         		TiObject* h = createRowObject(item);
-        		data->Set(x, h->getValue());
+        		// TODO: Pedro: something else for sections
+        		newData->Set(x, h->getValue());
                 NativeTableViewRowObject* listItem = static_cast<NativeTableViewRowObject*>(h->getNativeObject());
-                allRows.append(listItem->data());
+                section.append(listItem->data());
                 item->Delete(String::New("header"));
+                item->Delete(String::New("isHeader"));
         	}
-    		itemObject = createRowObject(item);
-    	    // Replace the dictionary object in the data array with the row object.
-    	    // This allows developers to later update properties on the row.
-    		data->Set(x, itemObject->getValue());
+    		if(!item->Has(String::New("title")))
+    		{
+    			continue;
+    		}
+			itemObject = createRowObject(item);
+			// Replace the dictionary object in the data array with the row object.
+			// This allows developers to later update properties on the row.
+			// TODO: something else for sections
+			newData->Set(x, itemObject->getValue());
         }
 
         NativeObject* native = itemObject->getNativeObject();
@@ -117,12 +161,15 @@ int NativeTableViewObject::setData(TiObject* obj)
         TiObject o;
         o.setValue(String::New(""));
         listItem->setHeader(&o);
-        allRows.append(listItem->data());
+        section.append(listItem->data());
         x++;
     }
+	if(!section.isEmpty()) {
+	    allRows.append(section);
+	}
     model->clear();
     model->append(allRows);
-
+    qDebug() << "all rows: " << allRows << "\n";
     return NATIVE_ERROR_OK;
 }
 
@@ -180,7 +227,7 @@ void TableViewRowFactory::updateItem(bb::cascades::ListView*, bb::cascades::Visu
     item->setData(data.value<QObject*>());
 }
 
-QString TableViewRowFactory::itemType(const QVariant &data, const QVariantList &indexPat)
+QString TableViewRowFactory::itemType(const QVariant &data, const QVariantList &indexPath)
 {
     Q_ASSERT(data.canConvert<QObject*>());
     return data.value<QObject*>()->property("dataType").toString();
