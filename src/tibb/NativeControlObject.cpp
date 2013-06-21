@@ -179,6 +179,8 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     layoutHandler_(0),
     deferWidth_(false),
     deferHeight_(false),
+    lastWidth_(0),
+    lastHeight_(0),
     deferWidthType_((enum ValueType)-1),
     deferHeightType_((enum ValueType)-1),
     batchUpdating_(false)
@@ -262,11 +264,15 @@ void NativeControlObject::updateLayout(QRectF rect)
     											deferWidthType_ != Size) {
     	}
     	else {
-			control_->setMinWidth(rect.width());
-			control_->setMaxWidth((float)rect.width());
 			layoutNode_.properties.width.value = rect.width();
 			layoutNode_.properties.width.valueType = Fixed;
-			requestLayout = true;
+
+			if (lastWidth_ == rect.width()) {
+				requestLayout = false;
+			}
+			else {
+				requestLayout = true;
+			};
     	}
     }
 
@@ -276,11 +282,15 @@ void NativeControlObject::updateLayout(QRectF rect)
     								deferHeightType_ != Size) {
     	}
     	else {
-			control_->setMinHeight((float)rect.height());
-			control_->setMaxHeight((float)rect.height());
 			layoutNode_.properties.height.value = rect.height();
 			layoutNode_.properties.height.valueType = Fixed;
-			requestLayout = true;
+
+			if (lastHeight_ == rect.height()) {
+				requestLayout = false;
+			}
+			else {
+				requestLayout = true;
+			};
     	}
     }
 
@@ -303,6 +313,9 @@ void NativeControlObject::updateLayout(QRectF rect)
             nodeLayout(root);
         }
     }
+
+    lastWidth_ = rect.width();
+    lastHeight_ = rect.height();
 }
 
 int NativeControlObject::initialize()

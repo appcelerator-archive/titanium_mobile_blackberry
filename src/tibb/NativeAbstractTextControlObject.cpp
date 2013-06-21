@@ -184,14 +184,12 @@ int NativeAbstractTextControlObject::setFont(TiObject* obj)
 void NativeAbstractTextControlObject::updateLayout(QRectF rect)
 {
 	NativeControlObject::updateLayout(rect);
-	textControl_->setPreferredSize(rect.width(), rect.height());
-}
 
-/*
-void NativeAbstractTextControlObject::resize(float width, float height)
-{
-    NativeControlObject::resize(width, height);
-    textControl_->setPreferredWidth(width);
-    textControl_->setPreferredHeight(height);
+	if (!deferWidth_) {
+		textControl_->setPreferredWidth(rect.width());
+	}
+
+	if (!deferHeight_) {
+		textControl_->setPreferredHeight(rect.height());
+	}
 }
-*/
