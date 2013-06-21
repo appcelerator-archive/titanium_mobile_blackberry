@@ -86,10 +86,9 @@ int NativeTableViewObject::setData(TiObject* obj)
 
     ArrayDataModel* model = static_cast<ArrayDataModel*>(tableView_->dataModel());
     QVariantList allRows;
-    QVariantList section;
     Handle<Array> data = Handle<Array>::Cast(value);
     Handle<Array> newData;
-    Handle<Array> _sections = Array::New();
+    Handle<Array> sections = Array::New();
     for(uint32_t i = 0, len = data->Length(); i < len; i++)
     {
         TiObject* sectionObject = TiObject::getTiObjectFromJsObject(data->Get(i));
@@ -98,17 +97,17 @@ int NativeTableViewObject::setData(TiObject* obj)
         	TiUITableViewSection *sect = static_cast<TiUITableViewSection*>(sectionObject);
         	if(sect == NULL) continue;
         	Handle<Array> rowsInSection = sect->getRowsInSection();
-    		int index = _sections->Length();
+    		int index = sections->Length();
         	for(int ii = 0, llen = rowsInSection->Length(); ii < llen; ii++) {
-        		_sections->Set(index, rowsInSection->Get(ii));
+        		sections->Set(index, rowsInSection->Get(ii));
         		index++;
         	}
         }
     }
 
-    if(_sections->Length() > 0)
+    if(sections->Length() > 0)
     {
-    	newData = Handle<Array>::Cast(_sections);
+    	newData = Handle<Array>::Cast(sections);
     }
     else
     {
@@ -128,15 +127,11 @@ int NativeTableViewObject::setData(TiObject* obj)
         {
     		if(item->Has(String::New("header")) || item->Has(String::New("isHeader")))
         	{
-        		if(!section.isEmpty()) {
-        		    allRows.append(section);
-        		}
-        		section.empty();
         		TiObject* h = createRowObject(item);
         		// TODO: Pedro: something else for sections
         		newData->Set(x, h->getValue());
                 NativeTableViewRowObject* listItem = static_cast<NativeTableViewRowObject*>(h->getNativeObject());
-                section.append(listItem->data());
+                allRows.append(listItem->data());
                 item->Delete(String::New("header"));
                 item->Delete(String::New("isHeader"));
         	}
@@ -161,12 +156,9 @@ int NativeTableViewObject::setData(TiObject* obj)
         TiObject o;
         o.setValue(String::New(""));
         listItem->setHeader(&o);
-        section.append(listItem->data());
+        allRows.append(listItem->data());
         x++;
     }
-	if(!section.isEmpty()) {
-	    allRows.append(section);
-	}
     model->clear();
     model->append(allRows);
     qDebug() << "all rows: " << allRows << "\n";
