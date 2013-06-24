@@ -87,6 +87,7 @@ struct ComputedSize doHorizontalLayout(std::vector<struct Element*> children, do
 
 		if (!isWidthSize && width > 0 && (int)(measuredSandboxWidth + runningWidth) > width) {
 			rowsLen++;
+			rowLen = 0;
 			measuredLeft -= runningWidth;
 			runningWidth = 0;
 		}

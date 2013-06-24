@@ -1,25 +1,47 @@
-var win = Titanium.UI.createWindow();
-  
-var scroll = Ti.UI.createScrollView({
-    backgroundColor: '#ccc',
-    width: Ti.UI.FILL,
-    height: Ti.UI.FILL,
-    layout: 'vertical',
-    contentHeight: Ti.UI.SIZE,
-    contentWidth: Ti.UI.FILL
+var win = Ti.UI.createWindow({});
+      
+var view = Ti.UI.createView({
+    backgroundColor:'green',
+       // height:200,
+        width:200,
+        layout:'horizontal'
+          
 });
+ 
+win.add(view);
+      
+var v1 = Ti.UI.createButton({
+        //backgroundColor:'blue',
+        title:'button 1',
+        //height:30,
+        left:5,
+        width:Ti.UI.SIZE,
+        top:80
+});
+     
+view.add(v1);
+     
+var v2 = Ti.UI.createButton({
+        //backgroundColor:'red',
+        title:'button 2',
+        //height:30,
+        left:5,
+        width:Ti.UI.SIZE,
+        top:80
+});
+     
+view.add(v2);
+     
+var v3 = Ti.UI.createButton({
+        //backgroundColor:'black',
+        title:'button 3',
+        //height:30,
+        left:5,
+        width:Ti.UI.SIZE,
+        top:80
+});
+     
+view.add(v3);
+     
   
-function MyButton(title) {
-    return Ti.UI.createLabel({
-        //title: title,
-    	text: 'kkkkkkk',
-        top: 10
-    });
-}
-  
-for(var i = 0; i < 100; i++) {
-    scroll.add(MyButton('Button #' + (i + 1))); 
-}
-  
-win.add(scroll);
 win.open();
