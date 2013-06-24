@@ -396,9 +396,19 @@ int NativeControlObject::addChildImpl(NativeObject* obj)
     nodeAddChild(&layoutNode_, &((NativeControlObject*) obj)->layoutNode_);
     struct Node* root = nodeRequestLayout(&layoutNode_);
     if (root) {
-    	root->element._measuredWidth = displayWidth_;
-    	root->element._measuredHeight = displayHeight_;
-        nodeLayout(root);
+        bb::device::DisplayInfo display;
+		bb::device::DeviceInfo info;
+		int orientation = Orientation::fromDevice(info.orientation());
+		if (orientation != Orientation::PORTRAIT) {
+			displayWidth_ = display.pixelSize().height();
+			displayHeight_ =  display.pixelSize().width();
+		}
+		else {
+			displayWidth_ = display.pixelSize().width();
+			displayHeight_ = display.pixelSize().height();
+
+		}
+		nodeLayout(root);
     }
     TiObject* tmpObj = new TiObject;
     obj->getPropertyValue(N_PROP_ZINDEX, tmpObj);
@@ -429,9 +439,20 @@ int NativeControlObject::removeChildImpl(NativeObject* obj)
     nodeRemoveChild(&layoutNode_, &((NativeControlObject*) obj)->layoutNode_);
     struct Node* root = nodeRequestLayout(&layoutNode_);
     if (root) {
-    	root->element._measuredWidth = displayWidth_;
-    	root->element._measuredHeight = displayHeight_;
-        nodeLayout(root);
+        bb::device::DisplayInfo display;
+		bb::device::DeviceInfo info;
+		int orientation = Orientation::fromDevice(info.orientation());
+		if (orientation != Orientation::PORTRAIT) {
+			displayWidth_ = display.pixelSize().height();
+			displayHeight_ =  display.pixelSize().width();
+		}
+		else {
+			displayWidth_ = display.pixelSize().width();
+			displayHeight_ = display.pixelSize().height();
+
+		}
+		nodeLayout(root);
+
     }
     bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
     container_->remove(control);
@@ -557,9 +578,19 @@ void NativeControlObject::updateLayoutProperty(ValueName name, TiObject* val) {
 
     struct Node* root = nodeRequestLayout(&layoutNode_);
     if (root) {
-    	root->element._measuredWidth = displayWidth_;
-    	root->element._measuredHeight = displayHeight_;
-        nodeLayout(root);
+        bb::device::DisplayInfo display;
+		bb::device::DeviceInfo info;
+		int orientation = Orientation::fromDevice(info.orientation());
+		if (orientation != Orientation::PORTRAIT) {
+			displayWidth_ = display.pixelSize().height();
+			displayHeight_ =  display.pixelSize().width();
+		}
+		else {
+			displayWidth_ = display.pixelSize().width();
+			displayHeight_ = display.pixelSize().height();
+
+		}
+		nodeLayout(root);
     }
 }
 
