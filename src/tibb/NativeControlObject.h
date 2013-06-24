@@ -203,6 +203,8 @@ public:
     }
 
     bb::cascades::Container* container_;
+    bool deferWidth_;
+    bool deferHeight_;
 
 protected:
     explicit NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType = N_TYPE_UNDEFINED);
@@ -238,8 +240,8 @@ private:
     float ppi_; // pixels per inch
     int displayWidth_;
     int displayHeight_;
-    bool deferWidth_;
-    bool deferHeight_;
+    float lastWidth_;
+    float lastHeight_;
     enum ValueType deferWidthType_;
     enum ValueType deferHeightType_;
 };
