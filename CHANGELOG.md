@@ -1,6 +1,24 @@
 Release Notes
 =============
 
+Beta Release (3.1.1)
+----------------------------------------------------
+
+MON JUN 17, 2013 
+
+* Alignment of BlackBerry SDK 3.2.0 to Titanium 3.1.1
+* BlackBerry SDK is now completely integrated into Titanium Studio and SDK (3.1.1)
+* Analytics 
+* Geolocation 
+* Filesystem 
+* ScrollableView
+* Accelerometer
+
+Notes on Using 3.1.1
+--------------------
+
+See the developer blog post at http://developer.appcelerator.com/blog/2013/06/announcing-titanium-3-1-1-production-release.html
+
 
 Beta Release (3.2.0.v20130412191647)
 ----------------------------------------------------
@@ -157,20 +175,9 @@ Previous Releases
 Additional Functionality for GA Release
 ---------------------------------------
 
-* Analytics (TIMOB-12236)
 * TableViewSection (TIMOB-8840)
-* Geolocation (TIMOB-12234)
-* Facebook (TIMOB-12225)
-* Toolbar (TIMOB-12516)
-* Filesystem (TIMOB-8580)
-* XML (TIMOB-8592)
-* ScrollableView (TIMOB-8831)
-* Accelerometer (TIMOB-12233)
-* Additional Media APIs
-* Native modules (TIMOB-12224)
 * VideoPlayer (TIMOB-12230)
 * Contacts (TIMOB-12235)
-* Search Bar (TIMOB-8833)
 
 
 To get the latest Preview Release build, go to http://builds.appcelerator.com.s3.amazonaws.com/index.html and in the branch drop-down choose "master" then select the listed build. Subsequent builds will continue to be updated but the Preview Release has been tested to ensure basic functionality is working as expected. To see how to integrate the nightly with Titanium Studio visit http://preview.appcelerator.com/studio/bb. 
