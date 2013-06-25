@@ -8,7 +8,7 @@
 #ifndef TIUIOPTIONDIALOG_H_
 #define TIUIOPTIONDIALOG_H_
 
-#include "TiUIBase.h"
+#include "TiProxy.h"
 
 /*
  * TiUIOptionDialog
@@ -16,7 +16,7 @@
  * Represents a Titanium option dialog object
  *
  */
-class TiUIOptionDialog : public TiUIBase
+class TiUIOptionDialog : public TiProxy
 {
 public:
     static TiUIOptionDialog* createOptionDialog(NativeObjectFactory* nativeObjectFactory);
@@ -33,6 +33,13 @@ private:
     // Disable copy ctor & assignment operator
     TiUIOptionDialog(const TiUIOptionDialog& optionDialog);
     TiUIOptionDialog& operator=(const TiUIOptionDialog& optionDialog);
+
+    static void _setCancel(void* userContext, Handle<Value> arg);
+    static void _setSelectedIndex(void* userContext, Handle<Value> arg);
+    static void _setDestructive(void* userContext, Handle<Value> arg);
+    static void _setTitle(void* userContext, Handle<Value> arg);
+    static void _setOptions(void* userContext, Handle<Value> arg);
+
 };
 
 #endif /* TIUIOPTIONDIALOG_H_ */
