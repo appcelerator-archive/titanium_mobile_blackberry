@@ -1,25 +1,22 @@
-var win = Titanium.UI.createWindow();
-  
-var scroll = Ti.UI.createScrollView({
-    backgroundColor: '#ccc',
-    width: Ti.UI.FILL,
-    height: Ti.UI.FILL,
-    layout: 'vertical',
-    contentHeight: Ti.UI.SIZE,
-    contentWidth: Ti.UI.FILL
+var win1 = Titanium.UI.createWindow({  
+   backgroundColor:'#fff'
 });
   
-function MyButton(title) {
-    return Ti.UI.createLabel({
-        //title: title,
-    	text: 'kkkkkkk',
-        top: 10
-    });
-}
+var view1 = Titanium.UI.createView({
+    backgroundColor:'red',
+   width:Ti.UI.SIZE,
+   height:Ti.UI.SIZE
+});
   
-for(var i = 0; i < 100; i++) {
-    scroll.add(MyButton('Button #' + (i + 1))); 
-}
+var label1 = Titanium.UI.createLabel({
+    backgroundColor:'blue',
+   color:'#999',
+   text:'Label Test',
+   font:{fontSize:20,fontFamily:'Helvetica Neue',fontStyle:'italic'},
+   width:Ti.UI.SIZE,
+   height:Ti.UI.SIZE
+});
   
-win.add(scroll);
-win.open();
+view1.add(label1);
+win1.add(view1);
+win1.open();

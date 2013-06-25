@@ -65,9 +65,6 @@ int NativeImageViewObject::setImage(TiObject* obj)
             imageView_->setImage(image);
         }
     }
-    QString imagePath = V8ValueToQString(obj->getValue());
-    imagePath = getResourcePath(imagePath);
-    imageView_->setImage(QUrl(imagePath));
     return NATIVE_ERROR_OK;
 }
 
