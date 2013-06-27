@@ -5,8 +5,11 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#include "TiGesture.h"
+#include <bb/device/DeviceInfo>
+#include <bb/device/DeviceOrientation>
 
+#include "TiGesture.h"
+#include "TiGenericFunctionObject.h"
 #include "NativeGestureObject.h"
 
 const static TiProperty g_tiProperties[] = {
@@ -27,6 +30,10 @@ void TiGesture::addObjectToParent(TiObject* parent, NativeObjectFactory* factory
 void TiGesture::onCreateStaticMembers() {
     TiProxy::onCreateStaticMembers();
     setTiMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "isLandscape", this, _isLandscape);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "isPortrait", this, _isPortrait);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "isFaceUp", this, _isFaceUp);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "isFaceDown", this, _isFaceDown);
 }
 
 void TiGesture::initializeTiObject(TiObject* parentContext) {
@@ -40,3 +47,50 @@ void TiGesture::initializeTiObject(TiObject* parentContext) {
     obj->release();
 }
 
+Handle<Value> TiGesture::_isLandscape(void* userContext, TiObject* caller, const Arguments& args)
+{
+	bb::device::DeviceInfo info;
+    bb::device::DeviceOrientation::Type orientation = info.orientation();
+
+    if(orientation == bb::device::DeviceOrientation::LeftUp || orientation == bb::device::DeviceOrientation::RightUp)
+    {
+    	return Boolean::New(true);
+    }
+    return Boolean::New(false);
+}
+
+Handle<Value> TiGesture::_isPortrait(void* userContext, TiObject* caller, const Arguments& args)
+{
+	bb::device::DeviceInfo info;
+    bb::device::DeviceOrientation::Type orientation = info.orientation();
+    if(orientation == bb::device::DeviceOrientation::TopUp || orientation == bb::device::DeviceOrientation::BottomUp)
+    {
+    	return Boolean::New(true);
+    }
+    return Boolean::New(false);
+}
+
+Handle<Value> TiGesture::_isFaceDown(void* userContext, TiObject* caller, const Arguments& args)
+{
+	bb::device::DeviceInfo info;
+    bb::device::DeviceOrientation::Type orientation = info.orientation();
+
+    if(orientation == bb::device::DeviceOrientation::FaceDown)
+    {
+    	return Boolean::New(true);
+    }
+    return Boolean::New(false);
+}
+
+
+Handle<Value> TiGesture::_isFaceUp(void* userContext, TiObject* caller, const Arguments& args)
+{
+	bb::device::DeviceInfo info;
+    bb::device::DeviceOrientation::Type orientation = info.orientation();
+
+    if(orientation == bb::device::DeviceOrientation::FaceUp)
+    {
+    	return Boolean::New(true);
+    }
+    return Boolean::New(false);
+}
