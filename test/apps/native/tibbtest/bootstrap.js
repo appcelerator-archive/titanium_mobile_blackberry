@@ -166,3 +166,4 @@ console = { };
     }
 });
 console.log = console.info;
+Titanium = Ti;
