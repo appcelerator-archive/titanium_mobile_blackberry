@@ -19,6 +19,11 @@ public:
 
 private:
     TiGesture();
+    static Handle<Value> _isLandscape(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _isPortrait(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _isFaceDown(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _isFaceUp(void* userContext, TiObject* caller, const Arguments& args);
+
 };
 
 #endif
