@@ -13,6 +13,13 @@
 #include "NativeControlObject.h"
 #include "PageScene.h"
 
+namespace bb
+{
+namespace cascades
+{
+class Sheet;
+}
+}
 class NativeWindowObject : public NativeControlObject {
 public:
     static NativeObject* createWindow(TiObject* tiObject, NativeObjectFactory* factory);
@@ -26,7 +33,7 @@ public:
     virtual int setOrientationModes(TiObject* obj);
     virtual int setTitle(TiObject* obj);
 
-    void open();
+    void open(bool);
     void close();
 
     void addAction(const QString& title, const QString& image, v8::Handle<v8::Function> triggerCallback);
@@ -39,6 +46,8 @@ private:
     explicit NativeWindowObject(TiObject* tiObject);
 
     titanium::PageScene scene_;
+    bb::cascades::Sheet* modalSheet_;
+    QString title_;
 };
 
 #endif
