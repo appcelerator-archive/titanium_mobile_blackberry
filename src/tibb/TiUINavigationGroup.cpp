@@ -44,7 +44,9 @@
  * nav.close()
  */
 
-TiUINavigationGroup::TiUINavigationGroup() {
+TiUINavigationGroup::TiUINavigationGroup() :
+	TiProxy("NavigationGroup")
+{
 	navigationScene_ = NULL;
 	modalSheet_ = NULL;
 }

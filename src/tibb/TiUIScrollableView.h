@@ -30,7 +30,6 @@ protected:
 
 private:
     TiUIScrollableView();
-	TiUIScrollableView(const char* name);
 	static Handle<Value> _addView(void* userContext, TiObject* caller, const Arguments& args);
 	static Handle<Value> _moveNext(void* userContext, TiObject* caller, const Arguments& args);
 	static Handle<Value> _movePrevious(void* userContext, TiObject* caller, const Arguments& args);

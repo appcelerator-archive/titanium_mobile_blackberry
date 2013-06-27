@@ -30,7 +30,6 @@ protected:
 
 private:
 	TiAnnotationObject();
-	TiAnnotationObject(const char* name);
 };
 
 #endif /* TIANNOTATIONOBJECT_H_ */

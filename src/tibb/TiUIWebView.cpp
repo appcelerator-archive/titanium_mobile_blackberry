@@ -9,13 +9,9 @@
 #include "NativeWebViewObject.h"
 #include "TiGenericFunctionObject.h"
 
-TiUIWebView::TiUIWebView(const char* name)
-    : TiUIBase(name)
-{
-}
 
 TiUIWebView::TiUIWebView()
-    : TiUIBase("")
+    : TiUIBase("WebView")
 {
 }
 

@@ -8,7 +8,7 @@
 #include "TiUIImageView.h"
 
 TiUIImageView::TiUIImageView()
-    : TiUIBase("")
+    : TiUIBase("ImageView")
 {
 }
 

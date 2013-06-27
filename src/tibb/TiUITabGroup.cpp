@@ -11,7 +11,7 @@
 #include "NativeTabGroupObject.h"
 
 TiUITabGroup::TiUITabGroup()
-    : TiUIBase("")
+    : TiUIBase("TabGroup")
 {
 }
 

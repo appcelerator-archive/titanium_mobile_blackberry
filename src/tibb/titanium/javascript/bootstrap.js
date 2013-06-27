@@ -4,7 +4,6 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-
 alert = function(msg)
 {
     Ti.UI.createAlertDialog({message: msg}).show();
@@ -163,3 +162,4 @@ console = { };
     }
 });
 console.log = console.info;
+Titanium = Ti;

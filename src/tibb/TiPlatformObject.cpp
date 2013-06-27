@@ -105,6 +105,7 @@ void TiPlatformObject::addObjectToParent(TiObject* parent)
 {
     TiPlatformObject* obj = new TiPlatformObject();
     parent->addMember(obj);
+    obj->setAttachedObject(parent);
     obj->release();
 }
 

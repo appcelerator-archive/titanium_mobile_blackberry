@@ -31,6 +31,7 @@ void TiDatabase::addObjectToParent(TiObject* parent, NativeObjectFactory* object
 {
     TiDatabase* obj = new TiDatabase(objectFactory);
     parent->addMember(obj);
+    obj->setAttachedObject(parent);
     obj->release();
 }
 

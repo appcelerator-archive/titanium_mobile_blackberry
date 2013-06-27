@@ -22,6 +22,8 @@ void TiLocaleObject::addObjectToParent(TiObject* parent)
 {
     TiLocaleObject* obj = new TiLocaleObject;
     parent->addMember(obj);
+    obj->setAttachedObject(parent);
+    obj->release();
 }
 
 void TiLocaleObject::onCreateStaticMembers()

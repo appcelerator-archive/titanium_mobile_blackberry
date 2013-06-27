@@ -8,7 +8,7 @@
 #include "TiUISlider.h"
 
 TiUISlider::TiUISlider()
-    : TiUIBase("")
+    : TiUIBase("Slider")
 {
 }
 

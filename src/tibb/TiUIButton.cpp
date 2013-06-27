@@ -8,7 +8,7 @@
 #include "TiUIButton.h"
 
 TiUIButton::TiUIButton()
-    : TiUIBase("")
+    : TiUIBase("Button")
 {
 }
 

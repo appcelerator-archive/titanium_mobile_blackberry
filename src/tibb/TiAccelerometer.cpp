@@ -16,6 +16,7 @@ void TiAccelerometer::addObjectToParent(TiObject* parent, NativeObjectFactory* o
     TiAccelerometer* module = new TiAccelerometer();
     module->setNativeObjectFactory(objectFactory);
     parent->addMember(module);
+    module->setAttachedObject(parent);
     module->release();
 }
 

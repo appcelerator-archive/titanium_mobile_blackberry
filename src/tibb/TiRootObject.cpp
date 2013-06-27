@@ -48,7 +48,6 @@ void TiRootObject::onCreateStaticMembers()
 {
     TiObject* ti = TiTitaniumObject::createObject(objectFactory_);
     addMember(ti);
-    addMember(ti, "Ti");
 
     createStringMethods();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "L", this, _L);   // TODO: use the same object as Ti.Locale.getString
@@ -66,6 +65,7 @@ VALUE_MODIFY TiRootObject::onChildValueChange(TiObject* childObject, Handle<Valu
     return VALUE_MODIFY_ALLOW;
 }
 
+
 void TiRootObject::addMember(TiObject* object, const char* name)
 {
     TiObject::addMember(object, name);
@@ -82,6 +82,7 @@ void TiRootObject::addMember(TiObject* object, const char* name)
         TiObject::setTiObjectToJsObject(newValue, object);
     }
     obj->Set(String::New(name), newValue);
+
 }
 
 TiRootObject* TiRootObject::createRootObject()

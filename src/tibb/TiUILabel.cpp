@@ -9,7 +9,7 @@
 #include <string.h>
 
 TiUILabel::TiUILabel()
-    : TiUIBase("")
+    : TiUIBase("Label")
 {
 }
 

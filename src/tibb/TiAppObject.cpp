@@ -22,6 +22,8 @@ void TiAppObject::addObjectToParent(TiObject* parent)
 {
     TiAppObject* obj = new TiAppObject;
     parent->addMember(obj);
+    obj->setAttachedObject(parent);
+    obj->release();
 }
 
 void TiAppObject::onCreateStaticMembers()

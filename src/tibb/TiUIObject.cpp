@@ -65,6 +65,7 @@ void TiUIObject::addObjectToParent(TiObject* parent, NativeObjectFactory* object
 {
     TiUIObject* obj = new TiUIObject(objectFactory);
     parent->addMember(obj);
+    obj->setAttachedObject(parent);
     obj->release();
 }
 
@@ -137,6 +138,7 @@ Handle<Value> TiUIObject::_createControlHelper(void* userContext, CREATEOBJECTCA
     Handle<Object> result;
     result = global->NewInstance();
     TiProxy* newControl = (createCallback)(obj->objectFactory_);
+    newControl->setAttachedObject(obj);
     newControl->setValue(result);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {

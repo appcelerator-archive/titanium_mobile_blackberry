@@ -111,6 +111,7 @@ void TiAnalyticsObject::addObjectToParent(TiObject* parent, NativeObjectFactory*
 {
     TiAnalyticsObject* obj = new TiAnalyticsObject(objectFactory);
     parent->addMember(obj);
+    obj->setAttachedObject(parent);
     obj->release();
 }
 

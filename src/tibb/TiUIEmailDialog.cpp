@@ -22,7 +22,7 @@ const static TiProperty g_tiProperties[] = {
 };
 
 TiUIEmailDialog::TiUIEmailDialog()
-    : TiUIBase("")
+    : TiUIBase("EmailDialog")
 {
 }
 

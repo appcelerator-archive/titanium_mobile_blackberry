@@ -50,6 +50,7 @@ void TiUDPSocketObject::addObjectToParent(TiObject* parent)
 {
 	TiUDPSocketObject* obj = new TiUDPSocketObject;
     parent->addMember(obj);
+    obj->setAttachedObject(parent);
     obj->release();
 }
 

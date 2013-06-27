@@ -9,13 +9,8 @@
 #include "TiGenericFunctionObject.h"
 #include "NativeAudioRecorderObject.h"
 
-TiAudioRecorderObject::TiAudioRecorderObject(const char* name)
-    : TiUIBase(name)
-{
-}
-
 TiAudioRecorderObject::TiAudioRecorderObject()
-    : TiUIBase("")
+    : TiUIBase("Recorder")
 {
 }
 

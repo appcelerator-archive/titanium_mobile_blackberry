@@ -49,6 +49,7 @@ TiBufferObject::~TiBufferObject()
 void TiBufferObject::addObjectToParent(TiObject* parent)
 {
     TiBufferObject* obj = new TiBufferObject;
+    obj->setAttachedObject(parent);
     parent->addMember(obj);
 }
 
