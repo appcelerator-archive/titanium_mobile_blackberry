@@ -30,6 +30,7 @@ public:
     virtual int setKeyboardType(TiObject* obj);
     virtual int setValue(TiObject* obj);
     virtual int setPasswordMask(TiObject* obj);
+    virtual void resize(float width, float height);
     void updateValue(QString value);
 
 protected:
