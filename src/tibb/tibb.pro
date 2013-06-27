@@ -27,6 +27,7 @@ SOURCES += \
 	./Contacts/ContactsPersonProxy.cpp \
     ./TableView/BasicTableViewRow.cpp \
     ./TableView/CustomTableViewRow.cpp \
+    ./TableView/HeaderTableViewRow.cpp \
     ./Media/CameraInvocation.cpp
 HEADERS += \
 	./*.h \
@@ -37,10 +38,11 @@ HEADERS += \
     TableView/BasicTableViewRow.h \
     TableView/CustomTableViewRow.h \
     TableView/TableViewRowData.h \
+    TableView/HeaderTableViewRow.h \
     Media/CameraInvocation.h
 
 LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata -lbbsystem
-LIBS += -lbbpim
+LIBS += -lbbpim 
 
 device {
 	CONFIG(release, debug|release) {

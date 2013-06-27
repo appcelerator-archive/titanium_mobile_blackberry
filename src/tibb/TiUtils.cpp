@@ -101,3 +101,10 @@ int TiUtils::getDateTime(Handle<Value> value, QDateTime& dt)
     return NATIVE_ERROR_OK;
 }
 
+// TiUtils::createProxyFromString("{title:'meh'};");
+Handle<Value> TiUtils::createV8HandleFromString(QString _string)
+{
+	HandleScope scope;
+	Handle<Script> script = Script::Compile(String::New(_string.toLocal8Bit().data()));
+	return scope.Close(script->Run());
+}
