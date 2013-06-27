@@ -174,7 +174,8 @@ static Handle<Value> includeJavaScript(string id, string parentFolder, bool* err
     if (compiledScript.IsEmpty())
     {
         *error = true;
-        DisplayExceptionLine(tryCatch);
+        std::string err_msg;
+        DisplayExceptionLine(tryCatch, err_msg);
         return tryCatch.ReThrow();
     }
 

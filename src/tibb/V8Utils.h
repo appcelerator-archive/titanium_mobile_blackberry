@@ -13,11 +13,11 @@
 
 namespace titanium {
 
-void DisplayExceptionLine (v8::TryCatch &try_catch);
+void DisplayExceptionLine (v8::TryCatch &try_catch, std::string& err_msg);
 
 // Reports an excetion thrown in JavaScript by logging it to stderr.
 // If "show_line" is true the line at which the excpetion was thrown is displayed.
-void ReportException(v8::TryCatch &try_catch, bool show_line);
+void ReportException(v8::TryCatch &try_catch, bool show_line, std::string& err_msg);
 
 // Copies the characters from the V8 String into a new QString.
 QString V8StringToQString(v8::Handle<v8::String> v8Str);
