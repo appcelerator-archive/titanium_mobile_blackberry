@@ -192,11 +192,11 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
 											   string("backgroundColor:'red'") +
 											   string("});") +
 											   string("var label1 = Titanium.UI.createLabel({") +
-											   string("color:'#61f427',") +
+											   string("color:'white',") +
 											   string("textAlign:'center',") +
 											   string("text:") +
 											   "'" + err_msg + "'," +
-											   //string("font:{fontSize:8,fontFamily:'Helvetica Neue',fontStyle:'italic'},") +
+											   string("font:{fontSize:8,fontFamily:'Helvetica Neue',fontStyle:'Bold'},") +
 											   string("});") +
 											   string("win1.add(label1);") +
 											   string("win1.open();");
