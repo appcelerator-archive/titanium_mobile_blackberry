@@ -23,17 +23,23 @@ class TableViewRowData : public QObject {
     Q_PROPERTY(QString dataType READ dataType)
     Q_PROPERTY(QUrl leftImage READ leftImage WRITE setLeftImage NOTIFY leftImageChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
+    Q_PROPERTY(QString header READ header WRITE setHeader NOTIFY headerChanged)
+    Q_PROPERTY(QString subHeader READ subHeader WRITE setSubHeader NOTIFY subHeaderChanged)
 
 public:
     explicit TableViewRowData(TiObject* row)
         : row_(row)
-        , content_(0) { }
+        , content_(0)
+        , header_("")
+    	, subHeader_(""){ }
 
     QString dataType() const {
         // If the data has custom views for content,
         // display using the "custom" list view control.
         if (content_) {
             return "custom";
+        } else if(header_.length()>0) {
+        	return "header";
         }
         return "basic";
     }
@@ -60,6 +66,24 @@ public:
         emit titleChanged(title);
     }
 
+    QString header() const {
+        return header_;
+    }
+
+    void setHeader(const QString& header) {
+    	header_ = header;
+        emit headerChanged(header);
+    }
+
+    QString subHeader() const {
+        return subHeader_;
+    }
+
+    void setSubHeader(const QString& subHeader) {
+    	subHeader_ = subHeader;
+        emit subHeaderChanged(subHeader);
+    }
+
     NativeControlObject* content() const {
         return content_;
     }
@@ -71,11 +95,15 @@ public:
 signals:
     void leftImageChanged(const QUrl& image);
     void titleChanged(const QString& title);
+    void headerChanged(const QString& header);
+    void subHeaderChanged(const QString& header);
 
 private:
     TiObject* row_;
     QUrl leftImage_;
     QString title_;
+    QString header_;
+    QString subHeader_;
     NativeControlObject* content_;
 };
 

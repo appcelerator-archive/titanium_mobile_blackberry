@@ -19,7 +19,7 @@ public:
 	float getPPI();
 	static int getDateTime(TiObject* obj, QDateTime& dt);
 	static int getDateTime(Handle<Value> value, QDateTime& dt);
-
+	static Handle<Value> createV8HandleFromString(QString _string);
 private:
 
 	float ppi_;

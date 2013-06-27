@@ -23,6 +23,8 @@ protected:
 private:
     explicit TiUITableViewRow();
 
+    static void _setHeader(void* userContext, Handle<Value> val);
+    static void _setSubHeader(void* userContext, Handle<Value> val);
     // Disable copy ctor & assignment operator
     TiUITableViewRow(const TiUITableViewRow& obj);
     TiUITableViewRow& operator=(const TiUITableViewRow& obj);
