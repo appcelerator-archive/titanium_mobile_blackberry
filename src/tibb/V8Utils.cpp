@@ -40,7 +40,7 @@ void DisplayExceptionLine (TryCatch &try_catch, std::string& err_msg) {
   Handle<Message> message = try_catch.Message();
 
   fprintf(stderr, "\n");
-  err_msg = "JavaScript Parse Error\n\n";
+  err_msg = "JavaScript Exception\n\n";
 
   if (!message.IsEmpty()) {
     // Print (filename):(line number): (message).
