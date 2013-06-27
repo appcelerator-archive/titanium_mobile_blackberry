@@ -151,3 +151,4 @@ Ti.Stream.pump = function(inputStream, handler, maxChunkSize, isAsync)
         } while (pumpCallBackArgs.bytesProcessed >= 0);
     }
 };
+Titanium = Ti;
