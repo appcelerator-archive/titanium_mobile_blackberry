@@ -135,6 +135,10 @@ public:
     static string jsFilePath;
     void forceSetProp(const char* propString, Local<Value> value);
 
+    const char* getApiName() const;
+
+    void setAttachedObject(TiObject *);
+    TiObject *getAttachedObject() const;
 protected:
     static VALUE_MODIFY _valueModify(int propertyNumber, TiObject* value, void* context);
     static Handle<Value> _getValue(int propertyNumber, void* context);
@@ -162,8 +166,10 @@ private:
     static Handle<Value> _propSetter(Local<String> prop, Local<Value> value, const AccessorInfo& info);
     static Handle<Value> _functCallback(const Arguments& args);
 
+    TiObject *attachedObject_;
     Persistent<Value> value_;
     string name_;
+    QString apiName_;
     bool isInitialized_;
     TiObject* parentObject_;
     map<string, ObjectEntry> childObjectMap_;

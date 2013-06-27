@@ -17,13 +17,9 @@ QList<TiUIWebView*> TiUIWebView::getWebViews()
 	return webViews_;
 }
 
-TiUIWebView::TiUIWebView(const char* name)
-    : TiUIBase(name)
-{
-}
 
 TiUIWebView::TiUIWebView()
-    : TiUIBase("")
+    : TiUIBase("WebView")
 {
 }
 

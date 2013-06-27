@@ -1,47 +1,33 @@
-var win = Ti.UI.createWindow({});
-      
-var view = Ti.UI.createView({
-    backgroundColor:'green',
-       // height:200,
-        width:200,
-        layout:'horizontal'
-          
+var win = Ti.UI.createWindow({
+  layout:'vertical'
 });
- 
-win.add(view);
-      
-var v1 = Ti.UI.createButton({
-        //backgroundColor:'blue',
-        title:'button 1',
-        //height:30,
-        left:5,
-        width:Ti.UI.SIZE,
-        top:80
+
+var button = Ti.UI.createButton({
+  title:'Option Dialog',
+  top: 50,
+  width:Ti.UI.SIZE,
+  height:Ti.UI.SIZE
+
 });
-     
-view.add(v1);
-     
-var v2 = Ti.UI.createButton({
-        //backgroundColor:'red',
-        title:'button 2',
-        //height:30,
-        left:5,
-        width:Ti.UI.SIZE,
-        top:80
-});
-     
-view.add(v2);
-     
-var v3 = Ti.UI.createButton({
-        //backgroundColor:'black',
-        title:'button 3',
-        //height:30,
-        left:5,
-        width:Ti.UI.SIZE,
-        top:80
-});
-     
-view.add(v3);
-     
+
+button.addEventListener('click',function(e){
+
+  var dialog = Ti.UI.createOptionDialog({
+    cancel: 2,
+    title: 'Delete File?',
+    options: ['Confirm', 'Help', 'Cancel'],
+    destructive: 0
+  });
+
   
+  
+  dialog.addEventListener('click', function(e){
+	  alert(JSON.stringify(e));
+  });
+  dialog.show();
+});
+
+
+
+win.add(button);
 win.open();

@@ -41,6 +41,7 @@ void TiMap::addObjectToParent(TiObject* parent, NativeObjectFactory* objectFacto
 {
     TiMap* obj = new TiMap(objectFactory);
     parent->addMember(obj);
+    obj->setAttachedObject(parent);
     obj->release();
 }
 
@@ -67,6 +68,7 @@ Handle<Value> TiMap::_createControlHelper(void* userContext, CREATEOBJECTCALLBAC
     Handle<Object> result;
     result = global->NewInstance();
     TiProxy* newControl = (createCallback)(obj->objectFactory_);
+    newControl->setAttachedObject(obj);
     newControl->setValue(result);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {

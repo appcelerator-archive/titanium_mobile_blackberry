@@ -28,6 +28,7 @@ TiUIClipboardObject::~TiUIClipboardObject() {
 void TiUIClipboardObject::addObjectToParent(TiObject* parent, NativeObjectFactory* factory) {
     TiUIClipboardObject* obj = new TiUIClipboardObject();
     obj->setNativeObjectFactory(factory);
+    obj->setAttachedObject(parent);
     parent->addMember(obj);
     obj->release();
 }

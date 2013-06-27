@@ -63,6 +63,7 @@ TiTCPSocketObject::~TiTCPSocketObject()
 void TiTCPSocketObject::addObjectToParent(TiObject* parent)
 {
     TiTCPSocketObject* obj = new TiTCPSocketObject;
+    obj->setAttachedObject(parent);
     parent->addMember(obj);
     obj->release();
 }

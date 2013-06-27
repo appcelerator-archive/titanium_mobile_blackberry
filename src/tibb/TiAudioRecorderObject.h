@@ -30,7 +30,6 @@ protected:
 
 private:
 	TiAudioRecorderObject();
-	TiAudioRecorderObject(const char* name);
 
 	static Handle<Value> _stop(void* userContext, TiObject*, const Arguments& args);
 	static Handle<Value> _start(void* userContext, TiObject*, const Arguments& args);

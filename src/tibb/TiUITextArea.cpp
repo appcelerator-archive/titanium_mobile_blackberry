@@ -8,7 +8,7 @@
 #include "TiUITextArea.h"
 
 TiUITextArea::TiUITextArea()
-    : TiUIBase("")
+    : TiUIBase("TextArea")
 {
 }
 

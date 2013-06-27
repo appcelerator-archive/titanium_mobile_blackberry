@@ -10,7 +10,7 @@
 #include "TiPropertySetGetObject.h"
 
 TiUITableViewRow::TiUITableViewRow()
-    : TiUIBase("") { }
+    : TiUIBase("TableViewRow") { }
 
 TiUITableViewRow::~TiUITableViewRow() { }
 

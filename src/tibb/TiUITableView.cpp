@@ -12,7 +12,7 @@
 #include "TiMessageStrings.h"
 
 TiUITableView::TiUITableView()
-    : TiUIBase("")
+    : TiUIBase("TableView")
 {
 }
 

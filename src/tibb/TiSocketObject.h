@@ -30,7 +30,6 @@ protected:
 
 private:
     TiSocketObject();
-    explicit TiSocketObject(NativeObjectFactory* objectFactory);
     TiSocketObject(const TiSocketObject&);
     TiSocketObject& operator=(const TiSocketObject&);
 

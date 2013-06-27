@@ -10,8 +10,8 @@
 
 #include "NativeWindowObject.h"
 
-TiUIWindow::TiUIWindow(const char* name)
-    : TiUIBase(name)
+TiUIWindow::TiUIWindow()
+    : TiUIBase("Window")
 {
 }
 
@@ -21,7 +21,7 @@ TiUIWindow::~TiUIWindow()
 
 TiUIWindow* TiUIWindow::createWindow(NativeObjectFactory* objectFactory)
 {
-    TiUIWindow* obj = new TiUIWindow("");
+    TiUIWindow* obj = new TiUIWindow;
     obj->setNativeObjectFactory(objectFactory);
     obj->initializeTiObject(NULL);
     return obj;

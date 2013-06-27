@@ -24,6 +24,7 @@ void TiCodecObject::addObjectToParent(TiObject* parent)
 {
     TiCodecObject* obj = new TiCodecObject();
     parent->addMember(obj);
+    obj->setAttachedObject(parent);
     obj->release();
 }
 

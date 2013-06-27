@@ -44,7 +44,7 @@ TiUIAnimation* TiUIAnimation::createAnimation(NativeObjectFactory* objectFactory
 }
 
 TiUIAnimation::TiUIAnimation()
-    : TiProxy("Animation") {
+    : TiProxy("Ti.UI.Animation") {
 }
 
 TiUIAnimation::~TiUIAnimation() {

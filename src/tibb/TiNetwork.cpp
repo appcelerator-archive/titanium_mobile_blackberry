@@ -31,6 +31,7 @@ void TiNetwork::addObjectToParent(TiObject* parent, NativeObjectFactory* objectF
 {
     TiNetwork* obj = new TiNetwork(objectFactory);
     parent->addMember(obj);
+    obj->setAttachedObject(parent);
     obj->release();
 }
 

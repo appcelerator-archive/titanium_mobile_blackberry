@@ -9,7 +9,7 @@
 #include "TiGenericFunctionObject.h"
 
 TiUIPicker::TiUIPicker()
-    : TiUIBase("")
+    : TiUIBase("Picker")
 {
 }
 

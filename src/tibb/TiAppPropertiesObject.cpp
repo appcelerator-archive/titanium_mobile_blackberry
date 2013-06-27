@@ -36,6 +36,8 @@ void TiAppPropertiesObject::addObjectToParent(TiObject* parent)
 {
     TiAppPropertiesObject* obj = new TiAppPropertiesObject;
     parent->addMember(obj);
+    obj->setAttachedObject(parent);
+    obj->release();
 }
 
 void TiAppPropertiesObject::onCreateStaticMembers()

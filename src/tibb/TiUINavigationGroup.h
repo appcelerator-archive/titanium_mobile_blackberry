@@ -20,7 +20,7 @@ public:
     NavigationScene(): titanium::Scene(new bb::cascades::NavigationPane()){}
 };
 
-class TiUINavigationGroup: public TiProxy {
+class TiUINavigationGroup : public TiProxy {
 public:
 
 	static TiUINavigationGroup* createProxy(NativeObjectFactory* objectFactory);

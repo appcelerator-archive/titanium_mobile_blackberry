@@ -9,7 +9,7 @@
 #include "TiGenericFunctionObject.h"
 
 TiUIProgressBar::TiUIProgressBar()
-    : TiUIBase("")
+    : TiUIBase("ProgressBar")
 {
 }
 

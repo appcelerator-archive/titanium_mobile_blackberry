@@ -9,13 +9,9 @@
 #include "TiGenericFunctionObject.h"
 #include "NativeMapViewObject.h"
 
-TiMapView::TiMapView(const char* name)
-    : TiUIBase(name)
-{
-}
 
 TiMapView::TiMapView()
-    : TiUIBase("")
+    : TiUIBase("View")
 {
 }
 

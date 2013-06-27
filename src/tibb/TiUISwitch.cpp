@@ -8,7 +8,7 @@
 #include "TiUISwitch.h"
 
 TiUISwitch::TiUISwitch()
-    : TiUIBase("")
+    : TiUIBase("Switch")
 {
 }
 

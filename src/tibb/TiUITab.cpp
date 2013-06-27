@@ -11,7 +11,7 @@
 #include "TiUITab.h"
 
 TiUITab::TiUITab()
-    : TiUIBase("")
+    : TiUIBase("Tab")
 {
 }
 

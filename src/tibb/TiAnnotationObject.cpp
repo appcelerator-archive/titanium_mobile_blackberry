@@ -8,13 +8,8 @@
 #include "TiAnnotationObject.h"
 #include "TiGenericFunctionObject.h"
 
-TiAnnotationObject::TiAnnotationObject(const char* name)
-    : TiUIBase(name)
-{
-}
-
 TiAnnotationObject::TiAnnotationObject()
-    : TiUIBase("")
+    : TiUIBase("Annotation")
 {
 }
 

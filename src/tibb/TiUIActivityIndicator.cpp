@@ -9,7 +9,7 @@
 #include "TiGenericFunctionObject.h"
 
 TiUIActivityIndicator::TiUIActivityIndicator()
-    : TiUIBase("")
+    : TiUIBase("ActivityIndicator")
 {
 }
 

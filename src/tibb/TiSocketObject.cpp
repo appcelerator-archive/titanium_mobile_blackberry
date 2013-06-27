@@ -15,22 +15,17 @@
 TiSocketObject::TiSocketObject()
     : TiProxy("Socket")
 {
-    objectFactory_ = NULL;
-}
-
-TiSocketObject::TiSocketObject(NativeObjectFactory* objectFactory)
-    : TiProxy("Socket")
-{
-    objectFactory_ = objectFactory;
 }
 
 TiSocketObject::~TiSocketObject()
 {
 }
 
-void TiSocketObject::addObjectToParent(TiObject* parent, NativeObjectFactory* objectFactory)
+void TiSocketObject::addObjectToParent(TiObject* parent, NativeObjectFactory* nativeObjectFactory)
 {
-    TiSocketObject* obj = new TiSocketObject(objectFactory);
+    TiSocketObject* obj = new TiSocketObject;
+    obj->setNativeObjectFactory(nativeObjectFactory);
+    obj->setAttachedObject(parent);
     parent->addMember(obj);
     obj->release();
 }
@@ -55,7 +50,7 @@ Handle<Value> TiSocketObject::_createTCP(void* userContext, TiObject* /*caller*/
     TiSocketObject* obj = (TiSocketObject*) userContext;
     Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
     Handle<Object> result = global->NewInstance();
-    TiTCPSocketObject* newSocket = TiTCPSocketObject::createTCP(obj->objectFactory_);
+    TiTCPSocketObject* newSocket = TiTCPSocketObject::createTCP(obj->getNativeObjectFactory());
     newSocket->setValue(result);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
@@ -72,7 +67,7 @@ Handle<Value> TiSocketObject::_createUDP(void* userContext, TiObject* /*caller*/
     TiSocketObject* obj = (TiSocketObject*) userContext;
     Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
     Handle<Object> result = global->NewInstance();
-    TiUDPSocketObject* newSocket = TiUDPSocketObject::createUDP(obj->objectFactory_);
+    TiUDPSocketObject* newSocket = TiUDPSocketObject::createUDP(obj->getNativeObjectFactory());
     newSocket->setValue(result);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
