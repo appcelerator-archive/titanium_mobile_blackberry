@@ -9,7 +9,7 @@
 #include "TiGenericFunctionObject.h"
 
 TiUIOptionDialog::TiUIOptionDialog()
-    : TiUIBase("")
+    : TiUIBase("OptionDialog")
 {
 }
 

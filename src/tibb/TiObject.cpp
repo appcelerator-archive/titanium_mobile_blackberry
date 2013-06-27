@@ -20,11 +20,13 @@ string TiObject::jsFilePath = "app/native/assets/app.js";
 
 TiObject::TiObject()
     : name_(""),
+      apiName_(""),
       isInitialized_(false),
       parentObject_(NULL),
       nativeObject_(NULL),
       nativeObjectFactory_(NULL),
-      areEventsInitialized_(false)
+      areEventsInitialized_(false),
+      attachedObject_(NULL)
 {
 #ifdef _TI_DEBUG_
     cstrName_ = name_.c_str();
@@ -35,11 +37,13 @@ TiObject::TiObject()
 
 TiObject::TiObject(const char* objectName)
     : name_(objectName),
+      apiName_(""),
       isInitialized_(false),
       parentObject_(NULL),
       nativeObject_(NULL),
       nativeObjectFactory_(NULL),
-      areEventsInitialized_(false)
+      areEventsInitialized_(false),
+      attachedObject_(NULL)
 {
 #ifdef _TI_DEBUG_
     cstrName_ = name_.c_str();
@@ -50,12 +54,14 @@ TiObject::TiObject(const char* objectName)
 
 TiObject::TiObject(const char* objectName, Handle<Value> value)
     : value_(Persistent<Value>::New(value)),
+      apiName_(""),
       name_(objectName),
       isInitialized_(false),
       parentObject_(NULL),
       nativeObject_(NULL),
       nativeObjectFactory_(NULL),
-      areEventsInitialized_(false)
+      areEventsInitialized_(false),
+      attachedObject_(NULL)
 {
 #ifdef _TI_DEBUG_
     cstrName_ = name_.c_str();
@@ -209,6 +215,37 @@ void TiObject::onCreateStaticMembers()
 const char* TiObject::getName() const
 {
     return name_.c_str();
+}
+
+static QString buildApiName(const TiObject* obj, QString _str)
+{
+	TiObject *parent = obj->getAttachedObject();
+	if(parent != NULL)
+	{
+		_str.append(".").append(buildApiName(parent, _str));
+	}
+	_str.append(".").append(QString(obj->getName()));
+	return _str;
+}
+
+const char* TiObject::getApiName() const
+{
+	QString apiName = buildApiName(this, QString(""));
+	while(apiName.startsWith("."))
+	{
+		apiName.remove(0,1);
+	}
+	return apiName.toLocal8Bit().data();
+}
+
+void TiObject::setAttachedObject(TiObject *parent)
+{
+	attachedObject_ = parent;
+}
+
+TiObject *TiObject::getAttachedObject() const
+{
+    return attachedObject_;
 }
 
 void TiObject::addMember(TiObject* object, const char* name/*=NULL*/)

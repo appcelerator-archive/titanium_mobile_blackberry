@@ -8,7 +8,7 @@
 #include "TiUIScrollView.h"
 
 TiUIScrollView::TiUIScrollView()
-    : TiUIBase("")
+    : TiUIBase("ScrollView")
 {
 }
 

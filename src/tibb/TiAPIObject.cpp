@@ -22,6 +22,7 @@ TiAPIObject::~TiAPIObject()
 void TiAPIObject::addObjectToParent(TiObject* parent)
 {
     TiAPIObject* obj = new TiAPIObject;
+    obj->setAttachedObject(parent);
     parent->addMember(obj);
 }
 

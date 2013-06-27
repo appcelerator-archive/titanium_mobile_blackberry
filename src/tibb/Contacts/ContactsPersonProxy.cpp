@@ -24,7 +24,7 @@
 using namespace bb::pim::contacts;
 
 ContactsPersonProxy::ContactsPersonProxy() :
-        TiProxy()
+        TiProxy("Person")
 {
     ContactService service;
     ContactBuilder builder;
@@ -33,7 +33,7 @@ ContactsPersonProxy::ContactsPersonProxy() :
 
 }
 ContactsPersonProxy::ContactsPersonProxy(Contact contact) :
-        TiProxy()
+        TiProxy("Person")
 {
 	isEditing = false;
     contact_ = contact;

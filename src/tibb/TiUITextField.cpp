@@ -8,7 +8,7 @@
 #include "TiUITextField.h"
 
 TiUITextField::TiUITextField()
-    : TiUIBase("")
+    : TiUIBase("TextField")
 {
 }
 

@@ -26,6 +26,7 @@ TiStreamObject::~TiStreamObject()
 void TiStreamObject::addObjectToParent(TiObject* parent)
 {
     TiStreamObject* obj = new TiStreamObject;
+    obj->setAttachedObject(parent);
     parent->addMember(obj);
 }
 

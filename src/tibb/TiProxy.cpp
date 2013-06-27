@@ -36,11 +36,21 @@ void TiProxy::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "addEventListener", this, _addEventListener);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "fireEvent", this, _fireEvent);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "removeEventListener", this, _removeEventListener);
+    TiPropertySetGetObject::createProperty(this, "apiName", this, NULL, _getApiName);
 }
 
 void TiProxy::createSettersAndGetters(const char* name, SET_PROPERTY_CALLBACK setter, GET_PROPERTY_CALLBACK getter)
 {
     TiPropertySetGetObject::createProperty(this, name, this, setter, getter);
+}
+
+Handle<Value> TiProxy::_getApiName(void*userContext)
+{
+	HandleScope scope;
+	TiProxy *proxy = (TiProxy*)userContext;
+
+
+	return scope.Close(String::New(proxy->getApiName()));
 }
 
 Handle<Value> TiProxy::createProxy(void*, TiObject*, const Arguments&)
@@ -60,6 +70,7 @@ Handle<Value> TiProxy::createProxy(TiProxy *proxy, void* userContext, const Argu
     proxy->setNativeObjectFactory(module->getNativeObjectFactory());
     proxy->initializeTiObject(NULL);
     proxy->setValue(result);
+    proxy->setAttachedObject(module);
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
         Local<Object> settingsObj = Local<Object>::Cast(args[0]);

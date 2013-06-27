@@ -9,13 +9,8 @@
 #include "TiGenericFunctionObject.h"
 #include "NativeAudioPlayerObject.h"
 
-TiSoundObject::TiSoundObject(const char* name)
-    : TiUIBase(name)
-{
-}
-
 TiSoundObject::TiSoundObject()
-    : TiUIBase("")
+    : TiUIBase("Sound")
 {
 }
 

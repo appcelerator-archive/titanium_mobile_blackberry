@@ -20,15 +20,16 @@
 
 using namespace bb::pim::contacts;
 
-ContactsModule::ContactsModule(NativeObjectFactory* objectFactory)
+ContactsModule::ContactsModule()
     : TiProxy("Contacts")
 {
-    setNativeObjectFactory(objectFactory);
 }
 
 void ContactsModule::addObjectToParent(TiObject* parent, NativeObjectFactory* objectFactory)
 {
-    ContactsModule* obj = new ContactsModule(objectFactory);
+    ContactsModule* obj = new ContactsModule;
+    obj->setNativeObjectFactory(objectFactory);
+    obj->setAttachedObject(parent);
     parent->addMember(obj);
 }
 

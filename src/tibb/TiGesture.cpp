@@ -21,6 +21,7 @@ void TiGesture::addObjectToParent(TiObject* parent, NativeObjectFactory* factory
     TiGesture* gesture = new TiGesture();
     gesture->setNativeObjectFactory(factory);
     parent->addMember(gesture);
+    gesture->setAttachedObject(parent);
     gesture->release();
 }
 

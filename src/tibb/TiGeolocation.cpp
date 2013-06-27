@@ -25,6 +25,7 @@ void TiGeolocation::addObjectToParent(TiObject* parent, NativeObjectFactory* fac
     TiGeolocation* geo = new TiGeolocation();
     geo->setNativeObjectFactory(factory);
     parent->addMember(geo);
+    geo->setAttachedObject(parent);
     geo->release();
 }
 

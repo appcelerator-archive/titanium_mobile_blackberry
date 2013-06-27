@@ -13,7 +13,7 @@ typedef TiProxy* (*CREATEOBJECTCALLBACK)(NativeObjectFactory*);
 
 class ContactsModule: public TiProxy {
 public:
-    ContactsModule(NativeObjectFactory* objectFactory);
+    ContactsModule();
     virtual ~ContactsModule();
     virtual void onCreateStaticMembers();
     static void addObjectToParent(TiObject* parent, NativeObjectFactory* objectFactory);

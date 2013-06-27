@@ -18,12 +18,7 @@ TiUIScrollableView::~TiUIScrollableView()
 }
 
 TiUIScrollableView::TiUIScrollableView()
-    : TiUIBase("")
-{
-}
-
-TiUIScrollableView::TiUIScrollableView(const char* name)
-    : TiUIBase(name)
+    : TiUIBase("ScrollableView")
 {
 }
 

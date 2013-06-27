@@ -37,7 +37,6 @@ public:
 
 protected:
     TiUIBase(const char* name);
-    TiUIBase();
     virtual ~TiUIBase();
 
     virtual bool canAddMembers() const;

@@ -20,6 +20,7 @@ TiBufferStreamObject::~TiBufferStreamObject()
 void TiBufferStreamObject::addObjectToParent(TiObject* parent)
 {
     TiBufferStreamObject* obj = new TiBufferStreamObject;
+    obj->setAttachedObject(parent);
     parent->addMember(obj);
 }
 

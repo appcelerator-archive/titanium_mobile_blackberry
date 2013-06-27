@@ -30,7 +30,6 @@ protected:
 
 private:
 	TiAudioPlayerObject();
-	TiAudioPlayerObject(const char* name);
 
 	static Handle<Value> _play(void* userContext, TiObject*, const Arguments& args);
 	static Handle<Value> _stop(void* userContext, TiObject*, const Arguments& args);

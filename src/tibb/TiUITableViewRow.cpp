@@ -10,7 +10,7 @@
 #include "NativeTableViewRowObject.h"
 
 TiUITableViewRow::TiUITableViewRow()
-    : TiUIBase("") { }
+    : TiUIBase("TableViewRow") { }
 
 TiUITableViewRow::~TiUITableViewRow() { }
 

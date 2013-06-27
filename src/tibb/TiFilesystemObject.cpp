@@ -26,6 +26,8 @@ void TiFilesystemObject::addObjectToParent(TiObject* parent, NativeObjectFactory
 {
     TiFilesystemObject* obj = new TiFilesystemObject(objectFactory);
     parent->addMember(obj);
+    obj->setAttachedObject(parent);
+    obj->release();
 }
 
 Handle<Value> TiFilesystemObject::getResourcesDirectory() {

@@ -508,7 +508,8 @@ const static TiProperty g_tiProperties[] =
 
 };
 
-TiUIBase::TiUIBase()
+TiUIBase::TiUIBase(const char* name)
+    : TiProxy(name)
 {
 }
 
@@ -520,14 +521,9 @@ TiUIBase::~TiUIBase()
     }
 }
 
-TiUIBase::TiUIBase(const char* name)
-    : TiProxy(name)
-{
-}
-
 TiUIBase* TiUIBase::createView(NativeObjectFactory* nativeObjectFactory)
 {
-    TiUIBase* obj = new TiUIBase("TiUIBase");
+    TiUIBase* obj = new TiUIBase("View");
     obj->setNativeObjectFactory(nativeObjectFactory);
     obj->initializeTiObject(NULL);
 
@@ -540,7 +536,7 @@ void TiUIBase::initializeTiObject(TiObject* parentContext)
     {
         TiProxy::initializeTiObject(parentContext);
         /* Don't create a native view object for derived classes */
-        if (string("TiUIBase") == getName())
+        if (string("View") == getName())
         {
             NativeObject* obj = getNativeObjectFactory()->createNativeObject(N_TYPE_VIEW, this);
             setNativeObject(obj);

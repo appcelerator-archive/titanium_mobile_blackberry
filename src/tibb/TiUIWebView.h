@@ -29,7 +29,6 @@ protected:
 
 private:
 	TiUIWebView();
-	TiUIWebView(const char* name);
 	static Handle<Value> _evalJS(void* userContext, TiObject* caller, const Arguments& args);
 	static Handle<Value> _goBack(void* userContext, TiObject* caller, const Arguments& args);
 	static Handle<Value> _canGoBack(void* userContext, TiObject* caller, const Arguments& args);

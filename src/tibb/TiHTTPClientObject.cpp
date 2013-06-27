@@ -141,6 +141,7 @@ void TiHTTPClientObject::addObjectToParent(TiObject* parent, NativeObjectFactory
 {
 	/*TiHTTPClientObject* obj = new TiHTTPClientObject(objectFactory);
     parent->addMember(obj);
+    obj->setAttachedObject(parent);
     obj->release();*/
 }
 

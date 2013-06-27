@@ -11,7 +11,7 @@
 #include "TiGenericFunctionObject.h"
 
 TiUIAlertDialog::TiUIAlertDialog()
-    : TiUIBase("")
+    : TiUIBase("AlertDialog")
 {
 }
 
