@@ -29,7 +29,9 @@ public:
 
     virtual int setLeftImage(TiObject* obj);
     virtual int setTitle(TiObject* obj);
-
+    virtual int setHeader(TiObject* obj);
+    virtual int setSubHeader(TiObject* obj);
+    void removeHeader();
     QVariant data() const;
 
 private:

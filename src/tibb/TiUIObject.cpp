@@ -38,7 +38,7 @@
 #include "TiUIEmailDialog.h"
 #include "TiUINavigationGroup.h"
 #include "TiUIImageButton.h"
-
+#include "TiUITableViewSection.h"
 #include <string.h>
 
 using namespace titanium;
@@ -76,6 +76,7 @@ void TiUIObject::onCreateStaticMembers()
 
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTableView", this, _createTableView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTableViewRow", this, _createTableViewRow);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTableViewSection", this, TiUITableViewSection::createProxy);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTabGroup", this, _createTabGroup);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createWindow", this, _createWindow);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createLabel", this, _createLabel);

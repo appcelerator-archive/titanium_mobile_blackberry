@@ -30,6 +30,10 @@ NativeTableViewRowObject::NativeTableViewRowObject(TiObject* object)
 NativeTableViewRowObject::~NativeTableViewRowObject() {
 }
 
+void NativeTableViewRowObject::removeHeader() {
+	data_->setProperty("header", "");
+}
+
 int NativeTableViewRowObject::addChildNativeObject(NativeObject* obj) {
     if (!data_->content()) {
         data_->setContent(this);
@@ -45,6 +49,16 @@ int NativeTableViewRowObject::setLeftImage(TiObject* obj) {
 
 int NativeTableViewRowObject::setTitle(TiObject* obj) {
     data_->setProperty("title", V8ValueToQString(obj->getValue()));
+    return NATIVE_ERROR_OK;
+}
+
+int NativeTableViewRowObject::setHeader(TiObject* obj) {
+    data_->setProperty("header", V8ValueToQString(obj->getValue()));
+    return NATIVE_ERROR_OK;
+}
+
+int NativeTableViewRowObject::setSubHeader(TiObject* obj) {
+    data_->setProperty("subHeader", V8ValueToQString(obj->getValue()));
     return NATIVE_ERROR_OK;
 }
 
