@@ -16,7 +16,7 @@
 #include "TiLogger.h"
 
 TiUIOptionDialog::TiUIOptionDialog()
-    : TiProxy("")
+    : TiProxy("OptionDialog")
 {
 }
 
