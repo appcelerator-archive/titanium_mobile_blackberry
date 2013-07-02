@@ -53,19 +53,19 @@
 	<!-- Configuration section -->
     <configuration id="com.qnx.qcc.toolChain.1839462390" name="Default">
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="arm/o.le-v7-g/${appname}" entry="true" type="Qnx/Elf">${appname}</asset>
+       <asset path="arm/o.le-v7-g/${appname}" entry="true" type="Qnx/Elf">${binname}</asset>
     </configuration>
     <configuration id="com.qnx.qcc.toolChain.1912267853" name="Device-Debug">
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="arm/o.le-v7-g/${appname}" entry="true" type="Qnx/Elf">${appname}</asset>
+       <asset path="arm/o.le-v7-g/${appname}" entry="true" type="Qnx/Elf">${binname}</asset>
     </configuration>
     <configuration id="com.qnx.qcc.toolChain.374311080" name="Device-Release">
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="arm/o.le-v7/${appname}" entry="true" type="Qnx/Elf">${appname}</asset>
+       <asset path="arm/o.le-v7/${appname}" entry="true" type="Qnx/Elf">${binname}</asset>
     </configuration>
     <configuration id="com.qnx.qcc.toolChain.1212388947" name="Simulator-Debug">
        <platformArchitecture>x86</platformArchitecture>
-       <asset path="x86/o-g/${appname}" entry="true" type="Qnx/Elf">${appname}</asset>
+       <asset path="x86/o-g/${appname}" entry="true" type="Qnx/Elf">${binname}</asset>
     </configuration>
 
     <asset path="LICENSE">LICENSE</asset>
