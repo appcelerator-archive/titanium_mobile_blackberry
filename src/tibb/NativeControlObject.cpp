@@ -621,7 +621,6 @@ int NativeControlObject::setBackgroundImage(TiObject* obj)
     container_->setBackground(TiUtils::colorFromTiObject(obj));
     return NATIVE_ERROR_OK;
 }
-#include "TiUtils.h"
 PROP_SETGET(setBackgroundColor)
 int NativeControlObject::setBackgroundColor(TiObject* obj)
 {
