@@ -7,9 +7,12 @@
 
 #include "NativeTableViewObject.h"
 
+#include <bb/cascades/AbsoluteLayoutProperties>
 #include <bb/cascades/ArrayDataModel>
 #include <bb/cascades/ListView>
+
 #include "V8Utils.h"
+#include "TiUtils.h"
 #include "NativeTableViewRowObject.h"
 #include "NativeTableViewObject.h"
 #include "TableView/BasicTableViewRow.h"
@@ -45,7 +48,9 @@ NativeTableViewObject* NativeTableViewObject::createTableView(TiObject* tiObject
 int NativeTableViewObject::initialize()
 {
     tableView_ = bb::cascades::ListView::create();
+    tableView_->setLayoutProperties(bb::cascades::AbsoluteLayoutProperties::create());
     setControl(tableView_);
+
     tableView_->setDataModel(new ArrayDataModel());
     tableView_->setSnapMode(bb::cascades::SnapMode::LeadingEdge);
     TableViewRowFactory* factory = new TableViewRowFactory(this);
@@ -94,7 +99,7 @@ int NativeTableViewObject::setData(TiObject* obj)
         TiObject* sectionObject = TiObject::getTiObjectFromJsObject(data->Get(i));
         if(sectionObject)
         {
-        	TiUITableViewSection *sect = static_cast<TiUITableViewSection*>(sectionObject);
+        	TiUITableViewSection *sect = dynamic_cast<TiUITableViewSection*>(sectionObject);
         	if(sect == NULL) continue;
         	Handle<Array> rowsInSection = sect->getRowsInSection();
     		int index = sections->Length();

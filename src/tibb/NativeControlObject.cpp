@@ -618,16 +618,15 @@ PROP_SETGET(setBackgroundImage)
 int NativeControlObject::setBackgroundImage(TiObject* obj)
 {
     Q_ASSERT(container_ != NULL);
-
-    QString imagePath = V8ValueToQString(obj->getValue());
-    imagePath = getResourcePath(imagePath);
-    container_->setBackground(bb::cascades::ImagePaint(QUrl(imagePath)));
+    container_->setBackground(TiUtils::colorFromTiObject(obj));
     return NATIVE_ERROR_OK;
 }
-
+#include "TiUtils.h"
 PROP_SETGET(setBackgroundColor)
 int NativeControlObject::setBackgroundColor(TiObject* obj)
 {
+	container_->setBackground(TiUtils::colorFromTiObject(obj));
+	return NATIVE_ERROR_OK;
     Q_ASSERT(container_ != NULL);
     float r;
     float g;
