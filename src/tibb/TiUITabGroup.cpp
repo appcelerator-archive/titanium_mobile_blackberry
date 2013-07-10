@@ -7,6 +7,7 @@
 
 #include "TiUITabGroup.h"
 #include "TiGenericFunctionObject.h"
+#include "TiPropertySetGetObject.h"
 #include "NativeMessageStrings.h"
 #include "NativeTabGroupObject.h"
 
@@ -27,12 +28,28 @@ TiUITabGroup* TiUITabGroup::createTabGroup(NativeObjectFactory* objectFactory)
     return obj;
 }
 
+Handle<Value> TiUITabGroup::_getTabs(void* userContext)
+{
+	TiUITabGroup* obj = (TiUITabGroup*) userContext;
+    Handle<Array> array = Array::New();
+
+    for(int i = 0, len = obj->allTabs_.length(); i < len; i++) {
+    	array->Set(array->Length(), obj->allTabs_.at(i));
+    }
+
+    return array;
+}
+
+
 void TiUITabGroup::onCreateStaticMembers()
 {
     TiUIBase::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "open", this, _open);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "addTab", this, _addTab);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "removeTab", this, _removeTab);
+
+    TiPropertySetGetObject::createProperty(this, "tabs", this, NULL, _getTabs);
+
 }
 
 void TiUITabGroup::initializeTiObject(TiObject* parentContext)
@@ -58,12 +75,22 @@ Handle<Value> TiUITabGroup::_open(void* userContext, TiObject*, const Arguments&
 
 Handle<Value> TiUITabGroup::_addTab(void* userContext, TiObject* caller, const Arguments& args)
 {
+    TiUITabGroup* obj = (TiUITabGroup*) userContext;
+    obj->allTabs_.append(args[0]);
     TiUIBase::_add(userContext, caller, args);
     return Undefined();
 }
 
 Handle<Value> TiUITabGroup::_removeTab(void* userContext, TiObject* caller, const Arguments& args)
 {
+    TiUITabGroup* obj = (TiUITabGroup*) userContext;
+	for(int i = 0, len = obj->allTabs_.length(); i < len; i++) {
+		if(obj->allTabs_.at(i) == args[0])
+		{
+			obj->allTabs_.removeAt(i);
+			break;
+		}
+	}
     TiUIBase::_remove(userContext, caller, args);
     return Undefined();
 }
