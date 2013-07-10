@@ -52,6 +52,10 @@ void TiLogger::log(const char* msg)
     assert(s_nativeLogger);
     s_nativeLogger->log(msg);
 }
+void TiLogger::log(QString msg)
+{
+	log(msg.toLocal8Bit().constData());
+}
 
 void TiLogger::log(const char* tag, const char* msg)
 {
