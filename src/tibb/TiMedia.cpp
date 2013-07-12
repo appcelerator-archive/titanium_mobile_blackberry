@@ -13,6 +13,7 @@
 #include "Media/CameraInvocation.h"
 #include "Scene.h"
 #include "TiAudioPlayerObject.h"
+#include "TiVideoPlayerObject.h"
 #include "TiAudioRecorderObject.h"
 #include "TiCascadesApp.h"
 #include "TiConstants.h"
@@ -54,6 +55,7 @@ void TiMedia::onCreateStaticMembers()
     TiProxy::onCreateStaticMembers();
 
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createAudioPlayer", this, _createAudioPlayer);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createVideoPlayer", this, _createVideoPlayer);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createAudioRecorder", this, _createAudioRecorder);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSound", this, _createSound);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "showCamera", this, _showCamera);
@@ -64,6 +66,7 @@ void TiMedia::onCreateStaticMembers()
     ADD_STATIC_TI_VALUE("AUDIO_FILEFORMAT_MP3", Number::New(Ti::Media::AUDIO_FILEFORMAT_MP3), this);
     ADD_STATIC_TI_VALUE("AUDIO_FILEFORMAT_MP4", Number::New(Ti::Media::AUDIO_FILEFORMAT_MP4), this);
     ADD_STATIC_TI_VALUE("AUDIO_FILEFORMAT_WAVE", Number::New(Ti::Media::AUDIO_FILEFORMAT_WAVE), this);
+    ADD_STATIC_TI_VALUE("VIDEO_FILEFORMAT_MP4", Number::New(Ti::Media::VIDEO_FILEFORMAT_MP4), this);
 }
 
 Handle<Value> TiMedia::_createControlHelper(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args)
@@ -88,6 +91,11 @@ Handle<Value> TiMedia::_createControlHelper(void* userContext, CREATEOBJECTCALLB
 Handle<Value> TiMedia::_createAudioPlayer(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiAudioPlayerObject::createAudioPlayerObject, args);
+}
+
+Handle<Value> TiMedia::_createVideoPlayer(void* userContext, TiObject*, const Arguments& args)
+{
+    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiVideoPlayerObject::createVideoPlayerObject, args);
 }
 
 Handle<Value> TiMedia::_createSound(void* userContext, TiObject*, const Arguments& args)

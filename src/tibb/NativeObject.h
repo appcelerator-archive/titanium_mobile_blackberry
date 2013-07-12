@@ -55,6 +55,7 @@ enum NATIVE_TYPE
     , N_TYPE_MAPVIEW
     , N_TYPE_AUDIOPLAYER
     , N_TYPE_AUDIORECORDER
+    , N_TYPE_VIDEOPLAYER
     , N_TYPE_ANNOTATION
     , N_TYPE_WINDOW
     , N_TYPE_DB
@@ -168,6 +169,7 @@ enum NATIVE_PROP
     , N_PROP_BITRATE
     , N_PROP_REPEATMODE
     , N_PROP_VOLUME
+    , N_PROP_AUTOPLAY
     ////////////////////////
     //TODO: need to place alphabetically
     , N_PROP_ENABLE_ZOOM_CONTROLS

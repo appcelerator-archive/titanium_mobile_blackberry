@@ -31,6 +31,7 @@ private:
     TiMedia(NativeObjectFactory* objectFactory);
     static Handle<Value> _createControlHelper(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args);
     static Handle<Value> _createAudioPlayer(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _createVideoPlayer(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createSound(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createAudioRecorder(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _showCamera(void* userContext, TiObject* caller, const Arguments& args);
