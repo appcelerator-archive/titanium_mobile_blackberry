@@ -99,7 +99,8 @@ int NativeVideoPlayerObject::getProgress(TiObject* obj)
 int NativeVideoPlayerObject::setUrl(TiObject* obj)
 {
 	QString url = V8ValueToQString(obj->getValue());
-	if (url.startsWith("www.", Qt::CaseInsensitive) || url.startsWith("http://", Qt::CaseInsensitive)) {
+	if (url.startsWith("www.", Qt::CaseInsensitive) || url.startsWith("http://", Qt::CaseInsensitive) ||
+								url.startsWith("https://", Qt::CaseInsensitive)) {
 		videoSource = url;
 	}
 	else {
@@ -197,12 +198,15 @@ void NativeVideoPlayerObject::setupEvents(TiEventContainerFactory* containerFact
 	change->setDataProperty("type", tetCOMPLETED);
 	events_.insert(tetCOMPLETED, EventPairSmartPtr(completed,  new VideoPlayerObjectEventHandler(completed, this)));
 
-	QObject::connect(player_, SIGNAL(bufferStatusChanged(bb::multimedia::BufferStatus::Type)), events_[tetCHANGE]->handler(), SLOT(changed(bb::multimedia::BufferStatus::Type)));
-	QObject::connect(player_, SIGNAL(playbackCompleted()), events_[tetCOMPLETED]->handler(), SLOT(completed()));
-	QObject::connect(player_, SIGNAL(repeatModeChanged(bb::multimedia::RepeatMode::Type)), events_[tetCHANGE]->handler(), SLOT(repeatModeChanged(bb::multimedia::RepeatMode::Type)));
+	QObject::connect(player_, SIGNAL(bufferStatusChanged(bb::multimedia::BufferStatus::Type)),
+							events_[tetCHANGE]->handler(), SLOT(changed(bb::multimedia::BufferStatus::Type)));
+	QObject::connect(player_, SIGNAL(playbackCompleted()), events_[tetCOMPLETED]->handler(),
+							SLOT(completed()));
+	QObject::connect(player_, SIGNAL(repeatModeChanged(bb::multimedia::RepeatMode::Type)),
+							events_[tetCHANGE]->handler(), SLOT(repeatModeChanged(bb::multimedia::RepeatMode::Type)));
 	QObject::connect(foreignWindow_, SIGNAL(windowAttached(screen_window_t, QString, QString)),
-						events_[tetCHANGE]->handler(),
-	                     SLOT(windowAttached(screen_window_t, QString, QString)));
+							events_[tetCHANGE]->handler(),
+							SLOT(windowAttached(screen_window_t, QString, QString)));
 }
 
 
