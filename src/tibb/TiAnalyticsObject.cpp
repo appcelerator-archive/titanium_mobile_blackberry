@@ -65,12 +65,24 @@ TiAnalyticsObject::TiAnalyticsObject(NativeObjectFactory* objectFactory)
 		QString mid = hdi.pin();
 		mid_ = mid.toLocal8Bit();
 
-		// generate the session id
-		QString sid = QUuid::createUuid().toString();
-		sid.replace("{", "");
-		sid.replace("}", "");
-		sid_ = sid.toLocal8Bit();
+		// generate the session id if it does not exist
+		{
+			QSettings _settings;
+			QVariant _uuid = _settings.value("__ti_uuid__");
 
+			if(!_uuid.isValid())
+			{
+				QString sid = QUuid::createUuid().toString();
+				sid.replace("{", "");
+				sid.replace("}", "");
+				_settings.setValue("__ti_uuid__", sid);
+				sid_ = sid.toLocal8Bit();
+			}
+			else
+			{
+				sid_ = _uuid.toString().toLocal8Bit();
+			}
+		}
 		// get deploy type if development or production
 		QString deployType = defaultSettings.value("deploytype").toString();
 		deployType_ = deployType.toLocal8Bit();
