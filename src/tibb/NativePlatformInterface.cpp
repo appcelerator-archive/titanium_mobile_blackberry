@@ -148,8 +148,23 @@ Handle<Value> NativePlatformInterface::getDisplayCaps()
 PROP_GETTER(getId)
 Handle<Value> NativePlatformInterface::getId()
 {
-    // TODO: Finish this when will be available in SDK
-    return Undefined();
+	QByteArray _sid;
+	QSettings _settings;
+	QVariant _uuid = _settings.value("__ti_uuid__");
+
+	if(!_uuid.isValid())
+	{
+		QString sid = QUuid::createUuid().toString();
+		sid.replace("{", "");
+		sid.replace("}", "");
+		_settings.setValue("__ti_uuid__", sid);
+		_sid = sid.toLocal8Bit();
+	}
+	else
+	{
+		_sid = _uuid.toString().toLocal8Bit();
+	}
+    return String::New(_sid.data());
 }
 
 PROP_GETTER(getLocale)
@@ -254,7 +269,7 @@ static vector<NATIVE_PROPGET_CALLBACK> initFunctionMap()
     vect[N_PLATFORM_PROP_BATTERYMONITORING]        = NULL;
     vect[N_PLATFORM_PROP_BATTERYSTATE]             = PROP_GETTING_FUNCTION(getBatteryState);
     vect[N_PLATFORM_PROP_DISPLAYCAPS]              = PROP_GETTING_FUNCTION(getDisplayCaps);
-    vect[N_PLATFORM_PROP_ID]                       = NULL;
+    vect[N_PLATFORM_PROP_ID]                       = PROP_GETTING_FUNCTION(getId);
     vect[N_PLATFORM_PROP_LOCALE]                   = NULL;
     vect[N_PLATFORM_PROP_MACADDRESS]               = NULL;
     vect[N_PLATFORM_PROP_MODEL]                    = NULL;

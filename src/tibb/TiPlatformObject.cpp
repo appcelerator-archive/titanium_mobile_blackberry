@@ -119,6 +119,15 @@ void TiPlatformObject::onCreateStaticMembers()
     ADD_STATIC_TI_VALUE("BATTERY_STATE_FULL", Number::New(Ti::Platform::BATTERY_STATE_FULL), this);
     ADD_STATIC_TI_VALUE("BATTERY_STATE_UNKNOWN", Number::New(Ti::Platform::BATTERY_STATE_UNKNOWN), this);
     ADD_STATIC_TI_VALUE("BATTERY_STATE_UNPLUGGED", Number::New(Ti::Platform::BATTERY_STATE_UNPLUGGED), this);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createUUID", this, _createUUID);
+}
+
+Handle<Value> TiPlatformObject::_createUUID(void* userContext, TiObject*, const Arguments& args)
+{
+	HandleScope scope;
+	QString uid = QUuid::createUuid().toString();
+	uid.replace("{", ""); uid.replace("}", "");
+	return scope.Close(String::New(uid.toLocal8Bit().data()));
 }
 
 void TiPlatformObject::setTiPlatformMappingProperties(const TiProperty* props, int propertyCount)

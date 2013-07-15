@@ -27,6 +27,7 @@ protected:
 private:
     static Handle<Value> _valueGetter(int propertyNumber, void* context);
     Handle<Value> getPropertyValue(int propertyNumber);
+	static Handle<Value> _createUUID(void* userContext, TiObject*, const Arguments& args);
     explicit TiPlatformObject();
     TiPlatformObject(const TiPlatformObject&);
     TiPlatformObject& operator=(const TiPlatformObject&);
