@@ -83,7 +83,8 @@ int NativeAudioPlayerObject::getProgress(TiObject* obj)
 int NativeAudioPlayerObject::setUrl(TiObject* obj)
 {
 	QString url = V8ValueToQString(obj->getValue());
-	if (url.startsWith("www.", Qt::CaseInsensitive) || url.startsWith("http://", Qt::CaseInsensitive)) {
+	if (url.startsWith("www.", Qt::CaseInsensitive) || url.startsWith("http://", Qt::CaseInsensitive) ||
+								url.startsWith("https://", Qt::CaseInsensitive)) {
 		audioSource = url;
 	}
 	else {

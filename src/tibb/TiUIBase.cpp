@@ -367,6 +367,11 @@ const static TiProperty g_tiProperties[] =
         "volume", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
         N_PROP_VOLUME
     },
+
+    {
+		"autoplay", TI_PROP_PERMISSION_READ | TI_PROP_PERMISSION_WRITE,
+		N_PROP_AUTOPLAY
+	},
     /////////////////////
 
     {

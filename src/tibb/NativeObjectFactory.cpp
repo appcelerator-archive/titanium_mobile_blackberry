@@ -44,6 +44,7 @@
 #include "NativeAnnotationObject.h"
 #include "NativeAudioPlayerObject.h"
 #include "NativeAudioRecorderObject.h"
+#include "NativeVideoPlayerObject.h"
 #include "NativeAnimationObject.h"
 #include "NativeEmailDialogObject.h"
 #include "TiCascadesApp.h"
@@ -214,8 +215,12 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
         break;
 
     case N_TYPE_AUDIORECORDER:
-		   obj = NativeAudioRecorderObject::createAudioRecorderObject(tiObj);
-		   break;
+		obj = NativeAudioRecorderObject::createAudioRecorderObject(tiObj);
+		break;
+
+    case N_TYPE_VIDEOPLAYER:
+		obj = NativeVideoPlayerObject::createVideoPlayerObject(tiObj);
+		break;
 
     case N_TYPE_GESTURE:
        obj = NativeGestureObject::createGesture(tiObj);

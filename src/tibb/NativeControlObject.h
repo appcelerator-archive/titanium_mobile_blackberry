@@ -147,6 +147,7 @@ public:
     virtual int setRepeatMode(TiObject* obj);
     virtual int getVolume(TiObject* obj);
     virtual int setVolume(TiObject* obj);
+    virtual int setAutoPlay(TiObject* obj);
     ////////////////////////
     virtual void focus();
     virtual void blur();
