@@ -29,6 +29,7 @@ protected:
     virtual ~TiDatabase();
     virtual void onCreateStaticMembers();
     static Handle<Value> _open(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _install(void* userContext, TiObject* caller, const Arguments& args);
 
 private:
     TiDatabase();
