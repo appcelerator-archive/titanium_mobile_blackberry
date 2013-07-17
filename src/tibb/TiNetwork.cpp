@@ -10,6 +10,8 @@
 #include "TiSocketObject.h"
 #include "TiHTTPClientObject.h"
 #include "TiGenericFunctionObject.h"
+#include "V8Utils.h"
+#include <QUrl>
 
 TiNetwork::TiNetwork()
     : TiProxy("Network")
@@ -42,7 +44,19 @@ void TiNetwork::onCreateStaticMembers()
     TiHTTPClientObject::addObjectToParent(this, objectFactory_);
     // TODO: Add class methods, constants, properties
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createHTTPClient", this, _createHTTPClient);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "encodeURIComponent", this, _encodeURIComponent);
 
+}
+
+Handle<Value> TiNetwork::_encodeURIComponent(void* userContext, TiObject* /*caller*/, const Arguments& args)
+{
+	HandleScope scope;
+	if(args.Length() > 0 && args[0]->IsString())
+	{
+		QByteArray url = QUrl::toPercentEncoding(titanium::V8ValueToQString(args[0]));
+		return scope.Close(String::New(url.data()));
+	}
+	return Undefined();
 }
 
 Handle<Value> TiNetwork::_createHTTPClient(void* userContext, TiObject* /*caller*/, const Arguments& args)
