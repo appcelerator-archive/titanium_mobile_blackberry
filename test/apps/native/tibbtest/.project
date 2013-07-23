@@ -3,6 +3,7 @@
 	<name>tibbtest</name>
 	<comment></comment>
 	<projects>
+		<project>ReplaceWithModuleName</project>
 		<project>tibb</project>
 	</projects>
 	<buildSpec>
@@ -10,6 +11,10 @@
 			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
 			<triggers>clean,full,incremental,</triggers>
 			<arguments>
+				<dictionary>
+					<key>?children?</key>
+					<value>?name?=outputEntries\|?children?=?name?=entry\\\\\\\|\\\|\||</value>
+				</dictionary>
 				<dictionary>
 					<key>?name?</key>
 					<value></value>
