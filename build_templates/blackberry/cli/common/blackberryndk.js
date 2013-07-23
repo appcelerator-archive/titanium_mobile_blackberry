@@ -5,9 +5,14 @@ var path = require('path'),
 	fs = require('fs'),
 	appc = require('node-appc'),
     afs = appc.fs,
+    i18n = appc.i18n(__dirname),
+	__ = i18n.__,
+	__n = i18n.__n,
     wrench = require('wrench'),
+    ti = require('titanium-sdk'),
 	exec = require('child_process').exec,
-	lastLineCount = 0;
+	jsExtRegExp = /\.js$/,
+	lastLineCount = 0,
 	timerID = 0;
 
 var findNDK = function() {
@@ -94,6 +99,116 @@ var renderTemplate = function(template, props) {
 	});
 }
 
+var collapsePath = function (p) {
+	var result = [], segment, lastSegment;
+	p = p.replace(/\\/g, '/').split('/');
+	while (p.length) {
+		segment = p.shift();
+		if (segment == '..' && result.length && lastSegment != '..') {
+			result.pop();
+			lastSegment = result[result.length - 1];
+		} else if (segment != '.') {
+			result.push(lastSegment = segment);
+		}
+	}
+	return result.join('/');
+}
+
+var findTiModules = function (builder, callback) {
+	if (!builder.tiapp.modules || !builder.tiapp.modules.length) {
+		builder.logger.info(__('No Titanium Modules required, continuing'));
+		callback();
+		return;
+	}
+
+    var moduleSearchPaths = [builder.projectDir, afs.resolvePath(builder.titaniumBBSdkPath, '..', '..', '..', '..')];
+    var deployType = "development"; // TODO: look at g to figure dev or prod
+	var projectDependencies = [];
+
+	builder.logger.info(__n('Searching for %s Titanium Module', 'Searching for %s Titanium Modules', builder.tiapp.modules.length));
+	appc.timodule.find(builder.tiapp.modules, 'blackberry', deployType, ti.manifest.version, moduleSearchPaths, builder.logger, function (modules) {
+		if (modules.missing.length) {
+			builder.logger.error(__('Could not find all required Titanium Modules:'));
+			modules.missing.forEach(function (m) {
+				builder.logger.error('   id: ' + m.id + '\t version: ' + (m.version || 'latest') + '\t platform: ' + m.platform + '\t deploy-type: ' + m.deployType);
+			}, builder);
+			builder.logger.log();
+			process.exit(1);
+		}
+
+		if (modules.incompatible.length) {
+			builder.logger.error(__('Found incompatible Titanium Modules:'));
+			modules.incompatible.forEach(function (m) {
+				builder.logger.error('   id: ' + m.id + '\t version: ' + (m.version || 'latest') + '\t platform: ' + m.platform + '\t min sdk: ' + m.minsdk);
+			}, builder);
+			builder.logger.log();
+			process.exit(1);
+		}
+
+		if (modules.conflict.length) {
+			builder.logger.error(__('Found conflicting Titanium modules:'));
+			modules.conflict.forEach(function (m) {
+				builder.logger.error('   ' + __('Titanium module "%s" requested for both Mobile Web and CommonJS platforms, but only one may be used at a time.', m.id));
+			}, builder);
+			builder.logger.log();
+			process.exit(1);
+		}
+
+		modules.found.forEach(function (module) {
+			var moduleDir = module.modulePath,
+				pkgJson,
+				pkgJsonFile = path.join(moduleDir, 'package.json');
+			if (!afs.exists(pkgJsonFile)) {
+				builder.logger.error(__('Invalid Titanium Mobile Module "%s": missing package.json', module.id) + '\n');
+				process.exit(1);
+			}
+
+			try {
+				pkgJson = JSON.parse(fs.readFileSync(pkgJsonFile));
+			} catch (e) {
+				builder.logger.error(__('Invalid Titanium Mobile Module "%s": unable to parse package.json', module.id) + '\n');
+				process.exit(1);
+			}
+
+			var libDir = ((pkgJson.directories && pkgJson.directories.lib) || '').replace(/^\//, '');		
+
+
+			var mainFilePath = path.join(moduleDir, libDir, (pkgJson.main || '').replace(jsExtRegExp, '') + '.js');
+			if (!afs.exists(mainFilePath)) {
+				builder.logger.error(__('Invalid Titanium Mobile Module "%s": unable to find main file "%s"', module.id, pkgJson.main) + '\n');
+				process.exit(1);
+			}
+
+			builder.logger.info(__('Bundling Titanium Mobile Module %s', module.id.cyan));
+
+			builder.projectDependencies.push(pkgJson.main);
+
+			var moduleName = module.id != pkgJson.main ? module.id + '/' + pkgJson.main : module.id;
+
+			if (/\/commonjs/.test(moduleDir)) {
+				builder.modulesToCache.push((/\/commonjs/.test(moduleDir) ? 'commonjs:' : '') + moduleName);
+			} else {
+				builder.modulesToCache.push(moduleName);
+				builder.tiModulesToLoad.push(module.id);
+			}
+
+			builder.packages.push({
+				'name': module.id,
+				'location': path.join(builder.projectDir, collapsePath('modules/' + module.id + (libDir ? '/' + libDir : ''))),
+				'main': pkgJson.main,
+				'type': pkgJson.type,
+				'root': 1
+			});
+
+			var dest = path.join(builder.buildDir, 'modules', module.id);
+			wrench.mkdirSyncRecursive(dest);
+			afs.copyDirSyncRecursive(moduleDir, dest, { preserve: true });
+		}, builder);
+
+		callback();
+	}.bind(builder));
+}
+
 var package = function(builder) {
 
     var projectDir = builder.projectDir;
@@ -104,9 +219,9 @@ var package = function(builder) {
 	afs.copyDirSyncRecursive(path.join(titaniumBBSdkPath, 'tibb', 'titanium', 'javascript'),
 	 									path.join(buildDir, 'framework'), { preserve: true, logger: logger.debug });
 
-    // copy resources into assets folder
-    var assetsDir = path.join(buildDir, 'assets');
+    // copy localization and resources into assets folder
     var i18nDir = path.join(projectDir, 'i18n');
+    var assetsDir = path.join(buildDir, 'assets');   
 	var resourcesDir = path.join(projectDir, 'Resources');
 	
 	if (fs.existsSync(i18nDir)) {
@@ -144,6 +259,33 @@ var package = function(builder) {
 
 	var appPropsFile = path.join(buildDir, 'assets', 'app_properties.ini');
     fs.writeFileSync(appPropsFile, builder.appProps);
+
+    builder.projectDependencies = [];
+	builder.modulesToCache = [];
+	builder.tiModulesToLoad = [];
+    builder.packages = [];
+
+
+    findTiModules(builder, function(){
+    	builder.packages.forEach(function (p) {
+
+    		if (typeof p.type !== 'undefined' && p.type === "native") {	
+    			var cpu = builder.type2variantCpu[this.builder.target][1];
+    			var lib = path.join(p.location, cpu, p.main + '.so');
+    			fs.createReadStream(lib).pipe(fs.createWriteStream(path.join(assetsDir, p.main + '.so')));	
+			}
+			else { 
+				var lib = path.join(p.location, p.main + '.js');
+    			fs.createReadStream(lib).pipe(fs.createWriteStream(path.join(assetsDir, p.main + '.js')));	
+			}
+
+			// copy module assets to blackberry build assets folder
+			var moduleAssetsDir = path.join(p.location, 'assets');
+			if (fs.existsSync(moduleAssetsDir)) {
+				afs.copyDirSyncRecursive(moduleAssetsDir, assetsDir, { preserve: true, logger: logger.debug });
+			}
+		});
+    });
 }
 
 var getAppLog = function(ndk, deviceIP, barFile, password, callback) {
@@ -232,7 +374,6 @@ function BlackberryNDK(builder) {
 
 			var variant = builder.type2variantCpu[this.builder.target][0];
 			var cpu = builder.type2variantCpu[this.builder.target][1];
-
             
 			var tiappName = 'TIAPP_NAME=' + projectName;
 			var cpuList = 'CPULIST=' + cpu;
@@ -317,7 +458,8 @@ function BlackberryNDK(builder) {
 			var barDescriptorTmpl = path.join(builder.titaniumBBSdkPath, 'templates', 'bar-descriptor2.xml');
 			fs.writeFileSync(barDescriptor, renderTemplate(fs.readFileSync(barDescriptorTmpl).toString().trim(), {
 				id: tiapp['id'] || '',
-				appname: projectName || '',
+				appname: builder.projectName || '',
+				binname: projectName || '',
 				description: tiapp.description || 'not specified',
 				version: tiapp.version || '1.0',
 				author: tiapp.publisher || 'not specified',
