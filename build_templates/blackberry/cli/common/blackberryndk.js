@@ -317,7 +317,8 @@ function BlackberryNDK(builder) {
 			var barDescriptorTmpl = path.join(builder.titaniumBBSdkPath, 'templates', 'bar-descriptor2.xml');
 			fs.writeFileSync(barDescriptor, renderTemplate(fs.readFileSync(barDescriptorTmpl).toString().trim(), {
 				id: tiapp['id'] || '',
-				appname: projectName || '',
+				appname: builder.projectName || '',
+				binname: projectName || '',
 				description: tiapp.description || 'not specified',
 				version: tiapp.version || '1.0',
 				author: tiapp.publisher || 'not specified',
