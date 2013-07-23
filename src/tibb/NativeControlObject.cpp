@@ -1229,6 +1229,12 @@ int NativeControlObject::setVolume(TiObject* obj)
 {
     return NATIVE_ERROR_NOTSUPPORTED;
 }
+
+PROP_SETGET(setAutoPlay)
+int NativeControlObject::setAutoPlay(TiObject* obj)
+{
+    return NATIVE_ERROR_NOTSUPPORTED;
+}
 //////////////////////////
 
 void NativeControlObject::focus() {
@@ -1440,7 +1446,9 @@ const static NATIVE_PROPSETGET_SETTING g_propSetGet[] =
     {N_PROP_BITRATE, PROP_SETGET_FUNCTION(setBitRate), NULL},
     {N_PROP_REPEATMODE, PROP_SETGET_FUNCTION(setRepeatMode), NULL},
     {N_PROP_VOLUME, PROP_SETGET_FUNCTION(setVolume),PROP_SETGET_FUNCTION(getVolume)},
+    {N_PROP_AUTOPLAY, PROP_SETGET_FUNCTION(setAutoPlay),NULL},
     //////////////////////
+
     {N_PROP_ZINDEX, PROP_SETGET_FUNCTION(setZIndex), PROP_SETGET_FUNCTION(getZIndex)},
 
     // Tab properties
@@ -1775,7 +1783,6 @@ QString NativeControlObject::getResourcePath(const QString& path)
     }
     return rPath;
 }
-
 
 NativeAnimationObject * NativeControlObject::createAnimationObject(Local<Object> obj)
 {

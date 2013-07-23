@@ -13,6 +13,7 @@
 #include <bb/cascades/ImageView>
 #include <bb/cascades/ScalingMethod>
 
+#include "ImageLoader.h"
 #include "TiBlobObject.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
@@ -52,8 +53,14 @@ int NativeImageViewObject::initialize()
 int NativeImageViewObject::setImage(TiObject* obj)
 {
 	Handle<Value> img = obj->getValue();
+	imageView_->resetImage();
     if (img->IsString()) {
         QString imagePath = V8ValueToQString(obj->getValue());
+        if(imagePath.startsWith("http://") || imagePath.startsWith("https://"))
+        {
+        	ImageLoader::loadImage(imageView_, QUrl(imagePath));
+            return NATIVE_ERROR_OK;
+        }
         imagePath = getResourcePath(imagePath);
         imageView_->setImage(QUrl(imagePath));
     } else {

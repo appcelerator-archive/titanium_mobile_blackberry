@@ -38,7 +38,7 @@ LIBS+=tibb v8 socket bps
 #LIBS+=ReplaceWithModuleName
 
 # Extra .so required
-LDFLAGS+=-lbbcascades -lbbdevice -lbbsystem -lQtCore -lQtDeclarative -lQtGui -lQtMultimedia -lQtNetwork -lm -lbb -lbbdata -lbbpim
+LDFLAGS+=-lbbcascades -lbbdevice -lbbsystem -lQtCore -lQtDeclarative -lQtGui -lQtMultimedia -lQtNetwork -lscreen -lm -lbb -lbbdata -lbbpim
 LDFLAGS+=-lQtSensors -lQtSql -lQtTest -lQtXml -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia
 
 include $(MKFILES_ROOT)/qmacros.mk
