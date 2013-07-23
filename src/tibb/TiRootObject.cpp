@@ -16,6 +16,7 @@
 #include "TiTimeoutManager.h"
 #include "TiV8EventContainerFactory.h"
 #include "V8Utils.h"
+#include <QSettings>
 
 #include <fstream>
 #include <sstream>
@@ -29,6 +30,11 @@ using namespace titanium;
 
 static Handle<ObjectTemplate> g_rootTemplate;
 static const string rootFolder = "app/native/assets/";
+
+// Application properties defined at compile in tiapp.xml
+// can be read using this settings instance. It is read only.
+static QSettings defaultSettings("app/native/assets/app_properties.ini",
+                                 QSettings::IniFormat);
 
 TiRootObject::TiRootObject()
     : TiObject("")
@@ -109,6 +115,7 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     setTiObjectToJsObject(context_->Global(), this);
     Context::Scope context_scope(context_);
     initializeTiObject(NULL);
+    bool scriptHasError = false;
 
     const char* bootstrapFilename = "bootstrap.js";
     string bootstrapJavascript;
@@ -154,17 +161,52 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
 
     const char* filename = "app.js";
     Handle<Script> compiledScript = Script::Compile(String::New(javaScript), String::New(filename));
+    string err_msg;
     if (compiledScript.IsEmpty())
     {
-        ReportException(tryCatch, true);
+        ReportException(tryCatch, true, err_msg);
         return 1;
     }
     compiledScript->Run();
     if (tryCatch.HasCaught())
     {
-        ReportException(tryCatch, true);
-        return 1;
+        ReportException(tryCatch, true, err_msg);
+        scriptHasError = true;
     }
+
+    // show script error
+    QString deployType = defaultSettings.value("deploytype").toString();
+    if (scriptHasError && deployType.compare(QString("development")) == 0) {
+
+		// clean up display data
+		size_t start_pos = 0;
+		while((start_pos = err_msg.find("\n", start_pos)) != std::string::npos) {
+			err_msg.replace(start_pos, 1, "\\n");
+		}
+
+		start_pos = 0;
+		while((start_pos = err_msg.find("'", start_pos)) != std::string::npos) {
+			err_msg.erase(start_pos, 1);
+		}
+
+    	static const string javaScriptErrorAlert = string("var win1 = Titanium.UI.createWindow({") +
+											   string("backgroundColor:'red'") +
+											   string("});") +
+											   string("var label1 = Titanium.UI.createLabel({") +
+											   string("color:'white',") +
+											   string("textAlign:'center',") +
+											   string("text:") +
+											   "'" + err_msg + "'," +
+											   string("font:{fontSize:8,fontFamily:'Helvetica Neue',fontStyle:'Bold'},") +
+											   string("});") +
+											   string("win1.add(label1);") +
+											   string("win1.open();");
+
+
+    	compiledScript = Script::Compile(String::New(javaScriptErrorAlert.c_str()));
+    	compiledScript->Run();
+    }
+
     onStartMessagePump();
     return (messageLoopEntry)(context);
 }
@@ -324,7 +366,8 @@ Handle<Value> TiRootObject::_globalRequire(void*, TiObject*, const Arguments& ar
 	Handle<Script> compiledScript = Script::Compile(String::New(javascript.c_str()), String::New(filename.c_str()));
 	if (compiledScript.IsEmpty())
 	{
-		DisplayExceptionLine(tryCatch);
+		std::string err_msg;
+		DisplayExceptionLine(tryCatch, err_msg);
 		return tryCatch.ReThrow();
 	}
 
