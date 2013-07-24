@@ -53,24 +53,19 @@ exports.run = function (logger, config, cli, projectConfig) {
 			var app_sample_file_path = path.join(projectDir, 'example', 'app.js');
 			var app_sample_template = fs.readFileSync(app_sample_file_path).toString().trim();
 			app_sample_template = app_sample_template.replace(/___PROJECTNAME___/g, cli.argv.name);	
-			app_sample_template = app_sample_template.replace(/__MODULE_ID__/g, cli.argv.id);	
+			app_sample_template = app_sample_template.replace(/__MODULE_ID__/g, cli.argv.name);	
 			fs.writeFileSync(app_sample_file_path, app_sample_template);	
 
-			var app_sample_file_path = path.join(projectDir, 'example', 'app.js');
-			var app_sample_template = fs.readFileSync(app_sample_file_path).toString().trim();
-			app_sample_template = app_sample_template.replace(/___PROJECTNAME___/g, cli.argv.name);	
-			app_sample_template = app_sample_template.replace(/__MODULE_ID__/g, cli.argv.id);	
-			fs.writeFileSync(app_sample_file_path, app_sample_template);	
 
 			var assets_read_file_path = path.join(projectDir, 'assets', 'README');
 			var assets_read_template = fs.readFileSync(assets_read_file_path).toString().trim();
-			assets_read_template = assets_read_template.replace(/__MODULE_ID__/g, cli.argv.id);	
+			assets_read_template = assets_read_template.replace(/__MODULE_ID__/g, cli.argv.name);	
 			fs.writeFileSync(assets_read_file_path, assets_read_template);	
 
 			var doc_index_file_path = path.join(projectDir, 'documentation', 'index.md');
 			var doc_index_template = fs.readFileSync(doc_index_file_path).toString().trim();
 			doc_index_template = doc_index_template.replace(/___PROJECTNAME___/g, cli.argv.name);	
-			doc_index_template = doc_index_template.replace(/__MODULE_ID__/g, cli.argv.id);
+			doc_index_template = doc_index_template.replace(/__MODULE_ID__/g, cli.argv.name);
 			doc_index_template = doc_index_template.replace(/___PROJECTNAMEASIDENTIFIER__/g, 'MyModule');
 			fs.writeFileSync(doc_index_file_path, doc_index_template);
 

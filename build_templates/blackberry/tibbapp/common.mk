@@ -17,6 +17,10 @@ EXTRA_LIBVPATH+=$(QNX_TARGET)/$(CPUVARDIR)/usr/lib \
 	$(BB_ROOT)/libv8/lib/$(CPU) \
 	$(BB_ROOT)/tibb/$(CPU)/a$(if $(filter arm,$(CPULIST)),.le-v7,)$(if $(filter g,$(VARIANTS)),-g,)
 
+# Extra library search path for native module extentions
+${extra_lib_path}
+	
+
 # Compiler options for enhanced security and recording the compiler options in release builds
 CCFLAGS+=-fstack-protector-all -D_FORTIFY_SOURCE=2 \
 	$(if $(filter g so shared,$(VARIANTS)),,-fPIE) \
@@ -27,6 +31,9 @@ LDFLAGS+=-Wl,-z,relro -Wl,-z,now $(if $(filter g so shared,$(VARIANTS)),,-pie)
 
 # Add your required library names, here
 LIBS+=tibb v8 socket bps
+
+# Add your native module library names, here
+${libs}
 
 # Extra .so required
 LDFLAGS+=-lbbcascades -lbbdevice -lbbsystem -lQtCore -lQtDeclarative -lQtGui -lQtMultimedia -lQtNetwork -lm -lbb -lbbdata
