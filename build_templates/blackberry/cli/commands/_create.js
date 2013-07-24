@@ -58,8 +58,7 @@ exports.run = function (logger, config, cli, projectConfig) {
 
 
 			var assets_read_file_path = path.join(projectDir, 'assets', 'README');
-			var assets_read_template = fs.readFileSync(assets_read_file_path).toString().trim();
-			assets_read_template = assets_read_template.replace(/__MODULE_ID__/g, cli.argv.name);	
+			var assets_read_template = 'Place your assets like PNG files in this directory and they will be packaged with your module.'
 			fs.writeFileSync(assets_read_file_path, assets_read_template);	
 
 			var doc_index_file_path = path.join(projectDir, 'documentation', 'index.md');

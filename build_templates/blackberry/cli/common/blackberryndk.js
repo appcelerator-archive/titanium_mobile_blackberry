@@ -269,14 +269,7 @@ var package = function(builder) {
     findTiModules(builder, function(){
     	builder.packages.forEach(function (p) {
 
-    		if (typeof p.type !== 'undefined' && p.type === "native") {	
-    			var cpu = builder.type2variantCpu[this.builder.target][1];
-    			var lib = path.join(p.location, cpu, p.main + '.a');
-    			var header = path.join(p.location, cpu, p.main + '.h');
-    			fs.createReadStream(lib).pipe(fs.createWriteStream(path.join(assetsDir, p.main + '.a')));
-    			fs.createReadStream(header).pipe(fs.createWriteStream(path.join(assetsDir, p.main + '.h')));	
-			}
-			else { 
+    		if (typeof p.type === 'undefined') {	
 				var lib = path.join(p.location, p.main + '.js');
     			fs.createReadStream(lib).pipe(fs.createWriteStream(path.join(assetsDir, p.main + '.js')));	
 			}
@@ -372,6 +365,33 @@ function BlackberryNDK(builder) {
 								path.join(tmpPathSDK, 'tibb'), {logger: logger.debug});
 			afs.copyDirSyncRecursive(path.join(builder.titaniumBBSdkPath, 'libv8'),
 								path.join(tmpPathSDK, 'libv8'), {logger: logger.debug});
+
+            // Copy over any module header file and make the static library location available to build
+			builder.projectDependencies = [];
+			builder.modulesToCache = [];
+			builder.tiModulesToLoad = [];
+		    builder.packages = [];
+
+            findTiModules(builder, function(){
+		    	builder.packages.forEach(function (p) {
+
+		    		if (typeof p.type !== 'undefined' && p.type === "native") {	
+		    			var cpu = builder.type2variantCpu[this.builder.target][1];
+		    			var lib_path = path.join(p.location, cpu, p.main + '.a');
+		    			var header_path = path.join(p.location, p.main + '.h');
+		    			var header_name = p.main + '.h';
+
+		    			fs.createReadStream(header_path).pipe(fs.createWriteStream(path.join(tmpPathSDK, 'tibb', p.main + '.h')));
+
+		    			// add path to lib and lib name to common.mk
+		    			// by calling renderTemplate and replacing ${}
+
+		    			// add header and register to main.cpp	
+		    			// by calling renderTemplate and replacing ${}
+					}
+				});
+		    });
+
 							
 
 			var variant = builder.type2variantCpu[this.builder.target][0];

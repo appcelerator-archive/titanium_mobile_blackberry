@@ -48,10 +48,9 @@ Handle<Value> ReplaceWithModuleName::startup()
 
 Handle<Value> ReplaceWithModuleName::Example(const v8::Arguments& args)
 {
-    HandleScope handleScope;
-	std::string value = "Hello World";
+    std::string value = "Hello World";
 
-    return handleScope.Close(Number::New(atof(value.c_str())));
+    return String::New(value.c_str(), value.length());
 }
 
 Handle<Value> ReplaceWithModuleName::GetProperty(Local<String> name,
