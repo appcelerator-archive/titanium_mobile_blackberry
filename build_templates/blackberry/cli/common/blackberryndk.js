@@ -271,8 +271,10 @@ var package = function(builder) {
 
     		if (typeof p.type !== 'undefined' && p.type === "native") {	
     			var cpu = builder.type2variantCpu[this.builder.target][1];
-    			var lib = path.join(p.location, cpu, p.main + '.so');
-    			fs.createReadStream(lib).pipe(fs.createWriteStream(path.join(assetsDir, p.main + '.so')));	
+    			var lib = path.join(p.location, cpu, p.main + '.a');
+    			var header = path.join(p.location, cpu, p.main + '.h');
+    			fs.createReadStream(lib).pipe(fs.createWriteStream(path.join(assetsDir, p.main + '.a')));
+    			fs.createReadStream(header).pipe(fs.createWriteStream(path.join(assetsDir, p.main + '.h')));	
 			}
 			else { 
 				var lib = path.join(p.location, p.main + '.js');
