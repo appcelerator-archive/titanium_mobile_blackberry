@@ -48,7 +48,7 @@ int NativeMapViewObject::initialize()
 
 
     setControl(mapview_);
-
+    updateMap();
     return NATIVE_ERROR_OK;
 }
 
@@ -101,7 +101,7 @@ int NativeMapViewObject::setRegion(TiObject* obj)
 	mapview_->setLatitude(latitude);
 	mapview_->setLongitude(longitude);
 
-
+	updateMap();
 	return NATIVE_ERROR_OK;
 }
 
