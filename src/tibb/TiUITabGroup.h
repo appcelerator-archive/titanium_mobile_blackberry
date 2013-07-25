@@ -9,7 +9,7 @@
 #define TIUITABGROUP_H_
 
 #include "TiUIBase.h"
-
+#include <QList>
 /*
  * TiUITabGroup
  *
@@ -33,11 +33,13 @@ private:
     static Handle<Value> _open(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _addTab(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _removeTab(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _getTabs(void* userContext);
 
     TiUITabGroup();
     //This class is neither copy-constructible nor assignable
     TiUITabGroup(const TiUITabGroup& obj);
     TiUITabGroup& operator=(const TiUITabGroup& obj);
+    QList<Handle<Value> > allTabs_;
 };
 
 #endif /* TIUITABGROUP_H_ */

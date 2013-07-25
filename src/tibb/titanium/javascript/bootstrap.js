@@ -4,6 +4,10 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
+
+var require = function (id) { return globalRequire(id, "app/native/assets/") };
+var global = {};
+
 alert = function(msg)
 {
     Ti.UI.createAlertDialog({message: msg}).show();
@@ -162,4 +166,63 @@ console = { };
     }
 });
 console.log = console.info;
+Ti.UI = Ti.UI || {};
+Ti.UI.iPhone = Ti.UI.iPhone || {
+		SystemButton: {
+			REFRESH: 0,
+			FLEXIBLE_SPACE: 0,
+			INFO_DARK: 0,
+			DISCLOSURE: 0
+		},
+		StatusBar: {
+			OPAQUE_BLACK:0,
+		},
+		SystemButtonStyle: {
+			BORDERED: 0,
+			PLAIN: 0,
+			DONE: 0,
+			BAR: 0
+		},
+		AnimationStyle: {
+			FLIP_FROM_LEFT: 0
+		},
+		ActivityIndicatorStyle: {
+			DARK: 0,
+		},
+		RowAnimationStyle: {
+			LEFT: 0,
+			UP: 0,
+			DOWN: 0,
+			RIGHT: 0
+		},
+		TableViewStyle: {
+			GROUPED: 0,
+			PLAIN: 0
+		},
+		TableViewCellSelectionStyle: {
+			NONE: 0
+		},
+		TableViewSeparatorStyle: {
+			NONE: 0
+		},
+		TableViewScrollPosition: {
+			TOP: 0
+		}
+};
+
+
+Ti.UI.create2DMatrix = function(){
+	Ti.API.error('Ti.UI.create2DMatrix NOT SUPPORTED IN BB10');
+	return {
+			scale: function(){},
+			transform: 0,
+			duration: 0,
+			rotate: function(){}
+	}
+}
+Ti.UI.createSearchBar = function(args) {
+	args = args || {};
+	Ti.API.error('Ti.UI.createSearchBar() NOT SUPPORTED IN BB10, using textField instead');
+	return Ti.UI.createTextField(args);
+} 
 Titanium = Ti;
