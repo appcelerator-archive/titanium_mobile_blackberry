@@ -13,7 +13,7 @@ class NativeObjectFactory;
 
 #include <sstream>
 #include <string>
-
+#include <QString>
 
 #define TI_TAGGED_LOG(tag, msg) \
     do { \
@@ -53,6 +53,7 @@ public:
     static void initialize(NativeObjectFactory* nativeObjectFactory);
 
     void log(const char* msg);
+    void log(QString msg);
     void log(const char* tag, const char* msg);
 
 protected:

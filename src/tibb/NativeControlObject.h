@@ -206,6 +206,7 @@ public:
     bb::cascades::Container* container_;
     bool deferWidth_;
     bool deferHeight_;
+    float opacity_;
 
 protected:
     explicit NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType = N_TYPE_UNDEFINED);
