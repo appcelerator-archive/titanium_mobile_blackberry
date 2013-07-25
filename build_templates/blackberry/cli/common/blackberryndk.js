@@ -170,14 +170,8 @@ var findTiModules = function (builder, callback) {
 				process.exit(1);
 			}
 
-			var libDir = ((pkgJson.directories && pkgJson.directories.lib) || '').replace(/^\//, '');		
+			var libDir = ((pkgJson.directories && pkgJson.directories.lib) || '').replace(/^\//, '');	
 
-
-			var mainFilePath = path.join(moduleDir, libDir, (pkgJson.main || '').replace(jsExtRegExp, '') + '.js');
-			if (!afs.exists(mainFilePath)) {
-				builder.logger.error(__('Invalid Titanium Mobile Module "%s": unable to find main file "%s"', module.id, pkgJson.main) + '\n');
-				process.exit(1);
-			}
 
 			builder.logger.info(__('Bundling Titanium Mobile Module %s', module.id.cyan));
 
@@ -194,15 +188,11 @@ var findTiModules = function (builder, callback) {
 
 			builder.packages.push({
 				'name': module.id,
-				'location': path.join(builder.projectDir, collapsePath('modules/' + module.id + (libDir ? '/' + libDir : ''))),
+				'location': path.join(moduleDir, libDir),
 				'main': pkgJson.main,
 				'type': pkgJson.type,
 				'root': 1
 			});
-
-			var dest = path.join(builder.buildDir, 'modules', module.id);
-			wrench.mkdirSyncRecursive(dest);
-			afs.copyDirSyncRecursive(moduleDir, dest, { preserve: true });
 		}, builder);
 
 		callback();
@@ -269,17 +259,12 @@ var package = function(builder) {
     findTiModules(builder, function(){
     	builder.packages.forEach(function (p) {
 
-    		if (typeof p.type !== 'undefined' && p.type === "native") {	
-    			var cpu = builder.type2variantCpu[this.builder.target][1];
-    			var lib = path.join(p.location, cpu, p.main + '.so');
-    			fs.createReadStream(lib).pipe(fs.createWriteStream(path.join(assetsDir, p.main + '.so')));	
-			}
-			else { 
+    		if (typeof p.type === 'undefined') {	
 				var lib = path.join(p.location, p.main + '.js');
     			fs.createReadStream(lib).pipe(fs.createWriteStream(path.join(assetsDir, p.main + '.js')));	
 			}
 
-			// copy module assets to blackberry build assets folder
+			// copy module assets to blackberry assets folder
 			var moduleAssetsDir = path.join(p.location, 'assets');
 			if (fs.existsSync(moduleAssetsDir)) {
 				afs.copyDirSyncRecursive(moduleAssetsDir, assetsDir, { preserve: true, logger: logger.debug });
@@ -370,7 +355,41 @@ function BlackberryNDK(builder) {
 								path.join(tmpPathSDK, 'tibb'), {logger: logger.debug});
 			afs.copyDirSyncRecursive(path.join(builder.titaniumBBSdkPath, 'libv8'),
 								path.join(tmpPathSDK, 'libv8'), {logger: logger.debug});
-							
+
+            // Copy over any module header file and make the static library location available to build
+			builder.projectDependencies = [];
+			builder.modulesToCache = [];
+			builder.tiModulesToLoad = [];
+		    builder.packages = [];
+		    var extra_lib_paths = '';
+		    var lib_names = '';
+		    var headers = '';
+		    var register_modules = '';
+		    var header_paths = [];
+
+            findTiModules(builder, function(){
+		    	builder.packages.forEach(function (p) {
+
+		    		if (typeof p.type !== 'undefined' && p.type === "native") {	
+		    			var cpu = builder.type2variantCpu[builder.target][1];
+		    			var header_path =  path.join(p.location, p.main + '.h');
+		    			var lib_path = path.join(p.location, cpu, builder.type2variantCpu[builder.target][2]); 
+		    			var lib_name = 'lib' + p.main + '.a';
+
+                        // copy header to build directory
+                        header_paths.push({'path': header_path, 'name': p.main + '.h'});
+		    			
+		    			// add lib name to common.mk, for convience copy lib to tibb lib location which is already on library search 
+		    			// path and does not contain spaces in path
+                        fs.createReadStream(path.join(lib_path, lib_name)).pipe(fs.createWriteStream(path.join(tmpPathSDK, 'tibb', cpu, builder.type2variantCpu[builder.target][2], lib_name)));
+		    			lib_names += 'LIBS+=' + p.main + ' ';
+
+		    			// add header and register calls to main.cpp	
+		    			headers += '#include "' + p.main + '.h"\n'; 
+		    			register_modules += '\ttiRegisterModule("' + p.main + '", (TiModule*) new ' + p.main + '());\n';
+					}
+				});
+		    });			
 
 			var variant = builder.type2variantCpu[this.builder.target][0];
 			var cpu = builder.type2variantCpu[this.builder.target][1];
@@ -388,6 +407,22 @@ function BlackberryNDK(builder) {
 			var projectDir = this.builder.projectDir;
 			afs.copyDirSyncRecursive(projectDir, tmpPathProj, {logger: logger.debug});
 			process.chdir(path.join(tmpPathProj, 'build', 'blackberry'));
+
+			header_paths.forEach(function(entry) {
+			    fs.createReadStream(entry.path).pipe(fs.createWriteStream(path.join(tmpPathProj, 'build', 'blackberry', entry.name)));
+			 });
+
+			var common_make_file_path = path.join(tmpPathProj, 'build', 'blackberry', 'common.mk');
+			fs.writeFileSync(common_make_file_path, renderTemplate(fs.readFileSync(common_make_file_path).toString().trim(), {
+				libs: lib_names
+			}));
+
+			var main_file_path = path.join(tmpPathProj, 'build', 'blackberry', 'main.cpp');
+			fs.writeFileSync(main_file_path, renderTemplate(fs.readFileSync(main_file_path).toString().trim(), {
+				module_headers: headers,
+				module_registration: register_modules
+			}));
+
 
 			// setup the build environment and then build the app executable using make
 			var srccmd;
