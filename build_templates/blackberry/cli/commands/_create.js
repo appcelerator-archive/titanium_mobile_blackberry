@@ -82,6 +82,11 @@ exports.run = function (logger, config, cli, projectConfig) {
 			var makefile_template = fs.readFileSync(makefile_file_path).toString().trim();
 			makefile_template = makefile_template.replace(/ReplaceWithModuleName/g, cli.argv.name);		
 			fs.writeFileSync(makefile_file_path, makefile_template);
+
+			var package_file_path = path.join(projectDir, 'package.json');
+			var package_template = fs.readFileSync(package_file_path).toString().trim();
+			package_template = package_template.replace(/___PROJECTNAME___/g, cli.argv.name);		
+			fs.writeFileSync(package_file_path, package_template);
 		}
 	}
 };

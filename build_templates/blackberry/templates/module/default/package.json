@@ -1,0 +1,10 @@
+{
+    "description": "This is the ___PROJECTNAME___ package descriptor", 
+    "type": "native",
+    "directories": {
+        "lib": "arm/a.le-v7, x86/a-g"
+    }, 
+    "main": "lib___PROJECTNAME___.a", 
+    "name": "___PROJECTNAME___", 
+    "version": "1.0.0"
+}
