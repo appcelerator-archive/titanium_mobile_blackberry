@@ -45,7 +45,7 @@ protected:
     static Handle<Value> _add(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _remove(void* userContext, TiObject* caller, const Arguments& args);
 
-    Persistent<Object> createConfig_;
+    Persistent<Array> jsChildren_;
     vector<ObjectEntry> childControls_;
 
 private:

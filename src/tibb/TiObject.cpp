@@ -72,10 +72,7 @@ TiObject::TiObject(const char* objectName, Handle<Value> value)
 
 TiObject::~TiObject()
 {
-    if (!value_.IsEmpty())
-    {
-        value_.Dispose();
-    }
+	clearValue();
     if (nativeObject_ != NULL)
     {
         nativeObject_->release();
@@ -339,6 +336,29 @@ VALUE_MODIFY TiObject::onChildValueChange(TiObject*, Handle<Value>, Handle<Value
     return VALUE_MODIFY_ALLOW;
 }
 
+static void JSObjectWeakCallBack(v8::Persistent<Value> object, void* parameter)
+{
+	TiObject* thisObject = static_cast<TiObject*>(parameter);
+	thisObject->setNativeObject(NULL);
+	thisObject->release();
+}
+
+void TiObject::clearValue()
+{
+	if(value_.IsEmpty()) return;
+	value_.ClearWeak();
+	value_.Clear();
+	value_.Dispose();
+}
+
+void TiObject::makeWeak()
+{
+	if(!value_.IsEmpty())
+	{
+		value_.MakeWeak(this, JSObjectWeakCallBack);
+	}
+}
+
 /*
  * setValue calls onValueChange which will determine how
  * the value is handled. If the value VALUE_MODIFY_IGNORE
@@ -349,6 +369,7 @@ VALUE_MODIFY TiObject::onChildValueChange(TiObject*, Handle<Value>, Handle<Value
  */
 VALUE_MODIFY TiObject::setValue(Handle<Value> value)
 {
+	clearValue();
     VALUE_MODIFY modify = onValueChange(value_, value);
     if (modify != VALUE_MODIFY_ALLOW)
     {
@@ -378,6 +399,7 @@ VALUE_MODIFY TiObject::setValue(Handle<Value> value)
 
 VALUE_MODIFY TiObject::forceSetValue(Handle<Value> value)
 {
+	clearValue();
     value_ = Persistent<Value>::New(value);
     return VALUE_MODIFY_ALLOW;
 }

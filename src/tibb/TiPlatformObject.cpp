@@ -108,12 +108,21 @@ void TiPlatformObject::addObjectToParent(TiObject* parent)
     obj->setAttachedObject(parent);
     obj->release();
 }
+#include <iostream>
+static Handle<Value> _gc(void*, TiObject*, const Arguments& args)
+{
+	std::cout << "--------- Garbage Collection Starting ---------" << std::endl;
+	V8::LowMemoryNotification();
+	std::cout << "----------- Garbage Collection Ended ----------" << std::endl;
+	return Undefined();
+}
+
 
 void TiPlatformObject::onCreateStaticMembers()
 {
     TiProxy::onCreateStaticMembers();
     setTiPlatformMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
-
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "gc", this, _gc);
     // Adding javascript constants from Ti.Platform
     ADD_STATIC_TI_VALUE("BATTERY_STATE_CHARGING", Number::New(Ti::Platform::BATTERY_STATE_CHARGING), this);
     ADD_STATIC_TI_VALUE("BATTERY_STATE_FULL", Number::New(Ti::Platform::BATTERY_STATE_FULL), this);

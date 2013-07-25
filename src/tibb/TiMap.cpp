@@ -70,6 +70,7 @@ Handle<Value> TiMap::_createControlHelper(void* userContext, CREATEOBJECTCALLBAC
     TiProxy* newControl = (createCallback)(obj->objectFactory_);
     newControl->setAttachedObject(obj);
     newControl->setValue(result);
+    newControl->makeWeak();
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
         Local<Object> settingsObj = Local<Object>::Cast(args[0]);
