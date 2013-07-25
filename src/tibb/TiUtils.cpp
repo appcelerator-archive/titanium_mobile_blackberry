@@ -6,6 +6,7 @@
  */
 
 #include "TiUtils.h"
+#include "V8Utils.h"
 #include "Layout/ParseProperty.h"
 #include <QString>
 #include <bb/device/DisplayInfo>
@@ -107,4 +108,24 @@ Handle<Value> TiUtils::createV8HandleFromString(QString _string)
 	HandleScope scope;
 	Handle<Script> script = Script::Compile(String::New(_string.toLocal8Bit().data()));
 	return scope.Close(script->Run());
+}
+
+bb::cascades::Color TiUtils::colorFromTiObject(TiObject *obj)
+{
+
+    QString qcolorString = titanium::V8ValueToQString(obj->getValue());
+    if (!QColor::isValidColor(qcolorString))
+    {
+        return bb::cascades::Color::Yellow;
+    }
+    QColor qcolor(qcolorString);
+    qreal qr, qg, qb, qa;
+    qcolor.getRgbF(&qr, &qg, &qb, &qa);
+    float r = qr;
+    float g = qg;
+    float b = qb;
+    float a = qa;
+
+	return bb::cascades::Color::fromRGBA(r, g, b, a);
+
 }
