@@ -10,6 +10,7 @@
 #include "NativeControlObject.h"
 #include "TiGenericFunctionObject.h"
 #include "TiPropertyGetFunctionObject.h"
+#include "TiPropertySetGetObject.h"
 #include "TiPropertyGetObject.h"
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
@@ -582,10 +583,10 @@ void TiUIBase::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "blur", this, _blur);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "animate", this, _animate);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "applyProperties", this, _applyProperties);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "convertPointToView", this, _convertPointToView);
+
+    TiPropertySetGetObject::createProperty(this, "children", this, NULL, _getChildren);
     setTiMappingProperties(g_tiProperties, sizeof(g_tiProperties) / sizeof(*g_tiProperties));
-    TiObject* value = TiPropertyGetObject::createGetProperty(this, "children", this, _getChildren);
-    TiPropertyGetFunctionObject::addPropertyGetter(this, value, "getChildren");
-    value->release();
 }
 
 Handle<Value> TiUIBase::_applyProperties(void* userContext, TiObject* caller, const Arguments& args)
@@ -738,6 +739,15 @@ Handle<Value> TiUIBase::_animate(void* userContext, TiObject*, const Arguments& 
     return Undefined();
 }
 
+Handle<Value> TiUIBase::_convertPointToView(void* userContext, TiObject* caller, const Arguments& args)
+{
+	HandleScope scope;
+	TiLogger::getInstance().log("Ti.UI.View convertPointToView() Not Supported in BB 10");
+	Handle<ObjectTemplate> o = ObjectTemplate::New();
+	o->Set(String::New("x"), Number::New(0));
+	o->Set(String::New("y"), Number::New(0));
+	return scope.Close(o->NewInstance());
+}
 Handle<Value> TiUIBase::_getChildren(void* userContext)
 {
     TiUIBase* obj = (TiUIBase*) userContext;
