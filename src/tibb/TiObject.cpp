@@ -514,7 +514,7 @@ VALUE_MODIFY TiObject::_valueModify(int propertyNumber, TiObject* value, void* c
         modify = VALUE_MODIFY_ALLOW;
         break;
     case NATIVE_ERROR_NOTSUPPORTED:
-        modify = VALUE_MODIFY_NOT_SUPPORTED;
+        modify = VALUE_MODIFY_ALLOW; //VALUE_MODIFY_NOT_SUPPORTED;
         break;
     default:
         modify = VALUE_MODIFY_INVALID;
