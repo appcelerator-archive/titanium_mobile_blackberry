@@ -516,13 +516,20 @@ const static TiProperty g_tiProperties[] =
 TiUIBase::TiUIBase(const char* name)
     : TiProxy(name)
 {
+	jsChildren_ = Persistent<Array>::New(Array::New());
 }
 
 TiUIBase::~TiUIBase()
 {
-    if (!createConfig_.IsEmpty())
+	if (!jsChildren_.IsEmpty())
     {
-        createConfig_.Dispose();
+		for(int i = 0, len = jsChildren_->Length(); i < len; i++)
+		{
+			jsChildren_->Set(i, Null());
+		}
+    	jsChildren_.ClearWeak();
+    	jsChildren_.Clear();
+    	jsChildren_.Dispose();
     }
 }
 
@@ -623,6 +630,7 @@ Handle<Value> TiUIBase::_add(void* userContext, TiObject*, const Arguments& args
         {
             ObjectEntry entry = addObj;
             obj->childControls_.push_back(entry);
+            obj->jsChildren_->Set(obj->jsChildren_->Length(), addObj->getValue());
         }
         childNO->release();
         parentNO->release();
@@ -683,6 +691,15 @@ Handle<Value> TiUIBase::_remove(void* userContext, TiObject*, const Arguments& a
                 return ThrowException(String::New(Ti::Msg::INTERNAL__Missing_native_object));
             }
             parentControl->removeChildNativeObject(childControl);
+            int len = obj->jsChildren_->Length();
+            for(int i = 0; i < len; i++)
+            {
+            	if(obj->jsChildren_->Get(i) == removeObject->getValue())
+            	{
+                    obj->jsChildren_->Delete(i);
+                    break;
+            	}
+            }
             childControl->release();
             foundChild = true;
             break;

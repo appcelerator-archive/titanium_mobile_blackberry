@@ -119,6 +119,8 @@ public:
     virtual void addMember(TiObject* object, const char* name = NULL);
     virtual Handle<Value> getValue() const;
     virtual Handle<Value> evaluate() const;
+    virtual void makeWeak();
+    virtual void clearValue();
     virtual VALUE_MODIFY setValue(Handle<Value> value);
     virtual VALUE_MODIFY forceSetValue(Handle<Value> value);
     virtual bool hasMembers() const;
@@ -131,6 +133,7 @@ public:
     virtual NativeObjectFactory* getNativeObjectFactory() const;
     virtual void setNativeObjectFactory(NativeObjectFactory* objectFactory);
     virtual NativeObject* getNativeObject() const;
+    virtual void setNativeObject(NativeObject* nativeObject);
     virtual void setupEvents();
     static string jsFilePath;
     void forceSetProp(const char* propString, Local<Value> value);
@@ -155,7 +158,6 @@ protected:
     virtual void onStartMessagePump();
     virtual VALUE_MODIFY onValueChange(Handle<Value> oldValue, Handle<Value> newValue);
     virtual VALUE_MODIFY onChildValueChange(TiObject* childObject, Handle<Value> oldValue, Handle<Value> newValue);
-    virtual void setNativeObject(NativeObject* nativeObject);
     virtual void onSetupEvents();
 
     typedef VALUE_MODIFY(TiObject::*SET_VALUE_CALLBACK)(Handle<Value>);
