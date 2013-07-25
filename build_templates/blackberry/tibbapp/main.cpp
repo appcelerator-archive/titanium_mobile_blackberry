@@ -11,10 +11,14 @@
 #include <fstream>
 #include <string>
 
+ ${module_headers}
+
 using namespace std;
 
 int main(int argc, char** argv)
 {
+    ${module_registration}
+    
     setvbuf(stdout, NULL, _IOLBF, 0);
 
     string javascript;

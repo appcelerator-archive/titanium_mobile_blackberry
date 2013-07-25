@@ -119,9 +119,9 @@ function build(logger, config, cli, finished) {
     this.deviceInternetAddress = cli.argv['ip-address'];
     this.tiapp = cli.tiapp;
     this.target = cli.argv.target;
-    this.type2variantCpu = {'simulator': ['o-g', 'x86'],
-                     'device': ['o.le-v7', 'arm'],
-                     'distribute': ['o.le-v7', 'arm']};
+    this.type2variantCpu = {'simulator': ['o-g', 'x86', 'a-g'],
+                     'device': ['o.le-v7', 'arm', 'a.le-v7'],
+                     'distribute': ['o.le-v7', 'arm', 'a.le-v7']};
     this.ndk = cli.argv['ndk'];
 
     cli.fireHook('build.pre.compile', this, function (e) {

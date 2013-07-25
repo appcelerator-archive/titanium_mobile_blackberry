@@ -30,6 +30,7 @@
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/tibb/include}"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
+									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/qt4/QtCore&quot;"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.compiler.1459620806" superClass="com.qnx.qcc.inputType.compiler"/>
 							</tool>
@@ -86,6 +87,7 @@
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/tibb/include}"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
+									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/qt4/QtCore&quot;"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.compiler.1832803495" superClass="com.qnx.qcc.inputType.compiler"/>
 							</tool>
@@ -142,6 +144,7 @@
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/tibb/include}"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
+									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/qt4/QtCore&quot;"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.compiler.1839569595" superClass="com.qnx.qcc.inputType.compiler"/>
 							</tool>
@@ -198,6 +201,7 @@
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/tibb/include}"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
+									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/qt4/QtCore&quot;"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.compiler.1476714048" superClass="com.qnx.qcc.inputType.compiler"/>
 							</tool>
@@ -231,6 +235,7 @@
 		<resource resourceType="PROJECT" workspacePath="/tibbtest"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.qnx.tools.ide.qde.managedbuilder.core.qccScannerInfo"/>
 		<scannerConfigBuildInfo instanceId="com.qnx.qcc.toolChain.1912267853">

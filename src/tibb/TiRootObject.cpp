@@ -18,6 +18,9 @@
 #include "V8Utils.h"
 #include <QSettings>
 
+#include "TiModule.h"
+#include "tibb.h"
+
 #include <fstream>
 #include <sstream>
 
@@ -25,6 +28,10 @@
 #include <QUrl>
 
 #include <unistd.h>
+ #include <stdlib.h>
+#include <stdio.h>
+#include <dlfcn.h>
+
 
 using namespace titanium;
 
@@ -268,16 +275,21 @@ void TiRootObject::clearTimeoutHelper(const Arguments& args, bool interval)
 
 Handle<Value> TiRootObject::_globalRequire(void*, TiObject*, const Arguments& args)
 {
-	if (args.Length() < 2)
-	{
+	if (args.Length() < 2) {
 		return ThrowException(String::New(Ti::Msg::Missing_argument));
 	}
 
 	string id = *String::Utf8Value(args[0]->ToString());
 
-	string parentFolder = *String::Utf8Value(args[1]->ToString());
+	// Require in native modules, if none found move to loading CommonJS modules
+	TiModule* module = getModuleByName(id);
+
+	if (module != NULL) {
+		return module->startup();
+	}
 
 	// CommonJS path rules
+	string parentFolder = *String::Utf8Value(args[1]->ToString());
 	if (id.find("/") == 0) {
 		id.replace(id.find("/"), std::string("/").length(), rootFolder);
 	}
@@ -335,8 +347,7 @@ Handle<Value> TiRootObject::_globalRequire(void*, TiObject*, const Arguments& ar
 	// check if cached
 	static map<string, Persistent<Value> > cache;
 	map<string, Persistent<Value> >::const_iterator cachedValue = cache.find(id);
-	if (cachedValue != cache.end())
-	{
+	if (cachedValue != cache.end())	{
 		return cachedValue->second;
 	}
 
@@ -407,3 +418,4 @@ Handle<Value> TiRootObject::setTimeoutHelper(const Arguments& args, bool interva
     Handle<Number> timerId = Number::New(id);
     return timerId;
 }
+

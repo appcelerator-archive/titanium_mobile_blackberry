@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <qnx xmlns="http://www.qnx.com/schemas/application/1.0">
 
-<!-- BlackBerry Tablet OS application descriptor file.
 
-    Specifies parameters for identifying, installing, and launching native applications on BlackBerry Tablet OS.
-
--->
-
-    <!-- A universally unique application identifier. Must be unique across all BlackBerry Tablet OS applications.
+    <!-- A universally unique application identifier.
          Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
     <id>com.example.tibbtest</id>
 
-    <!-- The name that is displayed in the BlackBerry Tablet OS application installer. 
+    <!-- The name that is displayed in the BlackBerry application installer. 
          May have multiple values for each language. See samples or xsd schema file. Optional. -->
-    <name>Simple Demo</name>
+    <name>Titanium Test App</name>
     
     <!-- A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade. 
          Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
@@ -27,7 +22,7 @@
     <!-- A string value (such as "v1", "2.5", or "Alpha 1") that represents the version of the application, as it should be shown to users. Optional. -->
     <!-- <versionLabel></versionLabel> -->
 
-    <!-- Description, displayed in the BlackBerry Tablet OS application installer.
+    <!-- Description, displayed in the BlackBerry application installer.
          May have multiple values for each language. See samples or xsd schema file. Optional. -->
     <description>The tibbtest application</description>
 
@@ -48,7 +43,7 @@
     
     <!--  The category where the application appears. Either core.games or core.media. -->
     <asset path="bootstrap.js">framework/bootstrap.js</asset>
-    <asset path="mac_labs_icon.png">mac_labs_icon.png</asset>
+    <asset path="appicon.png">appicon.png</asset>
     <asset path="Ti.Manifest">Ti.Manifest</asset>
     <asset path="Resources">assets</asset>
     <asset path="assets">assets</asset>
@@ -71,7 +66,7 @@
     
     <!--  The icon for the application, which should be 86x86. -->
     <icon>
-        <image>mac_labs_icon.png</image>
+        <image>appicon.png</image>
     </icon>
     
     <!--  The splash screen that will appear when your application is launching. Should be 1024x600. -->
@@ -94,6 +89,6 @@
     <permission>read_device_identifying_information</permission>
 
     <!-- Ensure that shared libraries in the package are found at run-time. -->
-    <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib"/>
+    <env var="LD_LIBRARY_PATH" value="app/native/assets/lib:/usr/lib/qt4/lib"/>
     
 </qnx>
