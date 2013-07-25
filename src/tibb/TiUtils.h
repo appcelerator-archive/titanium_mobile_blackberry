@@ -5,8 +5,12 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
+#ifndef TIUTILS_H_
+#define TIUTILS_H_
+
 #include <QObject>
 #include <QDateTime>
+#include <bb/cascades/Color>
 #include "TiObject.h"
 
 class TiUtils
@@ -20,7 +24,9 @@ public:
 	static int getDateTime(TiObject* obj, QDateTime& dt);
 	static int getDateTime(Handle<Value> value, QDateTime& dt);
 	static Handle<Value> createV8HandleFromString(QString _string);
+	static bb::cascades::Color colorFromTiObject(TiObject* obj);
 private:
 
 	float ppi_;
 };
+#endif
