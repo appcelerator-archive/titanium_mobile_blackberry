@@ -10,7 +10,7 @@
 #include <vector>
 #include <math.h>
 #include <QSize>
-
+#include <bb/device/HardwareInfo>
 #include <bb/device/DisplayInfo>
 #include <bps/deviceinfo.h>
 
@@ -148,8 +148,9 @@ Handle<Value> NativePlatformInterface::getDisplayCaps()
 PROP_GETTER(getId)
 Handle<Value> NativePlatformInterface::getId()
 {
-    // TODO: Finish this when will be available in SDK
-    return Undefined();
+	bb::device::HardwareInfo hdi;
+	QString mid = hdi.pin();
+    return String::New(mid.toLocal8Bit().data());
 }
 
 PROP_GETTER(getLocale)
@@ -254,7 +255,7 @@ static vector<NATIVE_PROPGET_CALLBACK> initFunctionMap()
     vect[N_PLATFORM_PROP_BATTERYMONITORING]        = NULL;
     vect[N_PLATFORM_PROP_BATTERYSTATE]             = PROP_GETTING_FUNCTION(getBatteryState);
     vect[N_PLATFORM_PROP_DISPLAYCAPS]              = PROP_GETTING_FUNCTION(getDisplayCaps);
-    vect[N_PLATFORM_PROP_ID]                       = NULL;
+    vect[N_PLATFORM_PROP_ID]                       = PROP_GETTING_FUNCTION(getId);
     vect[N_PLATFORM_PROP_LOCALE]                   = NULL;
     vect[N_PLATFORM_PROP_MACADDRESS]               = NULL;
     vect[N_PLATFORM_PROP_MODEL]                    = NULL;
