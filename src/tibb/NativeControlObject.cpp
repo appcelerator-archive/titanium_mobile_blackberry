@@ -168,6 +168,7 @@ static void onPostLayout(struct Node* node)
     if (layoutProperties != NULL) {
     	layoutProperties->setPositionX(node->element._measuredLeft);
     	layoutProperties->setPositionY(node->element._measuredTop);
+    	control->setOpacity(native->opacity_);
     }
 }
 
@@ -183,7 +184,8 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     lastHeight_(0),
     deferWidthType_((enum ValueType)-1),
     deferHeightType_((enum ValueType)-1),
-    batchUpdating_(false)
+    batchUpdating_(false),
+    opacity_(1)
 {
     nodeInitialize(&layoutNode_);
     layoutNode_.onLayout = onPostLayout;
@@ -347,6 +349,7 @@ void NativeControlObject::setControl(bb::cascades::Control* control)
     container_->add(control);
 
     control_ = control;
+    container_->setOpacity(0);
 }
 
 void NativeControlObject::addTouchEvent(const char* name, const QObject* source, const char* signal, TiEventContainer* container) {
@@ -867,6 +870,7 @@ int NativeControlObject::setOpacity(TiObject* obj)
     {
         return NATIVE_ERROR_INVALID_ARG;
     }
+    opacity_ = value;
     container_->setOpacity(value);
     return NATIVE_ERROR_OK;
 }
