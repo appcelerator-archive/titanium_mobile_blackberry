@@ -8,7 +8,7 @@
 #include "TiMapView.h"
 #include "TiGenericFunctionObject.h"
 #include "NativeMapViewObject.h"
-
+#include "NativeAnnotationObject.h"
 
 TiMapView::TiMapView()
     : TiUIBase("View")
@@ -30,6 +30,7 @@ TiMapView* TiMapView::createMapView(NativeObjectFactory* nativeObjectFactory)
 void TiMapView::onCreateStaticMembers()
 {
     TiUIBase::onCreateStaticMembers();
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "selectAnnotation", this, _selectAnnotation);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "removeAnnotation", this, _removeAnnotation);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "addAnnotation", this, _addAnnotation);
 
@@ -47,6 +48,29 @@ void TiMapView::initializeTiObject(TiObject* parentContext)
     }
 }
 
+Handle<Value> TiMapView::_selectAnnotation(void* userContext, TiObject*, const Arguments& args) {
+	HandleScope handleScope;
+	TiMapView* obj = (TiMapView*) userContext;
+	NativeMapViewObject* nativeMapViewObject = (NativeMapViewObject*) obj->getNativeObject();
+	TiObject* tiObj = TiObject::getTiObjectFromJsObject(args[0]);
+
+	NativeAnnotationObject* annotation = dynamic_cast<NativeAnnotationObject*>(tiObj->getNativeObject());
+
+	if(annotation)
+	{
+		TiObject o;
+		Local<Object> JSObj = Object::New();
+		JSObj->Set(String::New("latitude"), Number::New(annotation->latitude));
+		JSObj->Set(String::New("longitude"), Number::New(annotation->longitude));
+		o.setValue(JSObj);
+		nativeMapViewObject->setRegion(&o);
+		annotation->showBubble = true;
+		nativeMapViewObject->updateMap();
+	}
+
+	return Undefined();
+
+}
 Handle<Value> TiMapView::_removeAnnotation(void* userContext, TiObject*, const Arguments& args) {
 	HandleScope handleScope;
 	TiMapView* obj = (TiMapView*) userContext;

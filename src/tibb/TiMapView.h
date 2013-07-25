@@ -31,6 +31,7 @@ protected:
 private:
 	TiMapView();
 
+	static Handle<Value> _selectAnnotation(void* userContext, TiObject*, const Arguments& args);
 	static Handle<Value> _removeAnnotation(void* userContext, TiObject*, const Arguments& args);
 	static Handle<Value> _addAnnotation(void* userContext, TiObject*, const Arguments& args);
 };
