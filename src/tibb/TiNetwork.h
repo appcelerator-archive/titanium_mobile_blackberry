@@ -29,6 +29,7 @@ protected:
     virtual ~TiNetwork();
     virtual void onCreateStaticMembers();
     static Handle<Value> _createHTTPClient(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _encodeURIComponent(void* userContext, TiObject* /*caller*/, const Arguments& args)
 
 private:
     TiNetwork();
