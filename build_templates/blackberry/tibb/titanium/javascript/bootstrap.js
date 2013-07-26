@@ -4,9 +4,10 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-
+Ti = Ti || {};
 var require = function (id) { return globalRequire(id, "app/native/assets/") };
-Ti.include = function (id) { Ti.globalInclude(id, "app/native/assets/") };
+Ti.include = Ti.include || function (id) { Ti.globalInclude(id, "app/native/assets/") };
+var global = {};
 
 alert = function(msg)
 {
@@ -151,4 +152,78 @@ Ti.Stream.pump = function(inputStream, handler, maxChunkSize, isAsync)
         } while (pumpCallBackArgs.bytesProcessed >= 0);
     }
 };
+
+// Global.console
+console = { };
+['debug', 'error', 'info', 'warn'].forEach(function(level) {
+    console[level] = function() {
+        var msg = Array.prototype.map.call(arguments, function(m) {
+            if (typeof(m) === 'object') {
+                return m.hasOwnProperty('toString') ? m.toString() : JSON.stringify(m);
+            }
+            return m === null ? 'null' : m === void 0 ? 'undefined' : m;
+        }).join(' ');
+        Ti.API.log(level.toUpperCase(), msg);
+    }
+});
+console.log = console.info;
+Ti.UI = Ti.UI || {};
+Ti.UI.iPhone = Ti.UI.iPhone || {
+		SystemButton: {
+			REFRESH: 0,
+			FLEXIBLE_SPACE: 0,
+			INFO_DARK: 0,
+			DISCLOSURE: 0
+		},
+		StatusBar: {
+			OPAQUE_BLACK:0,
+		},
+		SystemButtonStyle: {
+			BORDERED: 0,
+			PLAIN: 0,
+			DONE: 0,
+			BAR: 0
+		},
+		AnimationStyle: {
+			FLIP_FROM_LEFT: 0
+		},
+		ActivityIndicatorStyle: {
+			DARK: 0,
+		},
+		RowAnimationStyle: {
+			LEFT: 0,
+			UP: 0,
+			DOWN: 0,
+			RIGHT: 0
+		},
+		TableViewStyle: {
+			GROUPED: 0,
+			PLAIN: 0
+		},
+		TableViewCellSelectionStyle: {
+			NONE: 0
+		},
+		TableViewSeparatorStyle: {
+			NONE: 0
+		},
+		TableViewScrollPosition: {
+			TOP: 0
+		}
+};
+
+
+Ti.UI.create2DMatrix = function(){
+	Ti.API.error('Ti.UI.create2DMatrix NOT SUPPORTED IN BB10');
+	return {
+			scale: function(){},
+			transform: 0,
+			duration: 0,
+			rotate: function(){}
+	}
+}
+Ti.UI.createSearchBar = function(args) {
+	args = args || {};
+	Ti.API.error('Ti.UI.createSearchBar() NOT SUPPORTED IN BB10, using textField instead');
+	return Ti.UI.createTextField(args);
+} 
 Titanium = Ti;
