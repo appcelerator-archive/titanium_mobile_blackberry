@@ -27,9 +27,12 @@ protected:
     virtual ~TiUIWindow();
     virtual void initializeTiObject(TiObject* parentContext);
     virtual void onCreateStaticMembers();
+    bool isModal;
 
 private:
 	TiUIWindow();
+	static Handle<Value> _getModal(void* userContext);
+	static void _setModal(void* userContext, Handle<Value> value);
     static Handle<Value> _open(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _close(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _addAction(void* userContext, TiObject* caller, const Arguments& args);

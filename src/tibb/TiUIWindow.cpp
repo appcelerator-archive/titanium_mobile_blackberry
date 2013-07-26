@@ -7,11 +7,12 @@
 
 #include "TiUIWindow.h"
 #include "TiGenericFunctionObject.h"
-
+#include "TiPropertySetGetObject.h"
 #include "NativeWindowObject.h"
 
 TiUIWindow::TiUIWindow()
-    : TiUIBase("Window")
+    : TiUIBase("Window"),
+      isModal(false)
 {
 }
 
@@ -27,12 +28,27 @@ TiUIWindow* TiUIWindow::createWindow(NativeObjectFactory* objectFactory)
     return obj;
 }
 
+Handle<Value> TiUIWindow::_getModal(void* userContext)
+{
+	HandleScope scope;
+	TiUIWindow* self = static_cast<TiUIWindow*>(userContext);
+	return scope.Close(Boolean::New(self->isModal));
+}
+
+void TiUIWindow::_setModal(void* userContext, Handle<Value> value)
+{
+	TiUIWindow* self = static_cast<TiUIWindow*>(userContext);
+	self->isModal = value->ToBoolean()->Value();
+}
+
+
 void TiUIWindow::onCreateStaticMembers()
 {
     TiUIBase::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "open", this, _open);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "close", this, _close);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "addAction", this, _addAction);
+    TiPropertySetGetObject::createProperty(this, "modal", this, _setModal, _getModal);
 }
 
 void TiUIWindow::initializeTiObject(TiObject* parentContext)
@@ -62,9 +78,12 @@ Handle<Value> TiUIWindow::_open(void* userContext, TiObject*, const Arguments& a
     {
     	Local<Object> modal = args[0]->ToObject();
     	Local<Boolean> isTrue = modal->Get(String::New("modal"))->ToBoolean();
+    	self->isModal = isTrue->Value();
     	window->open(isTrue->Value());
-    } else {
-    	window->open(false);
+    }
+    else
+    {
+    	window->open(self->isModal);
     }
     window->release(); // XXX(josh): Do we really want to release now?
 
