@@ -11,7 +11,7 @@
 #include <QString>
 #include <bb/device/DisplayInfo>
 #include <math.h>
-
+#include <QColor>
 static TiUtils* sharedInstance = NULL;
 
 TiUtils::TiUtils()
