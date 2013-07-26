@@ -428,11 +428,14 @@ int NativeControlObject::addChildImpl(NativeObject* obj)
 
 int NativeControlObject::removeChildNativeObject(NativeObject* obj)
 {
+	/*
+    // WHY?? Commeting for future removal
     if (getObjectType() != N_TYPE_VIEW)
     {
-        /* remove not supported for children types */
+        // remove not supported for children types
         return NativeObject::removeChildNativeObject(obj);
     }
+	*/
     return removeChildImpl(obj);
 }
 
