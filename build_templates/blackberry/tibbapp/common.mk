@@ -16,9 +16,6 @@ EXTRA_LIBVPATH+=$(QNX_TARGET)/$(CPUVARDIR)/usr/lib \
 	$(QNX_TARGET)/$(CPUVARDIR)/usr/lib/qt4/lib \
 	$(BB_ROOT)/libv8/lib/$(CPU) \
 	$(BB_ROOT)/tibb/$(CPU)/a$(if $(filter arm,$(CPULIST)),.le-v7,)$(if $(filter g,$(VARIANTS)),-g,)
-
-# Extra library search path for native module extentions
-${extra_lib_path}
 	
 
 # Compiler options for enhanced security and recording the compiler options in release builds
