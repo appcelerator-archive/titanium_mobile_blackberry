@@ -70,13 +70,15 @@ int NativeDBObject::execute(NativeResultSetObject* resultSet, string command, ve
 	}
 
 	stepResult = sqlite3_step(statement);
+	int effectedRows = 0;
 
 	if (stepResult == SQLITE_DONE) {
 		sqlite3_finalize(statement);
+		resultSet->effectedRows = effectedRows;
+		resultSet->statement = statement;
 		return NATIVE_ERROR_OK;
 	}
 
-	int effectedRows = 0;
 	while (true) {
 		if (stepResult == SQLITE_ROW) {
 			effectedRows++;

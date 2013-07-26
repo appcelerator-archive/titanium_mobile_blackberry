@@ -98,7 +98,7 @@ Handle<Value> TiDBObject::_execute(void* userContext, TiObject*, const Arguments
     }
 
 
-    if (nativeResultSet->effectedRows > 0) {
+    if (nativeResultSet->effectedRows >= 0) {
     	setTiObjectToJsObject(result, newResultSet);
     	return handleScope.Close(result);
     }
