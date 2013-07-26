@@ -22,6 +22,14 @@ NativeScrollViewContentObject::NativeScrollViewContentObject(TiObject* tiObject,
 {
  	setContainer(bb::cascades::Container::create());
  	scrollView_ = scrollView;
+
+ 	TiObject height;
+	height.setValue(String::New("UI.SIZE"));
+ 	setHeight(&height);
+
+	TiObject width;
+	width.setValue(String::New("UI.SIZE"));
+ 	setWidth(&height);
 }
 
 void NativeScrollViewContentObject::updateLayout(QRectF rect)
