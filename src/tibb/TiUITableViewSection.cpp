@@ -61,7 +61,6 @@ void TiUITableViewSection::_setSubTitle(void* userContext, Handle<Value> val)
 	TiUITableViewSection *section = (TiUITableViewSection*)userContext;
 	Handle<Array> sect = section->getRowsInSection();
 	Handle<Object> header = sect->Get(0)->ToObject();
-	header->Set(String::New("header"), val);
 	header->Set(String::New("subHeader"), val);
 }
 
