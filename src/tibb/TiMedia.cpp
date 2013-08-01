@@ -80,10 +80,9 @@ Handle<Value> TiMedia::_createControlHelper(void* userContext, CREATEOBJECTCALLB
     newControl->setAttachedObject(obj);
     newControl->setValue(result);
     newControl->makeWeak();
-    if ((args.Length() > 0) && (args[0]->IsObject()))
+    if (args.Length() > 0)
     {
-        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
-        newControl->setParametersFromObject(newControl, settingsObj);
+        newControl->applyProperties(args[0]);
     }
     setTiObjectToJsObject(result, newControl);
     return handleScope.Close(result);

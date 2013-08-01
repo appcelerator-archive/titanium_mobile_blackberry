@@ -230,7 +230,24 @@ void TiProxy::onRemoveEventListener(const char* eventName, Handle<Function> even
     Handle<External> v8evt = Handle<External>::Cast(v8evtValue);
     delete(TiV8Event*)v8evt->Value();
 }
+void TiProxy::applyProperties(Handle<Value> value)
+{
+	HandleScope scope;
+	if(!value->IsObject()) return;
 
+	Local<Object> obj = value->ToObject();
+	Local<Array> props = obj->GetPropertyNames();
+
+	for(uint32_t i = 0, len = props->Length(); i < len; i++)
+	{
+		Local<Value> key = props->Get(i);
+		Local<Value> value = obj->Get(key);
+		QString propName = titanium::V8ValueToQString(key);
+		const char* propString = propName.toLocal8Bit().data();
+		this->setPropHelper(propString, value, &TiObject::setValue);
+	}
+
+}
 void TiProxy::setParametersFromObject(void* userContext, Local<Object> obj)
 {
     HandleScope handleScope;
