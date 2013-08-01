@@ -27,6 +27,7 @@ class TiProxy : public TiObject
 public:
     virtual void onCreateStaticMembers();
     virtual void setParametersFromObject(void* userContext, Local<Object> obj);
+    void applyProperties(Handle<Value>);
 
 protected:
     TiProxy();
