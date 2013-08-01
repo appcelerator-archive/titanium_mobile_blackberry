@@ -58,7 +58,6 @@ private:
     static Handle<Value> _focus(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _blur(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _animate(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> _applyProperties(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _convertPointToView(void* userContext, TiObject* caller, const Arguments& args);
     // fields
     NativeObject* nativeObject_;

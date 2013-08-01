@@ -39,6 +39,7 @@ void TiProxy::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "fireEvent", this, _fireEvent);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "removeEventListener", this, _removeEventListener);
     TiPropertySetGetObject::createProperty(this, "apiName", this, NULL, _getApiName);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "applyProperties", this, _applyProperties);
 }
 
 void TiProxy::createSettersAndGetters(const char* name, SET_PROPERTY_CALLBACK setter, GET_PROPERTY_CALLBACK getter)
@@ -80,6 +81,17 @@ Handle<Value> TiProxy::createProxy(TiProxy *proxy, void* userContext, const Argu
     }
     setTiObjectToJsObject(result, proxy);
     return handleScope.Close(result);
+}
+
+Handle<Value> TiProxy::_applyProperties(void* userContext, TiObject* caller, const Arguments& args)
+{
+    TiUIBase* proxy = (TiUIBase*) userContext;
+
+    if(args.Length() > 0)
+    {
+        proxy->applyProperties(args[0]);
+    }
+    return Undefined();
 }
 
 Handle<Value> TiProxy::_addEventListener(void* userContext, TiObject*, const Arguments& args)
