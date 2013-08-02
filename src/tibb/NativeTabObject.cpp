@@ -83,6 +83,16 @@ int NativeTabObject::setIcon(TiObject* obj)
     return NATIVE_ERROR_OK;
 }
 
+int NativeTabObject::setWindow(TiObject* obj)
+{
+	Handle<Value> window = obj->getValue();
+	TiObject* windowObject = TiObject::getTiObjectFromJsObject(window);
+    NativeObject* childNO = windowObject->getNativeObject();
+    addChildNativeObject(childNO);
+    childNO->release();
+	return NATIVE_ERROR_OK;
+}
+
 int NativeTabObject::setTitle(TiObject* obj)
 {
     QString title = V8ValueToQString(obj->getValue());
