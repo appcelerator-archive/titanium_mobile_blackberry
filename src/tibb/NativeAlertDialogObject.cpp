@@ -80,6 +80,12 @@ int NativeAlertDialogObject::setButtonNames(TiObject* obj)
 {
     Q_ASSERT(nativeDialog_ != NULL);
     QVector<QString> buttons;
+    if(obj->getValue()->IsNull())
+    {
+        nativeDialog_->clearButtons();
+        nativeDialog_->confirmButton()->setLabel("OK");
+        return NATIVE_ERROR_OK;
+    }
     int error = NativeControlObject::getStringArray(obj, buttons);
     if (!N_SUCCEEDED(error))
     {
