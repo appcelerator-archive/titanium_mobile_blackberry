@@ -54,6 +54,8 @@ public:
     virtual int setContentHeight(TiObject *obj);
     virtual int setBackgroundColor(TiObject *obj);
     virtual int setLayout(TiObject *obj);
+    virtual int setHeight(TiObject *obj);
+    virtual int setWidth(TiObject *obj);
     void setContentWidthAndHeight(float w, float h);
     bb::cascades::ScrollViewProperties* scrollViewProperties_;
     bb::cascades::ScrollView* scrollView_;
