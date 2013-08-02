@@ -29,7 +29,7 @@ NativeScrollViewContentObject::NativeScrollViewContentObject(TiObject* tiObject,
 
 	TiObject width;
 	width.setValue(String::New("UI.SIZE"));
- 	setWidth(&height);
+ 	setWidth(&width);
 }
 
 void NativeScrollViewContentObject::updateLayout(QRectF rect)
@@ -65,13 +65,23 @@ int NativeScrollViewObject::setLayout(TiObject *obj)
 	std::string str = *String::Utf8Value(obj->getValue());
 
 	int err;
-	if (str == "vertical" && !contentHeightSet_) {
+	if (str == "vertical" && !contentHeightSet_)
+	{
 		TiObject height;
 		height.setValue(String::New("UI.SIZE"));
 		err = contentViewProxy_->setHeight(&height);
+
+		TiObject width;
+		width.setValue(String::New("UI.FILL"));
+		err = contentViewProxy_->setWidth(&width);
 	}
 
-	if (str == "horizontal" && !contentWidthSet_) {
+	if (str == "horizontal" && !contentWidthSet_)
+	{
+		TiObject height;
+		height.setValue(String::New("UI.FILL"));
+		err = contentViewProxy_->setHeight(&height);
+
 		TiObject width;
 		width.setValue(String::New("UI.SIZE"));
 		err = contentViewProxy_->setWidth(&width);
@@ -188,6 +198,19 @@ int NativeScrollViewObject::setBackgroundColor(TiObject* obj)
 {
 	NativeControlObject::setBackgroundColor(obj);
     return contentViewProxy_->setBackgroundColor(obj);
+}
+
+int NativeScrollViewObject::setHeight(TiObject *obj)
+{
+	std::string str = *String::Utf8Value(obj->getValue());
+	if(str == "UI.FILL") return NATIVE_ERROR_OK;
+	return NativeControlObject::setHeight(obj);
+}
+int NativeScrollViewObject::setWidth(TiObject *obj)
+{
+	std::string str = *String::Utf8Value(obj->getValue());
+	if(str == "UI.FILL") return NATIVE_ERROR_OK;
+	return NativeControlObject::setWidth(obj);
 }
 
 
