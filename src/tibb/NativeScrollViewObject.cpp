@@ -29,7 +29,7 @@ NativeScrollViewContentObject::NativeScrollViewContentObject(TiObject* tiObject,
 
 	TiObject width;
 	width.setValue(String::New("UI.SIZE"));
- 	setWidth(&width);
+ 	setWidth(&height);
 }
 
 void NativeScrollViewContentObject::updateLayout(QRectF rect)
