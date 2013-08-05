@@ -12,8 +12,9 @@ var path = require('path'),
     ti = require('titanium-sdk'),
 	exec = require('child_process').exec,
 	jsExtRegExp = /\.js$/,
-	lastLineCount = 0,
+	lastLogLength = 0,
 	timerID = 0;
+	getLog = true;
 
 var findNDK = function() {
 
@@ -292,37 +293,37 @@ var getAppLog = function(ndk, deviceIP, barFile, password, callback) {
 		command = command.concat(['-password', password])
 	}
 
-	runCommandFromArray(command, showCmd = false, function(err, stdout) { 
+    if (getLog == true) {
+	    getLog = false;
+		runCommandFromArray(command, showCmd = false, function(err, stdout) { 
 
-		if (stdout.indexOf('result::true') != -1) {
+			if (stdout.indexOf('result::true') != -1) {
 
-			var hostFile = "-";
-			var deviceFile = "logs/log";
-			command = [srccmd, '&&', ndkcmd, '-getFile', deviceFile, hostFile, '-device', deviceIP, '-package', barFile];
+				var hostFile = "-";
+				var deviceFile = "logs/log";
+				command = [srccmd, '&&', ndkcmd, '-getFile', deviceFile, hostFile, '-device', deviceIP, '-package', barFile];
 
-			if (typeof password !== 'undefined') {
-				command = command.concat(['-password', password])
+				if (typeof password !== 'undefined') {
+					command = command.concat(['-password', password])
+				}
+
+				runCommandFromArray(command, showCmd = false, function(err, stdout) {  
+
+					if (lastLogLength != stdout.length)
+					{
+						console.log(stdout);
+						lastLogLength = stdout.length;
+					}
+
+			        getLog = true;   	
+				});
+			} else {
+				clearInterval(timerID);
+				callback(/* finished */);
+
 			}
-
-			runCommandFromArray(command, showCmd = false, function(err, stdout) {  
-              
-				var logFile = stdout.trim().split('\n');
-				var len = logFile.length;
-		        for (i = 0; i < len; i++){
-		        	if (i > lastLineCount) {
-		        		console.log(logFile[i]);
-		        	}
-		        }
-		        lastLineCount = i;       
-				
-
-			});
-		} else {
-			clearInterval(timerID);
-			callback(/* finished */);
-
-		}
-	});
+		});
+	}
 }
 
 function BlackberryNDK(builder) {
