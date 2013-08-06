@@ -39,10 +39,10 @@ void TiNetwork::addObjectToParent(TiObject* parent, NativeObjectFactory* objectF
     obj->release();
 }
 
-static Handle<Value> _getNetworkType(void*)
+Handle<Value> TiNetwork::_getNetworkType(void*)
 {
-    QNetworkConfigurationManager *qncm = new QNetworkConfigurationManager();
-    QList<QNetworkConfiguration> activeConfigs = qncm->allConfigurations(QNetworkConfiguration::Active);
+    QNetworkConfigurationManager qncm;
+    QList<QNetworkConfiguration> activeConfigs = qncm.allConfigurations(QNetworkConfiguration::Active);
     foreach (QNetworkConfiguration qnc, activeConfigs){
     	int type = 0;
     	switch(qnc.bearerType())
@@ -55,7 +55,7 @@ static Handle<Value> _getNetworkType(void*)
     	    case QNetworkConfiguration::BearerWCDMA		: type = 5; break;
     	    case QNetworkConfiguration::BearerHSPA		: type = 6; break;
     	    case QNetworkConfiguration::BearerBluetooth	: type = 7; break;
-
+    	    default: type = 8; break;
     	}
     	return Number::New(type);
     }
@@ -63,15 +63,22 @@ static Handle<Value> _getNetworkType(void*)
 
 }
 
-static Handle<Value> _getNetworkTypeName(void*)
+Handle<Value> TiNetwork::_getNetworkTypeName(void*)
 {
-    QNetworkConfigurationManager *qncm = new QNetworkConfigurationManager();
-    QList<QNetworkConfiguration> activeConfigs = qncm->allConfigurations(QNetworkConfiguration::Active);
+    QNetworkConfigurationManager qncm;
+    QList<QNetworkConfiguration> activeConfigs = qncm.allConfigurations(QNetworkConfiguration::Active);
     foreach (QNetworkConfiguration qnc, activeConfigs){
     	QString typeName = qnc.bearerTypeName();
     	return String::New(typeName.toLocal8Bit().constData());
     }
     return Null();
+
+}
+
+Handle<Value> TiNetwork::_getOnline(void*)
+{
+    QNetworkConfigurationManager m;
+    return Boolean::New(m.isOnline());
 
 }
 
@@ -86,6 +93,7 @@ void TiNetwork::onCreateStaticMembers()
 
     TiPropertySetGetObject::createProperty(this, "networkTypeName", this, NULL, _getNetworkTypeName);
     TiPropertySetGetObject::createProperty(this, "networkType", this, NULL, _getNetworkType);
+    TiPropertySetGetObject::createProperty(this, "online", this, NULL, _getOnline);
 }
 
 Handle<Value> TiNetwork::_encodeURIComponent(void* userContext, TiObject* /*caller*/, const Arguments& args)
