@@ -23,19 +23,12 @@ NativeScrollViewContentObject::NativeScrollViewContentObject(TiObject* tiObject,
  	setContainer(bb::cascades::Container::create());
  	scrollView_ = scrollView;
 
- 	TiObject height;
-	height.setValue(String::New("UI.SIZE"));
- 	setHeight(&height);
-
-	TiObject width;
-	width.setValue(String::New("UI.SIZE"));
- 	setWidth(&width);
 }
 
 void NativeScrollViewContentObject::updateLayout(QRectF rect)
 {
     NativeControlObject::updateLayout(rect);
-    scrollView_->setContentWidthAndHeight(rect.width(), rect.height());
+    scrollView_->setContentWidthAndHeight(rect.width(), rect.height(), true);
 }
 
 NativeScrollViewObject::NativeScrollViewObject(TiObject* tiObject)
@@ -75,7 +68,7 @@ int NativeScrollViewObject::setLayout(TiObject *obj)
 		width.setValue(String::New("UI.FILL"));
 		err = contentViewProxy_->setWidth(&width);
 	}
-
+	else
 	if (str == "horizontal" && !contentWidthSet_)
 	{
 		TiObject height;
@@ -90,11 +83,11 @@ int NativeScrollViewObject::setLayout(TiObject *obj)
 
 	return err;
 }
-void NativeScrollViewObject::setContentWidthAndHeight(float width, float height)
+void NativeScrollViewObject::setContentWidthAndHeight(float width, float height, bool applyScrolling)
 {
     contentSize_.setHeight(height);
     contentSize_.setWidth(width);
-
+    if(!applyScrolling) return;
     if(contentSize_.width() > scrollViewSize_.width() && contentSize_.height() <= scrollViewSize_.height())
     {
     	scrollViewProperties_->setScrollMode(bb::cascades::ScrollMode::Horizontal);
@@ -136,8 +129,19 @@ int NativeScrollViewObject::initialize()
 
     bb::cascades::LayoutUpdateHandler::create(nativeContentView_).onLayoutFrameChanged(eventHandler_, SLOT(onContainerLayoutChange(QRectF)));
 
+
+ 	TiObject height;
+	height.setValue(String::New("UI.SIZE"));
+	contentViewProxy_->setHeight(&height);
+
+	TiObject width;
+	width.setValue(String::New("UI.SIZE"));
+	contentViewProxy_->setWidth(&width);
+
+
     contentSize_ = QSize(0,0);
     scrollViewSize_ = QSize(0,0);
+
     return NATIVE_ERROR_OK;
 }
 /*
@@ -192,6 +196,8 @@ void NativeScrollViewObject::updateLayout(QRectF rect)
     scrollView_->setPreferredWidth(w);
     scrollViewSize_.setHeight(h);
     scrollViewSize_.setWidth(w);
+
+    setContentWidthAndHeight(contentSize_.width(), contentSize_.height(), true);
 }
 
 int NativeScrollViewObject::setBackgroundColor(TiObject* obj)
