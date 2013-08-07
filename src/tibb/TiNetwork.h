@@ -36,7 +36,9 @@ private:
     explicit TiNetwork(NativeObjectFactory* objectFactory);
     TiNetwork(const TiNetwork&);
     TiNetwork& operator=(const TiNetwork&);
-
+    static Handle<Value> _getNetworkTypeName(void*);
+    static Handle<Value> _getNetworkType(void*);
+    static Handle<Value> _getOnline(void*);
     NativeObjectFactory* objectFactory_;
 };
 
