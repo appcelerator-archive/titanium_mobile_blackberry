@@ -13,6 +13,9 @@
 #include "TiObject.h"
 #include "V8Utils.h"
 
+static QList<bb::system::SystemDialog*> _alertQueue;
+static bool _alertShowing = false;
+
 using namespace titanium;
 
 class NativeAlertDialogEventHandler : public EventHandler {
@@ -25,6 +28,7 @@ public:
 public slots:
     void buttonSelected(bb::system::SystemUiResult::Type) {
         bb::system::SystemDialog* dialog = static_cast<bb::system::SystemDialog*>(sender());
+        _alertQueue.removeOne(dialog);
         bb::system::SystemUiButton* selectedButton = dialog->buttonSelection();
         if (selectedButton == NULL) {
           return;
@@ -36,6 +40,11 @@ public slots:
         container->setDataProperty("index", index.toInt(NULL));
         container->setDataProperty("cancel", cancel.toBool());
         container->fireEvent();
+        if(_alertQueue.isEmpty()) {
+        	_alertShowing = false;
+        } else {
+        	_alertQueue.at(0)->show();
+        }
     }
 };
 
@@ -66,7 +75,12 @@ int NativeAlertDialogObject::initialize()
 
 int NativeAlertDialogObject::show()
 {
-    nativeDialog_->show();
+	_alertQueue.append(nativeDialog_);
+	if(!_alertShowing) {
+		nativeDialog_->show();
+		_alertShowing = true;
+	}
+
     return NATIVE_ERROR_OK;
 }
 
