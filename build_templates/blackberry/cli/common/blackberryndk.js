@@ -13,7 +13,7 @@ var path = require('path'),
 	exec = require('child_process').exec,
 	jsExtRegExp = /\.js$/,
 	lastLogLength = 0,
-	timerID = 0;
+	timerID = 0,
 	getLog = true;
 
 var findNDK = function() {
