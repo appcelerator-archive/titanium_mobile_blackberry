@@ -430,7 +430,6 @@ function BlackberryNDK(builder) {
 				module_registration: register_modules
 			}));
 
-
 			// setup the build environment and then build the app executable using make
 			var srccmd;
 			if (process.platform === 'win32') {
