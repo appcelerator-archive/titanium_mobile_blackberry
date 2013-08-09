@@ -348,11 +348,10 @@ function BlackberryNDK(builder) {
 	    	}
 	        logger.log('\n' + 'Path to BlackBerry NDK is: ' + ndk.cyan);
 
-	        if (typeof builder.target === 'undefined') {
-		        logger.log('\n' + 'Build Failed: You must specify a target with -T flag. Valid values are device, simulator, distribute');
-		        return  1;
-
-	    	}	        
+			if (typeof builder.target === 'undefined') {
+				logger.log('\n' + 'Build Failed: You must specify a target with -T flag. Valid values are device, simulator, distribute');
+				return  1;
+			}     
 
 	        // BB NDK makefiles do not allow spaces in path names and cause build problem.
 			// The solution is to use temporary directories without spaces to do builds. Also
@@ -412,19 +411,20 @@ function BlackberryNDK(builder) {
 			var oldPath = process.cwd()	
 			var tmpPathProj = path.join(os.tmpDir(), generateTmpName(projectName)); 
 			var projectDir = this.builder.projectDir;
-			afs.copyDirSyncRecursive(projectDir, tmpPathProj, {logger: logger.debug});
-			process.chdir(path.join(tmpPathProj, 'build', 'blackberry'));
+
+			afs.copyDirSyncRecursive(path.join(projectDir, 'build'), tmpPathProj, {logger: logger.debug});
+			process.chdir(path.join(tmpPathProj, 'blackberry'));
 
 			header_paths.forEach(function(entry) {
-			    fs.createReadStream(entry.path).pipe(fs.createWriteStream(path.join(tmpPathProj, 'build', 'blackberry', entry.name)));
+			    fs.createReadStream(entry.path).pipe(fs.createWriteStream(path.join(tmpPathProj, 'blackberry', entry.name)));
 			 });
 
-			var common_make_file_path = path.join(tmpPathProj, 'build', 'blackberry', 'common.mk');
+			var common_make_file_path = path.join(tmpPathProj, 'blackberry', 'common.mk');
 			fs.writeFileSync(common_make_file_path, renderTemplate(fs.readFileSync(common_make_file_path).toString().trim(), {
 				libs: lib_names
 			}));
 
-			var main_file_path = path.join(tmpPathProj, 'build', 'blackberry', 'main.cpp');
+			var main_file_path = path.join(tmpPathProj, 'blackberry', 'main.cpp');
 			fs.writeFileSync(main_file_path, renderTemplate(fs.readFileSync(main_file_path).toString().trim(), {
 				module_headers: headers,
 				module_registration: register_modules
@@ -440,7 +440,7 @@ function BlackberryNDK(builder) {
 			}
 
 			runCommandFromArray([srccmd, '&&', 'make', tiappName, cpuList, bbRoot, debug], showCmd = true, function() {
-				afs.copyDirSyncRecursive(tmpPathProj, projectDir, {logger: logger.debug});
+				afs.copyDirSyncRecursive(tmpPathProj, path.join(projectDir, 'build'), {logger: logger.debug});
 
 				try {
 					wrench.rmdirSyncRecursive(tmpPathSDK);
