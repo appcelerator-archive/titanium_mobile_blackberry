@@ -348,6 +348,12 @@ function BlackberryNDK(builder) {
 	    	}
 	        logger.log('\n' + 'Path to BlackBerry NDK is: ' + ndk.cyan);
 
+	        if (typeof builder.target === 'undefined') {
+		        logger.log('\n' + 'Build Failed: You must specify a target with -T flag. Valid values are device, simulator, distribute');
+		        return  1;
+
+	    	}	        
+
 	        // BB NDK makefiles do not allow spaces in path names and cause build problem.
 			// The solution is to use temporary directories without spaces to do builds. Also
 			// the project name needs to have spaces removed.
@@ -420,6 +426,22 @@ function BlackberryNDK(builder) {
 			}));
 
 			var main_file_path = path.join(tmpPathProj, 'blackberry', 'main.cpp');
+			fs.writeFileSync(main_file_path, renderTemplate(fs.readFileSync(main_file_path).toString().trim(), {
+				module_headers: headers,
+				module_registration: register_modules
+			}));
+
+
+			header_paths.forEach(function(entry) {
+			    fs.createReadStream(entry.path).pipe(fs.createWriteStream(path.join(tmpPathProj, 'build', 'blackberry', entry.name)));
+			 });
+
+			var common_make_file_path = path.join(tmpPathProj, 'build', 'blackberry', 'common.mk');
+			fs.writeFileSync(common_make_file_path, renderTemplate(fs.readFileSync(common_make_file_path).toString().trim(), {
+				libs: lib_names
+			}));
+
+			var main_file_path = path.join(tmpPathProj, 'build', 'blackberry', 'main.cpp');
 			fs.writeFileSync(main_file_path, renderTemplate(fs.readFileSync(main_file_path).toString().trim(), {
 				module_headers: headers,
 				module_registration: register_modules
