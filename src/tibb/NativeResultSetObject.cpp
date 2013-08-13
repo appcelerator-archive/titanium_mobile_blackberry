@@ -202,7 +202,7 @@ bool NativeResultSetObject::next() {
 }
 
 void NativeResultSetObject::close() {
-	if(stepResult == SQLITE_ROW)
+	if(columnNames.size())
 		sqlite3_finalize(statement);
 }
 
