@@ -202,7 +202,8 @@ bool NativeResultSetObject::next() {
 }
 
 void NativeResultSetObject::close() {
-	sqlite3_finalize(statement);
+	if(stepResult == SQLITE_ROW)
+		sqlite3_finalize(statement);
 }
 
 #pragma GCC diagnostic warning "-Wdeprecated-declarations"
