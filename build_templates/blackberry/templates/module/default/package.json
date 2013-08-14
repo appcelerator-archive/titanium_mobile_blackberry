@@ -2,9 +2,9 @@
     "description": "This is the ___PROJECTNAME___ package descriptor", 
     "type": "native",
     "directories": {
-        "lib": "arm/a.le-v7, x86/a-g"
+        "lib": ""
     }, 
-    "main": "lib___PROJECTNAME___.a", 
+    "main": "___PROJECTNAME___", 
     "name": "___PROJECTNAME___", 
     "version": "1.0.0"
 }
