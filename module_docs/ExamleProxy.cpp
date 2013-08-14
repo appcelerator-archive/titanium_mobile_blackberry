@@ -1,44 +1,13 @@
-
 // TODO: Remove the Ti namespace from all the TiCore classes
 //
-// ==================================================================================================
-// Proxy Definition
-
-#ifndef EXAMPLE_PROXY_H
-#define EXAMPLE_PROXY_H
-
-#include "TiCore.h"
-
-class ExampleProxy: public Ti::TiProxy {
-public:
-	// Required Macro
-	CREATE_PROXY(ExampleProxy)
-	// Required Parameter `const char*`
-	ExampleProxy(const char*);
-	virtual ~ExampleProxy();
-
-	// Setter prop example
-	void setExampleProperty(Ti::TiValue);
-	EXPOSE_SETTER(ExampleProxy, setExampleProperty)
-	// Getter prop example
-	Ti::TiValue getExampleProperty();
-	EXPOSE_GETTER(ExampleProxy, getExampleProperty)
-
-	// Method exampleMethod
-	Ti::TiValue exampleMethod(Ti::TiValue);
-	EXPOSE_METHOD(ExampleProxy, exampleMethod)
-
-};
-
-#endif /* EXAMPLE_PROXY_H */
-// ==================================================================================================
-
 // ==================================================================================================
 // Proxy Implementation
 
 #include "ExampleProxy.h"
 
-ExampleProxy::ExampleProxy(const char* name) : Ti::TiProxy(name)
+// You MUST pass in the `name` of the constructor to the base class
+ExampleProxy::ExampleProxy(const char* name) :
+	Ti::TiProxy(name)
 {
 	// Create a setter and getter for the same property
 	// Note: the setter and getter *MUST* start with `_`
@@ -52,10 +21,11 @@ ExampleProxy::ExampleProxy(const char* name) : Ti::TiProxy(name)
 	 * 
 	 */
 
-	// Create a method
+	// Create a method, it also has to start with `_`
 	createPropertyFunction("example", _example);
 
 }
+
 ExampleProxy::~ExampleProxy()
 {
 	// delete instatiated pointers
@@ -128,6 +98,7 @@ Ti::TiValue ExampleProxy::getExampleProperty()
 	// Return the created value
 	return value;
 }
+
 Ti::TiValue ExampleProxy::exampleMethod(Ti::TiValue value)
 {
 	// Now you can call functions in this class
@@ -143,10 +114,10 @@ Ti::TiValue ExampleProxy::exampleMethod(Ti::TiValue value)
 	returnValue.setString(str);
 
 	// Can also be null or undefined
-	// returnValue.setUndefined()
+	returnValue.setUndefined()
 	// or
-	// returnValue.setNull()
-	return str;
+	returnValue.setNull()
+	
+	return returnValue;
 }
 // ==================================================================================================
-
