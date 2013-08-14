@@ -8,9 +8,16 @@
 #ifndef TIBB_H_
 #define TIBB_H_
 
+#include <string>
+#include "TiModule.h"
+
 extern "C"
 {
     int tibb_run(const char* javaScript, int argc, char** argv);
+
+    void tiRegisterModule(std::string name, TiModule* module);
+
+    TiModule* getModuleByName(std::string name);
 }
 
 #endif /* TIBB_H_ */
