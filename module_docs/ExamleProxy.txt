@@ -1,0 +1,152 @@
+
+// TODO: Remove the Ti namespace from all the TiCore classes
+//
+// ==================================================================================================
+// Proxy Definition
+
+#ifndef EXAMPLE_PROXY_H
+#define EXAMPLE_PROXY_H
+
+#include "TiCore.h"
+
+class ExampleProxy: public Ti::TiProxy {
+public:
+	// Required Macro
+	CREATE_PROXY(ExampleProxy)
+	// Required Parameter `const char*`
+	ExampleProxy(const char*);
+	virtual ~ExampleProxy();
+
+	// Setter prop example
+	void setExampleProperty(Ti::TiValue);
+	EXPOSE_SETTER(ExampleProxy, setExampleProperty)
+	// Getter prop example
+	Ti::TiValue getExampleProperty();
+	EXPOSE_GETTER(ExampleProxy, getExampleProperty)
+
+	// Method exampleMethod
+	Ti::TiValue exampleMethod(Ti::TiValue);
+	EXPOSE_METHOD(ExampleProxy, exampleMethod)
+
+};
+
+#endif /* EXAMPLE_PROXY_H */
+// ==================================================================================================
+
+// ==================================================================================================
+// Proxy Implementation
+
+#include "ExampleProxy.h"
+
+ExampleProxy::ExampleProxy(const char* name) : Ti::TiProxy(name)
+{
+	// Create a setter and getter for the same property
+	// Note: the setter and getter *MUST* start with `_`
+	createPropertySetterGetter("exampleProperty", _setExampleProperty, _getExampleProperty);
+
+	/* Or create them individually, first approach is recommended if
+	 * both, setter and getter, exist
+	 *
+	 * createPropertySetter("exampleProperty", _setExampleProperty);
+	 * createPropertyGetter("exampleProperty", _getExampleProperty);
+	 * 
+	 */
+
+	// Create a method
+	createPropertyFunction("example", _example);
+
+}
+ExampleProxy::~ExampleProxy()
+{
+	// delete instatiated pointers
+}
+
+void ExampleProxy::setExampleProperty(Ti::TiValue value)
+{
+
+	// Note, some values will be undefined
+	// Check with:
+	value.isList();
+	value.isProxy();
+
+	// To get a QString
+	QString val = value.toString();
+
+	// To get a number (double)
+	double num = value.toNumber();
+
+	// To get a boolean
+	bool flag = value.toBool();
+
+	// To get a list
+	QList<Ti::TiValue> list = value.toList()
+
+	// To get a proxy, is this takes a proxy
+	Ti::TiProxy *proxy = value.toProxy();
+
+	// To get the actual JavaScript value
+	Handle<Value> val = value.toJSValue()
+
+	// To get a color, if this takes a color, otherwise returns bb::cascades::Color::Yellow
+	// #include <bb/cascades/Color>
+	bb::cascades::Color color = value.toColor();
+}
+
+Ti::TiValue ExampleProxy::getExampleProperty()
+{
+	// Warning!!! do not "new" a Ti::TiValue, instatiate it on the stack!!
+	Ti::TiValue value;
+
+	// Caution! use only one of these
+
+	// Creates a JS String()
+	value.setString("some string");
+	// Creates a JS Number()
+	value.setNumber(12.54);
+	// Create a JS Bool()
+	value.setBool(true);
+	// Returns a proxy
+	value.setProxy(this);
+
+	// Createa a JS Array() with TiValues
+	QList<Ti::Value> list;
+	{
+		Ti::TiValue value1;
+		value1.setString("one");
+		list.append(value1);
+
+		Ti::TiValue value2;
+		value2.setNumber(2);
+		list.append(value2);
+
+		Ti::TiValue value3;
+		value3.setBool(true);
+		list.append(value3);
+	}
+	value.setList(list);
+
+	// Return the created value
+	return value;
+}
+Ti::TiValue ExampleProxy::exampleMethod(Ti::TiValue value)
+{
+	// Now you can call functions in this class
+	// Get the value from `value`
+	QString str = value.toString();
+	str.prepend("Something added to ");
+
+	// Call local function
+	// doSomethingWith(str) <---- this would be a local function to this class
+
+	// Create a return value
+	Ti::TiValue returnValue;
+	returnValue.setString(str);
+
+	// Can also be null or undefined
+	// returnValue.setUndefined()
+	// or
+	// returnValue.setNull()
+	return str;
+}
+// ==================================================================================================
+
