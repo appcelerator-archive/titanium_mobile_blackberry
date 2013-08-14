@@ -110,7 +110,7 @@ How to Create, Test, and Publish BlackBerry Native Modules
 
 -  Build and Extend the Module:
 
-	The QDE is the tool most often used to develop native BlackBerry 10 applications. Although the module stub generated during create has a Makefile that can be utilized by command-line tools, developers often find the Eclipse based IDE easier to use. To get started with BlackBerry 10 module development import the module project created above into the QDE. You will see a CPP source file with the same name as your <MODULE_NAME> this file is the entry point and the startup method is the hook to the BlackBerry SDK. When a module is first "required" into a running Titanium application the startup method is called. BlackBerry uses the V8 JavaScript runtime engine, and the generated stub has some simple example of extending the module by "plugging into" V8. To embedded V8 developers and Node.JS developers the code will be very familiar. Using the stub as a sample add your own BlackBerry 10 extensions and these will be available to Titanium applications.
+	The QDE is the tool most often used to develop native BlackBerry 10 applications. Although the module stub generated during create has a Makefile that can be utilized by command-line tools, developers often find the Eclipse based IDE easier to use. To get started with BlackBerry 10 module development import the module project created above into the QDE. You will see a CPP source file with the same name as your <MODULE_NAME> this file is the entry point and the startup method is the hook to the BlackBerry SDK. When a module is first "required" into a running Titanium application the startup method is called. BlackBerry uses the V8 JavaScript runtime engine, and the generated stub has some simple example of extending the module by "plugging into" V8. To embedded V8 developers and Node.JS developers the code will be very familiar. Using the stub as a sample add your own BlackBerry 10 extensions and these will be available to Titanium applications. A good resource for how to work with the V8 runtime is the V8 Embedder's Guide https://developers.google.com/v8/embed.
  
 
 - Testing and Debugging the Module:
@@ -121,13 +121,21 @@ How to Create, Test, and Publish BlackBerry Native Modules
 
 	2) Edit the common.mk with the path to your module library and the library name. There are comments in the file to assist you.
 
-	3) In the tibbtest project edit the app.js JavaScript to "require" in your module and then call your exposed properties methods and hook any callbacks. See the native_module_test.js for an example of using the stub module generated in step one. 
+	3) In the tibbtest project edit the app.js JavaScript to "require" in your module and then call your exposed properties methods and hook any callbacks. See the native_module_test.js for an example of using the stub module generated in step one. Make sure to make your module header file available to the tibbtest project, probably easiest to just put a copy in the tibbtest project.
 
-	4)  Run the tibbtest application to simulator or device to test out your module. You can set breakpoints in your module to make debugging easier.
+	4) Run the tibbtest application to simulator or device to test out your module. You can set breakpoints in your module to make debugging easier.
 
 - Deploying the Module:
 
-	 When you created your module  a QDE stub project was created and also templates of the collateral needed when "publishing" manually or to the Appcelerator Marketplace. You should look at the README file and documentation folder that was generated with your module to finish and publish your module.
+	When you created your module a QDE stub project was created and also templates of the collateral needed when "publishing" manually or to the Appcelerator Marketplace. You should look at the README file and documentation folder that was generated with your module to finish and publish your module. The stepa basically are:
+
+ 	1) Copy the module project folder to <PATH_TO_TITANIUM_SDK>/modules/blackberry/<MODULE_NAME>/<VERSION> make sure that the "built" module library is available in the x86 and arm folder.
+
+ 	2) In the application that will use the module make sure that there is a module entry:
+
+ 		<modules>
+			<module platform="blackberry"><MODULE_NAME></module>
+		</modules>
 
 
 Feedback
