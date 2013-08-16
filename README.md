@@ -6,7 +6,7 @@ Titanium Mobile BlackBerry is the Titanium platform support for the latest Black
 Current Status
 --------------
 
-* 2013-06-17 - _BETA 3.1.1_
+* 2013-08-15 - _GA 3.1.2_
 
 Release Notes
 -------------
