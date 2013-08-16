@@ -11,6 +11,8 @@
 #include <QObject>
 #include <QString>
 #include <QList>
+#include <QMap>
+
 #include <v8.h>
 
 namespace bb
@@ -40,6 +42,7 @@ public:
 	bool 				toBool();
 	double 				toNumber();
 	QList<Ti::TiValue>	toList();
+	QMap<QString, Ti::TiValue> toMap();
 
 	void 				setString(QString);
 	void 				setNumber(double);
@@ -54,6 +57,8 @@ public:
 	bool				isUndefined();
 	bool				isProxy();
 	bool				isNumber();
+	bool				isMap();
+	bool				isString();
 
 private:
 
@@ -63,6 +68,7 @@ private:
 	bool _bool;
 	Handle<Value> _jsValue;
 	QList<Ti::TiValue> _list;
+	QMap<QString, Ti::TiValue> _map;
 	void setValue(Handle<Value> value);
 
 };

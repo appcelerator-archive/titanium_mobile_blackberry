@@ -117,6 +117,8 @@ public:
 
 	virtual Ti::TiValue addEventListener(Ti::TiValue);
 	virtual Ti::TiValue removeEventListener(Ti::TiValue);
+	virtual Ti::TiValue fireEvent(Ti::TiValue);
+
 	virtual void fireEvent(QString, Ti::TiEventParameters);
 
 	virtual const char* getProxyName();
@@ -132,6 +134,7 @@ public:
 
 	EXPOSE_METHOD(Ti::TiProxy, addEventListener)
 	EXPOSE_METHOD(Ti::TiProxy, removeEventListener)
+	EXPOSE_METHOD(Ti::TiProxy, fireEvent)
 
 protected:
 	virtual void addFunction(const char* name, InvocationCallback);

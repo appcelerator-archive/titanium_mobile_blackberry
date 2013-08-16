@@ -63,13 +63,20 @@ void Ti::TiValue::setValue(Handle<Value> value)
 	}
 	if(value->IsObject())
 	{
-		Handle<Value> _a = value->ToObject()->GetHiddenValue(String::New("proxy"));
+		Local<Object> obj = value->ToObject();
+		Handle<Value> _a = obj->GetHiddenValue(String::New("proxy"));
 		if(_a.IsEmpty())
 		{
-			_a = value->ToObject()->GetHiddenValue(String::New("module"));
+			_a = obj->GetHiddenValue(String::New("module"));
 		}
 		if(_a.IsEmpty())
 		{
+			Local<Array> props = obj->GetPropertyNames();
+			for(int i = 0, len = props->Length(); i < len; i++) {
+				Local<String> key = props->Get(i)->ToString();
+				Local<Value> val = obj->Get(key);
+				_map[QString(*String::Utf8Value(key))] = Ti::TiValue(val);
+			}
 			return;
 		}
 
@@ -189,6 +196,15 @@ bool Ti::TiValue::isNull()
 	return _jsValue->IsNull();
 }
 
+bool Ti::TiValue::isMap()
+{
+	return _map.size() != 0;
+}
+
+bool Ti::TiValue::isString()
+{
+	return _jsValue->IsString();
+}
 
 Ti::TiValue::~TiValue()
 {

@@ -14,8 +14,10 @@ Ti::TiProxy::TiProxy(const char* name) : _proxyName(QString(name))
 	HandleScope scope;
 	jsObject = Persistent<ObjectTemplate>::New(ObjectTemplate::New());
 	jsObject->SetNamedPropertyHandler(Ti::TiProxy::_Getter, Ti::TiProxy::_Setter);
+
 	createPropertyFunction("addEventListener", _addEventListener);
 	createPropertyFunction("removeEventListener", _removeEventListener);
+	createPropertyFunction("fireEvent", _fireEvent);
 
 	Ti::TiHelper::Log(QString(_proxyName).append(" Created"));
 }
@@ -137,6 +139,51 @@ Ti::TiValue Ti::TiProxy::removeEventListener(Ti::TiValue value)
 	return res;
 }
 
+// TODO: Finish this
+Ti::TiValue Ti::TiProxy::fireEvent(Ti::TiValue value)
+{
+	QString eventName;
+	Ti::TiEventParameters eventParams;
+	if(value.isList()) {
+
+		Ti::TiValue eName = value.toList().at(0);
+		Ti::TiValue eParams = value.toList().at(1);
+		eventName = eName.toString();
+
+		if(eParams.isMap())
+		{
+			QMap<QString, Ti::TiValue> map = eParams.toMap();
+			QList<QString> keys = map.keys();
+			int len = keys.size();
+			while(len--)
+			{
+				QString 	name 	= keys.at(len);
+				Ti::TiValue val 	= map[name];
+
+				if(val.isNumber())
+				{
+					eventParams.addParam(name, val.toNumber());
+				}
+				else if (val.isProxy())
+				{
+					eventParams.addParam(name, val.toProxy());
+				}
+				else // if(val.isString())
+				{
+					eventParams.addParam(name, val.toString());
+				}
+			}
+		}
+	}
+	else
+	{
+		eventName = value.toString();
+	}
+
+	fireEvent(eventName, eventParams);
+
+	return Ti::TiValue(Undefined());
+}
 
 void Ti::TiProxy::fireEvent(QString eventName, Ti::TiEventParameters params)
 {
