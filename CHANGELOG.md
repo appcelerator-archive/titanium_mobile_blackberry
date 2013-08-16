@@ -1,6 +1,22 @@
 Release Notes
 =============
 
+GA Release (3.1.2)
+----------------------------------------------------
+
+THURS AUG 15, 2013 
+
+* Database.install Support
+* Platform.createUUID Support
+* GeoLocation.getCurrentPosition Support
+* Native Module Support
+* Updated and Integrated BlackBerry SDK into Documentation
+
+Notes on Using 3.1.2
+--------------------
+
+See the developer blog post at http://developer.appcelerator.com/blog/2013/08/announcing-titanium-3-1-2-production-release.html
+
 Beta Release (3.1.1)
 ----------------------------------------------------
 
