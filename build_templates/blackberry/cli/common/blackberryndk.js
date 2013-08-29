@@ -46,7 +46,7 @@ var findEnvFile = function(dir) {
 		var name = envFiles[i];
 		if (name.indexOf('bbndk-env') == 0) {
 			if (process.platform === 'win32') {
-				if (name.indexOf('.bat', name.length - 4)) {
+				if (name.indexOf('.bat', name.length - 4) != -1) {
 					envFile = name;
 				}
 			}
