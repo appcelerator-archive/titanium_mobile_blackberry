@@ -11,9 +11,7 @@ Current Status
 Release Notes
 -------------
 
-The Beta release is being made available to encourage developers to start building new applications and port existing Titanium applications to the new BlackBerry 10 Platform. 
-
-In the last few months BlackBerry released its new operating system, BlackBerry 10 as well as the first BlackBerry 10 phone, the Z10. The phone has garnered critical praise for its technical chops, with a fast OS and well-integrated user interface. If you want to try out the Titanium BlackBerry beta but don't have access to a Z10, the simulator that ships with the BlackBerry 10 Native SDK is easy to use and represents the phone nicely.
+BlackBerry has released its new operating system, BlackBerry 10 as well as the first BlackBerry 10 phones, the Z10 and Q10. The phones have garnered critical praise for their technical chops, with a fast OS and well-integrated user interface. If you want to try out the Titanium BlackBerry beta but don't have access to a phone, the simulator that ships with the BlackBerry 10 Native SDK is easy to use and represents the phone nicely.
 
 The latest release and API status notes are at [Release Notes](https://github.com/appcelerator/titanium_mobile_blackberry/blob/master/CHANGELOG.md).
 
@@ -43,6 +41,8 @@ How to get Started with Titanium BlackBerry Development
 
 To get started with Titanium BlackBerry development refer to the Titanium Documentation at http://docs.appcelerator.com/titanium/latest/#!/guide/Installing_Platform_SDKs and choose Installing the BlackBerry NDK. 
 
+Note: As of BlackBerry NDK 10.2 only the Momentics IDE is downloaded. To download the SDK from the Momentics Preferences Panel choose QNX and pick the desired SDK.
+
 If you are interested in writing Titanium Applications use the documentation, tutorials and quick start guides located at http://docs.appcelerator.com/titanium. If you are interested in native BlackBerry development to extend or contribute to the Titanium platform use this document.
 
 
@@ -59,7 +59,7 @@ Note: The following instructions are for Mac. For Windows you will need cygwin o
 
 - BlackBerry has forked the V8 Javascript runtime for BlackBerry 10 and made it available on GitHub (https://github.com/blackberry/v8). To build execute the command:
 
-		source /Applications/bbndk/bbndk-env.sh
+		source /Applications/bbndk/bbndk-env-<TARGET>.sh
 
 The source command setups up the envrironment to do BlackBerry builds.
 
