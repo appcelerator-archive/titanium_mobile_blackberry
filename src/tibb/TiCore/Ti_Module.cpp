@@ -24,6 +24,24 @@ void Ti::TiModule::addString(QString name, QString value)
 	HandleScope scope;
 	getJSObject()->Set(String::New(name.toLocal8Bit().data()), String::New(value.toLocal8Bit().data()));
 }
+
+void Ti::TiModule::addNumber(QString name, double value)
+{
+	HandleScope scope;
+	getJSObject()->Set(String::New(name.toLocal8Bit().data()), Number::New(value));
+}
+
+void Ti::TiModule::initStart()
+{
+	Ti::TiProxy::initStart();
+}
+
+void Ti::TiModule::initEnd()
+{
+	Ti::TiProxy::initEnd();
+}
+
+
 Ti::TiModule::~TiModule() {
 	// TODO Auto-generated destructor stub
 }

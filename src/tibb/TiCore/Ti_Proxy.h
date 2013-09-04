@@ -43,8 +43,6 @@
 		proxy->realJSObject.MakeWeak(proxy, _WeakCallback);
 
 #define CREATE_PROXY(NAME) \
-	virtual void initStart();\
-	virtual void initEnd();\
 	static Handle<Value> CreateProxy(const Arguments &args) \
 	{ \
 		GENERATE_PROXY(NAME) \
@@ -128,7 +126,9 @@ public:
 	TiProxy(const char*);
 	virtual ~TiProxy();
 
+	virtual void initStart();
 	virtual void initWithObject(Handle<Object>);
+	virtual void initEnd();
 
 	virtual Ti::TiValue addEventListener(Ti::TiValue);
 	virtual Ti::TiValue removeEventListener(Ti::TiValue);
