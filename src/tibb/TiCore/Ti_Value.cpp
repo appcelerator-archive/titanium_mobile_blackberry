@@ -15,7 +15,7 @@ Ti::TiValue::TiValue(Handle<Value> value) :
 		_string(""),
 		_number(0),
 		_bool(false),
-		_jsValue(value)
+		_jsValue(NULL)
 {
 	setValue(value);
 }
@@ -27,15 +27,19 @@ Ti::TiValue::TiValue(const Arguments& args) :
 	_bool(false),
 	_jsValue(NULL)
 {
+
 	if(args.Length() == 0 || args.Length() == 1)
 	{
 		setValue(args[0]);
-		return;
 	}
-
-	for(uint32_t i = 0, len = args.Length(); i < len; i++)
+	else
 	{
-		_list.append(Ti::TiValue(args[i]));
+		Handle<Array> array = Array::New(args.Length());
+		for(uint32_t i = 0, len = args.Length(); i < len; i++)
+		{
+			array->Set(i, args[i]);
+		}
+		setValue(array);
 	}
 }
 
@@ -49,6 +53,7 @@ Ti::TiValue::TiValue() :
 }
 void Ti::TiValue::setValue(Handle<Value> value)
 {
+	_jsValue = value;
 	_bool = value->ToBoolean()->Value();
 	_number = value->ToNumber()->Value();
 	_string = QString(*String::Utf8Value(value->ToString()));
@@ -129,6 +134,11 @@ QList<Ti::TiValue> Ti::TiValue::toList()
 	return _list;
 }
 
+QMap<QString, Ti::TiValue> Ti::TiValue::toMap()
+{
+	return _map;
+}
+
 void Ti::TiValue::setList(QList<Ti::TiValue> list)
 {
 	Handle<Array> ar = Array::New(list.size());
@@ -183,7 +193,7 @@ bool Ti::TiValue::isProxy()
 
 bool Ti::TiValue::isNumber()
 {
-	return _jsValue->IsNumber();
+	return (_jsValue->IsNumber() || _jsValue->IsNumberObject());
 }
 
 bool Ti::TiValue::isUndefined()

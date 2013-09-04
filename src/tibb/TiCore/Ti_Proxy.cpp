@@ -34,6 +34,11 @@ Ti::TiProxy::~TiProxy() {
 	properties.empty();
 }
 
+void Ti::TiProxy::initStart()
+{
+
+}
+
 void Ti::TiProxy::initWithObject(Handle<Object> obj)
 {
 	HandleScope scope;
@@ -50,6 +55,11 @@ void Ti::TiProxy::initWithObject(Handle<Object> obj)
 			jsObject->Set(key, val);
 		}
 	}
+}
+
+void Ti::TiProxy::initEnd()
+{
+
 }
 
 const char* Ti::TiProxy::getProxyName()

@@ -31,22 +31,35 @@
  * 		virtual ~MyProxy()
  * }
  */
-#define CREATE_PROXY(NAME) \
-	static Handle<Value> createProxy(const Arguments &args) \
-	{ \
+
+#define GENERATE_PROXY(NAME) \
 		HandleScope scope; \
 		NAME *proxy = new NAME(#NAME); \
+		proxy->jsObject.Dispose(); \
+		proxy->realJSObject = Persistent<Object>::New(proxy->jsObject->NewInstance()); \
+		proxy->realJSObject->SetHiddenValue(String::New("proxy"), External::New(proxy)); \
+		proxy->realJSObject.MakeWeak(proxy, _WeakCallback);
+
+#define CREATE_PROXY(NAME) \
+	virtual void initStart();\
+	virtual void initEnd();\
+	static Handle<Value> CreateProxy(const Arguments &args) \
+	{ \
+		GENERATE_PROXY(NAME) \
+		proxy->initStart(); \
  		if(args.Length() > 0 && args[0]->IsObject()) \
 		{ \
  			proxy->initWithObject(args[0]->ToObject()); \
 		} \
-		proxy->jsObject.Dispose(); \
-		proxy->realJSObject = Persistent<Object>::New(proxy->jsObject->NewInstance()); \
-		proxy->realJSObject->SetHiddenValue(String::New("proxy"), External::New(proxy)); \
-		proxy->realJSObject.MakeWeak(proxy, _WeakCallback); \
+		proxy->initEnd(); \
 		return scope.Close(proxy->realJSObject); \
+	} \
+	static NAME* CreateProxy() \
+	{ \
+		GENERATE_PROXY(NAME) \
+		return proxy; \
 	}
-
+//#undef GENERATE_PROXY
 /**
  * Creates a static version of this setter function, this is used with the TiProperty class
  * 		void someSetter(TiValue);

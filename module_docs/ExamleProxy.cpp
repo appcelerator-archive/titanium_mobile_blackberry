@@ -31,6 +31,18 @@ ExampleProxy::~ExampleProxy()
 	// delete instatiated pointers
 }
 
+void ExampleProxy::initStart()
+{
+	// Called when proxy created from JS and
+	// not properties have been applied
+}
+
+void ExampleProxy::initEnd()
+{
+	// Called when proxy created from JS and
+	// properties have been applied
+}
+
 void ExampleProxy::setExampleProperty(Ti::TiValue value)
 {
 
