@@ -28,7 +28,18 @@ SOURCES += \
     ./TableView/BasicTableViewRow.cpp \
     ./TableView/CustomTableViewRow.cpp \
     ./TableView/HeaderTableViewRow.cpp \
-    ./Media/CameraInvocation.cpp
+    ./Media/CameraInvocation.cpp \ 
+    ./TiCore/Ti_Constants.cpp \
+    ./TiCore/Ti_Event.cpp \
+    ./TiCore/Ti_EventParameters.cpp \
+    ./TiCore/Ti_Helper.cpp \
+    ./TiCore/Ti_Module.cpp \
+    ./TiCore/Ti_Property.cpp \
+    ./TiCore/Ti_Proxy.cpp \
+    ./TiCore/Ti_SceneManager.cpp \
+    ./TiCore/Ti_Timer.cpp \
+    ./TiCore/Ti_Value.cpp
+    
 HEADERS += \
 	./*.h \
 	TiScrollableView/TiScrollableView.h \
@@ -39,7 +50,17 @@ HEADERS += \
     TableView/CustomTableViewRow.h \
     TableView/TableViewRowData.h \
     TableView/HeaderTableViewRow.h \
-    Media/CameraInvocation.h
+    Media/CameraInvocation.h \
+    TiCore/Ti_Constants.h \
+    TiCore/Ti_Event.h \
+    TiCore/Ti_EventParameters.h \
+    TiCore/Ti_Helper.h \
+    TiCore/Ti_Module.h \
+    TiCore/Ti_Property.h \
+    TiCore/Ti_Proxy.h \
+    TiCore/Ti_SceneManager.h \
+    TiCore/Ti_Timer.h \
+    TiCore/Ti_Value.h
 
 LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata -lbbsystem
 LIBS += -lbbpim 
