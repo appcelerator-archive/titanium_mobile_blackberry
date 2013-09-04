@@ -71,7 +71,7 @@ void TiTitaniumObject::onCreateStaticMembers()
     TiMedia::addObjectToParent(this, objectFactory_);
     TiAPIObject::addObjectToParent(this);
     TiAppObject::addObjectToParent(this);
-    TiFilesystemObject::addObjectToParent(this, objectFactory_);
+//    TiFilesystemObject::addObjectToParent(this, objectFactory_);
     TiPlatformObject::addObjectToParent(this);
     TiCodecObject::addObjectToParent(this);
     TiNetwork::addObjectToParent(this, objectFactory_);
@@ -88,7 +88,8 @@ void TiTitaniumObject::onCreateStaticMembers()
 
 bool TiTitaniumObject::canAddMembers() const
 {
-    return false;
+//    return false;
+	return true;
 }
 
 static Handle<Value> includeJavaScript(string id, string parentFolder, bool* error) {

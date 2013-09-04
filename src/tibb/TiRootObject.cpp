@@ -32,6 +32,7 @@
 #include <stdio.h>
 #include <dlfcn.h>
 
+#include "Modules/Filesystem/TiFilesystemModule.h"
 
 using namespace titanium;
 
@@ -69,6 +70,11 @@ void TiRootObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "globalRequire", this, _globalRequire);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setInterval", this, _setInterval);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setTimeout", this, _setTimeout);
+
+
+	Local<Object> tiObj = context_->Global()->Get(String::New("Ti"))->ToObject();
+    tiObj->Set(String::New("Filesystem"), TiFilesystemModule::CreateModule());
+
 }
 
 VALUE_MODIFY TiRootObject::onChildValueChange(TiObject* childObject, Handle<Value>, Handle<Value> newValue)
