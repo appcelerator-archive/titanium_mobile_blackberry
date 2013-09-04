@@ -16,10 +16,12 @@
 using namespace v8;
 
 #define CREATE_MODULE(NAME) \
-	static Handle<Object> createModule() \
+	static Handle<Object> CreateModule() \
 	{ \
 		HandleScope scope; \
 		NAME *module = new NAME(#NAME); \
+		module->initStart(); \
+		module->initEnd(); \
 		Handle<Object> _jsObject = module->getJSObject()->NewInstance(); \
 		_jsObject->SetHiddenValue(String::New("module"), External::New(module)); \
 		return scope.Close(_jsObject); \
@@ -38,8 +40,11 @@ public:
 	TiModule(const char*);
 	CREATE_MODULE(Ti::TiModule)
 	virtual ~TiModule();
+	virtual void initStart();
+	virtual void initEnd();
 protected:
 	virtual void addModule(const char* name, Handle<Object> obj);
+	virtual void addNumber(QString name, double value);
 	virtual void addString(QString, QString);
 
 };
