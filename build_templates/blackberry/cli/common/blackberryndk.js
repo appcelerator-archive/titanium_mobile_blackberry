@@ -25,7 +25,7 @@ var findNDK = function() {
 		default_dirs = ['C:\\bbndk']
 	}
 	else {
-		default_dirs = ['/Applications/bbndk', '/Developer/SDKs/bbndk', '/opt/bbndk', '~/bbndk', '~/opt/bbndk']
+		default_dirs = ['/Applications/Momentics.app',  '/Applications/bbndk', '/Developer/SDKs/bbndk', '/opt/bbndk', '~/bbndk', '~/opt/bbndk']
 	}
 
 	var len = default_dirs.length;
@@ -36,6 +36,29 @@ var findNDK = function() {
 	     }
 	}
 }
+
+var findEnvFile = function(dir) {
+
+	envFiles = fs.readdirSync(dir);
+	var envFile = 'not found';
+
+	for (var i = 0; i < envFiles.length; i++) {
+		var name = envFiles[i];
+		if (name.indexOf('bbndk-env') == 0) {
+			if (process.platform === 'win32') {
+				if (name.indexOf('.bat', name.length - 4) != -1) {
+					envFile = name;
+				}
+			}
+			else {
+				envFile = name;
+			}	
+		}
+	}
+     
+    return envFile;   
+}
+
 
 var generateTmpName = function(suffix) {
 
@@ -279,11 +302,12 @@ var getAppLog = function(ndk, deviceIP, barFile, password, callback) {
 	// setup the build environment and then run the ndk command
     var srccmd;
     var ndkcmd;
+    var envFile = findEnvFile(ndk);
     if (process.platform === 'win32') {
-    	srccmd = path.join(ndk, 'bbndk-env.bat');
+    	srccmd = path.join(ndk, envFile);
 		ndkcmd = 'blackberry-deploy.bat';
 	} else {
-		srccmd = 'source ' + path.join(ndk, 'bbndk-env.sh');
+		srccmd = 'source ' + path.join(ndk, envFile);
 		ndkcmd = 'blackberry-deploy';
 	}
 
@@ -346,7 +370,9 @@ function BlackberryNDK(builder) {
 		        	return  1;
 		        }
 	    	}
+	    	var envFile = findEnvFile(ndk);
 	        logger.log('\n' + 'Path to BlackBerry NDK is: ' + ndk.cyan);
+	        logger.log('\n' + 'Environment command file is: ' + envFile.cyan);
 
 	        // BB NDK makefiles do not allow spaces in path names and cause build problem.
 			// The solution is to use temporary directories without spaces to do builds. Also
@@ -428,10 +454,11 @@ function BlackberryNDK(builder) {
 
 			// setup the build environment and then build the app executable using make
 			var srccmd;
+			var envFile = findEnvFile(ndk);
 			if (process.platform === 'win32') {
-				srccmd = path.join(ndk, 'bbndk-env.bat');
+				srccmd = path.join(ndk, envFile);
 			} else {
-				srccmd = 'source ' + path.join(ndk, 'bbndk-env.sh');
+				srccmd = 'source ' + path.join(ndk, envFile);
 			}
 
 			runCommandFromArray([srccmd, '&&', 'make', tiappName, cpuList, bbRoot, debug], showCmd = true, function() {
@@ -533,11 +560,12 @@ function BlackberryNDK(builder) {
             // setup the build environment and then run the ndk command
             var srccmd;
             var ndkcmd;
+            var envFile = findEnvFile(ndk);
             if (process.platform === 'win32') {
-            	srccmd = path.join(ndk, 'bbndk-env.bat');
+            	srccmd = path.join(ndk, envFile);
 				ndkcmd = 'blackberry-nativepackager.bat';
 			} else {
-				srccmd = 'source ' + path.join(ndk, 'bbndk-env.sh');
+				srccmd = 'source ' + path.join(ndk, envFile);
 				ndkcmd = 'blackberry-nativepackager';
 			}
 
