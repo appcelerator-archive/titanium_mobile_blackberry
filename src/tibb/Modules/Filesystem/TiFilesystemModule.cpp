@@ -7,7 +7,10 @@
 
 #include "TiFilesystemModule.h"
 #include "TiFilesystemFileProxy.h"
+#include "TiFilesystemBlobProxy.h"
 #include <QDir>
+
+static QString const RESOURCES_DIRECTORY = "app/native/assets";
 
 TiFilesystemModule::TiFilesystemModule(const char* name) :
 	Ti::TiModule(name)
@@ -87,7 +90,7 @@ Ti::TiValue TiFilesystemModule::getApplicationSharedDirectory()
 Ti::TiValue TiFilesystemModule::getLineEnding()
 {
 	Ti::TiValue returnedValue;
-	returnedValue.setUndefined();
+	returnedValue.setString("\n");
 	return returnedValue;
 }
 Ti::TiValue TiFilesystemModule::getResRawDirectory()
@@ -99,13 +102,13 @@ Ti::TiValue TiFilesystemModule::getResRawDirectory()
 Ti::TiValue TiFilesystemModule::getResourcesDirectory()
 {
 	Ti::TiValue returnedValue;
-	returnedValue.setString("app/native/assets");
+	returnedValue.setString(RESOURCES_DIRECTORY);
 	return returnedValue;
 }
 Ti::TiValue TiFilesystemModule::getSeparator()
 {
 	Ti::TiValue returnedValue;
-	returnedValue.setUndefined(); //setString(QDir::rootPath());
+	returnedValue.setString("/");
 	return returnedValue;
 }
 Ti::TiValue TiFilesystemModule::getTempDirectory()
@@ -151,7 +154,15 @@ Ti::TiValue TiFilesystemModule::getFile(Ti::TiValue value)
 	path.replace("//", "/");
 
 	Ti::TiValue returnedValue;
-	TiFilesystemFileProxy* proxy = TiFilesystemFileProxy::CreateProxy();
+	TiFilesystemFileProxy* proxy;
+	if(path.startsWith(RESOURCES_DIRECTORY))
+	{
+		proxy = TiFilesystemBlobProxy::CreateProxy();
+	}
+	else
+	{
+		proxy = TiFilesystemFileProxy::CreateProxy();
+	}
 	proxy->setPath(path);
 	returnedValue.setProxy(proxy);
 	return returnedValue;

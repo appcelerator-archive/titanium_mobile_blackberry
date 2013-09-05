@@ -147,10 +147,8 @@ Ti::TiValue TiFilesystemFileProxy::append(Ti::TiValue value)
 		file.write(value.toString().toUtf8());
 		file.close();
 		returnedValue.setBool(true);
-		qDebug() << "Text Appended";
 	} else {
 		returnedValue.setBool(false);
-		qDebug() << "Text Not Appended";
 	}
 
 	return returnedValue;

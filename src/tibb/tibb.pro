@@ -41,7 +41,8 @@ SOURCES += \
     ./TiCore/Ti_Timer.cpp \
     ./TiCore/Ti_Value.cpp \
     ./Modules/Filesystem/TiFilesystemModule.cpp \
-    ./Modules/Filesystem/TiFilesystemFileProxy.cpp
+    ./Modules/Filesystem/TiFilesystemFileProxy.cpp \
+    ./Modules/Filesystem/TiFilesystemBlobProxy.cpp
     
 HEADERS += \
 	./*.h \
@@ -65,7 +66,8 @@ HEADERS += \
     TiCore/Ti_Timer.h \
     TiCore/Ti_Value.h \
     Modules/Filesystem/TiFilesystemModule.h \
-    Modules/Filesystem/TiFilesystemFileProxy.h
+    Modules/Filesystem/TiFilesystemFileProxy.h \
+    Modules/Filesystem/TiFilesystemBlobProxy.h
 
 LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata -lbbsystem
 LIBS += -lbbpim -lbb
