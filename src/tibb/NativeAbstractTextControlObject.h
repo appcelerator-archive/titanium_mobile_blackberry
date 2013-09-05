@@ -9,6 +9,7 @@
 #define NATIVEABSTRACTTEXTCONTROLOBJECT_H_
 
 #include "NativeControlObject.h"
+#include <string>
 
 //forward declaration
 namespace bb
@@ -46,8 +47,10 @@ private:
     // Disable copy ctor & assignment operator
     NativeAbstractTextControlObject(const NativeAbstractTextControlObject& textControl);
     NativeAbstractTextControlObject& operator=(const NativeAbstractTextControlObject& textControl);
+    float computeValue(std::string value);
 
     bb::cascades::AbstractTextControl* textControl_;
+    double ppi_;
 };
 
 
