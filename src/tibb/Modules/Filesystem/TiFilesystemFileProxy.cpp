@@ -137,10 +137,22 @@ void TiFilesystemFileProxy::setRemoteBackup(Ti::TiValue)
 
 }
 
-Ti::TiValue TiFilesystemFileProxy::append(Ti::TiValue)
+Ti::TiValue TiFilesystemFileProxy::append(Ti::TiValue value)
 {
 	Ti::TiValue returnedValue;
-	returnedValue.setUndefined();
+
+	QFile file(_path);
+	if(value.isString() && file.open(QIODevice::WriteOnly | QIODevice::Append  | QIODevice::Text))
+	{
+		file.write(value.toString().toUtf8());
+		file.close();
+		returnedValue.setBool(true);
+		qDebug() << "Text Appended";
+	} else {
+		returnedValue.setBool(false);
+		qDebug() << "Text Not Appended";
+	}
+
 	return returnedValue;
 }
 Ti::TiValue TiFilesystemFileProxy::copy(Ti::TiValue)
@@ -296,7 +308,7 @@ Ti::TiValue TiFilesystemFileProxy::write(Ti::TiValue value)
 	Ti::TiValue returnedValue;
 
 	QFile file(_path);
-	if(value.isString() && file.open(QIODevice::ReadWrite | QIODevice::Text))
+	if(value.isString() && file.open(QIODevice::WriteOnly | QIODevice::Text))
 	{
 		file.write(value.toString().toUtf8());
 		file.close();
