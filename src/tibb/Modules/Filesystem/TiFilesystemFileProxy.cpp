@@ -259,6 +259,7 @@ Ti::TiValue TiFilesystemFileProxy::open(Ti::TiValue value)
 }
 Ti::TiValue TiFilesystemFileProxy::read(Ti::TiValue)
 {
+	// Waiting for PR https://github.com/appcelerator/titanium_mobile_blackberry/pull/168
 	Ti::TiValue returnedValue;
 	QFile file(_path);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -269,6 +270,7 @@ Ti::TiValue TiFilesystemFileProxy::read(Ti::TiValue)
     QByteArray a = file.readAll();
     // TODO: Create Blob
     returnedValue.setString(QString(a));
+    file.close();
 	return returnedValue;
 }
 
@@ -289,9 +291,21 @@ Ti::TiValue TiFilesystemFileProxy::spaceAvailable(Ti::TiValue)
 	returnedValue.setNumber(info.availableFileSystemSpace(_path));
 	return returnedValue;
 }
-Ti::TiValue TiFilesystemFileProxy::write(Ti::TiValue)
+Ti::TiValue TiFilesystemFileProxy::write(Ti::TiValue value)
 {
 	Ti::TiValue returnedValue;
-	returnedValue.setUndefined();
+
+	QFile file(_path);
+	if(value.isString() && file.open(QIODevice::ReadWrite | QIODevice::Text))
+	{
+		file.write(value.toString().toUtf8());
+		file.close();
+		returnedValue.setBool(true);
+	}
+	else
+	{
+		returnedValue.setBool(false);
+	}
+
 	return returnedValue;
 }
