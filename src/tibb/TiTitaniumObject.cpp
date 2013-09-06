@@ -19,7 +19,7 @@
 #include "TiGesture.h"
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
-#include "TiPlatformObject.h"
+//#include "TiPlatformObject.h"
 #include "TiLocaleObject.h"
 #include "TiStreamObject.h"
 #include "TiUIObject.h"
@@ -72,7 +72,7 @@ void TiTitaniumObject::onCreateStaticMembers()
     TiAPIObject::addObjectToParent(this);
     TiAppObject::addObjectToParent(this);
     TiFilesystemObject::addObjectToParent(this, objectFactory_);
-    TiPlatformObject::addObjectToParent(this);
+//    TiPlatformObject::addObjectToParent(this);
     TiCodecObject::addObjectToParent(this);
     TiNetwork::addObjectToParent(this, objectFactory_);
     TiAnalyticsObject::addObjectToParent(this, objectFactory_);
@@ -88,7 +88,7 @@ void TiTitaniumObject::onCreateStaticMembers()
 
 bool TiTitaniumObject::canAddMembers() const
 {
-    return false;
+    return true;
 }
 
 static Handle<Value> includeJavaScript(string id, string parentFolder, bool* error) {
