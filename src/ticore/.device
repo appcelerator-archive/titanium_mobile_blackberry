@@ -1,0 +1,6 @@
+#Project target device definition.
+#Thu Feb 21 16:59:48 PST 2013
+ppi=356
+height=1280
+kind=PHONE
+width=768
