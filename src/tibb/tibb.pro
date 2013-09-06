@@ -38,7 +38,8 @@ SOURCES += \
     ./TiCore/Ti_Proxy.cpp \
     ./TiCore/Ti_SceneManager.cpp \
     ./TiCore/Ti_Timer.cpp \
-    ./TiCore/Ti_Value.cpp
+    ./TiCore/Ti_Value.cpp \
+    ./Modules/Platform/TiPlatformModule.cpp
     
 HEADERS += \
 	./*.h \
@@ -60,7 +61,8 @@ HEADERS += \
     TiCore/Ti_Proxy.h \
     TiCore/Ti_SceneManager.h \
     TiCore/Ti_Timer.h \
-    TiCore/Ti_Value.h
+    TiCore/Ti_Value.h \
+    Modules/Platform/TiPlatformModule.h
 
 LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata -lbbsystem
 LIBS += -lbbpim 
