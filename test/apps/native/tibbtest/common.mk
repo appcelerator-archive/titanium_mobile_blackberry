@@ -19,6 +19,8 @@ EXTRA_LIBVPATH+=$(QNX_TARGET)/$(CPUVARDIR)/usr/lib \
 	$(PROJECT_ROOT)/../../../../runtime/v8/$(CPU) \
 	$(PROJECT_ROOT)/../../../../src/tibb/$(CPU)/a$(if $(filter arm,$(CPULIST)),.le-v7,)$(if $(filter g,$(VARIANTS)),-g,) 
 
+EXTRA_LIBVPATH+=$(PROJECT_ROOT)/../../../../src/ticore/$(CPU)/a$(if $(filter arm,$(CPULIST)),.le-v7,)$(if $(filter g,$(VARIANTS)),-g,) 
+
 # Extra library search path for native module extentions
 #EXTRA_LIBVPATH+=/Users/rmcmahon/ndk-10.1.0-workspace/ReplaceWithModuleName/$(CPU)/a$(if $(filter arm,$(CPULIST)),.le-v7,)$(if $(filter g,$(VARIANTS)),-g,)
 	
@@ -33,7 +35,7 @@ LDFLAGS+=-Wl,-E,-z,relro -Wl,-z,now $(if $(filter g so shared,$(VARIANTS)),,-pie
 
 # Add your required library names, here
 LIBS+=tibb v8 socket bps 
-
+LIBS+=ticore
 # Add your native module library names, here
 #LIBS+=ReplaceWithModuleName
 
