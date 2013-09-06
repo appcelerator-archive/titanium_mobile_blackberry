@@ -29,6 +29,12 @@ cd src/tibb
 make clean
 make
 
+cd $VAR_PWD
+echo "Creating TiCore Libraries"
+cd src/ticore
+make clean
+make
+
 echo "Creating the BlackBerry drop-in folder at build/sdk/blackberry"
 
 cd $VAR_PWD
@@ -46,6 +52,13 @@ cp src/tibb/arm/a.le-v7/libtibb.a  build/sdk/blackberry/tibb/arm/a.le-v7/libtibb
 cp src/tibb/arm/a.le-v7-g/libtibb.a build/sdk/blackberry/tibb/arm/a.le-v7-g/libtibb.a
 cp src/tibb/x86/a/libtibb.a build/sdk/blackberry/tibb/x86/a/libtibb.a
 cp src/tibb/x86/a-g/libtibb.a build/sdk/blackberry/tibb/x86/a-g/libtibb.a
+
+cp src/ticore/arm/a.le-v7/libticore.a  build/sdk/blackberry/ticore/arm/a.le-v7/libticore.a
+cp src/ticore/arm/a.le-v7-g/libticore.a build/sdk/blackberry/ticore/arm/a.le-v7-g/libticore.a
+cp src/ticore/x86/a/libticore.a build/sdk/blackberry/ticore/x86/a/libticore.a
+cp src/ticore/x86/a-g/libticore.a build/sdk/blackberry/ticore/x86/a-g/libticore.a
+cp -a src/ticore/include/. build/sdk/blackberry/ticore/include
+
 
 mkdir -p build/sdk/blackberry/libv8/lib/arm
 mkdir -p build/sdk/blackberry/libv8/lib/x86

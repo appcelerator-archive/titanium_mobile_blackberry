@@ -378,6 +378,8 @@ function BlackberryNDK(builder) {
 			// The solution is to use temporary directories without spaces to do builds. Also
 			// the project name needs to have spaces removed.
 			var tmpPathSDK = path.join(os.tmpDir(), generateTmpName(projectName)); 
+			afs.copyDirSyncRecursive(path.join(builder.titaniumBBSdkPath, 'ticore'),
+								path.join(tmpPathSDK, 'ticore'), {logger: logger.debug});
 			afs.copyDirSyncRecursive(path.join(builder.titaniumBBSdkPath, 'tibb'),
 								path.join(tmpPathSDK, 'tibb'), {logger: logger.debug});
 			afs.copyDirSyncRecursive(path.join(builder.titaniumBBSdkPath, 'libv8'),

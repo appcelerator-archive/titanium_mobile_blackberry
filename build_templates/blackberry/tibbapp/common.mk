@@ -9,12 +9,14 @@ USEFILE=
 EXTRA_INCVPATH+=$(QNX_TARGET)/usr/include/freetype2 \
 	$(QNX_TARGET)/../target-override/usr/include \
 	$(BB_ROOT)/libv8/include \
+	$(BB_ROOT)/ticore/include \
 	$(BB_ROOT)/tibb/include
 
 # Extra library search path for target overrides and patches
 EXTRA_LIBVPATH+=$(QNX_TARGET)/$(CPUVARDIR)/usr/lib \
 	$(QNX_TARGET)/$(CPUVARDIR)/usr/lib/qt4/lib \
 	$(BB_ROOT)/libv8/lib/$(CPU) \
+	$(BB_ROOT)/ticore/$(CPU)/a$(if $(filter arm,$(CPULIST)),.le-v7,)$(if $(filter g,$(VARIANTS)),-g,) \
 	$(BB_ROOT)/tibb/$(CPU)/a$(if $(filter arm,$(CPULIST)),.le-v7,)$(if $(filter g,$(VARIANTS)),-g,)
 	
 
@@ -27,7 +29,7 @@ CCFLAGS+=-fstack-protector-all -D_FORTIFY_SOURCE=2 \
 LDFLAGS+=-Wl,-z,relro -Wl,-z,now $(if $(filter g so shared,$(VARIANTS)),,-pie)
 
 # Add your required library names, here
-LIBS+=tibb v8 socket bps
+LIBS+=tibb ticore v8 socket bps
 
 # Add your native module library names, here
 ${libs}

@@ -13,7 +13,17 @@ device {
                  $$quote(${QNX_TARGET}/usr/include/bb/data) \
                  $$quote(${QNX_TARGET}/usr/include/freetype2)
 
-        HEADERS +=  $$quote($$BASEDIR/include/TiCore.h)
+        HEADERS +=  $$quote($$BASEDIR/include/TiCore.h) \
+                 $$quote($$BASEDIR/include/Ti_Constants.h) \
+                 $$quote($$BASEDIR/include/Ti_Event.h) \
+                 $$quote($$BASEDIR/include/Ti_EventParameters.h) \
+                 $$quote($$BASEDIR/include/Ti_Helper.h) \
+                 $$quote($$BASEDIR/include/Ti_Module.h) \
+                 $$quote($$BASEDIR/include/Ti_Property.h) \
+                 $$quote($$BASEDIR/include/Ti_Proxy.h) \
+                 $$quote($$BASEDIR/include/Ti_SceneManager.h) \
+                 $$quote($$BASEDIR/include/Ti_Timer.h) \
+                 $$quote($$BASEDIR/include/Ti_Value.h)
     }
 
     CONFIG(release, debug|release) {
@@ -27,7 +37,17 @@ device {
                  $$quote(${QNX_TARGET}/usr/include/bb/data) \
                  $$quote(${QNX_TARGET}/usr/include/freetype2)
 
-        HEADERS +=  $$quote($$BASEDIR/include/TiCore.h)
+        HEADERS +=  $$quote($$BASEDIR/include/TiCore.h) \
+                 $$quote($$BASEDIR/include/Ti_Constants.h) \
+                 $$quote($$BASEDIR/include/Ti_Event.h) \
+                 $$quote($$BASEDIR/include/Ti_EventParameters.h) \
+                 $$quote($$BASEDIR/include/Ti_Helper.h) \
+                 $$quote($$BASEDIR/include/Ti_Module.h) \
+                 $$quote($$BASEDIR/include/Ti_Property.h) \
+                 $$quote($$BASEDIR/include/Ti_Proxy.h) \
+                 $$quote($$BASEDIR/include/Ti_SceneManager.h) \
+                 $$quote($$BASEDIR/include/Ti_Timer.h) \
+                 $$quote($$BASEDIR/include/Ti_Value.h)
     }
 }
 
@@ -55,7 +75,17 @@ simulator {
                  $$quote({QNX_TARGET}/usr/include/bb/data) \
                  $$quote(${QNX_TARGET}/usr/include/qt4/QtCore)
 
-        HEADERS +=  $$quote($$BASEDIR/include/TiCore.h)
+        HEADERS +=  $$quote($$BASEDIR/include/TiCore.h) \
+                 $$quote($$BASEDIR/include/Ti_Constants.h) \
+                 $$quote($$BASEDIR/include/Ti_Event.h) \
+                 $$quote($$BASEDIR/include/Ti_EventParameters.h) \
+                 $$quote($$BASEDIR/include/Ti_Helper.h) \
+                 $$quote($$BASEDIR/include/Ti_Module.h) \
+                 $$quote($$BASEDIR/include/Ti_Property.h) \
+                 $$quote($$BASEDIR/include/Ti_Proxy.h) \
+                 $$quote($$BASEDIR/include/Ti_SceneManager.h) \
+                 $$quote($$BASEDIR/include/Ti_Timer.h) \
+                 $$quote($$BASEDIR/include/Ti_Value.h)
     }
 }
 
