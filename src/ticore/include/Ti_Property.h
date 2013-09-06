@@ -42,13 +42,13 @@ public:
 	Handle<Value> getValue();
 	Handle<Value> setValue(Handle<Value>);
 
+	QString name;
 	PROPERTY_FUNCTION callback;
 	PROPERTY_SETTER setterCallback;
 	PROPERTY_GETTER getterCallback;
 	Persistent<Function> value;
-	bool isFunction;
 	Ti::TiProxy* proxy;
-	QString name;
+	bool isFunction;
 };
 }
 #endif /* TIPROPERTY_H_ */

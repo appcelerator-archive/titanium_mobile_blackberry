@@ -40,6 +40,7 @@
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/tibb/include}&quot;"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ticore/include}&quot;"/>
 								</option>
 								<option id="com.qnx.qcc.option.compiler.defines.1265970181" name="Defines (-D)" superClass="com.qnx.qcc.option.compiler.defines" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="_REENTRANT"/>
@@ -76,7 +77,9 @@
 		</cconfiguration>
 		<cconfiguration id="com.qnx.qcc.toolChain.1711873784">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.qnx.qcc.toolChain.1711873784" moduleId="org.eclipse.cdt.core.settings" name="Device-Debug">
-				<externalSettings/>
+				<externalSettings>
+					<externalSetting/>
+				</externalSettings>
 				<extensions>
 					<extension id="com.qnx.tools.ide.qde.core.QDEBynaryParser" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
@@ -103,10 +106,10 @@
 								<option id="com.qnx.qcc.option.compiler.includePath.988809842" name="Include Directories (-I)" superClass="com.qnx.qcc.option.compiler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/tibb/include}&quot;"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ticore/include}&quot;"/>
 								</option>
-								<option id="com.qnx.qcc.option.compiler.defines.329860137" superClass="com.qnx.qcc.option.compiler.defines" valueType="definedSymbols">
+								<option id="com.qnx.qcc.option.compiler.defines.329860137" name="Defines (-D)" superClass="com.qnx.qcc.option.compiler.defines" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="_REENTRANT"/>
 									<listOptionValue builtIn="false" value="QT_NO_DEBUG"/>
 									<listOptionValue builtIn="false" value="QT_DECLARATIVE_LIB"/>
@@ -166,8 +169,9 @@
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/tibb/include}&quot;"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ticore/include}&quot;"/>
 								</option>
-								<option id="com.qnx.qcc.option.compiler.defines.940981227" superClass="com.qnx.qcc.option.compiler.defines" valueType="definedSymbols">
+								<option id="com.qnx.qcc.option.compiler.defines.940981227" name="Defines (-D)" superClass="com.qnx.qcc.option.compiler.defines" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="_REENTRANT"/>
 									<listOptionValue builtIn="false" value="QT_NO_DEBUG"/>
 									<listOptionValue builtIn="false" value="QT_DECLARATIVE_LIB"/>
@@ -231,6 +235,7 @@
 									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/qt4/cpp/c&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/qt4/cpp/embedded&quot;"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ticore/include}&quot;"/>
 								</option>
 								<option id="com.qnx.qcc.option.compiler.defines.1807513299" name="Defines (-D)" superClass="com.qnx.qcc.option.compiler.defines" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="_REENTRANT"/>
@@ -286,4 +291,5 @@
 	<storageModule moduleId="refreshScope" versionNumber="1">
 		<resource resourceType="PROJECT" workspacePath="/tibb"/>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 </cproject>

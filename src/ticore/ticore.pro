@@ -8,8 +8,8 @@ MOBILITY += sensors
 
 INCLUDEPATH += \
 	. \
-	./include \
-	../../runtime/v8/include
+    ./include \
+    ../../runtime/v8/include
 SOURCES += \
     ./src/Ti_Constants.cpp \
     ./src/Ti_Event.cpp \
@@ -23,16 +23,16 @@ SOURCES += \
     ./src/Ti_Value.cpp
     
 HEADERS += \
-    ./src/Ti_Constants.h \
-    ./src/Ti_Event.h \
-    ./src/Ti_EventParameters.h \
-    ./src/Ti_Helper.h \
-    ./src/Ti_Module.h \
-    ./src/Ti_Property.h \
-    ./src/Ti_Proxy.h \
-    ./src/Ti_SceneManager.h \
-    ./src/Ti_Timer.h \
-    ./src/Ti_Value.h
+    ./include/Ti_Constants.h \
+    ./include/Ti_Event.h \
+    ./include/Ti_EventParameters.h \
+    ./include/Ti_Helper.h \
+    ./include/Ti_Module.h \
+    ./include/Ti_Property.h \
+    ./include/Ti_Proxy.h \
+    ./include/Ti_SceneManager.h \
+    ./include/Ti_Timer.h \
+    ./include/Ti_Value.h
 
 device {
 	CONFIG(release, debug|release) {

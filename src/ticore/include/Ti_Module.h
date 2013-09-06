@@ -7,8 +7,8 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef TI_TIMODULE_H_
-#define TI_TIMODULE_H_
+#ifndef TI_TI_TIMODULE_H_
+#define TI_TI_TIMODULE_H_
 
 #include <v8.h>
 #include "Ti_Proxy.h"

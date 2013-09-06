@@ -34,26 +34,26 @@ device {
 simulator {
     CONFIG(debug, debug|release) {
         INCLUDEPATH +=  $$quote($$BASEDIR/../ticore/include) \
-                 $$quote("${QNX_TARGET}/usr/include/qt4/") \
+                 $$quote(${QNX_TARGET}/usr/include/qt4/cpp/c) \
+                 $$quote(${QNX_TARGET}/usr/include/qt4) \
+                 $$quote(${QNX_TARGET}/usr/include/qt4/cpp/embedded) \
+                 $$quote(${QNX_TARGET}/usr/include/qt4/cpp) \
+                 $$quote(${QNX_TARGET}/usr/include/qt4/) \
                  $$quote(${QNX_TARGET}/../target-override/usr/include) \
-                 $$quote("${QNX_TARGET}/usr/include/qt4") \
                  $$quote(${QNX_TARGET}/usr/include/bb/data) \
-                 $$quote("${QNX_TARGET}/usr/include/qt4/cpp/c") \
-                 $$quote("${QNX_TARGET}/usr/include/qt4/cpp") \
-                 $$quote("${QNX_TARGET}/usr/include/qt4/QtCore") \
                  $$quote({QNX_TARGET}/usr/include/bb/data) \
-                 $$quote("${QNX_TARGET}/usr/include/qt4/cpp/embedded")
+                 $$quote(${QNX_TARGET}/usr/include/qt4/QtCore)
 
         DEPENDPATH +=  $$quote($$BASEDIR/../ticore/include) \
-                 $$quote("${QNX_TARGET}/usr/include/qt4/") \
+                 $$quote(${QNX_TARGET}/usr/include/qt4/cpp/c) \
+                 $$quote(${QNX_TARGET}/usr/include/qt4) \
+                 $$quote(${QNX_TARGET}/usr/include/qt4/cpp/embedded) \
+                 $$quote(${QNX_TARGET}/usr/include/qt4/cpp) \
+                 $$quote(${QNX_TARGET}/usr/include/qt4/) \
                  $$quote(${QNX_TARGET}/../target-override/usr/include) \
-                 $$quote("${QNX_TARGET}/usr/include/qt4") \
                  $$quote(${QNX_TARGET}/usr/include/bb/data) \
-                 $$quote("${QNX_TARGET}/usr/include/qt4/cpp/c") \
-                 $$quote("${QNX_TARGET}/usr/include/qt4/cpp") \
-                 $$quote("${QNX_TARGET}/usr/include/qt4/QtCore") \
                  $$quote({QNX_TARGET}/usr/include/bb/data) \
-                 $$quote("${QNX_TARGET}/usr/include/qt4/cpp/embedded")
+                 $$quote(${QNX_TARGET}/usr/include/qt4/QtCore)
 
         HEADERS +=  $$quote($$BASEDIR/include/TiCore.h)
     }

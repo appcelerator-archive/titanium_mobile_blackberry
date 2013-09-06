@@ -9,7 +9,9 @@ MOBILITY += sensors
 INCLUDEPATH += \
 	. \
 	./include \
-	../../runtime/v8/include
+	../../runtime/v8/include \
+	../ticore/include
+
 SOURCES += \
 	./*.cpp \
 	./Layout/Common.cpp \
