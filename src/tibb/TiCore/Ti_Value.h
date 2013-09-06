@@ -48,6 +48,7 @@ public:
 
 	void 				setString(QString);
 	void 				setNumber(double);
+	void 				setMap(QMap<QString, Ti::TiValue>);
 	void 				setBool(bool);
 	void 				setProxy(Ti::TiProxy*);
 	void 				setList(QList<Ti::TiValue>);
