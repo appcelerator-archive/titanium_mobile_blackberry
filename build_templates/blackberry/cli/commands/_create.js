@@ -55,7 +55,6 @@ function copyFilesToDir(_dirFrom, _dirTo, _config) {
 }
 
 exports.run = function (logger, config, cli, projectConfig) {
-	console.log(projectConfig);
 	var templatePath = afs.resolvePath(path.dirname(module.filename), '..', '..', 'templates', cli.argv.type, cli.argv.template),
 		projectDir = afs.resolvePath(cli.argv['workspace-dir'], cli.argv.name);
 
