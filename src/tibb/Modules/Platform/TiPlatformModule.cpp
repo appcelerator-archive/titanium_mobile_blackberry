@@ -1,8 +1,8 @@
 /*
- * PlatformModule.cpp
- *
- *  Created on: Jul 31, 2013
- *      Author: penrique
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #include "TiPlatformModule.h"
@@ -13,6 +13,9 @@
 #include <bb/device/DisplayInfo>
 #include <bb/device/HardwareInfo>
 #include <bps/deviceinfo.h>
+#include <bb/pim/calendar/CalendarSettings>
+#include <QLocale>
+#include <bb/device/WiFiDirect>
 
 static float const MMPERINCH = 25.4f;
 
@@ -67,7 +70,6 @@ TiPlatformModule::~TiPlatformModule()
 
 Ti::TiValue TiPlatformModule::canOpenURL(Ti::TiValue value)
 {
-	//TODO: Figure this out
 	Ti::TiValue val;
 	val.setBool(false);
 	return val;
@@ -82,23 +84,21 @@ Ti::TiValue TiPlatformModule::createUUID(Ti::TiValue)
 }
 Ti::TiValue TiPlatformModule::openURL(Ti::TiValue value)
 {
-	//TODO: Fogure this out
 	Ti::TiValue val;
 	val.setBool(false);
 	return val;
 }
 Ti::TiValue TiPlatformModule::is24HourTimeFormat(Ti::TiValue value)
 {
-	//TODO: Finish this
 	Ti::TiValue val;
-	val.setUndefined();
+	bb::pim::calendar::CalendarSettings calSettings;
+	val.setBool(calSettings.is24HourFormat());
 	return val;
 }
 
 void TiPlatformModule::setBatteryMonitoring(Ti::TiValue value)
 {
-	//TODO: Finish this
-	qDebug() << "Batter Monitoring not supported";
+	qDebug() << "[WARN] Batter Monitoring not supported";
 }
 
 Ti::TiValue TiPlatformModule::getAddress()
@@ -131,7 +131,8 @@ Ti::TiValue TiPlatformModule::getBatteryLevel()
 }
 Ti::TiValue TiPlatformModule::getBatteryMonitoring()
 {
-	//TODO: Finish this
+	qDebug() << "[WARN] Batter Monitoring not supported";
+	qDebug() << "[WARN] Use Ti.Platform.addEventListener('battery', .. ) instead";
 	Ti::TiValue val;
 	val.setUndefined();
 	return val;
@@ -213,41 +214,40 @@ Ti::TiValue TiPlatformModule::getId()
 }
 Ti::TiValue TiPlatformModule::getLocale()
 {
-	//TODO: Finish this
+	QLocale locale;
 	Ti::TiValue val;
-	val.setUndefined();
+	val.setString(locale.name());
 	return val;
 }
 Ti::TiValue TiPlatformModule::getMacaddress()
 {
-	//TODO: Finish this
 	Ti::TiValue val;
-	val.setUndefined();
+	bb::device::WiFiDirect wifi;
+	val.setString(wifi.networkOwnerHardwareAddress());
 	return val;
 }
 Ti::TiValue TiPlatformModule::getManufacturer()
-{
-	//TODO: Finish this
-	Ti::TiValue val;
-	val.setUndefined();
-	return val;
-}
-Ti::TiValue TiPlatformModule::getModel()
-{
-	//TODO: Finish this
-	Ti::TiValue val;
-	val.setUndefined();
-	return val;
-}
-Ti::TiValue TiPlatformModule::getName()
 {
 	Ti::TiValue val;
 	val.setString("blackberry");
 	return val;
 }
+Ti::TiValue TiPlatformModule::getModel()
+{
+	Ti::TiValue val;
+	bb::device::HardwareInfo info;
+	val.setString(info.modelName());
+	return val;
+}
+Ti::TiValue TiPlatformModule::getName()
+{
+	Ti::TiValue val;
+	bb::device::HardwareInfo info;
+	val.setString(info.deviceName());
+	return val;
+}
 Ti::TiValue TiPlatformModule::getNetmask()
 {
-	//TODO: Finish this
 	Ti::TiValue val;
 	val.setUndefined();
 	return val;
@@ -260,14 +260,12 @@ Ti::TiValue TiPlatformModule::getOsname()
 }
 Ti::TiValue TiPlatformModule::getOstype()
 {
-	//TODO: Finish this
 	Ti::TiValue val;
 	val.setUndefined();
 	return val;
 }
 Ti::TiValue TiPlatformModule::getProcessorCount()
 {
-	//TODO: Finish this
 	Ti::TiValue val;
 	val.setUndefined();
 	return val;
@@ -280,7 +278,6 @@ Ti::TiValue TiPlatformModule::getRuntime()
 }
 Ti::TiValue TiPlatformModule::getUsername()
 {
-	//TODO: Finish this
 	Ti::TiValue val;
 	val.setUndefined();
 	return val;
