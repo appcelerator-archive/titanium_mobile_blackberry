@@ -9,7 +9,9 @@
 
 #include <fstream>
 #include <string>
+#include "TiCore.h"
 
+#include <v8.h>
 //#include "ReplaceWithModuleName.h"
 
 /**
@@ -18,13 +20,14 @@
  */
 
 using namespace std;
+class Ti::TiModule;
 
+typedef Handle<Object> (*ModuleStartup)();
 
 int main(int argc, char** argv)
 {
-    //tiRegisterModule("ReplaceWithModuleName", (TiModule*) new ReplaceWithModuleName());
 
-    string javascript;
+	string javascript;
     {
         ifstream ifs("app/native/assets/app.js");
         if (!ifs)
@@ -34,7 +37,7 @@ int main(int argc, char** argv)
         getline(ifs, javascript, string::traits_type::to_char_type(string::traits_type::eof()));
         ifs.close();
     }
-
+    startV8Engine();
     int ret = tibb_run(javascript.c_str(), argc, argv);
     return ret;
 }

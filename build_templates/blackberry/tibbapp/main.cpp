@@ -17,7 +17,6 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-    ${module_registration}
     
     setvbuf(stdout, NULL, _IOLBF, 0);
 
@@ -31,6 +30,8 @@ int main(int argc, char** argv)
         getline(ifs, javascript, string::traits_type::to_char_type(string::traits_type::eof()));
         ifs.close();
     }
+    startV8Engine();
+    ${module_registration}
     int ret = tibb_run(javascript.c_str(), argc, argv);
     return ret;
 }

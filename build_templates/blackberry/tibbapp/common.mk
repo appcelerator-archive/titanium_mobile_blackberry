@@ -12,6 +12,8 @@ EXTRA_INCVPATH+=$(QNX_TARGET)/usr/include/freetype2 \
 	$(BB_ROOT)/ticore/include \
 	$(BB_ROOT)/tibb/include
 
+#${header_paths}
+
 # Extra library search path for target overrides and patches
 EXTRA_LIBVPATH+=$(QNX_TARGET)/$(CPUVARDIR)/usr/lib \
 	$(QNX_TARGET)/$(CPUVARDIR)/usr/lib/qt4/lib \
@@ -19,6 +21,7 @@ EXTRA_LIBVPATH+=$(QNX_TARGET)/$(CPUVARDIR)/usr/lib \
 	$(BB_ROOT)/ticore/$(CPU)/a$(if $(filter arm,$(CPULIST)),.le-v7,)$(if $(filter g,$(VARIANTS)),-g,) \
 	$(BB_ROOT)/tibb/$(CPU)/a$(if $(filter arm,$(CPULIST)),.le-v7,)$(if $(filter g,$(VARIANTS)),-g,)
 	
+#${extra_libvpath}
 
 # Compiler options for enhanced security and recording the compiler options in release builds
 CCFLAGS+=-fstack-protector-all -D_FORTIFY_SOURCE=2 \
@@ -28,11 +31,12 @@ CCFLAGS+=-fstack-protector-all -D_FORTIFY_SOURCE=2 \
 # Linker options for enhanced security
 LDFLAGS+=-Wl,-z,relro -Wl,-z,now $(if $(filter g so shared,$(VARIANTS)),,-pie)
 
+# Add your native module library names, here
+#${libs}
+
 # Add your required library names, here
 LIBS+=tibb ticore v8 socket bps
 
-# Add your native module library names, here
-${libs}
 
 # Extra .so required
 LDFLAGS+=-lbbcascades -lbbdevice -lbbsystem -lQtCore -lQtDeclarative -lQtGui -lQtMultimedia -lQtNetwork -lm -lbb -lbbdata

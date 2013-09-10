@@ -12,6 +12,7 @@
 
 #include <v8.h>
 #include "Ti_Proxy.h"
+#include "Ti_Value.h"
 
 using namespace v8;
 
@@ -24,7 +25,7 @@ using namespace v8;
 		module->initEnd(); \
 		Handle<Object> _jsObject = module->getJSObject()->NewInstance(); \
 		_jsObject->SetHiddenValue(String::New("module"), External::New(module)); \
-		return scope.Close(_jsObject); \
+		return _jsObject; \
 	}
 
 #define GET_MODULE_FROM_CALLBACK(NAME, ARGS) \
@@ -38,10 +39,19 @@ namespace Ti
 class TiModule : public Ti::TiProxy {
 public:
 	TiModule(const char*);
+
 	CREATE_MODULE(Ti::TiModule)
+
 	virtual ~TiModule();
 	virtual void initStart();
 	virtual void initEnd();
+	virtual Ti::TiValue getModuleId();
+	virtual Ti::TiValue getModuleVersion();
+	virtual Ti::TiValue getModuleName();
+	EXPOSE_GETTER(Ti::TiModule, getModuleId);
+	EXPOSE_GETTER(Ti::TiModule, getModuleVersion);
+	EXPOSE_GETTER(Ti::TiModule, getModuleName);
+
 protected:
 	virtual void addModule(const char* name, Handle<Object> obj);
 	virtual void addNumber(QString name, double value);

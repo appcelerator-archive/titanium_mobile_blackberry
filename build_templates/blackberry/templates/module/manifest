@@ -1,0 +1,19 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: __MODULE_VERSION__
+apiversion: 2
+description: My module
+author: Your Name
+license: Specify your license
+copyright: Copyright (c) 2013 by Your Company
+
+
+# these should not be edited
+name: __MODULE_NAME__
+moduleid: __MODULE_ID__
+guid: d1772065-d222-40b8-9cd1-35545508a644
+platform: blackberry
+minsdk: 3.0.2.Test
+type: native

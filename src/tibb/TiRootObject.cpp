@@ -17,6 +17,10 @@
 #include "TiV8EventContainerFactory.h"
 #include "V8Utils.h"
 #include <QSettings>
+#include "TitaniumRuntime.h"
+
+#include "TiModuleRegistry.h"
+#include "TiCore.h"
 
 #include "TiModule.h"
 #include "tibb.h"
@@ -46,6 +50,7 @@ static QSettings defaultSettings("app/native/assets/app_properties.ini",
 TiRootObject::TiRootObject()
     : TiObject("")
 {
+	context_ = TitaniumRuntime::getContenxt();
 }
 
 TiRootObject::~TiRootObject()
@@ -115,7 +120,6 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     onSetGetPropertyCallback(&globalTemplate_);
     onSetFunctionCallback(&globalTemplate_);
     g_rootTemplate = ObjectTemplate::New();
-    context_ = Context::New(NULL, g_rootTemplate);
     forceSetValue(context_->Global());
     context_->Global()->SetHiddenValue(String::New("globalTemplate_"), External::New(&globalTemplate_));
     context_->Global()->SetHiddenValue(String::New("context_"), External::New(&context_));
@@ -275,6 +279,7 @@ void TiRootObject::clearTimeoutHelper(const Arguments& args, bool interval)
 
 Handle<Value> TiRootObject::_globalRequire(void*, TiObject*, const Arguments& args)
 {
+
 	if (args.Length() < 2) {
 		return ThrowException(String::New(Ti::Msg::Missing_argument));
 	}
@@ -282,11 +287,8 @@ Handle<Value> TiRootObject::_globalRequire(void*, TiObject*, const Arguments& ar
 	string id = *String::Utf8Value(args[0]->ToString());
 
 	// Require in native modules, if none found move to loading CommonJS modules
-	TiModule* module = getModuleByName(id);
-
-	if (module != NULL) {
-		return module->startup();
-	}
+	Handle<Value> mod = TiModuleRegistry::GetModule(QString(*String::Utf8Value(args[0]->ToString())));
+	if(!mod->IsUndefined()) return mod;
 
 	// CommonJS path rules
 	string parentFolder = *String::Utf8Value(args[1]->ToString());
