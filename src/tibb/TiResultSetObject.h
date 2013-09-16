@@ -45,6 +45,7 @@ private:
     static Handle<Value> _field(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _next(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _close(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _fieldName(void* userContext, TiObject* caller, const Arguments& args);
 
     NativeObjectFactory* objectFactory_;
 };
