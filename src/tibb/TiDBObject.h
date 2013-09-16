@@ -32,6 +32,7 @@ protected:
 
     static Handle<Value> _execute(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _close(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _rowsAffected(void* userContext);
 
 private:
     TiDBObject();
