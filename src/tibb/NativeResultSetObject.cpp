@@ -192,6 +192,13 @@ string NativeResultSetObject::field(int index /*, number type for cast*/) {
 	return "";
 }
 
+string NativeResultSetObject::fieldName(int index) {
+	if (index <= sqlite3_column_count(statement) && strlen((const char*)sqlite3_column_text(statement, index)) > 0) {
+		return (const char*)sqlite3_column_name(statement, index);
+	}
+	return "";
+}
+
 bool NativeResultSetObject::next() {
     stepResult = sqlite3_step(statement);
     if (stepResult == SQLITE_ROW) {

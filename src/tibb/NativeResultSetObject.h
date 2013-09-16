@@ -63,6 +63,7 @@ public:
     FIELD_TYPE fieldType(int index);
     string fieldByName(string name /*, number type for cast*/);
     string field(int index /*, number type for cast*/);
+    string fieldName(int index);
     bool next();
     void close();
 
