@@ -38,7 +38,7 @@ public:
     // DB methods
     int execute(NativeResultSetObject* resultSet, string command, vector<string> bindings);
     int close();
-
+    int affectedRows();
 protected:
     virtual ~NativeDBObject();
 
@@ -49,7 +49,7 @@ private:
 
     friend class TiDBObject;
     int _open(string name);
-
+    int rowsAffected;
     sqlite3* _db;
 };
 
