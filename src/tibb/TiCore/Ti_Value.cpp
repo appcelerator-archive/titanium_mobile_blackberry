@@ -177,6 +177,16 @@ void Ti::TiValue::setNull()
 {
 	_jsValue = Null();
 }
+void Ti::TiValue::setMap(QMap<QString, Ti::TiValue> map)
+{
+	Local<Object> jsObject = Object::New();
+	foreach(QString key, map.keys())
+	{
+		Ti::TiValue val = map[key];
+		jsObject->Set(Ti::TiHelper::ValueFromQString(key), val.toJSValue());
+	}
+	setValue(jsObject);
+}
 
 void Ti::TiValue::setUndefined()
 {
