@@ -15,7 +15,7 @@
 #include <bps/deviceinfo.h>
 #include <bb/pim/calendar/CalendarSettings>
 #include <QLocale>
-#include <bb/device/WiFiDirect>
+#include <QNetworkInterface>
 
 static float const MMPERINCH = 25.4f;
 
@@ -222,8 +222,17 @@ Ti::TiValue TiPlatformModule::getLocale()
 Ti::TiValue TiPlatformModule::getMacaddress()
 {
 	Ti::TiValue val;
-	bb::device::WiFiDirect wifi;
-	val.setString(wifi.networkOwnerHardwareAddress());
+    QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
+    for(int i = 0, len = interfaces.size(); i < len; i++)
+    {
+    	QNetworkInterface interface = interfaces.at(i);
+    	if(interface.hardwareAddress().length() > 0)
+    	{
+    		val.setString(interface.hardwareAddress());
+    		return val;
+    	}
+    }
+	val.setString("");
 	return val;
 }
 Ti::TiValue TiPlatformModule::getManufacturer()
