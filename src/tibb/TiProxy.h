@@ -53,6 +53,7 @@ private:
     static Handle<Value> _removeEventListener(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _getApiName(void*userContext);
     static Handle<Value> _applyProperties(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _toString(void* userContext, TiObject* caller, const Arguments& args);
 };
 
 #endif /* TIPROXY_H_ */
