@@ -33,6 +33,7 @@
 #include <dlfcn.h>
 
 #include "Modules/Filesystem/TiFilesystemModule.h"
+#include "Modules/Platform/TiPlatformModule.h"
 
 using namespace titanium;
 
@@ -74,7 +75,7 @@ void TiRootObject::onCreateStaticMembers()
 
 	Local<Object> tiObj = context_->Global()->Get(String::New("Ti"))->ToObject();
     tiObj->Set(String::New("Filesystem"), TiFilesystemModule::CreateModule());
-
+    tiObj->Set(String::New("Platform"), TiPlatformModule::CreateModule());
 }
 
 VALUE_MODIFY TiRootObject::onChildValueChange(TiObject* childObject, Handle<Value>, Handle<Value> newValue)
