@@ -40,11 +40,24 @@ void TiProxy::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "removeEventListener", this, _removeEventListener);
     TiPropertySetGetObject::createProperty(this, "apiName", this, NULL, _getApiName);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "applyProperties", this, _applyProperties);
+
+    // Override .toString() to get custom name, such as [object MyProxy]
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "toString", this, _toString);
 }
 
 void TiProxy::createSettersAndGetters(const char* name, SET_PROPERTY_CALLBACK setter, GET_PROPERTY_CALLBACK getter)
 {
     TiPropertySetGetObject::createProperty(this, name, this, setter, getter);
+}
+
+Handle<Value> TiProxy::_toString(void* userContext, TiObject* caller, const Arguments& args)
+{
+    TiObject* tiObject = (TiObject*) userContext;
+    HandleScope scope;
+    string name = "[object ";
+    name.append(tiObject->getName());
+    name.append("]");
+    return String::New(name.c_str());
 }
 
 Handle<Value> TiProxy::_getApiName(void*userContext)
@@ -64,7 +77,7 @@ Handle<Value> TiProxy::createProxy(void*, TiObject*, const Arguments&)
 
 Handle<Value> TiProxy::createProxy(TiProxy *proxy, void* userContext, const Arguments& args)
 {
-    
+
     TiProxy *module = static_cast<TiProxy*>(userContext);
     HandleScope handleScope;
     Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());

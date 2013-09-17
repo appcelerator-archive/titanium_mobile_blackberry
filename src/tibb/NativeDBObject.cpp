@@ -18,7 +18,7 @@
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 NativeDBObject::NativeDBObject(TiObject* tiObject)
-    : NativeProxyObject(tiObject) {
+    : NativeProxyObject(tiObject), rowsAffected(0) {
 }
 
 NativeDBObject::~NativeDBObject() {
@@ -75,6 +75,7 @@ int NativeDBObject::execute(NativeResultSetObject* resultSet, string command, ve
 	if (stepResult == SQLITE_DONE) {
 		sqlite3_finalize(statement);
 		resultSet->effectedRows = effectedRows;
+		rowsAffected = resultSet->effectedRows + 1;
 		resultSet->statement = statement;
 		return NATIVE_ERROR_OK;
 	}
@@ -95,6 +96,7 @@ int NativeDBObject::execute(NativeResultSetObject* resultSet, string command, ve
 	}
 
 	resultSet->effectedRows = effectedRows;
+	rowsAffected = resultSet->effectedRows;
 	sqlite3_reset(statement);
 	resultSet->stepResult = sqlite3_step(statement);
 	resultSet->statement = statement;
@@ -105,6 +107,10 @@ int NativeDBObject::execute(NativeResultSetObject* resultSet, string command, ve
 	return NATIVE_ERROR_OK;
 }
 
+int NativeDBObject::affectedRows()
+{
+	return rowsAffected;
+}
 int NativeDBObject::close() {
 
     sqlite3_close(_db);

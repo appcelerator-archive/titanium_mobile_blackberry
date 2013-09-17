@@ -11,6 +11,7 @@
 #include "TiResultSetObject.h"
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
+#include "TiPropertyGetObject.h"
 #include "NativeException.h"
 #include "TiPropertyGetFunctionObject.h"
 #include "TiPropertyMapObject.h"
@@ -65,6 +66,7 @@ void TiResultSetObject::onCreateStaticMembers() {
     TiGenericFunctionObject::addGenericFunctionToParent(this, "field", this, _field);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "next", this, _next);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "close", this, _close);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "fieldName", this, _fieldName);
 }
 
 // Properties boiler plate
@@ -163,6 +165,18 @@ Handle<Value> TiResultSetObject::_fieldByName(void* userContext, TiObject*, cons
 	else {
 		return handleScope.Close(Number::New(atof(value.c_str())));
 	}
+}
+
+Handle<Value> TiResultSetObject::_fieldName(void* userContext, TiObject*, const Arguments& args)
+{
+	HandleScope handleScope;
+	TiResultSetObject* obj = (TiResultSetObject*) userContext;
+	NativeResultSetObject* nativeResultSet = (NativeResultSetObject*) obj->getNativeObject();
+	int index = args[0]->ToNumber()->Value();
+	string name = nativeResultSet->fieldName(index);
+	if(name.size() > 0)
+		return handleScope.Close(String::New(name.c_str()));
+	return handleScope.Close(Undefined());
 }
 
 Handle<Value> TiResultSetObject::_field(void* userContext, TiObject*, const Arguments& args) {

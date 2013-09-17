@@ -1,84 +1,39 @@
-var vidWin = Titanium.UI.createWindow({
-    title : 'Video View Demo',
-    backgroundColor : 'red',
-    layout: 'vertical'
-});
-
-var startStopButton = Titanium.UI.createButton({
-    title:'Start/Stop Streaming',
-    top:20,
-    width:300
-});
-
-var pauseResumeButton = Titanium.UI.createButton({
-    title:'Pause/Resume Streaming',
-    top:20,
-    width:300,
-    enabled:false
-});
-
-var videoPlayer = Titanium.Media.createVideoPlayer({
-    top : 20,
-    height : 300,
-    width : 300
-});
-
-vidWin.add(startStopButton);
-vidWin.add(pauseResumeButton);
-
-startStopButton.addEventListener('click',function() {
-    // When paused, playing returns false.
-    // If both are false, playback is stopped.
-    if (videoPlayer.playing || videoPlayer.paused)
-    {
-        videoPlayer.stop();
-        pauseResumeButton.enabled = false;
-        videoPlayer.release();
-    }
-    else
-    {
-        videoPlayer.start();
-        pauseResumeButton.enabled = true;
-    }
-});
-
-pauseResumeButton.addEventListener('click', function() {
-    if (videoPlayer.paused) {
-        videoPlayer.start();
-    }
-    else {
-        videoPlayer.pause();
-    }
-});
-
-videoPlayer.addEventListener('progress',function(e) {
-    Ti.API.info('Time Played: ' + Math.round(e.progress) + ' milliseconds');
-});
-
-videoPlayer.addEventListener('change',function(e)
-{
-    Ti.API.info('State: ' + e.description + ' (' + e.state + ')');
-    
-    // currently blackberry does not support scaling but by hooking this
-    // change event and getting the actual video dimensions the developer can scale 
-    // or do and boxing that may be necessary
-    videoPlayer.width = e.videoWidth/2;
-    videoPlayer.height = e.videoHeight/2;
-});
-
-videoPlayer.addEventListener('completed',function(e)
-{
-    Ti.API.info('media completed');
-});
-
-vidWin.addEventListener('close',function() {
-
-    videoPlayer.stop();
-    videoPlayer.release();
-});
-
-
-videoPlayer.url = 'video/efencefun.mp4';
-vidWin.add(videoPlayer);
-vidWin.open();
-
+alert('Please see the console for logs');
+ 
+//Reading a file from the Resources dir
+ 
+Ti.API.info('------------------------');
+Ti.API.info('Testing resources directory reading app.js');
+var app_js = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'app.js');
+var blob = app_js.read();
+Ti.API.info('---------');
+Ti.API.info(blob.text);
+ 
+//Creating, writing, and reading a file from the data dir
+ 
+Ti.API.info('------------------------');
+Ti.API.info('Testing data directory reading writing and reading');
+var file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'hello_world.txt');
+if(!file.exists()) {
+    Ti.API.info('file does not exist');
+    file.write('this is a test');
+    Ti.API.info('file exists? ' + file.exists());
+}
+Ti.API.info('---------');
+var blob = file.read();
+Ti.API.info(blob.text);
+ 
+//Getting the directory listing from the data dir
+ 
+Ti.API.info('------------------------');
+Ti.API.info('Testing data directory get listing');
+var directory = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory);
+var files = directory.getDirectoryListing();
+for(var i = 0; i < files.length; i++) {
+    Ti.API.info('=====================');
+    var file = files[i];
+    Ti.API.info('filename: ' + file);
+    var _file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, file);
+    Ti.API.info('isDirectory: ' + _file.isDirectory());
+    Ti.API.info('isFile: ' + _file.isFile());
+}
