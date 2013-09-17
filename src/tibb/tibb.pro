@@ -30,6 +30,7 @@ SOURCES += \
     ./TableView/CustomTableViewRow.cpp \
     ./TableView/HeaderTableViewRow.cpp \
     ./Media/CameraInvocation.cpp \ 
+    ./TiCore/Ti_Blob.cpp \
     ./TiCore/Ti_Constants.cpp \
     ./TiCore/Ti_Event.cpp \
     ./TiCore/Ti_EventParameters.cpp \
@@ -55,6 +56,7 @@ HEADERS += \
     TableView/TableViewRowData.h \
     TableView/HeaderTableViewRow.h \
     Media/CameraInvocation.h \
+    TiCore/Ti_Blob.h \
     TiCore/Ti_Constants.h \
     TiCore/Ti_Event.h \
     TiCore/Ti_EventParameters.h \
@@ -70,7 +72,8 @@ HEADERS += \
     Modules/Filesystem/TiFilesystemBlobProxy.h
 
 LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata -lbbsystem
-LIBS += -lbbpim -lbb
+LIBS += -lbbpim
+LIBS += -lbbutility
 
 device {
 	CONFIG(release, debug|release) {
