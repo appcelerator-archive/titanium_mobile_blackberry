@@ -75,10 +75,6 @@ void TiRootObject::onCreateStaticMembers()
 
 	Local<Object> tiObj = context_->Global()->Get(String::New("Ti"))->ToObject();
     tiObj->Set(String::New("Filesystem"), TiFilesystemModule::CreateModule());
-
-
-
-	Local<Object> tiObj = context_->Global()->Get(String::New("Ti"))->ToObject();
     tiObj->Set(String::New("Platform"), TiPlatformModule::CreateModule());
 }
 

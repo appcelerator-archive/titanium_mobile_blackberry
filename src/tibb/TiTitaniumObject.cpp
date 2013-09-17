@@ -18,7 +18,6 @@
 #include "TiGesture.h"
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
-//#include "TiPlatformObject.h"
 #include "TiLocaleObject.h"
 #include "TiStreamObject.h"
 #include "TiUIObject.h"
@@ -70,7 +69,6 @@ void TiTitaniumObject::onCreateStaticMembers()
     TiMedia::addObjectToParent(this, objectFactory_);
     TiAPIObject::addObjectToParent(this);
     TiAppObject::addObjectToParent(this);
-    TiPlatformObject::addObjectToParent(this);
     TiCodecObject::addObjectToParent(this);
     TiNetwork::addObjectToParent(this, objectFactory_);
     TiAnalyticsObject::addObjectToParent(this, objectFactory_);
