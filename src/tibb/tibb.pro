@@ -32,6 +32,7 @@ SOURCES += \
     ./Media/CameraInvocation.cpp \ 
     ./TiCore/Ti_Blob.cpp \
     ./TiCore/Ti_Constants.cpp \
+    ./TiCore/Ti_Data.cpp \
     ./TiCore/Ti_Event.cpp \
     ./TiCore/Ti_EventParameters.cpp \
     ./TiCore/Ti_Helper.cpp \
@@ -44,9 +45,11 @@ SOURCES += \
     ./Modules/Filesystem/TiFilesystemModule.cpp \
     ./Modules/Filesystem/TiFilesystemFileProxy.cpp \
     ./Modules/Filesystem/TiFilesystemBlobProxy.cpp \
-    ./TiCore/Ti_Value.cpp \
-    ./Modules/Platform/TiPlatformModule.cpp
-    
+    ./Modules/Platform/TiPlatformModule.cpp \    
+    ./Modules/Filesystem/TiFilesystemBlobProxy.cpp \
+    ./Modules/Utils/sha256.cpp \    
+    ./Modules/Utils/TiUtilsModule.cpp    
+
 HEADERS += \
 	./*.h \
 	TiScrollableView/TiScrollableView.h \
@@ -60,6 +63,7 @@ HEADERS += \
     Media/CameraInvocation.h \
     TiCore/Ti_Blob.h \
     TiCore/Ti_Constants.h \
+    TiCore/Ti_Data.h \
     TiCore/Ti_Event.h \
     TiCore/Ti_EventParameters.h \
     TiCore/Ti_Helper.h \
@@ -72,8 +76,10 @@ HEADERS += \
     Modules/Filesystem/TiFilesystemModule.h \
     Modules/Filesystem/TiFilesystemFileProxy.h \
     Modules/Filesystem/TiFilesystemBlobProxy.h \
-    TiCore/Ti_Value.h \
-    Modules/Platform/TiPlatformModule.h
+    Modules/Platform/TiPlatformModule.h \
+    Modules/Filesystem/TiFilesystemBlobProxy.h \
+    Modules/Utils/sha256.h \    
+    Modules/Utils/TiUtilsModule.h    
 
 LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata -lbbsystem
 LIBS += -lbbpim

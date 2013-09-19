@@ -14,6 +14,9 @@ namespace Ti
 {
 class TiConstants {
 public:
+	static const QString EventReturn;
+	static const QString EventFocus;
+	static const QString EventBlur;
 	static const QString EventChange;
 	static const QString EventClick;
 	static const QString EventClose;
@@ -21,6 +24,12 @@ public:
 
 	static const QString SizeSIZE;
 	static const QString SizeFILL;
+
+	static const QString LayoutHorizontal;
+	static const QString LayoutVertical;
+	static const QString NotSupported;
+
+	static const QString ResourcesDir;
 };
 }
 #endif /* TICONSTANTS_H_ */

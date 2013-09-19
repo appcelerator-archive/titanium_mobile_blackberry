@@ -48,13 +48,12 @@ public:
 
 	void 				setString(QString);
 	void 				setNumber(double);
-	void 				setMap(QMap<QString, Ti::TiValue>);
 	void 				setBool(bool);
 	void 				setProxy(Ti::TiProxy*);
 	void 				setList(QList<Ti::TiValue>);
 	void				setNull();
 	void				setUndefined();
-
+	void 				setMap(QMap<QString, Ti::TiValue>);
 	bool				isList();
 	bool				isNull();
 	bool				isUndefined();

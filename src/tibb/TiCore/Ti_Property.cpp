@@ -154,11 +154,14 @@ Handle<Value> Ti::TiProperty::getValue()
 
 Handle<Value> Ti::TiProperty::setValue(Handle<Value>value)
 {
+	HandleScope scope;
 	if(isFunction)
-		return value;
-
+	{
+		return scope.Close(value);
+	}
 	if(setterCallback != NULL)
+	{
 		setterCallback(proxy, Ti::TiValue(value));
-
-	return Undefined();
+	}
+	return scope.Close(Undefined());
 }

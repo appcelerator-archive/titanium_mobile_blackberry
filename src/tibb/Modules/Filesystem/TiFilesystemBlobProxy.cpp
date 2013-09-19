@@ -7,6 +7,8 @@
 
 #include "TiFilesystemBlobProxy.h"
 
+namespace TiFilesystem {
+
 TiFilesystemBlobProxy::TiFilesystemBlobProxy(const char* name) :
 	TiFilesystemFileProxy(name) {
 
@@ -184,3 +186,4 @@ Ti::TiValue TiFilesystemBlobProxy::getRemoteBackup()
 	return valueFalse();
 }
 
+}
