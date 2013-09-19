@@ -17,4 +17,6 @@
 #include "TiCore/Ti_Helper.h"
 #include "TiCore/Ti_EventParameters.h"
 #include "TiCore/Ti_Blob.h"
+#include "TiCore/Ti_Data.h"
+
 #endif

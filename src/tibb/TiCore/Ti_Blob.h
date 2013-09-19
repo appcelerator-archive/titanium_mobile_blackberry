@@ -10,7 +10,7 @@
 #ifndef TI_TIBLOB_H_
 #define TI_TIBLOB_H_
 
-#include "Ti_Proxy.h"
+#include "Ti_Data.h"
 #include "Ti_Value.h"
 
 #include <bb/ImageData>
@@ -30,10 +30,10 @@ typedef enum {
 	TiBlobTypeNone = 3
 } TiBlobType;
 
-class TiBlob : public Ti::TiProxy
+class TiBlob : public Ti::TiData
 {
 public:
-	CREATE_PROXY(Ti::TiBlob);
+	CREATE_PROXY(TiBlob);
 	TiBlob(const char*);
 	virtual ~TiBlob();
 
@@ -59,7 +59,9 @@ public:
 	void setImageData(bb::ImageData);
 	void setMimeType(QString, TiBlobType);
 
-	QByteArray getData();
+	virtual QByteArray getData();
+	virtual QString getFilename();
+	virtual QString getContentType();
 	QString getMimeType();
 	QString getPath();
 	Ti::TiBlobType getType();

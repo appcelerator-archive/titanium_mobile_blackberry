@@ -25,13 +25,13 @@ Handle<Value> Ti::TiHelper::Log(const Arguments &args)
 
 void Ti::TiHelper::Log(QString str)
 {
-    std::cout << "[INFO] " << str.toLocal8Bit().data() << std::endl;
+    qDebug() << "[INFO] " << str.toLocal8Bit().data();
 
 }
 
 Handle<Value> Ti::TiHelper::Log(Handle<Value> arg)
 {
-    std::cout << "[INFO] " << *String::Utf8Value(arg) << std::endl;
+	qDebug() << "[INFO] " << *String::Utf8Value(arg);
     return Undefined();
 }
 

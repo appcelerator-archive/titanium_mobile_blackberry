@@ -9,6 +9,9 @@
 
 #include "Ti_Constants.h"
 
+const QString Ti::TiConstants::EventReturn = "return";
+const QString Ti::TiConstants::EventFocus = "focus";
+const QString Ti::TiConstants::EventBlur = "blur";
 const QString Ti::TiConstants::EventChange = "change";
 const QString Ti::TiConstants::EventClick = "click";
 const QString Ti::TiConstants::EventClose = "close";
@@ -16,3 +19,10 @@ const QString Ti::TiConstants::EventOpen = "open";
 
 const QString Ti::TiConstants::SizeSIZE = "size";
 const QString Ti::TiConstants::SizeFILL = "fill";
+
+const QString Ti::TiConstants::LayoutHorizontal = "horizontal";
+const QString Ti::TiConstants::LayoutVertical = "vertical";
+
+const QString Ti::TiConstants::NotSupported = "Not supported in BB 10";
+
+const QString Ti::TiConstants::ResourcesDir = "app/native/assets";
