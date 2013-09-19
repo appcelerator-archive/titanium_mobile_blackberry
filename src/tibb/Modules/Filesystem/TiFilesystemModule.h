@@ -5,17 +5,21 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef TIFILESYSTEMMODULE_H_
-#define TIFILESYSTEMMODULE_H_
+#ifndef NATIVE_TiFilesystem_MODULE
+#define NATIVE_TiFilesystem_MODULE
 
 #include "TiCore.h"
 
 class TiFilesystemModule : public Ti::TiModule
 {
 public:
-	CREATE_MODULE(TiFilesystemModule)
+	CREATE_MODULE(TiFilesystemModule);
 	TiFilesystemModule(const char*);
 	virtual ~TiFilesystemModule();
+
+	virtual Ti::TiValue getModuleId();
+	virtual Ti::TiValue getModuleVersion();
+	virtual Ti::TiValue getModuleName();
 
 	virtual void initStart();
 //	virtual void initEnd();
@@ -58,4 +62,4 @@ public:
 
 };
 
-#endif /* TIFILESYSTEMMODULE_H_ */
+#endif

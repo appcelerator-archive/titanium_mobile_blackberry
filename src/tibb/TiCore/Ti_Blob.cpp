@@ -14,7 +14,7 @@ static QString const MIMETYPE_PNG = "image/png";
 static QString const MIMETYPE_JPEG = "image/jpeg";
 
 Ti::TiBlob::TiBlob(const char* name) :
-		Ti::TiProxy(name),
+		Ti::TiData(name),
 		_imageSize(0,0),
 		_blobType(Ti::TiBlobTypeNone),
 		_mimetype(""),
@@ -44,8 +44,6 @@ Ti::TiBlob* Ti::TiBlob::InitWithImageData(bb::ImageData image)
 }
 Ti::TiBlob* Ti::TiBlob::InitWithData(QByteArray data, QString mimeType)
 {
-
-	qDebug() << "Data length: " << data.size();
 	Ti::TiBlob* blob = Ti::TiBlob::CreateProxy();
 	blob->setData(data);
 	blob->_mimetype = mimeType;
@@ -78,6 +76,7 @@ void Ti::TiBlob::ensureImageLoaded()
 void Ti::TiBlob::setData(QByteArray data)
 {
 	_data = QByteArray(data);
+	_blobType = Ti::TiBlobTypeData;
 }
 void Ti::TiBlob::setImageData(bb::ImageData image)
 {
@@ -120,6 +119,15 @@ QByteArray Ti::TiBlob::getData()
 		}
 	}
 	return _data;
+}
+
+QString Ti::TiBlob::getFilename()
+{
+	return "";
+}
+QString Ti::TiBlob::getContentType()
+{
+	return "";
 }
 
 bb::ImageData Ti::TiBlob::getImageData()

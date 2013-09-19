@@ -13,7 +13,9 @@
 #include <QFile>
 #include <QFileInfo>
 
-class TiFilesystemFileProxy : public Ti::TiProxy
+namespace TiFilesystem {
+
+class TiFilesystemFileProxy : public Ti::TiData
 {
 public:
 	CREATE_PROXY(TiFilesystemFileProxy)
@@ -91,9 +93,15 @@ public:
 	EXPOSE_METHOD(TiFilesystemFileProxy, write);
 
 	virtual void setPath(QString);
+
+	virtual QByteArray 	getData();
+	virtual QString 	getFilename();
+	virtual QString 	getContentType();
+
 private:
 	QString _path;
 	QFileInfo _fileInfo;
 };
 
+}
 #endif /* TIFILESYSTEMFILE_H_ */

@@ -9,10 +9,30 @@
 
 #include "Ti_Module.h"
 #include "Ti_Helper.h"
-
 Ti::TiModule::TiModule(const char* name) : Ti::TiProxy(name) {
+	createPropertyGetter("id", _getModuleId);
+	createPropertyGetter("version", _getModuleVersion);
+	createPropertyGetter("name", _getModuleName);
 }
 
+Ti::TiValue Ti::TiModule::getModuleId()
+{
+	Ti::TiValue val;
+	val.setString("");
+	return val;
+}
+Ti::TiValue Ti::TiModule::getModuleVersion()
+{
+	Ti::TiValue val;
+	val.setString("");
+	return val;
+}
+Ti::TiValue Ti::TiModule::getModuleName()
+{
+	Ti::TiValue val;
+	val.setString("root_module");
+	return val;
+}
 void Ti::TiModule::addModule(const char* name, Handle<Object> obj)
 {
 	HandleScope scope;

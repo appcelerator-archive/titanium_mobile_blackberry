@@ -9,8 +9,10 @@
 #include <bb/FileSystemInfo>
 #include <QDateTime>
 
+namespace TiFilesystem {
+
 TiFilesystemFileProxy::TiFilesystemFileProxy(const char* name) :
-	Ti::TiProxy(name), _path("")
+	Ti::TiData(name), _path("")
 {
 	createPropertyGetter("executable", _getExecutable);
 	createPropertyGetter("name", _getName);
@@ -49,6 +51,26 @@ TiFilesystemFileProxy::TiFilesystemFileProxy(const char* name) :
 TiFilesystemFileProxy::~TiFilesystemFileProxy()
 {
 
+}
+
+QByteArray TiFilesystemFileProxy::getData()
+{
+	QFile file(_path);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    	return "";
+    }
+
+    QByteArray a = file.readAll();
+    file.close();
+    return a;
+}
+QString TiFilesystemFileProxy::getFilename()
+{
+	return _fileInfo.fileName();
+}
+QString TiFilesystemFileProxy::getContentType()
+{
+	return "";
 }
 
 void TiFilesystemFileProxy::setPath(QString path)
@@ -269,18 +291,8 @@ Ti::TiValue TiFilesystemFileProxy::open(Ti::TiValue value)
 }
 Ti::TiValue TiFilesystemFileProxy::read(Ti::TiValue)
 {
-	// Waiting for PR https://github.com/appcelerator/titanium_mobile_blackberry/pull/168
 	Ti::TiValue returnedValue;
-	QFile file(_path);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    	returnedValue.setUndefined();
-    	return returnedValue;
-    }
-
-    QByteArray a = file.readAll();
-    // TODO: Create Blob
-    returnedValue.setString(QString(a));
-    file.close();
+	returnedValue.setProxy(static_cast<Ti::TiProxy*>(Ti::TiBlob::InitWithFile(_path)));
 	return returnedValue;
 }
 
@@ -318,4 +330,6 @@ Ti::TiValue TiFilesystemFileProxy::write(Ti::TiValue value)
 	}
 
 	return returnedValue;
+}
+
 }
