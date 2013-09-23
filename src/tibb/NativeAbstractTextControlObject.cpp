@@ -17,6 +17,7 @@
 #include "TiConstants.h"
 #include "TiObject.h"
 #include "V8Utils.h"
+#include "TiUtils.h"
 
 using namespace titanium;
 
@@ -33,6 +34,8 @@ NativeAbstractTextControlObject::NativeAbstractTextControlObject(TiObject* tiObj
     : NativeControlObject(tiObject, objType)
     , textControl_(NULL)
 {
+	TiUtils *tiUtils = TiUtils::getInstance();
+	ppi_ = tiUtils->getPPI();
 }
 
 NativeAbstractTextControlObject::~NativeAbstractTextControlObject()
@@ -130,9 +133,8 @@ int NativeAbstractTextControlObject::setFont(TiObject* obj)
         }
         else if (it.key().compare(FONT_SIZE) == 0)
         {
-            bool bSucceeded;
-            float size = it.value().toFloat(&bSucceeded);
-            if (bSucceeded)
+            float size = computeValue(it.value().toUtf8().constData());
+            if (size > 0)
             {
                 textControl_->textStyle()->setFontSize(bb::cascades::FontSize::PointValue);
                 textControl_->textStyle()->setFontSizeValue(size);
@@ -191,5 +193,50 @@ void NativeAbstractTextControlObject::updateLayout(QRectF rect)
 
 	if (!deferHeight_) {
 		textControl_->setPreferredHeight(rect.height());
+	}
+}
+
+float NativeAbstractTextControlObject::computeValue(std::string value) {
+	std::string units;
+	float parsedValue;
+
+	if ((value.find("mm") != std::string::npos) || (value.find("cm") != std::string::npos) ||
+		  (value.find("em") != std::string::npos) || (value.find("pt") != std::string::npos) ||
+		  (value.find("in") != std::string::npos) || (value.find("px") != std::string::npos) ||
+		  (value.find("dp") != std::string::npos) || (value.find("dip") != std::string::npos)) {
+
+	  if((value.find("dip") != std::string::npos)) {
+		  units = value.substr (value.size() - 3 , 3);
+		  parsedValue = atof(value.substr(0, value.size() - 3).c_str());
+	  } else {
+		  units = value.substr (value.size() - 2 , 2);
+		  parsedValue = atof(value.substr(0, value.size() - 2).c_str());
+	  }
+	}
+	else {
+	  parsedValue = atof(value.c_str());
+	  units = "dp";
+	}
+
+	if (units == "mm") {
+	  return parsedValue /= 10;
+	}
+	else if (units == "cm") {
+	  return parsedValue * 0.393700787 * ppi_;
+	}
+	else if (units == "em" || units == "pt") {
+	  return parsedValue /= 12;
+	}
+	else if (units == "pc") {
+	  return parsedValue /= 6;
+	}
+	else if (units == "in") {
+	  return parsedValue * ppi_;
+	}
+	else if (units == "px") {
+	  return parsedValue;
+	}
+	else if (units == "dp" || units == "dip") {
+	  return parsedValue / (ppi_ / 96); // http://msdn.microsoft.com/en-us/library/windows/desktop/ff684173(v=vs.85).aspx
 	}
 }

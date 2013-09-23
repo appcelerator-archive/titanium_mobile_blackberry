@@ -12,6 +12,7 @@
 #include "TiResultSetObject.h"
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
+#include "TiPropertyGetObject.h"
 #include "NativeException.h"
 #include "TiMessageStrings.h"
 #include <vector>
@@ -54,6 +55,7 @@ void TiDBObject::onCreateStaticMembers() {
     TiProxy::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "execute", this, _execute);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "close", this, _close);
+    TiPropertyGetObject::createGetProperty(this, "rowsAffected", this, _rowsAffected);
 }
 
 Handle<Value> TiDBObject::_execute(void* userContext, TiObject*, const Arguments& args)
@@ -104,6 +106,14 @@ Handle<Value> TiDBObject::_execute(void* userContext, TiObject*, const Arguments
     }
 
     return Undefined();
+}
+
+Handle<Value> TiDBObject::_rowsAffected(void* userContext)
+{
+    TiDBObject* obj = (TiDBObject*) userContext;
+    NativeDBObject* ndb = (NativeDBObject*) obj->getNativeObject();
+    HandleScope scope;
+    return scope.Close(Number::New(ndb->affectedRows()));
 }
 
 Handle<Value> TiDBObject::_close(void* userContext, TiObject*, const Arguments& args)
