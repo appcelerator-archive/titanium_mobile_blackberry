@@ -18,7 +18,7 @@ source $BB_PATH/bbndk/bbndk-env.sh
 
 echo "Creating V8 Libraries"
 cd runtime
-make clean
+# make clean
 make
 
 cd $VAR_PWD

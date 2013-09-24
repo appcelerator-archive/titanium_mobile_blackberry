@@ -20,20 +20,21 @@ Ti::TiProxy::TiProxy(const char* name) : _proxyName(QString(name))
 	createPropertyFunction("addEventListener", _addEventListener);
 	createPropertyFunction("removeEventListener", _removeEventListener);
 	createPropertyFunction("fireEvent", _fireEvent);
-
-	Ti::TiHelper::Log(QString(_proxyName).append(" Created"));
+	createPropertyFunction("toString", _getToString);
+//	Ti::TiHelper::Log(QString(_proxyName).append(" Created"));
 }
 
-Ti::TiProxy::~TiProxy() {
-	Ti::TiHelper::Log(QString(getProxyName()).append(" Destroyed"));
+Ti::TiProxy::~TiProxy()
+{
+//	qDebug() << "[DELETE] TiProxy" << getProxyName();
 	foreach(QString key, events.keys())
 	{
 		qDeleteAll(events[key]);
-		events[key].empty();
+		events[key].clear();
 	}
-	events.empty();
+	events.clear();
 	qDeleteAll(properties);
-	properties.empty();
+	properties.clear();
 }
 
 void Ti::TiProxy::initStart()
@@ -48,14 +49,7 @@ void Ti::TiProxy::initWithObject(Handle<Object> obj)
 	for(int i = 0, len = props->Length(); i < len; i++) {
 		Local<String> key = props->Get(i)->ToString();
 		Local<Value> val = obj->Get(key);
-		if(properties.contains(Ti::TiHelper::QStringFromValue(key)))
-		{
-			Ti::TiProperty *prop = properties[Ti::TiHelper::QStringFromValue(key)];
-			prop->setValue(val);
-			jsObject->Set(key, Undefined());
-		} else {
-			jsObject->Set(key, val);
-		}
+		realJSObject->Set(key, val);
 	}
 }
 
@@ -94,6 +88,11 @@ void Ti::TiProxy::createPropertySetterGetter(QString name, PROPERTY_SETTER sette
 	Ti::TiProperty::createProperty(this, name, setter, getter);
 }
 
+void Ti::TiProxy::onEventAdded(QString)
+{
+	// for subclass
+}
+
 Ti::TiValue Ti::TiProxy::addEventListener(Ti::TiValue value)
 {
 	QString eventName;
@@ -101,6 +100,7 @@ Ti::TiValue Ti::TiProxy::addEventListener(Ti::TiValue value)
 	Ti::TiValue nameValue = value.toList().at(0);
 	eventName = nameValue.toString();
 
+	onEventAdded(eventName);
 	Ti::TiValue functionValue = value.toList().at(1);
 	Handle<Function> func = Handle<Function>::Cast(functionValue.toJSValue());
 
@@ -141,7 +141,7 @@ Ti::TiValue Ti::TiProxy::removeEventListener(Ti::TiValue value)
 			Ti::TiEvent *event = list.at(i);
 			if(event->callback == func)
 			{
-				Ti::TiHelper::Log("Remove this event");
+//				Ti::TiHelper::Log("Remove this event");
 				delete event;
 				events[eventName].removeAt(i);
 				return res;
@@ -197,6 +197,10 @@ Ti::TiValue Ti::TiProxy::fireEvent(Ti::TiValue value)
 	return Ti::TiValue(Undefined());
 }
 
+void Ti::TiProxy::fireCallback(QString eventName, Ti::TiEventParameters params)
+{
+	Ti::TiEvent::fireCallbackIfNeeded(eventName, realJSObject, &params);
+}
 void Ti::TiProxy::fireEvent(QString eventName, Ti::TiEventParameters params)
 {
 	HandleScope scope;
@@ -209,12 +213,28 @@ void Ti::TiProxy::fireEvent(QString eventName, Ti::TiEventParameters params)
 			event->fireWithParameters(realJSObject, &params);
 		}
 	}
+
+    QString onEvent = QString(eventName);
+	onEvent[0] = onEvent[0].toUpper();
+	onEvent.prepend("on");
+
+	eventName.prepend("on");
+	Ti::TiEvent::fireCallbackIfNeeded(eventName, realJSObject, &params);
+	Ti::TiEvent::fireCallbackIfNeeded(onEvent, realJSObject, &params);
 	if(eventName == Ti::TiConstants::EventClose)
 	{
 		V8::LowMemoryNotification();
-		Ti::TiHelper::Log("Called Memory Warning");
+//		Ti::TiHelper::Log("Called Memory Warning");
 	}
 }
+
+Ti::TiValue Ti::TiProxy::getToString(Ti::TiValue)
+{
+	Ti::TiValue val;
+	val.setString(QString("[object ").append(_proxyName).append("]"));
+	return val;
+}
+
 
 void Ti::TiProxy::makeWeak()
 {
@@ -232,7 +252,10 @@ Handle<Value> Ti::TiProxy::_Getter (Local<String> property, const AccessorInfo& 
     Handle<Object> result;
     Handle<Object> obj = Handle<Object>::Cast(info.Holder());
     Handle<External> proxyObject = Handle<External>::Cast(obj->GetHiddenValue(String::New("module")));
-	if(proxyObject.IsEmpty())
+
+//	Ti::TiHelper::Log(QString("Property Getter ").append(Ti::TiHelper::QStringFromValue(property)));
+
+    if(proxyObject.IsEmpty())
 		proxyObject = Handle<External>::Cast(obj->GetHiddenValue(String::New("proxy")));
 
 	if(proxyObject.IsEmpty())
@@ -268,6 +291,7 @@ Handle<Value> Ti::TiProxy::_Setter (Local<String> property, Local<Value> value, 
 		return value;
 
 	Ti::TiProxy* tiProxy = static_cast<Ti::TiProxy*>(proxyObject->Value());
+//	Ti::TiHelper::Log(QString("Property Setter ").append(Ti::TiHelper::QStringFromValue(property)));
 
 	if(tiProxy->properties.contains(Ti::TiHelper::QStringFromValue(property)))
 	{
@@ -282,6 +306,7 @@ Handle<Value> Ti::TiProxy::_Setter (Local<String> property, Local<Value> value, 
 void Ti::TiProxy::_WeakCallback(Persistent<Value> object, void* parameter)
 {
 	Ti::TiProxy* obj = static_cast<Ti::TiProxy*>(parameter);
+//	qDebug() << "[DELETE] Proxy" << obj->_proxyName;
 	delete obj;
 	object.ClearWeak();
 	object.Clear();

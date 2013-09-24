@@ -37,7 +37,6 @@
 #define GENERATE_PROXY(NAME) \
 		HandleScope scope; \
 		NAME *proxy = new NAME(#NAME); \
-		proxy->jsObject.Dispose(); \
 		proxy->realJSObject = Persistent<Object>::New(proxy->jsObject->NewInstance()); \
 		proxy->realJSObject->SetHiddenValue(String::New("proxy"), External::New(proxy)); \
 		proxy->realJSObject.MakeWeak(proxy, _WeakCallback);
@@ -51,12 +50,14 @@
 		{ \
  			proxy->initWithObject(args[0]->ToObject()); \
 		} \
+		proxy->jsObject.Dispose(); \
 		proxy->initEnd(); \
 		return scope.Close(proxy->realJSObject); \
 	} \
 	static NAME* CreateProxy() \
 	{ \
 		GENERATE_PROXY(NAME) \
+		proxy->jsObject.Dispose(); \
 		return proxy; \
 	}
 //#undef GENERATE_PROXY
@@ -133,8 +134,11 @@ public:
 	virtual Ti::TiValue addEventListener(Ti::TiValue);
 	virtual Ti::TiValue removeEventListener(Ti::TiValue);
 	virtual Ti::TiValue fireEvent(Ti::TiValue);
+	virtual Ti::TiValue getToString(Ti::TiValue);
 
+	virtual void onEventAdded(QString);
 	virtual void fireEvent(QString, Ti::TiEventParameters);
+	virtual void fireCallback(QString, Ti::TiEventParameters);
 
 	virtual const char* getProxyName();
 	virtual Handle<ObjectTemplate> getJSObject();
@@ -150,6 +154,8 @@ public:
 	EXPOSE_METHOD(Ti::TiProxy, addEventListener)
 	EXPOSE_METHOD(Ti::TiProxy, removeEventListener)
 	EXPOSE_METHOD(Ti::TiProxy, fireEvent)
+	EXPOSE_METHOD(Ti::TiProxy, getToString)
+
 
 protected:
 	virtual void addFunction(const char* name, InvocationCallback);

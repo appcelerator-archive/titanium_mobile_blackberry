@@ -96,6 +96,18 @@ void Ti::TiValue::setValue(Handle<Value> value)
 
 }
 
+void Ti::TiValue::setMap(QMap<QString, Ti::TiValue> map)
+{
+	Local<Object> jsObject = Object::New();
+	foreach(QString key, map.keys())
+	{
+		Ti::TiValue val = map[key];
+		jsObject->Set(Ti::TiHelper::ValueFromQString(key), val.toJSValue());
+	}
+	setValue(jsObject);
+}
+
+
 bb::cascades::Color Ti::TiValue::toColor() {
 	if (!QColor::isValidColor(_string))
 	{
@@ -176,16 +188,6 @@ void Ti::TiValue::setProxy(Ti::TiProxy* val)
 void Ti::TiValue::setNull()
 {
 	_jsValue = Null();
-}
-void Ti::TiValue::setMap(QMap<QString, Ti::TiValue> map)
-{
-	Local<Object> jsObject = Object::New();
-	foreach(QString key, map.keys())
-	{
-		Ti::TiValue val = map[key];
-		jsObject->Set(Ti::TiHelper::ValueFromQString(key), val.toJSValue());
-	}
-	setValue(jsObject);
 }
 
 void Ti::TiValue::setUndefined()

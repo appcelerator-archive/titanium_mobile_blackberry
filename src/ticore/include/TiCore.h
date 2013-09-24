@@ -10,11 +10,14 @@
 #ifndef TI_TICORE_H_
 #define TI_TICORE_H_
 
+#include "Ti_Blob.h"
 #include "Ti_Value.h"
 #include "Ti_Proxy.h"
 #include "Ti_Module.h"
 #include "Ti_Constants.h"
 #include "Ti_Helper.h"
 #include "Ti_EventParameters.h"
+#include "Ti_Runtime.h"
+#include "Ti_SceneManager.h"
 
 #endif
