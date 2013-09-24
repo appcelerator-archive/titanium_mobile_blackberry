@@ -11,7 +11,7 @@
 #include "TiCore.h"
 #include "TiFilesystemFileProxy.h"
 
-
+namespace TiFilesystem {
 class TiFilesystemBlobProxy : public TiFilesystemFileProxy
 {
 public:
@@ -58,5 +58,6 @@ private:
 	Ti::TiValue valueFalse();
 	Ti::TiValue valueTrue();
 };
+}
 
 #endif /* TIFILESYSTEMBLOBPROXY_H_ */

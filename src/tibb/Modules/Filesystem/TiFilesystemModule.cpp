@@ -6,14 +6,14 @@
  */
 
 #include "TiFilesystemModule.h"
-#include "TiFilesystemFileProxy.h"
 #include "TiFilesystemBlobProxy.h"
-#include <QDir>
+#include "TiFilesystemFileProxy.h"
 
 static QString const RESOURCES_DIRECTORY = "app/native/assets";
 
-TiFilesystemModule::TiFilesystemModule(const char* name) :
-	Ti::TiModule(name)
+using namespace TiFilesystem;
+
+TiFilesystemModule::TiFilesystemModule(const char* name) : Ti::TiModule(name)
 {
 
 }
@@ -21,6 +21,25 @@ TiFilesystemModule::TiFilesystemModule(const char* name) :
 TiFilesystemModule::~TiFilesystemModule()
 {
 
+}
+
+Ti::TiValue TiFilesystemModule::getModuleId()
+{
+	Ti::TiValue val;
+	val.setString("ti.filesystem");
+	return val;
+}
+Ti::TiValue TiFilesystemModule::getModuleVersion()
+{
+	Ti::TiValue val;
+	val.setString("1.0");
+	return val;
+}
+Ti::TiValue TiFilesystemModule::getModuleName()
+{
+	Ti::TiValue val;
+	val.setString("TiFilesystem");
+	return val;
 }
 
 void TiFilesystemModule::initStart()

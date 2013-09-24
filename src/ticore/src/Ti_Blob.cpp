@@ -44,8 +44,6 @@ Ti::TiBlob* Ti::TiBlob::InitWithImageData(bb::ImageData image)
 }
 Ti::TiBlob* Ti::TiBlob::InitWithData(QByteArray data, QString mimeType)
 {
-
-	qDebug() << "Data length: " << data.size();
 	Ti::TiBlob* blob = Ti::TiBlob::CreateProxy();
 	blob->setData(data);
 	blob->_mimetype = mimeType;
