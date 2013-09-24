@@ -9,15 +9,15 @@
 #define TIBB_H_
 
 #include <string>
-#include "TiModule.h"
+#include <v8.h>
+
+typedef v8::Handle<v8::Object> (*ModuleStartup)();
 
 extern "C"
 {
+    void startV8Engine();
     int tibb_run(const char* javaScript, int argc, char** argv);
-
-    void tiRegisterModule(std::string name, TiModule* module);
-
-    TiModule* getModuleByName(std::string name);
+    void tiRegisterModule(const char* name, ModuleStartup mod);
 }
 
 #endif /* TIBB_H_ */

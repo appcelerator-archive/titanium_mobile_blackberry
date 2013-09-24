@@ -8,19 +8,25 @@
 #include "tibb.h"
 #include "TitaniumRuntime.h"
 #include <string>
-
+#include "TiModuleRegistry.h"
 #include "TiModule.h"
+#include <v8.h>
 
 map<std::string, TiModule*> g_tiRegisterModuleMap;
 
+void startV8Engine() {
+    HandleScope handleScope;
+	v8::Persistent<v8::Context> ctx = v8::Context::New(NULL, v8::ObjectTemplate::New());
+	TitaniumRuntime::setContext(ctx);
+}
 int tibb_run(const char* javaScript, int argc, char** argv)
 {
     return TitaniumRuntime::run(javaScript, argc, argv);
 }
 
-void tiRegisterModule(std::string name, TiModule* module)
+void tiRegisterModule(const char* name, ModuleStartup module)
 {
-	g_tiRegisterModuleMap[name] = module;
+	TiModuleRegistry::RegisterModule(QString(name), module);
 }
 
 TiModule* getModuleByName(const std::string name)

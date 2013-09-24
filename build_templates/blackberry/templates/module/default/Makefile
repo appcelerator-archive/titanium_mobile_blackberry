@@ -1,4 +1,4 @@
-QMAKE_TARGET  = ReplaceWithModuleName
+QMAKE_TARGET  = __MODULE_NAME__
 QMAKE         = $(QNX_HOST)/usr/bin/qmake
 TARGET        = $(QMAKE_TARGET)
 J_OPTION      = $(if $(NUM_CPUS), -j $(NUM_CPUS), )

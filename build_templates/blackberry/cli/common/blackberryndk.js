@@ -4,12 +4,12 @@ var path = require('path'),
 	util = require('util'),
 	fs = require('fs'),
 	appc = require('node-appc'),
-    afs = appc.fs,
-    i18n = appc.i18n(__dirname),
+	afs = appc.fs,
+	i18n = appc.i18n(__dirname),
 	__ = i18n.__,
 	__n = i18n.__n,
-    wrench = require('wrench'),
-    ti = require('titanium-sdk'),
+	wrench = require('wrench'),
+	ti = require('titanium-sdk'),
 	exec = require('child_process').exec,
 	jsExtRegExp = /\.js$/,
 	lastLogLength = 0,
@@ -33,7 +33,7 @@ var findNDK = function() {
 	for (i = 0; i < len; i++) {
 		if (fs.existsSync(default_dirs[i])) {
 			return default_dirs[i];
-	     }
+		 }
 	}
 }
 
@@ -55,8 +55,8 @@ var findEnvFile = function(dir) {
 			}	
 		}
 	}
-     
-    return envFile;   
+	 
+	return envFile;   
 }
 
 
@@ -70,19 +70,19 @@ var generateTmpName = function(suffix) {
 				(Math.random() * 0x100000000 + 1).toString(36),
 				'-',
 				suffix
-	          ].join('');
+			  ].join('');
 	return name;
 }
 
 var runCommandFromArray = function(commandArray, showCommand, callback) {
 
-    var len = commandArray.length;
-    var command = '';
+	var len = commandArray.length;
+	var command = '';
 	for (i = 0; i < len; i++) {
 		command += commandArray[i]  + ' ';
 	}
 
-    if (showCommand === true) {
+	if (showCommand === true) {
 		console.log('[Command] :' + command);
 	}
 
@@ -90,7 +90,7 @@ var runCommandFromArray = function(commandArray, showCommand, callback) {
 
 		callback(err, stdout);
 		if (showCommand === true) {
-		    if (err != null) {
+			if (err != null) {
 				util.puts(err);
 			}
 			if (stderr != null) {
@@ -98,7 +98,7 @@ var runCommandFromArray = function(commandArray, showCommand, callback) {
 			}
 			if (stdout != null) {
 				util.puts(stdout.trim());
-		    }
+			}
 		}
 	});	
 }
@@ -145,8 +145,8 @@ var findTiModules = function (builder, callback) {
 		return;
 	}
 
-    var moduleSearchPaths = [builder.projectDir, afs.resolvePath(builder.titaniumBBSdkPath, '..', '..', '..', '..')];
-    var deployType = "development"; // TODO: look at g to figure dev or prod
+	var moduleSearchPaths = [builder.projectDir, afs.resolvePath(builder.titaniumBBSdkPath, '..', '..', '..', '..')];
+	var deployType = "development"; // TODO: look at g to figure dev or prod
 	var projectDependencies = [];
 
 	builder.logger.info(__n('Searching for %s Titanium Module', 'Searching for %s Titanium Modules', builder.tiapp.modules.length));
@@ -179,45 +179,29 @@ var findTiModules = function (builder, callback) {
 		}
 
 		modules.found.forEach(function (module) {
-			var moduleDir = module.modulePath,
-				pkgJson,
-				pkgJsonFile = path.join(moduleDir, 'package.json');
-			if (!afs.exists(pkgJsonFile)) {
-				builder.logger.error(__('Invalid Titanium Mobile Module "%s": missing package.json', module.id) + '\n');
-				process.exit(1);
-			}
-
-			try {
-				pkgJson = JSON.parse(fs.readFileSync(pkgJsonFile));
-			} catch (e) {
-				builder.logger.error(__('Invalid Titanium Mobile Module "%s": unable to parse package.json', module.id) + '\n');
-				process.exit(1);
-			}
-
-			var libDir = ((pkgJson.directories && pkgJson.directories.lib) || '').replace(/^\//, '');	
-
+			var moduleDir = module.modulePath;
 
 			builder.logger.info(__('Bundling Titanium Mobile Module %s', module.id.cyan));
 
-			builder.projectDependencies.push(pkgJson.main);
-
-			var moduleName = module.id != pkgJson.main ? module.id + '/' + pkgJson.main : module.id;
-
+			var moduleName = module.manifest.moduleid != module.manifest.name ? module.manifest.moduleid + '/' + module.manifest.name : module.manifest.moduleid;
+			var type = 'commonjs';
 			if (/\/commonjs/.test(moduleDir)) {
 				builder.modulesToCache.push((/\/commonjs/.test(moduleDir) ? 'commonjs:' : '') + moduleName);
 			} else {
 				builder.modulesToCache.push(moduleName);
 				builder.tiModulesToLoad.push(module.id);
+				type = 'native';
 			}
-
 			builder.packages.push({
-				'name': module.id,
-				'location': path.join(moduleDir, libDir),
-				'main': pkgJson.main,
-				'type': pkgJson.type,
+				'name': module.manifest.name,
+				'id': module.manifest.moduleid,
+				'version': module.manifest.version,
+				'location': path.join(moduleDir),
+				'type': type,
 				'root': 1
 			});
 		}, builder);
+
 
 		callback();
 	}.bind(builder));
@@ -225,17 +209,17 @@ var findTiModules = function (builder, callback) {
 
 var package = function(builder) {
 
-    var projectDir = builder.projectDir;
+	var projectDir = builder.projectDir;
 	var buildDir = path.join(projectDir, 'build', 'blackberry');
-    var titaniumBBSdkPath = builder.titaniumBBSdkPath;
+	var titaniumBBSdkPath = builder.titaniumBBSdkPath;
 
-    // copy over bootstrap files
+	// copy over bootstrap files
 	afs.copyDirSyncRecursive(path.join(titaniumBBSdkPath, 'tibb', 'titanium', 'javascript'),
 	 									path.join(buildDir, 'framework'), { preserve: true, logger: logger.debug });
 
-    // copy localization and resources into assets folder
-    var i18nDir = path.join(projectDir, 'i18n');
-    var assetsDir = path.join(buildDir, 'assets');   
+	// copy localization and resources into assets folder
+	var i18nDir = path.join(projectDir, 'i18n');
+	var assetsDir = path.join(buildDir, 'assets');   
 	var resourcesDir = path.join(projectDir, 'Resources');
 	
 	if (fs.existsSync(i18nDir)) {
@@ -244,14 +228,14 @@ var package = function(builder) {
 
 	afs.copyDirSyncRecursive(resourcesDir, assetsDir, { preserve: true, logger: logger.debug });
 
-    var iphoneRes = path.join(assetsDir, 'iphone');
-    var mobilewebRes = path.join(assetsDir, 'mobileweb');
-    var androidRes = path.join(assetsDir, 'android');
-    var blackberryRes = path.join(assetsDir, 'blackberry');
+	var iphoneRes = path.join(assetsDir, 'iphone');
+	var mobilewebRes = path.join(assetsDir, 'mobileweb');
+	var androidRes = path.join(assetsDir, 'android');
+	var blackberryRes = path.join(assetsDir, 'blackberry');
 	if (fs.existsSync(iphoneRes)) { wrench.rmdirSyncRecursive(iphoneRes); }
 	if (fs.existsSync(mobilewebRes)) { wrench.rmdirSyncRecursive(mobilewebRes); }
 	if (fs.existsSync(androidRes)) { wrench.rmdirSyncRecursive(androidRes); }
-    // blackberry resources start at assets
+	// blackberry resources start at assets
 	if (fs.existsSync(blackberryRes)) { wrench.rmdirSyncRecursive(blackberryRes); }
 
 	// Copy BlackBerry resources from SDK (templates).
@@ -272,20 +256,20 @@ var package = function(builder) {
 	}
 
 	var appPropsFile = path.join(buildDir, 'assets', 'app_properties.ini');
-    fs.writeFileSync(appPropsFile, builder.appProps);
+	fs.writeFileSync(appPropsFile, builder.appProps);
 
-    builder.projectDependencies = [];
+	builder.projectDependencies = [];
 	builder.modulesToCache = [];
 	builder.tiModulesToLoad = [];
-    builder.packages = [];
+	builder.packages = [];
 
 
-    findTiModules(builder, function(){
-    	builder.packages.forEach(function (p) {
+	findTiModules(builder, function(){
+		builder.packages.forEach(function (p) {
 
-    		if (typeof p.type === 'undefined') {	
+			if (typeof p.type === 'undefined') {	
 				var lib = path.join(p.location, p.main + '.js');
-    			fs.createReadStream(lib).pipe(fs.createWriteStream(path.join(assetsDir, p.main + '.js')));	
+				fs.createReadStream(lib).pipe(fs.createWriteStream(path.join(assetsDir, p.main + '.js')));	
 			}
 
 			// copy module assets to blackberry assets folder
@@ -294,17 +278,17 @@ var package = function(builder) {
 				afs.copyDirSyncRecursive(moduleAssetsDir, assetsDir, { preserve: true, logger: logger.debug });
 			}
 		});
-    });
+	});
 }
 
 var getAppLog = function(ndk, deviceIP, barFile, password, callback) {
 
 	// setup the build environment and then run the ndk command
-    var srccmd;
-    var ndkcmd;
-    var envFile = findEnvFile(ndk);
-    if (process.platform === 'win32') {
-    	srccmd = path.join(ndk, envFile);
+	var srccmd;
+	var ndkcmd;
+	var envFile = findEnvFile(ndk);
+	if (process.platform === 'win32') {
+		srccmd = path.join(ndk, envFile);
 		ndkcmd = 'blackberry-deploy.bat';
 	} else {
 		srccmd = 'source ' + path.join(ndk, envFile);
@@ -317,8 +301,8 @@ var getAppLog = function(ndk, deviceIP, barFile, password, callback) {
 		command = command.concat(['-password', password])
 	}
 
-    if (getLog == true) {
-	    getLog = false;
+	if (getLog == true) {
+		getLog = false;
 		runCommandFromArray(command, showCmd = false, function(err, stdout) { 
 
 			if (stdout.indexOf('result::true') != -1) {
@@ -339,7 +323,7 @@ var getAppLog = function(ndk, deviceIP, barFile, password, callback) {
 						lastLogLength = stdout.length;
 					}
 
-			        getLog = true;   	
+					getLog = true;   	
 				});
 			} else {
 				clearInterval(timerID);
@@ -354,73 +338,76 @@ function BlackberryNDK(builder) {
 	
 	var self =  { 
 
-        builder: builder,
+		builder: builder,
 
 		build: function (finished) {
 
-            var builder = this.builder;
-            var logger = builder.logger;
+			var builder = this.builder;
+			var logger = builder.logger;
 			var ndk = builder.ndk;
 			// so BlackBerry NDK can build  projects with spaces do a space replace
 			var projectName = builder.projectName.replace(/ /g, '_');
 
 			if (typeof ndk === 'undefined') {
-		        ndk = findNDK();
-		        if (typeof ndk === 'undefined') {
-		        	return  1;
-		        }
-	    	}
-	    	var envFile = findEnvFile(ndk);
-	        logger.log('\n' + 'Path to BlackBerry NDK is: ' + ndk.cyan);
-	        logger.log('\n' + 'Environment command file is: ' + envFile.cyan);
+				ndk = findNDK();
+				if (typeof ndk === 'undefined') {
+					return  1;
+				}
+			}
+			var envFile = findEnvFile(ndk);
+			logger.log('\n' + 'Path to BlackBerry NDK is: ' + ndk.cyan);
+			logger.log('\n' + 'Environment command file is: ' + envFile.cyan);
 
-	        // BB NDK makefiles do not allow spaces in path names and cause build problem.
+			// BB NDK makefiles do not allow spaces in path names and cause build problem.
 			// The solution is to use temporary directories without spaces to do builds. Also
 			// the project name needs to have spaces removed.
 			var tmpPathSDK = path.join(os.tmpDir(), generateTmpName(projectName)); 
+			afs.copyDirSyncRecursive(path.join(builder.titaniumBBSdkPath, 'ticore'),
+								path.join(tmpPathSDK, 'ticore'), {logger: logger.debug});
 			afs.copyDirSyncRecursive(path.join(builder.titaniumBBSdkPath, 'tibb'),
 								path.join(tmpPathSDK, 'tibb'), {logger: logger.debug});
 			afs.copyDirSyncRecursive(path.join(builder.titaniumBBSdkPath, 'libv8'),
 								path.join(tmpPathSDK, 'libv8'), {logger: logger.debug});
 
-            // Copy over any module header file and make the static library location available to build
+			// Copy over any module header file and make the static library location available to build
 			builder.projectDependencies = [];
 			builder.modulesToCache = [];
 			builder.tiModulesToLoad = [];
-		    builder.packages = [];
-		    var extra_lib_paths = '';
-		    var lib_names = '';
-		    var headers = '';
-		    var register_modules = '';
-		    var header_paths = [];
+			builder.packages = [];
+			var extra_lib_paths = '';
+			var lib_names = '';
+			var headers = '';
+			var register_modules = '';
+			var header_paths = [];
 
-            findTiModules(builder, function(){
-		    	builder.packages.forEach(function (p) {
+			findTiModules(builder, function(){
+				builder.packages.forEach(function (p) {
 
-		    		if (typeof p.type !== 'undefined' && p.type === "native") {	
-		    			var cpu = builder.type2variantCpu[builder.target][1];
-		    			var header_path =  path.join(p.location, p.main + '.h');
-		    			var lib_path = path.join(p.location, cpu, builder.type2variantCpu[builder.target][2]); 
-		    			var lib_name = 'lib' + p.main + '.a';
+					if (typeof p.type !== 'undefined' && p.type === "native") {	
+						// var cpu = builder.type2variantCpu[builder.target][1];
+						var header_path =  path.join(p.location, '/header/' + p.name + 'ModuleStartup.h');
+						var lib_path = path.join(p.location, cpu, builder.type2variantCpu[builder.target][2]); 
+						var lib_name = 'lib' + p.name + '.a';
 
-                        // copy header to build directory
-                        header_paths.push({'path': header_path, 'name': p.main + '.h'});
-		    			
-		    			// add lib name to common.mk, for convience copy lib to tibb lib location which is already on library search 
-		    			// path and does not contain spaces in path
-                        fs.createReadStream(path.join(lib_path, lib_name)).pipe(fs.createWriteStream(path.join(tmpPathSDK, 'tibb', cpu, builder.type2variantCpu[builder.target][2], lib_name)));
-		    			lib_names += 'LIBS+=' + p.main + ' ';
+						lib_names += '\nLIBS+=' + p.name + ' ';
 
-		    			// add header and register calls to main.cpp	
-		    			headers += '#include "' + p.main + '.h"\n'; 
-		    			register_modules += '\ttiRegisterModule("' + p.main + '", (TiModule*) new ' + p.main + '());\n';
+						extra_lib_paths += '\nEXTRA_LIBVPATH+=$(BB_ROOT)/'+p.name+'/$(CPU)/a$(if $(filter arm,$(CPULIST)),.le-v7,)$(if $(filter g,$(VARIANTS)),-g,) \n';
+
+						header_paths += '\nEXTRA_INCVPATH+=$(BB_ROOT)/'+p.name+'/header\n';
+
+						// add header and register calls to main.cpp
+						headers += '#include "' + p.name + 'ModuleStartup.h"\n'; 
+						register_modules += 'tiRegisterModule("' + p.id + '", ' + p.name + 'ModuleStartup::CreateModule);\n';
+
+						afs.copyDirSyncRecursive(p.location,
+								path.join(tmpPathSDK, p.name), {logger: logger.debug});
+
 					}
 				});
-		    });			
-
+			});
 			var variant = builder.type2variantCpu[this.builder.target][0];
 			var cpu = builder.type2variantCpu[this.builder.target][1];
-            
+			
 			var tiappName = 'TIAPP_NAME=' + projectName;
 			var cpuList = 'CPULIST=' + cpu;
 			var bbRoot = 'BB_ROOT=' + tmpPathSDK;
@@ -436,13 +423,11 @@ function BlackberryNDK(builder) {
 			afs.copyDirSyncRecursive(path.join(projectDir, 'build'), tmpPathProj, {logger: logger.debug});
 			process.chdir(path.join(tmpPathProj, 'blackberry'));
 
-			header_paths.forEach(function(entry) {
-			    fs.createReadStream(entry.path).pipe(fs.createWriteStream(path.join(tmpPathProj, 'blackberry', entry.name)));
-			 });
-
 			var common_make_file_path = path.join(tmpPathProj, 'blackberry', 'common.mk');
 			fs.writeFileSync(common_make_file_path, renderTemplate(fs.readFileSync(common_make_file_path).toString().trim(), {
-				libs: lib_names
+				libs: lib_names,
+				extra_libvpath: extra_lib_paths,
+				header_paths: header_paths
 			}));
 
 			var main_file_path = path.join(tmpPathProj, 'blackberry', 'main.cpp');
@@ -471,53 +456,53 @@ function BlackberryNDK(builder) {
 				catch(e) {
 					logger.log('\nUnable to remove temporary folders: ' + e);
 				}
-                
+				
 				process.chdir(oldPath);
 				finished(/* if there was an error, pass it to finished */);
 			});		
-        },
+		},
 
-        run: function (finished) {
+		run: function (finished) {
 
-        	var builder = this.builder;
-            var logger = builder.logger;
+			var builder = this.builder;
+			var logger = builder.logger;
 			var ndk = builder.ndk;
 			var deviceIP = builder.deviceIP;
 			var projectName = builder.projectName.replace(/ /g, '_');
 
-        	if (typeof ndk === 'undefined') {
-		        ndk = findNDK();
-		        if (typeof ndk === 'undefined') {
-		        	return  1;
-		        }
-	    	}
+			if (typeof ndk === 'undefined') {
+				ndk = findNDK();
+				if (typeof ndk === 'undefined') {
+					return  1;
+				}
+			}
 
-	        logger.log('\n' + 'Path to BlackBerry NDK is: ' + ndk.cyan);
+			logger.log('\n' + 'Path to BlackBerry NDK is: ' + ndk.cyan);
 
 			// write the bar-descriptor file
-            var permissions = '';
-            var tiapp = builder.tiapp;
-            if (typeof tiapp.blackberry !== 'undefined' && typeof tiapp.blackberry.permissions !== 'undefined') {
-	            for (key in tiapp.blackberry.permissions) {
-	            	permissions += '<permission>' + key + '</permission>\n\t';
-	        	}
-	        }
+			var permissions = '';
+			var tiapp = builder.tiapp;
+			if (typeof tiapp.blackberry !== 'undefined' && typeof tiapp.blackberry.permissions !== 'undefined') {
+				for (key in tiapp.blackberry.permissions) {
+					permissions += '<permission>' + key + '</permission>\n\t';
+				}
+			}
 
-	        if (tiapp['analytics'] === true) {
-	        	permissions += '<permission>read_device_identifying_information</permission>\n\t';
-	        }
-            
-        	var autoOrient = false;
-        	var orientation = '';
-        	if (typeof tiapp.blackberry !== 'undefined' && typeof tiapp.blackberry.orientation !== 'undefined') {
-	        	orientation = builder.tiapp.blackberry['orientation'];
-	        	if (orientation === 'auto') {
-	        		autoOrient = true;
-	        	}
-	        }
+			if (tiapp['analytics'] === true) {
+				permissions += '<permission>read_device_identifying_information</permission>\n\t';
+			}
+			
+			var autoOrient = false;
+			var orientation = '';
+			if (typeof tiapp.blackberry !== 'undefined' && typeof tiapp.blackberry.orientation !== 'undefined') {
+				orientation = builder.tiapp.blackberry['orientation'];
+				if (orientation === 'auto') {
+					autoOrient = true;
+				}
+			}
 
-            var projectDir = builder.projectDir;
-            var buildDir = path.join(projectDir, 'build', 'blackberry');
+			var projectDir = builder.projectDir;
+			var buildDir = path.join(projectDir, 'build', 'blackberry');
 			var barDescriptor = path.join(buildDir, 'bar-descriptor.xml');
 			var barDescriptorTmpl = path.join(builder.titaniumBBSdkPath, 'templates', 'bar-descriptor2.xml');
 			fs.writeFileSync(barDescriptor, renderTemplate(fs.readFileSync(barDescriptorTmpl).toString().trim(), {
@@ -538,31 +523,31 @@ function BlackberryNDK(builder) {
 			appProps = builder.appProps;
 			appProps = '[General]\n';
 			for (key in tiapp.properties) {
-	            for (key2 in tiapp.properties[key]) {
-	                if (key2 == 'value') {
-	                    appProps += key + ' = ' + tiapp.properties[key][key2] + '\n';
-	                }
-	            }
-	        }
-	        appProps += 'analytics = ' + tiapp['analytics'] + '\n';
-	        appProps += 'aguid = ' + tiapp['guid'] + '\n';
-	        appProps += 'version = ' + tiapp['version'] + '\n';
-	        if (builder.target === 'distribute') {
+				for (key2 in tiapp.properties[key]) {
+					if (key2 == 'value') {
+						appProps += key + ' = ' + tiapp.properties[key][key2] + '\n';
+					}
+				}
+			}
+			appProps += 'analytics = ' + tiapp['analytics'] + '\n';
+			appProps += 'aguid = ' + tiapp['guid'] + '\n';
+			appProps += 'version = ' + tiapp['version'] + '\n';
+			if (builder.target === 'distribute') {
 				appProps += 'deploytype = production\n';
 			}
 			else {
 				appProps += 'deploytype = development\n';
 			}
 		
-            // create the bar package
-            package(builder);
+			// create the bar package
+			package(builder);
 
-            // setup the build environment and then run the ndk command
-            var srccmd;
-            var ndkcmd;
-            var envFile = findEnvFile(ndk);
-            if (process.platform === 'win32') {
-            	srccmd = path.join(ndk, envFile);
+			// setup the build environment and then run the ndk command
+			var srccmd;
+			var ndkcmd;
+			var envFile = findEnvFile(ndk);
+			if (process.platform === 'win32') {
+				srccmd = path.join(ndk, envFile);
 				ndkcmd = 'blackberry-nativepackager.bat';
 			} else {
 				srccmd = 'source ' + path.join(ndk, envFile);
@@ -570,23 +555,23 @@ function BlackberryNDK(builder) {
 			}
 
 			var variant = builder.type2variantCpu[builder.target][0];
-        	var cpu = builder.type2variantCpu[builder.target][1];
-        	var barFile = '"' + path.join(buildDir, cpu, variant, projectName + '.bar') + '"';
-        	var appBinaryFile = '"' + path.join(buildDir, cpu, variant, projectName) + '"';
-        	var type = builder.target;
-        	var password = builder.password;
-        	var debugToken = builder.debugToken;
+			var cpu = builder.type2variantCpu[builder.target][1];
+			var barFile = '"' + path.join(buildDir, cpu, variant, projectName + '.bar') + '"';
+			var appBinaryFile = '"' + path.join(buildDir, cpu, variant, projectName) + '"';
+			var type = builder.target;
+			var password = builder.password;
+			var debugToken = builder.debugToken;
 			
 			// BuildID is is a 0-65535 value that identifies this package it must be incremented before bar signing 
 			var buildID = 1;
-        	if (typeof tiapp.blackberry !== 'undefined' && typeof builder.tiapp.blackberry['build-id'] !== 'undefined') {
-	        	buildID = builder.tiapp.blackberry['build-id'];
-	        }
+			if (typeof tiapp.blackberry !== 'undefined' && typeof builder.tiapp.blackberry['build-id'] !== 'undefined') {
+				buildID = builder.tiapp.blackberry['build-id'];
+			}
 
-            var command = [srccmd, '&&', ndkcmd, '-package', barFile, 'bar-descriptor.xml', '-e', appBinaryFile , 
-            					'"' + projectName + '"', '-buildID', buildID, 'assets', 'framework'];
+			var command = [srccmd, '&&', ndkcmd, '-package', barFile, 'bar-descriptor.xml', '-e', appBinaryFile , 
+								'"' + projectName + '"', '-buildID', buildID, 'assets', 'framework'];
 
-            if (type !== 'distribute') {
+			if (type !== 'distribute') {
 				command.push('-devMode');
 			}
 
@@ -594,14 +579,14 @@ function BlackberryNDK(builder) {
 				debugToken = '"' + debugToken + '"';
 				command = command.concat(['-debugToken', debugToken])
 			}
-           
-            var oldPath = process.cwd();
-            process.chdir(buildDir);	
-            runCommandFromArray(command, showCmd = true, function() {  
+		   
+			var oldPath = process.cwd();
+			process.chdir(buildDir);	
+			runCommandFromArray(command, showCmd = true, function() {  
 
-            	if (type !== 'distribute') {                      
+				if (type !== 'distribute') {					  
 
-		            if (process.platform === 'win32') {
+					if (process.platform === 'win32') {
 						ndkcmd = 'blackberry-deploy.bat';
 					} else {
 						ndkcmd = 'blackberry-deploy';
@@ -614,12 +599,12 @@ function BlackberryNDK(builder) {
 					}
 
 					runCommandFromArray(command, showCmd = true, function() {  
-						timerID = setInterval(getAppLog, 2000, ndk, deviceIP, barFile, password, finished);                     
+						timerID = setInterval(getAppLog, 2000, ndk, deviceIP, barFile, password, finished);					 
 					});
 
-	            } else {
+				} else {
 
-	            	if (process.platform === 'win32') {
+					if (process.platform === 'win32') {
 						ndkcmd = 'blackberry-signer.bat';
 					} else {
 						ndkcmd = 'blackberry-signer';
@@ -630,17 +615,17 @@ function BlackberryNDK(builder) {
 					runCommandFromArray(command, showCmd = true, function() { 
 
 						if (typeof builder.outputDir !== 'undefined') {
-                        	fs.mkdir(builder.outputDir); 
-                        	barFile = path.join(buildDir, cpu, variant, projectName + '.bar'); 
-                        	fs.createReadStream(barFile).pipe(fs.createWriteStream(path.join(builder.outputDir, projectName + '.bar')));						
-						}      
+							fs.mkdir(builder.outputDir); 
+							barFile = path.join(buildDir, cpu, variant, projectName + '.bar'); 
+							fs.createReadStream(barFile).pipe(fs.createWriteStream(path.join(builder.outputDir, projectName + '.bar')));						
+						}	  
 
 						process.chdir(oldPath);
 						finished(/* if there was an error, pass it to finished */);
 					});
-	            }
+				}
 			});		
-        } // end of run function
+		} // end of run function
 	};
 
 	return self;

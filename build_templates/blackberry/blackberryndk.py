@@ -185,6 +185,7 @@ class BlackberryNDK:
 
 		tmpPathSDK = tempfile.mkdtemp()
 
+		self._copy_file(os.path.join(templateDir, "ticore"), os.path.join(tmpPathSDK, "ticore"))
 		self._copy_file(os.path.join(templateDir, "tibb"), os.path.join(tmpPathSDK, "tibb"))
 		self._copy_file(os.path.join(templateDir, "libv8"), os.path.join(tmpPathSDK, "libv8"))
 

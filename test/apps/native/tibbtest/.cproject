@@ -28,6 +28,7 @@
 								<option id="com.qnx.qcc.option.compiler.includePath.198348480" name="Include Directories (-I)" superClass="com.qnx.qcc.option.compiler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/ticore/include}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/tibb/include}"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
 									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/qt4/QtCore&quot;"/>
@@ -85,6 +86,7 @@
 								<option id="com.qnx.qcc.option.compiler.includePath.1804141359" name="Include Directories (-I)" superClass="com.qnx.qcc.option.compiler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/ticore/include}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/tibb/include}"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
 									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/qt4/QtCore&quot;"/>
@@ -142,6 +144,7 @@
 								<option id="com.qnx.qcc.option.compiler.includePath.1645799163" name="Include Directories (-I)" superClass="com.qnx.qcc.option.compiler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/ticore/include}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/tibb/include}"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
 									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/qt4/QtCore&quot;"/>
@@ -199,6 +202,7 @@
 								<option id="com.qnx.qcc.option.compiler.includePath.1358423892" name="Include Directories (-I)" superClass="com.qnx.qcc.option.compiler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/ticore/include}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/tibb/include}"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/bb/data"/>
 									<listOptionValue builtIn="false" value="&quot;${QNX_TARGET}/usr/include/qt4/QtCore&quot;"/>

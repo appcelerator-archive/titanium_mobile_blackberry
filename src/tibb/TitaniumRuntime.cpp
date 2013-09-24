@@ -25,11 +25,22 @@
 #include <bps/bps.h>
 
 TitaniumRuntime* TitaniumRuntime::runtime = 0;
+static Persistent<Context> _globalContex;
 
 TitaniumRuntime::TitaniumRuntime()
 {
     javaScript_ = NULL;
 }
+
+void TitaniumRuntime::setContext(Persistent<Context> ctx)
+{
+	_globalContex = ctx;
+}
+Persistent<Context> TitaniumRuntime::getContenxt()
+{
+	return _globalContex;
+}
+
 
 TitaniumRuntime::TitaniumRuntime(const char* javaScript)
 {
