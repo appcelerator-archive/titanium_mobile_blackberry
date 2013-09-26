@@ -18,6 +18,9 @@
 #include "Ti_Helper.h"
 #include "Ti_EventParameters.h"
 #include "Ti_Runtime.h"
+#include "Ti_View.h"
+#include "Ti_ViewProxy.h"
 #include "Ti_SceneManager.h"
+#include "TitaniumLayout.h"
 
 #endif

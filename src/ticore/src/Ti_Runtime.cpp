@@ -1,8 +1,8 @@
 /*
- * TiRuntime.cpp
- *
- *  Created on: Jul 10, 2013
- *      Author: penrique
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #include "Ti_Runtime.h"
@@ -25,6 +25,7 @@ Ti::TiRuntime::TiRuntime(bb::cascades::Application* _app)
 //    globalTemplate->Set(String::New("setInterval"), FunctionTemplate::New(Ti::TiTimer::SetInterval));
     globalTemplate->Set(String::New("require"), FunctionTemplate::New(Ti::TiRuntime::_require));
     globalTemplate->Set(String::New("_include"), FunctionTemplate::New(Ti::TiRuntime::_include));
+    globalTemplate->Set(String::New("__gc__"), FunctionTemplate::New(Ti::TiRuntime::GC));
 
     globalContext = Context::New(NULL, globalTemplate);
 

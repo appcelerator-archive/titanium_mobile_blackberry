@@ -8,18 +8,24 @@
  */
 
 #include "Ti_Timer.h"
-
-Ti::TiTimer::TiTimer(int _milliseconds) {
+#include <QDebug>
+Ti::TiTimer::TiTimer(int _milliseconds) :
+	singleShot(false)
+{
 
 	timer = new QTimer();
 	timer->setInterval(_milliseconds);
 	QObject::connect(timer, SIGNAL(timeout()), this, SLOT(timeout()));
+	QObject::connect(timer, SIGNAL(destroyed(QObject*)), this, SLOT(destroyed(QObject*)));
 }
 
 Ti::TiTimer::~TiTimer() {
 	// TODO Auto-generated destructor stub
 }
 
+void Ti::TiTimer::destroyed(QObject* obj) {
+	qDebug() << "[TIMER]" << obj;
+}
 void Ti::TiTimer::timeout()
 {
 	HandleScope scope;
@@ -42,6 +48,7 @@ void Ti::TiTimer::stop()
 
 Handle<Value> Ti::TiTimer::SetTimeout(const Arguments &args)
 {
+	HandleScope scope;
 	Handle<Value> _function = args[0];
 	Handle<Value> _timeout = args[1];
 
@@ -51,5 +58,5 @@ Handle<Value> Ti::TiTimer::SetTimeout(const Arguments &args)
 	timer->setSingleShot(true);
 	timer->start();
 	timer->callback = Persistent<Function>::New(Handle<Function>::Cast(_function));
-	return Undefined();
+	return scope.Close(Undefined());
 }
