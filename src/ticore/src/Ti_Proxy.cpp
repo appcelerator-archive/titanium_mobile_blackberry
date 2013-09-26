@@ -88,6 +88,11 @@ void Ti::TiProxy::createPropertySetterGetter(QString name, PROPERTY_SETTER sette
 	Ti::TiProperty::createProperty(this, name, setter, getter);
 }
 
+void Ti::TiProxy::onEventAdded(QString)
+{
+	// for subclass
+}
+
 Ti::TiValue Ti::TiProxy::addEventListener(Ti::TiValue value)
 {
 	QString eventName;
@@ -95,6 +100,7 @@ Ti::TiValue Ti::TiProxy::addEventListener(Ti::TiValue value)
 	Ti::TiValue nameValue = value.toList().at(0);
 	eventName = nameValue.toString();
 
+	onEventAdded(eventName);
 	Ti::TiValue functionValue = value.toList().at(1);
 	Handle<Function> func = Handle<Function>::Cast(functionValue.toJSValue());
 

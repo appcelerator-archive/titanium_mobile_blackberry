@@ -29,7 +29,8 @@ public:
     static TitaniumRuntime* instance() {
         return runtime;
     }
-
+    static void setContext(Persistent<Context>);
+    static Persistent<Context> getContenxt();
     NativeObjectFactory* objectFactory() const {
         return objectFactory_;
     }

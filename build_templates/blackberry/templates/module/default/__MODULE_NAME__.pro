@@ -1,17 +1,28 @@
 TEMPLATE = lib
 
-CONFIG += qt warn_on staticlib debug_and_release cascades
+QMAKE_CC = $(NDK_CCACHE) $${QMAKE_CC}
+QMAKE_CXX = $(NDK_CCACHE) $${QMAKE_CXX}
+
+CONFIG += qt staticlib warn_on debug_and_release cascades mobility
+MOBILITY += sensors
+
+
+TI_BB_SDK = "__SDK_ROOT__/blackberry/"
 
 INCLUDEPATH += \
 	. \
-	./include
+    $${TI_BB_SDK}/libv8 \
+    $${TI_BB_SDK}/ticore/include \
+    ./include
+
 QMAKE_LIBDIR += \
-	. \
-	../lib 
+	./libs
+
 SOURCES += \
-	./*.cpp 
+    ./*.cpp
+    
 HEADERS += \
-	./*.h 
+    ./*.h
 
 device {
 	CONFIG(release, debug|release) {
