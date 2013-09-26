@@ -23,6 +23,9 @@ using namespace bb::cascades;
 using namespace titanium;
 using namespace v8;
 
+
+
+
 NativeTabGroupObject::NativeTabGroupObject(TiObject* tiObject)
     : NativeControlObject(tiObject, N_TYPE_TABGROUP)
     , nativeObjectFactory_(NULL)
@@ -180,6 +183,14 @@ int NativeTabGroupObject::getTabs(TiObject* obj)
     }
 
     return NATIVE_ERROR_OK;
+}
+
+void NativeTabGroupObject::setupEvents(TiEventContainerFactory* factory)
+{
+    TiEventContainer* eventFocus = factory->createEventContainer();
+    eventFocus->setDataProperty("type", "focus");
+    events_.insert("focus", EventPairSmartPtr(eventFocus, new TabGroupFocusEventHandler(eventFocus)));
+    QObject::connect(tabGroup_, SIGNAL(activeTabChanged(bb::cascades::Tab*)), events_["focus"]->handler(), SLOT(activeTabChanged(bb::cascades::Tab*)));
 }
 
 int NativeTabGroupObject::open()
