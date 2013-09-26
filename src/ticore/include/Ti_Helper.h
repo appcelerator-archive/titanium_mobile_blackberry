@@ -13,6 +13,8 @@
 #include <v8.h>
 #include <QString>
 #include <bb/cascades/Color>
+#include <bb/cascades/AbstractTextControl>
+#include "Ti_Value.h"
 
 using namespace v8;
 
@@ -23,6 +25,7 @@ public:
 	TiHelper();
 	virtual ~TiHelper();
 	static void Log(QString);
+	static float PPI();
 	static Handle<Value> Log(Handle<Value>);
 	static Handle<Value> Log(const Arguments &args);
 	static Handle<Value> Alert(const Arguments &args);
@@ -30,7 +33,7 @@ public:
 	static float FloatFromValue(Handle<Value>);
 	static char* QStringToChar(QString);
 	static bb::cascades::Color ColorFromObject(Handle<Value> obj);
-
+	static void applyFontToText(Ti::TiValue, bb::cascades::AbstractTextControl*);
 	static Handle<Value> ValueFromQString(QString);
 };
 }

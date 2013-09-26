@@ -10,7 +10,42 @@
 #include "Ti_Helper.h"
 
 #include <bb/system/SystemDialog>
+#include <bb/device/DisplayInfo>
 #include <iostream>
+#include "Layout/Structs.h"
+#include "Layout/ParseProperty.h"
+
+static const QString FONT_FAMILY            = "fontFamily";
+static const QString FONT_SIZE              = "fontSize";
+static const QString FONT_STYLE             = "fontStyle";
+static const QString FONT_STYLE_NORMAL      = "normal";
+static const QString FONT_STYLE_ITALIC      = "italic";
+static const QString FONT_WEIGHT            = "fontWeight";
+static const QString FONT_WEIGHT_NORMAL     = "normal";
+static const QString FONT_WEIGHT_BOLD       = "bold";
+static float _ppi = -1;
+
+float Ti::TiHelper::PPI()
+{
+	if(_ppi != -1) return _ppi;
+	const float MMPERINCH = 25.4f;
+
+	bb::device::DisplayInfo display;
+	QSize pixelSize = display.pixelSize();
+	QSizeF physicalSize = display.physicalSize();
+
+	const float physicalWidth = physicalSize.width();
+	const float physicalHeight = physicalSize.height();
+	const float pixelWidth = pixelSize.width();
+	const float pixelHeight = pixelSize.height();
+
+	// Calculate pixels density
+	const float diagonalWidth = sqrtf(physicalWidth * physicalWidth + physicalHeight * physicalHeight) / MMPERINCH;
+	const float diagonalPixels = sqrtf(pixelWidth * pixelWidth + pixelHeight * pixelHeight);
+
+	_ppi = diagonalPixels / diagonalWidth;
+	return _ppi;
+}
 
 Handle<Value> Ti::TiHelper::Log(const Arguments &args)
 {
@@ -72,6 +107,59 @@ float Ti::TiHelper::FloatFromValue(Handle<Value> val)
 		return 0;
 	Local<Number> num = val->ToNumber();
 	return (float)num->Value();
+}
+
+void Ti::TiHelper::applyFontToText(Ti::TiValue value, bb::cascades::AbstractTextControl* control)
+{
+	if(!value.isMap()) return;
+	QMap<QString, Ti::TiValue> map = value.toMap();
+
+	if(map.contains(FONT_FAMILY))
+	{
+		Ti::TiValue fontFamily = map.value(FONT_FAMILY);
+		control->textStyle()->setFontFamily(fontFamily.toString());
+	}
+
+	if(map.contains(FONT_SIZE))
+	{
+		Ti::TiValue fontSize= map.value(FONT_SIZE);
+		float size = Ti::Layout::ParseProperty::_computeValue(fontSize.toString().toStdString(), Ti::Layout::Fixed, (double)Ti::TiHelper::PPI());
+		size /= 3.5;
+		if(size > 0)
+		{
+			control->textStyle()->setFontSize(bb::cascades::FontSize::PointValue);
+			control->textStyle()->setFontSizeValue(size);
+		}
+	}
+
+	if(map.contains(FONT_STYLE))
+	{
+		Ti::TiValue fontStyle = map.value(FONT_STYLE);
+		QString style = fontStyle.toString();
+		if(style == FONT_STYLE_NORMAL)
+		{
+            control->textStyle()->setFontStyle(bb::cascades::FontStyle::Normal);
+		}
+        else if (style == FONT_STYLE_ITALIC)
+        {
+        	control->textStyle()->setFontStyle(bb::cascades::FontStyle::Italic);
+        }
+	}
+
+	if(map.contains(FONT_WEIGHT))
+	{
+		Ti::TiValue fontWeight = map.value(FONT_WEIGHT);
+		QString weight = fontWeight.toString();
+		if(weight == FONT_WEIGHT_NORMAL)
+		{
+            control->textStyle()->setFontWeight(bb::cascades::FontWeight::Normal);
+		}
+		else if(weight == FONT_WEIGHT_BOLD)
+		{
+            control->textStyle()->setFontWeight(bb::cascades::FontWeight::Bold);
+		}
+	}
+
 }
 
 bb::cascades::Color Ti::TiHelper::ColorFromObject(Handle<Value> obj)

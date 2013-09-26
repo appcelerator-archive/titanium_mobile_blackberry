@@ -10,6 +10,7 @@ INCLUDEPATH += \
 	. \
     ./include \
     ../../runtime/v8/include
+
 SOURCES += \
     ./src/Ti_Blob.cpp \
     ./src/Ti_Constants.cpp \
@@ -23,7 +24,17 @@ SOURCES += \
     ./src/Ti_Runtime.cpp \
     ./src/Ti_SceneManager.cpp \
     ./src/Ti_Timer.cpp \
-    ./src/Ti_Value.cpp
+    ./src/Ti_Value.cpp \
+    ./src/Ti_View.cpp \
+    ./src/Ti_ViewProxy.cpp \
+    ./src/TitaniumLayout.cpp \
+    ./src/Layout/Common.cpp \
+    ./src/Layout/Composite.cpp \
+    ./src/Layout/Element.cpp \
+    ./src/Layout/Horizontal.cpp \
+    ./src/Layout/Node.cpp \
+    ./src/Layout/ParseProperty.cpp \
+    ./src/Layout/Vertical.cpp
 
 HEADERS += \
     ./include/Ti_Blob.h \
@@ -39,7 +50,20 @@ HEADERS += \
     ./include/Ti_SceneManager.h \
     ./include/Ti_Timer.h \
     ./include/Ti_Value.h \
-    ./include/TiCore.h    
+    ./include/Ti_View.h \
+    ./include/Ti_ViewProxy.h \
+    ./include/TiCore.h \
+    ./include/TitaniumLayout.h \
+    ./include/Layout/Common.h \
+    ./include/Layout/Composite.h \
+    ./include/Layout/Element.h \
+    ./include/Layout/Horizontal.h \
+    ./include/Layout/Node.h \
+    ./include/Layout/ParseProperty.h \
+    ./include/Layout/Vertical.h \
+    ./include/Layout/Headers.h \
+    ./include/Layout/Structs.h
+   
 device {
 	CONFIG(release, debug|release) {
 		DESTDIR = a.le-v7

@@ -53,6 +53,17 @@ void Ti::TiProxy::initWithObject(Handle<Object> obj)
 	}
 }
 
+Ti::TiValue Ti::TiProxy::applyProperties(Ti::TiValue value)
+{
+	if(value.isMap())
+	{
+		initWithObject(value.toJSValue()->ToObject());
+	}
+	Ti::TiValue val;
+	val.setUndefined();
+	return val;
+}
+
 void Ti::TiProxy::initEnd()
 {
 
@@ -213,18 +224,9 @@ void Ti::TiProxy::fireEvent(QString eventName, Ti::TiEventParameters params)
 			event->fireWithParameters(realJSObject, &params);
 		}
 	}
-
-    QString onEvent = QString(eventName);
-	onEvent[0] = onEvent[0].toUpper();
-	onEvent.prepend("on");
-
-	eventName.prepend("on");
-	Ti::TiEvent::fireCallbackIfNeeded(eventName, realJSObject, &params);
-	Ti::TiEvent::fireCallbackIfNeeded(onEvent, realJSObject, &params);
 	if(eventName == Ti::TiConstants::EventClose)
 	{
 		V8::LowMemoryNotification();
-//		Ti::TiHelper::Log("Called Memory Warning");
 	}
 }
 
@@ -291,7 +293,6 @@ Handle<Value> Ti::TiProxy::_Setter (Local<String> property, Local<Value> value, 
 		return value;
 
 	Ti::TiProxy* tiProxy = static_cast<Ti::TiProxy*>(proxyObject->Value());
-//	Ti::TiHelper::Log(QString("Property Setter ").append(Ti::TiHelper::QStringFromValue(property)));
 
 	if(tiProxy->properties.contains(Ti::TiHelper::QStringFromValue(property)))
 	{
@@ -306,7 +307,6 @@ Handle<Value> Ti::TiProxy::_Setter (Local<String> property, Local<Value> value, 
 void Ti::TiProxy::_WeakCallback(Persistent<Value> object, void* parameter)
 {
 	Ti::TiProxy* obj = static_cast<Ti::TiProxy*>(parameter);
-//	qDebug() << "[DELETE] Proxy" << obj->_proxyName;
 	delete obj;
 	object.ClearWeak();
 	object.Clear();

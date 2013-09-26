@@ -32,6 +32,7 @@ public:
 	Persistent<Function> callback;
 	bool singleShot;
 public slots:
+	void destroyed(QObject*);
 	void timeout();
 };
 }

@@ -9,11 +9,18 @@
 
 #include "Ti_Constants.h"
 
+const QString Ti::TiConstants::EventClick = "click";
+const QString Ti::TiConstants::EventDoubleClick = "dblclick";
+const QString Ti::TiConstants::EventSingleTap = "tap";
+const QString Ti::TiConstants::EventDoubleTap = "doubletap";
+const QString Ti::TiConstants::EventLongPress = "longpress";
+const QString Ti::TiConstants::EventLongClick = "longclick";
+const QString Ti::TiConstants::EventPinch = "pinch";
+
 const QString Ti::TiConstants::EventReturn = "return";
 const QString Ti::TiConstants::EventFocus = "focus";
 const QString Ti::TiConstants::EventBlur = "blur";
 const QString Ti::TiConstants::EventChange = "change";
-const QString Ti::TiConstants::EventClick = "click";
 const QString Ti::TiConstants::EventClose = "close";
 const QString Ti::TiConstants::EventOpen = "open";
 

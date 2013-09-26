@@ -1,5 +1,4 @@
 /*
- * TiValue.cpp
  *
  * Appcelerator Titanium Mobile
  * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
