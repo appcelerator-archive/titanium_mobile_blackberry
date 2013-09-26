@@ -9,6 +9,9 @@
 #define NATIVETABGROUPOBJECT_H_
 
 #include "NativeControlObject.h"
+#include "TiEventContainer.h"
+#include "TiEventContainerFactory.h"
+#include "EventHandler.h"
 
 class NativeObjectFactory;
 namespace bb
@@ -16,6 +19,7 @@ namespace bb
 namespace cascades
 {
 class TabbedPane;
+class Tab;
 }
 }
 
@@ -23,12 +27,13 @@ namespace titanium {
 class Scene;
 }
 
+using namespace titanium;
+
 /*
  * NativeTabGroupObject
  *
  * UI: Tab Group control
  */
-
 class NativeTabGroupObject : public NativeControlObject
 {
 public:
@@ -46,6 +51,8 @@ public:
     virtual int getTabs(TiObject* obj);
     virtual int open();
 
+    virtual void setupEvents(TiEventContainerFactory* factory);
+
 protected:
     virtual int initialize();
 
@@ -60,4 +67,18 @@ private:
     NativeTabGroupObject& operator=(const NativeTabGroupObject& obj);
 };
 
+class TabGroupFocusEventHandler : public EventHandler
+{
+    Q_OBJECT
+public:
+    explicit TabGroupFocusEventHandler(TiEventContainer* container)
+        : EventHandler(container) { }
+
+public slots:
+    void activeTabChanged(bb::cascades::Tab*)
+    {
+    	TiEventContainer* eventContainer = getEventContainer();
+    	eventContainer->fireEvent();
+    }
+};
 #endif /* NATIVETABGROUPOBJECT_H_ */
