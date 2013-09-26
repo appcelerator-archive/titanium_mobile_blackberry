@@ -135,6 +135,7 @@ public:
 	virtual Ti::TiValue removeEventListener(Ti::TiValue);
 	virtual Ti::TiValue fireEvent(Ti::TiValue);
 	virtual Ti::TiValue getToString(Ti::TiValue);
+	virtual Ti::TiValue applyProperties(Ti::TiValue);
 
 	virtual void onEventAdded(QString);
 	virtual void fireEvent(QString, Ti::TiEventParameters);
