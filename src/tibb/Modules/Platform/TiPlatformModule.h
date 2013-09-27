@@ -23,7 +23,6 @@ public:
 	TiPlatformModule(const char*);
 	CREATE_MODULE(TiPlatformModule)
 
-
 	virtual void eventAdded(QString);
 	virtual ~TiPlatformModule();
 

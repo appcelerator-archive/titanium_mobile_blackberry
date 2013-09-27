@@ -38,7 +38,9 @@ SOURCES += \
     ./Modules/Platform/TiPlatformModule.cpp \    
     ./Modules/Filesystem/TiFilesystemBlobProxy.cpp \
     ./Modules/Utils/sha256.cpp \    
-    ./Modules/Utils/TiUtilsModule.cpp    
+    ./Modules/Utils/TiUtilsModule.cpp \
+    ./Modules/UI/BlackBerry/TiUIBlackberryModule.cpp \
+    ./Modules/UI/BlackBerry/ApplicationMenu/ApplicationMenuProxy.cpp 
 
 HEADERS += \
 	./*.h \
@@ -57,7 +59,9 @@ HEADERS += \
     Modules/Platform/TiPlatformModule.h \
     Modules/Filesystem/TiFilesystemBlobProxy.h \
     Modules/Utils/sha256.h \    
-    Modules/Utils/TiUtilsModule.h    
+    Modules/Utils/TiUtilsModule.h  \
+    Modules/UI/BlackBerry/TiUIBlackberryModule.h \
+    Modules/UI/BlackBerry/ApplicationMenu/ApplicationMenuProxy.h 
 
 LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata -lbbsystem
 LIBS += -lbbpim
