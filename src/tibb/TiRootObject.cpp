@@ -39,6 +39,7 @@
 #include "Modules/Filesystem/TiFilesystemModule.h"
 #include "Modules/Platform/TiPlatformModule.h"
 #include "Modules/Utils/TiUtilsModule.h"
+#include "Modules/UI/BlackBerry/TiUIBlackberryModule.h"
 
 using namespace titanium;
 
@@ -83,6 +84,10 @@ void TiRootObject::onCreateStaticMembers()
     tiObj->Set(String::New("Filesystem"), TiFilesystemModule::CreateModule());
     tiObj->Set(String::New("Platform"), TiPlatformModule::CreateModule());
     tiObj->Set(String::New("Utils"), TiUtilsModule::CreateModule());
+
+    Local<Object> tiUI = tiObj->Get(String::New("UI"))->ToObject();
+    tiUI->Set(String::New("BlackBerry"), TiUIBlackberryModule::CreateModule());
+
 }
 
 VALUE_MODIFY TiRootObject::onChildValueChange(TiObject* childObject, Handle<Value>, Handle<Value> newValue)
