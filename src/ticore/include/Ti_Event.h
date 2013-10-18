@@ -21,7 +21,7 @@ class TiEvent {
 public:
 	TiEvent(Handle<Function>);
 	virtual ~TiEvent();
-	void fireWithParameters(Handle<Object>, Ti::TiEventParameters*);
+	void fireWithParameters(QString, Handle<Object>, Ti::TiEventParameters*);
 	static void fireCallbackIfNeeded(QString, Handle<Object>, Ti::TiEventParameters*);
 	Persistent<Function> callback;
 };

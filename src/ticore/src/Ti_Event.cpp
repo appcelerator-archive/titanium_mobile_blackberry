@@ -9,6 +9,7 @@
 
 #include "Ti_Event.h"
 #include "Ti_EventParameters.h"
+#include "Ti_Constants.h"
 
 Ti::TiEvent::TiEvent(Handle<Function> func) {
 	TiHelper::Log("Event Added");
@@ -30,6 +31,9 @@ void Ti::TiEvent::fireCallbackIfNeeded(QString eventName, Handle<Object> owner, 
 		Handle<Function> callback = Handle<Function>::Cast(owner->Get(Ti::TiHelper::ValueFromQString(eventName)));
 
 		Handle<Object> obj = Object::New();
+		if(!params->contains(Ti::TiConstants::EventType)) {
+			params->addParam(Ti::TiConstants::EventType, eventName);
+		}
 		Ti::TiEventParameters::addParametersToObject(params, obj);
 		obj->Set(String::New("source"), owner);
 
@@ -55,7 +59,7 @@ void Ti::TiEvent::fireCallbackIfNeeded(QString eventName, Handle<Object> owner, 
 
 }
 
-void Ti::TiEvent::fireWithParameters(Handle<Object> owner, Ti::TiEventParameters *params)
+void Ti::TiEvent::fireWithParameters(QString eventName, Handle<Object> owner, Ti::TiEventParameters *params)
 {
 	HandleScope scope;
 	if(owner.IsEmpty())
@@ -65,6 +69,9 @@ void Ti::TiEvent::fireWithParameters(Handle<Object> owner, Ti::TiEventParameters
 	}
     Context::Scope context_scope(owner->CreationContext());
 	Handle<Object> obj = Object::New();
+	if(!params->contains(Ti::TiConstants::EventType)) {
+		params->addParam(Ti::TiConstants::EventType, eventName);
+	}
 	Ti::TiEventParameters::addParametersToObject(params, obj);
 	obj->Set(String::New("source"), owner);
 

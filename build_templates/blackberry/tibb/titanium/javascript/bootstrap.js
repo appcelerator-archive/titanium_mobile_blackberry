@@ -11,7 +11,7 @@ var global = {};
 
 alert = function(msg)
 {
-    Ti.UI.createAlertDialog({message: msg}).show();
+    Ti.UI.createAlertDialog({message: (msg || '').toString()}).show();
 }
 
 // TODO: move to its own file when we can include from the framework dir

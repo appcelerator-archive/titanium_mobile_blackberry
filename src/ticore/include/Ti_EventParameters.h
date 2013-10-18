@@ -29,7 +29,7 @@ public:
 	void addParam(QString, double);
 	void addParam(QString, TiProxy*);
 	void addParam(QString, TiEventParameters);
-
+	bool contains(QString);
 	static void addParametersToObject(Ti::TiEventParameters*, Handle<Object>);
 private:
 	QMap<QString, QString> stringMap;

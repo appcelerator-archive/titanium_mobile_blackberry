@@ -9,6 +9,9 @@
 
 #include "Ti_Constants.h"
 
+
+const QString Ti::TiConstants::EventType = "type";
+
 const QString Ti::TiConstants::EventClick = "click";
 const QString Ti::TiConstants::EventDoubleClick = "dblclick";
 const QString Ti::TiConstants::EventSingleTap = "tap";

@@ -221,7 +221,7 @@ void Ti::TiProxy::fireEvent(QString eventName, Ti::TiEventParameters params)
 		for(int i = 0, len = list.length(); i < len; i++)
 		{
 			Ti::TiEvent *event = list.at(i);
-			event->fireWithParameters(realJSObject, &params);
+			event->fireWithParameters(eventName, realJSObject, &params);
 		}
 	}
 	if(eventName == Ti::TiConstants::EventClose)

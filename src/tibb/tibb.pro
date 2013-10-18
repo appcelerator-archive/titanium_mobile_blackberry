@@ -40,7 +40,9 @@ SOURCES += \
     ./Modules/Utils/sha256.cpp \    
     ./Modules/Utils/TiUtilsModule.cpp \
     ./Modules/UI/BlackBerry/TiUIBlackberryModule.cpp \
-    ./Modules/UI/BlackBerry/ApplicationMenu/ApplicationMenuProxy.cpp 
+    ./Modules/UI/BlackBerry/ApplicationMenu/ApplicationMenuProxy.cpp \ 
+    ./Modules/App/TiAppModule.cpp \
+    ./Modules/App/TiAppPropertiesModule.cpp
 
 HEADERS += \
 	./*.h \
@@ -61,7 +63,9 @@ HEADERS += \
     Modules/Utils/sha256.h \    
     Modules/Utils/TiUtilsModule.h  \
     Modules/UI/BlackBerry/TiUIBlackberryModule.h \
-    Modules/UI/BlackBerry/ApplicationMenu/ApplicationMenuProxy.h 
+    Modules/UI/BlackBerry/ApplicationMenu/ApplicationMenuProxy.h  \
+    Modules/App/TiAppModule.h \
+    Modules/App/TiAppPropertiesModule.h
 
 LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata -lbbsystem
 LIBS += -lbbpim

@@ -15,6 +15,8 @@ namespace Ti
 class TiConstants {
 public:
 
+	static const QString EventType;
+
 	// Touch events:
 	static const QString EventClick;
 	static const QString EventDoubleClick;
@@ -23,7 +25,6 @@ public:
 	static const QString EventLongPress;
 	static const QString EventLongClick;
 	static const QString EventPinch;
-
 
 	static const QString EventReturn;
 	static const QString EventFocus;
