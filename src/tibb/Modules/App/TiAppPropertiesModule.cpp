@@ -225,7 +225,6 @@ QVariant TiAppPropertiesModule::convertTiValueToQVariant(Ti::TiValue value, Prop
 
 Ti::TiValue TiAppPropertiesModule::convertQVariantToTiValue(QVariant value, PropertyType type)
 {
-	qDebug() << "[VAR]" << value;
 	Ti::TiValue val;
 	switch(type)
 	{
@@ -243,7 +242,6 @@ Ti::TiValue TiAppPropertiesModule::convertQVariantToTiValue(QVariant value, Prop
 		break;
 	case TiAppPropertiesModule::ObjectProperty:
 	{
-		qDebug() << "Set map??" << value.toString();
 		val.setMap(createMapFromQVariant(value));
 		break;
 	}
@@ -285,8 +283,7 @@ Ti::TiValue TiAppPropertiesModule::getProp(Ti::TiValue value, PropertyType type)
 		Ti::TiValue keyVal = values.at(0);
 		Ti::TiValue propVal = values.at(1);
 		key = keyVal.toString();
-
-		prop = convertTiValueToQVariant(keyVal, type);
+		prop = convertTiValueToQVariant(propVal, type);
 	}
 	else
 	{
@@ -300,10 +297,20 @@ Ti::TiValue TiAppPropertiesModule::getProp(Ti::TiValue value, PropertyType type)
 	}
 	else
 	{
-		settings.setValue(key, prop);
-		return convertQVariantToTiValue(prop, type);
+		if(prop.isValid())
+		{
+			settings.setValue(key, prop);
+			return convertQVariantToTiValue(prop, type);
+		}
+		QSettings defaultSettings("app/native/assets/app_properties.ini", QSettings::IniFormat);
+		if(defaultSettings.contains(key))
+		{
+			return convertQVariantToTiValue(defaultSettings.value(key), type);
+		}
 	}
-
+	Ti::TiValue val;
+	val.setUndefined();
+	return val;
 }
 
 Ti::TiValue TiAppPropertiesModule::getBool(Ti::TiValue value)
