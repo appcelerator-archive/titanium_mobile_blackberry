@@ -19,6 +19,14 @@ Ti::TiEventParameters::~TiEventParameters() {
 	// Ti::TiHelper::Log("Ti::TiEventParameters destroyed!");
 }
 
+bool Ti::TiEventParameters::contains(QString key)
+{
+	return stringMap.contains(key) ||
+			numberMap.contains(key) ||
+			proxyMap.contains(key) ||
+			objectMap.contains(key);
+
+}
 void Ti::TiEventParameters::addParam(QString key, QString value)
 {
 	stringMap[key] = value;
