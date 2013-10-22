@@ -615,7 +615,7 @@ function BlackberryNDK(builder) {
 					runCommandFromArray(command, showCmd = true, function() { 
 
 						if (typeof builder.outputDir !== 'undefined') {
-							fs.mkdir(builder.outputDir); 
+							wrench.mkdirSyncRecursive(builder.outputDir); 
 							barFile = path.join(buildDir, cpu, variant, projectName + '.bar'); 
 							fs.createReadStream(barFile).pipe(fs.createWriteStream(path.join(builder.outputDir, projectName + '.bar')));						
 						}	  

@@ -41,6 +41,7 @@
 #include "Modules/Platform/TiPlatformModule.h"
 #include "Modules/Utils/TiUtilsModule.h"
 #include "Modules/UI/BlackBerry/TiUIBlackberryModule.h"
+#include "Modules/App/TiAppModule.h"
 
 using namespace titanium;
 
