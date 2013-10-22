@@ -7,8 +7,10 @@
 
 #include "TiGeolocationModule.h"
 #include "TiGeolocationSession.h"
+#include "TiCompassSession.h"
 
 static QList<TiGeolocationSession*> _geolocationSessions;
+static QList<TiCompassSession*> _compassSessions;
 
 
 TiGeolocationModule::TiGeolocationModule(const char* name) :
@@ -88,6 +90,11 @@ void TiGeolocationModule::onEventAdded(QString eventName)
 		session->setPreferredProvider(_preferedProvider);
 		_geolocationSessions.append(session);
 	}
+
+	if(eventName == "heading") {
+		TiCompassSession *session = new TiCompassSession(this);
+		_compassSessions.append(session);
+	}
 }
 
 void TiGeolocationModule::onEventRemoved(QString eventName)
@@ -95,6 +102,10 @@ void TiGeolocationModule::onEventRemoved(QString eventName)
 	if(eventName == "location") {
 		delete _geolocationSessions.last();
 		_geolocationSessions.removeLast();
+	}
+	if(eventName == "heading") {
+		delete _compassSessions.last();
+		_compassSessions.removeLast();
 	}
 }
 
@@ -247,8 +258,13 @@ Ti::TiValue TiGeolocationModule::forwardGeocoder(Ti::TiValue)
 	val.setUndefined();
 	return val;
 }
-Ti::TiValue TiGeolocationModule::getCurrentHeading(Ti::TiValue)
+Ti::TiValue TiGeolocationModule::getCurrentHeading(Ti::TiValue value)
 {
+	if(value.isFunction())
+	{
+		TiCompassSession *session = new TiCompassSession(this);
+		session->setCallbackFunction(value);
+	}
 	Ti::TiValue val;
 	val.setUndefined();
 	return val;
