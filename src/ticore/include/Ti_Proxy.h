@@ -138,6 +138,7 @@ public:
 	virtual Ti::TiValue applyProperties(Ti::TiValue);
 
 	virtual void onEventAdded(QString);
+	virtual void onEventRemoved(QString);
 	virtual void fireEvent(QString, Ti::TiEventParameters);
 	virtual void fireCallback(QString, Ti::TiEventParameters);
 

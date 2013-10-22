@@ -103,6 +103,11 @@ void Ti::TiProxy::onEventAdded(QString)
 {
 	// for subclass
 }
+void Ti::TiProxy::onEventRemoved(QString)
+{
+	// for subclass
+}
+
 
 Ti::TiValue Ti::TiProxy::addEventListener(Ti::TiValue value)
 {
@@ -155,6 +160,7 @@ Ti::TiValue Ti::TiProxy::removeEventListener(Ti::TiValue value)
 //				Ti::TiHelper::Log("Remove this event");
 				delete event;
 				events[eventName].removeAt(i);
+				onEventRemoved(eventName);
 				return res;
 			}
 		}

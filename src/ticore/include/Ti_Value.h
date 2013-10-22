@@ -54,6 +54,7 @@ public:
 	void				setNull();
 	void				setUndefined();
 	void 				setMap(QMap<QString, Ti::TiValue>);
+	void				setFunctionParams(QMap<QString, Ti::TiValue>);
 	bool				isList();
 	bool				isNull();
 	bool				isUndefined();
@@ -61,7 +62,9 @@ public:
 	bool				isNumber();
 	bool				isMap();
 	bool				isString();
-
+	bool				isFunction();
+	bool				isValid();
+	void				callFunction(Ti::TiProxy*, Ti::TiValue);
 private:
 
 	Ti::TiProxy* _proxy;
@@ -72,7 +75,6 @@ private:
 	QList<Ti::TiValue> _list;
 	QMap<QString, Ti::TiValue> _map;
 	void setValue(Handle<Value> value);
-
 };
 
 } /* namespace Ti */

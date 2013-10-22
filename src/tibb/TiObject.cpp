@@ -477,7 +477,7 @@ Handle<Value> TiObject::_propSetter(Local<String> prop, Local<Value> value, cons
         info.Holder()->ForceSet(prop, value);
         return value;
     }
-    info.Holder()->ForceSet(prop, Boolean::New(true));
+    info.Holder()->ForceSet(prop, value);
     String::Utf8Value propName(prop);
     const char* propString = (const char*)(*propName);
     return obj->setPropHelper(propString, value, &TiObject::setValue);
@@ -547,7 +547,7 @@ Handle<Value> TiObject::setPropHelper(const char* propString, Local<Value> value
     }
     if(value_->IsObject())
     {
-    	value_->ToObject()->ForceSet(String::New(propString), Boolean::New(true));
+    	value_->ToObject()->ForceSet(String::New(propString), value);
     }
     (destObj->*cb)(value);
     addMember(destObj, propString);

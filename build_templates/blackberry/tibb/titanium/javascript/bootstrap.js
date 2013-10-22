@@ -226,13 +226,4 @@ Ti.UI.createSearchBar = function(args) {
 	Ti.API.error('Ti.UI.createSearchBar() NOT SUPPORTED IN BB10, using textField instead');
 	return Ti.UI.createTextField(args);
 } 
-Ti.Geolocation.getCurrentPosition = function(_callback) {
-    function _onlocation(e) {
-        _callback(e);
-        setTimeout(function(){
-            Ti.Geolocation.removeEventListener('location', _onlocation);
-        }, 100);
-    }
-    Ti.Geolocation.addEventListener('location', _onlocation);
-}
 Titanium = Ti;
