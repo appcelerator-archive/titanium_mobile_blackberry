@@ -87,6 +87,7 @@ void TiRootObject::onCreateStaticMembers()
     tiObj->Set(String::New("Geolocation"), TiGeolocationModule::CreateModule(), DontDelete);
     tiObj->Set(String::New("Platform"), TiPlatformModule::CreateModule(), DontDelete);
     tiObj->Set(String::New("Utils"), TiUtilsModule::CreateModule(), DontDelete);
+    tiObj->Set(String::New("App"), TiAppModule::CreateModule(), DontDelete);
 
     Local<Object> tiUI = tiObj->Get(String::New("UI"))->ToObject();
     tiUI->Set(String::New("BlackBerry"), TiUIBlackberryModule::CreateModule(), DontDelete);
