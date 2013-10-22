@@ -88,8 +88,8 @@ void TiGeolocationSession::onPositionUpdated(const QGeoPositionInfo & position)
 
 	if(_callbackFunction.isValid())
 	{
-		_callbackFunction.callFunction(_module, _module->getLastGeolocation());
 		_source->stopUpdates();
+		_callbackFunction.callFunction(_module, _module->getLastGeolocation());
 		deleteLater();
 	}
 }

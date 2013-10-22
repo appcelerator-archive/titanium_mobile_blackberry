@@ -40,6 +40,7 @@ void TiCompassSession::onReadingChanged()
 	_module->fireEvent("heading", eventParams);
 	if(_callbackFunction.isValid())
 	{
+		_compass->stop();
 		Ti::TiValue headingValue;
 		headingValue.setNumber((int)reading->azimuth());
 
@@ -54,7 +55,6 @@ void TiCompassSession::onReadingChanged()
 		val.setMap(map);
 
 		_callbackFunction.callFunction(_module, val);
-		_compass->stop();
 		deleteLater();
 	}
 }
