@@ -177,7 +177,25 @@ FIELD_TYPE NativeResultSetObject::fieldType(int index) {
 string NativeResultSetObject::fieldByName(string name /*, number type for cast*/) {
 	for (int i = 0; i < columnNames.size(); i++) {
 		if (columnNames[i] == name) {
-			return (const char*)sqlite3_column_text(statement, i);
+
+			int columnType = sqlite3_column_type(statement, i);
+		    switch (columnType) {
+		        case SQLITE_TEXT:
+		            return (const char*)sqlite3_column_text(statement, i);
+
+		        case SQLITE_INTEGER:
+		            return QString::number(sqlite3_column_int(statement, i)).toStdString();
+
+		        case SQLITE_FLOAT:
+		            return QString::number(sqlite3_column_double(statement, i)).toStdString();
+
+		        case SQLITE_BLOB:
+		        	// TODO: create a Ti Blob from this
+		            return ""; //sqlite3_column_blob(statement, i)
+
+		        case SQLITE_NULL:
+		            return ""; //
+		    }
 		}
 	}
 
