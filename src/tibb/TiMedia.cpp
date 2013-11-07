@@ -19,6 +19,7 @@
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
 #include "TiSoundObject.h"
+#include "PhotoGalleryEventHandler.h"
 
 using namespace titanium;
 
@@ -60,6 +61,7 @@ void TiMedia::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSound", this, _createSound);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "showCamera", this, _showCamera);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "hideCamera", this, _hideCamera);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "openPhotoGallery", this, _openPhotoGallery);
 
     // Todo fill in contants
     // Adding javascript constants from Ti.Media
@@ -111,6 +113,21 @@ Handle<Value> TiMedia::_createAudioRecorder(void* userContext, TiObject*, const 
 // If the camera is currently being shown this provides
 // a pointer to the camera invocation instance.
 static QPointer<CameraInvocation> cameraInvocation;
+
+Handle<Value> TiMedia::_openPhotoGallery(void* userContext, TiObject* caller, const Arguments& args)
+{
+
+    TiObject* options = NULL;
+    if (args.Length() && args[0]->IsObject()) {
+        options = new TiObject("CameraOptionsType", args[0]);
+    }
+
+    // Create a new invocation so we can display the camera card.
+    PhotoGalleryEventHandler *cam = new PhotoGalleryEventHandler(options);
+    cam->showPicker();
+
+    return Undefined();
+}
 
 Handle<Value> TiMedia::_showCamera(void* userContext, TiObject* caller, const Arguments& args)
 {

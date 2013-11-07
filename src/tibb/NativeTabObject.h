@@ -43,6 +43,8 @@ public:
 
     virtual int addChildNativeObject(NativeObject* obj);
     virtual int openWindowOnTab(NativeObject* obj);
+    virtual int closeWindowOnTab(NativeObject* obj);
+    virtual int pop();
 
     virtual int setActive(TiObject* obj);
     virtual int setIcon(TiObject* obj);

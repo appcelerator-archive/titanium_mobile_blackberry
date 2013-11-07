@@ -70,9 +70,30 @@ int NativeTabObject::addChildNativeObject(NativeObject* obj)
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 
+int NativeTabObject::pop()
+{
+    navigationPane_->pop();
+    return NATIVE_ERROR_OK;
+}
+
 int NativeTabObject::openWindowOnTab(NativeObject* obj)
 {
     return addChildNativeObject(obj);
+}
+int NativeTabObject::closeWindowOnTab(NativeObject* obj)
+{
+    if (obj->getObjectType() == N_TYPE_WINDOW)
+    {
+        Window* window = static_cast<Window*>(obj->getNativeHandle());
+        Page* page = static_cast<Page*>(window->scene()->pane());
+
+        // The ownership of the page must be cleared before pushing,
+        // otherwise navigation pane will do nothing.
+        page->setParent(0);
+
+        navigationPane_->remove(page);
+    }
+    return NATIVE_ERROR_OK;
 }
 
 int NativeTabObject::setIcon(TiObject* obj)

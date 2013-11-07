@@ -9,6 +9,7 @@
 #include "TiCascadesApp.h"
 #include "TiGenericFunctionObject.h"
 #include "TiUITab.h"
+#include "NativeTabObject.h"
 
 TiUITab::TiUITab()
     : TiUIBase("Tab")
@@ -31,6 +32,8 @@ void TiUITab::onCreateStaticMembers()
 {
     TiUIBase::onCreateStaticMembers();
     TiGenericFunctionObject::addGenericFunctionToParent(this, "open", this, _open);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "close", this, _close);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "pop", this, _pop);
 }
 
 void TiUITab::initializeTiObject(TiObject* parentContext)
@@ -59,6 +62,38 @@ Handle<Value> TiUITab::_open(void* userContext, TiObject*, const Arguments& args
         TiUITab* obj = (TiUITab*) userContext;
         NativeObject* tab = obj->getNativeObject();
         tab->openWindowOnTab(win);
+        tab->release();
+        win->release();
+    }
+    else
+    {
+        return ThrowException(String::New(Native::Msg::Expected_argument_of_type_object_or_external));
+    }
+    return Undefined();
+}
+
+Handle<Value> TiUITab::_pop(void* userContext, TiObject*, const Arguments& args)
+{
+    TiUITab* obj = (TiUITab*) userContext;
+    NativeTabObject* tab = static_cast<NativeTabObject*>(obj->getNativeObject());
+    tab->pop();
+}
+
+Handle<Value> TiUITab::_close(void* userContext, TiObject*, const Arguments& args)
+{
+    HandleScope handleScope;
+    if ((args.Length() > 0) && (args[0]->IsObject()))
+    {
+        TiObject* addObj = getTiObjectFromJsObject(args[0]);
+        if ((addObj == NULL) || (!addObj->isUIObject()))
+        {
+            return Undefined();
+        }
+        TiUIBase* uiObj = (TiUIBase*) addObj;
+        NativeObject* win = uiObj->getNativeObject();
+        TiUITab* obj = (TiUITab*) userContext;
+        NativeTabObject* tab = static_cast<NativeTabObject*>(obj->getNativeObject());
+        tab->closeWindowOnTab(win);
         tab->release();
         win->release();
     }
