@@ -70,7 +70,7 @@ HEADERS += \
     Modules/App/TiAppPropertiesModule.h
 
 LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata -lbbsystem
-LIBS += -lbbpim
+LIBS += -lbbpim -lbbcascadespickers
 LIBS += -lbbutility
 
 device {

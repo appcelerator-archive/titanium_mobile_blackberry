@@ -36,6 +36,7 @@ private:
     static Handle<Value> _createAudioRecorder(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _showCamera(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _hideCamera(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _openPhotoGallery(void* userContext, TiObject* caller, const Arguments& args);
 
     NativeObjectFactory* objectFactory_;
     NativeObject* contentContainer_;
