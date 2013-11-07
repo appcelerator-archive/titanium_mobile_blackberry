@@ -37,6 +37,8 @@ public:
     void close();
 
     void addAction(const QString& title, const QString& image, v8::Handle<v8::Function> triggerCallback);
+//    titanium::PageScene getScene();
+    titanium::PageScene scene_;
 
 protected:
     virtual int initialize();
@@ -45,7 +47,6 @@ protected:
 private:
     explicit NativeWindowObject(TiObject* tiObject);
 
-    titanium::PageScene scene_;
     bb::cascades::Sheet* modalSheet_;
     QString title_;
 };

@@ -36,6 +36,11 @@ private:
     static Handle<Value> _open(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _close(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _addAction(void* userContext, TiObject* caller, const Arguments& args);
+	static Handle<Value> _getLeftNavButton(void* userContext);
+	static void _setLeftNavButton(void* userContext, Handle<Value> value);
+	static Handle<Value> _getRightNavButton(void* userContext);
+	static void _setRightNavButton(void* userContext, Handle<Value> value);
+
 };
 
 #endif /* TIUIWINDOW_H_ */

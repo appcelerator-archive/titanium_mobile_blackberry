@@ -75,6 +75,11 @@ int NativeWindowObject::setOrientationModes(TiObject* obj) {
     return NATIVE_ERROR_OK;
 }
 
+//titanium::PageScene NativeWindowObject::getScene()
+//{
+//	return scene_;
+//}
+
 int NativeWindowObject::setTitle(TiObject* obj) {
 	title_ = QString::fromUtf8(*String::Utf8Value(obj->getValue()));
     scene_.titleBar()->setTitle(title_);

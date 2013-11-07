@@ -9,6 +9,7 @@
 #include "TiGenericFunctionObject.h"
 #include "TiPropertySetGetObject.h"
 #include "NativeWindowObject.h"
+#include "Modules/UI/BlackBerry/NavButton/NavButtonProxy.h"
 
 TiUIWindow::TiUIWindow()
     : TiUIBase("Window"),
@@ -41,6 +42,57 @@ void TiUIWindow::_setModal(void* userContext, Handle<Value> value)
 	self->isModal = value->ToBoolean()->Value();
 }
 
+Handle<Value> TiUIWindow::_getLeftNavButton(void* userContext)
+{
+	return Undefined();
+}
+void TiUIWindow::_setLeftNavButton(void* userContext, Handle<Value> value)
+{
+	Handle<Value> _a = value->ToObject()->GetHiddenValue(String::New("proxy"));
+	if(_a.IsEmpty()) return;
+
+	Handle<External> _b = Handle<External>::Cast(_a);
+	if(_b.IsEmpty()) return;
+
+	TiUI::NavButtonProxy *_proxy = NULL;
+
+	if(_b->Value())
+	{
+		_proxy = static_cast<TiUI::NavButtonProxy*>(_b->Value());
+	}
+	if(_proxy != NULL)
+	{
+		TiUIWindow* self = static_cast<TiUIWindow*>(userContext);
+	    NativeWindowObject* window = static_cast<NativeWindowObject*>(self->getNativeObject());
+	    window->scene_.titleBar()->setDismissAction(_proxy->getNativeItem());
+	}
+}
+Handle<Value> TiUIWindow::_getRightNavButton(void* userContext)
+{
+	return Undefined();
+}
+void TiUIWindow::_setRightNavButton(void* userContext, Handle<Value> value)
+{
+	Handle<Value> _a = value->ToObject()->GetHiddenValue(String::New("proxy"));
+	if(_a.IsEmpty()) return;
+
+	Handle<External> _b = Handle<External>::Cast(_a);
+	if(_b.IsEmpty()) return;
+
+	TiUI::NavButtonProxy *_proxy = NULL;
+
+	if(_b->Value())
+	{
+		_proxy = static_cast<TiUI::NavButtonProxy*>(_b->Value());
+	}
+	if(_proxy != NULL)
+	{
+		TiUIWindow* self = static_cast<TiUIWindow*>(userContext);
+	    NativeWindowObject* window = static_cast<NativeWindowObject*>(self->getNativeObject());
+	    window->scene_.titleBar()->setAcceptAction(_proxy->getNativeItem());
+	}
+}
+
 
 void TiUIWindow::onCreateStaticMembers()
 {
@@ -49,6 +101,10 @@ void TiUIWindow::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "close", this, _close);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "addAction", this, _addAction);
     TiPropertySetGetObject::createProperty(this, "modal", this, _setModal, _getModal);
+    TiPropertySetGetObject::createProperty(this, "rightNavButton", this, _setRightNavButton, _getRightNavButton);
+    TiPropertySetGetObject::createProperty(this, "leftNavButton", this, _setLeftNavButton, _getRightNavButton);
+
+
 }
 
 void TiUIWindow::initializeTiObject(TiObject* parentContext)

@@ -6,12 +6,13 @@
 
 #include "TiUIBlackberryModule.h"
 #include "ApplicationMenu/ApplicationMenuProxy.h"
-
+#include "NavButton/NavButtonProxy.h"
 using namespace TiUI;
 
 TiUIBlackberryModule::TiUIBlackberryModule(const char* name) : Ti::TiModule(name)
 {
 	addFunction("createApplicationMenu", ApplicationMenuProxy::CreateProxy);
+	addFunction("createNavButton", NavButtonProxy::CreateProxy);
 }
 
 TiUIBlackberryModule::~TiUIBlackberryModule()
