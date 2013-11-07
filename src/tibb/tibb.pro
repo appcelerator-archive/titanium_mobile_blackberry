@@ -41,6 +41,7 @@ SOURCES += \
     ./Modules/Utils/TiUtilsModule.cpp \
     ./Modules/UI/BlackBerry/TiUIBlackberryModule.cpp \
     ./Modules/UI/BlackBerry/ApplicationMenu/ApplicationMenuProxy.cpp \ 
+    ./Modules/UI/BlackBerry/NavButton/NavButtonProxy.cpp \ 
     ./Modules/App/TiAppModule.cpp \
     ./Modules/App/TiAppPropertiesModule.cpp
 
@@ -64,6 +65,7 @@ HEADERS += \
     Modules/Utils/TiUtilsModule.h  \
     Modules/UI/BlackBerry/TiUIBlackberryModule.h \
     Modules/UI/BlackBerry/ApplicationMenu/ApplicationMenuProxy.h  \
+    Modules/UI/BlackBerry/NavButton/NavButtonProxy.h \ 
     Modules/App/TiAppModule.h \
     Modules/App/TiAppPropertiesModule.h
 
