@@ -197,6 +197,7 @@ int NativeWindowObject::initialize()
 
 void NativeWindowObject::setupEvents(TiEventContainerFactory* factory)
 {
+    NativeControlObject::setupEvents(factory);
     TiEventContainer* eventFocus = factory->createEventContainer();
     eventFocus->setDataProperty("type", "focus");
     events_.insert("focus", EventPairSmartPtr(eventFocus, new FocusEventHandler(eventFocus)));
