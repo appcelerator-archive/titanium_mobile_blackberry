@@ -19,6 +19,8 @@
 #include "TiObject.h"
 #include "V8Utils.h"
 
+#include "TiCore.h"
+
 using namespace bb::cascades;
 using namespace titanium;
 
@@ -61,16 +63,32 @@ int NativeImageViewObject::setImage(TiObject* obj)
         	ImageLoader::loadImage(imageView_, QUrl(imagePath));
             return NATIVE_ERROR_OK;
         }
-        imagePath = getResourcePath(imagePath);
+        if(!QFile(imagePath).exists())
+        {
+        	imagePath = getResourcePath(imagePath);
+        }
         imageView_->setImage(QUrl(imagePath));
     } else {
         TiObject* obj = TiObject::getTiObjectFromJsObject(img);
-        if (obj == NULL) return NATIVE_ERROR_INVALID_ARG;
-        if (strcmp(obj->getName(), "Blob") == 0) {
-            TiBlobObject* blob = static_cast<TiBlobObject*>(obj);
-            Image image(blob->data());
-            imageView_->setImage(image);
+        // Ok, this is the old blob object, so get it, use it, and return.
+        if (obj != NULL && strcmp(obj->getName(), "Blob") == 0)
+        {
+			TiBlobObject* blob = static_cast<TiBlobObject*>(obj);
+			Image image(blob->data());
+			imageView_->setImage(image);
+		    return NATIVE_ERROR_OK;
         }
+        // This might be the new blob object
+        Handle<External> proxyObject = Handle<External>::Cast(img->ToObject()->GetHiddenValue(String::New("proxy")));
+
+        // But return if it's not
+        if(proxyObject.IsEmpty())
+    		return NATIVE_ERROR_OK;
+
+    	Ti::TiBlob* blob = static_cast<Ti::TiBlob*>(proxyObject->Value());
+		Image image(blob->getData());
+		imageView_->setImage(image);
+
     }
     return NATIVE_ERROR_OK;
 }
