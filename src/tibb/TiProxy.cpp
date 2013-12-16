@@ -267,9 +267,7 @@ void TiProxy::applyProperties(Handle<Value> value)
 	{
 		Local<Value> key = props->Get(i);
 		Local<Value> value = obj->Get(key);
-		QString propName = titanium::V8ValueToQString(key);
-		const char* propString = propName.toLocal8Bit().data();
-		this->setPropHelper(propString, value, &TiObject::setValue);
+		this->setPropHelper(*String::Utf8Value(key), value, &TiObject::setValue);
 	}
 
 }
@@ -288,9 +286,9 @@ void TiProxy::setParametersFromObject(void* userContext, Local<Object> obj)
     for (uint32_t i = 0; i < props; i++)
     {
         Handle<String> propString = Handle<String>::Cast(propNames->Get(Integer::New(i)));
-        String::Utf8Value propNameUTF(propString);
         Local<Value> propValue = obj->Get(propString);
-        TiObject* foundProp = onLookupMember(*propNameUTF);
+        TiObject* foundProp = onLookupMember(*String::Utf8Value(propString));
+        
         if (foundProp != NULL)
         {
             TiObject* addObj = getTiObjectFromJsObject(propValue);
