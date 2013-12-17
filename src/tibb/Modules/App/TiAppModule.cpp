@@ -10,6 +10,8 @@
 #include <bb/ApplicationInfo>
 #include <bb/PackageInfo>
 
+#include "TiUIWebView.h"
+
 TiAppModule::TiAppModule(const char* name) : Ti::TiModule(name)
 {
 
@@ -47,6 +49,24 @@ TiAppModule::TiAppModule(const char* name) : Ti::TiModule(name)
 TiAppModule::~TiAppModule()
 {
 
+}
+
+void TiAppModule::fireEvent(QString eventName, Ti::TiEventParameters eventParams)
+{
+	Ti::TiProxy::fireEvent(eventName, eventParams);
+	QList<TiUIWebView*> webViews = TiUIWebView::getWebViews();
+	if(webViews.size() > 0)
+	{
+		Ti::TiEventParameters webViewEventParams;
+		webViewEventParams.addParam("data", eventParams);
+		webViewEventParams.addParam("id", eventName);
+
+		QString json = webViewEventParams.toJsonQString();
+		for(int i = 0, len = webViews.length(); i < len; i++)
+		{
+			webViews.at(i)->getNativeWebView()->postMessage(json);
+		}
+	}
 }
 
 Ti::TiValue TiAppModule::getModuleId()
