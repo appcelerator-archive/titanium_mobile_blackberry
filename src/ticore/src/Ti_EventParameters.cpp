@@ -49,6 +49,61 @@ void Ti::TiEventParameters::addParam(QString key, TiEventParameters value)
 	objectMap[key] = value;
 }
 
+QString Ti::TiEventParameters::toJsonQString()
+{
+	QString json = "{";
+
+	foreach(QString key, stringMap.keys())
+	{
+		// "key":"value",
+		json.append("\"").append(key).append("\":\"").append(stringMap[key]).append("\",");
+	}
+
+	foreach(QString key, numberMap.keys())
+	{
+		// "key":"value",
+		json.append("\"").append(key).append("\":\"").append(QString::number(numberMap[key])).append("\",");
+	}
+
+	foreach(QString key, proxyMap.keys())
+	{
+		json.append("\"").append(key).append("\":\"").append(proxyMap[key]->getProxyName()).append("\",");
+	}
+
+	foreach(QString key, objectMap.keys())
+	{
+		json.append("\"").append(key).append("\":").append(
+				objectMap[key].toJsonQString()
+		).append(",");
+	}
+
+	/*
+	foreach(QString key, arrayMap.keys())
+	{
+		json.append("\"").append(key).append("\":");
+		json.append("[");
+		foreach(TiEventParameters params, arrayMap[key])
+		{
+			json.append(params.toJsonQString()).append(",");
+		}
+		if(json.endsWith(","))
+		{
+			json.chop(1);
+		}
+		json.append("],");
+	}
+	*/
+	if(json.endsWith(","))
+	{
+		json.chop(1);
+	}
+	json.append("}");
+
+	qDebug() << "[TiEventParameters]" << json;
+
+	return json;
+}
+
 void Ti::TiEventParameters::addParametersToObject(Ti::TiEventParameters* parameters, Handle<Object> object)
 {
 
