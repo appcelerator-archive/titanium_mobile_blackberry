@@ -5,7 +5,7 @@ QMAKE_CXX = $(NDK_CCACHE) $${QMAKE_CXX}
 
 CONFIG += qt staticlib warn_on debug_and_release cascades mobility
 MOBILITY += sensors
-CONFIG += console debug
+CONFIG += console warn_off
 
 INCLUDEPATH += \
 	. \

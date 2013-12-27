@@ -39,8 +39,9 @@ LIBS+=tibb ticore v8 socket bps
 
 
 # Extra .so required
-LDFLAGS+=-lbbcascades -lbbdevice -lbbsystem -lQtCore -lQtDeclarative -lQtGui -lQtMultimedia -lQtNetwork -lm -lbb -lbbdata
-LDFLAGS+=-lQtSensors -lQtSql -lQtSvg -lQtTest -lQtXml -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbpim
+LDFLAGS+=-lbbcascades -lbbdevice -lbbsystem -lQtCore -lQtDeclarative -lQtGui -lQtMultimedia -lQtNetwork -lscreen -lm -lbb -lbbdata -lbbpim
+LDFLAGS+=-lQtSensors -lQtSql -lQtTest -lQtXml -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia
+LDFLAGS+=-lbbplatform -lbbnetwork
 LDFLAGS+=-lbbutility -lbbcascadespickers
 
 include $(MKFILES_ROOT)/qmacros.mk
