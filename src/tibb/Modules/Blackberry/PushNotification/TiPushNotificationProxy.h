@@ -26,7 +26,7 @@ public:
 	virtual ~TiPushNotificationProxy();
 
 	virtual void initEnd();
-
+	void setFullScreen(bool);
 	bool validateConfiguration();
 	// void initializePushSession();
 	void loadConfiguration();
@@ -34,7 +34,7 @@ public:
 
 	void sessionCreated(const bb::network::PushStatus &);
 	void channelCreated(const bb::network::PushStatus &, const QString &);
-	void pushRecieved(const bb::system::InvokeRequest &);
+	void pushReceived(const bb::system::InvokeRequest &);
 
 	void setAppId(Ti::TiValue);
 	void setPpgUrl(Ti::TiValue);
@@ -52,8 +52,16 @@ public:
 	Ti::TiValue getLaunchApplicationOnPush();
 	Ti::TiValue getUser();
 
-//	Ti::TiValue createChannel(Ti::TiValue);
+	Ti::TiValue removePush(Ti::TiValue);
+	Ti::TiValue markPushAsRead(Ti::TiValue);
+	Ti::TiValue removeAllPushes(Ti::TiValue);
+	Ti::TiValue markAllPushesAsRead(Ti::TiValue);
 	void createChannel();
+
+	EXPOSE_METHOD(TiPushNotificationProxy, removePush);
+	EXPOSE_METHOD(TiPushNotificationProxy, markPushAsRead);
+	EXPOSE_METHOD(TiPushNotificationProxy, removeAllPushes);
+	EXPOSE_METHOD(TiPushNotificationProxy, markAllPushesAsRead);
 
 	EXPOSE_SETTER(TiPushNotificationProxy, setAppId)
 	EXPOSE_SETTER(TiPushNotificationProxy, setPpgUrl)
@@ -76,12 +84,16 @@ private:
 	bool _shouldUnregisterFromLaunch;
 	bool _launchApplicationOnPush;
 	bool _configSaveAction;
+	bool _hasBeenInForeground;
 	TiPushNotificationEventHandler* _eventHandler;
     PushNotificationService* _pushNotificationService;
     ConfigurationService* _configurationService;
     Configuration* _configuration;
     User *_user;
 
+    QString _tiAppPushTitle;
+    QString _tiAppId;
+    QString _tiAppKeyOpen;
     QString _appId;
     QString _ppgUrl;
     QString _pushInitiatorUrl;
@@ -105,18 +117,9 @@ private:
 public Q_SLOTS:
 	void onCreateSessionCompleted(const bb::network::PushStatus &status);
 	void onCreateChannelCompleted(const bb::network::PushStatus &status, const QString &token);
-	void onDestroyChannelCompleted(const bb::network::PushStatus &status);
-	void onRegisterToLaunchCompleted(const bb::network::PushStatus &status);
-	void onUnregisterFromLaunchCompleted(const bb::network::PushStatus &status);
-	void onRegisterPromptFinished(bb::system::SystemUiResult::Type value);
-	void onUnregisterPromptFinished(bb::system::SystemUiResult::Type value);
-	void onPIRegistrationCompleted(int code, const QString &description);
-	void onPIDeregistrationCompleted(int code, const QString &description);
 	void onInvoked(const bb::system::InvokeRequest &request);
-	void onSimChanged();
-	void onPushTransportReady(bb::network::PushCommand::Type command);
 	void onNoPushServiceConnection();
-	void onAllPushesRemoved();
+	void onFullScreen();
 };
 
 

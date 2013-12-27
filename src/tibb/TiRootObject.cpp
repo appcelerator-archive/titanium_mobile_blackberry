@@ -88,7 +88,7 @@ void TiRootObject::onCreateStaticMembers()
     tiObj->Set(String::New("Platform"), TiPlatformModule::CreateModule());
     tiObj->Set(String::New("Utils"), TiUtilsModule::CreateModule());
     tiObj->Set(String::New("App"), TiAppModule::CreateModule());
-    tiObj->Set(String::New("Blackberry"), TiBlackberryModule::CreateModule());
+    tiObj->Set(String::New("BlackBerry"), TiBlackberryModule::CreateModule());
 
     Local<Object> tiUI = tiObj->Get(String::New("UI"))->ToObject();
     tiUI->Set(String::New("BlackBerry"), TiUIBlackberryModule::CreateModule());

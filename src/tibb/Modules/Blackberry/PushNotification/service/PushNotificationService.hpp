@@ -30,11 +30,11 @@
 
 // This needs to match the invoke target specified in bar-descriptor.xml
 // The Invoke target key for receiving new push notifications
-#define INVOKE_TARGET_KEY_PUSH "com.example.pushCollector.invoke.push"
+// #define INVOKE_TARGET_KEY_PUSH "com.example.pushCollector.invoke.push"
 
 // This needs to match the invoke target specified in bar-descriptor.xml
 // The Invoke target key when selecting a notification in the BlackBerry Hub
-#define INVOKE_TARGET_KEY_OPEN "com.example.pushCollector.invoke.open"
+// #define INVOKE_TARGET_KEY_OPEN "com.example.pushCollector.invoke.open"
 
 /*!
  * Offers services related to the registering of a user to receive pushes, the

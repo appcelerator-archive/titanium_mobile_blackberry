@@ -29,6 +29,7 @@ SOURCES += \
     ../Modules/Filesystem/*.cpp \
     ../Modules/Platform/*.cpp \    
     ../Modules/UI/BlackBerry/*.cpp \
+    ../Modules/UI/BlackBerry/NavButton/*.cpp \
     ../Modules/UI/BlackBerry/ApplicationMenu/*.cpp \
     ../Modules/Utils/*.cpp    
 
@@ -48,8 +49,9 @@ HEADERS += \
     ../Modules/Filesystem/*.h \
     ../Modules/Platform/*.h \    
     ../Modules/UI/BlackBerry/*.h \
+    ../Modules/UI/BlackBerry/NavButton/*.h \
     ../Modules/UI/BlackBerry/ApplicationMenu/*.h \
-    ../Modules/Utils/*.cpp    
+    ../Modules/Utils/*.h    
 
 LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata -lbbsystem
 LIBS += -lbbpim -lbbcascadespickers

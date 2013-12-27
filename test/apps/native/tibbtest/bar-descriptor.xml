@@ -91,7 +91,7 @@
 
     <!-- Ensure that shared libraries in the package are found at run-time. -->
     <env var="LD_LIBRARY_PATH" value="app/native/assets/lib:/usr/lib/qt4/lib"/>
-    <invoke-target id="com.example.pushCollector.invoke.push">
+    <invoke-target id="com.example.tibbtest.invoke.push">
       <type>APPLICATION</type>
       <filter>
          <action>bb.action.PUSH</action>
@@ -100,7 +100,7 @@
     </invoke-target>
     <!-- Have an invoke entry here for when a notification is clicked on in the BlackBerry Hub -->
     <!-- This will cause the application to be opened -->
-    <invoke-target id="com.example.pushCollector.invoke.open">
+    <invoke-target id="com.example.tibbtest.invoke.open">
       <type>APPLICATION</type>
       <filter>
          <action>bb.action.OPEN</action>

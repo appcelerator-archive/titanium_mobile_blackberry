@@ -85,6 +85,7 @@
     <action system="true">run_native</action>
 
     ${permissions}
+    ${other}
 
     <!-- Ensure that shared libraries in the package are found at run-time. -->
     <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib"/>
