@@ -40,14 +40,14 @@ static QSettings defaultSettings("app/native/assets/app_properties.ini",
 
 // Singleton
 TiAnalyticsObject::TiAnalyticsObject()
-    : TiProxy("Analytics"), appStart(true), dbCreate(false), sequence_(1)
+    : TiProxy("Analytics"), appStart(true), dbCreate(false), sequence_(0)
 {
     objectFactory_ = NULL;
 }
 
 // Singleton
 TiAnalyticsObject::TiAnalyticsObject(NativeObjectFactory* objectFactory)
-    : TiProxy("Analytics"), appStart(true), dbCreate(false), sequence_(1)
+    : TiProxy("Analytics"), appStart(true), dbCreate(false), sequence_(0)
 {
     objectFactory_ = objectFactory;
 
