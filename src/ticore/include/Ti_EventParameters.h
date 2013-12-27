@@ -30,6 +30,9 @@ public:
 	void addParam(QString, TiProxy*);
 	void addParam(QString, TiEventParameters);
 	bool contains(QString);
+
+	QString toJsonQString();
+
 	static void addParametersToObject(Ti::TiEventParameters*, Handle<Object>);
 private:
 	QMap<QString, QString> stringMap;
