@@ -34,7 +34,6 @@ Ti::TiBlob::~TiBlob()
 {
 }
 
-
 Ti::TiBlob* Ti::TiBlob::InitWithImageData(bb::ImageData image)
 {
 	Ti::TiBlob* blob = Ti::TiBlob::CreateProxy();
@@ -49,6 +48,18 @@ Ti::TiBlob* Ti::TiBlob::InitWithData(QByteArray data, QString mimeType)
 	blob->_mimetype = mimeType;
 	blob->_blobType = Ti::TiBlobTypeData;
 	return blob;
+
+}
+Ti::TiBlob* Ti::TiBlob::InitWithString(QByteArray data, QString mimeType)
+{
+	Ti::TiBlob* blob = InitWithData(data, mimeType);
+	blob->_blobType = Ti::TiBlobTypeNone;
+	return blob;
+
+}
+Ti::TiBlob* Ti::TiBlob::InitWithString(QString str)
+{
+	return InitWithString(str.toLocal8Bit(), "text/text");
 
 }
 Ti::TiBlob* Ti::TiBlob::InitWithFile(QString path)
@@ -187,12 +198,20 @@ Ti::TiValue Ti::TiBlob::getHeight()
 	returnedValue.setNumber(_imageData.height());
 	return returnedValue;
 }
+
 Ti::TiValue Ti::TiBlob::getText()
 {
 	Ti::TiValue returnedValue;
-
 	returnedValue.setString(QString(getData()));
 	return returnedValue;
+}
+Ti::TiValue Ti::TiBlob::getToString(Ti::TiValue value)
+{
+	if(_blobType == TiBlobTypeImage || _blobType == TiBlobTypeData)
+	{
+		return Ti::TiProxy::getToString(value);
+	}
+	return getText();
 }
 
 Ti::TiValue Ti::TiBlob::getLength()

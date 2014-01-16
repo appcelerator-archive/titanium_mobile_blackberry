@@ -67,13 +67,13 @@ Ti::TiValue TiUtilsModule::getModuleName()
 Ti::TiValue TiUtilsModule::base64decode(Ti::TiValue value)
 {
 	Ti::TiValue val;
-	val.setProxy(Ti::TiBlob::InitWithData(QByteArray::fromBase64(bytesFromValue(value)), "titanium/blob"));
+	val.setProxy(Ti::TiBlob::InitWithString(QByteArray::fromBase64(bytesFromValue(value)), "titanium/blob"));
 	return val;
 }
 Ti::TiValue TiUtilsModule::base64encode(Ti::TiValue value)
 {
 	Ti::TiValue val;
-	val.setProxy(Ti::TiBlob::InitWithData(bytesFromValue(value).toBase64(), "titanium/blob"));
+	val.setProxy(Ti::TiBlob::InitWithString(bytesFromValue(value).toBase64(), "titanium/blob"));
 	return val;
 }
 Ti::TiValue TiUtilsModule::md5HexDigest(Ti::TiValue value)
