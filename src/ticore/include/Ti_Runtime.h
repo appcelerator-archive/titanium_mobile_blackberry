@@ -26,6 +26,7 @@ public:
 	static Handle<Value> _require(const Arguments &);
 	static Handle<Value> _include(const Arguments & args);
 	static TiRuntime* Instance();
+	Handle<Context> getGlobalContext();
 	int start();
 private:
 	bb::cascades::Application *app;

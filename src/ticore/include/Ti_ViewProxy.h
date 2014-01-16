@@ -73,6 +73,7 @@ public:
 	virtual void setHorizontalWrap(Ti::TiValue);
 	virtual void setZIndex(Ti::TiValue);
 	virtual void setKeepScreenOn(Ti::TiValue);
+	virtual void setContextMenus(Ti::TiValue);
 
 	virtual Ti::TiValue getAccessibilityHidden();
 	virtual Ti::TiValue getAccessibilityHint();
@@ -116,6 +117,7 @@ public:
 	virtual Ti::TiValue getHorizontalWrap();
 	virtual Ti::TiValue getZIndex();
 	virtual Ti::TiValue getKeepScreenOn();
+	virtual Ti::TiValue getContextMenus();
 
 	virtual Ti::TiValue add(Ti::TiValue);
 	virtual Ti::TiValue animate(Ti::TiValue);
@@ -168,6 +170,7 @@ public:
 	EXPOSE_SETTER(TiViewProxy, setHorizontalWrap)
 	EXPOSE_SETTER(TiViewProxy, setZIndex)
 	EXPOSE_SETTER(TiViewProxy, setKeepScreenOn)
+	EXPOSE_SETTER(TiViewProxy, setContextMenus)
 
 	EXPOSE_GETTER(TiViewProxy, getAccessibilityHidden)
 	EXPOSE_GETTER(TiViewProxy, getAccessibilityHint)
@@ -211,6 +214,7 @@ public:
 	EXPOSE_GETTER(TiViewProxy, getHorizontalWrap)
 	EXPOSE_GETTER(TiViewProxy, getZIndex)
 	EXPOSE_GETTER(TiViewProxy, getKeepScreenOn)
+	EXPOSE_GETTER(TiViewProxy, getContextMenus)
 
 	EXPOSE_METHOD(TiViewProxy, add)
 	EXPOSE_METHOD(TiViewProxy, animate)

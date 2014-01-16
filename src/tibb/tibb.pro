@@ -35,6 +35,9 @@ SOURCES += \
     ./Modules/Filesystem/TiFilesystemModule.cpp \
     ./Modules/Filesystem/TiFilesystemFileProxy.cpp \
     ./Modules/Filesystem/TiFilesystemBlobProxy.cpp \
+    ./Modules/Geolocation/TiGeolocationModule.cpp \
+    ./Modules/Geolocation/TiGeolocationSession.cpp \
+    ./Modules/Geolocation/TiCompassSession.cpp \
     ./Modules/Platform/TiPlatformModule.cpp \    
     ./Modules/Filesystem/TiFilesystemBlobProxy.cpp \
     ./Modules/Utils/sha256.cpp \    
@@ -61,6 +64,9 @@ HEADERS += \
     Modules/Filesystem/TiFilesystemModule.h \
     Modules/Filesystem/TiFilesystemFileProxy.h \
     Modules/Filesystem/TiFilesystemBlobProxy.h \
+    Modules/Geolocation/TiGeolocationModule.h \
+    Modules/Geolocation/TiGeolocationSession.h \
+    Modules/Geolocation/TiCompassSession.h \
     Modules/Platform/TiPlatformModule.h \
     Modules/Filesystem/TiFilesystemBlobProxy.h \
     Modules/Utils/sha256.h \    
