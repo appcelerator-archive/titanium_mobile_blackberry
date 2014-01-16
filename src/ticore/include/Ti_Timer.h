@@ -25,12 +25,16 @@ public:
 	TiTimer(int);
 	virtual ~TiTimer();
 	static Handle<Value> SetTimeout(const Arguments &args);
+	static Handle<Value> ClearTimeout(const Arguments &args);
+	static Handle<Value> SetInterval(const Arguments &args);
+	static Handle<Value> ClearInterval(const Arguments &args);
 	void setSingleShot(bool);
 	void start();
 	void stop();
 	QTimer *timer;
 	Persistent<Function> callback;
 	bool singleShot;
+	bool fireCallback;
 public slots:
 	void destroyed(QObject*);
 	void timeout();

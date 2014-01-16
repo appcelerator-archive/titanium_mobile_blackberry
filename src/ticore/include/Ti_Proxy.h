@@ -158,6 +158,7 @@ public:
 	EXPOSE_METHOD(Ti::TiProxy, fireEvent)
 	EXPOSE_METHOD(Ti::TiProxy, getToString)
 
+	void* __data__;
 
 protected:
 	virtual void addFunction(const char* name, InvocationCallback);

@@ -9,11 +9,22 @@
 
 #include "Ti_Event.h"
 #include "Ti_EventParameters.h"
-#include "Ti_Constants.h"
+#include <v8.h>
+
+
+static void _EventWeakCallback(Persistent<Value>, void*)
+{
+	/*
+     object.Clear();
+     object.Dispose();
+     qDebug() << "[TiEvent] _EvantWeakCallback";
+     */
+}
 
 Ti::TiEvent::TiEvent(Handle<Function> func) {
 	TiHelper::Log("Event Added");
 	callback = Persistent<Function>::New(func);
+	callback.MakeWeak(this, _EventWeakCallback);
 }
 
 Ti::TiEvent::~TiEvent() {
@@ -29,14 +40,11 @@ void Ti::TiEvent::fireCallbackIfNeeded(QString eventName, Handle<Object> owner, 
 	if(owner->Get(Ti::TiHelper::ValueFromQString(eventName))->IsFunction())
 	{
 		Handle<Function> callback = Handle<Function>::Cast(owner->Get(Ti::TiHelper::ValueFromQString(eventName)));
-
+        
 		Handle<Object> obj = Object::New();
-		if(!params->contains(Ti::TiConstants::EventType)) {
-			params->addParam(Ti::TiConstants::EventType, eventName);
-		}
 		Ti::TiEventParameters::addParametersToObject(params, obj);
 		obj->Set(String::New("source"), owner);
-
+        
 		Handle<Value> args[1];
 		args[0] = obj;
 		TryCatch tryCatch;
@@ -44,7 +52,7 @@ void Ti::TiEvent::fireCallbackIfNeeded(QString eventName, Handle<Object> owner, 
 		if(result.IsEmpty())
 		{
 			qDebug() << "[TIEVENT] Something bad happened";
-
+            
 	    	Handle<Value> exception = tryCatch.Exception();
 	    	Handle<Message> message = tryCatch.Message();
 	        int lineNumber = message->GetLineNumber();
@@ -54,12 +62,12 @@ void Ti::TiEvent::fireCallbackIfNeeded(QString eventName, Handle<Object> owner, 
 	    	qDebug() << "[ERROR] Line" << lineNumber << "File" << Ti::TiHelper::QStringFromValue(fileName);
 	    	qDebug() << "[ERROR] " << Ti::TiHelper::QStringFromValue(sourceLine);
 		}
-
+        
 	}
-
+    
 }
 
-void Ti::TiEvent::fireWithParameters(QString eventName, Handle<Object> owner, Ti::TiEventParameters *params)
+void Ti::TiEvent::fireWithParameters(Handle<Object> owner, Ti::TiEventParameters *params)
 {
 	HandleScope scope;
 	if(owner.IsEmpty())
@@ -69,16 +77,13 @@ void Ti::TiEvent::fireWithParameters(QString eventName, Handle<Object> owner, Ti
 	}
     Context::Scope context_scope(owner->CreationContext());
 	Handle<Object> obj = Object::New();
-	if(!params->contains(Ti::TiConstants::EventType)) {
-		params->addParam(Ti::TiConstants::EventType, eventName);
-	}
 	Ti::TiEventParameters::addParametersToObject(params, obj);
 	obj->Set(String::New("source"), owner);
-
+    
 	Handle<Value> args[1];
 	args[0] = obj;
-
+    
 	Handle<Value> result = callback->Call(owner, 1, args);
-
+    
     scope.Close(result);
 }

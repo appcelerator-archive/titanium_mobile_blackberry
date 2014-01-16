@@ -1,8 +1,8 @@
 /*
- * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
- * Licensed under the terms of the Apache Public License
- * Please see the LICENSE included with this distribution for details.
+ * TiView.cpp
+ *
+ *  Created on: Jul 10, 2013
+ *      Author: penrique
  */
 
 #include <bb/cascades/LayoutUpdateHandler>
@@ -31,17 +31,17 @@
 #include "TitaniumLayout.h"
 
 Ti::TiView::TiView(Ti::TiViewProxy *_proxy)
-	: bb::cascades::Container(NULL),
-	  proxy(_proxy),
-	  childControl(NULL),
-	  _width(""),
-	  _height(""),
-	  _top(""),
-	  _bottom(""),
-	  _left(""),
-	  _right(""),
-	  parentView(NULL),
-	  _zIndex(-1)
+: bb::cascades::Container(NULL),
+proxy(_proxy),
+childControl(NULL),
+_width(""),
+_height(""),
+_top(""),
+_bottom(""),
+_left(""),
+_right(""),
+parentView(NULL),
+_zIndex(-1)
 {
 	setLayout(bb::cascades::AbsoluteLayout::create());
 	setLayoutProperties(bb::cascades::AbsoluteLayoutProperties::create());
@@ -50,7 +50,16 @@ Ti::TiView::TiView(Ti::TiViewProxy *_proxy)
 }
 
 Ti::TiView::~TiView() {
-	qDebug() << "[INTERNAL] DELETING VIEW FROM" << getProxy()->getProxyName();
+	Ti::TiProxy *proxy = getProxy();
+	if(proxy != NULL)
+	{
+		QString name = getProxy()->getProxyName();
+		qDebug() << "[INTERNAL] DELETING VIEW" << name.replace("Proxy", "").replace("TiUI", "Ti.UI.");
+	}
+	else
+	{
+		qDebug() << "[INTERNAL] PROXY HAS BEEN DELETED";
+	}
 }
 
 void Ti::TiView::onTapEvent(bb::cascades::TapEvent*)
@@ -62,29 +71,29 @@ void Ti::TiView::onTapEvent(bb::cascades::TapEvent*)
 }
 void Ti::TiView::onDoubleTapEvent(bb::cascades::DoubleTapEvent*)
 {
-
+    
 }
 
 void Ti::TiView::onLongPressEvent(bb::cascades::LongPressEvent*)
 {
-
+    
 }
 
 void Ti::TiView::onPinchStartedEvent(bb::cascades::PinchEvent*)
 {
-
+    
 }
 void Ti::TiView::onPinchUpdatedEvent(bb::cascades::PinchEvent*)
 {
-
+    
 }
 void Ti::TiView::onPinchEndedEvent(bb::cascades::PinchEvent*)
 {
-
+    
 }
 void Ti::TiView::onPinchCancelledEvent(bb::cascades::PinchEvent*)
 {
-
+    
 }
 
 void Ti::TiView::onEventAdded(QString eventName)
@@ -108,7 +117,7 @@ void Ti::TiView::onEventAdded(QString eventName)
 	else if(eventName == Ti::TiConstants::EventPinch)
 	{
 		gesture = new bb::cascades::PinchHandler(this);
-
+        
 		QObject::connect(gesture, SIGNAL(pinchStarted(bb::cascades::PinchEvent*)), this, SLOT(onPinchStartedEvent(bb::cascades::PinchEvent*)));
 		QObject::connect(gesture, SIGNAL(pinchUpdated(bb::cascades::PinchEvent*)), this, SLOT(onPinchUpdatedEvent(bb::cascades::PinchEvent*)));
 		QObject::connect(gesture, SIGNAL(pinchEnded(bb::cascades::PinchEvent*)), this, SLOT(onPinchEndedEvent(bb::cascades::PinchEvent*)));
@@ -123,13 +132,13 @@ void Ti::TiView::onEventAdded(QString eventName)
 	{
 		childControl->addGestureHandler(gesture);
 	}
-
+    
 }
 
 Ti::TiViewProxy* Ti::TiView::getProxy() const
 {
 	HandleScope scope;
-
+    
 	return proxy;
 }
 
@@ -166,13 +175,13 @@ QString Ti::TiView::defaultHeight()
 void Ti::TiView::onRelayout(QRectF rect)
 {
 	Ti::TiEventParameters eventParams;
-
+    
 	Ti::TiEventParameters rectParams;
 	rectParams.addParam("width", rect.width());
 	rectParams.addParam("height", rect.height());
 	rectParams.addParam("x", rect.x());
 	rectParams.addParam("y", rect.y());
-
+    
 	eventParams.addParam("rect", rectParams);
 	getProxy()->fireEvent("postlayout", eventParams);
 }

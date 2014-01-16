@@ -1,8 +1,8 @@
 /*
- * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
- * Licensed under the terms of the Apache Public License
- * Please see the LICENSE included with this distribution for details.
+ * TiViewProxy.cpp
+ *
+ *  Created on: Jul 10, 2013
+ *      Author: penrique
  */
 
 #include "Ti_View.h"
@@ -10,20 +10,21 @@
 #include "Ti_Value.h"
 #include "Ti_Constants.h"
 #include <bb/cascades/ImagePaint>
+#include <bb/cascades/ActionSet>
 
 Ti::TiViewProxy::TiViewProxy(const char* name)
-	: Ti::TiProxy(name),
-	  view(NULL),
-	  isDestroyed(true),
-	  _backgroundImageRepeat(false),
-	  _backgroundImageUrl("")
+: Ti::TiProxy(name),
+view(NULL),
+isDestroyed(true),
+_backgroundImageRepeat(false),
+_backgroundImageUrl("")
 {
-
+    
 	createPropertyGetter("animatedCenter", _getAnimatedCenter);
 	createPropertyGetter("children", _getChildren);
 	createPropertyGetter("rect", _getRect);
 	createPropertyGetter("size", _getSize);
-
+    
 	createPropertySetterGetter("accessibilityHidden", _setAccessibilityHidden,  _getAccessibilityHidden);
 	createPropertySetterGetter("accessibilityHint", _setAccessibilityHint,  _getAccessibilityHint);
 	createPropertySetterGetter("accessibilityLabel", _setAccessibilityLabel,  _getAccessibilityLabel);
@@ -46,6 +47,7 @@ Ti::TiViewProxy::TiViewProxy(const char* name)
 	createPropertySetterGetter("borderWidth", _setBorderWidth,  _getBorderWidth);
 	createPropertySetterGetter("bottom", _setBottom,  _getBottom);
 	createPropertySetterGetter("center", _setCenter,  _getCenter);
+	createPropertySetterGetter("contextMenus", _setContextMenus,  _getContextMenus);
 	createPropertySetterGetter("enabled", _setEnabled,  _getEnabled);
 	createPropertySetterGetter("focusable", _setFocusable,  _getFocusable);
 	createPropertySetterGetter("height", _setHeight,  _getHeight);
@@ -62,7 +64,7 @@ Ti::TiViewProxy::TiViewProxy(const char* name)
 	createPropertySetterGetter("horizontalWrap", _setHorizontalWrap,  _getHorizontalWrap);
 	createPropertySetterGetter("zIndex", _setZIndex,  _getZIndex);
 	createPropertySetterGetter("keepScreenOn", _setKeepScreenOn,  _getKeepScreenOn);
-
+    
 	createPropertyFunction("add", _add);
 	createPropertyFunction("animate", _animate);
 	createPropertyFunction("finishLayout", _finishLayout);
@@ -74,7 +76,7 @@ Ti::TiViewProxy::TiViewProxy(const char* name)
 	createPropertyFunction("toImage", _toImage);
 	createPropertyFunction("updateLayout", _updateLayout);
 	createPropertyFunction("convertPointToView", _convertPointToView);
-
+    
 }
 
 void Ti::TiViewProxy::setView(Ti::TiView *_view)
@@ -87,12 +89,12 @@ void Ti::TiViewProxy::setView(Ti::TiView *_view)
 
 Ti::TiViewProxy::~TiViewProxy()
 {
-	qDebug() << "[INTERNAL] DELETING VIEW PROXY" << getProxyName();
 	HandleScope scope;
 	foreach(Ti::TiViewProxy* child, _childViewsProxies)
 	{
 		child->makeWeak();
 	}
+	_childViewsProxies.clear();
 	if(!isDestroyed)
 	{
 		delete view;
@@ -239,15 +241,15 @@ void Ti::TiViewProxy::setBackgroundGradient(Ti::TiValue)
 void Ti::TiViewProxy::setBackground()
 {
 	_backgroundImageUrl.replace("//", "/");
-
+    
 	bb::cascades::RepeatPattern::Type type;
 	if(_backgroundImageRepeat)
 		type = bb::cascades::RepeatPattern::XY;
 	else
 		type = bb::cascades::RepeatPattern::Fill;
-
+    
 	bb::cascades::ImagePaint bgImg = bb::cascades::ImagePaint(QUrl(_backgroundImageUrl), type);
-
+    
 	view->setBackground(bgImg);
 }
 
@@ -284,6 +286,21 @@ void Ti::TiViewProxy::setBorderWidth(Ti::TiValue)
 }
 void Ti::TiViewProxy::setCenter(Ti::TiValue)
 {
+}
+void Ti::TiViewProxy::setContextMenus(Ti::TiValue value)
+{
+	if(!value.isList()) return;
+	QList<Ti::TiValue> allValues = value.toList();
+	foreach(Ti::TiValue current, allValues)
+	{
+		if(!current.isProxy()) continue;
+		Ti::TiProxy* menuProxy = current.toProxy();
+		if(menuProxy->__data__ == NULL) return;
+        
+		bb::cascades::ActionSet *menu = (bb::cascades::ActionSet*)menuProxy->__data__;
+		qDebug() << "MENU" << menu->title();
+		getChildControl()->addActionSet(menu);
+	}
 }
 void Ti::TiViewProxy::setEnabled(Ti::TiValue value)
 {
@@ -460,6 +477,12 @@ Ti::TiValue Ti::TiViewProxy::getCenter()
 	val.setUndefined();
 	return val;
 }
+Ti::TiValue Ti::TiViewProxy::getContextMenus()
+{
+	Ti::TiValue val;
+	val.setUndefined();
+	return val;
+}
 Ti::TiValue Ti::TiViewProxy::getEnabled()
 {
 	Ti::TiValue val;
@@ -542,14 +565,15 @@ Ti::TiValue Ti::TiViewProxy::getKeepScreenOn()
 Ti::TiValue Ti::TiViewProxy::add(Ti::TiValue value)
 {
 	Ti::TiViewProxy *childProxy = static_cast<Ti::TiViewProxy*>(value.toProxy());
-
+    
 	_childViewsProxies.append(childProxy);
 	childProxy->clearWeak();
+	qDebug() << "TiViewProxy: Clear weak" << childProxy->getProxyName();
 	Ti::TiView* childView = childProxy->getView();
 	Ti::TiView* thisView = getView();
-
+    
 	thisView->add(childView);
-
+    
 	Ti::TiValue val;
 	val.setUndefined();
 	return val;
@@ -577,16 +601,16 @@ Ti::TiValue Ti::TiViewProxy::remove(Ti::TiValue value)
 {
 	Ti::TiValue val;
 	val.setUndefined();
-
+    
 	Ti::TiViewProxy *childProxy = static_cast<Ti::TiViewProxy*>(value.toProxy());
 	if(!_childViewsProxies.contains(childProxy)) return val;
-
+    
 	Ti::TiView* childView = childProxy->getView();
 	Ti::TiView* thisView = getView();
 	childProxy->makeWeak();
 	thisView->remove(childView);
 	_childViewsProxies.removeOne(childProxy);
-
+    
 	return val;
 }
 Ti::TiValue Ti::TiViewProxy::removeAllChildren(Ti::TiValue)
