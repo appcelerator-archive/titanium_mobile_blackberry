@@ -8,7 +8,7 @@
 #ifndef TIPROPERTYSETGETOBJECT_H_
 #define TIPROPERTYSETGETOBJECT_H_
 
-#import "TiObject.h"
+#include "TiObject.h"
 
 typedef void(*SET_PROPERTY_CALLBACK)(void*, Handle<Value>);
 typedef Handle<Value>(*GET_PROPERTY_CALLBACK)(void*);

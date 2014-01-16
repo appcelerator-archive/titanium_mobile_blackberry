@@ -516,6 +516,7 @@ function BlackberryNDK(builder) {
 				orientation: orientation, 
 				category: 'core.games',
 				permissions: permissions || '',
+				other: tiapp.blackberry.other || '', 
 				icon: 'assets/' + tiapp.icon || 'assets/appicon.png'
 			}));
 
@@ -529,6 +530,7 @@ function BlackberryNDK(builder) {
 					}
 				}
 			}
+			appProps += 'app_id = ' + tiapp['id'] + '\n';
 			appProps += 'analytics = ' + tiapp['analytics'] + '\n';
 			appProps += 'aguid = ' + tiapp['guid'] + '\n';
 			appProps += 'version = ' + tiapp['version'] + '\n';
