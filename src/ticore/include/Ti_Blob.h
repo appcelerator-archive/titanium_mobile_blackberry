@@ -37,6 +37,7 @@ public:
 	TiBlob(const char*);
 	virtual ~TiBlob();
 
+	virtual Ti::TiValue getToString(Ti::TiValue);
 	Ti::TiValue getWidth();
 	Ti::TiValue getHeight();
 	Ti::TiValue getText();
@@ -54,6 +55,8 @@ public:
 	static Ti::TiBlob* InitWithImageData(bb::ImageData);
 	static Ti::TiBlob* InitWithData(QByteArray, QString);
 	static Ti::TiBlob* InitWithFile(QString);
+	static Ti::TiBlob* InitWithString(QByteArray, QString);
+	static Ti::TiBlob* InitWithString(QString);
 
 	void setData(QByteArray);
 	void setImageData(bb::ImageData);

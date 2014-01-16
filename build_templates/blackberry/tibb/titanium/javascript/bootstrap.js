@@ -9,11 +9,10 @@ var require = function (id) { return globalRequire(id, "app/native/assets/") };
 Ti.include = Ti.include || function (id) { Ti.globalInclude(id, "app/native/assets/") };
 var global = {};
 
-alert = function(msg)
-{
+alert = function(msg) {
     Ti.UI.createAlertDialog({message: (msg || '').toString()}).show();
 }
-
+Ti.XML = require('ti.xml/module');
 // TODO: move to its own file when we can include from the framework dir
 //Ti.include("bufferstream.js");
 Ti.BufferStream.prototype = {};
@@ -226,13 +225,4 @@ Ti.UI.createSearchBar = function(args) {
 	Ti.API.error('Ti.UI.createSearchBar() NOT SUPPORTED IN BB10, using textField instead');
 	return Ti.UI.createTextField(args);
 } 
-Ti.Geolocation.getCurrentPosition = function(_callback) {
-    function _onlocation(e) {
-        _callback(e);
-        setTimeout(function(){
-            Ti.Geolocation.removeEventListener('location', _onlocation);
-        }, 100);
-    }
-    Ti.Geolocation.addEventListener('location', _onlocation);
-}
 Titanium = Ti;

@@ -37,6 +37,7 @@
 #include <dlfcn.h>
 
 #include "Modules/Filesystem/TiFilesystemModule.h"
+#include "Modules/Geolocation/TiGeolocationModule.h"
 #include "Modules/Platform/TiPlatformModule.h"
 #include "Modules/Utils/TiUtilsModule.h"
 #include "Modules/UI/BlackBerry/TiUIBlackberryModule.h"
@@ -83,15 +84,15 @@ void TiRootObject::onCreateStaticMembers()
 
 
 	Local<Object> tiObj = context_->Global()->Get(String::New("Ti"))->ToObject();
-
-    tiObj->Set(String::New("Filesystem"), TiFilesystemModule::CreateModule());
-    tiObj->Set(String::New("Platform"), TiPlatformModule::CreateModule());
-    tiObj->Set(String::New("Utils"), TiUtilsModule::CreateModule());
-    tiObj->Set(String::New("App"), TiAppModule::CreateModule());
-    tiObj->Set(String::New("BlackBerry"), TiBlackberryModule::CreateModule());
+    tiObj->Set(String::New("Filesystem"), TiFilesystemModule::CreateModule(), DontDelete);
+    tiObj->Set(String::New("Geolocation"), TiGeolocationModule::CreateModule(), DontDelete);
+    tiObj->Set(String::New("Platform"), TiPlatformModule::CreateModule(), DontDelete);
+    tiObj->Set(String::New("Utils"), TiUtilsModule::CreateModule(), DontDelete);
+    tiObj->Set(String::New("App"), TiAppModule::CreateModule(), DontDelete);
+    tiObj->Set(String::New("BlackBerry"), TiBlackberryModule::CreateModule(), DontDelete);
 
     Local<Object> tiUI = tiObj->Get(String::New("UI"))->ToObject();
-    tiUI->Set(String::New("BlackBerry"), TiUIBlackberryModule::CreateModule());
+    tiUI->Set(String::New("BlackBerry"), TiUIBlackberryModule::CreateModule(), DontDelete);
 
 }
 
@@ -118,7 +119,7 @@ void TiRootObject::addMember(TiObject* object, const char* name)
         object->forceSetValue(newValue);
         TiObject::setTiObjectToJsObject(newValue, object);
     }
-    obj->Set(String::New(name), newValue);
+    obj->Set(String::New(name), newValue, DontDelete);
 
 }
 

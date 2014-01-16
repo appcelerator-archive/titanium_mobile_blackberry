@@ -1,4 +1,5 @@
 /*
+ * TiValue.cpp
  *
  * Appcelerator Titanium Mobile
  * Copyright (c) 2009-2013 by Appcelerator, Inc. All Rights Reserved.
@@ -54,7 +55,14 @@ Ti::TiValue::TiValue() :
 }
 void Ti::TiValue::setValue(Handle<Value> value)
 {
-	_jsValue = value;
+	if(value->IsFunction())
+	{
+		_jsValue = Persistent<Value>::New(value);
+	}
+	else
+	{
+		_jsValue = value;
+	}
 	_bool = value->ToBoolean()->Value();
 	_number = value->ToNumber()->Value();
 	_string = QString(*String::Utf8Value(value->ToString()));
@@ -95,6 +103,27 @@ void Ti::TiValue::setValue(Handle<Value> value)
 
 }
 
+void Ti::TiValue::callFunction(Ti::TiProxy* proxy, Ti::TiValue value)
+{
+
+	Persistent<Function> function = (Persistent<Function>)Handle<Function>::Cast(_jsValue);
+	Handle<Value> args[1];
+	args[0] = value.toJSValue();
+
+	TryCatch tryCatch;
+	Handle<Value> result = function->Call(proxy->realJSObject, 1, args);
+	if(result.IsEmpty())
+	{
+		qDebug() << "[TiValue] Something bad happened";
+    	Handle<Value> exception = tryCatch.Exception();
+    	qDebug() << "[TiValue] " << Ti::TiHelper::QStringFromValue(exception);
+	}
+	else
+	{
+		function.Dispose();
+	}
+}
+
 void Ti::TiValue::setMap(QMap<QString, Ti::TiValue> map)
 {
 	Local<Object> jsObject = Object::New();
@@ -105,7 +134,6 @@ void Ti::TiValue::setMap(QMap<QString, Ti::TiValue> map)
 	}
 	setValue(jsObject);
 }
-
 
 bb::cascades::Color Ti::TiValue::toColor() {
 	if (!QColor::isValidColor(_string))
@@ -229,7 +257,25 @@ bool Ti::TiValue::isString()
 	return _jsValue->IsString();
 }
 
+bool Ti::TiValue::isFunction()
+{
+	return _jsValue->IsFunction();
+}
+
+bool Ti::TiValue::isValid()
+{
+	return !_jsValue.IsEmpty();
+}
+
 Ti::TiValue::~TiValue()
 {
-
+	if(!_jsValue.IsEmpty() && _jsValue->IsFunction())
+	{
+		Persistent<Function> function = (Persistent<Function>)Handle<Function>::Cast(_jsValue);
+		function.Dispose();
+	}
+	if(!_jsValue.IsEmpty())
+	{
+		_jsValue.Clear();
+	}
 }
