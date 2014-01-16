@@ -30,6 +30,8 @@ protected:
 
 private:
     static Handle<Value> _open(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _close(void* userContext, TiObject* caller, const Arguments& args);
+    static Handle<Value> _pop(void* userContext, TiObject* caller, const Arguments& args);
 
     TiUITab();
     //This class is neither copy-constructible nor assignable

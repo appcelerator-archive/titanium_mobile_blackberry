@@ -9,11 +9,10 @@ var require = function (id) { return globalRequire(id, "app/native/assets/") };
 Ti.include = Ti.include || function (id) { Ti.globalInclude(id, "app/native/assets/") };
 var global = {};
 
-alert = function(msg)
-{
+alert = function(msg) {
     Ti.UI.createAlertDialog({message: (msg || '').toString()}).show();
 }
-
+Ti.XML = require('ti.xml/module');
 // TODO: move to its own file when we can include from the framework dir
 //Ti.include("bufferstream.js");
 Ti.BufferStream.prototype = {};

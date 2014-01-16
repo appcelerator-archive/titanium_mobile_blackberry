@@ -197,6 +197,16 @@ Ti::TiValue Ti::TiProxy::fireEvent(Ti::TiValue value)
 				{
 					eventParams.addParam(name, val.toProxy());
 				}
+				/*
+				else if (val.isList())
+				{
+					// TODO:
+				}
+				else if (val.isMap())
+				{
+					// TODO:
+				}
+				*/
 				else // if(val.isString())
 				{
 					eventParams.addParam(name, val.toString());

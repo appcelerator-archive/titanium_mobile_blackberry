@@ -21,6 +21,8 @@ public:
 	virtual Ti::TiValue getModuleVersion();
 	virtual Ti::TiValue getModuleName();
 
+	virtual void fireEvent(QString, Ti::TiEventParameters);
+
 	Ti::TiValue fireSystemEvent(Ti::TiValue);
 	Ti::TiValue getArguments(Ti::TiValue);
 

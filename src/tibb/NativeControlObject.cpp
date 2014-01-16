@@ -624,7 +624,10 @@ PROP_SETGET(setBackgroundImage)
 int NativeControlObject::setBackgroundImage(TiObject* obj)
 {
     Q_ASSERT(container_ != NULL);
-    container_->setBackground(TiUtils::colorFromTiObject(obj));
+
+    QString imagePath = V8ValueToQString(obj->getValue());
+	container_->setBackground(bb::cascades::ImagePaint(QUrl(getResourcePath(imagePath))));
+
     return NATIVE_ERROR_OK;
 }
 PROP_SETGET(setBackgroundColor)
@@ -632,40 +635,13 @@ int NativeControlObject::setBackgroundColor(TiObject* obj)
 {
 	container_->setBackground(TiUtils::colorFromTiObject(obj));
 	return NATIVE_ERROR_OK;
-    Q_ASSERT(container_ != NULL);
-    float r;
-    float g;
-    float b;
-    float a;
-
-    int error = NativeControlObject::getColorComponents(obj, &r, &g, &b, &a);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
-    backgroundColor_ = bb::cascades::Color::fromRGBA(r, g, b, a);
-    if (container_->isEnabled())
-    {
-        container_->setBackground(backgroundColor_);
-    }
-    return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(setBackgroundDisableColor)
 int NativeControlObject::setBackgroundDisableColor(TiObject* obj)
 {
     Q_ASSERT(container_ != NULL);
-    float r;
-    float g;
-    float b;
-    float a;
-
-    int error = NativeControlObject::getColorComponents(obj, &r, &g, &b, &a);
-    if (error != NATIVE_ERROR_OK)
-    {
-        return error;
-    }
-    disabledBackgroundColor_ = bb::cascades::Color::fromRGBA(r, g, b, a);
+   disabledBackgroundColor_ = TiUtils::colorFromTiObject(obj);
     if (!container_->isEnabled())
     {
         container_->setBackground(disabledBackgroundColor_);

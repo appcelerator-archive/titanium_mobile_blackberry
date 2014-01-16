@@ -9,6 +9,10 @@
 #include <bb/FileSystemInfo>
 #include <QDateTime>
 
+// TODO: Refactor with new Ti::TiBlob
+#include "TiObject.h"
+#include "TiBlobObject.h"
+
 namespace TiFilesystem {
 
 TiFilesystemFileProxy::TiFilesystemFileProxy(const char* name) :
@@ -94,7 +98,12 @@ Ti::TiValue TiFilesystemFileProxy::getName()
 Ti::TiValue TiFilesystemFileProxy::getNativePath()
 {
 	Ti::TiValue returnedValue;
-	returnedValue.setString(_fileInfo.absolutePath());
+	QString fullPath = _fileInfo.absolutePath();
+	QString name = _fileInfo.fileName();
+	if(!fullPath.contains(name)) {
+		fullPath.append("/").append(name);
+	}
+	returnedValue.setString(fullPath);
 	return returnedValue;
 }
 Ti::TiValue TiFilesystemFileProxy::getParent()
@@ -322,11 +331,27 @@ Ti::TiValue TiFilesystemFileProxy::write(Ti::TiValue value)
 	{
 		file.write(value.toString().toUtf8());
 		file.close();
+		_fileInfo = QFileInfo(file);
 		returnedValue.setBool(true);
 	}
 	else
 	{
-		returnedValue.setBool(false);
+		Handle<Value> blobData = value.toJSValue();
+		// TODO: Refactor with new Ti::TiBlob
+		TiObject* obj = TiObject::getTiObjectFromJsObject(blobData);
+        if (obj == NULL)
+        {
+    		returnedValue.setBool(false);
+    		return returnedValue;
+       	}
+        TiBlobObject* blob = static_cast<TiBlobObject*>(obj);
+        if(file.open(QIODevice::WriteOnly))
+        {
+        	file.write(blob->data());
+        	file.close();
+        	_fileInfo = QFileInfo(file);
+        }
+
 	}
 
 	return returnedValue;
