@@ -20,8 +20,6 @@ public:
 	virtual Ti::TiValue getModuleId();
 	virtual Ti::TiValue getModuleVersion();
 	virtual Ti::TiValue getModuleName();
-
-
 };
 
 #endif
