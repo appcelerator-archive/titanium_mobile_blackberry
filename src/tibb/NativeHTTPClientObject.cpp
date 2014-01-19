@@ -92,6 +92,8 @@ private:
 static QSettings defaultSettings("app/native/assets/app_properties.ini",
                                  QSettings::IniFormat);
 
+QNetworkCookieJar* NativeHTTPClientObject::cookieStore_ = new QNetworkCookieJar();
+
 NativeHTTPClientObject::NativeHTTPClientObject(TiObject* tiObject)
     : NativeProxyObject(tiObject)
 {
@@ -99,6 +101,7 @@ NativeHTTPClientObject::NativeHTTPClientObject(TiObject* tiObject)
 
     QString aguid = defaultSettings.value("aguid").toString();
 	aguid_ = aguid.toAscii();
+    networkAccessManager_.setCookieJar(cookieStore_);
 
     request_.setRawHeader("X-Titanium-ID", aguid_);
 }
@@ -107,6 +110,7 @@ NativeHTTPClientObject::~NativeHTTPClientObject()
 {
 	delete reply_;
     delete eventHandler_;
+    //delete cookieStore_;
 }
 
 NATIVE_TYPE NativeHTTPClientObject::getObjectType() const
@@ -195,6 +199,55 @@ int NativeHTTPClientObject::getReadyState(TiObject* obj, void* /*userContext*/)
     return NATIVE_ERROR_OK;
 }
 
+PROP_SETGET(getAllResponseHeaders)
+int NativeHTTPClientObject::getAllResponseHeaders(TiObject* obj, void* /*userContext*/)
+{
+
+    if (reply_ == NULL) {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    
+    QList< QPair<QByteArray, QByteArray> > rawHeader = reply_->rawHeaderPairs();
+    QString rawHeaderList;
+    
+    for (int i = 0; i < rawHeader.length(); i++){
+        QPair<QByteArray, QByteArray> pair = rawHeader.value(i);
+        rawHeaderList.append(pair.first + " : " + pair.second + "\n");
+    }
+    
+    obj->setValue(String::New(rawHeaderList.toAscii(), rawHeaderList.size()));
+    
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(getStatus)
+int NativeHTTPClientObject::getStatus(TiObject* obj, void* /*userContext*/)
+{
+    if (reply_ == NULL) {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    
+    QVariant status = reply_->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    
+    obj->setValue(Number::New(status.toInt()));
+
+    return NATIVE_ERROR_OK;
+}
+
+PROP_SETGET(getStatusText)
+int NativeHTTPClientObject::getStatusText(TiObject* obj, void* /*userContext*/)
+{
+    if (reply_ == NULL) {
+        return NATIVE_ERROR_INVALID_ARG;
+    }
+    
+    QString statusText = reply_->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
+    
+    obj->setValue(String::New(statusText.toUtf8(), statusText.size()));
+    
+    return NATIVE_ERROR_OK;
+}
+
 PROP_SETGET(getResponseText)
 int NativeHTTPClientObject::getResponseText(TiObject* obj, void* /*userContext*/)
 {
@@ -220,6 +273,9 @@ const static NATIVE_PROPSETGET_SETTING g_HTTPClientPropSetGet[] =
     {N_HTTPCLIENT_PROP_ONERROR, PROP_SETGET_FUNCTION(setOnerrorCallback), PROP_SETGET_FUNCTION(getOnerrorCallback)},
     {N_HTTPCLIENT_PROP_ONREADYSTATECHANGE, PROP_SETGET_FUNCTION(setOnreadystatechangeCallback), PROP_SETGET_FUNCTION(getOnreadystatechangeCallback)},
     {N_HTTPCLIENT_PROP_READYSTATE, NULL, PROP_SETGET_FUNCTION(getReadyState)},
+    {N_HTTPCLIENT_PROP_ALLRESPONSEHEADERS, NULL, PROP_SETGET_FUNCTION(getAllResponseHeaders)},
+    {N_HTTPCLIENT_PROP_STATUS, NULL, PROP_SETGET_FUNCTION(getStatus)},
+    {N_HTTPCLIENT_PROP_STATUSTEXT, NULL, PROP_SETGET_FUNCTION(getStatusText)},
     {N_HTTPCLIENT_PROP_RESPONSETEXT, NULL, PROP_SETGET_FUNCTION(getResponseText)}
 };
 
