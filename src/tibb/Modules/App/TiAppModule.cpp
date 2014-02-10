@@ -143,8 +143,11 @@ Ti::TiValue TiAppModule::getCopyright()
 }
 Ti::TiValue TiAppModule::getDeployType()
 {
+	QSettings defaultSettings("app/native/assets/app_properties.ini", QSettings::IniFormat);
+	QString deployType = defaultSettings.value("deploytype").toString();
+
 	Ti::TiValue val;
-	val.setUndefined();
+	val.setString(deployType);
 	return val;
 }
 Ti::TiValue TiAppModule::getDescription()
