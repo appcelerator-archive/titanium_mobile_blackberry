@@ -21,6 +21,9 @@ NativeLoggerObject::NativeLoggerObject(TiObject* tiObject)
 {
     nativeLoggerThread_.start();
     nativeLoggerWorker_->moveToThread(&nativeLoggerThread_);
+
+
+
 }
 
 NativeLoggerObject::~NativeLoggerObject()
@@ -60,7 +63,7 @@ NATIVE_TYPE NativeLoggerObject::getObjectType() const
 
 void NativeLoggerObject::log(const char* msg)
 {
-    queueLog(msg);
+    log(QString(msg));
 }
 
 void NativeLoggerObject::log(const QString& msg)

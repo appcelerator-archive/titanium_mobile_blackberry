@@ -111,7 +111,7 @@ void Ti::TiValue::callFunction(Ti::TiProxy* proxy, Ti::TiValue value)
 	args[0] = value.toJSValue();
 
 	TryCatch tryCatch;
-	Handle<Value> result = function->Call(proxy->realJSObject, 1, args);
+	Handle<Value> result = function->Call(proxy->_jsObject, 1, args);
 	if(result.IsEmpty())
 	{
 		qDebug() << "[TiValue] Something bad happened";
@@ -209,7 +209,7 @@ void Ti::TiValue::setBool(bool val)
 void Ti::TiValue::setProxy(Ti::TiProxy* val)
 {
 	_proxy = val;
-	_jsValue = _proxy->realJSObject;
+	_jsValue = _proxy->_jsObject;
 }
 
 void Ti::TiValue::setNull()

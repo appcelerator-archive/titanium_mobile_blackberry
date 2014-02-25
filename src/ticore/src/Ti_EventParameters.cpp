@@ -119,7 +119,7 @@ void Ti::TiEventParameters::addParametersToObject(Ti::TiEventParameters* paramet
 
 	foreach(QString key, parameters->proxyMap.keys())
 	{
-		object->Set(Ti::TiHelper::ValueFromQString(key), parameters->proxyMap[key]->realJSObject);
+		object->Set(Ti::TiHelper::ValueFromQString(key), parameters->proxyMap[key]->_jsObject);
 	}
 
 	foreach(QString key, parameters->objectMap.keys())

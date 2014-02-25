@@ -218,7 +218,6 @@ protected:
     int removeChildImpl(NativeObject* obj);
     static int setZOrder(bb::cascades::Container* container, bb::cascades::Control* control,
                          float zindex, bool zindexIsDefined);
-    static QString getResourcePath(const QString& path);
 
     struct Node layoutNode_;
 

@@ -35,6 +35,9 @@ public:
 	static bb::cascades::Color ColorFromObject(Handle<Value> obj);
 	static void applyFontToText(Ti::TiValue, bb::cascades::AbstractTextControl*);
 	static Handle<Value> ValueFromQString(QString);
+	static QMap<QString, QVariant> getAppSettings();
+	static QVariant getAppSetting(QString);
+	static QString getAssetPath(QString);
 };
 }
 #endif /* TIHELPER_H_ */

@@ -72,6 +72,7 @@ private:
 
     NativeLoggerWorker* nativeLoggerWorker_;
     QThread nativeLoggerThread_;
+
 };
 
 #endif /* NATIVELOGGEROBJECT_H_ */

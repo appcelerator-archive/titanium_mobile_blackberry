@@ -9,6 +9,7 @@
 #define TIAPIOBJECT_H_
 
 #include "TiProxy.h"
+#include <QtNetwork/QTcpSocket>
 
 /*
  * TiAPIObject
@@ -26,6 +27,7 @@ protected:
     virtual void onCreateStaticMembers();
 
 private:
+    QTcpSocket *_socket;
     TiAPIObject();
     TiAPIObject(const TiAPIObject&);
     TiAPIObject& operator=(const TiAPIObject&);

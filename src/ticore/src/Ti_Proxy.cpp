@@ -18,8 +18,8 @@ __data__(NULL),
 _proxyName(QString(name))
 {
 	HandleScope scope;
-	jsObject = Persistent<ObjectTemplate>::New(ObjectTemplate::New());
-	jsObject->SetNamedPropertyHandler(Ti::TiProxy::_Getter, Ti::TiProxy::_Setter);
+	_jsObjectTemplate = Persistent<ObjectTemplate>::New(ObjectTemplate::New());
+	_jsObjectTemplate->SetNamedPropertyHandler(Ti::TiProxy::_Getter, Ti::TiProxy::_Setter);
 
 	createPropertyFunction("addEventListener", _addEventListener);
 	createPropertyFunction("removeEventListener", _removeEventListener);
@@ -40,8 +40,8 @@ Ti::TiProxy::~TiProxy()
 	qDeleteAll(properties);
 	properties.clear();
 
-	realJSObject.Clear();
-	realJSObject.Dispose();
+	_jsObject.Clear();
+	_jsObject.Dispose();
 }
 
 void Ti::TiProxy::initStart()
@@ -56,7 +56,7 @@ void Ti::TiProxy::initWithObject(Handle<Object> obj)
 	for(int i = 0, len = props->Length(); i < len; i++) {
 		Local<String> key = props->Get(i)->ToString();
 		Local<Value> val = obj->Get(key);
-		realJSObject->Set(key, val);
+		_jsObject->Set(key, val);
 	}
 }
 
@@ -81,13 +81,13 @@ const char* Ti::TiProxy::getProxyName()
 	return _proxyName.toLocal8Bit().constData();
 }
 
-Handle<ObjectTemplate> Ti::TiProxy::getJSObject() {
-	return jsObject;
+Handle<ObjectTemplate> Ti::TiProxy::getJSObjectTemplate() {
+	return _jsObjectTemplate;
 }
 
 void Ti::TiProxy::addFunction(const char* name, InvocationCallback callback)
 {
-	jsObject->Set(name, FunctionTemplate::New(callback));
+	_jsObjectTemplate->Set(name, FunctionTemplate::New(callback));
 }
 void Ti::TiProxy::createPropertyFunction(QString name, PROPERTY_FUNCTION callback)
 {
@@ -223,7 +223,7 @@ Ti::TiValue Ti::TiProxy::fireEvent(Ti::TiValue value)
 
 void Ti::TiProxy::fireCallback(QString eventName, Ti::TiEventParameters params)
 {
-	Ti::TiEvent::fireCallbackIfNeeded(eventName, realJSObject, &params);
+	Ti::TiEvent::fireCallbackIfNeeded(eventName, _jsObject, &params);
 }
 void Ti::TiProxy::fireEvent(QString eventName, Ti::TiEventParameters params)
 {
@@ -234,7 +234,7 @@ void Ti::TiProxy::fireEvent(QString eventName, Ti::TiEventParameters params)
 		for(int i = 0, len = list.length(); i < len; i++)
 		{
 			Ti::TiEvent *event = list.at(i);
-			event->fireWithParameters(realJSObject, &params);
+			event->fireWithParameters(_jsObject, &params);
 		}
 	}
 	if(eventName == Ti::TiConstants::EventClose || eventName == Ti::TiConstants::EventOpen)
@@ -251,18 +251,26 @@ Ti::TiValue Ti::TiProxy::getToString(Ti::TiValue)
 	return val;
 }
 
+Ti::TiValue Ti::TiProxy::getTiValueForKey(QString key)
+{
+	return Ti::TiValue(_jsObject->Get(Ti::TiHelper::ValueFromQString(key)));
+}
+void Ti::TiProxy::setTiValueForKey(Ti::TiValue value, QString key)
+{
+	_jsObject->Set(TiHelper::ValueFromQString(key), value.toJSValue());
+}
 
 void Ti::TiProxy::makeWeak()
 {
-	if(realJSObject.IsEmpty()) return;
+	if(_jsObject.IsEmpty()) return;
 	qDebug() << "TiProxy: Make weak" << _proxyName;
-	realJSObject.MakeWeak(this, _WeakCallback);
+	_jsObject.MakeWeak(this, _WeakCallback);
 }
 void Ti::TiProxy::clearWeak()
 {
-	if(realJSObject.IsEmpty()) return;
+	if(_jsObject.IsEmpty()) return;
 	qDebug() << "TiProxy: Clear weak" << _proxyName;
-	realJSObject.ClearWeak();
+	_jsObject.ClearWeak();
 }
 
 Handle<Value> Ti::TiProxy::_Getter (Local<String> property, const AccessorInfo& info)

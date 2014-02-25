@@ -13,6 +13,7 @@
 #include "TableView/TableViewRowData.h"
 #include "TiObject.h"
 #include "V8Utils.h"
+#include "TiCore.h"
 
 using namespace titanium;
 
@@ -43,7 +44,7 @@ int NativeTableViewRowObject::addChildNativeObject(NativeObject* obj) {
 
 int NativeTableViewRowObject::setLeftImage(TiObject* obj) {
     QString imagePath = V8ValueToQString(obj->getValue());
-    data_->setProperty("leftImage", QUrl(getResourcePath(imagePath)));
+    data_->setProperty("leftImage", QUrl(Ti::TiHelper::getAssetPath(imagePath)));
     return NATIVE_ERROR_OK;
 }
 

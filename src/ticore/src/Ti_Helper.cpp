@@ -14,6 +14,7 @@
 #include <iostream>
 #include "Layout/Structs.h"
 #include "Layout/ParseProperty.h"
+#include <QSettings>
 
 static const QString FONT_FAMILY            = "fontFamily";
 static const QString FONT_SIZE              = "fontSize";
@@ -179,5 +180,45 @@ bb::cascades::Color Ti::TiHelper::ColorFromObject(Handle<Value> obj)
     float a = qa;
 
 	return bb::cascades::Color::fromRGBA(r, g, b, a);
-
 }
+
+QVariant Ti::TiHelper::getAppSetting(QString key) {
+	QMap<QString, QVariant> settings = Ti::TiHelper::getAppSettings();
+	return settings[key];
+}
+
+QMap<QString, QVariant> Ti::TiHelper::getAppSettings()
+{
+	static QMap<QString, QVariant> settings;
+	if(settings.isEmpty())
+	{
+		QSettings defaultSettings("app/native/_private_assets_/app_properties.ini", QSettings::IniFormat);
+		foreach(QString key, defaultSettings.allKeys())
+		{
+			settings[key] = defaultSettings.value(key);
+		}
+	}
+	return settings;
+}
+
+QString Ti::TiHelper::getAssetPath(QString file)
+{
+	if(!file.startsWith("/")) {
+		file.prepend("/");
+	}
+
+	QFileInfo privateAssets(QString("app/native/_private_assets_").append(file));
+	if(privateAssets.exists()) {
+		return privateAssets.filePath();
+	}
+	QFileInfo bbFolder(QString("app/native/assets/blackberry").append(file));
+	if(bbFolder.exists()) {
+		return bbFolder.filePath();
+	}
+	QFileInfo resourcesFolder(QString("app/native/assets").append(file));
+	if(resourcesFolder.exists()) {
+		return resourcesFolder.filePath();
+	}
+	return "";
+}
+
