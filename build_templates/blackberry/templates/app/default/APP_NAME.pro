@@ -41,7 +41,7 @@ simulator {
 
 LIBS+=-lbbcascades -lbbdevice -lbbsystem -lQtCore -lQtDeclarative -lQtGui -lQtMultimedia -lQtNetwork -lm -lbb -lbbdata
 LIBS+=-lQtSensors -lQtSql -lQtSvg -lQtTest -lQtXml -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbpim
-LIBS+=-lbbutility -lbbcascadespickers
+LIBS+=-lbbutility -lbbcascadespickers -lbbnetwork -lbbplatform
 
 
 include(config.pri)
