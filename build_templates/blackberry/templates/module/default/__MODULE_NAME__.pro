@@ -7,11 +7,11 @@ CONFIG += qt staticlib warn_on debug_and_release cascades mobility
 MOBILITY += sensors
 
 
-TI_BB_SDK = "__SDK_ROOT__/blackberry/"
+TI_BB_SDK = "__SDK_ROOT__/blackberry/libs"
 
 INCLUDEPATH += \
 	. \
-    $${TI_BB_SDK}/libv8 \
+    $${TI_BB_SDK}/libv8/include \
     $${TI_BB_SDK}/ticore/include \
     ./include
 

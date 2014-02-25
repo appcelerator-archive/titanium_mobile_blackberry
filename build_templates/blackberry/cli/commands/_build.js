@@ -10,8 +10,9 @@ var appc = require('node-appc'),
     afs = appc.fs,
     i18n = appc.i18n(__dirname),
     __ = i18n.__,
+    __n = i18n.__n,
     ti = require('titanium-sdk'),
-    BlackBerryNDK = require('../common/blackberryndk'),
+    BlackBerry = require('../common/bb_cli'),
     path = require('path'),
 
     targets = ['simulator', 'device', 'distribute'];
@@ -129,14 +130,37 @@ function build(logger, config, cli, finished) {
         // Alloy generate an app.js, it may not have existed during validate(), but should exist now
         // that build.pre.compile was fired.
         ti.validateAppJsExists(this.projectDir, this.logger, 'blackberry');
+        var self = this;
+        appc.net.interfaces(function(a){
+            for(var key in a) {
+                var obj = a[key];
+                if(!obj.gateway) continue;
+                obj.ipAddresses.forEach(function (ip) {
+                    if(ip.family == 'IPv4') {
+                        self.ipAddress = ip.address;
+                    }
+                });
+            }
+            var bbndk = new BlackBerry(self);
+            bbndk.build(finished);
+        });
+        logToSocket(logger);
 
-
-        var bbndk = new BlackBerryNDK(this);
-
-        var projectBuildPath = path.join(this.projectDir, 'build', 'blackberry');
-        // permission errors can be thrown here if the projectDir folder is private
-        afs.copyDirSyncRecursive(path.join(this.titaniumBBSdkPath, 'tibbapp'), projectBuildPath, { preserve: true, logger: logger.debug });
-
-        bbndk.build(finished);
     }.bind(this));
+}
+
+function logToSocket(logger) {
+    var net = require('net');
+    net.createServer(function(socket){
+        socket.on('connection',function(socket){
+            console.log('socket connection...');
+        });
+        socket.on('data',function(message){
+            console.log('' + message);
+        });
+        socket.on('error',function(error){
+            console.log('error on socket message:'+error);
+        });
+    }).listen(9999);
+
 }
