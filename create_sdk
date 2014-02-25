@@ -43,30 +43,28 @@ mkdir -p build/sdk/blackberry
 
 cp -r build_templates/blackberry/. build/sdk/blackberry
 
-mkdir -p build/sdk/blackberry/tibb/arm/a.le-v7
-mkdir -p build/sdk/blackberry/tibb/arm/a.le-v7-g
-mkdir -p build/sdk/blackberry/tibb/x86/a
-mkdir -p build/sdk/blackberry/tibb/x86/a-g/
+mkdir -p build/sdk/blackberry/libs/tibb/arm/a.le-v7
+mkdir -p build/sdk/blackberry/libs/tibb/arm/a.le-v7-g
+mkdir -p build/sdk/blackberry/libs/tibb/x86/a
+mkdir -p build/sdk/blackberry/libs/tibb/x86/a-g/
 
-cp src/tibb/arm/a.le-v7/libtibb.a  build/sdk/blackberry/tibb/arm/a.le-v7/libtibb.a
-cp src/tibb/arm/a.le-v7-g/libtibb.a build/sdk/blackberry/tibb/arm/a.le-v7-g/libtibb.a
-cp src/tibb/x86/a/libtibb.a build/sdk/blackberry/tibb/x86/a/libtibb.a
-cp src/tibb/x86/a-g/libtibb.a build/sdk/blackberry/tibb/x86/a-g/libtibb.a
+cp src/tibb/arm/a.le-v7/libtibb.a  build/sdk/blackberry/libs/tibb/arm/a.le-v7/libtibb.a
+cp src/tibb/arm/a.le-v7-g/libtibb.a build/sdk/blackberry/libs/tibb/arm/a.le-v7-g/libtibb.a
+cp src/tibb/x86/a/libtibb.a build/sdk/blackberry/libs/tibb/x86/a/libtibb.a
+cp src/tibb/x86/a-g/libtibb.a build/sdk/blackberry/libs/tibb/x86/a-g/libtibb.a
 
-cp src/ticore/arm/a.le-v7/libticore.a  build/sdk/blackberry/ticore/arm/a.le-v7/libticore.a
-cp src/ticore/arm/a.le-v7-g/libticore.a build/sdk/blackberry/ticore/arm/a.le-v7-g/libticore.a
-cp src/ticore/x86/a/libticore.a build/sdk/blackberry/ticore/x86/a/libticore.a
-cp src/ticore/x86/a-g/libticore.a build/sdk/blackberry/ticore/x86/a-g/libticore.a
+cp src/ticore/arm/a.le-v7/libticore.a  build/sdk/blackberry/libs/ticore/arm/a.le-v7/libticore.a
+cp src/ticore/arm/a.le-v7-g/libticore.a build/sdk/blackberry/libs/ticore/arm/a.le-v7-g/libticore.a
+cp src/ticore/x86/a/libticore.a build/sdk/blackberry/libs/ticore/x86/a/libticore.a
+cp src/ticore/x86/a-g/libticore.a build/sdk/blackberry/libs/ticore/x86/a-g/libticore.a
 
-cp -r src/ticore/include/. build/sdk/blackberry/ticore/include
+cp -r src/ticore/include/. build/sdk/blackberry/libs/ticore/include
 
+mkdir -p build/sdk/blackberry/libs/libv8/arm
+mkdir -p build/sdk/blackberry/libs/libv8/x86
 
-mkdir -p build/sdk/blackberry/libv8/lib/arm
-mkdir -p build/sdk/blackberry/libv8/lib/x86
-
-cp runtime/v8/arm/libv8.a build/sdk/blackberry/libv8/lib/arm/libv8.a
-cp runtime/v8/x86/libv8.a build/sdk/blackberry/libv8/lib/x86/libv8.a
+cp runtime/v8/arm/libv8.a build/sdk/blackberry/libs/libv8/arm/libv8.a
+cp runtime/v8/x86/libv8.a build/sdk/blackberry/libs/libv8/x86/libv8.a
 
 cp package.json build/sdk/blackberry/package.json
-
-
+cd $VAR_PWD
