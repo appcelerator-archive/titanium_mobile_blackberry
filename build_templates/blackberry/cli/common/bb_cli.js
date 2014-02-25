@@ -9,6 +9,50 @@ var __n = i18n.__n;
 var exec = require('child_process').exec;
 const MOD_NATIVE = 1;
 const MOD_COMMON_JS = 2;
+
+function findEnvFile(dir) {
+
+	var envFiles = fs.readdirSync(dir);
+	var envFile = 'not found';
+
+	for (var i = 0; i < envFiles.length; i++) {
+		var name = envFiles[i];
+		if (name.indexOf('bbndk-env') == 0) {
+			if (process.platform === 'win32') {
+				if (name.indexOf('.bat', name.length - 4) != -1) {
+					envFile = name;
+				}
+			}
+			else {
+				envFile = name;
+			}	
+		}
+	}
+	 
+	return envFile;   
+}
+
+function findNDK() {
+
+	var default_dirs;
+	var ndkPath = 'not found';
+
+	if (process.platform === 'win32') {
+		default_dirs = ['C:\\bbndk']
+	}
+	else {
+		default_dirs = ['/Applications/Momentics.app',  '/Applications/bbndk', '/Developer/SDKs/bbndk', '/opt/bbndk', '~/bbndk', '~/opt/bbndk']
+	}
+
+	var len = default_dirs.length;
+
+	for (i = 0; i < len; i++) {
+		if (fs.existsSync(default_dirs[i])) {
+			return default_dirs[i];
+		 }
+	}
+}
+
 function TiModules(projectDir, tiSDK, tiapp, logger, callback) {
 	callback = callback || function(){};
 	if (!tiapp.modules || !tiapp.modules.length) {
@@ -180,9 +224,12 @@ BlackBerry.prototype.run = function(argv, _onFinish) {
 	process.chdir(buildBlackberry);
 	var isDevice = this.target == 'device' || this.target == 'distribute';
 	var isRelease = this.target == 'distribute';
+	var ndkPath = findNDK();
+	var envFile = findEnvFile(ndkPath);
+	var bashFile = path.join(ndkPath, envFile);
 
 	var cmd = [
-		'source "/Applications/Momentics.app/bbndk-env_10_2_0_1155.sh"',
+		'source "' + bashFile + '"',
 		'make -j3 ' + (isDevice ? 'Device' : 'Simulator') + (isRelease ? '-Release' : '-Debug'),
 		'blackberry-nativepackager -package build/' + this.tiapp.name + '.bar bar-descriptor.xml -configuration ' + (isDevice ? 'Device' : 'Simulator') + (isRelease ? '-Release' : '-Debug')
 	];
