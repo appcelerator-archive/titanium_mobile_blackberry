@@ -364,6 +364,9 @@ void NativeControlObject::setupEvents(TiEventContainerFactory* containerFactory)
     NativeProxyObject::setupEvents(containerFactory);
 
     bb::cascades::Control* control = (control_ != NULL) ? control_ : container_;
+    if(control == NULL) {
+        return;
+    }
     UIViewEventHandler* handler = new UIViewEventHandler(control);
 
     addTouchEvent("touchstart", handler, SIGNAL(touchStart(float,float)), containerFactory->createEventContainer());

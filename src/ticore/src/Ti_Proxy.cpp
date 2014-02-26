@@ -31,12 +31,6 @@ _proxyName(QString(name))
 Ti::TiProxy::~TiProxy()
 {
 	qDebug() << "[INTERNAL] DELETING PROXY" << getProxyName();
-	foreach(QString key, events.keys())
-	{
-		qDeleteAll(events[key]);
-		events[key].clear();
-	}
-	events.clear();
 	qDeleteAll(properties);
 	properties.clear();
 
@@ -106,8 +100,9 @@ void Ti::TiProxy::createPropertySetterGetter(QString name, PROPERTY_SETTER sette
 	Ti::TiProperty::createProperty(this, name, setter, getter);
 }
 
-void Ti::TiProxy::onEventAdded(QString)
+void Ti::TiProxy::onEventAdded(QString str)
 {
+	qDebug() << "Event Added" << str;
 	// for subclass
 }
 void Ti::TiProxy::onEventRemoved(QString)
@@ -121,24 +116,13 @@ Ti::TiValue Ti::TiProxy::addEventListener(Ti::TiValue value)
 	QString eventName;
 
 	Ti::TiValue nameValue = value.toList().at(0);
+	Ti::TiValue functionValue = value.toList().at(1);
+
 	eventName = nameValue.toString();
 
 	onEventAdded(eventName);
-	Ti::TiValue functionValue = value.toList().at(1);
-	Handle<Function> func = Handle<Function>::Cast(functionValue.toJSValue());
 
-	Ti::TiEvent *newEvent = new Ti::TiEvent(func);
-	if(events.contains(eventName))
-	{
-		events[eventName].append(newEvent);
-	}
-	else
-	{
-		QList<Ti::TiEvent*> list;
-		list.append(newEvent);
-		events.insert(eventName, list);
-	}
-
+	Ti::TiEvent::AddEventToObject(_jsObject, eventName, Handle<Function>::Cast(functionValue.toJSValue()));
 
 	Ti::TiValue res;
 	res.setUndefined();
@@ -153,25 +137,9 @@ Ti::TiValue Ti::TiProxy::removeEventListener(Ti::TiValue value)
 	Ti::TiValue functionValue = value.toList().at(1);
 	Handle<Function> func = Handle<Function>::Cast(functionValue.toJSValue());
 
+	Ti::TiEvent::RemoveEventFromObject(_jsObject, eventName, func);
 	Ti::TiValue res;
 	res.setUndefined();
-
-	if(events.contains(eventName))
-	{
-		QList<Ti::TiEvent*> list = events[eventName];
-		for(int i = 0, len = list.length(); i < len; i++)
-		{
-			Ti::TiEvent *event = list.at(i);
-			if(event->callback == func)
-			{
-                //				Ti::TiHelper::Log("Remove this event");
-				delete event;
-				events[eventName].removeAt(i);
-				onEventRemoved(eventName);
-				return res;
-			}
-		}
-	}
 	return res;
 }
 
@@ -223,21 +191,13 @@ Ti::TiValue Ti::TiProxy::fireEvent(Ti::TiValue value)
 
 void Ti::TiProxy::fireCallback(QString eventName, Ti::TiEventParameters params)
 {
-	Ti::TiEvent::fireCallbackIfNeeded(eventName, _jsObject, &params);
+	Ti::TiEvent::FireCallbackIfNeeded(eventName, _jsObject, &params);
 }
 void Ti::TiProxy::fireEvent(QString eventName, Ti::TiEventParameters params)
 {
 	HandleScope scope;
-	if(events.contains(eventName))
-	{
-		QList<Ti::TiEvent*> list = events[eventName];
-		for(int i = 0, len = list.length(); i < len; i++)
-		{
-			Ti::TiEvent *event = list.at(i);
-			event->fireWithParameters(_jsObject, &params);
-		}
-	}
-	if(eventName == Ti::TiConstants::EventClose || eventName == Ti::TiConstants::EventOpen)
+	Ti::TiEvent::FireEventOnObject(_jsObject, eventName, &params);
+	if(eventName == Ti::TiConstants::EventClose)
 	{
 		qDebug() << "[TIPROXY] force GC";
 		V8::LowMemoryNotification();
@@ -262,13 +222,13 @@ void Ti::TiProxy::setTiValueForKey(Ti::TiValue value, QString key)
 
 void Ti::TiProxy::makeWeak()
 {
-	if(_jsObject.IsEmpty()) return;
+	//if(_jsObject.IsEmpty()) return;
 	qDebug() << "TiProxy: Make weak" << _proxyName;
 	_jsObject.MakeWeak(this, _WeakCallback);
 }
 void Ti::TiProxy::clearWeak()
 {
-	if(_jsObject.IsEmpty()) return;
+	//if(_jsObject.IsEmpty()) return;
 	qDebug() << "TiProxy: Clear weak" << _proxyName;
 	_jsObject.ClearWeak();
 }

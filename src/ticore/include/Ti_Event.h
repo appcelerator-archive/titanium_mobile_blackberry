@@ -19,11 +19,13 @@ namespace Ti
 class TiEventParameters;
 class TiEvent {
 public:
-	TiEvent(Handle<Function>);
+	static void FireCallbackIfNeeded(QString, Handle<Object>, Ti::TiEventParameters*);
+	static void AddEventToObject(Handle<Object>, QString, Handle<Function>);
+	static void RemoveEventFromObject(Handle<Object>, QString, Handle<Function>);
+	static void FireEventOnObject(Handle<Object>, QString, Ti::TiEventParameters*);
+private:
+	TiEvent();
 	virtual ~TiEvent();
-	void fireWithParameters(Handle<Object> owner, Ti::TiEventParameters *params);
-	static void fireCallbackIfNeeded(QString, Handle<Object>, Ti::TiEventParameters*);
-	Persistent<Function> callback;
 };
 }
 #endif /* TIEVENT_H_ */
