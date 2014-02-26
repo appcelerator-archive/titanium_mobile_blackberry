@@ -213,6 +213,7 @@ function BlackBerry(_params) {
 	this.appName = String(this.tiapp.name);
 	this.tiapp.name = this.tiapp.name.replace(/ /g, '_');
 	this.ipAddress = _params.ipAddress;
+	this.availablePort = _params.availablePort;
 	this.modules = TiModules(this.projectDir, this.tiSDK, _params.tiapp, _params.logger);
 	this.target = (_params.target || '').toLowerCase();
 }
@@ -235,7 +236,9 @@ BlackBerry.prototype.run = function(argv, _onFinish) {
 	];
 
 	if(!isRelease) {
-		cmd[2] += ' -debugToken "' + argv['debug-token'] + '" -devMode';
+		if(isDevice) {
+			cmd[2] += ' -debugToken "' + argv['debug-token'] + '" -devMode';
+		}
 		cmd.push('blackberry-deploy -installApp -launchApp -device ' + (argv['ip-address'] || '""') + ' -password "' + (argv.password || '')+ '" build/'+this.tiapp.name+'.bar')
 	} else {
 		cmd.push('blackberry-signer -storepass "' + (argv['keystore-password'] || '') + '" build/' + this.tiapp.name + '.bar')
@@ -276,7 +279,7 @@ BlackBerry.prototype.build = function(_onFinish) {
 	if (!fs.existsSync(buildBlackberry)) {
 		fs.mkdirSync(buildBlackberry);
 	} else {
-		// return;
+		// TODO: skip rebuilding?
 	}
 	CreateApp(this.tiapp.name, this.tiapp.id, this.projectDir, this.tiapp.version, this.tiSDK);
 
@@ -385,7 +388,7 @@ BlackBerry.prototype.build = function(_onFinish) {
 	for (key in this.tiapp.properties) {
 		for (key2 in this.tiapp.properties[key]) {
 			if (key2 == 'value') {
-				appProps += key + ' = ' + this.tiapp.properties[key][key2] + '\n';
+				appProps += key + ' = "' + this.tiapp.properties[key][key2] + '"\n';
 			}
 		}
 	}
@@ -398,6 +401,7 @@ BlackBerry.prototype.build = function(_onFinish) {
 		appProps += 'deploytype = development\n';
 	}
 	appProps += 'current_ip = ' + this.ipAddress + '\n';
+	appProps += 'current_port = ' + this.availablePort + '\n';
 	var appPropsFile = path.join(buildBlackberry, '_private_assets_' , 'app_properties.ini');
 	fs.writeFileSync(appPropsFile, appProps);
 	_onFinish();

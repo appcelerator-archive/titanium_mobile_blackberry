@@ -14,11 +14,14 @@
 TiAPIObject::TiAPIObject()
     : TiProxy("API")
 {
-
 	QString ipAddress = Ti::TiHelper::getAppSetting("current_ip").toString();
+	bool hasPort = true;
+	int port = Ti::TiHelper::getAppSetting("current_port").toInt(&hasPort);
     _socket = new QTcpSocket();
-    _socket->connectToHost(ipAddress, 9999);
-    _socket->waitForConnected(3000);
+    if(hasPort) {
+    	_socket->connectToHost(ipAddress, port);
+        _socket->waitForConnected(3000);
+    }
 }
 
 TiAPIObject::~TiAPIObject()

@@ -192,7 +192,7 @@ QMap<QString, QVariant> Ti::TiHelper::getAppSettings()
 	static QMap<QString, QVariant> settings;
 	if(settings.isEmpty())
 	{
-		QSettings defaultSettings("app/native/_private_assets_/app_properties.ini", QSettings::IniFormat);
+		QSettings defaultSettings(Ti::TiHelper::getAssetPath("app_properties.ini"), QSettings::IniFormat);
 		foreach(QString key, defaultSettings.allKeys())
 		{
 			settings[key] = defaultSettings.value(key);

@@ -5,8 +5,8 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef TIAPIOBJECT_H_
-#define TIAPIOBJECT_H_
+#ifndef TI_APIOBJECT_H_
+#define TI_APIOBJECT_H_
 
 #include "TiProxy.h"
 #include <QtNetwork/QTcpSocket>

@@ -14,7 +14,7 @@ var appc = require('node-appc'),
     ti = require('titanium-sdk'),
     BlackBerry = require('../common/bb_cli'),
     path = require('path'),
-
+    net = require('net'),
     targets = ['simulator', 'device', 'distribute'];
  
 exports.config = function (logger, config, cli) {
@@ -131,6 +131,7 @@ function build(logger, config, cli, finished) {
         // that build.pre.compile was fired.
         ti.validateAppJsExists(this.projectDir, this.logger, 'blackberry');
         var self = this;
+        var ipFound = false;
         appc.net.interfaces(function(a){
             for(var key in a) {
                 var obj = a[key];
@@ -138,29 +139,45 @@ function build(logger, config, cli, finished) {
                 obj.ipAddresses.forEach(function (ip) {
                     if(ip.family == 'IPv4') {
                         self.ipAddress = ip.address;
+                        ipFound = true;
+                        return;
                     }
                 });
+                if(ipFound) break;
             }
-            var bbndk = new BlackBerry(self);
-            bbndk.build(finished);
+            getAvailablePort(function(port){
+                self.availablePort = port;
+                var bbndk = new BlackBerry(self);
+                bbndk.build(finished);
+            });
+
         });
-        logToSocket(logger);
 
     }.bind(this));
 }
 
-function logToSocket(logger) {
-    var net = require('net');
-    net.createServer(function(socket){
+function getAvailablePort(_callback) {
+    var port = Math.floor(Math.random() * (9999 - 8001 + 1)) + 8001;
+    var server = net.createServer(function(socket) {
         socket.on('connection',function(socket){
-            console.log('socket connection...');
+            console.info('socket connection...');
         });
         socket.on('data',function(message){
-            console.log('' + message);
+            var parts = (message + '').split('\n');
+            parts.forEach(function(msg){
+                console.info('' + msg.replace(/\n\net/g, '\n'));
+            });
         });
         socket.on('error',function(error){
-            console.log('error on socket message:'+error);
+            console.info('error on socket message:'+error);
         });
-    }).listen(9999);
-
+    });
+    server.on('error', function(a,b){
+        getAvailablePort(_callback);
+    });
+    server.on('listening', function() {
+        console.info('[INFO] Listening to port ' + port);
+        _callback(port);
+    });
+    server.listen(port);
 }
