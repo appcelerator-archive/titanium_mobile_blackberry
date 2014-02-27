@@ -93,7 +93,7 @@
     <asset path="APP_PATH/Resources">assets</asset>
         
     ${permissions}
-    <!-- ${other} -->
+    ${other}
 
     <!-- Request permission to execute native code.  Required for native applications. -->
     <permission system="true">run_native</permission>

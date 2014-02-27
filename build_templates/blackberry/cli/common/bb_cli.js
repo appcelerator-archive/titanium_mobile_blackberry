@@ -376,6 +376,8 @@ BlackBerry.prototype.build = function(_onFinish) {
 			return false;
 		};
 	});
+	this.tiapp.blackberry = this.tiapp.blackberry || {};
+	this.tiapp.blackberry.other = this.tiapp.blackberry.other || '';
 	RenderTemplate(buildBlackberry + '/bar-descriptor.xml', {
 		binname: this.tiapp.name,
 		description: this.tiapp.description || 'not specified',
@@ -386,7 +388,8 @@ BlackBerry.prototype.build = function(_onFinish) {
 		permissions: permissions || '',
 		icon: iconPath,
 		icon_name: 'appicon.png',
-		appname: this.appName
+		appname: this.appName,
+		other: this.tiapp.blackberry.other
 	});
 
 
