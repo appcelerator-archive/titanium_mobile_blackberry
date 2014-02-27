@@ -218,6 +218,23 @@ function BlackBerry(_params) {
 	this.target = (_params.target || '').toLowerCase();
 }
 
+function RunCommand(_cmd, _logger, _callback) {
+	_logger.info('Running: ' + _cmd);
+	var ndkPath = findNDK();
+	var envFile = findEnvFile(ndkPath);
+	var bashFile = path.join(ndkPath, envFile);
+	_cmd = 'source ' + bashFile + ';' + _cmd;
+	exec(_cmd, function (err, stdout, stderr) {
+		if(err)
+			_logger.error('' + err);
+		if(stdout)
+			_logger.info('' + stdout);
+		if(stderr)
+			_logger.debug('' + stderr);
+		_callback();
+	});
+}
+
 BlackBerry.prototype.run = function(argv, _onFinish) {
 
 	var buildBlackberry = path.join(this.projectDir, 'build', 'blackberry');
@@ -225,45 +242,34 @@ BlackBerry.prototype.run = function(argv, _onFinish) {
 	process.chdir(buildBlackberry);
 	var isDevice = this.target == 'device' || this.target == 'distribute';
 	var isRelease = this.target == 'distribute';
-	var ndkPath = findNDK();
-	var envFile = findEnvFile(ndkPath);
-	var bashFile = path.join(ndkPath, envFile);
 
 	var cmd = [
-		'source "' + bashFile + '"',
 		'make -j3 ' + (isDevice ? 'Device' : 'Simulator') + (isRelease ? '-Release' : '-Debug'),
 		'blackberry-nativepackager -package build/' + this.tiapp.name + '.bar bar-descriptor.xml -configuration ' + (isDevice ? 'Device' : 'Simulator') + (isRelease ? '-Release' : '-Debug')
 	];
 
 	if(!isRelease) {
 		if(isDevice) {
-			cmd[2] += ' -debugToken "' + argv['debug-token'] + '" -devMode';
+			cmd[1] += ' -debugToken "' + argv['debug-token'] + '" -devMode';
 		}
 		cmd.push('blackberry-deploy -installApp -launchApp -device ' + (argv['ip-address'] || '""') + ' -password "' + (argv.password || '')+ '" build/'+this.tiapp.name+'.bar')
 	} else {
 		cmd.push('blackberry-signer -storepass "' + (argv['keystore-password'] || '') + '" build/' + this.tiapp.name + '.bar')
 	}
-	cmd.forEach(function (c) {
-		argv.logger.info('Running: ' + c);
-	});
 	var self = this;
-	exec(cmd.join(';'), function (err, stdout, stderr) {
-		if(err)
-			argv.logger.error('err: ' + err);
-		if(stdout)
-			argv.logger.info('stdout: ' + stdout);
-		if(stderr)
-			argv.logger.info('stderr: ' + stderr);
-
-		if(isRelease) {
-			var outputDir = argv['output-dir'];
-			wrench.mkdirSyncRecursive(outputDir); 
-			var barFile = path.join('build', self.tiapp.name + '.bar'); 
-			fs.createReadStream(barFile).pipe(fs.createWriteStream(path.join(outputDir, self.tiapp.name + '.bar')));						
-		}
-		process.chdir(pwd);
-		_onFinish();
-
+	RunCommand(cmd[0], argv.logger, function(){
+		RunCommand(cmd[1], argv.logger, function(){
+			RunCommand(cmd[2], argv.logger, function(){
+				if(isRelease) {
+					var outputDir = argv['output-dir'];
+					wrench.mkdirSyncRecursive(outputDir); 
+					var barFile = path.join('build', self.tiapp.name + '.bar'); 
+					fs.createReadStream(barFile).pipe(fs.createWriteStream(path.join(outputDir, self.tiapp.name + '.bar')));						
+				}
+				process.chdir(pwd);
+				_onFinish();
+			});
+		});
 	});
 }
 
@@ -379,6 +385,7 @@ BlackBerry.prototype.build = function(_onFinish) {
 		category: 'core.games',
 		permissions: permissions || '',
 		icon: iconPath,
+		icon_name: 'appicon.png',
 		appname: this.appName
 	});
 

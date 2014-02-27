@@ -85,15 +85,15 @@
        
     <!--  The icon for the application, which should be 114x114. -->
     <icon>
-        <image>${icon}</image>
+        <image>${icon_name}</image>
     </icon>
 
-    <asset path="icon.png">icon.png</asset>
+    <asset path="${icon}">${icon_name}</asset>
     <asset path="_private_assets_">_private_assets_</asset>
     <asset path="APP_PATH/Resources">assets</asset>
         
     ${permissions}
-    ${other}
+    <!-- ${other} -->
 
     <!-- Request permission to execute native code.  Required for native applications. -->
     <permission system="true">run_native</permission>

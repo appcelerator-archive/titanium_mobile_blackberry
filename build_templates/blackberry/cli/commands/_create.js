@@ -55,13 +55,12 @@ function copyFilesToDir(_dirFrom, _dirTo, _config) {
 }
 
 exports.run = function (logger, config, cli, projectConfig) {
-	var templatePath = afs.resolvePath(path.dirname(module.filename), '..', '..', 'templates', cli.argv.type, cli.argv.template),
+	var templatePath = afs.resolvePath(path.dirname(module.filename), '..', '..', 'templates', cli.argv.type),
 		projectDir = afs.resolvePath(cli.argv['workspace-dir'], cli.argv.name);
-
 	if (afs.exists(templatePath)) {
 		if (cli.argv.type == 'app') {
 			var resPath = path.join(projectDir, 'Resources', 'blackberry');
-			templatePath = path.join(templatePath, 'Resources', 'blackberry');
+			templatePath = path.join(templatePath, 'Resources');
 			afs.copyDirSyncRecursive(templatePath, resPath, { preserve: true, logger: logger.debug });
 		} else if (cli.argv.type == 'module') {
 			projectDir = path.join(projectDir, 'module');
