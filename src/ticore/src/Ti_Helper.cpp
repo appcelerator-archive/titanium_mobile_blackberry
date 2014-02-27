@@ -67,7 +67,7 @@ void Ti::TiHelper::Log(QString str)
 
 Handle<Value> Ti::TiHelper::Log(Handle<Value> arg)
 {
-	qDebug() << "[INFO] " << *String::Utf8Value(arg);
+	qDebug() << "[INFO] " << QStringFromValue(arg);
     return Undefined();
 }
 
@@ -96,10 +96,11 @@ Handle<Value> Ti::TiHelper::ValueFromQString(QString str)
 	return String::New(str.toLocal8Bit().constData());
 }
 
-QString Ti::TiHelper::QStringFromValue(Handle<Value> val)
+QString Ti::TiHelper::QStringFromValue(Handle<Value> value)
 {
-	String::Utf8Value value(val);
-	return QString(*value);
+	String::Value val(value);
+	QString r = QString::fromUtf16(*val, val.length());
+	return r;
 }
 
 float Ti::TiHelper::FloatFromValue(Handle<Value> val)

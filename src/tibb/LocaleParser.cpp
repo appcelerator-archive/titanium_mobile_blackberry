@@ -46,7 +46,7 @@ void LocaleParser::setLocale(QString value)
 	localeLanguage_ = QString(value.left(2).toLower());
 	localeCountry_ = QString(value.right(2).toUpper());
 	locale_ = value;
-    QString localeFile = QString("app/native/assets/i18n/");
+    QString localeFile = QString("app/native/_private_assets_/i18n/");
     		localeFile.append(localeLanguage_);
     		localeFile.append("/strings.xml");
 

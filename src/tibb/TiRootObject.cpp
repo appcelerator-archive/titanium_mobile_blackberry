@@ -363,7 +363,13 @@ static QString readJsFile(QString filePath) {
 	if(!file.open(QIODevice::ReadOnly)) {
 		return jsContent;
 	}
-	jsContent.append(file.readAll());
+    QTextStream in(&file);
+    in.setCodec("UTF-8");
+    while(!in.atEnd())
+    {
+    	QString s = in.readLine().append("\n");
+        jsContent.append(s);
+    }
 	file.close();
 	return jsContent;
 }

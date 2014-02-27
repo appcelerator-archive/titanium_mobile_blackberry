@@ -3,6 +3,7 @@ var fs = require('fs');
 var wrench = require('wrench');
 var ti = require('titanium-sdk');
 var appc = require('node-appc');
+var afs = appc.fs;
 var i18n = appc.i18n(__dirname);
 var __ = i18n.__;
 var __n = i18n.__n;
@@ -304,23 +305,23 @@ BlackBerry.prototype.build = function(_onFinish) {
 
 			var oldArmPath = path.join(p.location, 'arm', 'a.le-v7', 'lib' + p.name + '.a');
 			var newArmPath = path.join(buildBlackberry, 'libs', 'arm', 'a', 'lib' + p.name + '.a');
-			afs.copyFileSync(oldArmPath, newArmPath);
+			afs.copyFileSync(oldArmPath, newArmPath, { preserve: true });
 
 			oldArmPath = path.join(p.location, 'arm', 'a.le-v7-g', 'lib' + p.name + '.a');
 			newArmPath = path.join(buildBlackberry, 'libs', 'arm', 'a-g', 'lib' + p.name + '.a');
-			afs.copyFileSync(oldArmPath, newArmPath);
+			afs.copyFileSync(oldArmPath, newArmPath, { preserve: true });
 
 			var oldX86Path = path.join(p.location, 'x86', 'a', 'lib' + p.name + '.a');
 			var newX86Path = path.join(buildBlackberry, 'libs', 'x86', 'a', 'lib' + p.name + '.a');
-			afs.copyFileSync(oldX86Path, newX86Path);
+			afs.copyFileSync(oldX86Path, newX86Path, { preserve: true });
 
 			oldX86Path = path.join(p.location, 'x86', 'a-g', 'lib' + p.name + '.a');
 			newX86Path = path.join(buildBlackberry, 'libs', 'x86', 'a-g', 'lib' + p.name + '.a');
-			afs.copyFileSync(oldX86Path, newX86Path);
+			afs.copyFileSync(oldX86Path, newX86Path, { preserve: true });
 
 			var oldHeaderPath = path.join(p.location, 'header', p.name + 'ModuleStartup.h');
 			var newHeaderPath = path.join(buildBlackberry,'libs', 'headers', p.name + 'ModuleStartup.h');
-			afs.copyFileSync(oldHeaderPath, newHeaderPath);
+			afs.copyFileSync(oldHeaderPath, newHeaderPath, { preserve: true });
 
 			nativeModuleHeaders += '#include "' + p.name + 'ModuleStartup.h"\n';
 			nativeModuleResgister += 'tiRegisterModule("' + p.id + '", ' + p.name + 'ModuleStartup::CreateModule);\n';
@@ -414,6 +415,12 @@ BlackBerry.prototype.build = function(_onFinish) {
 	appProps += 'current_port = ' + this.availablePort + '\n';
 	var appPropsFile = path.join(buildBlackberry, '_private_assets_' , 'app_properties.ini');
 	fs.writeFileSync(appPropsFile, appProps);
+
+	var i18nDir = path.join(this.projectDir, 'i18n');
+	if (fs.existsSync(i18nDir)) {
+		var newi18nDir = path.join(buildBlackberry, '_private_assets_' , 'i18n');
+		afs.copyDirSyncRecursive(i18nDir, newi18nDir, { preserve: false });
+	}
 	_onFinish();
 };
 

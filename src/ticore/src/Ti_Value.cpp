@@ -65,7 +65,7 @@ void Ti::TiValue::setValue(Handle<Value> value)
 	}
 	_bool = value->ToBoolean()->Value();
 	_number = value->ToNumber()->Value();
-	_string = QString(*String::Utf8Value(value->ToString()));
+	_string = Ti::TiHelper::QStringFromValue(value->ToString());
 	if(value->IsArray())
 	{
 		Handle<Array> ar = Handle<Array>::Cast(value);
