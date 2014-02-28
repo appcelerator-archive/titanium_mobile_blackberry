@@ -196,7 +196,7 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     const char* bootstrapFilename = "bootstrap.js";
     string bootstrapJavascript;
     {
-        ifstream ifs(Ti::TiHelper::getAssetPath(QString(bootstrapFilename)).toLocal8Bit().constData());
+        ifstream ifs(QString("app/native/").append(Ti::TiHelper::getAssetPath(QString(bootstrapFilename))).toLocal8Bit().constData());
         if (!ifs)
         {
             TiLogger::getInstance().log(Ti::Msg::ERROR__Cannot_load_bootstrap_js);
@@ -383,10 +383,8 @@ Handle<Value> TiRootObject::_require(void* userContext, TiObject* caller, const 
 	{
 		return scope.Close(nativeModule);
 	}
-	QString fileName = Ti::TiHelper::QStringFromValue(args[0]);
-	fileName.append(".js");
-	QString filePath = Ti::TiHelper::getAssetPath(fileName);
-
+	QString fileName = Ti::TiHelper::QStringFromValue(args[0]).append(".js");
+	QString filePath = Ti::TiHelper::getAssetPath(fileName).prepend("app/native/")
 	if(_commonJSModules.contains(filePath))
 	{
 		return scope.Close(_commonJSModules.value(filePath));

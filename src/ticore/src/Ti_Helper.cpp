@@ -210,15 +210,15 @@ QString Ti::TiHelper::getAssetPath(QString file)
 
 	QFileInfo privateAssets(QString("app/native/_private_assets_").append(file));
 	if(privateAssets.exists()) {
-		return privateAssets.filePath();
+		return QString("_private_assets_").append(file);
 	}
 	QFileInfo bbFolder(QString("app/native/assets/blackberry").append(file));
 	if(bbFolder.exists()) {
-		return bbFolder.filePath();
+		return QString("assets/blackberry").append(file);
 	}
 	QFileInfo resourcesFolder(QString("app/native/assets").append(file));
 	if(resourcesFolder.exists()) {
-		return resourcesFolder.filePath();
+		return QString("assets").append(file);
 	}
 	return "";
 }
