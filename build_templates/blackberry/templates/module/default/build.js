@@ -3,7 +3,7 @@ try {
     archiver = require("archiver");
 } catch(e) {
     console.error(e.message);
-    console.error("node-zip is not found. Try running `npm install archiver --save`.");
+    console.error("archiver is not found. Try running `npm install archiver --save`.");
     process.exit(e.code);
 }
 var wrench = require('wrench');
@@ -73,7 +73,7 @@ function makeZip() {
 	}
 	var moduleBuildPath = path.join('build', manifest['moduleid'], manifest['version']);
 	wrench.mkdirSyncRecursive(moduleBuildPath);
-	console.log('copy?');
+
 	wrench.copyDirSyncRecursive(path.join('module', 'arm'), path.join(moduleBuildPath, 'arm'));
 	wrench.copyDirSyncRecursive(path.join('module', 'x86'), path.join(moduleBuildPath, 'x86'));
 	wrench.copyDirSyncRecursive(path.join('module', 'include'), path.join(moduleBuildPath, 'header'));
