@@ -384,7 +384,7 @@ Handle<Value> TiRootObject::_require(void* userContext, TiObject* caller, const 
 		return scope.Close(nativeModule);
 	}
 	QString fileName = Ti::TiHelper::QStringFromValue(args[0]).append(".js");
-	QString filePath = Ti::TiHelper::getAssetPath(fileName).prepend("app/native/")
+	QString filePath = Ti::TiHelper::getAssetPath(fileName).prepend("app/native/");
 	if(_commonJSModules.contains(filePath))
 	{
 		return scope.Close(_commonJSModules.value(filePath));

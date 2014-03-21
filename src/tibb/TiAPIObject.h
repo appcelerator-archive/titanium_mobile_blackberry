@@ -21,7 +21,7 @@ class TiAPIObject : public TiProxy
 {
 public:
     static void addObjectToParent(TiObject* parent);
-
+    static void Log(QString);
 protected:
     virtual ~TiAPIObject();
     virtual void onCreateStaticMembers();

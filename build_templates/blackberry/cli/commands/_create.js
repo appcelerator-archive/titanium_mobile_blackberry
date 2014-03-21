@@ -60,7 +60,7 @@ exports.run = function (logger, config, cli, projectConfig) {
 	if (afs.exists(templatePath)) {
 		if (cli.argv.type == 'app') {
 			var resPath = path.join(projectDir, 'Resources', 'blackberry');
-			templatePath = path.join(templatePath, 'Resources');
+			templatePath = path.join(templatePath, 'default', 'Resources');
 			afs.copyDirSyncRecursive(templatePath, resPath, { preserve: true, logger: logger.debug });
 		} else if (cli.argv.type == 'module') {
 			fs.mkdirSync(path.join(projectDir, 'module'));

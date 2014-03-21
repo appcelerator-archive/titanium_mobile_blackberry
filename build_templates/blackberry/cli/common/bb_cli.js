@@ -204,7 +204,7 @@ function CreateApp(appName, appId, appPath, appVersion, tiSDK) {
 
 		}
 	}
-	copyFilesToDir(path.join(__dirname, '../../templates/app/default'), path.join(appPath, 'build', 'blackberry'));
+	copyFilesToDir(path.join(__dirname, '../../templates/app/build'), path.join(appPath, 'build', 'blackberry'));
 }
 function BlackBerry(_params) {
 
@@ -399,7 +399,7 @@ BlackBerry.prototype.build = function(_onFinish) {
 	for (key in this.tiapp.properties) {
 		for (key2 in this.tiapp.properties[key]) {
 			if (key2 == 'value') {
-				appProps += key + ' = "' + this.tiapp.properties[key][key2] + '"\n';
+				appProps += key + ' = ' + this.tiapp.properties[key][key2] + '\n';
 			}
 		}
 	}

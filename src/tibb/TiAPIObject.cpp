@@ -11,9 +11,12 @@
 #include "TiMessageStrings.h"
 #include "TiCore.h"
 
+static TiAPIObject* _instance = NULL;
+
 TiAPIObject::TiAPIObject()
     : TiProxy("API")
 {
+	_instance = this;
 	QString ipAddress = Ti::TiHelper::getAppSetting("current_ip").toString();
 	bool hasPort = true;
 	int port = Ti::TiHelper::getAppSetting("current_port").toInt(&hasPort);
@@ -27,6 +30,12 @@ TiAPIObject::TiAPIObject()
 TiAPIObject::~TiAPIObject()
 {
 	delete _socket;
+}
+
+void TiAPIObject::Log(QString str)
+{
+	_instance->_socket->write(str.toLocal8Bit().constBegin());
+    TiLogger::getInstance().log(str);
 }
 
 void TiAPIObject::addObjectToParent(TiObject* parent)
