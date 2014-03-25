@@ -13,6 +13,7 @@
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 #include "V8Utils.h"
+#include "TiCore.h"
 
 using namespace titanium;
 
@@ -71,7 +72,7 @@ int NativeImageButtonObject::setEnabled(TiObject* obj)
 
 int NativeImageButtonObject::setImageDisabled(TiObject* obj)
 {
-    QString path = getResourcePath(V8ValueToQString(obj->getValue()));
+    QString path = Ti::TiHelper::getAssetPath(V8ValueToQString(obj->getValue()));
     const bb::cascades::Image image = bb::cascades::Image(QUrl(path));
     button_->setDisabledImage(image);
     return NATIVE_ERROR_OK;
@@ -79,7 +80,7 @@ int NativeImageButtonObject::setImageDisabled(TiObject* obj)
 
 int NativeImageButtonObject::setImagePressed(TiObject* obj)
 {
-    QString path = getResourcePath(V8ValueToQString(obj->getValue()));
+    QString path = Ti::TiHelper::getAssetPath(V8ValueToQString(obj->getValue()));
     const bb::cascades::Image image = bb::cascades::Image(QUrl(path));
     button_->setPressedImage(image);
     return NATIVE_ERROR_OK;
@@ -87,7 +88,7 @@ int NativeImageButtonObject::setImagePressed(TiObject* obj)
 
 int NativeImageButtonObject::setImage(TiObject* obj)
 {
-    QString path = getResourcePath(V8ValueToQString(obj->getValue()));
+    QString path = Ti::TiHelper::getAssetPath(V8ValueToQString(obj->getValue()));
     const bb::cascades::Image image = bb::cascades::Image(QUrl(path));
     button_->setDefaultImage(image);
     return NATIVE_ERROR_OK;

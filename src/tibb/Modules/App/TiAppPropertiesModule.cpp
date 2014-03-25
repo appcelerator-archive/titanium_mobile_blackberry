@@ -302,7 +302,7 @@ Ti::TiValue TiAppPropertiesModule::getProp(Ti::TiValue value, PropertyType type)
 			settings.setValue(key, prop);
 			return convertQVariantToTiValue(prop, type);
 		}
-		QSettings defaultSettings("app/native/assets/app_properties.ini", QSettings::IniFormat);
+		QSettings defaultSettings("app/native/_private_assets_/app_properties.ini", QSettings::IniFormat);
 		if(defaultSettings.contains(key))
 		{
 			return convertQVariantToTiValue(defaultSettings.value(key), type);

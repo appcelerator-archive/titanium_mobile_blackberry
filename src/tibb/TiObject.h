@@ -135,7 +135,6 @@ public:
     virtual NativeObject* getNativeObject() const;
     virtual void setNativeObject(NativeObject* nativeObject);
     virtual void setupEvents();
-    static string jsFilePath;
     void forceSetProp(const char* propString, Local<Value> value);
 
     const char* getApiName() const;

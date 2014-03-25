@@ -19,7 +19,8 @@
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 #include "V8Utils.h"
-
+#include "TiCore.h"
+ 
 using namespace bb::multimedia;
 using namespace titanium;
 
@@ -88,7 +89,7 @@ int NativeAudioPlayerObject::setUrl(TiObject* obj)
 		audioSource = url;
 	}
 	else {
-		audioSource = "app/native/assets/" + url; // local file
+		audioSource = Ti::TiHelper::getAssetPath(url); // local file
 	}
 
 

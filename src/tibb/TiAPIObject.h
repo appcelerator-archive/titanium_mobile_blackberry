@@ -5,10 +5,11 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef TIAPIOBJECT_H_
-#define TIAPIOBJECT_H_
+#ifndef TI_APIOBJECT_H_
+#define TI_APIOBJECT_H_
 
 #include "TiProxy.h"
+#include <QtNetwork/QTcpSocket>
 
 /*
  * TiAPIObject
@@ -20,12 +21,13 @@ class TiAPIObject : public TiProxy
 {
 public:
     static void addObjectToParent(TiObject* parent);
-
+    static void Log(QString);
 protected:
     virtual ~TiAPIObject();
     virtual void onCreateStaticMembers();
 
 private:
+    QTcpSocket *_socket;
     TiAPIObject();
     TiAPIObject(const TiAPIObject&);
     TiAPIObject& operator=(const TiAPIObject&);

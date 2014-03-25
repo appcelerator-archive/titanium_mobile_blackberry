@@ -115,7 +115,17 @@ QByteArray Ti::TiBlob::getData()
 		{
 			QFile file(_path);
 			if(file.open(QIODevice::ReadOnly)) {
-				QByteArray d = file.readAll();
+
+			    QTextStream in(&file);
+			    in.setCodec("UTF-8");
+			    QString txt;
+			    while(!in.atEnd())
+			    {
+			    	QString s = in.readLine().append("\n");
+			        txt.append(s);
+			    }
+
+				QByteArray d = txt.toLocal8Bit();
 				file.close();
 				return d;
 			}

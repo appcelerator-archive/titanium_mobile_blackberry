@@ -12,39 +12,124 @@
 #include <v8.h>
 
 
-static void _EventWeakCallback(Persistent<Value>, void*)
-{
-	/*
-     object.Clear();
-     object.Dispose();
-     qDebug() << "[TiEvent] _EvantWeakCallback";
-     */
-}
-
-Ti::TiEvent::TiEvent(Handle<Function> func) {
-	TiHelper::Log("Event Added");
-	callback = Persistent<Function>::New(func);
-	callback.MakeWeak(this, _EventWeakCallback);
+Ti::TiEvent::TiEvent() {
 }
 
 Ti::TiEvent::~TiEvent() {
-	// Ti::TiHelper::Log("Ti::TiEvent Destroyed!");
-	callback.Clear();
-	callback.Dispose();
 }
 
-void Ti::TiEvent::fireCallbackIfNeeded(QString eventName, Handle<Object> owner, Ti::TiEventParameters *params)
+void Ti::TiEvent::AddEventToObject(Handle<Object> proxy, QString eventName, Handle<Function> func)
+{
+	/*
+	 * var eventName = 'click';
+	 * var func = function() {};
+	 * var eventMap;
+	 * var tEventMap = proxy.eventMap;
+	 * if(!tEventMap) {
+	 * 		eventMap = {};
+	 * 		proxy.eventMap = eventMap;
+	 * } else {
+	 * 		eventMap = tEventMap;
+	 * }
+	 * var eventArray;
+	 * var tEventArray = proxy.eventArray;
+	 * if(!tEventArray) {
+	 * 		eventArray = [];
+	 * 		proxy.eventMap[eventName] = eventArray;
+	 * } else {
+	 * 		eventArray = tEventArray;
+	 * }
+	 * eventArray.push(func);
+	 */
+
+	Local<Object> eventMap;
+	Local<Value> tEventMap = proxy->GetHiddenValue(String::New("eventMap"));
+	if(tEventMap.IsEmpty() || tEventMap->IsUndefined()) {
+		eventMap = Object::New();
+		proxy->SetHiddenValue(String::New("eventMap"), eventMap);
+	} else {
+		eventMap = tEventMap->ToObject();
+	}
+
+	Local<Array> eventArray;
+	Local<Value> tEventArray = eventMap->Get(Ti::TiHelper::ValueFromQString(eventName));
+	if(tEventArray.IsEmpty() || tEventArray->IsUndefined()) {
+		eventArray = Array::New();
+		eventMap->Set(Ti::TiHelper::ValueFromQString(eventName), eventArray);
+	} else {
+		eventArray = Local<Array>::Cast(tEventArray);
+	}
+	eventArray->Set(eventArray->Length(), func);
+}
+
+void Ti::TiEvent::RemoveEventFromObject(Handle<Object> proxy, QString eventName, Handle<Function> func)
+{
+	Local<Value> tEventMap = proxy->GetHiddenValue(String::New("eventMap"));
+	if(tEventMap.IsEmpty() || tEventMap->IsUndefined()) {
+		return;
+	}
+	Local<Value> tEventArray = tEventMap->ToObject()->Get(Ti::TiHelper::ValueFromQString(eventName));
+	if(tEventArray.IsEmpty() || tEventArray->IsUndefined()) {
+		return;
+	}
+	Local<Array> eventArray = Local<Array>::Cast(tEventArray);
+
+	for(uint32_t i = 0, len = eventArray->Length(); i < len; i++) {
+		Local<Value> v = eventArray->Get(i);
+		if(v.IsEmpty() && !v->IsFunction()) continue;
+		Local<Function> f = Local<Function>::Cast(v);
+		if(func == f) {
+			eventArray->Set(i, Undefined());
+		}
+	}
+}
+
+
+void Ti::TiEvent::FireEventOnObject(Handle<Object> proxy, QString eventName, Ti::TiEventParameters* params)
+{
+	Local<Value> tEventMap = proxy->GetHiddenValue(String::New("eventMap"));
+	if(tEventMap.IsEmpty() || tEventMap->IsUndefined()) {
+		return;
+	}
+	Local<Value> tEventArray = tEventMap->ToObject()->Get(Ti::TiHelper::ValueFromQString(eventName));
+	if(tEventArray.IsEmpty() || tEventArray->IsUndefined()) {
+		return;
+	}
+	Local<Array> eventArray = Local<Array>::Cast(tEventArray);
+
+	for(uint32_t i = 0, len = eventArray->Length(); i < len; i++) {
+
+		Local<Value> v = eventArray->Get(i);
+		if((v.IsEmpty() && !v->IsFunction()) || v->IsUndefined()) continue;
+		Local<Function> func = Local<Function>::Cast(v);
+		{
+		    TryCatch tryCatch;
+		    Local<Object> obj = Object::New();
+			Ti::TiEventParameters::addParametersToObject(params, obj);
+			obj->Set(String::New("source"), proxy);
+			Local<Value> args[] = { obj };
+			Local<Value> result = func->Call(proxy, 1, args);
+		    if (result.IsEmpty())
+		    {
+		    	qDebug() << "Error" << *String::Utf8Value(tryCatch.Exception());
+		    }
+
+		}
+	}
+}
+
+void Ti::TiEvent::FireCallbackIfNeeded(QString eventName, Handle<Object> owner, Ti::TiEventParameters *params)
 {
 	HandleScope scope;
     Context::Scope context_scope(owner->CreationContext());
 	if(owner->Get(Ti::TiHelper::ValueFromQString(eventName))->IsFunction())
 	{
 		Handle<Function> callback = Handle<Function>::Cast(owner->Get(Ti::TiHelper::ValueFromQString(eventName)));
-        
+
 		Handle<Object> obj = Object::New();
 		Ti::TiEventParameters::addParametersToObject(params, obj);
 		obj->Set(String::New("source"), owner);
-        
+
 		Handle<Value> args[1];
 		args[0] = obj;
 		TryCatch tryCatch;
@@ -52,7 +137,6 @@ void Ti::TiEvent::fireCallbackIfNeeded(QString eventName, Handle<Object> owner, 
 		if(result.IsEmpty())
 		{
 			qDebug() << "[TIEVENT] Something bad happened";
-            
 	    	Handle<Value> exception = tryCatch.Exception();
 	    	Handle<Message> message = tryCatch.Message();
 	        int lineNumber = message->GetLineNumber();
@@ -62,28 +146,5 @@ void Ti::TiEvent::fireCallbackIfNeeded(QString eventName, Handle<Object> owner, 
 	    	qDebug() << "[ERROR] Line" << lineNumber << "File" << Ti::TiHelper::QStringFromValue(fileName);
 	    	qDebug() << "[ERROR] " << Ti::TiHelper::QStringFromValue(sourceLine);
 		}
-        
 	}
-    
-}
-
-void Ti::TiEvent::fireWithParameters(Handle<Object> owner, Ti::TiEventParameters *params)
-{
-	HandleScope scope;
-	if(owner.IsEmpty())
-	{
-		Ti::TiHelper::Log("is empty");
-		return;
-	}
-    Context::Scope context_scope(owner->CreationContext());
-	Handle<Object> obj = Object::New();
-	Ti::TiEventParameters::addParametersToObject(params, obj);
-	obj->Set(String::New("source"), owner);
-    
-	Handle<Value> args[1];
-	args[0] = obj;
-    
-	Handle<Value> result = callback->Call(owner, 1, args);
-    
-    scope.Close(result);
 }

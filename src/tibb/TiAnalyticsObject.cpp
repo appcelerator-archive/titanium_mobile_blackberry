@@ -35,7 +35,7 @@
 
 // Application properties defined at compile in tiapp.xml
 // can be read using this settings instance. It is read only.
-static QSettings defaultSettings("app/native/assets/app_properties.ini",
+static QSettings defaultSettings("app/native/_private_assets_/app_properties.ini",
                                  QSettings::IniFormat);
 
 // Singleton

@@ -89,7 +89,7 @@ private:
     NATIVE_PROPSETGET_CALLBACK* getters_;
 };
 
-static QSettings defaultSettings("app/native/assets/app_properties.ini",
+static QSettings defaultSettings("app/native/_private_assets_/app_properties.ini",
                                  QSettings::IniFormat);
 
 NativeHTTPClientObject::NativeHTTPClientObject(TiObject* tiObject)

@@ -7,6 +7,13 @@
 
 #include "TiRootObject.h"
 
+#include <bb/cascades/Page>
+#include <bb/cascades/Sheet>
+#include <bb/cascades/Container>
+#include <bb/cascades/Label>
+#include <bb/cascades/DockLayout>
+#include <bb/cascades/Color>
+
 #include "NativeStringInterface.h"
 #include "TiGenericFunctionObject.h"
 #include "TiLocaleObject.h"
@@ -47,12 +54,47 @@
 using namespace titanium;
 
 static Handle<ObjectTemplate> g_rootTemplate;
-static const string rootFolder = "app/native/assets/";
 
-// Application properties defined at compile in tiapp.xml
-// can be read using this settings instance. It is read only.
-static QSettings defaultSettings("app/native/assets/app_properties.ini",
-                                 QSettings::IniFormat);
+static QMap<QString, v8::Persistent<Value> > _commonJSModules;
+static QString ThrowJSException(TryCatch tryCatch)
+{
+	QString str;
+	HandleScope scope;
+
+	if(tryCatch.HasCaught())
+    {
+    	Handle<Message> message = tryCatch.Message();
+    	if(!message.IsEmpty()) {
+        	Handle<Value> fileName = message->GetScriptResourceName();
+        	Local<String> srcLine = message->GetSourceLine();
+        	Ti::TiHelper::Log(QString("File Name: ").append(Ti::TiHelper::QStringFromValue(fileName)));
+        	Ti::TiHelper::Log(QString("Source Line: ").append(Ti::TiHelper::QStringFromValue(srcLine)));
+        	str.append("File: ").append(Ti::TiHelper::QStringFromValue(fileName)).append("\n");
+        	str.append("Source: ").append(Ti::TiHelper::QStringFromValue(srcLine)).append("\n\n");
+    	}
+    	QString stackTrace = Ti::TiHelper::QStringFromValue(tryCatch.StackTrace());
+    	if (!stackTrace.isEmpty()) {
+    		str.append(stackTrace);
+    	} else {
+    	    Local<Value> er = tryCatch.Exception();
+
+    	    bool isErrorObject =
+    	    		er->IsObject() &&
+    	    		!(er->ToObject()->Get(String::New("message"))->IsUndefined()) &&
+    	    		!(er->ToObject()->Get(String::New("name"))->IsUndefined());
+
+    	    if (isErrorObject) {
+    	    	Local<String> name = er->ToObject()->Get(String::New("name"))->ToString();
+    	    	str.append(Ti::TiHelper::QStringFromValue(name) + "\n");
+    	    }
+    	    Local<String> message = !isErrorObject ? er->ToString() : er->ToObject()->Get(String::New("message"))->ToString();
+    	    str.append(Ti::TiHelper::QStringFromValue(message) + "\n");
+    	}
+
+    }
+	return str;
+}
+
 
 TiRootObject::TiRootObject()
     : TiObject("")
@@ -66,6 +108,9 @@ TiRootObject::~TiRootObject()
     {
         context_.Dispose();
     }
+    foreach(QString str, _commonJSModules.keys()) {
+    	_commonJSModules[str].Dispose();
+    }
     NativeStringInterface::deleteInstance();
 }
 
@@ -78,7 +123,7 @@ void TiRootObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "L", this, _L);   // TODO: use the same object as Ti.Locale.getString
     TiGenericFunctionObject::addGenericFunctionToParent(this, "clearInterval", this, _clearInterval);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "clearTimeout", this, _clearTimeout);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "globalRequire", this, _globalRequire);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "require", this, _require);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setInterval", this, _setInterval);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setTimeout", this, _setTimeout);
 
@@ -151,7 +196,7 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     const char* bootstrapFilename = "bootstrap.js";
     string bootstrapJavascript;
     {
-        ifstream ifs((string("app/native/framework/") + bootstrapFilename).c_str());
+        ifstream ifs(QString("app/native/").append(Ti::TiHelper::getAssetPath(QString(bootstrapFilename))).toLocal8Bit().constData());
         if (!ifs)
         {
             TiLogger::getInstance().log(Ti::Msg::ERROR__Cannot_load_bootstrap_js);
@@ -192,34 +237,48 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
 
     const char* filename = "app.js";
     Handle<Script> compiledScript = Script::Compile(String::New(javaScript), String::New(filename));
-    string err_msg;
+    QString error_str;
     if (compiledScript.IsEmpty())
     {
-        ReportException(tryCatch, true, err_msg);
+    	ThrowJSException(tryCatch);
         return 1;
     }
     compiledScript->Run();
     if (tryCatch.HasCaught())
     {
-        ReportException(tryCatch, true, err_msg);
+    	error_str = ThrowJSException(tryCatch);
         scriptHasError = true;
     }
-
     // show script error
-    QString deployType = defaultSettings.value("deploytype").toString();
+    QString deployType = Ti::TiHelper::getAppSetting("deploytype").toString();
     if (scriptHasError && deployType.compare(QString("development")) == 0) {
 
-		// clean up display data
-		size_t start_pos = 0;
-		while((start_pos = err_msg.find("\n", start_pos)) != std::string::npos) {
-			err_msg.replace(start_pos, 1, "\\n");
-		}
+		bb::cascades::Page* page = bb::cascades::Page::create();
+		bb::cascades::Container* background = bb::cascades::Container::create();
+		background->setLayout(bb::cascades::DockLayout::create());
+		background->setBackground(bb::cascades::Color::Red);
+		page->setContent(background);
 
-		start_pos = 0;
-		while((start_pos = err_msg.find("'", start_pos)) != std::string::npos) {
-			err_msg.erase(start_pos, 1);
-		}
+		bb::cascades::Container* container = bb::cascades::Container::create();
+		container->setHorizontalAlignment(bb::cascades::HorizontalAlignment::Center);
+		container->setVerticalAlignment(bb::cascades::VerticalAlignment::Center);
+		background->add(container);
 
+		bb::cascades::Label *label = bb::cascades::Label::create();
+		label->textStyle()->setColor(bb::cascades::Color::White);
+		label->setText(error_str);
+		label->setMultiline(true);
+		container->add(label);
+
+	    bb::cascades::Application::instance()->setScene(bb::cascades::Page::create());
+
+	    bb::cascades::Sheet *sheet = bb::cascades::Sheet::create();
+		sheet->setPeekEnabled(false);
+		sheet->setContent(page);
+		sheet->open();
+
+
+		/*
     	static const string javaScriptErrorAlert = string("var win1 = Titanium.UI.createWindow({") +
 											   string("backgroundColor:'red'") +
 											   string("});") +
@@ -236,6 +295,7 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
 
     	compiledScript = Script::Compile(String::New(javaScriptErrorAlert.c_str()));
     	compiledScript->Run();
+    	*/
     }
 
     onStartMessagePump();
@@ -297,123 +357,72 @@ void TiRootObject::clearTimeoutHelper(const Arguments& args, bool interval)
     timeoutManager->clearTimeout((int)number->Value(), interval);
 }
 
-Handle<Value> TiRootObject::_globalRequire(void*, TiObject*, const Arguments& args)
+static QString readJsFile(QString filePath) {
+	QFile file(filePath);
+	QString jsContent;
+	if(!file.open(QIODevice::ReadOnly)) {
+		return jsContent;
+	}
+    QTextStream in(&file);
+    in.setCodec("UTF-8");
+    while(!in.atEnd())
+    {
+    	QString s = in.readLine().append("\n");
+        jsContent.append(s);
+    }
+	file.close();
+	return jsContent;
+}
+
+
+Handle<Value> TiRootObject::_require(void* userContext, TiObject* caller, const Arguments& args)
 {
-
-	if (args.Length() < 2) {
-		return ThrowException(String::New(Ti::Msg::Missing_argument));
-	}
-
-	string id = *String::Utf8Value(args[0]->ToString());
-
-	// Require in native modules, if none found move to loading CommonJS modules
-	Handle<Value> mod = TiModuleRegistry::GetModule(QString(*String::Utf8Value(args[0]->ToString())));
-	if(!mod->IsUndefined()) return mod;
-
-	// CommonJS path rules
-	string parentFolder = *String::Utf8Value(args[1]->ToString());
-	if (id.find("/") == 0) {
-		id.replace(id.find("/"), std::string("/").length(), rootFolder);
-	}
-	else if (id.find("./") == 0) {
-		id.replace(id.find("./"), std::string("./").length(), parentFolder);
-	}
-	else if (id.find("../") == 0) {
-		// count ../../../ in id and strip off back of parentFolder
-		int count = 0;
-		size_t idx = 0;
-		size_t pos = 0;
-		while (true) {
-			idx = id.find("../", pos);
-			if (idx == std::string::npos) {
-				break;
-			} else {
-				pos = idx + 3;
-				count++;
-			}
-		}
-
-		// strip leading ../../ off module id
-		id = id.substr(pos);
-
-		// strip paths off the parent folder
-		idx = 0;
-		pos = parentFolder.size();
-		for (int i = 0; i < count; i++) {
-			idx = parentFolder.find_last_of("/", pos);
-			pos = idx - 1;
-		}
-
-		if (idx == std::string::npos) {
-			return ThrowException(String::New("Unable to find module"));
-		}
-
-		parentFolder = parentFolder.substr(0, idx + 1);
-
-		id = parentFolder + id;
-	}
-	else {
-		string tempId = rootFolder + id;
-
-		ifstream ifs((tempId + ".js").c_str());
-		if (!ifs) {
-			id = parentFolder + id;
-		}
-		else {
-			id = rootFolder + id;
-		}
-	}
-
-	string filename = id + ".js";
-
-	// check if cached
-	static map<string, Persistent<Value> > cache;
-	map<string, Persistent<Value> >::const_iterator cachedValue = cache.find(id);
-	if (cachedValue != cache.end())	{
-		return cachedValue->second;
-	}
-
-	string javascript;
+	HandleScope scope;
+	Handle<Value> nativeModule = TiModuleRegistry::GetModule(QString(*String::Utf8Value(args[0]->ToString())));
+	if(!nativeModule->IsUndefined())
 	{
-		ifstream ifs((filename).c_str());
-		if (!ifs)
-		{
-			Local<Value> taggedMessage = String::New((string(Ti::Msg::No_such_native_module) + " " + id).c_str());
-			return ThrowException(taggedMessage);
-		}
-		getline(ifs, javascript, string::traits_type::to_char_type(string::traits_type::eof()));
-		ifs.close();
+		return scope.Close(nativeModule);
 	}
-
-	// wrap the module
+	QString fileName = Ti::TiHelper::QStringFromValue(args[0]).append(".js");
+	QString filePath = Ti::TiHelper::getAssetPath(fileName).prepend("app/native/");
+	if(_commonJSModules.contains(filePath))
 	{
-		size_t idx = filename.find_last_of("/");
-		parentFolder = filename.substr(0, idx + 1);
-		static const string requireWithParent = "var require = function (id) { return globalRequire(id, '" + parentFolder + "')};\n";
-		static const string preWrap = "(function () {" + requireWithParent + "\nvar module = { exports: {} }; var exports = module.exports;\n";
-		static const string postWrap = "\nreturn module.exports; })();";
-		javascript =  preWrap + javascript + postWrap;
+		return scope.Close(_commonJSModules.value(filePath));
 	}
 
+	QString js = readJsFile(filePath);
+	if(js.isEmpty()) {
+		ThrowException(String::New(
+								QString("Module not found ").append(fileName).toLocal8Bit().constData()
+						));
+		return scope.Close(Undefined());
+	}
+	js.prepend("(function () {"
+			   "	var module = {"
+			   "		exports: {}"
+			   "	};"
+			   "	var exports = module.exports;"
+			   "	Ti.API.info('inside \"" + filePath + "\" module');"
+			);
+	js.append("	\n"
+			  "	return module.exports;\n"
+			  "})();\n");
+
+	Handle<Script> script = Script::Compile(Ti::TiHelper::ValueFromQString(js)->ToString() , Ti::TiHelper::ValueFromQString(fileName));
 	TryCatch tryCatch;
-	Handle<Script> compiledScript = Script::Compile(String::New(javascript.c_str()), String::New(filename.c_str()));
-	if (compiledScript.IsEmpty())
+	if (script.IsEmpty())
 	{
-		std::string err_msg;
-		DisplayExceptionLine(tryCatch, err_msg);
-		return tryCatch.ReThrow();
+		ThrowException(tryCatch.ReThrow());
+		return scope.Close(Undefined());
 	}
-
-	Persistent<Value> result = Persistent<Value>::New(compiledScript->Run());
+	Persistent<Value> result = Persistent<Value>::New(script->Run());
 	if (result.IsEmpty())
 	{
-		return tryCatch.ReThrow();
+		ThrowException(tryCatch.ReThrow());
+		return scope.Close(Undefined());
 	}
-
-	// cache result
-	cache.insert(pair<string, Persistent<Value> >(id, result));
-
-	return result;
+	_commonJSModules.insert(filePath, result);
+	return scope.Close(result);
 }
 
 Handle<Value> TiRootObject::_setInterval(void*, TiObject*, const Arguments& args)

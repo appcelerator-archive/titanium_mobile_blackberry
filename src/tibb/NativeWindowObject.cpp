@@ -25,6 +25,7 @@
 #include "TiObject.h"
 #include "TiOrientation.h"
 #include "Window.h"
+#include "TiCore.h"
 
 using namespace bb::cascades;
 using namespace titanium;
@@ -148,7 +149,7 @@ void NativeWindowObject::addAction(const QString& title, const QString& image, H
     ActionItem* item = ActionItem::create();
     item->setTitle(title);
     if (!image.isEmpty()) {
-        item->setImageSource(getResourcePath(image));
+        item->setImageSource(Ti::TiHelper::getAssetPath(image));
     }
     QObject::connect(item, SIGNAL(triggered()), new ActionItemTriggerHandler(tiObject_, triggerCallback), SLOT(triggered()));
     scene_.addAction(item);

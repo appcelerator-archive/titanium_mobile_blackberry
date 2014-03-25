@@ -37,9 +37,9 @@
 #define GENERATE_PROXY(NAME) \
 		HandleScope scope; \
 		NAME *proxy = new NAME(#NAME); \
-		proxy->realJSObject = Persistent<Object>::New(proxy->jsObject->NewInstance()); \
-		proxy->realJSObject->SetHiddenValue(String::New("proxy"), External::New(proxy)); \
-		proxy->realJSObject.MakeWeak(proxy, _WeakCallback);
+		proxy->_jsObject = Persistent<Object>::New(proxy->_jsObjectTemplate->NewInstance()); \
+		proxy->_jsObject->SetHiddenValue(String::New("proxy"), External::New(proxy)); \
+		proxy->_jsObject.MakeWeak(proxy, _WeakCallback);
 
 #define CREATE_PROXY(NAME) \
 	static Handle<Value> CreateProxy(const Arguments &args) \
@@ -50,14 +50,14 @@
 		{ \
  			proxy->initWithObject(args[0]->ToObject()); \
 		} \
-		proxy->jsObject.Dispose(); \
+		proxy->_jsObjectTemplate.Dispose(); \
 		proxy->initEnd(); \
-		return scope.Close(proxy->realJSObject); \
+		return scope.Close(proxy->_jsObject); \
 	} \
 	static NAME* CreateProxy() \
 	{ \
 		GENERATE_PROXY(NAME) \
-		proxy->jsObject.Dispose(); \
+		proxy->_jsObjectTemplate.Dispose(); \
 		return proxy; \
 	}
 //#undef GENERATE_PROXY
@@ -143,15 +143,16 @@ public:
 	virtual void fireCallback(QString, Ti::TiEventParameters);
 
 	virtual const char* getProxyName();
-	virtual Handle<ObjectTemplate> getJSObject();
-
+	virtual Handle<ObjectTemplate> getJSObjectTemplate();
+	virtual Ti::TiValue getTiValueForKey(QString);
+	virtual void setTiValueForKey(Ti::TiValue, QString);
 	virtual void makeWeak();
 	virtual void clearWeak();
 
 	QMap<QString, Ti::TiProperty*> properties;
 	QMap<QString, QList<Ti::TiEvent*> > events;
-	Persistent<Object> realJSObject;
-	Persistent<ObjectTemplate> jsObject;
+	Persistent<Object> _jsObject;
+	Persistent<ObjectTemplate> _jsObjectTemplate;
 
 	EXPOSE_METHOD(Ti::TiProxy, addEventListener)
 	EXPOSE_METHOD(Ti::TiProxy, removeEventListener)

@@ -24,9 +24,9 @@ using namespace v8;
 		module->initStart(); \
 		module->initEnd(); \
 		qDebug() << "Create JS Object"; \
-		module->realJSObject = Persistent<Object>::New(module->getJSObject()->NewInstance()); \
-		module->realJSObject->SetHiddenValue(String::New("module"), External::New(module)); \
-		return scope.Close(module->realJSObject); \
+		module->_jsObject = Persistent<Object>::New(module->getJSObjectTemplate()->NewInstance()); \
+		module->_jsObject->SetHiddenValue(String::New("module"), External::New(module)); \
+		return scope.Close(module->_jsObject); \
 	}
 
 #define GET_MODULE_FROM_CALLBACK(NAME, ARGS) \

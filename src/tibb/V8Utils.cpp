@@ -23,6 +23,7 @@
 
 #include "V8Utils.h"
 #include  <string>
+#include  <v8.h>
 
 using namespace v8;
 
@@ -117,10 +118,9 @@ void ReportException(TryCatch &try_catch, bool show_line, std::string& err_msg) 
 }
 
 QString V8StringToQString(Handle<String> v8Str) {
-    QString qStr;
-    qStr.resize(v8Str->Length());
-    v8Str->Write(reinterpret_cast<uint16_t*>(qStr.data()));
-    return qStr;
+	v8::String::Value val(v8Str);
+	QString r = QString::fromUtf16(*val, val.length());
+	return r;
 }
 
 Local<Value> CallV8ObjectProperty(Handle<Object> object,

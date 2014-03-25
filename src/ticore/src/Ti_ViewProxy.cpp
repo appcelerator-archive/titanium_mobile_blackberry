@@ -19,12 +19,12 @@ isDestroyed(true),
 _backgroundImageRepeat(false),
 _backgroundImageUrl("")
 {
-    
+
 	createPropertyGetter("animatedCenter", _getAnimatedCenter);
 	createPropertyGetter("children", _getChildren);
 	createPropertyGetter("rect", _getRect);
 	createPropertyGetter("size", _getSize);
-    
+
 	createPropertySetterGetter("accessibilityHidden", _setAccessibilityHidden,  _getAccessibilityHidden);
 	createPropertySetterGetter("accessibilityHint", _setAccessibilityHint,  _getAccessibilityHint);
 	createPropertySetterGetter("accessibilityLabel", _setAccessibilityLabel,  _getAccessibilityLabel);
@@ -64,7 +64,7 @@ _backgroundImageUrl("")
 	createPropertySetterGetter("horizontalWrap", _setHorizontalWrap,  _getHorizontalWrap);
 	createPropertySetterGetter("zIndex", _setZIndex,  _getZIndex);
 	createPropertySetterGetter("keepScreenOn", _setKeepScreenOn,  _getKeepScreenOn);
-    
+
 	createPropertyFunction("add", _add);
 	createPropertyFunction("animate", _animate);
 	createPropertyFunction("finishLayout", _finishLayout);
@@ -76,7 +76,7 @@ _backgroundImageUrl("")
 	createPropertyFunction("toImage", _toImage);
 	createPropertyFunction("updateLayout", _updateLayout);
 	createPropertyFunction("convertPointToView", _convertPointToView);
-    
+
 }
 
 void Ti::TiViewProxy::setView(Ti::TiView *_view)
@@ -241,21 +241,21 @@ void Ti::TiViewProxy::setBackgroundGradient(Ti::TiValue)
 void Ti::TiViewProxy::setBackground()
 {
 	_backgroundImageUrl.replace("//", "/");
-    
+
 	bb::cascades::RepeatPattern::Type type;
 	if(_backgroundImageRepeat)
 		type = bb::cascades::RepeatPattern::XY;
 	else
 		type = bb::cascades::RepeatPattern::Fill;
-    
+
 	bb::cascades::ImagePaint bgImg = bb::cascades::ImagePaint(QUrl(_backgroundImageUrl), type);
-    
+
 	view->setBackground(bgImg);
 }
 
 void Ti::TiViewProxy::setBackgroundImage(Ti::TiValue value)
 {
-	_backgroundImageUrl = Ti::TiConstants::ResourcesDir + "/" + value.toString();
+	_backgroundImageUrl = Ti::TiHelper::getAssetPath(value.toString());
 	setBackground();
 }
 void Ti::TiViewProxy::setBackgroundRepeat(Ti::TiValue value)
@@ -296,7 +296,7 @@ void Ti::TiViewProxy::setContextMenus(Ti::TiValue value)
 		if(!current.isProxy()) continue;
 		Ti::TiProxy* menuProxy = current.toProxy();
 		if(menuProxy->__data__ == NULL) return;
-        
+
 		bb::cascades::ActionSet *menu = (bb::cascades::ActionSet*)menuProxy->__data__;
 		qDebug() << "MENU" << menu->title();
 		getChildControl()->addActionSet(menu);
@@ -565,15 +565,15 @@ Ti::TiValue Ti::TiViewProxy::getKeepScreenOn()
 Ti::TiValue Ti::TiViewProxy::add(Ti::TiValue value)
 {
 	Ti::TiViewProxy *childProxy = static_cast<Ti::TiViewProxy*>(value.toProxy());
-    
+
 	_childViewsProxies.append(childProxy);
 	childProxy->clearWeak();
 	qDebug() << "TiViewProxy: Clear weak" << childProxy->getProxyName();
 	Ti::TiView* childView = childProxy->getView();
 	Ti::TiView* thisView = getView();
-    
+
 	thisView->add(childView);
-    
+
 	Ti::TiValue val;
 	val.setUndefined();
 	return val;
@@ -601,23 +601,23 @@ Ti::TiValue Ti::TiViewProxy::remove(Ti::TiValue value)
 {
 	Ti::TiValue val;
 	val.setUndefined();
-    
+
 	Ti::TiViewProxy *childProxy = static_cast<Ti::TiViewProxy*>(value.toProxy());
 	if(!_childViewsProxies.contains(childProxy)) return val;
-    
+
 	Ti::TiView* childView = childProxy->getView();
 	Ti::TiView* thisView = getView();
 	childProxy->makeWeak();
 	thisView->remove(childView);
 	_childViewsProxies.removeOne(childProxy);
-    
+
 	return val;
 }
 Ti::TiValue Ti::TiViewProxy::removeAllChildren(Ti::TiValue)
 {
 	foreach(Ti::TiViewProxy* child, _childViewsProxies)
 	{
-		remove(Ti::TiValue(child->realJSObject));
+		remove(Ti::TiValue(child->_jsObject));
 	}
 	Ti::TiValue val;
 	val.setUndefined();

@@ -19,7 +19,7 @@
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 #include "V8Utils.h"
-
+#include "TiCore.h"
 #include <bb/cascades/ForeignWindowControl>
 #include <bb/multimedia/VideoOutput>
 
@@ -104,7 +104,7 @@ int NativeVideoPlayerObject::setUrl(TiObject* obj)
 		videoSource = url;
 	}
 	else {
-		videoSource = "app/native/assets/" + url; // local file
+		videoSource = Ti::TiHelper::getAssetPath(url); // local file
 	}
 
     player_->setSourceUrl(QUrl(videoSource));

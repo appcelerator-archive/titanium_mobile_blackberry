@@ -14,6 +14,7 @@
 #include <iostream>
 #include "Layout/Structs.h"
 #include "Layout/ParseProperty.h"
+#include <QSettings>
 
 static const QString FONT_FAMILY            = "fontFamily";
 static const QString FONT_SIZE              = "fontSize";
@@ -66,7 +67,7 @@ void Ti::TiHelper::Log(QString str)
 
 Handle<Value> Ti::TiHelper::Log(Handle<Value> arg)
 {
-	qDebug() << "[INFO] " << *String::Utf8Value(arg);
+	qDebug() << "[INFO] " << QStringFromValue(arg);
     return Undefined();
 }
 
@@ -95,10 +96,11 @@ Handle<Value> Ti::TiHelper::ValueFromQString(QString str)
 	return String::New(str.toLocal8Bit().constData());
 }
 
-QString Ti::TiHelper::QStringFromValue(Handle<Value> val)
+QString Ti::TiHelper::QStringFromValue(Handle<Value> value)
 {
-	String::Utf8Value value(val);
-	return QString(*value);
+	String::Value val(value);
+	QString r = QString::fromUtf16(*val, val.length());
+	return r;
 }
 
 float Ti::TiHelper::FloatFromValue(Handle<Value> val)
@@ -179,5 +181,45 @@ bb::cascades::Color Ti::TiHelper::ColorFromObject(Handle<Value> obj)
     float a = qa;
 
 	return bb::cascades::Color::fromRGBA(r, g, b, a);
-
 }
+
+QVariant Ti::TiHelper::getAppSetting(QString key) {
+	QMap<QString, QVariant> settings = Ti::TiHelper::getAppSettings();
+	return settings[key];
+}
+
+QMap<QString, QVariant> Ti::TiHelper::getAppSettings()
+{
+	static QMap<QString, QVariant> settings;
+	if(settings.isEmpty())
+	{
+		QSettings defaultSettings("app/native/" + Ti::TiHelper::getAssetPath("app_properties.ini"), QSettings::IniFormat);
+		foreach(QString key, defaultSettings.allKeys())
+		{
+			settings[key] = defaultSettings.value(key);
+		}
+	}
+	return settings;
+}
+
+QString Ti::TiHelper::getAssetPath(QString file)
+{
+	if(!file.startsWith("/")) {
+		file.prepend("/");
+	}
+
+	QFileInfo privateAssets(QString("app/native/_private_assets_").append(file));
+	if(privateAssets.exists()) {
+		return QString("_private_assets_").append(file);
+	}
+	QFileInfo bbFolder(QString("app/native/assets/blackberry").append(file));
+	if(bbFolder.exists()) {
+		return QString("assets/blackberry").append(file);
+	}
+	QFileInfo resourcesFolder(QString("app/native/assets").append(file));
+	if(resourcesFolder.exists()) {
+		return QString("assets").append(file);
+	}
+	return "";
+}
+
