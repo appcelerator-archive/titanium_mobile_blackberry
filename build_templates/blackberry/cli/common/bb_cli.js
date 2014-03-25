@@ -8,6 +8,8 @@ var i18n = appc.i18n(__dirname);
 var __ = i18n.__;
 var __n = i18n.__n;
 var exec = require('child_process').exec;
+var keystorePassword = '';
+var devicePassword = '';
 const MOD_NATIVE = 1;
 const MOD_COMMON_JS = 2;
 
@@ -220,7 +222,15 @@ function BlackBerry(_params) {
 }
 
 function RunCommand(_cmd, _logger, _callback) {
-	_logger.info('Running: ' + _cmd);
+	var c = String(_cmd);
+	if(keystorePassword && keystorePassword.length) {
+		c = c.replace(new RegExp(keystorePassword, 'g'), '*****');
+	}
+	if(devicePassword && devicePassword.length) {
+		c = c.replace(new RegExp(devicePassword, 'g'), '*****');
+	}
+	_logger.info('Running: ' + c);
+	_logger.info('Please wait...');
 	var ndkPath = findNDK();
 	var envFile = findEnvFile(ndkPath);
 	var bashFile = path.join(ndkPath, envFile);
@@ -249,13 +259,15 @@ BlackBerry.prototype.run = function(argv, _onFinish) {
 		'blackberry-nativepackager -package build/' + this.tiapp.name + '.bar bar-descriptor.xml -configuration ' + (isDevice ? 'Device' : 'Simulator') + (isRelease ? '-Release' : '-Debug')
 	];
 
+	keystorePassword = argv['keystore-password'] || '';
+	devicePassword = argv.password || '';
 	if(!isRelease) {
 		if(isDevice) {
 			cmd[1] += ' -debugToken "' + argv['debug-token'] + '" -devMode';
 		}
-		cmd.push('blackberry-deploy -installApp -launchApp -device ' + (argv['ip-address'] || '""') + ' -password "' + (argv.password || '')+ '" build/'+this.tiapp.name+'.bar')
+		cmd.push('blackberry-deploy -installApp -launchApp -device ' + (argv['ip-address'] || '""') + ' -password "' + devicePassword + '" build/'+this.tiapp.name+'.bar')
 	} else {
-		cmd.push('blackberry-signer -storepass "' + (argv['keystore-password'] || '') + '" build/' + this.tiapp.name + '.bar')
+		cmd.push('blackberry-signer -storepass "' + keystorePassword + '" build/' + this.tiapp.name + '.bar')
 	}
 	var self = this;
 	RunCommand(cmd[0], argv.logger, function(){
