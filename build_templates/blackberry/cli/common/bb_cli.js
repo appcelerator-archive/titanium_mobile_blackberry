@@ -418,6 +418,7 @@ BlackBerry.prototype.build = function(_onFinish) {
 	appProps += 'analytics = ' + this.tiapp['analytics'] + '\n';
 	appProps += 'aguid = ' + this.tiapp['guid'] + '\n';
 	appProps += 'version = ' + this.tiapp['version'] + '\n';
+	appProps += 'app_id = ' + this.tiapp['id'] + '\n';
 	if (this.target == 'distribute') {
 		appProps += 'deploytype = production\n';
 	} else {

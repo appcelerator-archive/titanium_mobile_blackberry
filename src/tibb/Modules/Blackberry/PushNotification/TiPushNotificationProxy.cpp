@@ -58,12 +58,9 @@ TiPushNotificationProxy::TiPushNotificationProxy(const char* name) :
     		_eventHandler, SLOT(onInvoked(const bb::system::InvokeRequest&)));
     QObject::connect(bb::cascades::Application::instance(), SIGNAL(fullscreen()), _eventHandler, SLOT(onFullScreen()));
 
-
-    QSettings defaultSettings("app/native/assets/app_properties.ini", QSettings::IniFormat);
-    _tiAppId = defaultSettings.value("app_id").toString();
-    _tiAppPushTitle = defaultSettings.value("push_title").toString();
-    _tiAppKeyOpen = defaultSettings.value("ti.bb.invoke.target.key.push").toString();
-
+    _tiAppId = Ti::TiHelper::getAppSetting("app_id").toString();
+    _tiAppPushTitle = Ti::TiHelper::getAppSetting("push_title").toString();
+    _tiAppKeyOpen = Ti::TiHelper::getAppSetting("ti.bb.invoke.target.key.push").toString();
 }
 
 TiPushNotificationProxy::~TiPushNotificationProxy() {
@@ -226,7 +223,7 @@ void TiPushNotificationProxy::sessionCreated(const bb::network::PushStatus &stat
     	QString errorMessage;
         if (_configSaveAction) {
         	errorTitle = "Configuration";
-        	errorMessage = "Configuration was saved, but was unable to create push session. (Error code: " + QString::number(status.code())+ ")";
+        	errorMessage = "Configuration was saved, but was unable to create push session. (Error code: " + QString::number(status.code()) + " " + status.errorDescription() +" )";
         } else {
         	errorTitle = _tiAppPushTitle;
         	errorMessage = "Error: unable to create push session. (Error code: " + QString::number(status.code())+ ")";

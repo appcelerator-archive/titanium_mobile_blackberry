@@ -16,6 +16,7 @@
 
 #include "PushNotificationService.hpp"
 #include <QDebug>
+#include "TiCore.h"
 
 using namespace bb::network;
 
@@ -86,8 +87,7 @@ void PushNotificationService::initializePushService()
 
         m_previousApplicationId = config.providerApplicationId();
 
-        QSettings defaultSettings("app/native/assets/app_properties.ini", QSettings::IniFormat);
-        QString pushKey = defaultSettings.value("ti.bb.invoke.target.key.push").toString();
+        QString pushKey = Ti::TiHelper::getAppSetting("ti.bb.invoke.target.key.push").toString();
 
         m_pushService = new PushService(config.providerApplicationId(), pushKey, this);
 
