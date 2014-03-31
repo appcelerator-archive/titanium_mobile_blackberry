@@ -18,6 +18,7 @@
 #include "TiObject.h"
 #include "V8Utils.h"
 #include "Window.h"
+#include "TiCore.h"
 
 using namespace bb::cascades;
 using namespace titanium;
@@ -57,7 +58,7 @@ int NativeTabObject::addChildNativeObject(NativeObject* obj)
 {
     if (obj->getObjectType() == N_TYPE_WINDOW)
     {
-        Window* window = static_cast<Window*>(obj->getNativeHandle());
+    	titanium::Window* window = static_cast<titanium::Window*>(obj->getNativeHandle());
         Page* page = static_cast<Page*>(window->scene()->pane());
 
         // The ownership of the page must be cleared before pushing,
@@ -84,7 +85,7 @@ int NativeTabObject::closeWindowOnTab(NativeObject* obj)
 {
     if (obj->getObjectType() == N_TYPE_WINDOW)
     {
-        Window* window = static_cast<Window*>(obj->getNativeHandle());
+    	titanium::Window* window = static_cast<titanium::Window*>(obj->getNativeHandle());
         Page* page = static_cast<Page*>(window->scene()->pane());
 
         // The ownership of the page must be cleared before pushing,
@@ -99,7 +100,7 @@ int NativeTabObject::closeWindowOnTab(NativeObject* obj)
 int NativeTabObject::setIcon(TiObject* obj)
 {
     QString iconPath = V8ValueToQString(obj->getValue());
-    iconPath = getResourcePath(iconPath);
+    iconPath = Ti::TiHelper::getAssetPath(iconPath);
     tab_->setImage(bb::cascades::Image(QUrl(iconPath)));
     return NATIVE_ERROR_OK;
 }

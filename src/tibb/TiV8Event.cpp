@@ -7,6 +7,45 @@
 
 #include "TiV8Event.h"
 #include "TiLogger.h"
+#include "TiAPIObject.h"
+#include "TiCore.h"
+
+static QString ThrowJSException(TryCatch tryCatch)
+{
+	QString str;
+	HandleScope scope;
+
+	if(tryCatch.HasCaught())
+    {
+    	Handle<Message> message = tryCatch.Message();
+    	if(!message.IsEmpty()) {
+        	Handle<Value> fileName = message->GetScriptResourceName();
+        	Local<String> srcLine = message->GetSourceLine();
+        	str.append("File: ").append(Ti::TiHelper::QStringFromValue(fileName)).append("\n");
+        	str.append("Source: ").append(Ti::TiHelper::QStringFromValue(srcLine)).append("\n\n");
+    	}
+    	QString stackTrace = Ti::TiHelper::QStringFromValue(tryCatch.StackTrace());
+    	if (!stackTrace.isEmpty()) {
+    		str.append(stackTrace);
+    	} else {
+    	    Local<Value> er = tryCatch.Exception();
+
+    	    bool isErrorObject =
+    	    		er->IsObject() &&
+    	    		!(er->ToObject()->Get(String::New("message"))->IsUndefined()) &&
+    	    		!(er->ToObject()->Get(String::New("name"))->IsUndefined());
+
+    	    if (isErrorObject) {
+    	    	Local<String> name = er->ToObject()->Get(String::New("name"))->ToString();
+    	    	str.append(Ti::TiHelper::QStringFromValue(name) + "\n");
+    	    }
+    	    Local<String> message = !isErrorObject ? er->ToString() : er->ToObject()->Get(String::New("message"))->ToString();
+    	    str.append(Ti::TiHelper::QStringFromValue(message) + "\n");
+    	}
+
+    }
+	return str;
+}
 
 TiV8Event::TiV8Event()
 {
@@ -50,8 +89,10 @@ void TiV8Event::fire(void* fireDataObject)
     }
     if (result.IsEmpty())
     {
+    	tryCatch.SetVerbose(true);
         String::Utf8Value error(tryCatch.Exception());
-        TiLogger::getInstance().log(*error);
+        TiAPIObject::Log(QString("[ERROR] ").append(*error));
+        TiAPIObject::Log(QString("[ERROR] ").append(ThrowJSException(tryCatch)));
     }
 }
 

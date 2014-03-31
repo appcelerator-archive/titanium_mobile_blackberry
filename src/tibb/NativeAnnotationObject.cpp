@@ -18,18 +18,19 @@
 #include "NativeLoggerObject.h"
 #include "NativeMessageStrings.h"
 #include <bb/cascades/SystemDefaults>
-
+#include <bb/cascades/Image>
 #include "TiConstants.h"
 #include "TiEvent.h"
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 #include "V8Utils.h"
+#include "TiCore.h"
 
 using namespace bb::cascades;
 using namespace titanium;
 
 NativeAnnotationObject::NativeAnnotationObject(TiObject* tiObject)
-    : NativeControlObject(tiObject, N_TYPE_ANNOTATION), pinImageSource_("assets/map/red_pin.png"),
+    : NativeControlObject(tiObject, N_TYPE_ANNOTATION), pinImageSource_(Ti::TiHelper::getAssetPath("map/red_pin.png")),
       showBubble(false)
 {
 	pin = NULL;
@@ -52,17 +53,19 @@ NATIVE_TYPE NativeAnnotationObject::getObjectType() const
 int NativeAnnotationObject::initialize()
 {
     pin = new ImageButton();
-    pin->setDefaultImageSource(QUrl(pinImageSource_));
-    pin->setPressedImage(QUrl(pinImageSource_));
+    pin->setDefaultImage(bb::cascades::Image(pinImageSource_));
+    pin->setPressedImage(bb::cascades::Image(pinImageSource_));
     pin->setFocusPolicy(bb::cascades::FocusPolicy::KeyAndTouch);
     pin->setLayoutProperties(new AbsoluteLayoutProperties());
-
+    pin->setMinHeight(30.f);
+    pin->setMinWidth(30.f);
     // create the bubbles
     bubble = new Container();
     bubble->setLayoutProperties(new AbsoluteLayoutProperties());
 
 	ImageView* bubbleBackground = new ImageView();
-	bubbleBackground->setImageSource(QUrl("assets/map/bubble.png"));
+	QUrl u = QUrl::fromLocalFile(Ti::TiHelper::getAssetPath("map/bubble.png"));
+	bubbleBackground->setImageSource(u);
 
 	bubbleContent = new Container();
 	bubbleContent->setLayoutProperties(new AbsoluteLayoutProperties());
@@ -112,21 +115,21 @@ int NativeAnnotationObject::setPincolor(TiObject* obj)
 	 switch (value)
 	    {
 	    case Ti::Map::ANNOTATION_GREEN:
-	    	pinImageSource_ = "assets/map/green_pin.png";
+	    	pinImageSource_ = Ti::TiHelper::getAssetPath("map/green_pin.png");
 	        break;
 	    case  Ti::Map::ANNOTATION_RED:
-	    	pinImageSource_ = "assets/map/red_pin.png";
+	    	pinImageSource_ = Ti::TiHelper::getAssetPath("map/red_pin.png");
 	        break;
 	    case  Ti::Map::ANNOTATION_PURPLE:
-	    	pinImageSource_ = "assets/map/purple_pin.png";
+	    	pinImageSource_ = Ti::TiHelper::getAssetPath("map/purple_pin.png");
 	        break;
 	    default:
 	        N_DEBUG(Native::Msg::Unknown_value_received << ": " << value);
 	        break;
 	    }
 
-	pin->setDefaultImageSource(QUrl(pinImageSource_));
-	pin->setPressedImage(QUrl(pinImageSource_));
+	pin->setDefaultImage(bb::cascades::Image(pinImageSource_));
+	pin->setPressedImage(bb::cascades::Image(pinImageSource_));
 	return NATIVE_ERROR_OK;
 }
 
@@ -171,16 +174,16 @@ int NativeAnnotationObject::setSubtitle(TiObject* obj)
 int NativeAnnotationObject::setLeftView(TiObject* obj)
 {
   QString leftView = V8ValueToQString(obj->getValue());
-  leftView_->setDefaultImageSource(QUrl("assets/" + leftView));
-  leftView_->setPressedImage(QUrl("assets/" + leftView));
+  leftView_->setDefaultImageSource(QUrl::fromLocalFile(Ti::TiHelper::getAssetPath(leftView)));
+  leftView_->setPressedImage(QUrl::fromLocalFile(Ti::TiHelper::getAssetPath(leftView)));
   return NATIVE_ERROR_OK;
 }
 
 int NativeAnnotationObject::setRightView(TiObject* obj)
 {
   QString rightView = V8ValueToQString(obj->getValue());
-  rightView_->setDefaultImageSource(QUrl("assets/" + rightView));
-  rightView_->setPressedImage(QUrl("assets/" + rightView));
+  rightView_->setDefaultImageSource(QUrl::fromLocalFile(Ti::TiHelper::getAssetPath(rightView)));
+  rightView_->setPressedImage(QUrl::fromLocalFile(Ti::TiHelper::getAssetPath(rightView)));
   return NATIVE_ERROR_OK;
 }
 

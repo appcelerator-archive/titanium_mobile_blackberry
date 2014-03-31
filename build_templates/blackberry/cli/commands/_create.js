@@ -55,18 +55,18 @@ function copyFilesToDir(_dirFrom, _dirTo, _config) {
 }
 
 exports.run = function (logger, config, cli, projectConfig) {
-	var templatePath = afs.resolvePath(path.dirname(module.filename), '..', '..', 'templates', cli.argv.type, cli.argv.template),
+	var templatePath = afs.resolvePath(path.dirname(module.filename), '..', '..', 'templates', cli.argv.type),
 		projectDir = afs.resolvePath(cli.argv['workspace-dir'], cli.argv.name);
-
 	if (afs.exists(templatePath)) {
 		if (cli.argv.type == 'app') {
 			var resPath = path.join(projectDir, 'Resources', 'blackberry');
-			templatePath = path.join(templatePath, 'Resources', 'blackberry');
+			templatePath = path.join(templatePath, 'default', 'Resources');
 			afs.copyDirSyncRecursive(templatePath, resPath, { preserve: true, logger: logger.debug });
 		} else if (cli.argv.type == 'module') {
-			projectDir = path.join(projectDir, 'module');
-			fs.mkdirSync(projectDir);
-			copyFilesToDir(templatePath, projectDir, projectConfig);
+			fs.mkdirSync(path.join(projectDir, 'module'));
+			templatePath += '/default';
+			copyFilesToDir(templatePath, path.join(projectDir, 'module'), projectConfig);
+			fs.renameSync(path.join(projectDir, 'module', 'build.js'), path.join(projectDir, 'build.js'));
 		}
 	}
 };

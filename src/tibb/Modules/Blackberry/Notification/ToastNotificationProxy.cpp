@@ -45,10 +45,7 @@ void ToastNotificationProxy::setButtonTitle(Ti::TiValue value)
 }
 void ToastNotificationProxy::setIcon(Ti::TiValue value)
 {
-	QString res = Ti::TiConstants::ResourcesDir;
-	res.append("/").append(value.toString());
-	res.replace("//", "/");
-	_toast->setIcon(QUrl(res));
+	_toast->setIcon(QUrl(Ti::TiHelper::getAssetPath(value.toString())));
 }
 void ToastNotificationProxy::setMessage(Ti::TiValue value)
 {

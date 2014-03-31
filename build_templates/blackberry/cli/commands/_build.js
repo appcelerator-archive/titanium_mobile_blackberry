@@ -10,10 +10,11 @@ var appc = require('node-appc'),
     afs = appc.fs,
     i18n = appc.i18n(__dirname),
     __ = i18n.__,
+    __n = i18n.__n,
     ti = require('titanium-sdk'),
-    BlackBerryNDK = require('../common/blackberryndk'),
+    BlackBerry = require('../common/bb_cli'),
     path = require('path'),
-
+    net = require('net'),
     targets = ['simulator', 'device', 'distribute'];
  
 exports.config = function (logger, config, cli) {
@@ -129,14 +130,54 @@ function build(logger, config, cli, finished) {
         // Alloy generate an app.js, it may not have existed during validate(), but should exist now
         // that build.pre.compile was fired.
         ti.validateAppJsExists(this.projectDir, this.logger, 'blackberry');
+        var self = this;
+        var ipFound = false;
+        appc.net.interfaces(function(a){
+            for(var key in a) {
+                var obj = a[key];
+                if(!obj.gateway) continue;
+                obj.ipAddresses.forEach(function (ip) {
+                    if(ip.family == 'IPv4') {
+                        self.ipAddress = ip.address;
+                        ipFound = true;
+                        return;
+                    }
+                });
+                if(ipFound) break;
+            }
+            getAvailablePort(function(port){
+                self.availablePort = port;
+                var bbndk = new BlackBerry(self);
+                bbndk.build(finished);
+            });
 
+        });
 
-        var bbndk = new BlackBerryNDK(this);
-
-        var projectBuildPath = path.join(this.projectDir, 'build', 'blackberry');
-        // permission errors can be thrown here if the projectDir folder is private
-        afs.copyDirSyncRecursive(path.join(this.titaniumBBSdkPath, 'tibbapp'), projectBuildPath, { preserve: true, logger: logger.debug });
-
-        bbndk.build(finished);
     }.bind(this));
+}
+
+function getAvailablePort(_callback) {
+    var port = Math.floor(Math.random() * (9999 - 8001 + 1)) + 8001;
+    var server = net.createServer(function(socket) {
+        socket.on('connection',function(socket){
+            console.info('socket connection...');
+        });
+        socket.on('data',function(message){
+            var parts = (message + '').split('\n');
+            parts.forEach(function(msg){
+                console.info('' + msg.replace(/\n\net/g, '\n'));
+            });
+        });
+        socket.on('error',function(error){
+            console.info('error on socket message:'+error);
+        });
+    });
+    server.on('error', function(a,b){
+        getAvailablePort(_callback);
+    });
+    server.on('listening', function() {
+        console.info('[INFO] Listening to port ' + port);
+        _callback(port);
+    });
+    server.listen(port);
 }

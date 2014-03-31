@@ -79,12 +79,11 @@ Handle<Value> Ti::TiRuntime::GC(const Arguments &)
 Handle<Value> Ti::TiRuntime::_include(const Arguments & args)
 {
 	Ti::TiRuntime* instance = Ti::TiRuntime::Instance();
-	QString resources = Ti::TiConstants::ResourcesDir;
     
 	for(int i = 0, len = args.Length(); i < len; i++)
 	{
 		QString filePath = Ti::TiHelper::QStringFromValue(args[i]);
-		QFile file(filePath.prepend(resources.append("/")).replace("//", "/"));
+		QFile file(Ti::TiHelper::getAssetPath(filePath));
         
 	    if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
 	    	QString js = QString(file.readAll().data());
@@ -110,9 +109,7 @@ Handle<Value> Ti::TiRuntime::_require(const Arguments & args)
 	}
 	QString fileName = Ti::TiHelper::QStringFromValue(args[0]);
 	fileName.append(".js");
-	QString filePath = Ti::TiConstants::ResourcesDir + "/" + fileName;
-	filePath.replace("//", "/");
-    
+	QString filePath = Ti::TiHelper::getAssetPath(fileName);    
 	if(_commonJSModules.contains(filePath))
 	{
 		return scope.Close(_commonJSModules.value(filePath));

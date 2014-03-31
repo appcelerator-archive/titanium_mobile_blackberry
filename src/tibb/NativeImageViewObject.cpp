@@ -18,7 +18,6 @@
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 #include "V8Utils.h"
-
 #include "TiCore.h"
 
 using namespace bb::cascades;
@@ -65,7 +64,7 @@ int NativeImageViewObject::setImage(TiObject* obj)
         }
         if(!QFile(imagePath).exists())
         {
-        	imagePath = getResourcePath(imagePath);
+        	imagePath = Ti::TiHelper::getAssetPath(imagePath);
         }
         imageView_->setImage(QUrl(imagePath));
     } else {

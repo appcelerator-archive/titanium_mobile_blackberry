@@ -13,17 +13,32 @@ device {
                  $$quote(${QNX_TARGET}/usr/include/bb/data) \
                  $$quote(${QNX_TARGET}/usr/include/freetype2)
 
-        HEADERS +=  $$quote($$BASEDIR/include/TiCore.h) \
+        HEADERS +=  $$quote($$BASEDIR/include/Layout/Common.h) \
+                 $$quote($$BASEDIR/include/Layout/Composite.h) \
+                 $$quote($$BASEDIR/include/Layout/Element.h) \
+                 $$quote($$BASEDIR/include/Layout/Headers.h) \
+                 $$quote($$BASEDIR/include/Layout/Horizontal.h) \
+                 $$quote($$BASEDIR/include/Layout/Node.h) \
+                 $$quote($$BASEDIR/include/Layout/ParseProperty.h) \
+                 $$quote($$BASEDIR/include/Layout/Structs.h) \
+                 $$quote($$BASEDIR/include/Layout/Vertical.h) \
+                 $$quote($$BASEDIR/include/TiCore.h) \
+                 $$quote($$BASEDIR/include/Ti_Blob.h) \
                  $$quote($$BASEDIR/include/Ti_Constants.h) \
+                 $$quote($$BASEDIR/include/Ti_Data.h) \
                  $$quote($$BASEDIR/include/Ti_Event.h) \
                  $$quote($$BASEDIR/include/Ti_EventParameters.h) \
                  $$quote($$BASEDIR/include/Ti_Helper.h) \
                  $$quote($$BASEDIR/include/Ti_Module.h) \
                  $$quote($$BASEDIR/include/Ti_Property.h) \
                  $$quote($$BASEDIR/include/Ti_Proxy.h) \
+                 $$quote($$BASEDIR/include/Ti_Runtime.h) \
                  $$quote($$BASEDIR/include/Ti_SceneManager.h) \
                  $$quote($$BASEDIR/include/Ti_Timer.h) \
-                 $$quote($$BASEDIR/include/Ti_Value.h)
+                 $$quote($$BASEDIR/include/Ti_Value.h) \
+                 $$quote($$BASEDIR/include/Ti_View.h) \
+                 $$quote($$BASEDIR/include/Ti_ViewProxy.h) \
+                 $$quote($$BASEDIR/include/TitaniumLayout.h)
     }
 
     CONFIG(release, debug|release) {
@@ -37,17 +52,32 @@ device {
                  $$quote(${QNX_TARGET}/usr/include/bb/data) \
                  $$quote(${QNX_TARGET}/usr/include/freetype2)
 
-        HEADERS +=  $$quote($$BASEDIR/include/TiCore.h) \
+        HEADERS +=  $$quote($$BASEDIR/include/Layout/Common.h) \
+                 $$quote($$BASEDIR/include/Layout/Composite.h) \
+                 $$quote($$BASEDIR/include/Layout/Element.h) \
+                 $$quote($$BASEDIR/include/Layout/Headers.h) \
+                 $$quote($$BASEDIR/include/Layout/Horizontal.h) \
+                 $$quote($$BASEDIR/include/Layout/Node.h) \
+                 $$quote($$BASEDIR/include/Layout/ParseProperty.h) \
+                 $$quote($$BASEDIR/include/Layout/Structs.h) \
+                 $$quote($$BASEDIR/include/Layout/Vertical.h) \
+                 $$quote($$BASEDIR/include/TiCore.h) \
+                 $$quote($$BASEDIR/include/Ti_Blob.h) \
                  $$quote($$BASEDIR/include/Ti_Constants.h) \
+                 $$quote($$BASEDIR/include/Ti_Data.h) \
                  $$quote($$BASEDIR/include/Ti_Event.h) \
                  $$quote($$BASEDIR/include/Ti_EventParameters.h) \
                  $$quote($$BASEDIR/include/Ti_Helper.h) \
                  $$quote($$BASEDIR/include/Ti_Module.h) \
                  $$quote($$BASEDIR/include/Ti_Property.h) \
                  $$quote($$BASEDIR/include/Ti_Proxy.h) \
+                 $$quote($$BASEDIR/include/Ti_Runtime.h) \
                  $$quote($$BASEDIR/include/Ti_SceneManager.h) \
                  $$quote($$BASEDIR/include/Ti_Timer.h) \
-                 $$quote($$BASEDIR/include/Ti_Value.h)
+                 $$quote($$BASEDIR/include/Ti_Value.h) \
+                 $$quote($$BASEDIR/include/Ti_View.h) \
+                 $$quote($$BASEDIR/include/Ti_ViewProxy.h) \
+                 $$quote($$BASEDIR/include/TitaniumLayout.h)
     }
 }
 
@@ -75,21 +105,37 @@ simulator {
                  $$quote({QNX_TARGET}/usr/include/bb/data) \
                  $$quote(${QNX_TARGET}/usr/include/qt4/QtCore)
 
-        HEADERS +=  $$quote($$BASEDIR/include/TiCore.h) \
+        HEADERS +=  $$quote($$BASEDIR/include/Layout/Common.h) \
+                 $$quote($$BASEDIR/include/Layout/Composite.h) \
+                 $$quote($$BASEDIR/include/Layout/Element.h) \
+                 $$quote($$BASEDIR/include/Layout/Headers.h) \
+                 $$quote($$BASEDIR/include/Layout/Horizontal.h) \
+                 $$quote($$BASEDIR/include/Layout/Node.h) \
+                 $$quote($$BASEDIR/include/Layout/ParseProperty.h) \
+                 $$quote($$BASEDIR/include/Layout/Structs.h) \
+                 $$quote($$BASEDIR/include/Layout/Vertical.h) \
+                 $$quote($$BASEDIR/include/TiCore.h) \
+                 $$quote($$BASEDIR/include/Ti_Blob.h) \
                  $$quote($$BASEDIR/include/Ti_Constants.h) \
+                 $$quote($$BASEDIR/include/Ti_Data.h) \
                  $$quote($$BASEDIR/include/Ti_Event.h) \
                  $$quote($$BASEDIR/include/Ti_EventParameters.h) \
                  $$quote($$BASEDIR/include/Ti_Helper.h) \
                  $$quote($$BASEDIR/include/Ti_Module.h) \
                  $$quote($$BASEDIR/include/Ti_Property.h) \
                  $$quote($$BASEDIR/include/Ti_Proxy.h) \
+                 $$quote($$BASEDIR/include/Ti_Runtime.h) \
                  $$quote($$BASEDIR/include/Ti_SceneManager.h) \
                  $$quote($$BASEDIR/include/Ti_Timer.h) \
-                 $$quote($$BASEDIR/include/Ti_Value.h)
+                 $$quote($$BASEDIR/include/Ti_Value.h) \
+                 $$quote($$BASEDIR/include/Ti_View.h) \
+                 $$quote($$BASEDIR/include/Ti_ViewProxy.h) \
+                 $$quote($$BASEDIR/include/TitaniumLayout.h)
     }
 }
 
-INCLUDEPATH +=  $$quote($$BASEDIR/include)
+INCLUDEPATH +=  $$quote($$BASEDIR/include) \
+         $$quote($$BASEDIR/include/Layout)
 
 lupdate_inclusion {
     SOURCES +=  $$quote($$BASEDIR/../include/*.c) \
@@ -97,9 +143,11 @@ lupdate_inclusion {
              $$quote($$BASEDIR/../include/*.cc) \
              $$quote($$BASEDIR/../include/*.cpp) \
              $$quote($$BASEDIR/../include/*.cxx) \
-             $$quote($$BASEDIR/../assets/*.qml) \
-             $$quote($$BASEDIR/../assets/*.js) \
-             $$quote($$BASEDIR/../assets/*.qs)
+             $$quote($$BASEDIR/../include/Layout/*.c) \
+             $$quote($$BASEDIR/../include/Layout/*.c++) \
+             $$quote($$BASEDIR/../include/Layout/*.cc) \
+             $$quote($$BASEDIR/../include/Layout/*.cpp) \
+             $$quote($$BASEDIR/../include/Layout/*.cxx)
 
     HEADERS +=  $$quote($$BASEDIR/../include/*.h) \
              $$quote($$BASEDIR/../include/*.h++) \

@@ -19,7 +19,6 @@ namespace Ti
 {
 
 const std::string TopDir = "app/native";
-const std::string AssetsDir = "app/native/assets";
 
 namespace Codec
 {

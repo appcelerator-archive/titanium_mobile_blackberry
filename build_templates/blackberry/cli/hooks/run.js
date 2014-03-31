@@ -7,7 +7,7 @@
 
 var appc = require('node-appc');
     afs = appc.fs,
-    BlackBerryNDK = require('../common/blackberryndk');
+    BlackBerry = require('../common/bb_cli'),
     
 
 exports.init = function (logger, config, cli, appc) {
@@ -28,8 +28,8 @@ exports.init = function (logger, config, cli, appc) {
         this.keystorePassword = cli.argv['keystore-password'];
         this.outputDir = cli.argv['output-dir'];      
 
-    	var bbndk = new BlackBerryNDK(this);
-
-    	bbndk.run(finished);
+        var bbndk = new BlackBerry(this);
+        cli.argv.logger = logger;
+        bbndk.run(cli.argv, finished);
     });
 };

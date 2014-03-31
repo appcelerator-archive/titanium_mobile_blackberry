@@ -89,8 +89,7 @@ Ti::TiValue ApplicationMenuProxy::addItem(Ti::TiValue value)
 	if(current.contains("icon"))
 	{
 		Ti::TiValue icon = current["icon"];
-		QString path = QString("asset:///").append(icon.toString()).replace("////","///");
-		item->setImageSource(QUrl(path));
+		item->setImageSource(QUrl(Ti::TiHelper::getAssetPath(icon.toString())));
 	}
 	QObject::connect(item, SIGNAL(triggered()), _appMenuEventHandler, SLOT(onClick()));
 	_appMenu->addAction(item);

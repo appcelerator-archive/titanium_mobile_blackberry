@@ -9,14 +9,33 @@
 #include "TiGenericFunctionObject.h"
 #include "TiLogger.h"
 #include "TiMessageStrings.h"
+#include "TiCore.h"
+
+static TiAPIObject* _instance = NULL;
 
 TiAPIObject::TiAPIObject()
     : TiProxy("API")
 {
+	_instance = this;
+	QString ipAddress = Ti::TiHelper::getAppSetting("current_ip").toString();
+	bool hasPort = true;
+	int port = Ti::TiHelper::getAppSetting("current_port").toInt(&hasPort);
+    _socket = new QTcpSocket();
+    if(hasPort) {
+    	_socket->connectToHost(ipAddress, port);
+        _socket->waitForConnected(3000);
+    }
 }
 
 TiAPIObject::~TiAPIObject()
 {
+	delete _socket;
+}
+
+void TiAPIObject::Log(QString str)
+{
+	_instance->_socket->write(str.toLocal8Bit().constBegin());
+    TiLogger::getInstance().log(str);
 }
 
 void TiAPIObject::addObjectToParent(TiObject* parent)
@@ -38,7 +57,7 @@ void TiAPIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "trace", this, _trace);
 }
 
-Handle<Value> TiAPIObject::_debug(void*, TiObject*, const Arguments& args)
+Handle<Value> TiAPIObject::_debug(void* self, TiObject*, const Arguments& args)
 {
     if (args.Length() < 1)
     {
@@ -47,11 +66,13 @@ Handle<Value> TiAPIObject::_debug(void*, TiObject*, const Arguments& args)
 
     // Log message with DEBUG severity-level
     TiLogger::getInstance().log("DEBUG", *String::Utf8Value(args[0]));
+	static_cast<TiAPIObject*>(self)->
+    _socket->write(QString("[DEBUG] ").append(*String::Utf8Value(args[0])).append("\n").toLocal8Bit().constData());
 
     return Undefined();
 }
 
-Handle<Value> TiAPIObject::_info(void*, TiObject*, const Arguments& args)
+Handle<Value> TiAPIObject::_info(void* self, TiObject*, const Arguments& args)
 {
     if (args.Length() < 1)
     {
@@ -60,11 +81,12 @@ Handle<Value> TiAPIObject::_info(void*, TiObject*, const Arguments& args)
 
     // Log message with INFO severity-level
     TiLogger::getInstance().log("INFO", *String::Utf8Value(args[0]));
-
+	static_cast<TiAPIObject*>(self)->
+	_socket->write(QString("[INFO] ").append(*String::Utf8Value(args[0])).append("\n").toLocal8Bit().constData());
     return Undefined();
 }
 
-Handle<Value> TiAPIObject::_warn(void*, TiObject*, const Arguments& args)
+Handle<Value> TiAPIObject::_warn(void* self, TiObject*, const Arguments& args)
 {
     if (args.Length() < 1)
     {
@@ -73,11 +95,12 @@ Handle<Value> TiAPIObject::_warn(void*, TiObject*, const Arguments& args)
 
     // Log message with WARNING severity-level
     TiLogger::getInstance().log("WARN", *String::Utf8Value(args[0]));
-
+	static_cast<TiAPIObject*>(self)->
+	_socket->write(QString("[WARN] ").append(*String::Utf8Value(args[0])).append("\n").toLocal8Bit().constData());
     return Undefined();
 }
 
-Handle<Value> TiAPIObject::_error(void*, TiObject*, const Arguments& args)
+Handle<Value> TiAPIObject::_error(void* self, TiObject*, const Arguments& args)
 {
     if (args.Length() < 1)
     {
@@ -86,11 +109,13 @@ Handle<Value> TiAPIObject::_error(void*, TiObject*, const Arguments& args)
 
     // Log message with ERROR severity-level
     TiLogger::getInstance().log("ERROR", *String::Utf8Value(args[0]));
+	static_cast<TiAPIObject*>(self)->
+	_socket->write(QString("[ERROR] ").append(*String::Utf8Value(args[0])).append("\n").toLocal8Bit().constData());
     return Undefined();
 }
 
 // log([level], msg)
-Handle<Value> TiAPIObject::_log(void*, TiObject*, const Arguments& args)
+Handle<Value> TiAPIObject::_log(void* self, TiObject*, const Arguments& args)
 {
     HandleScope scope;
 
@@ -107,21 +132,25 @@ Handle<Value> TiAPIObject::_log(void*, TiObject*, const Arguments& args)
         // If no log level is provided default to "INFO".
         logger.log("INFO", *String::Utf8Value(args[0]));
     }
+	static_cast<TiAPIObject*>(self)->
+	_socket->write(QString("[INFO] ").append(*String::Utf8Value(args[0])).append("\n").toLocal8Bit().constData());
 
     return Undefined();
 }
 
-Handle<Value> TiAPIObject::_timestamp(void*, TiObject*, const Arguments& args)
+Handle<Value> TiAPIObject::_timestamp(void* self, TiObject*, const Arguments& args)
 {
     if (args.Length() < 1) {
         return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
 
     TiLogger::getInstance().log("TIMESTAMP", *String::Utf8Value(args[0]));
+	static_cast<TiAPIObject*>(self)->
+	_socket->write(QString("[TIMESTAMP] ").append(*String::Utf8Value(args[0])).append("\n").toLocal8Bit().constData());
     return Undefined();
 }
 
-Handle<Value> TiAPIObject::_trace(void*, TiObject*, const Arguments& args)
+Handle<Value> TiAPIObject::_trace(void* self, TiObject*, const Arguments& args)
 {
     if (args.Length() < 1)
     {
@@ -130,6 +159,8 @@ Handle<Value> TiAPIObject::_trace(void*, TiObject*, const Arguments& args)
 
     // Log message with TRACE severity-level
     TiLogger::getInstance().log("TRACE", *String::Utf8Value(args[0]));
+	static_cast<TiAPIObject*>(self)->
+	_socket->write(QString("[TRACE] ").append(*String::Utf8Value(args[0])).append("\n").toLocal8Bit().constData());
     return Undefined();
 }
 

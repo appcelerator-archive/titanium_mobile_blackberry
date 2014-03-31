@@ -111,7 +111,6 @@ void Ti::TiValue::callFunction(Ti::TiProxy* proxy, Ti::TiValue value)
 	args[0] = value.toJSValue();
 
 	TryCatch tryCatch;
-	qDebug() << "[TiValue]" << Ti::TiHelper::QStringFromValue(function);
 	Handle<Value> result = function->Call(proxy->_jsObject, 1, args);
 	if(result.IsEmpty())
 	{

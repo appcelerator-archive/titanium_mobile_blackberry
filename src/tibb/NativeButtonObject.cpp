@@ -13,6 +13,7 @@
 #include "TiEventContainerFactory.h"
 #include "TiObject.h"
 #include "V8Utils.h"
+#include "TiCore.h"
 
 using namespace titanium;
 
@@ -58,7 +59,7 @@ int NativeButtonObject::setTitle(TiObject* obj)
 
 int NativeButtonObject::setImage(TiObject* obj)
 {
-    QString path = getResourcePath(V8ValueToQString(obj->getValue()));
+    QString path = Ti::TiHelper::getAssetPath(V8ValueToQString(obj->getValue()));
     const bb::cascades::Image image = bb::cascades::Image(QUrl(path));
     button_->setImage(image);
     return NATIVE_ERROR_OK;
