@@ -10,6 +10,7 @@
 #ifndef TI_TICORE_H_
 #define TI_TICORE_H_
 
+#include "Ti_Macros.h"
 #include "Ti_Blob.h"
 #include "Ti_Value.h"
 #include "Ti_Proxy.h"

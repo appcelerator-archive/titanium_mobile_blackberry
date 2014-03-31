@@ -1,5 +1,5 @@
-#ifndef LAYOUT_NODE_H
-#define LAYOUT_NODE_H
+#ifndef _LAYOUT_NODE_H
+#define _LAYOUT_NODE_H
 
 #include "Element.h"
 #include "ParseProperty.h"

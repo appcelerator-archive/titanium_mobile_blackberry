@@ -65,7 +65,7 @@ void Ti::TiValue::setValue(Handle<Value> value)
 	}
 	_bool = value->ToBoolean()->Value();
 	_number = value->ToNumber()->Value();
-	_string = QString(*String::Utf8Value(value->ToString()));
+	_string = Ti::TiHelper::QStringFromValue(value->ToString());
 	if(value->IsArray())
 	{
 		Handle<Array> ar = Handle<Array>::Cast(value);
@@ -111,7 +111,8 @@ void Ti::TiValue::callFunction(Ti::TiProxy* proxy, Ti::TiValue value)
 	args[0] = value.toJSValue();
 
 	TryCatch tryCatch;
-	Handle<Value> result = function->Call(proxy->realJSObject, 1, args);
+	qDebug() << "[TiValue]" << Ti::TiHelper::QStringFromValue(function);
+	Handle<Value> result = function->Call(proxy->_jsObject, 1, args);
 	if(result.IsEmpty())
 	{
 		qDebug() << "[TiValue] Something bad happened";
@@ -156,7 +157,7 @@ Handle<Value> Ti::TiValue::toJSValue()
 }
 QString Ti::TiValue::toString()
 {
-	return _string;
+	return Ti::TiHelper::QStringFromValue(_jsValue);
 }
 Ti::TiProxy *Ti::TiValue::toProxy()
 {
@@ -209,7 +210,7 @@ void Ti::TiValue::setBool(bool val)
 void Ti::TiValue::setProxy(Ti::TiProxy* val)
 {
 	_proxy = val;
-	_jsValue = _proxy->realJSObject;
+	_jsValue = _proxy->_jsObject;
 }
 
 void Ti::TiValue::setNull()

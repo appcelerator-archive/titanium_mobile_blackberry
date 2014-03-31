@@ -5,8 +5,8 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef LAYOUT_NODE_H
-#define LAYOUT_NODE_H
+#ifndef TI_LAYOUT_NODE_H
+#define TI_LAYOUT_NODE_H
 
 #include "Headers.h"
 

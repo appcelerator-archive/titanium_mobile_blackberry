@@ -5,8 +5,8 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef HORIZONTAL_H_
-#define HORIZONTAL_H_
+#ifndef TI_HORIZONTAL_H_
+#define TI_HORIZONTAL_H_
 
 #include "Headers.h"
 

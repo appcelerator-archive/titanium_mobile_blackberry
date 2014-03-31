@@ -16,7 +16,6 @@
  * Represents a Titanium button object
  *
  */
-
 class TiUIButton : public TiUIBase
 {
 public:

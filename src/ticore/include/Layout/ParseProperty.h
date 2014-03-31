@@ -5,8 +5,8 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef PARSEPROPERTY_H_
-#define PARSEPROPERTY_H_
+#ifndef TI_PARSEPROPERTY_H_
+#define TI_PARSEPROPERTY_H_
 
 #include <string>
 #include "Headers.h"

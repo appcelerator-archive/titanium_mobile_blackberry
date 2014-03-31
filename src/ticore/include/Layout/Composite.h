@@ -5,8 +5,8 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef COMPOSITE_H_
-#define COMPOSITE_H_
+#ifndef TI_COMPOSITE_H_
+#define TI_COMPOSITE_H_
 
 #include "Headers.h"
 

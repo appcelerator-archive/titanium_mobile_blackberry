@@ -62,6 +62,7 @@ public:
 	TitaniumLayout *viewLayout;
 	bb::cascades::Control* childControl;
 	void setZIndex(int index);
+	int getZIndex();
 protected:
 	virtual TiViewProxy *getProxy() const;
 private:

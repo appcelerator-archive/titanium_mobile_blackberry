@@ -17,7 +17,6 @@ QList<TiUIWebView*> TiUIWebView::getWebViews()
 	return webViews_;
 }
 
-
 TiUIWebView::TiUIWebView()
     : TiUIBase("WebView")
 {

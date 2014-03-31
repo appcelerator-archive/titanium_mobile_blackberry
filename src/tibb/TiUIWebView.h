@@ -21,6 +21,7 @@
 
 class TiUIWebView: public TiUIBase
 {
+
 public:
     static TiUIWebView* createWebView(NativeObjectFactory* nativeObjectFactory);
     static QList<TiUIWebView*> getWebViews();

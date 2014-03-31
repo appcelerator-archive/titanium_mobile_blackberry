@@ -12,7 +12,8 @@
 #include <bb/cascades/Control>
 #include <bb/cascades/LayoutUpdateHandler>
 #include "Ti_View.h"
-#include "Layout/Structs.h"
+#include "Layout/Headers.h"
+
 namespace Ti
 {
 class TitaniumLayout : QObject
@@ -38,9 +39,9 @@ public:
 	void _setHeight(QString);
 	void _setChildControl(bb::cascades::Control *);
 	bb::cascades::Control * _getChildControl();
+    struct Ti::Layout::Node _layoutNode;
 private:
 
-    struct Ti::Layout::Node layoutNode_;
 
 	QString _layout;
 	QString _left;

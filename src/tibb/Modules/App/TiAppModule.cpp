@@ -11,10 +11,18 @@
 #include <bb/PackageInfo>
 
 #include "TiUIWebView.h"
+#include "../UI/BlackBerry/WebView/TiUIWebViewProxy.h"
+
+static TiAppModule* _instance;
+
+TiAppModule::TiAppModule* getInstance()
+{
+	return _instance;
+}
 
 TiAppModule::TiAppModule(const char* name) : Ti::TiModule(name)
 {
-
+	_instance = this;
 	addModule("Properties", TiAppPropertiesModule::CreateModule());
 	createPropertyFunction("fireSystemEvent", _fireSystemEvent);
 	createPropertyFunction("getArguments", _getArguments);
@@ -54,17 +62,34 @@ TiAppModule::~TiAppModule()
 void TiAppModule::fireEvent(QString eventName, Ti::TiEventParameters eventParams)
 {
 	Ti::TiProxy::fireEvent(eventName, eventParams);
-	QList<TiUIWebView*> webViews = TiUIWebView::getWebViews();
-	if(webViews.size() > 0)
 	{
-		Ti::TiEventParameters webViewEventParams;
-		webViewEventParams.addParam("data", eventParams);
-		webViewEventParams.addParam("id", eventName);
-
-		QString json = webViewEventParams.toJsonQString();
-		for(int i = 0, len = webViews.length(); i < len; i++)
+		QList<TiUIWebView*> webViews = TiUIWebView::getWebViews();
+		if(webViews.size() > 0)
 		{
-			webViews.at(i)->getNativeWebView()->postMessage(json);
+			Ti::TiEventParameters webViewEventParams;
+			webViewEventParams.addParam("data", eventParams);
+			webViewEventParams.addParam("id", eventName);
+
+			QString json = webViewEventParams.toJsonQString();
+			for(int i = 0, len = webViews.length(); i < len; i++)
+			{
+				webViews.at(i)->getNativeWebView()->postMessage(json);
+			}
+		}
+	}
+	{
+		QList<TiUI::TiUIWebViewProxy*> webViews = TiUI::TiUIWebViewProxy::getWebViewProxies();
+		if(webViews.size() > 0)
+		{
+			Ti::TiEventParameters webViewEventParams;
+			webViewEventParams.addParam("data", eventParams);
+			webViewEventParams.addParam("id", eventName);
+
+			QString json = webViewEventParams.toJsonQString();
+			for(int i = 0, len = webViews.length(); i < len; i++)
+			{
+				webViews.at(i)->getTiWebView()->getNativeWebView()->postMessage(json);
+			}
 		}
 	}
 }
@@ -143,7 +168,7 @@ Ti::TiValue TiAppModule::getCopyright()
 }
 Ti::TiValue TiAppModule::getDeployType()
 {
-	QSettings defaultSettings("app/native/assets/app_properties.ini", QSettings::IniFormat);
+	QSettings defaultSettings("app/native/_private_assets_/app_properties.ini", QSettings::IniFormat);
 	QString deployType = defaultSettings.value("deploytype").toString();
 
 	Ti::TiValue val;

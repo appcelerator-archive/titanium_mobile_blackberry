@@ -194,6 +194,12 @@ void Ti::TiView::setZIndex(int index)
 		parentView->add(this);
 	}
 }
+
+int Ti::TiView::getZIndex()
+{
+	return _zIndex;
+}
+
 void Ti::TiView::add(bb::cascades::Control* control)
 {
 	Ti::TiView *newView = static_cast<Ti::TiView*>(control);
