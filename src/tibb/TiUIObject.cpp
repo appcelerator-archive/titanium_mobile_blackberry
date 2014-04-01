@@ -15,7 +15,6 @@
 #include "TiOrientation.h"
 #include "TiUIActivityIndicator.h"
 #include "TiUIAlertDialog.h"
-#include "TiUIButton.h"
 #include "TiUIClipboardObject.h"
 #include "TiUIImageView.h"
 #include "TiUILabel.h"
@@ -32,7 +31,6 @@
 #include "TiUITableViewRow.h"
 #include "TiUITextField.h"
 #include "TiUITextArea.h"
-#include "TiUIWebView.h"
 #include "TiUIWindow.h"
 #include "TiUIAnimation.h"
 #include "TiUIEmailDialog.h"
@@ -81,7 +79,6 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTabGroup", this, _createTabGroup);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createWindow", this, _createWindow);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createLabel", this, _createLabel);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createButton", this, _createButton);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createImageButton", this, _createImageButton);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSlider", this, _createSlider);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createProgressBar", this, _createProgressBar);
@@ -96,7 +93,6 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createPicker", this, _createPicker);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createAlertDialog", this, _createAlertDialog);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createView", this, _createView);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createWebView", this, _createWebView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createScrollView", this, _createScrollView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createScrollableView", this, _createScrollableView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setBackgroundColor", this, _setBackgroundColor);
@@ -158,11 +154,6 @@ Handle<Value> TiUIObject::_createWindow(void* userContext, TiObject*, const Argu
 Handle<Value> TiUIObject::_createLabel(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUILabel::createLabel, args);
-}
-
-Handle<Value> TiUIObject::_createButton(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUIButton::createButton, args);
 }
 
 Handle<Value> TiUIObject::_createImageButton(void* userContext, TiObject*, const Arguments& args)
@@ -248,11 +239,6 @@ Handle<Value> TiUIObject::_createAlertDialog(void* userContext, TiObject*, const
 Handle<Value> TiUIObject::_createView(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIBase::createView), args);
-}
-
-Handle<Value> TiUIObject::_createWebView(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIWebView::createWebView), args);
 }
 
 Handle<Value> TiUIObject::_createScrollView(void* userContext, TiObject*, const Arguments& args)

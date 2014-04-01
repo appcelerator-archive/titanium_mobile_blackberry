@@ -10,12 +10,11 @@
 #include <bb/ApplicationInfo>
 #include <bb/PackageInfo>
 
-#include "TiUIWebView.h"
 #include "../UI/BlackBerry/WebView/TiUIWebViewProxy.h"
 
 static TiAppModule* _instance;
 
-TiAppModule::TiAppModule* getInstance()
+TiAppModule* TiAppModule::getInstance()
 {
 	return _instance;
 }
@@ -62,34 +61,17 @@ TiAppModule::~TiAppModule()
 void TiAppModule::fireEvent(QString eventName, Ti::TiEventParameters eventParams)
 {
 	Ti::TiProxy::fireEvent(eventName, eventParams);
+	QList<TiUI::TiUIWebViewProxy*> webViews = TiUI::TiUIWebViewProxy::getWebViewProxies();
+	if(webViews.size() > 0)
 	{
-		QList<TiUIWebView*> webViews = TiUIWebView::getWebViews();
-		if(webViews.size() > 0)
-		{
-			Ti::TiEventParameters webViewEventParams;
-			webViewEventParams.addParam("data", eventParams);
-			webViewEventParams.addParam("id", eventName);
+		Ti::TiEventParameters webViewEventParams;
+		webViewEventParams.addParam("data", eventParams);
+		webViewEventParams.addParam("id", eventName);
 
-			QString json = webViewEventParams.toJsonQString();
-			for(int i = 0, len = webViews.length(); i < len; i++)
-			{
-				webViews.at(i)->getNativeWebView()->postMessage(json);
-			}
-		}
-	}
-	{
-		QList<TiUI::TiUIWebViewProxy*> webViews = TiUI::TiUIWebViewProxy::getWebViewProxies();
-		if(webViews.size() > 0)
+		QString json = webViewEventParams.toJsonQString();
+		for(int i = 0, len = webViews.length(); i < len; i++)
 		{
-			Ti::TiEventParameters webViewEventParams;
-			webViewEventParams.addParam("data", eventParams);
-			webViewEventParams.addParam("id", eventName);
-
-			QString json = webViewEventParams.toJsonQString();
-			for(int i = 0, len = webViews.length(); i < len; i++)
-			{
-				webViews.at(i)->getTiWebView()->getNativeWebView()->postMessage(json);
-			}
+			webViews.at(i)->getTiWebView()->getNativeWebView()->postMessage(json);
 		}
 	}
 }

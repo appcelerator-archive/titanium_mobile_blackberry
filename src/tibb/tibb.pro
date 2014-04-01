@@ -15,7 +15,6 @@ INCLUDEPATH += \
 
 SOURCES += \
 	./*.cpp \
-	../Layout/*.cpp \
 	../TiScrollableView/*.cpp \
 	../Contacts/*.cpp \
     ../TableView/*.cpp \
@@ -41,7 +40,6 @@ SOURCES += \
 
 HEADERS += \
 	./*.h \
-    ../Layout/*.h \
     ../TiScrollableView/*.h \
     ../Contacts/*.h \
     ../TableView/*.h \

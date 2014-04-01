@@ -33,7 +33,6 @@ private:
     static Handle<Value> _createTabGroup(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createWindow(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createLabel(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> _createButton(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createImageButton(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createSlider(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createProgressBar(void* userContext, TiObject* caller, const Arguments& args);
@@ -50,7 +49,6 @@ private:
     static Handle<Value> _createEmailDialog(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createAlertDialog(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createView(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> _createWebView(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createScrollView(void* userContext, TiObject*, const Arguments& args);
     static Handle<Value> _createAnimation(void* userContext, TiObject*, const Arguments& args);
     static Handle<Value> _createScrollableView(void* userContext, TiObject*, const Arguments& args);
