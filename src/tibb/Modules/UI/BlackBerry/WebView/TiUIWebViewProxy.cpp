@@ -17,9 +17,6 @@ QList<TiUIWebViewProxy*> TiUIWebViewProxy::getWebViewProxies()
 
 TiUIWebViewProxy::TiUIWebViewProxy(const char* name) : Ti::TiViewProxy(name)
 {
-	qDebug() << "[INTERNAL] TiUIWebViewProxy Not Implemented yet";
-
-
 	createPropertySetterGetter("data", _setData,  _getData);
 	createPropertySetterGetter("disableBounce", _setDisableBounce,  _getDisableBounce);
 	createPropertySetterGetter("hideLoadIndicator", _setHideLoadIndicator,  _getHideLoadIndicator);
