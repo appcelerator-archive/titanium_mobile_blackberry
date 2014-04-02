@@ -15,7 +15,6 @@ INCLUDEPATH += \
 
 SOURCES += \
 	./*.cpp \
-	../Layout/*.cpp \
 	../TiScrollableView/*.cpp \
 	../Contacts/*.cpp \
     ../TableView/*.cpp \
@@ -32,13 +31,15 @@ SOURCES += \
     ../Modules/UI/BlackBerry/*.cpp \
     ../Modules/UI/BlackBerry/NavButton/*.cpp \
     ../Modules/UI/BlackBerry/ApplicationMenu/*.cpp \
+    ../Modules/UI/BlackBerry/View/*.cpp \
+    ../Modules/UI/BlackBerry/WebView/*.cpp \
+    ../Modules/UI/BlackBerry/Button/*.cpp \
     ../Modules/Utils/*.cpp \
     ../Modules/Blackberry/Notification/*.cpp \
     ../Modules/Blackberry/*.cpp
 
 HEADERS += \
 	./*.h \
-    ../Layout/*.h \
     ../TiScrollableView/*.h \
     ../Contacts/*.h \
     ../TableView/*.h \
@@ -55,6 +56,9 @@ HEADERS += \
     ../Modules/UI/BlackBerry/*.h \
     ../Modules/UI/BlackBerry/NavButton/*.h \
     ../Modules/UI/BlackBerry/ApplicationMenu/*.h \
+    ../Modules/UI/BlackBerry/View/*.h \
+    ../Modules/UI/BlackBerry/WebView/*.h \
+    ../Modules/UI/BlackBerry/Button/*.h \
     ../Modules/Utils/*.h \
     ../Modules/Blackberry/Notification/*.h \
     ../Modules/Blackberry/*.h

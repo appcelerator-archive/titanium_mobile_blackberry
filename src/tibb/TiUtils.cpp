@@ -12,6 +12,8 @@
 #include <bb/device/DisplayInfo>
 #include <math.h>
 #include <QColor>
+#include "TiCore.h"
+
 static TiUtils* sharedInstance = NULL;
 
 TiUtils::TiUtils()
@@ -47,7 +49,7 @@ float TiUtils::getPPI()
 
 float TiUtils::getCalculatedDimension(QString str)
 {
-	return getDimensionValue(str.toUtf8().constData(), ppi_);
+	return Ti::Layout::ParseProperty::getDimensionValue(str.toUtf8().constData(), ppi_);
 }
 
 TiUtils* TiUtils::getInstance()

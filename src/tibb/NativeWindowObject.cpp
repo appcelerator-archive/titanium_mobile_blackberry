@@ -50,9 +50,9 @@ int NativeWindowObject::addChildNativeObject(NativeObject* obj)
 void NativeWindowObject::updateLayout(QRectF rect) {
     layoutNode_.element._measuredWidth = rect.width();
     layoutNode_.element._measuredHeight = rect.height();
-    struct Node* root = nodeRequestLayout(&layoutNode_);
+    struct Ti::Layout::Node* root = Ti::Layout::TiNode::nodeRequestLayout(&layoutNode_);
     if (root) {
-        nodeLayout(root);
+    	Ti::Layout::TiNode::nodeLayout(root);
     }
 }
 

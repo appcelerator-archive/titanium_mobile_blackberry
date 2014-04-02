@@ -274,7 +274,7 @@ TiObject *NativeAnimationObject::getJSObject()
 	return _jsObject;
 }
 
-void NativeAnimationObject::animate(NativeControlObject *obj, Node layoutNode)
+void NativeAnimationObject::animate(NativeControlObject *obj, Ti::Layout::Node layoutNode)
 {
 	setNativeControlObject(obj);
 	bb::cascades::Control *view = (bb::cascades::Control*)obj->getNativeHandle();

@@ -23,7 +23,6 @@
 #include <bb/device/DisplayInfo>
 
 #include "EventHandler.h"
-#include "Layout/Composite.h"
 #include "NativeLayoutHandler.h"
 #include "PersistentV8Value.h"
 #include "TiConstants.h"
@@ -145,7 +144,7 @@ public slots:
 
 #include "NativeControlObject.moc"
 
-static void onPostLayout(struct Node* node)
+static void onPostLayout(struct Ti::Layout::Node* node)
 {
     NativeControlObject* native = static_cast<NativeControlObject*>(node->data);
     Control* control = static_cast<Control*>(native->getNativeHandle());
@@ -183,25 +182,25 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     deferHeight_(false),
     lastWidth_(0),
     lastHeight_(0),
-    deferWidthType_((enum ValueType)-1),
-    deferHeightType_((enum ValueType)-1),
+    deferWidthType_((enum Ti::Layout::ValueType)-1),
+    deferHeightType_((enum Ti::Layout::ValueType)-1),
     batchUpdating_(false),
     opacity_(1)
 {
-    nodeInitialize(&layoutNode_);
+    Ti::Layout::TiNode::nodeInitialize(&layoutNode_);
     layoutNode_.onLayout = onPostLayout;
     layoutNode_.data = this;
 
     if (objType == N_TYPE_VIEW || objType == N_TYPE_WEBVIEW || objType == N_TYPE_TABLE_VIEW || objType == N_TYPE_SCROLL_VIEW || objType == N_TYPE_SCROLLABLE_VIEW ||
     		objType == N_TYPE_WINDOW || objType == N_TYPE_MAPVIEW || objType == N_TYPE_TEXT_AREA) {
-		layoutNode_.properties.defaultWidthType = Fill;
-		layoutNode_.properties.defaultHeightType  = Fill;
+		layoutNode_.properties.defaultWidthType = Ti::Layout::Fill;
+		layoutNode_.properties.defaultHeightType  = Ti::Layout::Fill;
     }
     else if (objType == N_TYPE_LABEL || objType == N_TYPE_BUTTON || objType == N_TYPE_IMAGE_BUTTON || objType == N_TYPE_TOGGLEBUTTON ||
     		objType == N_TYPE_SLIDER || objType == N_TYPE_PROGRESSBAR || objType == N_TYPE_TEXT_FIELD ||
         	objType == N_TYPE_ACTIVITYINDICATOR || objType == N_TYPE_IMAGEVIEW) {
-    	layoutNode_.properties.defaultWidthType = Size;
-    	layoutNode_.properties.defaultHeightType  = Size;
+    	layoutNode_.properties.defaultWidthType = Ti::Layout::Size;
+    	layoutNode_.properties.defaultHeightType  = Ti::Layout::Size;
 
 
     	// in Cascades controls like labels and buttons there is no way to know the size of the control, and
@@ -214,8 +213,8 @@ NativeControlObject::NativeControlObject(TiObject* tiObject, NATIVE_TYPE objType
     }
 
     if (objType == N_TYPE_TABLE_VIEW_ROW) {
-        layoutNode_.properties.width.valueType = Fill;
-        layoutNode_.properties.height.valueType = Defer;
+        layoutNode_.properties.width.valueType = Ti::Layout::Fill;
+        layoutNode_.properties.height.valueType = Ti::Layout::Defer;
     }
 
     objType_ = objType;
@@ -262,13 +261,13 @@ void NativeControlObject::updateLayout(QRectF rect)
     rect_ = rect;
 
     if (deferWidth_ == true && rect.width() != 0) {
-    	if (deferWidth_ && (layoutNode_.properties.left.valueType == Fixed || layoutNode_.properties.left.valueType == Percent) &&
-    					(layoutNode_.properties.right.valueType == Fixed || layoutNode_.properties.right.valueType == Percent) &&
-    											deferWidthType_ != Size) {
+    	if (deferWidth_ && (layoutNode_.properties.left.valueType == Ti::Layout::Fixed || layoutNode_.properties.left.valueType == Ti::Layout::Percent) &&
+    					(layoutNode_.properties.right.valueType == Ti::Layout::Fixed || layoutNode_.properties.right.valueType == Ti::Layout::Percent) &&
+    											deferWidthType_ != Ti::Layout::Size) {
     	}
     	else {
 			layoutNode_.properties.width.value = rect.width();
-			layoutNode_.properties.width.valueType = Fixed;
+			layoutNode_.properties.width.valueType = Ti::Layout::Fixed;
 
 			if (lastWidth_ == rect.width()) {
 				requestLayout = false;
@@ -280,13 +279,13 @@ void NativeControlObject::updateLayout(QRectF rect)
     }
 
     if (deferHeight_ == true && rect.height() != 0) {
-    	if (deferHeight_ && (layoutNode_.properties.top.valueType == Fixed || layoutNode_.properties.top.valueType == Percent) &&
-    						(layoutNode_.properties.bottom.valueType == Fixed || layoutNode_.properties.bottom.valueType == Percent) &&
-    								deferHeightType_ != Size) {
+    	if (deferHeight_ && (layoutNode_.properties.top.valueType == Ti::Layout::Fixed || layoutNode_.properties.top.valueType == Ti::Layout::Percent) &&
+    						(layoutNode_.properties.bottom.valueType == Ti::Layout::Fixed || layoutNode_.properties.bottom.valueType == Ti::Layout::Percent) &&
+    								deferHeightType_ != Ti::Layout::Size) {
     	}
     	else {
 			layoutNode_.properties.height.value = rect.height();
-			layoutNode_.properties.height.valueType = Fixed;
+			layoutNode_.properties.height.valueType = Ti::Layout::Fixed;
 
 			if (lastHeight_ == rect.height()) {
 				requestLayout = false;
@@ -299,7 +298,7 @@ void NativeControlObject::updateLayout(QRectF rect)
 
 
     if (requestLayout) {
-        struct Node* root = nodeRequestLayout(&layoutNode_);
+        struct Ti::Layout::Node* root = Ti::Layout::TiNode::nodeRequestLayout(&layoutNode_);
         if (root) {
         	bb::device::DisplayInfo display;
         	bb::device::DeviceInfo info;
@@ -313,7 +312,7 @@ void NativeControlObject::updateLayout(QRectF rect)
 				displayHeight_ = display.pixelSize().height();
 
 			}
-            nodeLayout(root);
+        	Ti::Layout::TiNode::nodeLayout(root);
         }
     }
 
@@ -400,8 +399,8 @@ int NativeControlObject::addChildImpl(NativeObject* obj)
 {
     Q_ASSERT(container_ != NULL);
     bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
-    nodeAddChild(&layoutNode_, &((NativeControlObject*) obj)->layoutNode_);
-    struct Node* root = nodeRequestLayout(&layoutNode_);
+    Ti::Layout::TiNode::nodeAddChild(&layoutNode_, &((NativeControlObject*) obj)->layoutNode_);
+    struct Ti::Layout::Node* root = Ti::Layout::TiNode::nodeRequestLayout(&layoutNode_);
     if (root) {
         bb::device::DisplayInfo display;
 		bb::device::DeviceInfo info;
@@ -415,7 +414,7 @@ int NativeControlObject::addChildImpl(NativeObject* obj)
 			displayHeight_ = display.pixelSize().height();
 
 		}
-		nodeLayout(root);
+		Ti::Layout::TiNode::nodeLayout(root);
     }
     TiObject* tmpObj = new TiObject;
     obj->getPropertyValue(N_PROP_ZINDEX, tmpObj);
@@ -428,6 +427,19 @@ int NativeControlObject::addChildImpl(NativeObject* obj)
     tmpObj->release();
     int error = setZOrder(container_, control, zindexValue, zindex->IsNumber());
     return error;
+}
+
+void NativeControlObject::addTiViewProxy(Ti::TiViewProxy* proxy)
+{
+    Ti::TiView* control = proxy->getView();
+    control->setParentView(static_cast<Ti::TiView*>(container_));
+    Ti::Layout::TiNode::nodeAddChild(&layoutNode_, &control->viewLayout->_layoutNode);
+    struct Ti::Layout::Node* root = Ti::Layout::TiNode::nodeRequestLayout(&layoutNode_);
+    if (root) {
+		Ti::Layout::TiNode::nodeLayout(root);
+    }
+    int zIndex = control->getZIndex();
+    int error = setZOrder(container_, control, zIndex, zIndex > -1);
 }
 
 int NativeControlObject::removeChildNativeObject(NativeObject* obj)
@@ -446,8 +458,8 @@ int NativeControlObject::removeChildNativeObject(NativeObject* obj)
 int NativeControlObject::removeChildImpl(NativeObject* obj)
 {
     Q_ASSERT(container_ != NULL);
-    nodeRemoveChild(&layoutNode_, &((NativeControlObject*) obj)->layoutNode_);
-    struct Node* root = nodeRequestLayout(&layoutNode_);
+    Ti::Layout::TiNode::nodeRemoveChild(&layoutNode_, &((NativeControlObject*) obj)->layoutNode_);
+    struct Ti::Layout::Node* root = Ti::Layout::TiNode::nodeRequestLayout(&layoutNode_);
     if (root) {
         bb::device::DisplayInfo display;
 		bb::device::DeviceInfo info;
@@ -461,7 +473,7 @@ int NativeControlObject::removeChildImpl(NativeObject* obj)
 			displayHeight_ = display.pixelSize().height();
 
 		}
-		nodeLayout(root);
+		Ti::Layout::TiNode::nodeLayout(root);
 
     }
     bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
@@ -562,31 +574,31 @@ void NativeControlObject::resize(float width, float height)
 		control->setMaxHeight(height);
     }
 
-	if (deferWidth_ && (layoutNode_.properties.left.valueType == Fixed || layoutNode_.properties.left.valueType == Percent) &&
-				(layoutNode_.properties.right.valueType == Fixed || layoutNode_.properties.right.valueType == Percent) &&
-										deferWidthType_ != Size) {
+	if (deferWidth_ && (layoutNode_.properties.left.valueType == Ti::Layout::Fixed || layoutNode_.properties.left.valueType == Ti::Layout::Percent) &&
+				(layoutNode_.properties.right.valueType == Ti::Layout::Fixed || layoutNode_.properties.right.valueType == Ti::Layout::Percent) &&
+										deferWidthType_ != Ti::Layout::Size) {
 		control->setMinWidth(width);
 		control->setMaxWidth(width);
 	}
 
-	if (deferHeight_ && (layoutNode_.properties.top.valueType == Fixed || layoutNode_.properties.top.valueType == Percent) &&
-					(layoutNode_.properties.bottom.valueType == Fixed || layoutNode_.properties.bottom.valueType == Percent) &&
-							deferHeightType_ != Size) {
+	if (deferHeight_ && (layoutNode_.properties.top.valueType == Ti::Layout::Fixed || layoutNode_.properties.top.valueType == Ti::Layout::Percent) &&
+					(layoutNode_.properties.bottom.valueType == Ti::Layout::Fixed || layoutNode_.properties.bottom.valueType == Ti::Layout::Percent) &&
+							deferHeightType_ != Ti::Layout::Size) {
 		control->setMinHeight(height);
 		control->setMaxHeight(height);
     }
 }
 
-void NativeControlObject::updateLayoutProperty(ValueName name, TiObject* val) {
+void NativeControlObject::updateLayoutProperty(Ti::Layout::ValueName name, TiObject* val) {
     HandleScope handleScope;
 
-    struct InputProperty property;
+    struct Ti::Layout::InputProperty property;
     property.name = name;
     property.value = *String::Utf8Value(val->getValue());
 
-    populateLayoutPoperties(property, &layoutNode_.properties, ppi_);
+    Ti::Layout::ParseProperty::populateLayoutPoperties(property, &layoutNode_.properties, ppi_);
 
-    struct Node* root = nodeRequestLayout(&layoutNode_);
+    struct Ti::Layout::Node* root = Ti::Layout::TiNode::nodeRequestLayout(&layoutNode_);
     if (root) {
         bb::device::DisplayInfo display;
 		bb::device::DeviceInfo info;
@@ -600,7 +612,7 @@ void NativeControlObject::updateLayoutProperty(ValueName name, TiObject* val) {
 			displayHeight_ = display.pixelSize().height();
 
 		}
-		nodeLayout(root);
+		Ti::Layout::TiNode::nodeLayout(root);
     }
 }
 
@@ -716,12 +728,12 @@ int NativeControlObject::setHeight(TiObject* obj)
 	}
 
 	if (deferHeight_ && str == "UI.SIZE") {
-		deferHeightType_ = Size;
+		deferHeightType_ = Ti::Layout::Size;
 		return NATIVE_ERROR_OK;
 	}
 
 	deferHeight_ = false;
-	updateLayoutProperty(Height, obj);
+	updateLayoutProperty(Ti::Layout::Height, obj);
 
 	return NATIVE_ERROR_OK;
 }
@@ -765,7 +777,8 @@ int NativeControlObject::setLabel(TiObject*)
 PROP_SETGET(setLayout)
 int NativeControlObject::setLayout(TiObject* obj)
 {
-    nodeSetLayoutType(&layoutNode_, *String::Utf8Value(obj->getValue()));
+	Ti::Layout::TiNode::nodeSetLayoutType(&layoutNode_, *String::Utf8Value(obj->getValue()));
+    return NATIVE_ERROR_OK;
 }
 
 PROP_SETGET(setLoading)
@@ -777,7 +790,8 @@ int NativeControlObject::setLoading(TiObject*)
 PROP_SETGET(setLeft)
 int NativeControlObject::setLeft(TiObject* obj)
 {
-    updateLayoutProperty(Left, obj);
+
+    updateLayoutProperty(Ti::Layout::Left, obj);
 
     return NATIVE_ERROR_OK;
 }
@@ -790,7 +804,7 @@ int NativeControlObject::setLeftImage(TiObject* obj) {
 PROP_SETGET(setBottom)
 int NativeControlObject::setBottom(TiObject* obj)
 {
-    updateLayoutProperty(Bottom, obj);
+    updateLayoutProperty(Ti::Layout::Bottom, obj);
 
     return NATIVE_ERROR_OK;
 }
@@ -810,7 +824,7 @@ int NativeControlObject::setCancel(TiObject* /*obj*/)
 PROP_SETGET(setRight)
 int NativeControlObject::setRight(TiObject* obj)
 {
-    updateLayoutProperty(Right, obj);
+    updateLayoutProperty(Ti::Layout::Right, obj);
 
     return NATIVE_ERROR_OK;
 }
@@ -939,7 +953,7 @@ int NativeControlObject::setUserAgent(TiObject*)
 PROP_SETGET(setTop)
 int NativeControlObject::setTop(TiObject* obj)
 {
-    updateLayoutProperty(Top, obj);
+    updateLayoutProperty(Ti::Layout::Top, obj);
 
     return NATIVE_ERROR_OK;
 }
@@ -1002,12 +1016,12 @@ int NativeControlObject::setWidth(TiObject* obj)
 	}
 
 	if (deferWidth_ && str == "UI.SIZE") {
-		deferWidthType_ = Size;
+		deferWidthType_ = Ti::Layout::Size;
 		return NATIVE_ERROR_OK;
 	}
 
 	deferWidth_ = false;
-	updateLayoutProperty(Width, obj);
+	updateLayoutProperty(Ti::Layout::Width, obj);
 
 	return NATIVE_ERROR_OK;
 }

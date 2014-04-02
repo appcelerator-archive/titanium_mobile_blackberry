@@ -12,7 +12,6 @@
 #include "NativeAlertDialogObject.h"
 #include "NativeBlobObject.h"
 #include "NativeBufferObject.h"
-#include "NativeButtonObject.h"
 #include "NativeImageButtonObject.h"
 #include "NativeDateTimePickerObject.h"
 #include "NativeDropDownObject.h"
@@ -38,7 +37,6 @@
 #include "NativeResultSetObject.h"
 #include "NativeScrollViewObject.h"
 #include "NativeScrollableViewObject.h"
-#include "NativeWebViewObject.h"
 #include "NativeMapViewObject.h"
 #include "NativeAnnotationObject.h"
 #include "NativeAudioPlayerObject.h"
@@ -95,10 +93,6 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 
     case N_TYPE_BUFFER:
         obj = NativeBufferObject::createBuffer(tiObj);
-        break;
-
-    case N_TYPE_BUTTON:
-        obj = NativeButtonObject::createButton(tiObj);
         break;
 
     case N_TYPE_IMAGE_BUTTON:
@@ -195,10 +189,6 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 
     case N_TYPE_VIEW:
         obj = NativeControlObject::createView(tiObj);
-        break;
-
-    case N_TYPE_WEBVIEW:
-        obj = NativeWebViewObject::createWebView(tiObj);
         break;
 
     case N_TYPE_MAPVIEW:

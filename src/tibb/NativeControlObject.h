@@ -14,7 +14,7 @@
 #include <bb/cascades/VisualNode>
 #include <QRect>
 
-#include <Layout/Node.h>
+#include "TiCore.h"
 
 class TiV8Event;
 class QString;
@@ -192,14 +192,16 @@ public:
     virtual int setImagePressed(TiObject* obj);
     virtual int setImageDisabled(TiObject* obj);
 
-    // Show tab description 
+    // Show tab description
     virtual int setShowTabsOnActionBar(TiObject* obj);
 
     virtual void animate(NativeObject* obj);
     virtual void animate(v8::Local<v8::Object> obj);
     virtual void animate(v8::Local<v8::Object> obj, TiV8Event* event);
 
-    Node* layout() {
+    void addTiViewProxy(Ti::TiViewProxy*);
+
+    Ti::Layout::Node* layout() {
         return &layoutNode_;
     }
 
@@ -219,14 +221,14 @@ protected:
     static int setZOrder(bb::cascades::Container* container, bb::cascades::Control* control,
                          float zindex, bool zindexIsDefined);
 
-    struct Node layoutNode_;
+    struct Ti::Layout::Node layoutNode_;
 
 private:
     friend class NativePageObject;
     friend class NativeWindowObject; // TODO(josh): we shouldn't have to abuse friends this way.
 
     void addTouchEvent(const char* name, const QObject* source, const char* signal, TiEventContainer* container);
-    void updateLayoutProperty(ValueName name, TiObject* val);
+    void updateLayoutProperty(Ti::Layout::ValueName name, TiObject* val);
 
     NativeAnimationObject *createAnimationObject(v8::Local<v8::Object> obj);
     bb::cascades::Control* control_;
@@ -243,8 +245,8 @@ private:
     int displayHeight_;
     float lastWidth_;
     float lastHeight_;
-    enum ValueType deferWidthType_;
-    enum ValueType deferHeightType_;
+    enum Ti::Layout::ValueType deferWidthType_;
+    enum Ti::Layout::ValueType deferHeightType_;
 };
 
 // Event handler for Ti.UI.View

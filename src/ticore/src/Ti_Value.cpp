@@ -156,7 +156,7 @@ Handle<Value> Ti::TiValue::toJSValue()
 }
 QString Ti::TiValue::toString()
 {
-	return _string;
+	return Ti::TiHelper::QStringFromValue(_jsValue);
 }
 Ti::TiProxy *Ti::TiValue::toProxy()
 {

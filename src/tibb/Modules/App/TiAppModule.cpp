@@ -10,11 +10,18 @@
 #include <bb/ApplicationInfo>
 #include <bb/PackageInfo>
 
-#include "TiUIWebView.h"
+#include "../UI/BlackBerry/WebView/TiUIWebViewProxy.h"
+
+static TiAppModule* _instance;
+
+TiAppModule* TiAppModule::getInstance()
+{
+	return _instance;
+}
 
 TiAppModule::TiAppModule(const char* name) : Ti::TiModule(name)
 {
-
+	_instance = this;
 	addModule("Properties", TiAppPropertiesModule::CreateModule());
 	createPropertyFunction("fireSystemEvent", _fireSystemEvent);
 	createPropertyFunction("getArguments", _getArguments);
@@ -54,7 +61,7 @@ TiAppModule::~TiAppModule()
 void TiAppModule::fireEvent(QString eventName, Ti::TiEventParameters eventParams)
 {
 	Ti::TiProxy::fireEvent(eventName, eventParams);
-	QList<TiUIWebView*> webViews = TiUIWebView::getWebViews();
+	QList<TiUI::TiUIWebViewProxy*> webViews = TiUI::TiUIWebViewProxy::getWebViewProxies();
 	if(webViews.size() > 0)
 	{
 		Ti::TiEventParameters webViewEventParams;
@@ -64,7 +71,7 @@ void TiAppModule::fireEvent(QString eventName, Ti::TiEventParameters eventParams
 		QString json = webViewEventParams.toJsonQString();
 		for(int i = 0, len = webViews.length(); i < len; i++)
 		{
-			webViews.at(i)->getNativeWebView()->postMessage(json);
+			webViews.at(i)->getTiWebView()->getNativeWebView()->postMessage(json);
 		}
 	}
 }

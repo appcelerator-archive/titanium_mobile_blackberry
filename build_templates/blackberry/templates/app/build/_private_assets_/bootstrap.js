@@ -224,4 +224,7 @@ Ti.UI.createSearchBar = function(args) {
 	Ti.API.error('Ti.UI.createSearchBar() NOT SUPPORTED IN BB10, using textField instead');
 	return Ti.UI.createTextField(args);
 } 
+Ti.UI.createWebView = Ti.UI.BlackBerry.createWebView;
+Ti.UI.createButton = Ti.UI.BlackBerry.createButton;
+
 Titanium = Ti;

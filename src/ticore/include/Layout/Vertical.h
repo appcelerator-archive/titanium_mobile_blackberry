@@ -6,8 +6,8 @@
  */
 
 
-#ifndef VERTICAL_H_
-#define VERTICAL_H_
+#ifndef TI_VERTICAL_H_
+#define TI_VERTICAL_H_
 
 #include "Headers.h"
 

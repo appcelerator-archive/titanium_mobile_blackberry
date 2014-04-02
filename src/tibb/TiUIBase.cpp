@@ -20,6 +20,7 @@
 #include <ctype.h>
 #include <string>
 #include "V8Utils.h"
+#include "TiCore.h"
 
 const static TiProperty g_tiProperties[] =
 {
@@ -591,7 +592,14 @@ void TiUIBase::onCreateStaticMembers()
 Handle<Value> TiUIBase::_add(void* userContext, TiObject*, const Arguments& args)
 {
     HandleScope handleScope;
+    Ti::TiValue newProxy(args);
     TiUIBase* obj = (TiUIBase*) userContext;
+    if(newProxy.isProxy()) {
+        NativeControlObject* parentNO = static_cast<NativeControlObject*>(obj->getNativeObject());
+        parentNO->addTiViewProxy(static_cast<Ti::TiViewProxy*>(newProxy.toProxy()));
+        obj->jsChildren_->Set(obj->jsChildren_->Length(), newProxy.toJSValue());
+    	return Undefined();
+    }
     if ((args.Length() > 0) && (args[0]->IsObject()))
     {
         TiObject* addObj = getTiObjectFromJsObject(args[0]);

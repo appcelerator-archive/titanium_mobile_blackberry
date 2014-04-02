@@ -41,40 +41,40 @@ namespace Ti {
         ignoreHeight_ = _tiView->ingoreHeight();
         ignoreWidth_ = _tiView->ingoreWidth();
         
-        Ti::Layout::TiNode::nodeInitialize(&layoutNode_);
-        layoutNode_.onLayout = onPostLayout;
-        layoutNode_.data = this;
+        Ti::Layout::TiNode::nodeInitialize(&_layoutNode);
+        _layoutNode.onLayout = onPostLayout;
+        _layoutNode.data = this;
         
         // ================================
         if(_tiView->defaultHeight() == Ti::TiConstants::SizeSIZE)
         {
-            layoutNode_.properties.defaultHeightType = Ti::Layout::Size;
+            _layoutNode.properties.defaultHeightType = Ti::Layout::Size;
             deferHeight_ = true;
             if(ignoreHeight_)
-                layoutNode_.properties.height.valueType = Ti::Layout::Size;
+                _layoutNode.properties.height.valueType = Ti::Layout::Size;
         }
         else
             if(_tiView->defaultHeight() == Ti::TiConstants::SizeFILL)
             {
-                layoutNode_.properties.defaultHeightType = Ti::Layout::Fill;
+                _layoutNode.properties.defaultHeightType = Ti::Layout::Fill;
                 if(ignoreHeight_)
-                    layoutNode_.properties.height.valueType = Ti::Layout::Fill;
+                    _layoutNode.properties.height.valueType = Ti::Layout::Fill;
                 
             }
         // ================================
         if(_tiView->defaultWidth() == Ti::TiConstants::SizeSIZE)
         {
             deferWidth_ = true;
-            layoutNode_.properties.defaultWidthType = Ti::Layout::Size;
+            _layoutNode.properties.defaultWidthType = Ti::Layout::Size;
             if(ignoreWidth_)
-                layoutNode_.properties.width.valueType = Ti::Layout::Size;
+                _layoutNode.properties.width.valueType = Ti::Layout::Size;
         }
         else
             if(_tiView->defaultWidth() == Ti::TiConstants::SizeFILL)
             {
-                layoutNode_.properties.defaultWidthType = Ti::Layout::Fill;
+                _layoutNode.properties.defaultWidthType = Ti::Layout::Fill;
                 if(ignoreWidth_)
-                    layoutNode_.properties.width.valueType = Ti::Layout::Fill;
+                    _layoutNode.properties.width.valueType = Ti::Layout::Fill;
             }
         
         _control = _tiView->childControl != NULL ? _tiView->childControl : _tiView;
@@ -134,13 +134,13 @@ namespace Ti {
         rect_ = rect;
         
         if (deferWidth_ == true && rect.width() != 0) {
-            if (deferWidth_ && (layoutNode_.properties.left.valueType == Ti::Layout::Fixed || layoutNode_.properties.left.valueType == Ti::Layout::Percent) &&
-                (layoutNode_.properties.right.valueType == Ti::Layout::Fixed || layoutNode_.properties.right.valueType == Ti::Layout::Percent) &&
+            if (deferWidth_ && (_layoutNode.properties.left.valueType == Ti::Layout::Fixed || _layoutNode.properties.left.valueType == Ti::Layout::Percent) &&
+                (_layoutNode.properties.right.valueType == Ti::Layout::Fixed || _layoutNode.properties.right.valueType == Ti::Layout::Percent) &&
                 deferWidthType_ != Ti::Layout::Size) {
             }
             else {
-                layoutNode_.properties.width.value = rect.width();
-                layoutNode_.properties.width.valueType = Ti::Layout::Fixed;
+                _layoutNode.properties.width.value = rect.width();
+                _layoutNode.properties.width.valueType = Ti::Layout::Fixed;
                 
                 if (lastWidth_ == rect.width()) {
                     requestLayout = false;
@@ -152,13 +152,13 @@ namespace Ti {
         }
         
         if (deferHeight_ == true && rect.height() != 0) {
-            if (deferHeight_ && (layoutNode_.properties.top.valueType == Ti::Layout::Fixed || layoutNode_.properties.top.valueType == Ti::Layout::Percent) &&
-                (layoutNode_.properties.bottom.valueType == Ti::Layout::Fixed || layoutNode_.properties.bottom.valueType == Ti::Layout::Percent) &&
+            if (deferHeight_ && (_layoutNode.properties.top.valueType == Ti::Layout::Fixed || _layoutNode.properties.top.valueType == Ti::Layout::Percent) &&
+                (_layoutNode.properties.bottom.valueType == Ti::Layout::Fixed || _layoutNode.properties.bottom.valueType == Ti::Layout::Percent) &&
                 deferHeightType_ != Ti::Layout::Size) {
             }
             else {
-                layoutNode_.properties.height.value = rect.height();
-                layoutNode_.properties.height.valueType = Ti::Layout::Fixed;
+                _layoutNode.properties.height.value = rect.height();
+                _layoutNode.properties.height.valueType = Ti::Layout::Fixed;
                 
                 if (lastHeight_ == rect.height()) {
                     requestLayout = false;
@@ -171,13 +171,13 @@ namespace Ti {
         // is window
         if(_tiView->parentView == NULL)
         {
-            layoutNode_.element._measuredWidth = rect.width();
-            layoutNode_.element._measuredHeight = rect.height();
+            _layoutNode.element._measuredWidth = rect.width();
+            _layoutNode.element._measuredHeight = rect.height();
             requestLayout = true;
         }
         
         if (requestLayout) {
-            struct Ti::Layout::Node* root = Ti::Layout::TiNode::nodeRequestLayout(&layoutNode_);
+            struct Ti::Layout::Node* root = Ti::Layout::TiNode::nodeRequestLayout(&_layoutNode);
             if(root) {
                 Ti::Layout::TiNode::nodeLayout(root);
             }
@@ -193,8 +193,8 @@ namespace Ti {
         {
             newView->setParentView(_tiView);
         }
-        Ti::Layout::TiNode::nodeAddChild(&layoutNode_, &newView->viewLayout->layoutNode_);
-        struct Ti::Layout::Node* root = Ti::Layout::TiNode::nodeRequestLayout(&layoutNode_);
+        Ti::Layout::TiNode::nodeAddChild(&_layoutNode, &newView->viewLayout->_layoutNode);
+        struct Ti::Layout::Node* root = Ti::Layout::TiNode::nodeRequestLayout(&_layoutNode);
         if (root) {
             Ti::Layout::TiNode::nodeLayout(root);
         }
@@ -202,8 +202,8 @@ namespace Ti {
     
     void TitaniumLayout::removeChild(TiView *oldView)
     {
-        Ti::Layout::TiNode::nodeRemoveChild(&layoutNode_, &oldView->viewLayout->layoutNode_);
-        struct Ti::Layout::Node* root = Ti::Layout::TiNode::nodeRequestLayout(&layoutNode_);
+        Ti::Layout::TiNode::nodeRemoveChild(&_layoutNode, &oldView->viewLayout->_layoutNode);
+        struct Ti::Layout::Node* root = Ti::Layout::TiNode::nodeRequestLayout(&_layoutNode);
         if (root) {
             Ti::Layout::TiNode::nodeLayout(root);
         }
@@ -236,16 +236,16 @@ namespace Ti {
             resized = true;
         }
         
-        if (deferWidth_ && (layoutNode_.properties.left.valueType == Ti::Layout::Fixed || layoutNode_.properties.left.valueType == Ti::Layout::Percent) &&
-            (layoutNode_.properties.right.valueType == Ti::Layout::Fixed || layoutNode_.properties.right.valueType == Ti::Layout::Percent) &&
+        if (deferWidth_ && (_layoutNode.properties.left.valueType == Ti::Layout::Fixed || _layoutNode.properties.left.valueType == Ti::Layout::Percent) &&
+            (_layoutNode.properties.right.valueType == Ti::Layout::Fixed || _layoutNode.properties.right.valueType == Ti::Layout::Percent) &&
             deferWidthType_ != Ti::Layout::Size) {
             control->setMinWidth(width);
             control->setMaxWidth(width);
             resized = true;
         }
         
-        if (deferHeight_ && (layoutNode_.properties.top.valueType == Ti::Layout::Fixed || layoutNode_.properties.top.valueType == Ti::Layout::Percent) &&
-            (layoutNode_.properties.bottom.valueType == Ti::Layout::Fixed || layoutNode_.properties.bottom.valueType == Ti::Layout::Percent) &&
+        if (deferHeight_ && (_layoutNode.properties.top.valueType == Ti::Layout::Fixed || _layoutNode.properties.top.valueType == Ti::Layout::Percent) &&
+            (_layoutNode.properties.bottom.valueType == Ti::Layout::Fixed || _layoutNode.properties.bottom.valueType == Ti::Layout::Percent) &&
             deferHeightType_ != Ti::Layout::Size) {
             control->setMinHeight(height);
             control->setMaxHeight(height);
@@ -260,18 +260,16 @@ namespace Ti {
         property.name = name;
         property.value = val.toStdString();
         
-        Ti::Layout::ParseProperty::populateLayoutPoperties(property, &layoutNode_.properties, (double)Ti::TiHelper::PPI());
+        Ti::Layout::ParseProperty::populateLayoutPoperties(property, &_layoutNode.properties, (double)Ti::TiHelper::PPI());
         
-        struct Ti::Layout::Node* root = Ti::Layout::TiNode::nodeRequestLayout(&layoutNode_);
+        struct Ti::Layout::Node* root = Ti::Layout::TiNode::nodeRequestLayout(&_layoutNode);
         if (root) {
             Ti::Layout::TiNode::nodeLayout(root);
         }
     }
-    
-    
     void TitaniumLayout::_setLayout(QString val)
     {
-        Ti::Layout::TiNode::nodeSetLayoutType(&layoutNode_, val.toLocal8Bit());
+        Ti::Layout::TiNode::nodeSetLayoutType(&_layoutNode, val.toLocal8Bit());
     }
     void TitaniumLayout::_setLeft(QString val)
     {

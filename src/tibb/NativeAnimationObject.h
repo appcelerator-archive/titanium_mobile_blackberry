@@ -15,7 +15,7 @@
 #include <bb/cascades/TranslateTransition>
 #include <bb/cascades/FadeTransition>
 #include <bb/cascades/ScaleTransition>
-#include "Layout/Node.h"
+#include "TiCore.h"
 #include "TiV8Event.h"
 #include <QMap>
 #include <v8.h>
@@ -94,7 +94,7 @@ public:
 	bb::cascades::FadeTransition *getFadeAnimation();
 	QMap<N_ANIMATION_PROPS, TiObject*> getAnimationProperies();
 
-	void animate(NativeControlObject *obj, Node layoutNode);
+	void animate(NativeControlObject *obj, Ti::Layout::Node layoutNode);
 
 	float ppi_;
 protected:

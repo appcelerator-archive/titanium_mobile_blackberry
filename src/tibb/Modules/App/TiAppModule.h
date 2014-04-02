@@ -23,6 +23,8 @@ public:
 
 	virtual void fireEvent(QString, Ti::TiEventParameters);
 
+	static TiAppModule* getInstance();
+
 	Ti::TiValue fireSystemEvent(Ti::TiValue);
 	Ti::TiValue getArguments(Ti::TiValue);
 

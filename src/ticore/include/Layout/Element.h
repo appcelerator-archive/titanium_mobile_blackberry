@@ -5,8 +5,8 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef ELEMENT_H_
-#define ELEMENT_H_
+#ifndef TI_ELEMENT_H_
+#define TI_ELEMENT_H_
 
 #include <string>
 #include <vector>

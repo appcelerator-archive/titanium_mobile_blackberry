@@ -12,7 +12,7 @@
 
 namespace titanium {
 
-CustomTableViewRow::CustomTableViewRow(Node* rootLayout)
+CustomTableViewRow::CustomTableViewRow(Ti::Layout::Node* rootLayout)
   : rootLayout_(rootLayout)
   , root_(new bb::cascades::Container())
   , content_(NULL) {
@@ -43,10 +43,10 @@ void CustomTableViewRow::setData(QObject* newData) {
     root_->add(content_);
 
     // Add content into the layout tree for the list view.
-    nodeAddChild(rootLayout_, control->layout());
-    Node* root = nodeRequestLayout(control->layout());
+    Ti::Layout::TiNode::nodeAddChild(rootLayout_, control->layout());
+    Ti::Layout::Node* root = Ti::Layout::TiNode::nodeRequestLayout(control->layout());
     if (root) {
-      nodeLayout(root);
+    	Ti::Layout::TiNode::nodeLayout(root);
     }
 }
 
