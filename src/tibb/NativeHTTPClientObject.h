@@ -27,9 +27,9 @@ using namespace Ti::Network::HTTPClient;
 enum NATIVE_HTTPCLIENT_PROP
 {
     N_HTTPCLIENT_PROP_UNDEFINED
+    , N_HTTPCLIENT_PROP_ALLRESPONSEHEADERS
     , N_HTTPCLIENT_PROP_AUTOENCODEURL
     , N_HTTPCLIENT_PROP_AUTOREDIRECT
-    , N_HTTPCLIENT_PROP_ALLRESPONSEHEADERS
     , N_HTTPCLIENT_PROP_CACHE
     , N_HTTPCLIENT_PROP_CONNECTED
     , N_HTTPCLIENT_PROP_CONNECTIONTYPE
@@ -81,6 +81,9 @@ public:
 
     // Properties
     int getReadyState(TiObject* obj, void* userContext);
+    int getAllResponseHeaders(TiObject* obj, void* userContext);
+    int getStatus(TiObject* obj, void* userContext);
+    int getStatusText(TiObject* obj, void* userContext);
     int getResponseText(TiObject* obj, void* userContext);
     int setOnloadCallback(TiObject* obj, void* userContext);
     int getOnloadCallback(TiObject* obj, void* userContext);
@@ -112,6 +115,7 @@ private:
     QNetworkRequest request_;
     QNetworkReply* reply_;
     QNetworkAccessManager networkAccessManager_;
+    static QNetworkCookieJar* cookieStore_;
     HTTPClientEventHandler* eventHandler_;
     QByteArray responseData_;
     QByteArray aguid_;
