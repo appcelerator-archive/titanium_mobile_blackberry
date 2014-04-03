@@ -25,6 +25,7 @@ public:
 	TiHelper();
 	virtual ~TiHelper();
 	static void Log(QString);
+	static void Log(QString, QString);
 	static float PPI();
 	static Handle<Value> Log(Handle<Value>);
 	static Handle<Value> Log(const Arguments &args);

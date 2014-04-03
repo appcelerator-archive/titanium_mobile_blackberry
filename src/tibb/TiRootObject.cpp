@@ -56,44 +56,6 @@ using namespace titanium;
 static Handle<ObjectTemplate> g_rootTemplate;
 
 static QMap<QString, v8::Persistent<Value> > _commonJSModules;
-static QString ThrowJSException(TryCatch tryCatch)
-{
-	QString str;
-	HandleScope scope;
-
-	if(tryCatch.HasCaught())
-    {
-    	Handle<Message> message = tryCatch.Message();
-    	if(!message.IsEmpty()) {
-        	Handle<Value> fileName = message->GetScriptResourceName();
-        	Local<String> srcLine = message->GetSourceLine();
-        	Ti::TiHelper::Log(QString("File Name: ").append(Ti::TiHelper::QStringFromValue(fileName)));
-        	Ti::TiHelper::Log(QString("Source Line: ").append(Ti::TiHelper::QStringFromValue(srcLine)));
-        	str.append("File: ").append(Ti::TiHelper::QStringFromValue(fileName)).append("\n");
-        	str.append("Source: ").append(Ti::TiHelper::QStringFromValue(srcLine)).append("\n\n");
-    	}
-    	QString stackTrace = Ti::TiHelper::QStringFromValue(tryCatch.StackTrace());
-    	if (!stackTrace.isEmpty()) {
-    		str.append(stackTrace);
-    	} else {
-    	    Local<Value> er = tryCatch.Exception();
-
-    	    bool isErrorObject =
-    	    		er->IsObject() &&
-    	    		!(er->ToObject()->Get(String::New("message"))->IsUndefined()) &&
-    	    		!(er->ToObject()->Get(String::New("name"))->IsUndefined());
-
-    	    if (isErrorObject) {
-    	    	Local<String> name = er->ToObject()->Get(String::New("name"))->ToString();
-    	    	str.append(Ti::TiHelper::QStringFromValue(name) + "\n");
-    	    }
-    	    Local<String> message = !isErrorObject ? er->ToString() : er->ToObject()->Get(String::New("message"))->ToString();
-    	    str.append(Ti::TiHelper::QStringFromValue(message) + "\n");
-    	}
-
-    }
-	return str;
-}
 
 
 TiRootObject::TiRootObject()
@@ -210,29 +172,14 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     Handle<Script> compiledBootstrapScript = Script::Compile(String::New(bootstrapJavascript.c_str()), String::New(bootstrapFilename));
     if (compiledBootstrapScript.IsEmpty())
     {
-        String::Utf8Value error(tryCatch.Exception());
-        TiLogger::getInstance().log(*error);
-        return -1;
+    	Ti::TiErrorScreen::ShowWithTryCatch(tryCatch);
+        return (messageLoopEntry)(context);
     }
     Handle<Value> bootstrapResult = compiledBootstrapScript->Run();
     if (bootstrapResult.IsEmpty())
     {
-        Local<Value> exception = tryCatch.Exception();
-        // FIXME: need a way to prevent double "filename + line" output
-        Handle<Message> msg = tryCatch.Message();
-        stringstream ss;
-        ss << bootstrapFilename << " line ";
-        if (msg.IsEmpty())
-        {
-            ss << "?";
-        }
-        else
-        {
-            ss << msg->GetLineNumber();
-        }
-        ss << ": " << *String::Utf8Value(exception);
-        TiLogger::getInstance().log(ss.str().c_str());
-        return -1;
+    	Ti::TiErrorScreen::ShowWithTryCatch(tryCatch);
+        return (messageLoopEntry)(context);
     }
 
     const char* filename = "app.js";
@@ -240,64 +187,14 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     QString error_str;
     if (compiledScript.IsEmpty())
     {
-    	ThrowJSException(tryCatch);
-        return 1;
+        Ti::TiErrorScreen::ShowWithTryCatch(tryCatch);
+        return (messageLoopEntry)(context);
     }
     compiledScript->Run();
     if (tryCatch.HasCaught())
     {
-    	error_str = ThrowJSException(tryCatch);
-        scriptHasError = true;
+        Ti::TiErrorScreen::ShowWithTryCatch(tryCatch);
     }
-    // show script error
-    QString deployType = Ti::TiHelper::getAppSetting("deploytype").toString();
-    if (scriptHasError && deployType.compare(QString("development")) == 0) {
-
-		bb::cascades::Page* page = bb::cascades::Page::create();
-		bb::cascades::Container* background = bb::cascades::Container::create();
-		background->setLayout(bb::cascades::DockLayout::create());
-		background->setBackground(bb::cascades::Color::Red);
-		page->setContent(background);
-
-		bb::cascades::Container* container = bb::cascades::Container::create();
-		container->setHorizontalAlignment(bb::cascades::HorizontalAlignment::Center);
-		container->setVerticalAlignment(bb::cascades::VerticalAlignment::Center);
-		background->add(container);
-
-		bb::cascades::Label *label = bb::cascades::Label::create();
-		label->textStyle()->setColor(bb::cascades::Color::White);
-		label->setText(error_str);
-		label->setMultiline(true);
-		container->add(label);
-
-	    bb::cascades::Application::instance()->setScene(bb::cascades::Page::create());
-
-	    bb::cascades::Sheet *sheet = bb::cascades::Sheet::create();
-		sheet->setPeekEnabled(false);
-		sheet->setContent(page);
-		sheet->open();
-
-
-		/*
-    	static const string javaScriptErrorAlert = string("var win1 = Titanium.UI.createWindow({") +
-											   string("backgroundColor:'red'") +
-											   string("});") +
-											   string("var label1 = Titanium.UI.createLabel({") +
-											   string("color:'white',") +
-											   string("textAlign:'center',") +
-											   string("text:") +
-											   "'" + err_msg + "'," +
-											   string("font:{fontSize:8,fontFamily:'Helvetica Neue',fontStyle:'Bold'},") +
-											   string("});") +
-											   string("win1.add(label1);") +
-											   string("win1.open();");
-
-
-    	compiledScript = Script::Compile(String::New(javaScriptErrorAlert.c_str()));
-    	compiledScript->Run();
-    	*/
-    }
-
     onStartMessagePump();
     return (messageLoopEntry)(context);
 }
@@ -412,13 +309,13 @@ Handle<Value> TiRootObject::_require(void* userContext, TiObject* caller, const 
 	TryCatch tryCatch;
 	if (script.IsEmpty())
 	{
-		ThrowException(tryCatch.ReThrow());
+    	Ti::TiErrorScreen::ShowWithTryCatch(tryCatch);
 		return scope.Close(Undefined());
 	}
 	Persistent<Value> result = Persistent<Value>::New(script->Run());
 	if (result.IsEmpty())
 	{
-		ThrowException(tryCatch.ReThrow());
+    	Ti::TiErrorScreen::ShowWithTryCatch(tryCatch);
 		return scope.Close(Undefined());
 	}
 	_commonJSModules.insert(filePath, result);

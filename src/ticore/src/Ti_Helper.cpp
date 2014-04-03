@@ -62,7 +62,12 @@ Handle<Value> Ti::TiHelper::Log(const Arguments &args)
 void Ti::TiHelper::Log(QString str)
 {
     qDebug() << "[INFO] " << str.toLocal8Bit().data();
+}
 
+void Ti::TiHelper::Log(QString w, QString str)
+{
+	QString m = w + " " + str;
+    qDebug() << m;
 }
 
 Handle<Value> Ti::TiHelper::Log(Handle<Value> arg)
