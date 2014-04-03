@@ -1,10 +1,11 @@
 /**
- *
- *
- *
- *
- *
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2009-2014 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
+
+
 #include "Ti_ErrorScreen.h"
 #include <bb/cascades/Page>
 #include <bb/cascades/Container>
@@ -74,10 +75,10 @@ void TiErrorScreen::buildAndShow() {
 	bb::cascades::Page* page = new bb::cascades::Page();
 	_errorSheet = new bb::cascades::Sheet();
 	_errorSheet->setParent(this);
-    {
+	{
 		_errorSheet->setPeekEnabled(false);
 		QObject::connect(_errorSheet, SIGNAL(closed()), this, SLOT(onClosed()));
-    }
+	}
 	bb::cascades::Container *pageContainer = new bb::cascades::Container();
 	{
 		pageContainer->setLayout(new bb::cascades::DockLayout());
@@ -100,11 +101,11 @@ void TiErrorScreen::buildAndShow() {
 		textStyle->setTextAlign(bb::cascades::TextAlign::Center);
 		textStyle->setColor(bb::cascades::Color::Green);
 	}
-    bb::cascades::Container *messageContainer = new bb::cascades::Container();
-    {
+	bb::cascades::Container *messageContainer = new bb::cascades::Container();
+	{
 		messageContainer->setHorizontalAlignment(bb::cascades::HorizontalAlignment::Center);
 		messageContainer->setVerticalAlignment(bb::cascades::VerticalAlignment::Center);
-    }
+	}
 	bb::cascades::Label *messageLabel = new bb::cascades::Label();
 	{
 		bb::cascades::TextStyleDefinition* textStyle = messageLabel->textStyle();
@@ -126,8 +127,8 @@ void TiErrorScreen::buildAndShow() {
 		dismissButton->setTopMargin(20);
 		QObject::connect(dismissButton, SIGNAL(clicked()), this, SLOT(onClicked()));
 	}
-    bb::cascades::Label *warningLabel = new bb::cascades::Label();
-    {
+	bb::cascades::Label *warningLabel = new bb::cascades::Label();
+	{
 		bb::cascades::TextStyleDefinition* textStyle = warningLabel->textStyle();
 		warningLabel->setText("Error messages will only be displayed during development. When your app is packaged for final distribution, no error screen will appear. Test your code!");
 		warningLabel->setMultiline(true);
@@ -136,23 +137,23 @@ void TiErrorScreen::buildAndShow() {
 		textStyle->setFontSize(bb::cascades::FontSize::Small);
 		textStyle->setFontWeight(bb::cascades::FontWeight::Bold);
 		textStyle->setTextAlign(bb::cascades::TextAlign::Center);
-    }
+	}
 
 	messageContainer->add(messageLabel);
 	messageContainer->add(dismissButton);
 
 	pageContainer->add(title);
-    pageContainer->add(messageContainer);
-    pageContainer->add(warningLabel);
+	pageContainer->add(messageContainer);
+	pageContainer->add(warningLabel);
 
-    page->setContent(pageContainer);
+	page->setContent(pageContainer);
 	_errorSheet->setContent(page);
 
-    bb::cascades::Application* app = bb::cascades::Application::instance();
-    if(app->scene() == NULL) {
-    	app->setScene(new bb::cascades::Page());
-    }
-    _errorSheet->open();
+	bb::cascades::Application* app = bb::cascades::Application::instance();
+	if(app->scene() == NULL) {
+		app->setScene(new bb::cascades::Page());
+	}
+	_errorSheet->open();
 }
 
 void TiErrorScreen::onClicked()
@@ -165,6 +166,9 @@ void TiErrorScreen::onClosed()
 }
 void TiErrorScreen::ShowWithTryCatch(TryCatch tryCatch)
 {
+	QString deploytype = Ti::TiHelper::getAppSetting("deploytype").toString();
+	if(deploytype != "development") return;
+
 	TiErrorScreen *errorScreen = new TiErrorScreen();
 	errorScreen->parseTryCatch(tryCatch);
 	errorScreen->buildAndShow();
@@ -174,17 +178,17 @@ void TiErrorScreen::parseTryCatch(TryCatch tryCatch)
 {
 	HandleScope scope;
 	if(tryCatch.HasCaught())
-    {
-    	Handle<Message> message = tryCatch.Message();
-    	if(!message.IsEmpty()) {
-        	_fileName = Ti::TiHelper::QStringFromValue(message->GetScriptResourceName());
-        	_sourceLine = Ti::TiHelper::QStringFromValue(message->GetSourceLine());
-        	_lineNumber = message->GetLineNumber();
-        	_colNumber = message->GetStartColumn();
-    	}
-    	_stackTrace = Ti::TiHelper::QStringFromValue(tryCatch.StackTrace());
-    	if (_stackTrace.isEmpty()) {
-    		Local<Value> er = tryCatch.Exception();
+	{
+		Handle<Message> message = tryCatch.Message();
+		if(!message.IsEmpty()) {
+			_fileName = Ti::TiHelper::QStringFromValue(message->GetScriptResourceName());
+			_sourceLine = Ti::TiHelper::QStringFromValue(message->GetSourceLine());
+			_lineNumber = message->GetLineNumber();
+			_colNumber = message->GetStartColumn();
+		}
+		_stackTrace = Ti::TiHelper::QStringFromValue(tryCatch.StackTrace());
+		if (_stackTrace.isEmpty()) {
+			Local<Value> er = tryCatch.Exception();
 			if (er->IsObject()) {
 				Local<Object> exObj = er->ToObject();
 				_exceptionName = Ti::TiHelper::QStringFromValue(exObj->Get(String::New("name")));
