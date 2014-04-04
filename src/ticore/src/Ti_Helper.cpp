@@ -15,6 +15,7 @@
 #include "Layout/Structs.h"
 #include "Layout/ParseProperty.h"
 #include <QSettings>
+#include <QtNetwork/QTcpSocket>
 
 static const QString FONT_FAMILY            = "fontFamily";
 static const QString FONT_SIZE              = "fontSize";
@@ -25,6 +26,24 @@ static const QString FONT_WEIGHT            = "fontWeight";
 static const QString FONT_WEIGHT_NORMAL     = "normal";
 static const QString FONT_WEIGHT_BOLD       = "bold";
 static float _ppi = -1;
+
+static QTcpSocket *_socket = NULL;
+static void LogToProxy(QString str)
+{
+	if(_socket == NULL)
+	{
+	    _socket = new QTcpSocket();
+		bool hasPort = true;
+		QString ipAddress = Ti::TiHelper::getAppSetting("current_ip").toString();
+		int port = Ti::TiHelper::getAppSetting("current_port").toInt(&hasPort);
+	    if(hasPort) {
+	    	_socket->connectToHost(ipAddress, port);
+	        _socket->waitForConnected(3000);
+	    }
+	}
+	_socket->write(str.append("\n").toLocal8Bit().constBegin());
+    qDebug() << str;
+}
 
 float Ti::TiHelper::PPI()
 {
@@ -61,13 +80,16 @@ Handle<Value> Ti::TiHelper::Log(const Arguments &args)
 
 void Ti::TiHelper::Log(QString str)
 {
-    qDebug() << "[INFO] " << str.toLocal8Bit().data();
-
+    LogToProxy(str);
+}
+void Ti::TiHelper::LogInternal(QString str)
+{
+    qDebug() << str.prepend("[INTERANL] ");
 }
 
 Handle<Value> Ti::TiHelper::Log(Handle<Value> arg)
 {
-	qDebug() << "[INFO] " << QStringFromValue(arg);
+	Log(QStringFromValue(arg));
     return Undefined();
 }
 

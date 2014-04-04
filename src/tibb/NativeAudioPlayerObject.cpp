@@ -12,7 +12,6 @@
 #include <bb/multimedia/MediaPlayer>
 #include <bb/multimedia/MediaState>
 
-#include "NativeLoggerObject.h"
 #include "NativeMessageStrings.h"
 #include "TiConstants.h"
 #include "TiEvent.h"

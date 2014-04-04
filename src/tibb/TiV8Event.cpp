@@ -6,8 +6,6 @@
  */
 
 #include "TiV8Event.h"
-#include "TiLogger.h"
-#include "TiAPIObject.h"
 #include "TiCore.h"
 
 static QString ThrowJSException(TryCatch tryCatch)
@@ -91,8 +89,8 @@ void TiV8Event::fire(void* fireDataObject)
     {
     	tryCatch.SetVerbose(true);
         String::Utf8Value error(tryCatch.Exception());
-        TiAPIObject::Log(QString("[ERROR] ").append(*error));
-        TiAPIObject::Log(QString("[ERROR] ").append(ThrowJSException(tryCatch)));
+        Ti::TiHelper::Log(QString("[ERROR] ").append(*error));
+        Ti::TiHelper::Log(QString("[ERROR] ").append(ThrowJSException(tryCatch)));
     }
 }
 

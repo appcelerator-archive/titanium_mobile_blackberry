@@ -7,10 +7,10 @@
 
 #include "NativeProxyObject.h"
 
-#include "NativeLoggerObject.h"
 #include "NativeMessageStrings.h"
 #include "TiEvent.h"
 #include "TitaniumRuntime.h"
+#include "TiCore.h"
 
 const char* NativeProxyObject::tetACCEPTED = "accepted";
 const char* NativeProxyObject::tetCHANGE = "change";
@@ -49,7 +49,7 @@ int NativeProxyObject::fireEvent(const char* name, const TiObject* event) const
         }
         return NATIVE_ERROR_OK;
     }
-    N_WARNING(Native::Msg::Unsupported_event_name_ << name);
+    Ti::TiHelper::LogInternal(QString("Event not found ") +  QString(name));
     return NATIVE_ERROR_NOTSUPPORTED;
 }
 

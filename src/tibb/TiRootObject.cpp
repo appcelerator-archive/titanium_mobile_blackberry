@@ -17,7 +17,6 @@
 #include "NativeStringInterface.h"
 #include "TiGenericFunctionObject.h"
 #include "TiLocaleObject.h"
-#include "TiLogger.h"
 #include "TiMessageStrings.h"
 #include "TiTitaniumObject.h"
 #include "TiTimeoutManager.h"
@@ -49,6 +48,7 @@
 #include "Modules/Utils/TiUtilsModule.h"
 #include "Modules/UI/BlackBerry/TiUIBlackberryModule.h"
 #include "Modules/App/TiAppModule.h"
+#include "Modules/API/TiAPIModule.h"
 #include "Modules/Blackberry/TiBlackberryModule.h"
 
 using namespace titanium;
@@ -67,8 +67,8 @@ static QString ThrowJSException(TryCatch tryCatch)
     	if(!message.IsEmpty()) {
         	Handle<Value> fileName = message->GetScriptResourceName();
         	Local<String> srcLine = message->GetSourceLine();
-        	Ti::TiHelper::Log(QString("File Name: ").append(Ti::TiHelper::QStringFromValue(fileName)));
-        	Ti::TiHelper::Log(QString("Source Line: ").append(Ti::TiHelper::QStringFromValue(srcLine)));
+        	Ti::TiHelper::Log(QString("[ERROR] File Name: ").append(Ti::TiHelper::QStringFromValue(fileName)));
+        	Ti::TiHelper::Log(QString("[ERROR] Source Line: ").append(Ti::TiHelper::QStringFromValue(srcLine)));
         	str.append("File: ").append(Ti::TiHelper::QStringFromValue(fileName)).append("\n");
         	str.append("Source: ").append(Ti::TiHelper::QStringFromValue(srcLine)).append("\n\n");
     	}
@@ -134,6 +134,7 @@ void TiRootObject::onCreateStaticMembers()
     tiObj->Set(String::New("Platform"), TiPlatformModule::CreateModule(), DontDelete);
     tiObj->Set(String::New("Utils"), TiUtilsModule::CreateModule(), DontDelete);
     tiObj->Set(String::New("App"), TiAppModule::CreateModule(), DontDelete);
+    tiObj->Set(String::New("API"), TiAPIModule::CreateModule(), DontDelete);
     tiObj->Set(String::New("BlackBerry"), TiBlackberryModule::CreateModule(), DontDelete);
 
     Local<Object> tiUI = tiObj->Get(String::New("UI"))->ToObject();
@@ -199,7 +200,7 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
         ifstream ifs(QString("app/native/").append(Ti::TiHelper::getAssetPath(QString(bootstrapFilename))).toLocal8Bit().constData());
         if (!ifs)
         {
-            TiLogger::getInstance().log(Ti::Msg::ERROR__Cannot_load_bootstrap_js);
+            Ti::TiHelper::Log("[ERROR] Cannot load bootstrap.js");
             return -1;
         }
         getline(ifs, bootstrapJavascript, string::traits_type::to_char_type(string::traits_type::eof()));
@@ -211,7 +212,7 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
     if (compiledBootstrapScript.IsEmpty())
     {
         String::Utf8Value error(tryCatch.Exception());
-        TiLogger::getInstance().log(*error);
+        Ti::TiHelper::Log("[ERROR] " + QString(*error));
         return -1;
     }
     Handle<Value> bootstrapResult = compiledBootstrapScript->Run();
@@ -231,7 +232,7 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
             ss << msg->GetLineNumber();
         }
         ss << ": " << *String::Utf8Value(exception);
-        TiLogger::getInstance().log(ss.str().c_str());
+        Ti::TiHelper::Log("[ERROR] " + QString(ss.str().c_str()));
         return -1;
     }
 

@@ -128,14 +128,14 @@ bool TiAnalyticsObject::createAnalyticsDatabase()
 
 	rc = sqlite3_open_v2("data/analytics.db", &db, SQLITE_OPEN_READWRITE, NULL);
 	if(rc){
-		//TiLogger::getInstance().log(sqlite3_errmsg(db));
+		Ti::TiHelper::Log(QString("[ERROR] ") + QString(sqlite3_errmsg(db)));
 		sqlite3_close(db);
 
 		// TODO check errmsg and make sure that it's caused by no db, create if that is the error
 		dbCreate = true;
 		rc = sqlite3_open_v2("data/analytics.db", &db, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, NULL);
 		if(rc){
-			TiLogger::getInstance().log(sqlite3_errmsg(db));
+			Ti::TiHelper::Log(QString("[ERROR] ") + QString(sqlite3_errmsg(db)));
 			sqlite3_close(db);
 			return(false);
 		}
@@ -144,13 +144,13 @@ bool TiAnalyticsObject::createAnalyticsDatabase()
 		string cmd = "CREATE TABLE IF NOT EXISTS events (uid TEXT, event TEXT)";
 		rc = sqlite3_prepare_v2(db, cmd.c_str(), strlen(cmd.c_str()) + 1, &stmt, NULL);
 		if( rc ) {
-			TiLogger::getInstance().log(sqlite3_errmsg(db));
+			Ti::TiHelper::Log(QString("[ERROR] ") + QString(sqlite3_errmsg(db)));
 			sqlite3_close(db);
 			return(false);
 		}
 
 		if (sqlite3_step(stmt) != SQLITE_DONE) {
-			TiLogger::getInstance().log("\nCould not step (execute) stmt.\n");
+			Ti::TiHelper::Log(QString("[ERROR] nCould not step (execute) stmt"));
 			return(false);
 		}
 
@@ -169,7 +169,7 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 	string cmd = "INSERT INTO events VALUES (?, ?)";
 	rc = sqlite3_prepare_v2(db, cmd.c_str(), strlen(cmd.c_str()) + 1, &stmt, NULL);
 	if( rc ) {
-		TiLogger::getInstance().log(sqlite3_errmsg(db));
+		Ti::TiHelper::Log(QString("[ERROR] ") + QString(sqlite3_errmsg(db)));
 		sqlite3_close(db);
 	}
 
@@ -200,7 +200,7 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 	sqlite3_bind_text(stmt, 2, json, strlen(json), 0);
 
 	if (sqlite3_step(stmt) != SQLITE_DONE) {
-		TiLogger::getInstance().log("\nCould not step (execute) stmt.\n");
+		Ti::TiHelper::Log(QString("[ERROR] Could not step (execute) stmt."));
 	}
 
 	sequence_++;
@@ -224,7 +224,7 @@ void TiAnalyticsObject::sendPendingAnalyticsEvents()
 	string cmd = "SELECT * FROM events";
 	rc = sqlite3_prepare_v2(db, cmd.c_str(), strlen(cmd.c_str()) + 1, &stmt, NULL);
 	if( rc ) {
-		TiLogger::getInstance().log(sqlite3_errmsg(db));
+		Ti::TiHelper::Log(QString("[ERROR] ") + QString(sqlite3_errmsg(db)));
 		sqlite3_close(db);
 	}
 
@@ -251,8 +251,7 @@ void TiAnalyticsObject::sendPendingAnalyticsEvents()
 
 					bool log = defaultSettings.value("analytics-log").toBool();
 					if (log) {
-						TiLogger::getInstance().log("Sending Analytic Event: ");
-						TiLogger::getInstance().log((const char*)json);
+						Ti::TiHelper::Log(QString("[INFO] Sending Analytic Event: ") + QString((const char*)json));
 					}
 
 
@@ -305,7 +304,7 @@ void TiAnalyticsHandler::finished()
 	string cmd = "DELETE FROM events WHERE uid=?";
 	rc = sqlite3_prepare_v2(tiAnalyticsObject_->db, cmd.c_str(), strlen(cmd.c_str()) + 1, &stmt, NULL);
 	if( rc ) {
-		TiLogger::getInstance().log(sqlite3_errmsg(tiAnalyticsObject_->db));
+		Ti::TiHelper::Log(QString("[ERROR] ") + QString(sqlite3_errmsg(tiAnalyticsObject_->db)));
 		sqlite3_close(tiAnalyticsObject_->db);
 	}
 
@@ -316,8 +315,7 @@ void TiAnalyticsHandler::finished()
 	if (stepResult == SQLITE_DONE) {
 		bool log = defaultSettings.value("analytics-log").toBool();
 		if (log) {
-			TiLogger::getInstance().log("Clearing Analytic Event from DB for ID: ");
-			TiLogger::getInstance().log(uid_.c_str());
+			Ti::TiHelper::Log(QString("[INFO] Clearing Analytic Event from DB for ID: " + QString(uid_.c_str())));
 		}
 	}
 
@@ -332,7 +330,7 @@ void TiAnalyticsHandler::finished()
 
 void TiAnalyticsHandler::errors(QNetworkReply* reply)
 {
-	TiLogger::getInstance().log("\nHTTP error while sending analytic event.\n");
+	Ti::TiHelper::Log(QString("[ERROR] HTTP error while sending analytic event."));
 	this->deleteLater();
 }
 

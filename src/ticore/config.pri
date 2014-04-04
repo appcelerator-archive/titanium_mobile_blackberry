@@ -29,6 +29,7 @@ device {
                  $$quote($$BASEDIR/include/Ti_Event.h) \
                  $$quote($$BASEDIR/include/Ti_EventParameters.h) \
                  $$quote($$BASEDIR/include/Ti_Helper.h) \
+                 $$quote($$BASEDIR/include/Ti_Macros.h) \
                  $$quote($$BASEDIR/include/Ti_Module.h) \
                  $$quote($$BASEDIR/include/Ti_Property.h) \
                  $$quote($$BASEDIR/include/Ti_Proxy.h) \
@@ -68,6 +69,7 @@ device {
                  $$quote($$BASEDIR/include/Ti_Event.h) \
                  $$quote($$BASEDIR/include/Ti_EventParameters.h) \
                  $$quote($$BASEDIR/include/Ti_Helper.h) \
+                 $$quote($$BASEDIR/include/Ti_Macros.h) \
                  $$quote($$BASEDIR/include/Ti_Module.h) \
                  $$quote($$BASEDIR/include/Ti_Property.h) \
                  $$quote($$BASEDIR/include/Ti_Proxy.h) \
@@ -121,6 +123,7 @@ simulator {
                  $$quote($$BASEDIR/include/Ti_Event.h) \
                  $$quote($$BASEDIR/include/Ti_EventParameters.h) \
                  $$quote($$BASEDIR/include/Ti_Helper.h) \
+                 $$quote($$BASEDIR/include/Ti_Macros.h) \
                  $$quote($$BASEDIR/include/Ti_Module.h) \
                  $$quote($$BASEDIR/include/Ti_Property.h) \
                  $$quote($$BASEDIR/include/Ti_Proxy.h) \

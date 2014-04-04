@@ -13,7 +13,6 @@
 #include <bb/multimedia/MediaError>
 #include <bb/multimedia/MediaState>
 
-#include "NativeLoggerObject.h"
 #include "NativeMessageStrings.h"
 #include "TiConstants.h"
 #include "TiEvent.h"

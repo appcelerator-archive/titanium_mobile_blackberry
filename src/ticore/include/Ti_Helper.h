@@ -28,6 +28,7 @@ public:
 	static float PPI();
 	static Handle<Value> Log(Handle<Value>);
 	static Handle<Value> Log(const Arguments &args);
+	static void LogInternal(QString str);
 	static Handle<Value> Alert(const Arguments &args);
 	static QString QStringFromValue(Handle<Value>);
 	static float FloatFromValue(Handle<Value>);

@@ -10,8 +10,8 @@
 #include "TiPropertyGetObject.h"
 #include "V8Utils.h"
 #include "TiUtils.h"
+ #include "TiCore.h"
 #include "TiBlobObject.h"
-#include "TiLogger.h"
 #include <bb/pim/contacts/ContactConsts>
 #include <bb/pim/contacts/ContactService>
 #include <bb/pim/contacts/ContactPhoto>
@@ -278,7 +278,7 @@ void ContactsPersonProxy::_setBirthday(void* userContext, Handle<Value> value)
     }
     else
     {
-    	TiLogger::getInstance().log("WARN", "Birthday MUST be a Date object");
+    	Ti::TiHelper::Log("[WARN] Birthday MUST be a Date object");
     }
 }
 void ContactsPersonProxy::_setCreated(void* userContext, Handle<Value> value)
