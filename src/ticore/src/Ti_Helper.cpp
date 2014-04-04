@@ -17,14 +17,14 @@
 #include <QSettings>
 #include <QtNetwork/QTcpSocket>
 
-static const QString FONT_FAMILY            = "fontFamily";
-static const QString FONT_SIZE              = "fontSize";
-static const QString FONT_STYLE             = "fontStyle";
-static const QString FONT_STYLE_NORMAL      = "normal";
-static const QString FONT_STYLE_ITALIC      = "italic";
-static const QString FONT_WEIGHT            = "fontWeight";
-static const QString FONT_WEIGHT_NORMAL     = "normal";
-static const QString FONT_WEIGHT_BOLD       = "bold";
+static const QString FONT_FAMILY		= "fontFamily";
+static const QString FONT_SIZE			= "fontSize";
+static const QString FONT_STYLE			= "fontStyle";
+static const QString FONT_STYLE_NORMAL	= "normal";
+static const QString FONT_STYLE_ITALIC	= "italic";
+static const QString FONT_WEIGHT		= "fontWeight";
+static const QString FONT_WEIGHT_NORMAL	= "normal";
+static const QString FONT_WEIGHT_BOLD	= "bold";
 static float _ppi = -1;
 
 static QTcpSocket *_socket = NULL;
@@ -69,12 +69,12 @@ float Ti::TiHelper::PPI()
 
 Handle<Value> Ti::TiHelper::Log(const Arguments &args)
 {
-    HandleScope scope;
-    if(args.Length() > 0)
-    {
-    	Ti::TiHelper::Log(args[0]);
-    }
-    return scope.Close(Undefined());
+	HandleScope scope;
+	if(args.Length() > 0)
+	{
+		Ti::TiHelper::Log(args[0]);
+	}
+	return scope.Close(Undefined());
 
 }
 
@@ -95,16 +95,16 @@ Handle<Value> Ti::TiHelper::Log(Handle<Value> arg)
 
 Handle<Value> Ti::TiHelper::Alert(const Arguments &args)
 {
-    HandleScope scope;
-    if(args.Length() > 0)
-    {
-    	bb::system::SystemDialog* alert = new bb::system::SystemDialog("OK");
-    	alert->setTitle(QString("Alert"));
-    	alert->setBody(QString(*String::Utf8Value(args[0])));
-    	alert->show();
-//    	alert->deleteLater();
-    }
-    return scope.Close(Undefined());
+	HandleScope scope;
+	if(args.Length() > 0)
+	{
+		bb::system::SystemDialog* alert = new bb::system::SystemDialog("OK");
+		alert->setTitle(QString("Alert"));
+		alert->setBody(QString(*String::Utf8Value(args[0])));
+		alert->show();
+//		alert->deleteLater();
+	}
+	return scope.Close(Undefined());
 
 }
 
@@ -162,12 +162,12 @@ void Ti::TiHelper::applyFontToText(Ti::TiValue value, bb::cascades::AbstractText
 		QString style = fontStyle.toString();
 		if(style == FONT_STYLE_NORMAL)
 		{
-            control->textStyle()->setFontStyle(bb::cascades::FontStyle::Normal);
+			control->textStyle()->setFontStyle(bb::cascades::FontStyle::Normal);
 		}
-        else if (style == FONT_STYLE_ITALIC)
-        {
-        	control->textStyle()->setFontStyle(bb::cascades::FontStyle::Italic);
-        }
+		else if (style == FONT_STYLE_ITALIC)
+		{
+			control->textStyle()->setFontStyle(bb::cascades::FontStyle::Italic);
+		}
 	}
 
 	if(map.contains(FONT_WEIGHT))
@@ -176,11 +176,11 @@ void Ti::TiHelper::applyFontToText(Ti::TiValue value, bb::cascades::AbstractText
 		QString weight = fontWeight.toString();
 		if(weight == FONT_WEIGHT_NORMAL)
 		{
-            control->textStyle()->setFontWeight(bb::cascades::FontWeight::Normal);
+			control->textStyle()->setFontWeight(bb::cascades::FontWeight::Normal);
 		}
 		else if(weight == FONT_WEIGHT_BOLD)
 		{
-            control->textStyle()->setFontWeight(bb::cascades::FontWeight::Bold);
+			control->textStyle()->setFontWeight(bb::cascades::FontWeight::Bold);
 		}
 	}
 
@@ -189,18 +189,18 @@ void Ti::TiHelper::applyFontToText(Ti::TiValue value, bb::cascades::AbstractText
 bb::cascades::Color Ti::TiHelper::ColorFromObject(Handle<Value> obj)
 {
 
-    QString qcolorString = Ti::TiHelper::QStringFromValue(obj);
-    if (!QColor::isValidColor(qcolorString))
-    {
-        return bb::cascades::Color::Yellow;
-    }
-    QColor qcolor(qcolorString);
-    qreal qr, qg, qb, qa;
-    qcolor.getRgbF(&qr, &qg, &qb, &qa);
-    float r = qr;
-    float g = qg;
-    float b = qb;
-    float a = qa;
+	QString qcolorString = Ti::TiHelper::QStringFromValue(obj);
+	if (!QColor::isValidColor(qcolorString))
+	{
+		return bb::cascades::Color::Yellow;
+	}
+	QColor qcolor(qcolorString);
+	qreal qr, qg, qb, qa;
+	qcolor.getRgbF(&qr, &qg, &qb, &qa);
+	float r = qr;
+	float g = qg;
+	float b = qb;
+	float a = qa;
 
 	return bb::cascades::Color::fromRGBA(r, g, b, a);
 }

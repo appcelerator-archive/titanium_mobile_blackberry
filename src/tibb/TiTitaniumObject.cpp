@@ -24,7 +24,7 @@
 #include "TiAnalyticsObject.h"
 #include "TiV8EventContainerFactory.h"
 #include "Contacts/ContactsModule.h"
-
+#include "TiCore.h"
 #include "V8Utils.h"
 
 #include <fstream>
@@ -163,17 +163,15 @@ static Handle<Value> includeJavaScript(string id, string parentFolder, bool* err
     Handle<Script> compiledScript = Script::Compile(String::New(javascript.c_str()), String::New(filename.c_str()));
     if (compiledScript.IsEmpty())
     {
-        *error = true;
-        std::string err_msg;
-        DisplayExceptionLine(tryCatch, err_msg);
-        return tryCatch.ReThrow();
+        Ti::TiErrorScreen::ShowWithTryCatch(tryCatch);
+        return Undefined();
     }
 
     Local<Value> result = compiledScript->Run();
     if (result.IsEmpty())
     {
-        *error = true;
-        return tryCatch.ReThrow();
+        Ti::TiErrorScreen::ShowWithTryCatch(tryCatch);
+        return Undefined();
     }
 
     return result;

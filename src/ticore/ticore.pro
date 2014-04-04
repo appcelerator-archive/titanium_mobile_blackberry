@@ -28,6 +28,7 @@ SOURCES += \
     ./src/Ti_View.cpp \
     ./src/Ti_ViewProxy.cpp \
     ./src/TitaniumLayout.cpp \
+    ./src/Ti_ErrorScreen.cpp \
     ./src/Layout/Common.cpp \
     ./src/Layout/Composite.cpp \
     ./src/Layout/Element.cpp \
@@ -54,6 +55,7 @@ HEADERS += \
     ./include/Ti_ViewProxy.h \
     ./include/TiCore.h \
     ./include/TitaniumLayout.h \
+    ./include/Ti_ErrorScreen.h \
     ./include/Layout/Common.h \
     ./include/Layout/Composite.h \
     ./include/Layout/Element.h \
