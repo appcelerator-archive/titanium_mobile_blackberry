@@ -9,6 +9,7 @@
 
 #include "Ti_Event.h"
 #include "Ti_EventParameters.h"
+#include "Ti_ErrorScreen.h"
 #include <v8.h>
 
 
@@ -111,7 +112,7 @@ void Ti::TiEvent::FireEventOnObject(Handle<Object> proxy, QString eventName, Ti:
 			Local<Value> result = func->Call(proxy, 1, args);
 		    if (result.IsEmpty())
 		    {
-		    	qDebug() << "Error" << *String::Utf8Value(tryCatch.Exception());
+		    	Ti::TiErrorScreen::ShowWithTryCatch(tryCatch);
 		    }
 
 		}
@@ -136,15 +137,7 @@ void Ti::TiEvent::FireCallbackIfNeeded(QString eventName, Handle<Object> owner, 
 		Handle<Value> result = callback->Call(owner, 1, args);
 		if(result.IsEmpty())
 		{
-			qDebug() << "[TIEVENT] Something bad happened";
-	    	Handle<Value> exception = tryCatch.Exception();
-	    	Handle<Message> message = tryCatch.Message();
-	        int lineNumber = message->GetLineNumber();
-	        Handle<Value> fileName = message->GetScriptResourceName();
-	        Handle<Value> sourceLine = message->GetSourceLine();
-	    	qDebug() << "[ERROR] " << Ti::TiHelper::QStringFromValue(exception);
-	    	qDebug() << "[ERROR] Line" << lineNumber << "File" << Ti::TiHelper::QStringFromValue(fileName);
-	    	qDebug() << "[ERROR] " << Ti::TiHelper::QStringFromValue(sourceLine);
+			Ti::TiErrorScreen::ShowWithTryCatch(tryCatch);
 		}
 	}
 }

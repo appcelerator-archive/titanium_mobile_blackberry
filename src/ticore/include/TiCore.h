@@ -23,5 +23,5 @@
 #include "Ti_ViewProxy.h"
 #include "Ti_SceneManager.h"
 #include "TitaniumLayout.h"
-
+#include "Ti_ErrorScreen.h"
 #endif
