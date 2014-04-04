@@ -26,6 +26,7 @@ device {
                  $$quote($$BASEDIR/include/Ti_Blob.h) \
                  $$quote($$BASEDIR/include/Ti_Constants.h) \
                  $$quote($$BASEDIR/include/Ti_Data.h) \
+                 $$quote($$BASEDIR/include/Ti_ErrorScreen.h) \
                  $$quote($$BASEDIR/include/Ti_Event.h) \
                  $$quote($$BASEDIR/include/Ti_EventParameters.h) \
                  $$quote($$BASEDIR/include/Ti_Helper.h) \
@@ -66,6 +67,7 @@ device {
                  $$quote($$BASEDIR/include/Ti_Blob.h) \
                  $$quote($$BASEDIR/include/Ti_Constants.h) \
                  $$quote($$BASEDIR/include/Ti_Data.h) \
+                 $$quote($$BASEDIR/include/Ti_ErrorScreen.h) \
                  $$quote($$BASEDIR/include/Ti_Event.h) \
                  $$quote($$BASEDIR/include/Ti_EventParameters.h) \
                  $$quote($$BASEDIR/include/Ti_Helper.h) \
@@ -120,6 +122,7 @@ simulator {
                  $$quote($$BASEDIR/include/Ti_Blob.h) \
                  $$quote($$BASEDIR/include/Ti_Constants.h) \
                  $$quote($$BASEDIR/include/Ti_Data.h) \
+                 $$quote($$BASEDIR/include/Ti_ErrorScreen.h) \
                  $$quote($$BASEDIR/include/Ti_Event.h) \
                  $$quote($$BASEDIR/include/Ti_EventParameters.h) \
                  $$quote($$BASEDIR/include/Ti_Helper.h) \
