@@ -1,9 +1,3 @@
-/**
- * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
- * Licensed under the terms of the Apache Public License
- * Please see the LICENSE included with this distribution for details.
- */
 Ti = Ti || {};
 Ti.include = Ti.include || function (id) { Ti.globalInclude(id, "app/native/assets/") };
 var global = {};

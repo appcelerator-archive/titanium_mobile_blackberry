@@ -1,39 +1,72 @@
-alert('Please see the console for logs');
- 
-//Reading a file from the Resources dir
- 
-Ti.API.info('------------------------');
-Ti.API.info('Testing resources directory reading app.js');
-var app_js = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'app.js');
-var blob = app_js.read();
-Ti.API.info('---------');
-Ti.API.info(blob.text);
- 
-//Creating, writing, and reading a file from the data dir
- 
-Ti.API.info('------------------------');
-Ti.API.info('Testing data directory reading writing and reading');
-var file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'hello_world.txt');
-if(!file.exists()) {
-    Ti.API.info('file does not exist');
-    file.write('this is a test');
-    Ti.API.info('file exists? ' + file.exists());
-}
-Ti.API.info('---------');
-var blob = file.read();
-Ti.API.info(blob.text);
- 
-//Getting the directory listing from the data dir
- 
-Ti.API.info('------------------------');
-Ti.API.info('Testing data directory get listing');
-var directory = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory);
-var files = directory.getDirectoryListing();
-for(var i = 0; i < files.length; i++) {
-    Ti.API.info('=====================');
-    var file = files[i];
-    Ti.API.info('filename: ' + file);
-    var _file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, file);
-    Ti.API.info('isDirectory: ' + _file.isDirectory());
-    Ti.API.info('isFile: ' + _file.isFile());
-}
+
+
+// Tab Group sample
+
+
+// this sets the background color of the master UIView (when there are no windows/tab groups on it)
+Titanium.UI.setBackgroundColor('#000');
+
+// create tab group
+var tabGroup = Titanium.UI.createTabGroup();
+
+
+//
+// create base UI tab and root window
+//
+var win1 = Titanium.UI.createWindow({  
+    title:'Tab 1',
+    backgroundColor:'#fff'
+});
+var tab1 = Titanium.UI.createTab({  
+    icon:'KS_nav_views.png',
+    title:'Tab 1',
+    window:win1
+});
+
+var label1 = Titanium.UI.createLabel({
+	color:'#999',
+	text:'I am Window 1',
+	font:{fontSize:20,fontFamily:'Helvetica Neue'},
+	textAlign:'center',
+	width:'auto'
+});
+
+win1.add(label1);
+
+label1.addEventListener('click', function(){
+	meh();
+});
+//
+// create controls tab and root window
+//
+var win2 = Titanium.UI.createWindow({  
+    title:'Tab 2',
+    backgroundColor:'#fff'
+});
+var tab2 = Titanium.UI.createTab({  
+    icon:'KS_nav_ui.png',
+    title:'Tab 2',
+    window:win2
+});
+
+var label2 = Titanium.UI.createLabel({
+	color:'#999',
+	text:'I am Window 2',
+	font:{fontSize:20,fontFamily:'Helvetica Neue'},
+	textAlign:'center',
+	width:'auto'
+});
+
+win2.add(label2);
+
+
+
+//
+//  add tabs
+//
+tabGroup.addTab(tab1);  
+tabGroup.addTab(tab2);  
+
+
+// open tab group
+tabGroup.open();

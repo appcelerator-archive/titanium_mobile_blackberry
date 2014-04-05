@@ -42,7 +42,6 @@
     </initialWindow>
     
     <!--  The category where the application appears. Either core.games or core.media. -->
-    <asset path="bootstrap.js">framework/bootstrap.js</asset>
     <asset path="appicon.png">appicon.png</asset>
     <asset path="Ti.Manifest">Ti.Manifest</asset>
     <asset path="Resources">assets</asset>
