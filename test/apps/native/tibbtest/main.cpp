@@ -5,40 +5,52 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
+
 #include "tibb.h"
+#include <QFile>
+#include <QIODevice>
+#include <QDebug>
 
-#include <fstream>
-#include <string>
-#include "TiCore.h"
-
-#include <v8.h>
-//#include "ReplaceWithModuleName.h"
-
-/**
- * To test native modules make sure to include the module header file
- * and register the module.
+/*
+ * Include native modules here
+ * #include "TiModuleNameStartup.h"
  */
 
-using namespace std;
-class Ti::TiModule;
 
-typedef Handle<Object> (*ModuleStartup)();
+using namespace std;
+
+QString readAppJs(QString filePath) {
+	QFile file(filePath);
+	QString jsContent;
+	if(!file.open(QIODevice::ReadOnly)) {
+		return jsContent;
+	}
+    QTextStream in(&file);
+    in.setCodec("UTF-8");
+    while(!in.atEnd())
+    {
+    	QString s = in.readLine().append("\n");
+        jsContent.append(s);
+    }
+	file.close();
+	return jsContent;}
 
 int main(int argc, char** argv)
 {
+	QString js = readAppJs("app/native/assets/blackberry/app.js");
+	if(js.isEmpty()) {
+		js = readAppJs("app/native/assets/app.js");
+	}
+	if(js.isEmpty()) {
+		// die
+		qDebug() << "app.js not found!";
+		js = QString("");
+	}
 
-	string javascript;
-    {
-        ifstream ifs("app/native/assets/app.js");
-        if (!ifs)
-        {
-            return -1;
-        }
-        getline(ifs, javascript, string::traits_type::to_char_type(string::traits_type::eof()));
-        ifs.close();
-    }
     startV8Engine();
-    int ret = tibb_run(javascript.c_str(), argc, argv);
-    return ret;
+    /*
+     * Include native modules here
+     * tiRegisterModule("ti.module.name", TiModuleNameStartup);
+     */
+    return tibb_run(js.toLocal8Bit().constData(), argc, argv);
 }
-
