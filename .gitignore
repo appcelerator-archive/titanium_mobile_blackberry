@@ -3,3 +3,6 @@
 *~
 src/tibb/arm
 src/tibb/x86
+src/ticore/x86
+src/ticore/arm
+build
