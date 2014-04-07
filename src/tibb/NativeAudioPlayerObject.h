@@ -10,7 +10,6 @@
 
 #include "NativeControlObject.h"
 #include <QtCore/QObject>
-#include "TiLogger.h"
 #include <bb/multimedia/BufferStatus>
 #include <bb/multimedia/RepeatMode>
 

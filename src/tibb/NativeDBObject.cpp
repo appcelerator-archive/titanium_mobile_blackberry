@@ -10,7 +10,7 @@
 #include "NativeException.h"
 #include "NativeMessageStrings.h"
 #include "TiObject.h"
-#include "TiLogger.h"
+#include "TiCore.h"
 
 #define N_FILEPATH "data/"
 #define N_SQLITE_ERROR 1
@@ -38,7 +38,7 @@ int NativeDBObject::_open(string name) {
 
 	error = sqlite3_open_v2(dbFile.c_str(), &_db, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, NULL);
 	if (error) {
-		TiLogger::getInstance().log(sqlite3_errmsg(_db));
+		Ti::TiHelper::Log("[ERROR] " + QString(sqlite3_errmsg(_db)));
 		sqlite3_close(_db);
 		return error;
 	}
@@ -53,7 +53,7 @@ int NativeDBObject::execute(NativeResultSetObject* resultSet, string command, ve
 
 	error = sqlite3_prepare_v2(_db, command.c_str(), strlen(command.c_str()) + 1, &statement, NULL);
 	if(error) {
-		TiLogger::getInstance().log(sqlite3_errmsg(_db));
+		Ti::TiHelper::Log("[ERROR] " + QString(sqlite3_errmsg(_db)));
 		sqlite3_finalize(statement);
 		sqlite3_close(_db);
 		return error;
@@ -62,7 +62,7 @@ int NativeDBObject::execute(NativeResultSetObject* resultSet, string command, ve
 	for (int i = 0; i < bindings.size(); i++) {
 		error = sqlite3_bind_text(statement, i + 1, bindings[i].c_str(), strlen(bindings[i].c_str()), 0);
 		if(error) {
-			TiLogger::getInstance().log(sqlite3_errmsg(_db));
+			Ti::TiHelper::Log("[ERROR] " + QString(sqlite3_errmsg(_db)));
 			sqlite3_finalize(statement);
 			sqlite3_close(_db);
 			return error;
@@ -89,7 +89,7 @@ int NativeDBObject::execute(NativeResultSetObject* resultSet, string command, ve
 		}
 		else {
 			sqlite3_finalize(statement);
-			TiLogger::getInstance().log("While stepping through statement, an error has occurred");
+			Ti::TiHelper::Log("[ERROR] " + QString("While stepping through statement, an error has occurred"));
 			return  N_SQLITE_ERROR;
 		}
 		stepResult = sqlite3_step(statement);

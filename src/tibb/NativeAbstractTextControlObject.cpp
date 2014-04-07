@@ -12,7 +12,6 @@
 #include <QMap>
 #include <QString>
 
-#include "NativeLoggerObject.h"
 #include "NativeMessageStrings.h"
 #include "TiConstants.h"
 #include "TiObject.h"

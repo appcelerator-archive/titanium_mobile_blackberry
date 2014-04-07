@@ -10,7 +10,6 @@
 #include "NativeObject.h"
 #include "NativeObjectFactory.h"
 #include "TiCascadesApp.h"
-#include "TiLogger.h"
 #include "TiRootObject.h"
 #include "TiTitaniumObject.h"
 
@@ -81,10 +80,8 @@ int TitaniumRuntime::internalRun(int argc, char** argv)
     NativeObjectFactory objFactory(&mainApp);
     objectFactory_ = &objFactory;
     mainApp_ = &mainApp;
-    TiLogger::initialize(&objFactory);
     int ret = obj->executeScript(&objFactory, javaScript_, messageLoop, this);
     // TODO: handle non-zero return code here
-    TiLogger::deleteInstance();
     obj->release();
     return ret;
 }

@@ -58,7 +58,7 @@ void TiErrorScreen::buildAndShow() {
 	}
 	QStringList parts = log.split('\n');
 	foreach(QString p, parts) {
-		Ti::TiHelper::Log("[ERROR]", p);
+		Ti::TiHelper::Log(p.prepend("[ERROR] "));
 	}
 
 	QString msg = "";

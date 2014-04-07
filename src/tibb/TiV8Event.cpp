@@ -6,8 +6,6 @@
  */
 
 #include "TiV8Event.h"
-#include "TiLogger.h"
-#include "TiAPIObject.h"
 #include "TiCore.h"
 
 TiV8Event::TiV8Event()

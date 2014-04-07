@@ -15,7 +15,6 @@
 #include <bb/cascades/ImageView>
 #include <bb/cascades/maps/MapView>
 #include <bb/cascades/Label>
-#include "NativeLoggerObject.h"
 #include "NativeMessageStrings.h"
 #include <bb/cascades/SystemDefaults>
 #include <bb/cascades/Image>
@@ -124,7 +123,7 @@ int NativeAnnotationObject::setPincolor(TiObject* obj)
 	    	pinImageSource_ = Ti::TiHelper::getAssetPath("map/purple_pin.png");
 	        break;
 	    default:
-	        N_DEBUG(Native::Msg::Unknown_value_received << ": " << value);
+	    	Ti::TiHelper::LogInternal( QString(Native::Msg::Unknown_value_received) + ": " + QString::number(value));
 	        break;
 	    }
 
