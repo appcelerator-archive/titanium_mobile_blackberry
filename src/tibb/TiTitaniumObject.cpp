@@ -8,13 +8,11 @@
 #include "TiTitaniumObject.h"
 
 #include "TiAccelerometer.h"
-#include "TiAPIObject.h"
 #include "TiBufferObject.h"
 #include "TiBufferStreamObject.h"
 #include "TiCodecObject.h"
 #include "TiGenericFunctionObject.h"
 #include "TiGesture.h"
-#include "TiLogger.h"
 #include "TiMessageStrings.h"
 #include "TiLocaleObject.h"
 #include "TiStreamObject.h"
@@ -65,7 +63,6 @@ void TiTitaniumObject::onCreateStaticMembers()
     TiUIObject::addObjectToParent(this, objectFactory_);
     TiMap::addObjectToParent(this, objectFactory_);
     TiMedia::addObjectToParent(this, objectFactory_);
-    TiAPIObject::addObjectToParent(this);
     TiCodecObject::addObjectToParent(this);
     TiNetwork::addObjectToParent(this, objectFactory_);
     TiAnalyticsObject::addObjectToParent(this, objectFactory_);

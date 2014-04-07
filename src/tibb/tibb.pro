@@ -20,6 +20,7 @@ SOURCES += \
     ../TableView/*.cpp \
     ../Media/*.cpp \ 
     ../Modules/App/*.cpp \
+    ../Modules/API/*.cpp \
     ../Modules/Blackberry/*.cpp \
     ../Modules/Blackberry/PushNotification/*.cpp \
     ../Modules/Blackberry/PushNotification/dao/*.cpp \
@@ -45,6 +46,7 @@ HEADERS += \
     ../TableView/*.h \
     ../Media/*.h \ 
     ../Modules/App/*.h \
+    ../Modules/APi/*.h \
     ../Modules/Blackberry/*.h \
     ../Modules/Blackberry/PushNotification/*.h \
     ../Modules/Blackberry/PushNotification/dao/*.hpp \

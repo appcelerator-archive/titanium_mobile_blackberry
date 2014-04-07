@@ -10,7 +10,6 @@
 #include "NativeException.h"
 #include "NativeMessageStrings.h"
 #include "TiObject.h"
-#include "TiLogger.h"
 
 
 #define N_SQLITE_ERROR 1

@@ -17,7 +17,6 @@
 #include "NativeStringInterface.h"
 #include "TiGenericFunctionObject.h"
 #include "TiLocaleObject.h"
-#include "TiLogger.h"
 #include "TiMessageStrings.h"
 #include "TiTitaniumObject.h"
 #include "TiTimeoutManager.h"
@@ -49,6 +48,7 @@
 #include "Modules/Utils/TiUtilsModule.h"
 #include "Modules/UI/BlackBerry/TiUIBlackberryModule.h"
 #include "Modules/App/TiAppModule.h"
+#include "Modules/API/TiAPIModule.h"
 #include "Modules/Blackberry/TiBlackberryModule.h"
 
 using namespace titanium;
@@ -96,6 +96,7 @@ void TiRootObject::onCreateStaticMembers()
     tiObj->Set(String::New("Platform"), TiPlatformModule::CreateModule(), DontDelete);
     tiObj->Set(String::New("Utils"), TiUtilsModule::CreateModule(), DontDelete);
     tiObj->Set(String::New("App"), TiAppModule::CreateModule(), DontDelete);
+    tiObj->Set(String::New("API"), TiAPIModule::CreateModule(), DontDelete);
     tiObj->Set(String::New("BlackBerry"), TiBlackberryModule::CreateModule(), DontDelete);
 
     Local<Object> tiUI = tiObj->Get(String::New("UI"))->ToObject();
@@ -161,7 +162,7 @@ int TiRootObject::executeScript(NativeObjectFactory* objectFactory, const char* 
         ifstream ifs(QString("app/native/").append(Ti::TiHelper::getAssetPath(QString(bootstrapFilename))).toLocal8Bit().constData());
         if (!ifs)
         {
-            TiLogger::getInstance().log(Ti::Msg::ERROR__Cannot_load_bootstrap_js);
+            Ti::TiHelper::Log("[ERROR] Cannot load bootstrap.js");
             return -1;
         }
         getline(ifs, bootstrapJavascript, string::traits_type::to_char_type(string::traits_type::eof()));

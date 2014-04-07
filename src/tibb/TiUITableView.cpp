@@ -8,8 +8,8 @@
 #include "TiUITableView.h"
 
 #include "TiGenericFunctionObject.h"
-#include "TiLogger.h"
 #include "TiMessageStrings.h"
+#include "TiCore.h"
 
 TiUITableView::TiUITableView()
     : TiUIBase("TableView")
@@ -57,7 +57,7 @@ Handle<Value> TiUITableView::_scrollToIndex(void* userContext, TiObject*, const 
     }
     else
     {
-        TI_DEBUG(Ti::Msg::INTERNAL__args0_is_not_a_number);
+        Ti::TiHelper::LogInternal(QString(Ti::Msg::INTERNAL__args0_is_not_a_number));
     }
 
     return Undefined();

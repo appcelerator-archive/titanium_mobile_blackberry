@@ -13,7 +13,7 @@
 #include <bb/system/SystemUiButton>
 #include <bb/system/SystemUiModality>
 #include "V8Utils.h"
-#include "TiLogger.h"
+#include "TiCore.h"
 
 TiUIOptionDialog::TiUIOptionDialog()
     : TiProxy("OptionDialog")
@@ -76,7 +76,7 @@ Handle<Value> TiUIOptionDialog::_hide(void* userContext, TiObject*, const Argume
 
 void TiUIOptionDialog::_setCancel(void* userContext, Handle<Value> arg)
 {
-	TiLogger::getInstance().log("Ti.UI.OptionDialog - \"cancel\" not supported");
+    Ti::TiHelper::Log("[WARN] Ti.UI.OptionDialog - \"cancel\" not supported");
 }
 
 void TiUIOptionDialog::_setSelectedIndex(void* userContext, Handle<Value> arg)
@@ -89,7 +89,7 @@ void TiUIOptionDialog::_setSelectedIndex(void* userContext, Handle<Value> arg)
 
 void TiUIOptionDialog::_setDestructive(void* userContext, Handle<Value> arg)
 {
-	TiLogger::getInstance().log("Ti.UI.OptionDialog - \"destructive\" not supported");
+    Ti::TiHelper::Log("[WARN] Ti.UI.OptionDialog - \"destructive\" not supported");
 }
 
 void TiUIOptionDialog::_setTitle(void* userContext, Handle<Value> arg)

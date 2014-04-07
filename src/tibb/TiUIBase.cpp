@@ -12,7 +12,6 @@
 #include "TiPropertyGetFunctionObject.h"
 #include "TiPropertySetGetObject.h"
 #include "TiPropertyGetObject.h"
-#include "TiLogger.h"
 #include "TiMessageStrings.h"
 #include "TiV8Event.h"
 #include "TiUIAnimation.h"
@@ -696,7 +695,7 @@ Handle<Value> TiUIBase::_remove(void* userContext, TiObject*, const Arguments& a
     parentControl->release();
     if (!foundChild)
     {
-        TI_WARNING(Ti::Msg::Remove_child_warning);
+        Ti::TiHelper::LogInternal(QString(Ti::Msg::Remove_child_warning));
     }
     return Undefined();
 }
@@ -729,7 +728,7 @@ Handle<Value> TiUIBase::_animate(void* userContext, TiObject*, const Arguments& 
 Handle<Value> TiUIBase::_convertPointToView(void* userContext, TiObject* caller, const Arguments& args)
 {
 	HandleScope scope;
-	TiLogger::getInstance().log("Ti.UI.View convertPointToView() Not Supported in BB 10");
+	Ti::TiHelper::Log("[WARN] Ti.UI.View convertPointToView() Not Supported in BB 10");
 	Handle<ObjectTemplate> o = ObjectTemplate::New();
 	o->Set(String::New("x"), Number::New(0));
 	o->Set(String::New("y"), Number::New(0));

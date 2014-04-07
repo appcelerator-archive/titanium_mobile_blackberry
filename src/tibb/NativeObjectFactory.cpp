@@ -20,7 +20,6 @@
 #include "NativeLabelObject.h"
 #include "NativeTableViewRowObject.h"
 #include "NativeTableViewObject.h"
-#include "NativeLoggerObject.h"
 #include "NativeProgressBarObject.h"
 #include "NativeTabObject.h"
 #include "NativeTabGroupObject.h"
@@ -81,10 +80,6 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 
     case N_TYPE_LABEL:
         obj = NativeLabelObject::createLabel(tiObj);
-        break;
-
-    case N_TYPE_LOGGER:
-        obj = NativeLoggerObject::getInstance();
         break;
 
     case N_TYPE_BLOB:

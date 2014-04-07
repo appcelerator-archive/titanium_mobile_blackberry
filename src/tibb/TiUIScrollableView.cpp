@@ -8,7 +8,6 @@
 #include "TiUIScrollableView.h"
 #include "TiGenericFunctionObject.h"
 #include "NativeScrollableViewObject.h"
-#include "TiLogger.h"
 #include "TiMessageStrings.h"
 #include "NativeObject.h"
 #include <iostream>
