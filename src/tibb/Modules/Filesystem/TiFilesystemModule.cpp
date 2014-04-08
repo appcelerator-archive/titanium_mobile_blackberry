@@ -69,6 +69,10 @@ void TiFilesystemModule::initStart()
 	addNumber("MODE_APPEND", QIODevice::Append);
 }
 
+QString TiFilesystemModule::resolveApplicationDirectory(){
+	return QDir::currentPath().append("/").append(RESOURCES_DIRECTORY);
+}
+
 
 Ti::TiValue TiFilesystemModule::getApplicationCacheDirectory()
 {
@@ -121,7 +125,7 @@ Ti::TiValue TiFilesystemModule::getResRawDirectory()
 Ti::TiValue TiFilesystemModule::getResourcesDirectory()
 {
 	Ti::TiValue returnedValue;
-	returnedValue.setString(RESOURCES_DIRECTORY);
+	returnedValue.setString(this->resolveApplicationDirectory());
 	return returnedValue;
 }
 Ti::TiValue TiFilesystemModule::getSeparator()
@@ -174,7 +178,10 @@ Ti::TiValue TiFilesystemModule::getFile(Ti::TiValue value)
 
 	Ti::TiValue returnedValue;
 	TiFilesystemFileProxy* proxy;
-	if(path.startsWith(RESOURCES_DIRECTORY))
+	if(path.startsWith(this->resolveApplicationDirectory()) &&
+			(path.endsWith(".html") ||
+			path.endsWith(".css") ||
+			path.endsWith(".js")))
 	{
 		proxy = TiFilesystemBlobProxy::CreateProxy();
 	}

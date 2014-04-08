@@ -102,6 +102,8 @@ Ti::TiValue TiFilesystemFileProxy::getNativePath()
 	QString name = _fileInfo.fileName();
 	if(!fullPath.contains(name)) {
 		fullPath.append("/").append(name);
+	}else{
+		fullPath.append("/");
 	}
 	returnedValue.setString(fullPath);
 	return returnedValue;
