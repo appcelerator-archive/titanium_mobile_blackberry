@@ -6,3 +6,8 @@ src/tibb/x86
 src/ticore/x86
 src/ticore/arm
 build
+src/tibb/config.pri
+
+test/apps/native/tibbtest/arm/o.le-v7-g/tibbtest
+
+test/apps/native/tibbtest/assets/.assets.index
