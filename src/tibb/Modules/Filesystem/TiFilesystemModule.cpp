@@ -174,7 +174,8 @@ Ti::TiValue TiFilesystemModule::getFile(Ti::TiValue value)
 
 	Ti::TiValue returnedValue;
 	TiFilesystemFileProxy* proxy;
-	if(path.startsWith(RESOURCES_DIRECTORY))
+	if(path.startsWith(RESOURCES_DIRECTORY) &&
+			(path.endsWith(".html") && path.endsWith(".js") && path.endsWith(".css")))
 	{
 		proxy = TiFilesystemBlobProxy::CreateProxy();
 	}
