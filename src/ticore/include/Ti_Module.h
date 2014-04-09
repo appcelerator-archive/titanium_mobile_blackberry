@@ -13,6 +13,7 @@
 #include <v8.h>
 #include "Ti_Proxy.h"
 #include "Ti_Value.h"
+#include "Ti_Helper.h"
 
 using namespace v8;
 
@@ -23,8 +24,7 @@ using namespace v8;
 		NAME *module = new NAME(#NAME); \
 		module->initStart(); \
 		module->initEnd(); \
-		qDebug() << "Create JS Object"; \
-		module->_jsObject = Persistent<Object>::New(module->getJSObjectTemplate()->NewInstance()); \
+		Ti::TiHelper::LogInternal("Create JS " + QString(#NAME) + " Module Object"); \
 		module->_jsObject->SetHiddenValue(String::New("module"), External::New(module)); \
 		return scope.Close(module->_jsObject); \
 	}
