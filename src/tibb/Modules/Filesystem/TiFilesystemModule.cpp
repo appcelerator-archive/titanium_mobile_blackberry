@@ -125,7 +125,7 @@ Ti::TiValue TiFilesystemModule::getResRawDirectory()
 Ti::TiValue TiFilesystemModule::getResourcesDirectory()
 {
 	Ti::TiValue returnedValue;
-	returnedValue.setString(this->resolveApplicationDirectory());
+	returnedValue.setString(resolveApplicationDirectory());
 	return returnedValue;
 }
 Ti::TiValue TiFilesystemModule::getSeparator()
@@ -178,7 +178,7 @@ Ti::TiValue TiFilesystemModule::getFile(Ti::TiValue value)
 
 	Ti::TiValue returnedValue;
 	TiFilesystemFileProxy* proxy;
-	if(path.startsWith(this->resolveApplicationDirectory()) &&
+	if(path.startsWith(resolveApplicationDirectory()) &&
 			(path.endsWith(".html") ||
 			path.endsWith(".css") ||
 			path.endsWith(".js")))
