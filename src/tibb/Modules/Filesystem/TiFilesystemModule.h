@@ -12,6 +12,10 @@
 
 class TiFilesystemModule : public Ti::TiModule
 {
+
+private:
+	QString resolveApplicationDirectory();
+
 public:
 	CREATE_MODULE(TiFilesystemModule);
 	TiFilesystemModule(const char*);
