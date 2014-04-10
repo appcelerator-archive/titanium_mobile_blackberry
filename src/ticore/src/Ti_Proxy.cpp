@@ -20,17 +20,17 @@ _proxyName(QString(name))
 	HandleScope scope;
 	_jsObjectTemplate = Persistent<ObjectTemplate>::New(ObjectTemplate::New());
 	_jsObjectTemplate->SetNamedPropertyHandler(Ti::TiProxy::_Getter, Ti::TiProxy::_Setter);
+	_jsObject = Persistent<Object>::New(_jsObjectTemplate->NewInstance());
 
 	createPropertyFunction("addEventListener", _addEventListener);
 	createPropertyFunction("removeEventListener", _removeEventListener);
 	createPropertyFunction("fireEvent", _fireEvent);
 	createPropertyFunction("toString", _getToString);
-    //	Ti::TiHelper::Log(QString(_proxyName).append(" Created"));
 }
 
 Ti::TiProxy::~TiProxy()
 {
-	qDebug() << "[INTERNAL] DELETING PROXY" << getProxyName();
+	Ti::TiHelper::LogInternal(QString(getProxyName()).prepend("Deleting proxy: "));
 	qDeleteAll(properties);
 	properties.clear();
 
@@ -81,7 +81,8 @@ Handle<ObjectTemplate> Ti::TiProxy::getJSObjectTemplate() {
 
 void Ti::TiProxy::addFunction(const char* name, InvocationCallback callback)
 {
-	_jsObjectTemplate->Set(name, FunctionTemplate::New(callback));
+	_jsObject->ForceSet(String::New(name), FunctionTemplate::New(callback)->GetFunction(), DontDelete);
+
 }
 void Ti::TiProxy::createPropertyFunction(QString name, PROPERTY_FUNCTION callback)
 {
@@ -102,7 +103,7 @@ void Ti::TiProxy::createPropertySetterGetter(QString name, PROPERTY_SETTER sette
 
 void Ti::TiProxy::onEventAdded(QString str)
 {
-	qDebug() << "Event Added" << str;
+	Ti::TiHelper::LogInternal(str.prepend("Event Added: "));
 	// for subclass
 }
 void Ti::TiProxy::onEventRemoved(QString)
@@ -199,7 +200,7 @@ void Ti::TiProxy::fireEvent(QString eventName, Ti::TiEventParameters params)
 	Ti::TiEvent::FireEventOnObject(_jsObject, eventName, &params);
 	if(eventName == Ti::TiConstants::EventClose)
 	{
-		qDebug() << "[TIPROXY] force GC";
+		Ti::TiHelper::LogInternal("Forcing GC");
 		V8::LowMemoryNotification();
 	}
 }
@@ -223,30 +224,28 @@ void Ti::TiProxy::setTiValueForKey(Ti::TiValue value, QString key)
 void Ti::TiProxy::makeWeak()
 {
 	//if(_jsObject.IsEmpty()) return;
-	qDebug() << "TiProxy: Make weak" << _proxyName;
+	Ti::TiHelper::LogInternal(QString("Make weak ").append(QString(_proxyName)));
 	_jsObject.MakeWeak(this, _WeakCallback);
 }
 void Ti::TiProxy::clearWeak()
 {
 	//if(_jsObject.IsEmpty()) return;
-	qDebug() << "TiProxy: Clear weak" << _proxyName;
+	Ti::TiHelper::LogInternal(QString("Clear weak ").append(QString(_proxyName)));
 	_jsObject.ClearWeak();
 }
 
 Handle<Value> Ti::TiProxy::_Getter (Local<String> property, const AccessorInfo& info)
 {
-    HandleScope handleScope;
-    Handle<Object> result;
-    Handle<Object> obj = Handle<Object>::Cast(info.Holder());
-    Handle<External> proxyObject = Handle<External>::Cast(obj->GetHiddenValue(String::New("module")));
+	HandleScope handleScope;
+	Handle<Object> obj = Handle<Object>::Cast(info.Holder());
+	Handle<External> proxyObject = Handle<External>::Cast(obj->GetHiddenValue(String::New("module")));
 
-    //	Ti::TiHelper::Log(QString("Property Getter ").append(Ti::TiHelper::QStringFromValue(property)));
-
-    if(proxyObject.IsEmpty())
+	Ti::TiHelper::LogInternal(QString("Property Getter: ").append(Ti::TiHelper::QStringFromValue(property)));
+	if(proxyObject.IsEmpty())
 		proxyObject = Handle<External>::Cast(obj->GetHiddenValue(String::New("proxy")));
 
 	if(proxyObject.IsEmpty())
-		return result;
+		return handleScope.Close(Handle<Value>());
 
 	Ti::TiProxy* tiProxy = static_cast<Ti::TiProxy*>(proxyObject->Value());
 
@@ -256,21 +255,27 @@ Handle<Value> Ti::TiProxy::_Getter (Local<String> property, const AccessorInfo& 
 		Ti::TiProperty *prop = tiProxy->properties[Ti::TiHelper::QStringFromValue(property)];
 		return handleScope.Close(prop->getValue());
 	}
-
-	return handleScope.Close(result);
+	return handleScope.Close(Handle<Value>());
 }
 
 Handle<Value> Ti::TiProxy::_Setter (Local<String> property, Local<Value> value, const AccessorInfo& info)
 {
 	HandleScope handleScope;
+	Ti::TiHelper::LogInternal(QString("Property Setter: ").append(Ti::TiHelper::QStringFromValue(property)));
+	
+	// Todo: Come back to this later
+	// if(value == info.Holder()->Get(property)) {
+	//	 Ti::TiHelper::LogInternal(QString("Already set: ").append(Ti::TiHelper::QStringFromValue(property)));
+	//	 return value;
+	// }
 
 	// Todo: come back to this - might not be allowing GC to collect proxies
 	info.Holder()->ForceSet(property, value);
 	// for example. scrollView.views = [a,b,c]
 	// scrollView.remove(a) <--- removed from view, but still in array
 
-    Handle<Object> obj = Handle<Object>::Cast(info.Holder());
-    Handle<External> proxyObject = Handle<External>::Cast(obj->GetHiddenValue(String::New("module")));
+	Handle<Object> obj = Handle<Object>::Cast(info.Holder());
+	Handle<External> proxyObject = Handle<External>::Cast(obj->GetHiddenValue(String::New("module")));
 	if(proxyObject.IsEmpty())
 		proxyObject = Handle<External>::Cast(obj->GetHiddenValue(String::New("proxy")));
 
@@ -278,8 +283,6 @@ Handle<Value> Ti::TiProxy::_Setter (Local<String> property, Local<Value> value, 
 		return value;
 
 	Ti::TiProxy* tiProxy = static_cast<Ti::TiProxy*>(proxyObject->Value());
-    //	Ti::TiHelper::Log(QString("Property Setter ").append(Ti::TiHelper::QStringFromValue(property)));
-
 	if(tiProxy->properties.contains(Ti::TiHelper::QStringFromValue(property)))
 	{
 
@@ -290,7 +293,7 @@ Handle<Value> Ti::TiProxy::_Setter (Local<String> property, Local<Value> value, 
 	return value;
 }
 
-void Ti::TiProxy::_WeakCallback(Persistent<Value> object, void* parameter)
+void Ti::TiProxy::_WeakCallback(Persistent<Value>, void* parameter)
 {
 	Ti::TiProxy* obj = static_cast<Ti::TiProxy*>(parameter);
 	delete obj;

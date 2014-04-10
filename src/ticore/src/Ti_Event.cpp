@@ -88,6 +88,8 @@ void Ti::TiEvent::RemoveEventFromObject(Handle<Object> proxy, QString eventName,
 
 void Ti::TiEvent::FireEventOnObject(Handle<Object> proxy, QString eventName, Ti::TiEventParameters* params)
 {
+	HandleScope scope;
+    Context::Scope context_scope(proxy->CreationContext());
 	Local<Value> tEventMap = proxy->GetHiddenValue(String::New("eventMap"));
 	if(tEventMap.IsEmpty() || tEventMap->IsUndefined()) {
 		return;

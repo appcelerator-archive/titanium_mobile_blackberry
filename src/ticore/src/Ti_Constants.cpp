@@ -27,8 +27,8 @@ const QString Ti::TiConstants::EventChange = "change";
 const QString Ti::TiConstants::EventClose = "close";
 const QString Ti::TiConstants::EventOpen = "open";
 
-const QString Ti::TiConstants::SizeSIZE = "size";
-const QString Ti::TiConstants::SizeFILL = "fill";
+const QString Ti::TiConstants::SizeSIZE = "UI.SIZE";
+const QString Ti::TiConstants::SizeFILL = "UI.FILL";
 
 const QString Ti::TiConstants::LayoutHorizontal = "horizontal";
 const QString Ti::TiConstants::LayoutVertical = "vertical";

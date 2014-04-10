@@ -37,7 +37,7 @@
 #define GENERATE_PROXY(NAME) \
 		HandleScope scope; \
 		NAME *proxy = new NAME(#NAME); \
-		proxy->_jsObject = Persistent<Object>::New(proxy->_jsObjectTemplate->NewInstance()); \
+		Ti::TiHelper::LogInternal("Create JS " + QString(#NAME) + " Proxy Object"); \
 		proxy->_jsObject->SetHiddenValue(String::New("proxy"), External::New(proxy)); \
 		proxy->_jsObject.MakeWeak(proxy, _WeakCallback);
 

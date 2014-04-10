@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include "Layout/Common.h"
 #include "Layout/ParseProperty.h"
+#include "Ti_Constants.h"
 #include <string>
 
 
@@ -17,10 +18,11 @@ namespace Layout
 {
 
 enum ValueType _getValueType(std::string value) {
-	if (value == "size") {
+	QString qVal(QString(value.c_str()));
+	if (qVal == Ti::TiConstants::SizeSIZE) {
 		return Size;
 	}
-	else if (value == "fill") {
+	else if (qVal == Ti::TiConstants::SizeFILL) {
 		return Fill;
 	}
 	else if (value.find("%") != std::string::npos) {

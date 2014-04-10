@@ -41,7 +41,7 @@ static void LogToProxy(QString str)
 	        _socket->waitForConnected(3000);
 	    }
 	}
-	_socket->write(str.append("\n").toLocal8Bit().constBegin());
+	_socket->write(QString(str).append("\n").toLocal8Bit().constBegin());
     qDebug() << str;
 }
 
