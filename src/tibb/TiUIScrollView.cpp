@@ -50,7 +50,7 @@ void TiUIScrollView::onCreateStaticMembers()
 
 Handle<Value> TiUIScrollView::_setContentOffset(void* userContext, TiObject* /*caller*/, const Arguments& args)
 {
-    if (args.Length() < 2) {
+    if (args.Length() < 1) {
         return ThrowException(String::New(Ti::Msg::Missing_argument));
     }
     HandleScope handleScope;
@@ -79,11 +79,7 @@ Handle<Value> TiUIScrollView::_setContentOffset(void* userContext, TiObject* /*c
     				QMap<QString, Ti::TiValue> animatedMap = animated.toMap();
         			Ti::TiValue animatedValue = animatedMap.value(QString("animated"));
 
-        			//if(animatedValue.isString()){
-
-        			//}else{
-        				isAnimated = animatedValue.toBool();
-        			//}
+       				isAnimated = animatedValue.toBool();
 
         		}
     		}
