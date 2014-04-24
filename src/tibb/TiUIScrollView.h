@@ -25,9 +25,12 @@ public:
 protected:
     virtual ~TiUIScrollView();
     virtual void initializeTiObject(TiObject* parentContext);
+    virtual void onCreateStaticMembers();
 
 private:
     TiUIScrollView();
+    static Handle<Value> _setContentOffset(void* userContext, TiObject* caller, const Arguments& args);
+
 };
 
 #endif /* TIUISCROLLVIEW_H_ */

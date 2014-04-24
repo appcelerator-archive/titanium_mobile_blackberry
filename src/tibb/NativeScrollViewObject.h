@@ -56,6 +56,7 @@ public:
     virtual int setLayout(TiObject *obj);
     virtual int setHeight(TiObject *obj);
     virtual int setWidth(TiObject *obj);
+    virtual int scrollTo(float xPos, float yPos, bool isAnimated);
     void setContentWidthAndHeight(float w, float h, bool a);
     bb::cascades::ScrollViewProperties* scrollViewProperties_;
     bb::cascades::ScrollView* scrollView_;

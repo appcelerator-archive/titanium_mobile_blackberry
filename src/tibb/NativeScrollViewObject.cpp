@@ -219,6 +219,18 @@ int NativeScrollViewObject::setWidth(TiObject *obj)
 	return NativeControlObject::setWidth(obj);
 }
 
+int NativeScrollViewObject::scrollTo(float xPos, float yPos, bool isAnimated){
+
+	bb::cascades::ScrollAnimation::Type animation = bb::cascades::ScrollAnimation::Default;
+
+	if(!isAnimated){
+		animation = bb::cascades::ScrollAnimation::None;
+	}
+
+	scrollView_->scrollToPoint(xPos,yPos, animation);
+
+	return NATIVE_ERROR_OK;
+}
 
 int NativeScrollViewObject::addChildNativeObject(NativeObject* obj)
 {
