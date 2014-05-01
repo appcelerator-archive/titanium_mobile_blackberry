@@ -22,17 +22,18 @@ class AbstractPane;
 
 namespace Ti
 {
+class TiWindowProxy;
 class TiSceneManager {
 public:
 	TiSceneManager();
 	virtual ~TiSceneManager();
-	void addPane(bb::cascades::AbstractPane*);
-	void removePane(bb::cascades::AbstractPane*);
+	void addPane(TiWindowProxy*);
+	void removePane(TiWindowProxy*);
 	static TiSceneManager* Instance();
-	static void Open(bb::cascades::AbstractPane*);
-	static void Close(bb::cascades::AbstractPane*);
+	static void Open(TiWindowProxy*);
+	static void Close(TiWindowProxy*);
 private:
-	QList<bb::cascades::AbstractPane*> _scenes;
+	QList<TiWindowProxy*> _windows;
 };
 }
 #endif /* TISCENEMANAGER_H_ */

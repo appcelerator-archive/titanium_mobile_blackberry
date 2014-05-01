@@ -9,7 +9,6 @@
 
 #include "NativeAccelerometerObject.h"
 #include "NativeActivityIndicatorObject.h"
-#include "NativeAlertDialogObject.h"
 #include "NativeBlobObject.h"
 #include "NativeBufferObject.h"
 #include "NativeImageButtonObject.h"
@@ -21,8 +20,6 @@
 #include "NativeTableViewRowObject.h"
 #include "NativeTableViewObject.h"
 #include "NativeProgressBarObject.h"
-#include "NativeTabObject.h"
-#include "NativeTabGroupObject.h"
 #include "NativeSliderObject.h"
 #include "NativeStringInterface.h"
 #include "NativeTCPSocketObject.h"
@@ -30,7 +27,6 @@
 #include "NativeTextFieldObject.h"
 #include "NativeTextAreaObject.h"
 #include "NativeToggleButtonObject.h"
-#include "NativeWindowObject.h"
 #include "NativeHTTPClientObject.h"
 #include "NativeDBObject.h"
 #include "NativeResultSetObject.h"
@@ -74,10 +70,6 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
     NativeObject* obj = NULL;
     switch (type)
     {
-    case N_TYPE_WINDOW:
-        obj = NativeWindowObject::createWindow(tiObj, this);
-        break;
-
     case N_TYPE_LABEL:
         obj = NativeLabelObject::createLabel(tiObj);
         break;
@@ -138,14 +130,6 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
         obj = new NativeTableViewRowObject(tiObj);
         break;
 
-    case N_TYPE_TAB:
-        obj = NativeTabObject::createTab(tiObj);
-        break;
-
-    case N_TYPE_TABGROUP:
-        obj = NativeTabGroupObject::createTabGroup(tiObj, this);
-        break;
-
     case N_TYPE_TCPSOCKET:
         obj = NativeTCPSocketObject::createTCPSocket(tiObj);
         break;
@@ -176,10 +160,6 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 
     case N_TYPE_DATE_TIME_PICKER:
         obj = NativeDateTimePickerObject::createDateTimePicker(tiObj);
-        break;
-
-    case N_TYPE_ALERTDIALOG:
-        obj = NativeAlertDialogObject::createAlertDialog(tiObj);
         break;
 
     case N_TYPE_VIEW:

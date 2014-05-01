@@ -35,6 +35,9 @@ SOURCES += \
     ../Modules/UI/BlackBerry/View/*.cpp \
     ../Modules/UI/BlackBerry/WebView/*.cpp \
     ../Modules/UI/BlackBerry/Button/*.cpp \
+    ../Modules/UI/BlackBerry/Window/*.cpp \
+    ../Modules/UI/BlackBerry/TabGroup/*.cpp \
+    ../Modules/UI/BlackBerry/AlertDialog/*.cpp \
     ../Modules/Utils/*.cpp \
     ../Modules/Blackberry/Notification/*.cpp \
     ../Modules/Blackberry/*.cpp
@@ -61,6 +64,9 @@ HEADERS += \
     ../Modules/UI/BlackBerry/View/*.h \
     ../Modules/UI/BlackBerry/WebView/*.h \
     ../Modules/UI/BlackBerry/Button/*.h \
+    ../Modules/UI/BlackBerry/Window/*.h \
+    ../Modules/UI/BlackBerry/TabGroup/*.h \
+    ../Modules/UI/BlackBerry/AlertDialog/*.h \
     ../Modules/Utils/*.h \
     ../Modules/Blackberry/Notification/*.h \
     ../Modules/Blackberry/*.h

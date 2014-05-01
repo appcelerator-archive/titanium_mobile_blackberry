@@ -121,11 +121,9 @@ int NativeTableViewObject::setData(TiObject* obj)
     int x = 0;
     for (uint32_t i = 0, len = newData->Length(); i < len; i++)
     {
-        Local<Object> item = newData->Get(i)->ToObject();
-        if (!item->IsObject()) {
-            // Silently ignore any invalid data items.
-            continue;
-        }
+        Local<Value> temp = newData->Get(i);
+        if(temp.IsEmpty() ||!temp->IsObject()) continue;
+        Local<Object> item = temp->ToObject();
 
         TiObject* itemObject = TiObject::getTiObjectFromJsObject(item);
         if (!itemObject)

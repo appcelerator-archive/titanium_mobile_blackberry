@@ -24,4 +24,7 @@
 #include "Ti_SceneManager.h"
 #include "TitaniumLayout.h"
 #include "Ti_ErrorScreen.h"
+#include "Ti_Callback.h"
+#include "Ti_WindowProxy.h"
+ 
 #endif

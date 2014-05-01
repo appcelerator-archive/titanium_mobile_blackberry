@@ -9,6 +9,7 @@
 
 #include "Ti_Value.h"
 #include "Ti_Proxy.h"
+#include "Ti_ErrorScreen.h"
 #include <bb/cascades/Color>
 #include <Qt/qcolor.h>
 
@@ -57,7 +58,7 @@ void Ti::TiValue::setValue(Handle<Value> value)
 {
 	if(value->IsFunction())
 	{
-		_jsValue = Persistent<Value>::New(value);
+		_jsValue = Persistent<Function>::New(Handle<Function>::Cast(value));
 	}
 	else
 	{
@@ -114,9 +115,7 @@ void Ti::TiValue::callFunction(Ti::TiProxy* proxy, Ti::TiValue value)
 	Handle<Value> result = function->Call(proxy->_jsObject, 1, args);
 	if(result.IsEmpty())
 	{
-		qDebug() << "[TiValue] Something bad happened";
-    	Handle<Value> exception = tryCatch.Exception();
-    	qDebug() << "[TiValue] " << Ti::TiHelper::QStringFromValue(exception);
+		Ti::TiErrorScreen::ShowWithTryCatch(tryCatch);
 	}
 	else
 	{

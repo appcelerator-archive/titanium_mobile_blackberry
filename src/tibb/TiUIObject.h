@@ -30,8 +30,6 @@ private:
     TiUIObject();
     TiUIObject(NativeObjectFactory* objectFactory);
     static Handle<Value> _createControlHelper(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args);
-    static Handle<Value> _createTabGroup(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> _createWindow(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createLabel(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createImageButton(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createSlider(void* userContext, TiObject* caller, const Arguments& args);
@@ -40,14 +38,12 @@ private:
     static Handle<Value> _createTextField(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createTextArea(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createActivityIndicator(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> _createTab(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createSwitch(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createOptionDialog(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createTableView(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createTableViewRow(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createPicker(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createEmailDialog(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> _createAlertDialog(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createView(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createScrollView(void* userContext, TiObject*, const Arguments& args);
     static Handle<Value> _createAnimation(void* userContext, TiObject*, const Arguments& args);
