@@ -56,6 +56,11 @@ Ti::TiValue::TiValue() :
 }
 void Ti::TiValue::setValue(Handle<Value> value)
 {
+	if(value.IsEmpty())
+	{
+		_jsValue = Undefined();
+	}
+	else
 	if(value->IsFunction())
 	{
 		_jsValue = Persistent<Function>::New(Handle<Function>::Cast(value));
@@ -64,8 +69,15 @@ void Ti::TiValue::setValue(Handle<Value> value)
 	{
 		_jsValue = value;
 	}
-	_bool = value->ToBoolean()->Value();
-	_number = value->ToNumber()->Value();
+
+	if(_jsValue->IsBoolean())
+	{
+		_bool = value->ToBoolean()->Value();
+	} else if(_jsValue->IsNumber() || _jsValue->IsNumberObject())
+	{
+		_number = value->ToNumber()->Value();
+	}
+
 	_string = Ti::TiHelper::QStringFromValue(value->ToString());
 	if(value->IsArray())
 	{
@@ -238,7 +250,7 @@ bool Ti::TiValue::isNumber()
 
 bool Ti::TiValue::isUndefined()
 {
-	return _jsValue->IsUndefined();
+	return _jsValue.IsEmpty() || _jsValue->IsUndefined();
 }
 
 bool Ti::TiValue::isNull()

@@ -36,7 +36,6 @@ TiUIWindowProxy::TiUIWindowProxy(const char* name)
 	page->setContent(view);
 }
 
-
 TiUIWindowProxy::~TiUIWindowProxy()
 {
 	if(!actionItemEvents.isEmpty())

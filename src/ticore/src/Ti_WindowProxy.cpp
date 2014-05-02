@@ -113,6 +113,7 @@ void TiWindowProxy::setOrientationModes(Ti::TiValue val)
 Ti::TiValue TiWindowProxy::open(Ti::TiValue value)
 {
 	Ti::TiSceneManager::Open(this);
+	clearWeak();
 	Ti::TiValue val;
 	val.setUndefined();
 
@@ -122,6 +123,7 @@ Ti::TiValue TiWindowProxy::open(Ti::TiValue value)
 Ti::TiValue TiWindowProxy::close(Ti::TiValue value)
 {
 	Ti::TiSceneManager::Close(this);
+	makeWeak();
 	Ti::TiValue val;
 	val.setUndefined();
 	return val;

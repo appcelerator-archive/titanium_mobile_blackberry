@@ -125,18 +125,43 @@ Ti::TiValue TiUITabProxy::close(Ti::TiValue value)
 {
 	Ti::TiValue val;
 	val.setUndefined();
-	if(!value.isProxy())
+	Ti::TiWindowProxy* windowProxy;
+	bool animated = true;
+	if(value.isList())
+	{
+		QList<Ti::TiValue> vs = value.toList();
+		Ti::TiValue v = vs.at(0);
+		windowProxy = static_cast<TiUIWindowProxy*>(v.toProxy());
+		Ti::TiValue optionsValue = vs.at(1);
+		if(optionsValue.isMap())
+		{
+			QMap<QString, Ti::TiValue> options = optionsValue.toMap();
+			if(options.contains("animated"))
+			{
+				animated = options["animated"].toBool();
+			}
+		}
+	}
+	else if(value.isProxy())
+	{
+		windowProxy = static_cast<TiUIWindowProxy*>(value.toProxy());
+	}
+	else
 	{
 		return val;
 	}
-
-	TiUIWindowProxy* windowProxy = static_cast<TiUIWindowProxy*>(value.toProxy());
-	_navigationPane->remove(static_cast<bb::cascades::Page*>(windowProxy->getPane()));
-
+	if(_windows.last() == windowProxy && animated == true)
+	{
+		_navigationPane->pop();
+	}
+	else
+	{
+		_navigationPane->remove(static_cast<bb::cascades::Page*>(windowProxy->getPane()));
+		Ti::TiEventParameters _params;
+		windowProxy->fireEvent(Ti::TiConstants::EventClose, _params);
+		windowProxy->makeWeak();
+	}
 	_windows.removeOne(windowProxy);
-	Ti::TiEventParameters _params;
-	windowProxy->fireEvent(Ti::TiConstants::EventClose, _params);
-	windowProxy->makeWeak();
 
 	return val;
 }
