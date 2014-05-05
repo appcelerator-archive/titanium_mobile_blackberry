@@ -1,3 +1,9 @@
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
+ */
 Ti = Ti || {};
 Ti.include = Ti.include || function (id) { Ti.globalInclude(id, "app/native/assets/") };
 var global = {};
@@ -220,5 +226,9 @@ Ti.UI.createSearchBar = function(args) {
 } 
 Ti.UI.createWebView = Ti.UI.BlackBerry.createWebView;
 Ti.UI.createButton = Ti.UI.BlackBerry.createButton;
+Ti.UI.createWindow = Ti.UI.BlackBerry.createWindow;
+Ti.UI.createTabGroup = Ti.UI.BlackBerry.createTabGroup;
+Ti.UI.createTab = Ti.UI.BlackBerry.createTab;
+Ti.UI.createAlertDialog = Ti.UI.BlackBerry.createAlertDialog;
 
 Titanium = Ti;

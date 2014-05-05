@@ -1,8 +1,8 @@
-/*
- * TiView.cpp
- *
- *  Created on: Jul 10, 2013
- *      Author: penrique
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #include <bb/cascades/LayoutUpdateHandler>
@@ -21,6 +21,7 @@
 #include <bb/cascades/LongPressEvent>
 #include <bb/cascades/PinchEvent>
 #include <bb/cascades/LongPressEvent>
+#include <bb/cascades/Control>
 
 
 #include "Ti_Helper.h"
@@ -71,29 +72,29 @@ void Ti::TiView::onTapEvent(bb::cascades::TapEvent*)
 }
 void Ti::TiView::onDoubleTapEvent(bb::cascades::DoubleTapEvent*)
 {
-    
+
 }
 
 void Ti::TiView::onLongPressEvent(bb::cascades::LongPressEvent*)
 {
-    
+
 }
 
 void Ti::TiView::onPinchStartedEvent(bb::cascades::PinchEvent*)
 {
-    
+
 }
 void Ti::TiView::onPinchUpdatedEvent(bb::cascades::PinchEvent*)
 {
-    
+
 }
 void Ti::TiView::onPinchEndedEvent(bb::cascades::PinchEvent*)
 {
-    
+
 }
 void Ti::TiView::onPinchCancelledEvent(bb::cascades::PinchEvent*)
 {
-    
+
 }
 
 void Ti::TiView::onEventAdded(QString eventName)
@@ -117,7 +118,7 @@ void Ti::TiView::onEventAdded(QString eventName)
 	else if(eventName == Ti::TiConstants::EventPinch)
 	{
 		gesture = new bb::cascades::PinchHandler(this);
-        
+
 		QObject::connect(gesture, SIGNAL(pinchStarted(bb::cascades::PinchEvent*)), this, SLOT(onPinchStartedEvent(bb::cascades::PinchEvent*)));
 		QObject::connect(gesture, SIGNAL(pinchUpdated(bb::cascades::PinchEvent*)), this, SLOT(onPinchUpdatedEvent(bb::cascades::PinchEvent*)));
 		QObject::connect(gesture, SIGNAL(pinchEnded(bb::cascades::PinchEvent*)), this, SLOT(onPinchEndedEvent(bb::cascades::PinchEvent*)));
@@ -132,13 +133,13 @@ void Ti::TiView::onEventAdded(QString eventName)
 	{
 		childControl->addGestureHandler(gesture);
 	}
-    
+
 }
 
 Ti::TiViewProxy* Ti::TiView::getProxy() const
 {
 	HandleScope scope;
-    
+
 	return proxy;
 }
 
@@ -175,13 +176,13 @@ QString Ti::TiView::defaultHeight()
 void Ti::TiView::onRelayout(QRectF rect)
 {
 	Ti::TiEventParameters eventParams;
-    
+
 	Ti::TiEventParameters rectParams;
 	rectParams.addParam("width", rect.width());
 	rectParams.addParam("height", rect.height());
 	rectParams.addParam("x", rect.x());
 	rectParams.addParam("y", rect.y());
-    
+
 	eventParams.addParam("rect", rectParams);
 	getProxy()->fireEvent("postlayout", eventParams);
 }
@@ -200,6 +201,39 @@ int Ti::TiView::getZIndex()
 	return _zIndex;
 }
 
+/*
+ * TODO: Remove this crap
+ */
+
+class mNativeObject : public bb::cascades::Control
+{
+public:
+	virtual ~mNativeObject() = 0;
+	virtual bb::cascades::Control* getNativeHandle() = 0;
+	struct Ti::Layout::Node layoutNode_;
+};
+class mTiUIBase
+{
+public:
+	mTiUIBase() {};
+	virtual ~mTiUIBase() = 0;
+	virtual mNativeObject* getNativeObject() = 0;
+	virtual Handle<Value> getValue() = 0;
+};
+#include "NativeObject.h"
+#include "NativeControlObject.h"
+
+void Ti::TiView::addOldObject(void* o)
+{
+	NativeObject *obj = (NativeObject*)o;
+	bb::cascades::Control* control = (bb::cascades::Control*) obj->getNativeHandle();
+	bb::cascades::Container::add(control);
+	Ti::Layout::TiNode::nodeAddChild(&viewLayout->_layoutNode, ((NativeControlObject*) obj)->layout());
+	struct Ti::Layout::Node* root = Ti::Layout::TiNode::nodeRequestLayout(&viewLayout->_layoutNode);
+	if (root) {
+		Ti::Layout::TiNode::nodeLayout(root);
+	}
+}
 void Ti::TiView::add(bb::cascades::Control* control)
 {
 	Ti::TiView *newView = static_cast<Ti::TiView*>(control);
@@ -222,7 +256,6 @@ void Ti::TiView::add(bb::cascades::Control* control)
 		bb::cascades::Container::add(newView);
 	}
 }
-
 void Ti::TiView::remove(bb::cascades::Control* control)
 {
 	Ti::TiView *childView = static_cast<Ti::TiView*>(control);

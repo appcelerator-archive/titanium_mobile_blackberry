@@ -9,11 +9,13 @@ MOBILITY += sensors
 INCLUDEPATH += \
 	. \
     ./include \
-    ../../runtime/v8/include
+    ../../runtime/v8/include \
+	../tibb
 
 SOURCES += \
     ./src/Ti_Blob.cpp \
     ./src/Ti_Constants.cpp \
+    ./src/Ti_Callback.cpp \
     ./src/Ti_Data.cpp \
     ./src/Ti_Event.cpp \
     ./src/Ti_EventParameters.cpp \
@@ -26,6 +28,7 @@ SOURCES += \
     ./src/Ti_Timer.cpp \
     ./src/Ti_Value.cpp \
     ./src/Ti_View.cpp \
+    ./src/Ti_WindowProxy.cpp \
     ./src/Ti_ViewProxy.cpp \
     ./src/TitaniumLayout.cpp \
     ./src/Ti_ErrorScreen.cpp \
@@ -40,6 +43,7 @@ SOURCES += \
 HEADERS += \
     ./include/Ti_Blob.h \
     ./include/Ti_Constants.h \
+    ./include/Ti_Callback.h \
     ./include/Ti_Data.h \
     ./include/Ti_Event.h \
     ./include/Ti_EventParameters.h \
@@ -52,6 +56,7 @@ HEADERS += \
     ./include/Ti_Timer.h \
     ./include/Ti_Value.h \
     ./include/Ti_View.h \
+    ./include/Ti_WindowProxy.h \
     ./include/Ti_ViewProxy.h \
     ./include/TiCore.h \
     ./include/TitaniumLayout.h \

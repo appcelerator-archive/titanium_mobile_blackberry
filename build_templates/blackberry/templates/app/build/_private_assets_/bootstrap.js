@@ -226,5 +226,9 @@ Ti.UI.createSearchBar = function(args) {
 } 
 Ti.UI.createWebView = Ti.UI.BlackBerry.createWebView;
 Ti.UI.createButton = Ti.UI.BlackBerry.createButton;
+Ti.UI.createWindow = Ti.UI.BlackBerry.createWindow;
+Ti.UI.createTabGroup = Ti.UI.BlackBerry.createTabGroup;
+Ti.UI.createTab = Ti.UI.BlackBerry.createTab;
+Ti.UI.createAlertDialog = Ti.UI.BlackBerry.createAlertDialog;
 
 Titanium = Ti;

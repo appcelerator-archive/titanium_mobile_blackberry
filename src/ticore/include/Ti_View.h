@@ -49,6 +49,7 @@ public:
 	virtual void remove(bb::cascades::Control*);
 	virtual void onEventAdded(QString);
 	virtual void onRelayout(QRectF);
+	void addOldObject(void*);
 	void setParentView(TiView*);
 	void setTiLayout();
 	QList<TiView*> childViews;

@@ -14,7 +14,6 @@
 #include "TiGenericFunctionObject.h"
 #include "TiOrientation.h"
 #include "TiUIActivityIndicator.h"
-#include "TiUIAlertDialog.h"
 #include "TiUIClipboardObject.h"
 #include "TiUIImageView.h"
 #include "TiUILabel.h"
@@ -25,13 +24,10 @@
 #include "TiUIScrollView.h"
 #include "TiUIScrollableView.h"
 #include "TiUISwitch.h"
-#include "TiUITab.h"
-#include "TiUITabGroup.h"
 #include "TiUITableView.h"
 #include "TiUITableViewRow.h"
 #include "TiUITextField.h"
 #include "TiUITextArea.h"
-#include "TiUIWindow.h"
 #include "TiUIAnimation.h"
 #include "TiUIEmailDialog.h"
 #include "TiUINavigationGroup.h"
@@ -76,8 +72,6 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTableView", this, _createTableView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTableViewRow", this, _createTableViewRow);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTableViewSection", this, TiUITableViewSection::createProxy);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTabGroup", this, _createTabGroup);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createWindow", this, _createWindow);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createLabel", this, _createLabel);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createImageButton", this, _createImageButton);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSlider", this, _createSlider);
@@ -89,9 +83,7 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createActivityIndicator", this, _createActivityIndicator);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSwitch", this, _createSwitch);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createOptionDialog", this, _createOptionDialog);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTab", this, _createTab);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createPicker", this, _createPicker);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createAlertDialog", this, _createAlertDialog);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createView", this, _createView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createScrollView", this, _createScrollView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createScrollableView", this, _createScrollableView);
@@ -146,11 +138,6 @@ Handle<Value> TiUIObject::_createControlHelper(void* userContext, CREATEOBJECTCA
     return handleScope.Close(result);
 }
 
-Handle<Value> TiUIObject::_createWindow(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUIWindow::createWindow, args);
-}
-
 Handle<Value> TiUIObject::_createLabel(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUILabel::createLabel, args);
@@ -196,16 +183,6 @@ Handle<Value> TiUIObject::_createActivityIndicator(void* userContext, TiObject*,
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUIActivityIndicator::createActivityIndicator, args);
 }
 
-Handle<Value> TiUIObject::_createTab(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUITab::createTab, args);
-}
-
-Handle<Value> TiUIObject::_createTabGroup(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUITabGroup::createTabGroup, args);
-}
-
 Handle<Value> TiUIObject::_createOptionDialog(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIOptionDialog::createOptionDialog), args);
@@ -229,11 +206,6 @@ Handle<Value> TiUIObject::_createSwitch(void* userContext, TiObject*, const Argu
 Handle<Value> TiUIObject::_createPicker(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIPicker::createPicker), args);
-}
-
-Handle<Value> TiUIObject::_createAlertDialog(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIAlertDialog::createAlertDialog), args);
 }
 
 Handle<Value> TiUIObject::_createView(void* userContext, TiObject*, const Arguments& args)

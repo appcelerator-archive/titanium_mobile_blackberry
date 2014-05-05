@@ -22,7 +22,7 @@
 			PROXY_CLASS* mProxy = static_cast<PROXY_CLASS*>(proxy);	\
 			mProxy->SETTER_METHOD(value);	\
 	} \
-	void SETTER_METHOD(Ti::TiValue);
+	virtual void SETTER_METHOD(Ti::TiValue);
 
 #define TI_CREATE_GETTER(PROXY_CLASS, GETTER_METHOD) \
 	static Ti::TiValue _##GETTER_METHOD(Ti::TiProxy* proxy) \
@@ -30,7 +30,7 @@
 			PROXY_CLASS* mProxy = static_cast<PROXY_CLASS*>(proxy);	\
 			return mProxy->GETTER_METHOD();	\
 	} \
-	Ti::TiValue GETTER_METHOD();
+	virtual Ti::TiValue GETTER_METHOD();
 
 #define TI_CREATE_SETTER_GETTER(PROXY_CLASS, SETTER_METHOD, GETTER_METHOD) \
 		TI_CREATE_SETTER(PROXY_CLASS, SETTER_METHOD) \

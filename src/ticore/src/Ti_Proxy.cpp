@@ -36,6 +36,8 @@ Ti::TiProxy::~TiProxy()
 
 	_jsObject.Clear();
 	_jsObject.Dispose();
+	_jsObjectTemplate.Clear();
+	_jsObjectTemplate.Dispose();
 }
 
 void Ti::TiProxy::initStart()
@@ -232,6 +234,8 @@ void Ti::TiProxy::clearWeak()
 	//if(_jsObject.IsEmpty()) return;
 	Ti::TiHelper::LogInternal(QString("Clear weak ").append(QString(_proxyName)));
 	_jsObject.ClearWeak();
+	_jsObjectTemplate.ClearWeak();
+	_jsObject.MarkIndependent();
 }
 
 Handle<Value> Ti::TiProxy::_Getter (Local<String> property, const AccessorInfo& info)
@@ -262,7 +266,7 @@ Handle<Value> Ti::TiProxy::_Setter (Local<String> property, Local<Value> value, 
 {
 	HandleScope handleScope;
 	Ti::TiHelper::LogInternal(QString("Property Setter: ").append(Ti::TiHelper::QStringFromValue(property)));
-	
+
 	// Todo: Come back to this later
 	// if(value == info.Holder()->Get(property)) {
 	//	 Ti::TiHelper::LogInternal(QString("Already set: ").append(Ti::TiHelper::QStringFromValue(property)));

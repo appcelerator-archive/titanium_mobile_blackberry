@@ -5,21 +5,24 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef TIUIVIEW_H_
-#define TIUIVIEW_H_
+#ifndef TI_UIWINDOW_H_
+#define TI_UIWINDOW_H_
 
 #include "TiCore.h"
+
 namespace TiUI {
 
-class TiUIView : public Ti::TiView
+class TiUIWindow : public Ti::TiView
 {
 public:
-	TiUIView(Ti::TiViewProxy*);
-	virtual ~TiUIView();
+	TiUIWindow(Ti::TiViewProxy*);
+	virtual ~TiUIWindow();
 	virtual bool ingoreWidth();
 	virtual bool ingoreHeight();
 	virtual QString defaultWidth();
 	virtual QString defaultHeight();
+
 };
-}
-#endif /* TIUIVIEW_H_ */
+
+} /* namespace TiUI */
+#endif /* TIUIWINDOW_H_ */

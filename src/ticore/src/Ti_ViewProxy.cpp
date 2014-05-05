@@ -1,16 +1,21 @@
-/*
- * TiViewProxy.cpp
- *
- *  Created on: Jul 10, 2013
- *      Author: penrique
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #include "Ti_View.h"
 #include "Ti_ViewProxy.h"
 #include "Ti_Value.h"
 #include "Ti_Constants.h"
+#include "TitaniumLayout.h"
 #include <bb/cascades/ImagePaint>
 #include <bb/cascades/ActionSet>
+
+#include "TiUIBase.h"
+#include "TiObject.h"
+#include "NativeObject.h"
 
 Ti::TiViewProxy::TiViewProxy(const char* name)
 : Ti::TiProxy(name),
@@ -95,6 +100,17 @@ Ti::TiViewProxy::~TiViewProxy()
 		child->makeWeak();
 	}
 	_childViewsProxies.clear();
+
+    Ti::TiValue cArray = getTiValueForKey("childs");
+    if(!cArray.isUndefined())
+    {
+    	QList<Ti::TiValue> vals = cArray.toList();
+    	foreach(Ti::TiValue v, vals)
+    	{
+            TiObject* addObj = TiObject::getTiObjectFromJsObject(v.toJSValue());
+            addObj->clearValue();
+    	}
+    }
 	if(!isDestroyed)
 	{
 		delete view;
@@ -562,17 +578,38 @@ Ti::TiValue Ti::TiViewProxy::getKeepScreenOn()
 	return val;
 }
 
+
 Ti::TiValue Ti::TiViewProxy::add(Ti::TiValue value)
 {
-	Ti::TiViewProxy *childProxy = static_cast<Ti::TiViewProxy*>(value.toProxy());
+	if(value.isProxy())
+	{
+		Ti::TiViewProxy *childProxy = static_cast<Ti::TiViewProxy*>(value.toProxy());
+		childProxy->clearWeak();
+		_childViewsProxies.append(childProxy);
+		Ti::TiView* childView = childProxy->getView();
+		Ti::TiView* thisView = getView();
+		thisView->add(childView);
+	}
+	else
+	{
+        TiObject* addObj = TiObject::getTiObjectFromJsObject(value.toJSValue());
+        TiUIBase* uiObj = (TiUIBase*) addObj;
+        NativeObject* childNO = uiObj->getNativeObject();
+        getView()->addOldObject(childNO);
 
-	_childViewsProxies.append(childProxy);
-	childProxy->clearWeak();
-	qDebug() << "TiViewProxy: Clear weak" << childProxy->getProxyName();
-	Ti::TiView* childView = childProxy->getView();
-	Ti::TiView* thisView = getView();
-
-	thisView->add(childView);
+       Ti::TiValue cArray = getTiValueForKey("childs");
+       if(cArray.isUndefined())
+       {
+    	   Ti::TiValue chArray;
+    	   QList<Ti::TiValue> list;
+    	   list.append(Ti::TiValue(value.toJSValue()));
+    	   chArray.setList(list);
+    	   setTiValueForKey(chArray, "childs");
+       } else {
+    	   QList<Ti::TiValue> list = cArray.toList();
+       }
+       childNO->release();
+	}
 
 	Ti::TiValue val;
 	val.setUndefined();

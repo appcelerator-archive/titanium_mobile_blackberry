@@ -36,19 +36,19 @@ Ti::TiValue Ti::TiModule::getModuleName()
 void Ti::TiModule::addModule(const char* name, Handle<Object> obj)
 {
 	HandleScope scope;
-	_jsObject->Set(String::New(name), obj, DontDelete);
+	_jsObject->ForceSet(String::New(name), obj, DontDelete);
 }
 
 void Ti::TiModule::addString(QString name, QString value)
 {
 	HandleScope scope;
-	_jsObject->Set(String::New(name.toLocal8Bit().data()), String::New(value.toLocal8Bit().data()), DontDelete);
+	_jsObject->ForceSet(String::New(name.toLocal8Bit().data()), String::New(value.toLocal8Bit().data()), DontDelete);
 }
 
 void Ti::TiModule::addNumber(QString name, double value)
 {
 	HandleScope scope;
-	_jsObject->Set(String::New(name.toLocal8Bit().data()), Number::New(value), DontDelete);
+	_jsObject->ForceSet(String::New(name.toLocal8Bit().data()), Number::New(value), DontDelete);
 }
 
 void Ti::TiModule::initStart()

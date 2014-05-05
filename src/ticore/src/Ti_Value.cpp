@@ -9,6 +9,7 @@
 
 #include "Ti_Value.h"
 #include "Ti_Proxy.h"
+#include "Ti_ErrorScreen.h"
 #include <bb/cascades/Color>
 #include <Qt/qcolor.h>
 
@@ -55,16 +56,28 @@ Ti::TiValue::TiValue() :
 }
 void Ti::TiValue::setValue(Handle<Value> value)
 {
+	if(value.IsEmpty())
+	{
+		_jsValue = Undefined();
+	}
+	else
 	if(value->IsFunction())
 	{
-		_jsValue = Persistent<Value>::New(value);
+		_jsValue = Persistent<Function>::New(Handle<Function>::Cast(value));
 	}
 	else
 	{
 		_jsValue = value;
 	}
-	_bool = value->ToBoolean()->Value();
-	_number = value->ToNumber()->Value();
+
+	if(_jsValue->IsBoolean())
+	{
+		_bool = value->ToBoolean()->Value();
+	} else if(_jsValue->IsNumber() || _jsValue->IsNumberObject())
+	{
+		_number = value->ToNumber()->Value();
+	}
+
 	_string = Ti::TiHelper::QStringFromValue(value->ToString());
 	if(value->IsArray())
 	{
@@ -114,9 +127,7 @@ void Ti::TiValue::callFunction(Ti::TiProxy* proxy, Ti::TiValue value)
 	Handle<Value> result = function->Call(proxy->_jsObject, 1, args);
 	if(result.IsEmpty())
 	{
-		qDebug() << "[TiValue] Something bad happened";
-    	Handle<Value> exception = tryCatch.Exception();
-    	qDebug() << "[TiValue] " << Ti::TiHelper::QStringFromValue(exception);
+		Ti::TiErrorScreen::ShowWithTryCatch(tryCatch);
 	}
 	else
 	{
@@ -239,7 +250,7 @@ bool Ti::TiValue::isNumber()
 
 bool Ti::TiValue::isUndefined()
 {
-	return _jsValue->IsUndefined();
+	return _jsValue.IsEmpty() || _jsValue->IsUndefined();
 }
 
 bool Ti::TiValue::isNull()

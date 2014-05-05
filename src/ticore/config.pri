@@ -24,6 +24,7 @@ device {
                  $$quote($$BASEDIR/include/Layout/Vertical.h) \
                  $$quote($$BASEDIR/include/TiCore.h) \
                  $$quote($$BASEDIR/include/Ti_Blob.h) \
+                 $$quote($$BASEDIR/include/Ti_Callback.h) \
                  $$quote($$BASEDIR/include/Ti_Constants.h) \
                  $$quote($$BASEDIR/include/Ti_Data.h) \
                  $$quote($$BASEDIR/include/Ti_ErrorScreen.h) \
@@ -40,6 +41,7 @@ device {
                  $$quote($$BASEDIR/include/Ti_Value.h) \
                  $$quote($$BASEDIR/include/Ti_View.h) \
                  $$quote($$BASEDIR/include/Ti_ViewProxy.h) \
+                 $$quote($$BASEDIR/include/Ti_WindowProxy.h) \
                  $$quote($$BASEDIR/include/TitaniumLayout.h)
     }
 
@@ -65,6 +67,7 @@ device {
                  $$quote($$BASEDIR/include/Layout/Vertical.h) \
                  $$quote($$BASEDIR/include/TiCore.h) \
                  $$quote($$BASEDIR/include/Ti_Blob.h) \
+                 $$quote($$BASEDIR/include/Ti_Callback.h) \
                  $$quote($$BASEDIR/include/Ti_Constants.h) \
                  $$quote($$BASEDIR/include/Ti_Data.h) \
                  $$quote($$BASEDIR/include/Ti_ErrorScreen.h) \
@@ -81,6 +84,7 @@ device {
                  $$quote($$BASEDIR/include/Ti_Value.h) \
                  $$quote($$BASEDIR/include/Ti_View.h) \
                  $$quote($$BASEDIR/include/Ti_ViewProxy.h) \
+                 $$quote($$BASEDIR/include/Ti_WindowProxy.h) \
                  $$quote($$BASEDIR/include/TitaniumLayout.h)
     }
 }
@@ -120,6 +124,7 @@ simulator {
                  $$quote($$BASEDIR/include/Layout/Vertical.h) \
                  $$quote($$BASEDIR/include/TiCore.h) \
                  $$quote($$BASEDIR/include/Ti_Blob.h) \
+                 $$quote($$BASEDIR/include/Ti_Callback.h) \
                  $$quote($$BASEDIR/include/Ti_Constants.h) \
                  $$quote($$BASEDIR/include/Ti_Data.h) \
                  $$quote($$BASEDIR/include/Ti_ErrorScreen.h) \
@@ -136,6 +141,7 @@ simulator {
                  $$quote($$BASEDIR/include/Ti_Value.h) \
                  $$quote($$BASEDIR/include/Ti_View.h) \
                  $$quote($$BASEDIR/include/Ti_ViewProxy.h) \
+                 $$quote($$BASEDIR/include/Ti_WindowProxy.h) \
                  $$quote($$BASEDIR/include/TitaniumLayout.h)
     }
 }

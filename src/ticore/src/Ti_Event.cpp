@@ -12,6 +12,7 @@
 #include "Ti_ErrorScreen.h"
 #include <v8.h>
 
+#include "TitaniumRuntime.h"
 
 Ti::TiEvent::TiEvent() {
 }
@@ -89,11 +90,11 @@ void Ti::TiEvent::RemoveEventFromObject(Handle<Object> proxy, QString eventName,
 void Ti::TiEvent::FireEventOnObject(Handle<Object> proxy, QString eventName, Ti::TiEventParameters* params)
 {
 	HandleScope scope;
-    Context::Scope context_scope(proxy->CreationContext());
+	if(proxy.IsEmpty()) return;
+//    Context::Scope context_scope(proxy->CreationContext());
+	Context::Scope context_scope(TitaniumRuntime::getContenxt());
 	Local<Value> tEventMap = proxy->GetHiddenValue(String::New("eventMap"));
-	if(tEventMap.IsEmpty() || tEventMap->IsUndefined()) {
-		return;
-	}
+	if(tEventMap.IsEmpty() || tEventMap->IsUndefined()) return;
 	Local<Value> tEventArray = tEventMap->ToObject()->Get(Ti::TiHelper::ValueFromQString(eventName));
 	if(tEventArray.IsEmpty() || tEventArray->IsUndefined()) {
 		return;
@@ -124,7 +125,8 @@ void Ti::TiEvent::FireEventOnObject(Handle<Object> proxy, QString eventName, Ti:
 void Ti::TiEvent::FireCallbackIfNeeded(QString eventName, Handle<Object> owner, Ti::TiEventParameters *params)
 {
 	HandleScope scope;
-    Context::Scope context_scope(owner->CreationContext());
+//    Context::Scope context_scope(owner->CreationContext());
+	Context::Scope context_scope(TitaniumRuntime::getContenxt());
 	if(owner->Get(Ti::TiHelper::ValueFromQString(eventName))->IsFunction())
 	{
 		Handle<Function> callback = Handle<Function>::Cast(owner->Get(Ti::TiHelper::ValueFromQString(eventName)));

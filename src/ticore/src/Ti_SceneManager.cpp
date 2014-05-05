@@ -8,6 +8,10 @@
  */
 
 #include "Ti_SceneManager.h"
+#include "Ti_WindowProxy.h"
+#include "Ti_EventParameters.h"
+#include "Ti_Constants.h"
+
 #include <bb/cascades/AbstractPane>
 #include <bb/cascades/Application>
 
@@ -22,39 +26,73 @@ Ti::TiSceneManager::~TiSceneManager() {
 	// TODO Auto-generated destructor stub
 }
 
-void Ti::TiSceneManager::addPane(bb::cascades::AbstractPane* pane)
+void Ti::TiSceneManager::addPane(Ti::TiWindowProxy* window)
 {
-	if(_scenes.contains(pane)) {
-		_scenes.removeOne(pane);
+	if(_windows.contains(window)) {
+		_windows.removeOne(window);
 	}
-	_scenes.append(pane);
+
+	if(_windows.size() > 0)
+	{
+		Ti::TiWindowProxy *lastWindow = _windows.last();
+		Ti::TiEventParameters eventParams;
+		eventParams.addParam("type", Ti::TiConstants::EventBlur);
+		lastWindow->fireEvent(Ti::TiConstants::EventBlur, eventParams);
+	}
+
+	_windows.append(window);
+
+	bb::cascades::AbstractPane *pane = window->getPane();
 	bb::cascades::Application::instance()->setScene(pane);
 	pane->setParent(0);
+
+	Ti::TiEventParameters eventParams;
+	eventParams.addParam("type", Ti::TiConstants::EventFocus);
+	window->fireEvent(Ti::TiConstants::EventFocus, eventParams);
 }
 
-void Ti::TiSceneManager::removePane(bb::cascades::AbstractPane* pane)
+void Ti::TiSceneManager::removePane(Ti::TiWindowProxy* window)
 {
-	if(_scenes.contains(pane)) {
-		_scenes.removeOne(pane);
-	}
+	if(!_windows.contains(window)) return;
 
-	if(_scenes.size() > 0)
+	_windows.removeOne(window);
+	Ti::TiEventParameters eventParams;
+	eventParams.addParam("type", Ti::TiConstants::EventBlur);
+	window->fireEvent(Ti::TiConstants::EventBlur, eventParams);
+
+	if(_windows.size() > 0)
 	{
-		bb::cascades::AbstractPane *_pane = NULL;
-		_pane = _scenes.last();
-		bb::cascades::Application::instance()->setScene(_pane);
-		_pane->setParent(0);
+		Ti::TiWindowProxy *lastWindow = _windows.last();
+		bb::cascades::AbstractPane *pane = lastWindow->getPane();
+		bb::cascades::Application::instance()->setScene(pane);
+		pane->setParent(0);
+
+		Ti::TiEventParameters eventParams;
+		eventParams.addParam("type", Ti::TiConstants::EventFocus);
+		lastWindow->fireEvent(Ti::TiConstants::EventFocus, eventParams);
+	} else {
+		bb::cascades::Application::instance()->setScene(NULL);
 	}
 }
 
-void Ti::TiSceneManager::Open(bb::cascades::AbstractPane* pane)
+void Ti::TiSceneManager::Open(Ti::TiWindowProxy* window)
 {
-	Ti::TiSceneManager::Instance()->addPane(pane);
+	{
+		Ti::TiEventParameters eventParams;
+		eventParams.addParam("type", "open");
+		window->fireEvent(Ti::TiConstants::EventOpen, eventParams);
+	}
+	Ti::TiSceneManager::Instance()->addPane(window);
 }
 
-void Ti::TiSceneManager::Close(bb::cascades::AbstractPane* pane)
+void Ti::TiSceneManager::Close(Ti::TiWindowProxy* window)
 {
-	Ti::TiSceneManager::Instance()->removePane(pane);
+	Ti::TiSceneManager::Instance()->removePane(window);
+	{
+		Ti::TiEventParameters eventParams;
+		eventParams.addParam("type", "close");
+		window->fireEvent(Ti::TiConstants::EventClose, eventParams);
+	}
 }
 
 Ti::TiSceneManager* Ti::TiSceneManager::Instance()

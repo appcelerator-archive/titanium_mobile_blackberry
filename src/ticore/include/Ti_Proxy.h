@@ -50,14 +50,12 @@
 		{ \
  			proxy->initWithObject(args[0]->ToObject()); \
 		} \
-		proxy->_jsObjectTemplate.Dispose(); \
 		proxy->initEnd(); \
 		return scope.Close(proxy->_jsObject); \
 	} \
 	static NAME* CreateProxy() \
 	{ \
 		GENERATE_PROXY(NAME) \
-		proxy->_jsObjectTemplate.Dispose(); \
 		return proxy; \
 	}
 //#undef GENERATE_PROXY
