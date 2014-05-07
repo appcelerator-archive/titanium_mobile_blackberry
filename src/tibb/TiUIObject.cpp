@@ -77,7 +77,7 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSwitch", this, _createSwitch);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createOptionDialog", this, _createOptionDialog);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createPicker", this, _createPicker);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createView", this, _createView);
+//    TiGenericFunctionObject::addGenericFunctionToParent(this, "createView", this, _createView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createScrollView", this, _createScrollView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setBackgroundColor", this, _setBackgroundColor);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createAnimation", this, _createAnimation);

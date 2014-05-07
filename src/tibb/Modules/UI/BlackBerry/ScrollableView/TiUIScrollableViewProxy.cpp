@@ -48,6 +48,12 @@ TiUIScrollableViewProxy::~TiUIScrollableViewProxy()
 		p->makeWeak();
 	}
 }
+
+Ti::TiViewProxy *TiUIScrollableViewProxy::getProxyAt(int index)
+{
+	return _allViews.at(index);
+}
+
 void TiUIScrollableViewProxy::setCacheSize(Ti::TiValue)
 {
 	TI_SCROLLABLEVIEW_NOT_IMPLEMENTED
@@ -138,9 +144,8 @@ Ti::TiValue TiUIScrollableViewProxy::getCacheSize()
 }
 Ti::TiValue TiUIScrollableViewProxy::getCurrentPage()
 {
-	TI_SCROLLABLEVIEW_NOT_IMPLEMENTED
 	Ti::TiValue val;
-	val.setUndefined();
+	val.setNumber(_nativeScrollableView->getCurrentIndex());
 	return val;
 }
 Ti::TiValue TiUIScrollableViewProxy::getDisableBounce()
@@ -215,10 +220,16 @@ Ti::TiValue TiUIScrollableViewProxy::getScrollingEnabled()
 }
 Ti::TiValue TiUIScrollableViewProxy::getViews()
 {
-	TI_SCROLLABLEVIEW_NOT_IMPLEMENTED
-	Ti::TiValue val;
-	val.setUndefined();
-	return val;
+	Ti::TiValue rValue;
+	QList<Ti::TiValue> array;
+	foreach(Ti::TiViewProxy *p, _allViews)
+	{
+		Ti::TiValue current;
+		current.setProxy(p);
+		array.append(current);
+	}
+	rValue.setList(array);
+	return rValue;
 }
 Ti::TiValue TiUIScrollableViewProxy::getClipViews()
 {
@@ -315,8 +326,12 @@ Ti::TiValue TiUIScrollableViewProxy::scrollToView(Ti::TiValue value)
 	{
 		indexValue = value;
 	}
-
-	if(indexValue.isNumber())
+	if(indexValue.isProxy())
+	{
+		Ti::TiViewProxy *viewProxy = static_cast<Ti::TiViewProxy*>(indexValue.toProxy());
+		_nativeScrollableView->scrollToViewAnimated(viewProxy->view, animated);
+	}
+	else if(indexValue.isNumber())
 	{
 		double num = value.toNumber();
 		int index = round(indexValue.toNumber());
@@ -326,11 +341,6 @@ Ti::TiValue TiUIScrollableViewProxy::scrollToView(Ti::TiValue value)
 		{
 			_nativeScrollableView->scrollToIndexAnimated(index, animated);
 		}
-	}
-	else if(indexValue.isProxy())
-	{
-		Ti::TiViewProxy *viewProxy = static_cast<Ti::TiViewProxy*>(indexValue.toProxy());
-		_nativeScrollableView->scrollToViewAnimated(viewProxy->view, animated);
 	}
 	Ti::TiValue val;
 	val.setUndefined();

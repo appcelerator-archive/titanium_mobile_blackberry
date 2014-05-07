@@ -17,6 +17,7 @@ TiUITabGroupProxy::TiUITabGroupProxy(const char* name) : Ti::TiWindowProxy(name)
 	createPropertyFunction("addTab", _addTab);
 	createPropertyFunction("setActiveTab", _setActiveTab);
 	createPropertySetterGetter("showTabsOnActionBar", _setShowTabsOnActionBar, _getShowTabsOnActionBar);
+	createPropertyGetter("tabs", _getTiTabs);
 	bb::cascades::TabbedPane* tabbedPane = new bb::cascades::TabbedPane();
 	tabbedPane->setShowTabsOnActionBar(true);
 	tabbedPane->setParent(NULL);
@@ -61,15 +62,28 @@ Ti::TiValue TiUITabGroupProxy::getShowTabsOnActionBar()
 
 Ti::TiValue TiUITabGroupProxy::setActiveTab(Ti::TiValue value)
 {
-	getTabbedPane()->setActiveTab(getTabbedPane()->at((int)value.toNumber()));
-	Ti::TiValue val;
-	val.setUndefined();
-	return val;
+	if(value.isNumber())
+	{
+		setActiveTab(_allTabs.at((int)value.toNumber()));
+	} else
+	if(value.isProxy())
+	{
+		setActiveTab(static_cast<TiUITabProxy*>(value.toProxy()));
+	}
+	return Ti::TiValue();
 }
 
 void TiUITabGroupProxy::setActiveTab(TiUITabProxy* tab)
 {
+	Ti::TiEventParameters eventParams;
+	eventParams.addParam("previousTab", _activeTab);
+	eventParams.addParam("previousIndex", getTabbedPane()->indexOf(_activeTab->getTab()));
+	getTabbedPane()->setActiveTab(tab->getTab());
 	_activeTab = tab;
+	eventParams.addParam("index", getTabbedPane()-> indexOf(_activeTab->getTab()));
+	eventParams.addParam("tab", tab);
+	changeIsFocus(false);
+	fireEvent(Ti::TiConstants::EventFocus, eventParams);
 }
 
 Ti::TiValue TiUITabGroupProxy::addTab(Ti::TiValue value)
@@ -85,12 +99,27 @@ Ti::TiValue TiUITabGroupProxy::addTab(Ti::TiValue value)
 	tabProxy->clearWeak();
 	getTabbedPane()->add(tabProxy->getTab());
 	_allTabs.append(tabProxy);
+	_activeTab = _allTabs.at(0);
 	return val;
 }
 
 QList<TiUITabProxy*> TiUITabGroupProxy::getTabs()
 {
 	return _allTabs;
+}
+
+Ti::TiValue TiUITabGroupProxy::getTiTabs()
+{
+	Ti::TiValue rValue;
+	QList<Ti::TiValue> array;
+	foreach(TiUITabProxy *proxy, _allTabs)
+	{
+		Ti::TiValue current;
+		current.setProxy(proxy);
+		array.append(current);
+	}
+	rValue.setList(array);
+	return rValue;
 }
 
 TiUITabGroupEventHandler::TiUITabGroupEventHandler(TiUITabGroupProxy* proxy)

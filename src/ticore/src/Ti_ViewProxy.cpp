@@ -377,9 +377,7 @@ Ti::TiValue Ti::TiViewProxy::getAnimatedCenter()
 }
 Ti::TiValue Ti::TiViewProxy::getBackgroundColor()
 {
-	Ti::TiValue val;
-	val.setUndefined();
-	return val;
+	return Ti::TiValue();
 }
 Ti::TiValue Ti::TiViewProxy::getBackgroundDisabledColor()
 {
@@ -567,6 +565,7 @@ Ti::TiValue Ti::TiViewProxy::add(Ti::TiValue value)
 		Ti::TiView* childView = childProxy->getView();
 		Ti::TiView* thisView = getView();
 		thisView->add(childView);
+		setTiValueForKey(value, "parent");
 	}
 	else
 	{
@@ -588,6 +587,7 @@ Ti::TiValue Ti::TiViewProxy::add(Ti::TiValue value)
        }
        array->Set(array->Length(), value.toJSValue());
        childNO->release();
+       setTiValueForKey(value, "parent");
 	}
 
 	Ti::TiValue val;
@@ -627,7 +627,7 @@ Ti::TiValue Ti::TiViewProxy::remove(Ti::TiValue value)
 	thisView->remove(childView);
 	_childViewsProxies.removeOne(childProxy);
 
-
+	setTiValueForKey(Ti::TiValue(), "parent");
     Local<Value> children = _jsObject->Get(String::New("children"));
     if(!children.IsEmpty() && !children->IsUndefined())
     {
@@ -674,11 +674,9 @@ Ti::TiValue Ti::TiViewProxy::toImage(Ti::TiValue)
 	val.setUndefined();
 	return val;
 }
-Ti::TiValue Ti::TiViewProxy::updateLayout(Ti::TiValue)
+Ti::TiValue Ti::TiViewProxy::updateLayout(Ti::TiValue val)
 {
-	Ti::TiValue val;
-	val.setUndefined();
-	return val;
+	return applyProperties(val);
 }
 Ti::TiValue Ti::TiViewProxy::convertPointToView(Ti::TiValue)
 {

@@ -6,6 +6,7 @@
  */
 
 #include "TiUIScrollableView.h"
+#include "TiUIScrollableViewProxy.h"
 #include <bb/cascades/Container>
 #include "ScrollableView.h"
 
@@ -44,9 +45,14 @@ ScrollableView* TiUIScrollableView::getNative()
 }
 void TiUIScrollableView::onPageChange(int index)
 {
+	if(index == _scrollableView->getCurrentIndex()) return;
+	TiUIScrollableViewProxy* proxy = static_cast<TiUIScrollableViewProxy*>(getProxy());
+	Ti::TiViewProxy* currentView = proxy->getProxyAt(index);
 	Ti::TiEventParameters eventParams;
+	eventParams.addParam("currentPage", index);
 	eventParams.addParam("index", index);
-	getProxy()->fireEvent(Ti::TiConstants::EventChange, eventParams);
+	eventParams.addParam("view", currentView);
+	proxy->fireEvent("scroll", eventParams);
 }
 void TiUIScrollableView::onRelayout(QRectF rect)
 {

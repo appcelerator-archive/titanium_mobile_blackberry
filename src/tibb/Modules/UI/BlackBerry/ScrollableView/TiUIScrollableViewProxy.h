@@ -58,6 +58,7 @@ public:
 	Ti::TiValue removeView(Ti::TiValue);
 	Ti::TiValue scrollToView(Ti::TiValue);
 
+	Ti::TiViewProxy *getProxyAt(int);
 
 	EXPOSE_SETTER(TiUIScrollableViewProxy, setCacheSize)
 	EXPOSE_SETTER(TiUIScrollableViewProxy, setCurrentPage)

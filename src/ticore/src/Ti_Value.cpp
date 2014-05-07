@@ -75,7 +75,7 @@ void Ti::TiValue::setValue(Handle<Value> value)
 		_bool = value->ToBoolean()->Value();
 	} else if(_jsValue->IsNumber() || _jsValue->IsNumberObject())
 	{
-		_number = value->ToNumber()->Value();
+		_number = _jsValue->IsNumber() ? value->ToNumber()->Value() : value->ToNumber()->NumberValue();
 	}
 
 	_string = Ti::TiHelper::QStringFromValue(value->ToString());
@@ -163,6 +163,10 @@ bb::cascades::Color Ti::TiValue::toColor() {
 
 Handle<Value> Ti::TiValue::toJSValue()
 {
+	if(_jsValue.IsEmpty())
+	{
+		_jsValue = Undefined();
+	}
 	return _jsValue;
 }
 QString Ti::TiValue::toString()

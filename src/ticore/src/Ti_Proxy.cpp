@@ -261,7 +261,10 @@ Handle<Value> Ti::TiProxy::_Getter (Local<String> property, const AccessorInfo& 
 	if(tiProxy->properties.contains(Ti::TiHelper::QStringFromValue(property)))
 	{
 		Ti::TiProperty *prop = tiProxy->properties[Ti::TiHelper::QStringFromValue(property)];
-		return handleScope.Close(prop->getValue());
+		Handle<Value> r = prop->getValue();
+		if(r.IsEmpty() || r->IsUndefined())
+			return handleScope.Close(Handle<Value>());
+		return handleScope.Close();
 	}
 	return handleScope.Close(Handle<Value>());
 }

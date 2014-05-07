@@ -82,8 +82,9 @@ void ScrollableView::onItemChanged(QVariantList item)
 	bool success;
 	if(_tiView != NULL)
 	{
-		_currentIndex = index.toInt(&success);
-		_tiView->onPageChange(_currentIndex);
+		int i = index.toInt(&success);
+		_tiView->onPageChange(i);
+		_currentIndex = i;
 	}
 }
 
@@ -106,6 +107,7 @@ void ScrollableView::removeView(Ti::TiView* view)
 	{
 		QVariant val = model->value(i);
 		PageContainer* page = val.value<PageContainer*>();
+		if(page == NULL) continue;
 		if(page->view == view)
 		{
 			model->removeAt(i);
