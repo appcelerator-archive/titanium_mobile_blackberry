@@ -183,7 +183,6 @@ Ti::TiWindowProxy* TiUITabProxyEventHandler::windowFromPage(bb::cascades::Page* 
 }
 void TiUITabProxyEventHandler::onPagePoped(bb::cascades::Page* page)
 {
-	qDebug() << "[TiUITabProxyEventHandler] onPagePoped";
 	Ti::TiWindowProxy* window = windowFromPage(page);
 	if(window != NULL)
 	{

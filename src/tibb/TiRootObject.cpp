@@ -55,9 +55,6 @@ using namespace titanium;
 
 static Handle<ObjectTemplate> g_rootTemplate;
 
-static QMap<QString, v8::Persistent<Value> > _commonJSModules;
-
-
 TiRootObject::TiRootObject()
     : TiObject("")
 {
@@ -70,9 +67,7 @@ TiRootObject::~TiRootObject()
     {
         context_.Dispose();
     }
-    foreach(QString str, _commonJSModules.keys()) {
-    	_commonJSModules[str].Dispose();
-    }
+
     NativeStringInterface::deleteInstance();
 }
 
@@ -98,6 +93,7 @@ void TiRootObject::onCreateStaticMembers()
     tiObj->Set(String::New("App"), TiAppModule::CreateModule(), DontDelete);
     tiObj->Set(String::New("API"), TiAPIModule::CreateModule(), DontDelete);
     tiObj->Set(String::New("BlackBerry"), TiBlackberryModule::CreateModule(), DontDelete);
+
 
     Local<Object> tiUI = tiObj->Get(String::New("UI"))->ToObject();
     tiUI->Set(String::New("BlackBerry"), TiUIBlackberryModule::CreateModule(), DontDelete);
@@ -128,7 +124,6 @@ void TiRootObject::addMember(TiObject* object, const char* name)
         TiObject::setTiObjectToJsObject(newValue, object);
     }
     obj->Set(String::New(name), newValue, DontDelete);
-
 }
 
 TiRootObject* TiRootObject::createRootObject()
@@ -207,6 +202,7 @@ Handle<Object> TiRootObject::createProxyObject()
 
 void TiRootObject::createStringMethods()
 {
+
     Local<Value> str = context_->Global()->Get(String::New("String"));
     if (!str->IsObject())
     {
@@ -272,10 +268,11 @@ static QString readJsFile(QString filePath) {
 	return jsContent;
 }
 
-
 Handle<Value> TiRootObject::_require(void* userContext, TiObject* caller, const Arguments& args)
 {
 	HandleScope scope;
+	Local<Object> globalObject = TitaniumRuntime::getContenxt()->Global();
+
 	Handle<Value> nativeModule = TiModuleRegistry::GetModule(QString(*String::Utf8Value(args[0]->ToString())));
 	if(!nativeModule->IsUndefined())
 	{
@@ -283,9 +280,10 @@ Handle<Value> TiRootObject::_require(void* userContext, TiObject* caller, const 
 	}
 	QString fileName = Ti::TiHelper::QStringFromValue(args[0]).append(".js");
 	QString filePath = Ti::TiHelper::getAssetPath(fileName).prepend("app/native/");
-	if(_commonJSModules.contains(filePath))
+	Local<Value> existingModule = globalObject->GetHiddenValue(Ti::TiHelper::ValueFromQString(fileName)->ToString());
+	if(!existingModule.IsEmpty() && !existingModule->IsUndefined())
 	{
-		return scope.Close(_commonJSModules.value(filePath));
+		return scope.Close(existingModule);
 	}
 
 	QString js = readJsFile(filePath);
@@ -295,16 +293,15 @@ Handle<Value> TiRootObject::_require(void* userContext, TiObject* caller, const 
 						));
 		return scope.Close(Undefined());
 	}
-	js.prepend("(function () {"
-			   "	var module = {"
-			   "		exports: {}"
-			   "	};"
-			   "	var exports = module.exports;"
-			   "	Ti.API.info('inside \"" + filePath + "\" module');"
-			);
-	js.append("	\n"
-			  "	return module.exports;\n"
-			  "})();\n");
+	js.prepend("(function(){"
+			"var __vars = {};"
+			"__vars.exports = {};"
+			"__vars.module = {exports:__vars.exports};"
+			"var module = __vars.module;"
+			"var exports = __vars.exports;");
+	js.append("\nreturn __vars.module.exports;"
+			"})();");
+
 
 	Handle<Script> script = Script::Compile(Ti::TiHelper::ValueFromQString(js)->ToString() , Ti::TiHelper::ValueFromQString(fileName));
 	TryCatch tryCatch;
@@ -314,12 +311,13 @@ Handle<Value> TiRootObject::_require(void* userContext, TiObject* caller, const 
 		return scope.Close(Undefined());
 	}
 	Persistent<Value> result = Persistent<Value>::New(script->Run());
+	result.MarkIndependent();
 	if (result.IsEmpty())
 	{
     	Ti::TiErrorScreen::ShowWithTryCatch(tryCatch);
 		return scope.Close(Undefined());
 	}
-	_commonJSModules.insert(filePath, result);
+	globalObject->SetHiddenValue(Ti::TiHelper::ValueFromQString(fileName)->ToString(), result);
 	return scope.Close(result);
 }
 

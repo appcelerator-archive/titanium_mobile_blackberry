@@ -55,11 +55,11 @@ Ti::TiView::~TiView() {
 	if(proxy != NULL)
 	{
 		QString name = getProxy()->getProxyName();
-		qDebug() << "[INTERNAL] DELETING VIEW" << name.replace("Proxy", "").replace("TiUI", "Ti.UI.");
+		// qDebug() << "[INTERNAL] DELETING VIEW" << name.replace("Proxy", "").replace("TiUI", "Ti.UI.");
 	}
 	else
 	{
-		qDebug() << "[INTERNAL] PROXY HAS BEEN DELETED";
+		// qDebug() << "[INTERNAL] PROXY HAS BEEN DELETED";
 	}
 }
 

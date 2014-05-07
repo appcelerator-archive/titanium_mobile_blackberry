@@ -11,6 +11,7 @@
 #include "TiPropertyGetFunctionObject.h"
 #include "TiPropertyMapObject.h"
 #include "TiPropertySetFunctionObject.h"
+#include "TiCore.h"
 
 #define HIDDEN_TI_OBJECT_PROPERTY           "ti_"
 #define HIDDEN_TEMP_OBJECT_PROPERTY         "globalTemplate_"
@@ -156,12 +157,17 @@ TiObject* TiObject::getTiObjectFromJsObject(Handle<Value> value)
         return NULL;
     }
     Handle<Object> obj = Handle<Object>::Cast(value);
-    Handle<External> ext = Handle<External>::Cast(obj->GetHiddenValue(String::New(HIDDEN_TI_OBJECT_PROPERTY)));
+    Local<Value> hidden = obj->GetHiddenValue(String::New(HIDDEN_TI_OBJECT_PROPERTY));
+    if(hidden.IsEmpty() || !hidden->IsExternal())
+    {
+    	return NULL;
+    }
+    Handle<External> ext = Handle<External>::Cast(hidden);
     if (ext.IsEmpty())
     {
         return NULL;
     }
-    TiObject* tiObj = (TiObject*) ext->Value();
+    TiObject* tiObj = static_cast<TiObject*>(ext->Value());
     return tiObj;
 }
 
@@ -424,6 +430,7 @@ Handle<Value> TiObject::_propGetter(Local<String> prop, const AccessorInfo& info
     Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(info.Holder());
     String::Utf8Value propName(prop);
     const char* propString = (const char*)(*propName);
+
     TiObject* propObject = obj->onLookupMember(propString);
     if (propObject == NULL)
     {
@@ -440,6 +447,7 @@ Handle<Value> TiObject::_propGetter(Local<String> prop, const AccessorInfo& info
         */
         return Handle<Value>();
     }
+
     Handle<Value> ret = propObject->getValue();
     if (!ret.IsEmpty())
     {
@@ -450,9 +458,13 @@ Handle<Value> TiObject::_propGetter(Local<String> prop, const AccessorInfo& info
         result = global->NewInstance();
         propObject->setValue(result);
         setTiObjectToJsObject(result, propObject);
+        if(obj->value_->IsObject())
+        	obj->value_->ToObject()->Set(String::New(propString), propObject->getValue(), DontDelete);
     }
     else
     {
+        // if(obj->value_->IsObject())
+        // 	obj->value_->ToObject()->Set(String::New(propString), propObject->getValue(), DontDelete);
         propObject->release();
         return handleScope.Close(propObject->getValue());
     }

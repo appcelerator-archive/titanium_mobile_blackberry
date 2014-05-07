@@ -53,7 +53,6 @@ Ti::TiValue TiAppPropertiesModule::getModuleName()
 
 QVariant TiAppPropertiesModule::createObjectFromTiValue(Ti::TiValue val)
 {
-	qDebug() << "[VAL]" << val.toString();
 	QMap<QString, QVariant> map;
 	if(!val.isMap()) return map;
 
@@ -82,7 +81,6 @@ QVariant TiAppPropertiesModule::createObjectFromTiValue(Ti::TiValue val)
 
 QMap<QString, Ti::TiValue> TiAppPropertiesModule::createMapFromQVariant(QVariant val)
 {
-	qDebug() << "createMapFromQVariant" << val;
 	QMap<QString, Ti::TiValue> map;
 	if(val.type() == QVariant::Map)
 	{

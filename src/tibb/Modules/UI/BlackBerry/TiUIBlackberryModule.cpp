@@ -14,6 +14,10 @@
 #include "TabGroup/TiUITabGroupProxy.h"
 #include "TabGroup/TiUITabProxy.h"
 #include "AlertDialog/TiUIAlertDialogProxy.h"
+#include "TableView/TiUITableViewProxy.h"
+#include "TableView/TiUITableViewRowProxy.h"
+#include "TableView/TiUITableViewSectionProxy.h"
+#include "ScrollableView/TiUIScrollableViewProxy.h"
 
 #include <bb/cascades/SupportedDisplayOrientation>
 #include <bb/cascades/ActionBarPlacement>
@@ -31,6 +35,10 @@ TiUIBlackberryModule::TiUIBlackberryModule(const char* name) : Ti::TiModule(name
 	addFunction("createTabGroup", TiUITabGroupProxy::CreateProxy);
 	addFunction("createTab", TiUITabProxy::CreateProxy);
 	addFunction("createAlertDialog", TiUIAlertDialogProxy::CreateProxy);
+	addFunction("createTableView", TiUITableViewProxy::CreateProxy);
+	addFunction("createTableViewRow", TiUITableViewRowProxy::CreateProxy);
+	addFunction("createTableViewSection", TiUITableViewSectionProxy::CreateProxy);
+	addFunction("createScrollableView", TiUIScrollableViewProxy::CreateProxy);
 
 	addNumber("WEBVIEW_NAVIGATION_TYPE_LINK_CLICKED", bb::cascades::WebNavigationType::LinkClicked);
 	addNumber("WEBVIEW_NAVIGATION_TYPE_FORM_SUBMIT", bb::cascades::WebNavigationType::FormSubmitted);

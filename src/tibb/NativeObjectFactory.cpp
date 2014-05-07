@@ -17,8 +17,6 @@
 #include "NativeGestureObject.h"
 #include "NativeImageViewObject.h"
 #include "NativeLabelObject.h"
-#include "NativeTableViewRowObject.h"
-#include "NativeTableViewObject.h"
 #include "NativeProgressBarObject.h"
 #include "NativeSliderObject.h"
 #include "NativeStringInterface.h"
@@ -31,7 +29,6 @@
 #include "NativeDBObject.h"
 #include "NativeResultSetObject.h"
 #include "NativeScrollViewObject.h"
-#include "NativeScrollableViewObject.h"
 #include "NativeMapViewObject.h"
 #include "NativeAnnotationObject.h"
 #include "NativeAudioPlayerObject.h"
@@ -122,14 +119,6 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
         obj = NativeDropDownObject::createDropDown(tiObj);
         break;
 
-    case N_TYPE_TABLE_VIEW:
-        obj = NativeTableViewObject::createTableView(tiObj);
-        break;
-
-    case N_TYPE_TABLE_VIEW_ROW:
-        obj = new NativeTableViewRowObject(tiObj);
-        break;
-
     case N_TYPE_TCPSOCKET:
         obj = NativeTCPSocketObject::createTCPSocket(tiObj);
         break;
@@ -144,10 +133,6 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 
     case N_TYPE_SCROLL_VIEW:
         obj = NativeScrollViewObject::createScrollView(tiObj);
-        break;
-
-    case N_TYPE_SCROLLABLE_VIEW:
-        obj = NativeScrollableViewObject::createScrollableView(tiObj);
         break;
 
     case N_TYPE_DB:

@@ -43,7 +43,7 @@ Ti::TiTimer::~TiTimer()
 }
 
 void Ti::TiTimer::destroyed(QObject* obj) {
-	qDebug() << "[TIMER]" << obj;
+
 }
 void Ti::TiTimer::timeout()
 {
@@ -95,21 +95,16 @@ Handle<Value> Ti::TiTimer::SetTimeout(const Arguments &args)
 
 Handle<Value> Ti::TiTimer::ClearTimeout(const Arguments &args)
 {
-	qDebug() << "[TiTimer] ClearTimeout!";
 	HandleScope scope;
 	Handle<Function> _function = Handle<Function>::Cast(args[0]);
 	if(_timeouts.contains(_function))
 	{
-		qDebug() << "[TiTimer] Found!";
 		Persistent<Function> callback = (Persistent<Function>)_function;
 		Handle<External> timerObject = Handle<External>::Cast(callback->GetHiddenValue(String::New("timer")));
 		Ti::TiTimer* tiTimer = static_cast<Ti::TiTimer*>(timerObject->Value());
     	callback.MakeWeak(tiTimer, _TimerWeakCallback);
     	tiTimer->fireCallback = false;
-		tiTimer->stop();
-		qDebug() << "[TiTimer] remove timer?" << _timeouts.removeOne(_function);
-		qDebug() << "[TiTimer] Done with this";
-        
+		tiTimer->stop();        
 	}
 	return scope.Close(Object::New());
     

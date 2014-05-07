@@ -151,7 +151,6 @@ TiUIWindowActionEvent::TiUIWindowActionEvent(TiUIWindowProxy* proxy, Ti::TiCallb
 
 TiUIWindowActionEvent::~TiUIWindowActionEvent()
 {
-	qDebug() << "[TiUIWindowActionEvent] deleted";
     delete _callback;
 }
 

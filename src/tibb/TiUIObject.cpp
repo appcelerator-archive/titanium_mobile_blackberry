@@ -22,17 +22,13 @@
 #include "TiUIProgressBar.h"
 #include "TiUISlider.h"
 #include "TiUIScrollView.h"
-#include "TiUIScrollableView.h"
 #include "TiUISwitch.h"
-#include "TiUITableView.h"
-#include "TiUITableViewRow.h"
 #include "TiUITextField.h"
 #include "TiUITextArea.h"
 #include "TiUIAnimation.h"
 #include "TiUIEmailDialog.h"
 #include "TiUINavigationGroup.h"
 #include "TiUIImageButton.h"
-#include "TiUITableViewSection.h"
 #include <string.h>
 
 using namespace titanium;
@@ -69,9 +65,6 @@ void TiUIObject::onCreateStaticMembers()
 
     TiProxy::onCreateStaticMembers();
 
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTableView", this, _createTableView);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTableViewRow", this, _createTableViewRow);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTableViewSection", this, TiUITableViewSection::createProxy);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createLabel", this, _createLabel);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createImageButton", this, _createImageButton);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSlider", this, _createSlider);
@@ -86,7 +79,6 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createPicker", this, _createPicker);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createView", this, _createView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createScrollView", this, _createScrollView);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createScrollableView", this, _createScrollableView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setBackgroundColor", this, _setBackgroundColor);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createAnimation", this, _createAnimation);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createNavigationGroup", this, _createNavigationGroup);
@@ -188,16 +180,6 @@ Handle<Value> TiUIObject::_createOptionDialog(void* userContext, TiObject*, cons
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIOptionDialog::createOptionDialog), args);
 }
 
-Handle<Value> TiUIObject::_createTableView(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUITableView::createTableView), args);
-}
-
-Handle<Value> TiUIObject::_createTableViewRow(void* userContext, TiObject* caller, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUITableViewRow::createTableViewRow), args);
-}
-
 Handle<Value> TiUIObject::_createSwitch(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUISwitch::createSwitch), args);
@@ -223,10 +205,6 @@ Handle<Value> TiUIObject::_createAnimation(void* userContext, TiObject*, const A
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIAnimation::createAnimation), args);
 }
 
-Handle<Value> TiUIObject::_createScrollableView(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIScrollableView::createScrollableView), args);
-}
 Handle<Value> TiUIObject::_createNavigationGroup(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUINavigationGroup::createProxy), args);

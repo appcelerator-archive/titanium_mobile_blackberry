@@ -263,7 +263,6 @@ Ti::TiValue TiFilesystemFileProxy::getDirectoryListing(Ti::TiValue)
 		Ti::TiValue val;
 		val.setString(allFiles.at(i));
 		array.append(val);
-		Ti::TiHelper::Log(allFiles.at(i));
 	}
 	returnedValue.setList(array);
 	return returnedValue;

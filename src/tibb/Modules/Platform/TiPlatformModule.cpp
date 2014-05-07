@@ -98,7 +98,7 @@ Ti::TiValue TiPlatformModule::is24HourTimeFormat(Ti::TiValue value)
 
 void TiPlatformModule::setBatteryMonitoring(Ti::TiValue value)
 {
-	qDebug() << "[WARN] Batter Monitoring not supported";
+	Ti::TiHelper::Log("[WARN] Batter Monitoring not supported");
 }
 
 Ti::TiValue TiPlatformModule::getAddress()
@@ -131,8 +131,8 @@ Ti::TiValue TiPlatformModule::getBatteryLevel()
 }
 Ti::TiValue TiPlatformModule::getBatteryMonitoring()
 {
-	qDebug() << "[WARN] Batter Monitoring not supported";
-	qDebug() << "[WARN] Use Ti.Platform.addEventListener('battery', .. ) instead";
+	Ti::TiHelper::Log("[WARN] Batter Monitoring not supported");
+	Ti::TiHelper::Log("[WARN] Use Ti.Platform.addEventListener('battery', .. ) instead");
 	Ti::TiValue val;
 	val.setUndefined();
 	return val;
@@ -313,7 +313,6 @@ void TiPlatformModule::eventAdded(QString str)
 {
 	if(str == QString("battery"))
 	{
-		qDebug() << "Batter event added";
 		bb::device::BatteryInfo _batteryInfo;
 		QObject::connect(&_batteryInfo, SIGNAL(levelChanged(int, bb::device::BatteryChargingState::Type)),
 				_signalHandler, SLOT(levelChanged(int, bb::device::BatteryChargingState::Type)));

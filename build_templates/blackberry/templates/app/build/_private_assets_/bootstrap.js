@@ -230,5 +230,9 @@ Ti.UI.createWindow = Ti.UI.BlackBerry.createWindow;
 Ti.UI.createTabGroup = Ti.UI.BlackBerry.createTabGroup;
 Ti.UI.createTab = Ti.UI.BlackBerry.createTab;
 Ti.UI.createAlertDialog = Ti.UI.BlackBerry.createAlertDialog;
+Ti.UI.createTableView = Ti.UI.BlackBerry.createTableView;
+Ti.UI.createTableViewRow = Ti.UI.BlackBerry.createTableViewRow;
+Ti.UI.createTableViewSection = Ti.UI.BlackBerry.createTableViewSection;
+
 
 Titanium = Ti;

@@ -15,9 +15,7 @@ INCLUDEPATH += \
 
 SOURCES += \
 	./*.cpp \
-	../TiScrollableView/*.cpp \
 	../Contacts/*.cpp \
-    ../TableView/*.cpp \
     ../Media/*.cpp \ 
     ../Modules/App/*.cpp \
     ../Modules/API/*.cpp \
@@ -38,15 +36,17 @@ SOURCES += \
     ../Modules/UI/BlackBerry/Window/*.cpp \
     ../Modules/UI/BlackBerry/TabGroup/*.cpp \
     ../Modules/UI/BlackBerry/AlertDialog/*.cpp \
+    ../Modules/UI/BlackBerry/AlertDialog/*.cpp \
+    ../Modules/UI/BlackBerry/TableView/*.cpp \
+    ../Modules/UI/BlackBerry/TableView/Components/*.cpp \
+    ../Modules/UI/BlackBerry/ScrollableView/*.cpp \
     ../Modules/Utils/*.cpp \
     ../Modules/Blackberry/Notification/*.cpp \
     ../Modules/Blackberry/*.cpp
 
 HEADERS += \
 	./*.h \
-    ../TiScrollableView/*.h \
     ../Contacts/*.h \
-    ../TableView/*.h \
     ../Media/*.h \ 
     ../Modules/App/*.h \
     ../Modules/APi/*.h \
@@ -67,6 +67,9 @@ HEADERS += \
     ../Modules/UI/BlackBerry/Window/*.h \
     ../Modules/UI/BlackBerry/TabGroup/*.h \
     ../Modules/UI/BlackBerry/AlertDialog/*.h \
+    ../Modules/UI/BlackBerry/TableView/*.h \
+    ../Modules/UI/BlackBerry/TableView/Components/*.h \
+    ../Modules/UI/BlackBerry/ScrollableView/*.h \
     ../Modules/Utils/*.h \
     ../Modules/Blackberry/Notification/*.h \
     ../Modules/Blackberry/*.h

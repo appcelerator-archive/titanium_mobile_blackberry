@@ -9,6 +9,7 @@
 #include "Ti_ViewProxy.h"
 #include "Ti_Value.h"
 #include "Ti_Constants.h"
+#include "Ti_Macros.h"
 #include "TitaniumLayout.h"
 #include <bb/cascades/ImagePaint>
 #include <bb/cascades/ActionSet>
@@ -100,17 +101,8 @@ Ti::TiViewProxy::~TiViewProxy()
 		child->makeWeak();
 	}
 	_childViewsProxies.clear();
+	_jsObject->Delete(String::New("children"));
 
-    Ti::TiValue cArray = getTiValueForKey("childs");
-    if(!cArray.isUndefined())
-    {
-    	QList<Ti::TiValue> vals = cArray.toList();
-    	foreach(Ti::TiValue v, vals)
-    	{
-            TiObject* addObj = TiObject::getTiObjectFromJsObject(v.toJSValue());
-            addObj->clearValue();
-    	}
-    }
 	if(!isDestroyed)
 	{
 		delete view;
@@ -198,19 +190,6 @@ Ti::TiValue Ti::TiViewProxy::getRight()
 {
 	Ti::TiValue val;
 	val.setString(getView()->_right);
-	return val;
-}
-
-Ti::TiValue Ti::TiViewProxy::getChildren()
-{
-	QList<Ti::TiValue> children;
-	for(int i = 0, len = _childViewsProxies.size(); i < len; i++) {
-		Ti::TiValue child;
-		child.setProxy(_childViewsProxies.at(i));
-		children.append(child);
-	}
-	Ti::TiValue val;
-	val.setList(children);
 	return val;
 }
 
@@ -314,7 +293,6 @@ void Ti::TiViewProxy::setContextMenus(Ti::TiValue value)
 		if(menuProxy->__data__ == NULL) return;
 
 		bb::cascades::ActionSet *menu = (bb::cascades::ActionSet*)menuProxy->__data__;
-		qDebug() << "MENU" << menu->title();
 		getChildControl()->addActionSet(menu);
 	}
 }
@@ -597,17 +575,18 @@ Ti::TiValue Ti::TiViewProxy::add(Ti::TiValue value)
         NativeObject* childNO = uiObj->getNativeObject();
         getView()->addOldObject(childNO);
 
-       Ti::TiValue cArray = getTiValueForKey("childs");
-       if(cArray.isUndefined())
+       Local<Value> children = _jsObject->Get(String::New("children"));
+       Local<Array> array;
+       if(children.IsEmpty() || children->IsUndefined())
        {
-    	   Ti::TiValue chArray;
-    	   QList<Ti::TiValue> list;
-    	   list.append(Ti::TiValue(value.toJSValue()));
-    	   chArray.setList(list);
-    	   setTiValueForKey(chArray, "childs");
-       } else {
-    	   QList<Ti::TiValue> list = cArray.toList();
+    	   array = Array::New();
+    	   _jsObject->Set(String::New("children"), array);
        }
+       else
+       {
+    	   array = Local<Array>::Cast(children);
+       }
+       array->Set(array->Length(), value.toJSValue());
        childNO->release();
 	}
 
@@ -648,8 +627,24 @@ Ti::TiValue Ti::TiViewProxy::remove(Ti::TiValue value)
 	thisView->remove(childView);
 	_childViewsProxies.removeOne(childProxy);
 
+
+    Local<Value> children = _jsObject->Get(String::New("children"));
+    if(!children.IsEmpty() && !children->IsUndefined())
+    {
+    	Local<Array> array = Local<Array>::Cast(children);
+    	for(int i = 0, len = array->Length(); i < len; i++) {
+    		if(array->Get(i) == value.toJSValue())
+    		{
+    	    	array->Delete(i);
+    	    	break;
+    		}
+    	}
+    }
+
 	return val;
 }
+
+TI_GETTER_DEFER(Ti::TiViewProxy, getChildren)
 Ti::TiValue Ti::TiViewProxy::removeAllChildren(Ti::TiValue)
 {
 	foreach(Ti::TiViewProxy* child, _childViewsProxies)

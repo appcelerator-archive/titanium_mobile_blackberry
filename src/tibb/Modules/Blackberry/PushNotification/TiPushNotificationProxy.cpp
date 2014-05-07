@@ -341,7 +341,7 @@ void TiPushNotificationProxy::pushReceived(const bb::system::InvokeRequest &requ
             }
             else
             {
-            	qDebug() << "[PushNotificationProxy] something failed on \"pushReceived\"";
+            	Ti::TiHelper::Log("[ERROR] something failed on \"pushReceived\"");
             }
         } else if (request.action().compare(BB_OPEN_INVOCATION_ACTION) == 0){
             // Received an invoke request to open an existing push (ie. from a notification in the BlackBerry Hub)
@@ -359,7 +359,7 @@ void TiPushNotificationProxy::pushReceived(const bb::system::InvokeRequest &requ
         }
         else
         {
-        	qDebug() << "[PushNotificationProxy] something failed...";
+            Ti::TiHelper::Log("[DEBUG] something PushNotificationProxy - failed on \"pushReceived\"");
         }
 
     }
