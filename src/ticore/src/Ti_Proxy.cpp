@@ -264,7 +264,7 @@ Handle<Value> Ti::TiProxy::_Getter (Local<String> property, const AccessorInfo& 
 		Handle<Value> r = prop->getValue();
 		if(r.IsEmpty() || r->IsUndefined())
 			return handleScope.Close(Handle<Value>());
-		return handleScope.Close();
+		return handleScope.Close(r);
 	}
 	return handleScope.Close(Handle<Value>());
 }
@@ -280,12 +280,12 @@ Handle<Value> Ti::TiProxy::_Setter (Local<String> property, Local<Value> value, 
 	//	 return value;
 	// }
 
-	// Todo: come back to this - might not be allowing GC to collect proxies
-	info.Holder()->ForceSet(property, value);
-	// for example. scrollView.views = [a,b,c]
-	// scrollView.remove(a) <--- removed from view, but still in array
 
 	Handle<Object> obj = Handle<Object>::Cast(info.Holder());
+	// Todo: come back to this - might not be allowing GC to collect proxies
+	obj->ForceSet(property, value);
+	// for example. scrollView.views = [a,b,c]
+	// scrollView.remove(a) <--- removed from view, but still in array
 	Handle<External> proxyObject = Handle<External>::Cast(obj->GetHiddenValue(String::New("module")));
 	if(proxyObject.IsEmpty())
 		proxyObject = Handle<External>::Cast(obj->GetHiddenValue(String::New("proxy")));

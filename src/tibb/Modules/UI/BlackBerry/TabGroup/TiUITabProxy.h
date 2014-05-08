@@ -50,6 +50,8 @@ public:
 	EXPOSE_SETTER(TiUITabProxy, setTitle)
 	EXPOSE_SETTER(TiUITabProxy, setIcon)
 	EXPOSE_SETTER(TiUITabProxy, setWindow)
+
+	TI_CREATE_SETTER_GETTER(TiUITabProxy, setPeekEnable, getPeekEnable)
 	virtual ~TiUITabProxy();
 	virtual void removeWindow(Ti::TiWindowProxy*);
 	QList<Ti::TiWindowProxy*> getAllWindows();

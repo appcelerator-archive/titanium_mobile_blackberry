@@ -244,3 +244,7 @@ QString Ti::TiHelper::getAssetPath(QString file)
 	return "";
 }
 
+double Ti::TiHelper::PixelsToDP(double val)
+{
+	return val / (Ti::TiHelper::PPI() / 160.0);
+}
