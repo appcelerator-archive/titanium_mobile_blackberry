@@ -31,13 +31,14 @@ public:
 
 	Ti::TiValue addTab(Ti::TiValue);
 	Ti::TiValue setActiveTab(Ti::TiValue);
+	Ti::TiValue getTiTabs();
 
 	virtual void setActiveTab(TiUITabProxy*);
 	virtual void fireEvent(QString name, Ti::TiEventParameters params);
 
 	EXPOSE_METHOD(TiUITabGroupProxy, addTab)
 	EXPOSE_METHOD(TiUITabGroupProxy, setActiveTab)
-
+	EXPOSE_GETTER(TiUITabGroupProxy, getTiTabs)
 	TI_CREATE_SETTER_GETTER(TiUITabGroupProxy, setShowTabsOnActionBar, getShowTabsOnActionBar)
 
 	virtual ~TiUITabGroupProxy();

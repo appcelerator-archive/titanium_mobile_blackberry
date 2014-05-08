@@ -35,6 +35,9 @@ public:
 	bb::cascades::AbstractPane *getPane();
 protected:
 	virtual void setPane(bb::cascades::AbstractPane*);
+	virtual void changeIsFocus(bool f) {
+		_isFocused = f;
+	}
 private:
 	bb::cascades::AbstractPane *_pane;
 	QList<bb::cascades::SupportedDisplayOrientation::Type> _orientationModes;

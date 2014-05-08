@@ -524,11 +524,6 @@ TiUIBase::~TiUIBase()
 {
 	if (!jsChildren_.IsEmpty())
     {
-		for(int i = 0, len = jsChildren_->Length(); i < len; i++)
-		{
-			jsChildren_->Set(i, Null());
-		}
-    	jsChildren_.ClearWeak();
     	jsChildren_.Clear();
     	jsChildren_.Dispose();
     }

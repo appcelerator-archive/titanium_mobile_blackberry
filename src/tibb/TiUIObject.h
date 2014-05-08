@@ -40,14 +40,11 @@ private:
     static Handle<Value> _createActivityIndicator(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createSwitch(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createOptionDialog(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> _createTableView(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> _createTableViewRow(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createPicker(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createEmailDialog(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createView(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createScrollView(void* userContext, TiObject*, const Arguments& args);
     static Handle<Value> _createAnimation(void* userContext, TiObject*, const Arguments& args);
-    static Handle<Value> _createScrollableView(void* userContext, TiObject*, const Arguments& args);
     static Handle<Value> _createNavigationGroup(void* userContext, TiObject*, const Arguments& args);
 
     static Handle<Value> _setBackgroundColor(void* userContext, TiObject* caller, const Arguments& args);

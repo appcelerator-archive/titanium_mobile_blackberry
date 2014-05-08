@@ -16,7 +16,6 @@ Ti::TiEventParameters::TiEventParameters() {
 }
 
 Ti::TiEventParameters::~TiEventParameters() {
-	// Ti::TiHelper::Log("Ti::TiEventParameters destroyed!");
 }
 
 bool Ti::TiEventParameters::contains(QString key)
@@ -98,8 +97,6 @@ QString Ti::TiEventParameters::toJsonQString()
 		json.chop(1);
 	}
 	json.append("}");
-
-	qDebug() << "[TiEventParameters]" << json;
 
 	return json;
 }

@@ -51,7 +51,6 @@ void RegisterService::subscribeToPushInitiator(const User& user, const QString& 
         url.addQueryItem("type","bds");
     }
 
-    qDebug() << "URL: " << url;
     m_reply = m_accessManager.get(QNetworkRequest(url));
 
     // Connect to the reply finished signal.
@@ -60,15 +59,12 @@ void RegisterService::subscribeToPushInitiator(const User& user, const QString& 
 
 void RegisterService::httpFinished()
 {
-    qDebug() << "httpFinished called";
-
     int code = -1;
     QString description;
 
     if (m_reply->error() == QNetworkReply::NoError) {
         // Load the data using the reply QIODevice
         const QString returnCode = QString::fromUtf8(m_reply->readAll());
-        qDebug() << "returnCode: " << returnCode;
 
         if (returnCode == "rc=200") {
             m_userDAO.save(m_currentUser);
@@ -115,7 +111,6 @@ void RegisterService::httpFinished()
             description = tr("Error: Unknown error code: %0.").arg(returnCode);
         }
     } else {
-        qDebug() << "network error";
         code = m_reply->error();
         description = m_reply->errorString();
     }
@@ -135,7 +130,6 @@ void RegisterService::onSslErrors(QNetworkReply * reply, const QList<QSslError> 
     // "SSL error: The root CA certificate is not trusted for this purpose"
     // Seems to be a problem with how the server is set up and a known QT issue QTBUG-23625
 
-    qDebug() << "onSslErrors called";
     reply->ignoreSslErrors(errors);
 }
 
@@ -144,7 +138,6 @@ QString RegisterService::deviceVersion() const
     QString deviceVersion;
 
     if (bps_initialize() == BPS_SUCCESS) {
-        qDebug() << "bps initialized";
         deviceinfo_details_t *deviceDetails = 0;
 
         if (deviceinfo_get_details(&deviceDetails) == BPS_SUCCESS) {
@@ -167,7 +160,6 @@ QString RegisterService::deviceModel() const
     QString deviceModel;
 
     if (bps_initialize() == BPS_SUCCESS) {
-        qDebug() << "bps initialized";
         deviceinfo_details_t *deviceDetails = 0;
 
         if (deviceinfo_get_details(&deviceDetails) == BPS_SUCCESS) {

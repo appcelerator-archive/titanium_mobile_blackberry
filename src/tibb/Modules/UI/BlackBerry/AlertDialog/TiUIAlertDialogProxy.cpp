@@ -51,7 +51,6 @@ void TiUIAlertDialogProxy::setButtonNames(Ti::TiValue val)
     }
     if(!val.isList())
     {
-    	qDebug() << "[INTERNAL] Button names was supposed to be an array, instead it's" << val.toString();
     	return;
     }
 
@@ -115,7 +114,7 @@ Ti::TiValue TiUIAlertDialogProxy::show(Ti::TiValue)
 }
 Ti::TiValue TiUIAlertDialogProxy::hide(Ti::TiValue)
 {
-	qDebug() << "[INTERNAL] Ti.UI.AlertDialog hide() not supported in BB10";
+	Ti::TiHelper::Log("[DEBUG] Ti.UI.AlertDialog hide() not supported in BB10");
 	Ti::TiValue val;
 	val.setUndefined();
 	return val;

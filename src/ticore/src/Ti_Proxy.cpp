@@ -216,7 +216,12 @@ Ti::TiValue Ti::TiProxy::getToString(Ti::TiValue)
 
 Ti::TiValue Ti::TiProxy::getTiValueForKey(QString key)
 {
-	return Ti::TiValue(_jsObject->Get(Ti::TiHelper::ValueFromQString(key)));
+	Handle<Value> val = _jsObject->Get(Ti::TiHelper::ValueFromQString(key));
+	if(val.IsEmpty())
+	{
+		val = Undefined();
+	}
+	return Ti::TiValue(val);
 }
 void Ti::TiProxy::setTiValueForKey(Ti::TiValue value, QString key)
 {
@@ -255,9 +260,11 @@ Handle<Value> Ti::TiProxy::_Getter (Local<String> property, const AccessorInfo& 
 
 	if(tiProxy->properties.contains(Ti::TiHelper::QStringFromValue(property)))
 	{
-
 		Ti::TiProperty *prop = tiProxy->properties[Ti::TiHelper::QStringFromValue(property)];
-		return handleScope.Close(prop->getValue());
+		Handle<Value> r = prop->getValue();
+		if(r.IsEmpty() || r->IsUndefined())
+			return handleScope.Close(Handle<Value>());
+		return handleScope.Close();
 	}
 	return handleScope.Close(Handle<Value>());
 }

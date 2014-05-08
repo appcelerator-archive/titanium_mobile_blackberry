@@ -49,7 +49,6 @@ void UnregisterService::unsubscribeFromPushInitiator(const User& user)
     url.addQueryItem("username",user.userId());
     url.addQueryItem("password",user.password());
 
-    qDebug() << "URL: " << url;
     m_reply = m_accessManager.get(QNetworkRequest(url));
 
     // Connect to the reply finished signal.
@@ -58,7 +57,6 @@ void UnregisterService::unsubscribeFromPushInitiator(const User& user)
 
 void UnregisterService::httpFinished()
 {
-    qDebug() << "httpFinished called";
 
     int code = -1;
     QString description;
@@ -66,7 +64,6 @@ void UnregisterService::httpFinished()
     if (m_reply->error() == QNetworkReply::NoError) {
         // Load the data using the reply QIODevice
         const QString returnCode = QString::fromUtf8(m_reply->readAll());
-        qDebug() << "returnCode: " << returnCode;
 
         if (returnCode == "rc=200"){
             const User storedUser = getCurrentlyRegisteredUser();
@@ -108,7 +105,6 @@ void UnregisterService::httpFinished()
             description = tr("Error: Unknown error code: %0.").arg(returnCode);
         }
     } else {
-        qDebug() << "network error";
         code = m_reply->error();
         description = m_reply->errorString();
     }
@@ -128,6 +124,5 @@ void UnregisterService::onSslErrors(QNetworkReply * reply, const QList<QSslError
     // "SSL error: The root CA certificate is not trusted for this purpose"
     // Seems to be a problem with how the server is set up and a known QT issue QTBUG-23625
 
-    qDebug() << "onSslErrors called";
     reply->ignoreSslErrors(errors);
 }

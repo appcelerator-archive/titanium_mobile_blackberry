@@ -230,7 +230,6 @@ void UIWebView::onJavaScriptResult(int resultId, const QVariant& result)
 	map["result"] = res;
 	e.setMap(map);
 
-	qDebug() << "[WEBIVEW] id:" << id << callback.toString();
 	callback.callFunction(getProxy(), e);
 }
 
@@ -251,7 +250,6 @@ void UIWebView::evalJS(QString str, Ti::TiValue callback)
 	}
 	int e = _webView->evaluateJavaScript(str);
 	QString id = QString::number(e);
-	qDebug() << "[WEBIVEW] id:" << id << callback.toString();
 	_evalCallbacks->Set(Ti::TiHelper::ValueFromQString(id), callback.toJSValue());
 }
 

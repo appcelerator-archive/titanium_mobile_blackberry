@@ -56,7 +56,6 @@ void TiElement::addChildElement(Element* parent, Element* child) {
 
     if(std::find((*parent)._children.begin(), (*parent)._children.end(), child) != (*parent)._children.end()) {
         // do nothing
-    	qDebug() << "[LAYOUT] allready contains child";
     } else {
         (*parent)._children.push_back(child);
     }

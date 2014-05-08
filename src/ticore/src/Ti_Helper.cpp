@@ -42,7 +42,6 @@ static void LogToProxy(QString str)
 	    }
 	}
 	_socket->write(QString(str).append("\n").toLocal8Bit().constBegin());
-    qDebug() << str;
 }
 
 float Ti::TiHelper::PPI()

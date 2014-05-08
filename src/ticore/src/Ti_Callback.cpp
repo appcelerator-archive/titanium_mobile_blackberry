@@ -31,6 +31,8 @@ TiCallback::TiCallback(Ti::TiProxy* proxy, Ti::TiValue val)
 }
 TiCallback::~TiCallback()
 {
+	Local<Array> callbacks = Local<Array>::Cast(_proxy->_jsObject->GetHiddenValue(String::New("callbacks")));
+	callbacks->Set(_id, Null());
 }
 void TiCallback::fire(Ti::TiEventParameters params)
 {
@@ -41,9 +43,6 @@ void TiCallback::fire(Ti::TiEventParameters params)
 
 	Local<Array> callbackArray = Local<Array>::Cast(_proxy->_jsObject->GetHiddenValue(String::New("callbacks")));
 	Local<Function> callbackFunction = Local<Function>::Cast(callbackArray->Get(_id));
-
-	Ti::TiHelper::LogInternal("[TiCallback] Callback is " + Ti::TiHelper::QStringFromValue(callbackFunction));
-
 	Local<Object> eventObject = Object::New();
 	Ti::TiEventParameters::addParametersToObject(&params, eventObject);
 
