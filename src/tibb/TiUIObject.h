@@ -42,8 +42,6 @@ private:
     static Handle<Value> _createOptionDialog(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createPicker(void* userContext, TiObject* caller, const Arguments& args);
     static Handle<Value> _createEmailDialog(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> _createView(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> _createScrollView(void* userContext, TiObject*, const Arguments& args);
     static Handle<Value> _createAnimation(void* userContext, TiObject*, const Arguments& args);
     static Handle<Value> _createNavigationGroup(void* userContext, TiObject*, const Arguments& args);
 

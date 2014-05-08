@@ -18,9 +18,11 @@
 #include "TableView/TiUITableViewRowProxy.h"
 #include "TableView/TiUITableViewSectionProxy.h"
 #include "ScrollableView/TiUIScrollableViewProxy.h"
+#include "ScrollView/TiUIScrollViewProxy.h"
 
 #include <bb/cascades/SupportedDisplayOrientation>
 #include <bb/cascades/ActionBarPlacement>
+#include <bb/cascades/OverScrollEffectMode>
 
 using namespace TiUI;
 
@@ -39,6 +41,7 @@ TiUIBlackberryModule::TiUIBlackberryModule(const char* name) : Ti::TiModule(name
 	addFunction("createTableViewRow", TiUITableViewRowProxy::CreateProxy);
 	addFunction("createTableViewSection", TiUITableViewSectionProxy::CreateProxy);
 	addFunction("createScrollableView", TiUIScrollableViewProxy::CreateProxy);
+	addFunction("createScrollView", TiUIScrollViewProxy::CreateProxy);
 
 	addNumber("WEBVIEW_NAVIGATION_TYPE_LINK_CLICKED", bb::cascades::WebNavigationType::LinkClicked);
 	addNumber("WEBVIEW_NAVIGATION_TYPE_FORM_SUBMIT", bb::cascades::WebNavigationType::FormSubmitted);
@@ -56,6 +59,10 @@ TiUIBlackberryModule::TiUIBlackberryModule(const char* name) : Ti::TiModule(name
     addNumber("ACTION_BAR_PLACEMENT_ON_BAR", bb::cascades::ActionBarPlacement::OnBar);
     addNumber("ACTION_BAR_PLACEMENT_IN_OVERFLOW", bb::cascades::ActionBarPlacement::InOverflow);
     addNumber("ACTION_ABR_PLACEMENT_DEFAULT", bb::cascades::ActionBarPlacement::Default);
+
+    addNumber("OVER_SCROLL_ALWAYS", bb::cascades::OverScrollEffectMode::Default);
+    addNumber("OVER_SCROLL_IF_CONTENT_SCROLLS", bb::cascades::OverScrollEffectMode::OnScroll);
+    addNumber("OVER_SCROLL_NEVER", bb::cascades::OverScrollEffectMode::None);
 
 }
 

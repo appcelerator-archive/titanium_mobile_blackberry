@@ -7,6 +7,7 @@
 Ti = Ti || {};
 Ti.include = Ti.include || function (id) { Ti.globalInclude(id, "app/native/assets/") };
 var global = this;
+//var require;
 
 alert = function(msg) {
     Ti.UI.createAlertDialog({message: (msg || '').toString()}).show();
@@ -217,13 +218,13 @@ Ti.UI.create2DMatrix = function(){
             transform: 0,
             duration: 0,
             rotate: function(){}
-    }
-}
+    };
+};
 Ti.UI.createSearchBar = function(args) {
     args = args || {};
-    Ti.API.error('Ti.UI.createSearchBar() NOT SUPPORTED IN BB10, using textField instead');
+    Ti.API.warn('Ti.UI.createSearchBar() is not supported in BB10, using textField instead');
     return Ti.UI.createTextField(args);
-} 
+};
 Ti.UI.createWebView = Ti.UI.BlackBerry.createWebView;
 Ti.UI.createButton = Ti.UI.BlackBerry.createButton;
 Ti.UI.createWindow = Ti.UI.BlackBerry.createWindow;
@@ -234,6 +235,12 @@ Ti.UI.createTableView = Ti.UI.BlackBerry.createTableView;
 Ti.UI.createTableViewRow = Ti.UI.BlackBerry.createTableViewRow;
 Ti.UI.createTableViewSection = Ti.UI.BlackBerry.createTableViewSection;
 Ti.UI.createScrollableView = Ti.UI.BlackBerry.createScrollableView;
+Ti.UI.createScrollView = Ti.UI.BlackBerry.createScrollView;
 Ti.UI.createView = Ti.UI.BlackBerry.createView;
+
+Ti.UI.PORTRAIT = Ti.UI.BlackBerry.PORTRAIT;
+Ti.UI.UPSIDE_PORTRAIT = Ti.UI.BlackBerry.UPSIDE_PORTRAIT;
+Ti.UI.LANDSCAPE_LEFT = Ti.UI.BlackBerry.LANDSCAPE_LEFT;
+Ti.UI.LANDSCAPE_RIGHT = Ti.UI.BlackBerry.LANDSCAPE_RIGHT;
 
 Titanium = Ti;

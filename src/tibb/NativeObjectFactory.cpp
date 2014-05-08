@@ -28,7 +28,6 @@
 #include "NativeHTTPClientObject.h"
 #include "NativeDBObject.h"
 #include "NativeResultSetObject.h"
-#include "NativeScrollViewObject.h"
 #include "NativeMapViewObject.h"
 #include "NativeAnnotationObject.h"
 #include "NativeAudioPlayerObject.h"
@@ -129,10 +128,6 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 
     case N_TYPE_HTTPCLIENT:
         obj = NativeHTTPClientObject::createHTTPClient(tiObj);
-        break;
-
-    case N_TYPE_SCROLL_VIEW:
-        obj = NativeScrollViewObject::createScrollView(tiObj);
         break;
 
     case N_TYPE_DB:

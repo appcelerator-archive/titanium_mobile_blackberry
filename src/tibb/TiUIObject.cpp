@@ -21,7 +21,6 @@
 #include "TiUIPicker.h"
 #include "TiUIProgressBar.h"
 #include "TiUISlider.h"
-#include "TiUIScrollView.h"
 #include "TiUISwitch.h"
 #include "TiUITextField.h"
 #include "TiUITextArea.h"
@@ -77,8 +76,6 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSwitch", this, _createSwitch);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createOptionDialog", this, _createOptionDialog);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createPicker", this, _createPicker);
-//    TiGenericFunctionObject::addGenericFunctionToParent(this, "createView", this, _createView);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createScrollView", this, _createScrollView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setBackgroundColor", this, _setBackgroundColor);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createAnimation", this, _createAnimation);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createNavigationGroup", this, _createNavigationGroup);
@@ -94,10 +91,6 @@ void TiUIObject::onCreateStaticMembers()
     ADD_STATIC_TI_VALUE("PICKER_TYPE_COUNT_DOWN_TIMER", Number::New(Ti::UI::PICKER_TYPE_COUNT_DOWN_TIMER), this);
     ADD_STATIC_TI_VALUE("FILL", String::NewSymbol("UI.FILL"), this);
     ADD_STATIC_TI_VALUE("SIZE", String::NewSymbol("UI.SIZE"), this);
-    ADD_STATIC_TI_VALUE("LANDSCAPE_LEFT", Integer::New(Orientation::LANDSCAPE_LEFT), this);
-    ADD_STATIC_TI_VALUE("LANDSCAPE_RIGHT", Integer::New(Orientation::LANDSCAPE_RIGHT), this);
-    ADD_STATIC_TI_VALUE("PORTRAIT", Integer::New(Orientation::PORTRAIT), this);
-    ADD_STATIC_TI_VALUE("UPSIDE_PORTRAIT", Integer::New(Orientation::UPSIDE_PORTRAIT), this);
     ADD_STATIC_TI_VALUE("FACE_UP", Integer::New(Orientation::FACE_UP), this);
     ADD_STATIC_TI_VALUE("FACE_DOWN", Integer::New(Orientation::FACE_DOWN), this);
     ADD_STATIC_TI_VALUE("KEYBOARD_DEFAULT", Integer::New(KeyboardType::DEFAULT), this);
@@ -188,16 +181,6 @@ Handle<Value> TiUIObject::_createSwitch(void* userContext, TiObject*, const Argu
 Handle<Value> TiUIObject::_createPicker(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIPicker::createPicker), args);
-}
-
-Handle<Value> TiUIObject::_createView(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIBase::createView), args);
-}
-
-Handle<Value> TiUIObject::_createScrollView(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIScrollView::createScrollView), args);
 }
 
 Handle<Value> TiUIObject::_createAnimation(void* userContext, TiObject*, const Arguments& args)

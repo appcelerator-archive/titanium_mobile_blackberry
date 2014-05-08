@@ -24,6 +24,7 @@ TiUITabProxy::TiUITabProxy(const char* name) : Ti::TiProxy(name),
 	createPropertySetter("title", _setTitle);
 	createPropertySetter("icon", _setIcon);
 	createPropertySetter("window", _setWindow);
+	createPropertySetterGetter("peekEnabled", _setPeekEnable, _getPeekEnable);
 	createPropertyFunction("open", _open);
 	createPropertyFunction("close", _close);
 	createPropertyFunction("pop", _pop);
@@ -41,6 +42,17 @@ TiUITabProxy::~TiUITabProxy()
 	delete _navigationPane;
 }
 
+void TiUITabProxy::setPeekEnable(Ti::TiValue value)
+{
+	_navigationPane->setPeekEnabled(value.toBool());
+}
+
+Ti::TiValue TiUITabProxy::getPeekEnable()
+{
+	Ti::TiValue val;
+	val.setBool(_navigationPane->isPeekEnabled());
+	return val;
+}
 void TiUITabProxy::setRootWindow(TiUIWindowProxy* windowProxy)
 {
 	_rootWindow = windowProxy;

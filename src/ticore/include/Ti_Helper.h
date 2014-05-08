@@ -40,6 +40,7 @@ public:
 	static QMap<QString, QVariant> getAppSettings();
 	static QVariant getAppSetting(QString);
 	static QString getAssetPath(QString);
+	static double PixelsToDP(double);
 };
 }
 #endif /* TIHELPER_H_ */
