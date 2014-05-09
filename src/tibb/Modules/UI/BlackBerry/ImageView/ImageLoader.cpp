@@ -18,6 +18,7 @@ ImageLoader::ImageLoader(TiUIImageView* tiView,  bb::cascades::ImageView* img, Q
 	imageUrl = url;
 	if (networkManager)
 	{
+		url = QUrl::fromEncoded(url.toString().toUtf8());
 	    QNetworkRequest networkRequest(url);
 	   	networkReply = networkManager->get(networkRequest);
 	    connect(networkReply, SIGNAL(finished()), this, SLOT(onFinish()));
