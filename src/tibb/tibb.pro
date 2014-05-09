@@ -41,6 +41,7 @@ SOURCES += \
     ../Modules/UI/BlackBerry/TableView/Components/*.cpp \
     ../Modules/UI/BlackBerry/ScrollableView/*.cpp \
     ../Modules/UI/BlackBerry/ScrollView/*.cpp \
+    ../Modules/UI/BlackBerry/ImageView/*.cpp \
     ../Modules/Utils/*.cpp \
     ../Modules/Blackberry/Notification/*.cpp \
     ../Modules/Blackberry/*.cpp
@@ -72,6 +73,7 @@ HEADERS += \
     ../Modules/UI/BlackBerry/TableView/Components/*.h \
     ../Modules/UI/BlackBerry/ScrollableView/*.h \
     ../Modules/UI/BlackBerry/ScrollView/*.h \
+    ../Modules/UI/BlackBerry/ImageView/*.h \
     ../Modules/Utils/*.h \
     ../Modules/Blackberry/Notification/*.h \
     ../Modules/Blackberry/*.h

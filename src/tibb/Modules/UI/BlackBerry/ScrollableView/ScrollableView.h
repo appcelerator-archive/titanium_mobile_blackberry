@@ -10,7 +10,7 @@
 
 #include <QObject>
 #include "TiCore.h"
-#include <bb/cascades/Customcontrol>
+#include <bb/cascades/CustomControl>
 #include <bb/cascades/ListView>
 #include "ScrollableViewPage.h"
 #include "TiUIScrollableView.h"

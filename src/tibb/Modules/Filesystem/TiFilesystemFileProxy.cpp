@@ -54,8 +54,16 @@ TiFilesystemFileProxy::TiFilesystemFileProxy(const char* name) :
 
 TiFilesystemFileProxy::~TiFilesystemFileProxy()
 {
-
 }
+
+QString TiFilesystemFileProxy::getFilePath() {
+	return _fileInfo.filePath();
+}
+
+Ti::TiData::Type TiFilesystemFileProxy::getType() {
+	return TiData::File;
+};
+
 
 QByteArray TiFilesystemFileProxy::getData()
 {

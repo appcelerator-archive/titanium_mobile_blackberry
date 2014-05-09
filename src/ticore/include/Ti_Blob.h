@@ -62,12 +62,13 @@ public:
 	void setImageData(bb::ImageData);
 	void setMimeType(QString, TiBlobType);
 
+	virtual TiData::Type getType();
 	virtual QByteArray getData();
 	virtual QString getFilename();
 	virtual QString getContentType();
 	QString getMimeType();
 	QString getPath();
-	Ti::TiBlobType getType();
+	Ti::TiBlobType getBlobType();
 	Ti::TiBlob* getNativePath();
 	bb::ImageData getImageData();
 	QSizeF _imageSize;

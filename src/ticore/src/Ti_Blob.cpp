@@ -69,6 +69,9 @@ Ti::TiBlob* Ti::TiBlob::InitWithFile(QString path)
 	blob->_blobType = Ti::TiBlobTypeFile;
 	return blob;
 }
+Ti::TiData::Type Ti::TiBlob::getType() {
+	return TiData::Blob;
+};
 
 bool Ti::TiBlob::isImageMimeType()
 {
@@ -184,7 +187,7 @@ QString Ti::TiBlob::getMimeType()
 	return _mimetype;
 }
 
-Ti::TiBlobType Ti::TiBlob::getType()
+Ti::TiBlobType Ti::TiBlob::getBlobType()
 {
 	return _blobType;
 }
@@ -197,7 +200,7 @@ Ti::TiValue Ti::TiBlob::getWidth()
 {
 	Ti::TiValue returnedValue;
 	ensureImageLoaded();
-	returnedValue.setNumber(_imageData.width());
+	returnedValue.setNumber(Ti::TiHelper::PixelsToDP(_imageData.width()));
 	return returnedValue;
 }
 
@@ -205,7 +208,7 @@ Ti::TiValue Ti::TiBlob::getHeight()
 {
 	Ti::TiValue returnedValue;
 	ensureImageLoaded();
-	returnedValue.setNumber(_imageData.height());
+	returnedValue.setNumber(Ti::TiHelper::PixelsToDP(_imageData.height()));
 	return returnedValue;
 }
 
