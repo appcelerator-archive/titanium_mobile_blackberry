@@ -15,7 +15,6 @@
 #include "NativeDateTimePickerObject.h"
 #include "NativeDropDownObject.h"
 #include "NativeGestureObject.h"
-#include "NativeImageViewObject.h"
 #include "NativeLabelObject.h"
 #include "NativeProgressBarObject.h"
 #include "NativeSliderObject.h"
@@ -97,10 +96,6 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
     case N_TYPE_TEXT_AREA:
             obj = NativeTextAreaObject::createTextArea(tiObj);
             break;
-
-    case N_TYPE_IMAGEVIEW:
-        obj = NativeImageViewObject::createImageView(tiObj);
-        break;
 
     case N_TYPE_ACTIVITYINDICATOR:
         obj = NativeActivityIndicatorObject::createActivityIndicator(tiObj);

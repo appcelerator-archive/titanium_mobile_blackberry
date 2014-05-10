@@ -53,6 +53,7 @@ public:
 	virtual Ti::TiValue resolve(Ti::TiValue);
 	virtual Ti::TiValue spaceAvailable(Ti::TiValue);
 	virtual Ti::TiValue write(Ti::TiValue);
+	virtual Ti::TiData::Type getType();
 
 private:
 	Ti::TiValue valueFalse();

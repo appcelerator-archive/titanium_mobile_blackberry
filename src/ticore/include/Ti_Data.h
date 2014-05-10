@@ -19,8 +19,13 @@ class TiData : public Ti::TiProxy
 {
 public:
 	TiData(const char*);
+	enum Type
+	{
+		Blob,
+		File
+	};
 	virtual ~TiData();
-
+	virtual TiData::Type getType() = 0;
 	virtual QByteArray 	getData() = 0;
 	virtual QString 	getFilename() = 0;
 	virtual QString 	getContentType() = 0;

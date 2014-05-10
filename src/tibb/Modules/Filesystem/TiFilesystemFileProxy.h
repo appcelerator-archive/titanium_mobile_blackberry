@@ -93,10 +93,11 @@ public:
 	EXPOSE_METHOD(TiFilesystemFileProxy, write);
 
 	virtual void setPath(QString);
-
+	virtual QString getFilePath();
 	virtual QByteArray 	getData();
 	virtual QString 	getFilename();
 	virtual QString 	getContentType();
+	virtual Ti::TiData::Type getType();
 
 private:
 	QString _path;

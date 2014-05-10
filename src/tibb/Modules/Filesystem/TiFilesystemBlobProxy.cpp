@@ -19,6 +19,10 @@ TiFilesystemBlobProxy::~TiFilesystemBlobProxy()
 
 }
 
+Ti::TiData::Type TiFilesystemBlobProxy::getType() {
+	return TiData::File;
+};
+
 Ti::TiValue TiFilesystemBlobProxy::valueFalse()
 {
 	Ti::TiValue val;

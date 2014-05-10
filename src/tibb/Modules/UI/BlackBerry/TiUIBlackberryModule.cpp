@@ -19,6 +19,7 @@
 #include "TableView/TiUITableViewSectionProxy.h"
 #include "ScrollableView/TiUIScrollableViewProxy.h"
 #include "ScrollView/TiUIScrollViewProxy.h"
+#include "ImageView/TiUIImageViewProxy.h"
 
 #include <bb/cascades/SupportedDisplayOrientation>
 #include <bb/cascades/ActionBarPlacement>
@@ -42,6 +43,7 @@ TiUIBlackberryModule::TiUIBlackberryModule(const char* name) : Ti::TiModule(name
 	addFunction("createTableViewSection", TiUITableViewSectionProxy::CreateProxy);
 	addFunction("createScrollableView", TiUIScrollableViewProxy::CreateProxy);
 	addFunction("createScrollView", TiUIScrollViewProxy::CreateProxy);
+	addFunction("createImageView", TiUIImageViewProxy::CreateProxy);
 
 	addNumber("WEBVIEW_NAVIGATION_TYPE_LINK_CLICKED", bb::cascades::WebNavigationType::LinkClicked);
 	addNumber("WEBVIEW_NAVIGATION_TYPE_FORM_SUBMIT", bb::cascades::WebNavigationType::FormSubmitted);

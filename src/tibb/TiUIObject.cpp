@@ -15,7 +15,6 @@
 #include "TiOrientation.h"
 #include "TiUIActivityIndicator.h"
 #include "TiUIClipboardObject.h"
-#include "TiUIImageView.h"
 #include "TiUILabel.h"
 #include "TiUIOptionDialog.h"
 #include "TiUIPicker.h"
@@ -70,7 +69,6 @@ void TiUIObject::onCreateStaticMembers()
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createProgressBar", this, _createProgressBar);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTextField", this, _createTextField);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createTextArea", this, _createTextArea);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createImageView", this, _createImageView);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createEmailDialog", this, _createEmailDialog);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createActivityIndicator", this, _createActivityIndicator);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createSwitch", this, _createSwitch);
@@ -156,11 +154,6 @@ Handle<Value> TiUIObject::_createTextField(void* userContext, TiObject*, const A
 Handle<Value> TiUIObject::_createTextArea(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUITextArea::createTextArea, args);
-}
-
-Handle<Value> TiUIObject::_createImageView(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUIImageView::createImageView, args);
 }
 
 Handle<Value> TiUIObject::_createActivityIndicator(void* userContext, TiObject*, const Arguments& args)
