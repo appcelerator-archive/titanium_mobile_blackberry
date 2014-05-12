@@ -57,6 +57,9 @@ exports.config = function (logger, config, cli) {
                 abbr: 'O',
                 desc: __('the path containing the signed bar file'),
                 hint: __('path')
+            },
+            'build-type': {
+                hidden: true
             }
         }
     };
@@ -124,7 +127,7 @@ function build(logger, config, cli, finished) {
                      'device': ['o.le-v7', 'arm', 'a.le-v7'],
                      'distribute': ['o.le-v7', 'arm', 'a.le-v7']};
     this.ndk = cli.argv['ndk'];
-
+    this.analyticsBuildType = cli.argv['build-type'];
     cli.fireHook('build.pre.compile', this, function (e) {
         // Make sure we have an app.js. This used to be validated in validate(), but since plugins like
         // Alloy generate an app.js, it may not have existed during validate(), but should exist now

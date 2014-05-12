@@ -219,6 +219,7 @@ function BlackBerry(_params) {
 	this.availablePort = _params.availablePort;
 	this.modules = TiModules(this.projectDir, this.tiSDK, _params.tiapp, _params.logger);
 	this.target = (_params.target || '').toLowerCase();
+	this.analyticsBuildType = _params.analyticsBuildType;
 }
 
 function RunCommand(_cmd, _logger, _callback) {
@@ -426,6 +427,11 @@ BlackBerry.prototype.build = function(_onFinish) {
 	}
 	appProps += 'current_ip = ' + this.ipAddress + '\n';
 	appProps += 'current_port = ' + this.availablePort + '\n';
+
+	if(this.analyticsBuildType) {
+		appProps += 'buildtype = ' + this.analyticsBuildType + '\n';
+	}
+
 	var appPropsFile = path.join(buildBlackberry, '_private_assets_' , 'app_properties.ini');
 	fs.writeFileSync(appPropsFile, appProps);
 
