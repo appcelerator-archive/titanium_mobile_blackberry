@@ -71,6 +71,7 @@ TiAnalyticsObject::TiAnalyticsObject(NativeObjectFactory* objectFactory)
 		sid.replace("}", "");
 		sid_ = sid.toLocal8Bit();
 
+		_buildtype = defaultSettings.value("buildtype").toString();
 		// get deploy type if development or production
 		QString deployType = defaultSettings.value("deploytype").toString();
 		deployType_ = deployType.toLocal8Bit();
@@ -164,7 +165,7 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 {
 	sqlite3_stmt* stmt;
 	int rc;
-	string type;
+	QString type;
 
 	string cmd = "INSERT INTO events VALUES (?, ?)";
 	rc = sqlite3_prepare_v2(db, cmd.c_str(), strlen(cmd.c_str()) + 1, &stmt, NULL);
@@ -185,19 +186,45 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 	QByteArray id = uid.toLocal8Bit();
 
 	if (name.find("app.feature") == std::string::npos) {
-		type = name;
+		type = QString(name.c_str());
 	} else {
-		type = typeArg;
+		type = QString(typeArg.c_str());
 	}
 
-	// TODO guard against 1024 overrun
-	char json[1024];
-	sprintf(json, "[{\"seq\":%d,\"ver\":\"2\",\"id\":\"%s\",\"sid\":\"%s\",\"mid\":\"%s\",\"aguid\":\"%s\",\"type\":\"%s\",\"event\":\"%s\",\"ts\":\"%s\",\"data\":{\"platform\":\"blackberry\",\"deploytype\":\"%s\",\"app_version\":\"%s\",\"feature_data\":\"%s\"}}]",
-				sequence_, id.data(), sid_.data(), mid_.data(), aguid_.data(), name.c_str(), type.c_str(), ts.data(),
-				deployType_.data(), appVersion_.data(), data.c_str());
 
+	// Commenting for now, just in case we need to roll back...
+	// TIMOB-16916
+	// char json[1024];
+	// sprintf(json, "[{\"seq\":%d,\"ver\":\"2\",\"id\":\"%s\",\"sid\":\"%s\",\"mid\":\"%s\",\"aguid\":\"%s\",\"type\":\"%s\",\"event\":\"%s\",\"ts\":\"%s\",\"data\":{\"platform\":\"blackberry\",\"deploytype\":\"%s\",\"app_version\":\"%s\",\"feature_data\":\"%s\"}}]",
+	// 			sequence_, id.data(), sid_.data(), mid_.data(), aguid_.data(), name.c_str(), type.c_str(), ts.data(),
+	// 			deployType_.data(), appVersion_.data(), data.c_str());
+
+
+
+	QString json =
+			QString("[{") +
+			QString("\"seq\": " + QString::number(sequence_) + ",") +
+			QString("\"ver\": 2,") +
+			QString("\"id\": \"" + uid + "\",") +
+			QString("\"sid\": \"" + sid_ + "\",") +
+			QString("\"mid\": \"" + mid_ + "\",") +
+			QString("\"aguid\": \"" + aguid_ + "\",") +
+			QString("\"type\": \"" + QString(name.c_str()) + "\",") +
+			QString("\"event\": \"" + type + "\",") +
+			QString("\"ts\": \"" + ts + "\",") +
+			QString("\"data\":{") +
+				QString("\"platform\": \"blackberry\",") +
+				QString("\"deploytype\": \"" + deployType_ + "\",")+
+				QString("\"app_version\": \"" + appVersion_ + "\",")+
+				QString("\"feature_data\": \"" + QString(data.c_str()) + "\"");
+
+	if(!_buildtype.isEmpty())
+	{
+		json.append(",\"buildtype\" : \"" + _buildtype +"\"");
+	}
+	json.append("}}]");
 	sqlite3_bind_text(stmt, 1, id.data(), strlen(id.data()), 0);
-	sqlite3_bind_text(stmt, 2, json, strlen(json), 0);
+	sqlite3_bind_text(stmt, 2, json.toLocal8Bit().constData(), json.length(), 0);
 
 	if (sqlite3_step(stmt) != SQLITE_DONE) {
 		Ti::TiHelper::Log(QString("[ERROR] Could not step (execute) stmt."));
