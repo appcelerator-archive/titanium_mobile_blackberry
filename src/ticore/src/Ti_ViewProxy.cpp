@@ -508,7 +508,16 @@ Ti::TiValue Ti::TiViewProxy::getRect()
 Ti::TiValue Ti::TiViewProxy::getSize()
 {
 	Ti::TiValue val;
-	val.setUndefined();
+
+	Ti::TiValue width;
+	width.setNumber(Ti::TiHelper::PixelsToDP(getView()->viewLayout->_layoutNode.element._measuredWidth));
+	Ti::TiValue height;
+	height.setNumber(Ti::TiHelper::PixelsToDP(getView()->viewLayout->_layoutNode.element._measuredHeight));
+
+	QMap<QString, Ti::TiValue> size;
+	size["width"] = width;
+	size["height"] = height;
+	val.setMap(size);
 	return val;
 }
 Ti::TiValue Ti::TiViewProxy::getSoftKeyboardOnFocus()

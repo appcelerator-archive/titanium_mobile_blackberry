@@ -191,15 +191,12 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 		type = QString(typeArg.c_str());
 	}
 
-
 	// Commenting for now, just in case we need to roll back...
 	// TIMOB-16916
 	// char json[1024];
 	// sprintf(json, "[{\"seq\":%d,\"ver\":\"2\",\"id\":\"%s\",\"sid\":\"%s\",\"mid\":\"%s\",\"aguid\":\"%s\",\"type\":\"%s\",\"event\":\"%s\",\"ts\":\"%s\",\"data\":{\"platform\":\"blackberry\",\"deploytype\":\"%s\",\"app_version\":\"%s\",\"feature_data\":\"%s\"}}]",
 	// 			sequence_, id.data(), sid_.data(), mid_.data(), aguid_.data(), name.c_str(), type.c_str(), ts.data(),
 	// 			deployType_.data(), appVersion_.data(), data.c_str());
-
-
 
 	QString json =
 			QString("[{") +

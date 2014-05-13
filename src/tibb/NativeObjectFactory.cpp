@@ -15,15 +15,10 @@
 #include "NativeDateTimePickerObject.h"
 #include "NativeDropDownObject.h"
 #include "NativeGestureObject.h"
-#include "NativeLabelObject.h"
 #include "NativeProgressBarObject.h"
-#include "NativeSliderObject.h"
 #include "NativeStringInterface.h"
 #include "NativeTCPSocketObject.h"
 #include "NativeUDPSocketObject.h"
-#include "NativeTextFieldObject.h"
-#include "NativeTextAreaObject.h"
-#include "NativeToggleButtonObject.h"
 #include "NativeHTTPClientObject.h"
 #include "NativeDBObject.h"
 #include "NativeResultSetObject.h"
@@ -65,10 +60,6 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
     NativeObject* obj = NULL;
     switch (type)
     {
-    case N_TYPE_LABEL:
-        obj = NativeLabelObject::createLabel(tiObj);
-        break;
-
     case N_TYPE_BLOB:
         obj = NativeBlobObject::createBlob(tiObj);
         break;
@@ -81,28 +72,12 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
         obj = NativeImageButtonObject::createButton(tiObj);
         break;
 
-    case N_TYPE_SLIDER:
-        obj = NativeSliderObject::createSlider(tiObj);
-        break;
-
     case N_TYPE_PROGRESSBAR:
         obj = NativeProgressBarObject::createProgressBar(tiObj);
         break;
 
-    case N_TYPE_TEXT_FIELD:
-        obj = NativeTextFieldObject::createTextField(tiObj);
-        break;
-
-    case N_TYPE_TEXT_AREA:
-            obj = NativeTextAreaObject::createTextArea(tiObj);
-            break;
-
     case N_TYPE_ACTIVITYINDICATOR:
         obj = NativeActivityIndicatorObject::createActivityIndicator(tiObj);
-        break;
-
-    case N_TYPE_TOGGLEBUTTON:
-        obj = NativeToggleButtonObject::createToggleButton(tiObj);
         break;
 
     case N_TYPE_EMAILDIALOG:

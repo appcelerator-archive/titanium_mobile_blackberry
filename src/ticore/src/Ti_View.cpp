@@ -178,10 +178,10 @@ void Ti::TiView::onRelayout(QRectF rect)
 	Ti::TiEventParameters eventParams;
 
 	Ti::TiEventParameters rectParams;
-	rectParams.addParam("width", rect.width());
-	rectParams.addParam("height", rect.height());
-	rectParams.addParam("x", rect.x());
-	rectParams.addParam("y", rect.y());
+	rectParams.addParam("width", Ti::TiHelper::PixelsToDP(rect.width()));
+	rectParams.addParam("height", Ti::TiHelper::PixelsToDP(rect.height()));
+	rectParams.addParam("x", Ti::TiHelper::PixelsToDP(rect.x()));
+	rectParams.addParam("y", Ti::TiHelper::PixelsToDP(rect.y()));
 
 	eventParams.addParam("rect", rectParams);
 	getProxy()->fireEvent("postlayout", eventParams);
