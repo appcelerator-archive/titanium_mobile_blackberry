@@ -114,7 +114,14 @@ Ti::TiValue TiUIAlertDialogProxy::show(Ti::TiValue)
 }
 Ti::TiValue TiUIAlertDialogProxy::hide(Ti::TiValue)
 {
-	Ti::TiHelper::Log("[DEBUG] Ti.UI.AlertDialog hide() not supported in BB10");
+	_alert->cancel();
+    _alertQueue.removeOne(_alert);
+    if(_alertQueue.isEmpty()) {
+    	_alertShowing = false;
+    } else {
+    	_alertQueue.last()->show();
+    }
+    makeWeak();
 	Ti::TiValue val;
 	val.setUndefined();
 	return val;
@@ -143,7 +150,7 @@ void TiUIAlertDialogEventHandler::buttonSelected(bb::system::SystemUiResult::Typ
     if(_alertQueue.isEmpty()) {
     	_alertShowing = false;
     } else {
-    	_alertQueue.at(0)->show();
+    	_alertQueue.last()->show();
     }
     _proxy->makeWeak();
 }
