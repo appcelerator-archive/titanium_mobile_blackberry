@@ -5,34 +5,32 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef TI_TIUISWITCH_H_
-#define TI_TIUISWITCH_H_
+#ifndef TI_TIUIIMAGEBUTTON_H_
+#define TI_TIUIIMAGEBUTTON_H_
 
 #include "TiCore.h"
-#include <bb/cascades/ToggleButton>
+#include <bb/cascades/ImageButton>
+#include <bb/cascades/TapEvent>
 
 namespace TiUI {
 
-class TiUISwitch : public Ti::TiView
+class TiUIImageButton : public Ti::TiView
 {
-	Q_OBJECT;
+Q_OBJECT;
 public:
-	TiUISwitch(Ti::TiViewProxy*);
-
+	TiUIImageButton(Ti::TiViewProxy*);
+	virtual ~TiUIImageButton();
 	virtual bool ingoreWidth();
 	virtual bool ingoreHeight();
 	virtual QString defaultWidth();
 	virtual QString defaultHeight();
-	void setChecked(bool);
-	void setEnabled(bool);
-	bool isChecked();
-	bool isEnabled();
-	virtual ~TiUISwitch();
-private:
-	bb::cascades::ToggleButton* _switch;
-public slots:
-	void onChange(bool);
-};
 
+	virtual void onTapEvent(bb::cascades::TapEvent*);
+	bb::cascades::ImageButton * getNative();
+private:
+	bb::cascades::ImageButton *_button;
+public slots:
+	void onClick();
+};
 } /* namespace TiUI */
-#endif /* TIUISWITCH_H_ */
+#endif /* TIUIIMAGEBUTTON_H_ */

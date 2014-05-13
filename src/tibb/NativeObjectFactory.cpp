@@ -8,14 +8,11 @@
 #include "NativeObjectFactory.h"
 
 #include "NativeAccelerometerObject.h"
-#include "NativeActivityIndicatorObject.h"
 #include "NativeBlobObject.h"
 #include "NativeBufferObject.h"
-#include "NativeImageButtonObject.h"
 #include "NativeDateTimePickerObject.h"
 #include "NativeDropDownObject.h"
 #include "NativeGestureObject.h"
-#include "NativeProgressBarObject.h"
 #include "NativeStringInterface.h"
 #include "NativeTCPSocketObject.h"
 #include "NativeUDPSocketObject.h"
@@ -28,7 +25,6 @@
 #include "NativeAudioRecorderObject.h"
 #include "NativeVideoPlayerObject.h"
 #include "NativeAnimationObject.h"
-#include "NativeEmailDialogObject.h"
 #include "TiCascadesApp.h"
 
 #include <bb/cascades/Container>
@@ -66,22 +62,6 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
 
     case N_TYPE_BUFFER:
         obj = NativeBufferObject::createBuffer(tiObj);
-        break;
-
-    case N_TYPE_IMAGE_BUTTON:
-        obj = NativeImageButtonObject::createButton(tiObj);
-        break;
-
-    case N_TYPE_PROGRESSBAR:
-        obj = NativeProgressBarObject::createProgressBar(tiObj);
-        break;
-
-    case N_TYPE_ACTIVITYINDICATOR:
-        obj = NativeActivityIndicatorObject::createActivityIndicator(tiObj);
-        break;
-
-    case N_TYPE_EMAILDIALOG:
-        obj = NativeEmailDialogObject::createEmailDialog(tiObj);
         break;
 
     case N_TYPE_DROPDOWN:

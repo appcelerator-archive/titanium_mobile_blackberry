@@ -1,8 +1,8 @@
-/*
- * TiUISlider.cpp
- *
- *  Created on: Wednesday, September 25, 2013
- *      Author: penrique
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #include "TiUISlider.h"

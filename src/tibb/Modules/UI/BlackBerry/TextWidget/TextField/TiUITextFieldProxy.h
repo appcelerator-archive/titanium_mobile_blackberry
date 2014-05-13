@@ -1,8 +1,8 @@
-/*
- * TiUITextFieldProxy.h
- *
- *  Created on: Friday, September 13, 2013
- *      Author: penrique
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #ifndef TI_TIUITEXTFIELDPROXY_H_

@@ -13,15 +13,11 @@
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
 #include "TiOrientation.h"
-#include "TiUIActivityIndicator.h"
 #include "TiUIClipboardObject.h"
 #include "TiUIOptionDialog.h"
 #include "TiUIPicker.h"
-#include "TiUIProgressBar.h"
 #include "TiUIAnimation.h"
-#include "TiUIEmailDialog.h"
 #include "TiUINavigationGroup.h"
-#include "TiUIImageButton.h"
 #include <string.h>
 
 using namespace titanium;
@@ -58,10 +54,6 @@ void TiUIObject::onCreateStaticMembers()
 
     TiProxy::onCreateStaticMembers();
 
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createImageButton", this, _createImageButton);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createProgressBar", this, _createProgressBar);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createEmailDialog", this, _createEmailDialog);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createActivityIndicator", this, _createActivityIndicator);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createOptionDialog", this, _createOptionDialog);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createPicker", this, _createPicker);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setBackgroundColor", this, _setBackgroundColor);
@@ -118,7 +110,7 @@ Handle<Value> TiUIObject::_createLabel(void* userContext, TiObject*, const Argum
 
 Handle<Value> TiUIObject::_createImageButton(void* userContext, TiObject*, const Arguments& args)
 {
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUIImageButton::createButton, args);
+    return Undefined();
 }
 
 Handle<Value> TiUIObject::_createSlider(void* userContext, TiObject*, const Arguments& args)
@@ -128,12 +120,12 @@ Handle<Value> TiUIObject::_createSlider(void* userContext, TiObject*, const Argu
 
 Handle<Value> TiUIObject::_createEmailDialog(void* userContext, TiObject*, const Arguments& args)
 {
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIEmailDialog::createEmailDialog), args);
+    return Undefined();
 }
 
 Handle<Value> TiUIObject::_createProgressBar(void* userContext, TiObject*, const Arguments& args)
 {
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUIProgressBar::createProgressBar, args);
+    return Undefined();
 }
 
 Handle<Value> TiUIObject::_createTextField(void* userContext, TiObject*, const Arguments& args)
@@ -148,7 +140,7 @@ Handle<Value> TiUIObject::_createTextArea(void* userContext, TiObject*, const Ar
 
 Handle<Value> TiUIObject::_createActivityIndicator(void* userContext, TiObject*, const Arguments& args)
 {
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUIActivityIndicator::createActivityIndicator, args);
+    return Undefined();
 }
 
 Handle<Value> TiUIObject::_createOptionDialog(void* userContext, TiObject*, const Arguments& args)

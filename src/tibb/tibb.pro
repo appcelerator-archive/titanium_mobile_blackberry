@@ -48,6 +48,10 @@ SOURCES += \
     ../Modules/UI/BlackBerry/TextWidget/TextField/*.cpp \
     ../Modules/UI/BlackBerry/Switch/*.cpp \
     ../Modules/UI/BlackBerry/Slider/*.cpp \
+    ../Modules/UI/BlackBerry/ImageButton/*.cpp \
+    ../Modules/UI/BlackBerry/ProgressBar/*.cpp \
+    ../Modules/UI/BlackBerry/ActivityIndicator/*.cpp \
+    ../Modules/UI/BlackBerry/EmailDialog/*.cpp \
     ../Modules/Utils/*.cpp \
     ../Modules/Blackberry/Notification/*.cpp \
     ../Modules/Blackberry/*.cpp
@@ -86,6 +90,10 @@ HEADERS += \
     ../Modules/UI/BlackBerry/TextWidget/TextField/*.h \
     ../Modules/UI/BlackBerry/Switch/*.h \
     ../Modules/UI/BlackBerry/Slider/*.h \
+    ../Modules/UI/BlackBerry/ImageButton/*.h \
+    ../Modules/UI/BlackBerry/ProgressBar/*.h \
+    ../Modules/UI/BlackBerry/ActivityIndicator/*.h \
+    ../Modules/UI/BlackBerry/EmailDialog/*.h \
     ../Modules/Utils/*.h \
     ../Modules/Blackberry/Notification/*.h \
     ../Modules/Blackberry/*.h

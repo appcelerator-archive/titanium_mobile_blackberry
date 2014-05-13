@@ -1,7 +1,8 @@
 /**
- * TiUIBlackberry.cpp
- *
- *
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #include "TiUIBlackberryModule.h"
@@ -24,6 +25,10 @@
 #include "TextWidget/TiUITextWidgetProxy.h"
 #include "Switch/TiUISwitchProxy.h"
 #include "Slider/TiUISliderProxy.h"
+#include "ImageButton/TiUIImageButtonProxy.h"
+#include "ProgressBar/TiUIProgressBarProxy.h"
+#include "ActivityIndicator/TiUIActivityIndicatorProxy.h"
+#include "EmailDialog/TiUIEmailDialogProxy.h"
 
 #include <bb/cascades/SupportedDisplayOrientation>
 #include <bb/cascades/ActionBarPlacement>
@@ -55,6 +60,10 @@ TiUIBlackberryModule::TiUIBlackberryModule(const char* name) : Ti::TiModule(name
 	addFunction("createTextArea", TiUITextWidgetProxy::CreateTextArea);
 	addFunction("createSwitch", TiUISwitchProxy::CreateProxy);
 	addFunction("createSlider", TiUISliderProxy::CreateProxy);
+	addFunction("createImageButton", TiUIImageButtonProxy::CreateProxy);
+	addFunction("createProgressBar", TiUIProgressBarProxy::CreateProxy);
+	addFunction("createActivityIndicator", TiUIActivityIndicatorProxy::CreateProxy);
+	addFunction("createEmailDialog", TiUIEmailDialogProxy::CreateProxy);
 
 	addNumber("WEBVIEW_NAVIGATION_TYPE_LINK_CLICKED", bb::cascades::WebNavigationType::LinkClicked);
 	addNumber("WEBVIEW_NAVIGATION_TYPE_FORM_SUBMIT", bb::cascades::WebNavigationType::FormSubmitted);

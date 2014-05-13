@@ -5,27 +5,31 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#ifndef TI_TIUITEXTFIELD_H_
-#define TI_TIUITEXTFIELD_H_
+#ifndef TI_TIUIACTIVITYINDICATOR_H_
+#define TI_TIUIACTIVITYINDICATOR_H_
 
 #include "TiCore.h"
-#include "../TiUITextWidget.h"
-#include <bb/cascades/TextField>
-#include <bb/cascades/AbstractTextControl>
+
+#include <bb/cascades/ActivityIndicator>
 
 namespace TiUI {
-class TiUITextField : public TiUITextWidget
+
+class TiUIActivityIndicator : public Ti::TiView
 {
 	Q_OBJECT;
 public:
-	TiUITextField(Ti::TiViewProxy*);
-	virtual ~TiUITextField();
+	TiUIActivityIndicator(Ti::TiViewProxy*);
+	virtual ~TiUIActivityIndicator();
+
 	virtual bool ingoreWidth();
 	virtual bool ingoreHeight();
 	virtual QString defaultWidth();
 	virtual QString defaultHeight();
+
+	bb::cascades::ActivityIndicator* getNativeIndicator();
 private:
-	bb::cascades::TextField *_textField;
+	bb::cascades::ActivityIndicator* _indicator;
+public slots:
 };
 }
-#endif /* TIUITEXTFIELD_H_ */
+#endif /* TIUIACTIVITYINDICATOR_H_ */
