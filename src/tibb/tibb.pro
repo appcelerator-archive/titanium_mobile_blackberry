@@ -52,6 +52,8 @@ SOURCES += \
     ../Modules/UI/BlackBerry/ProgressBar/*.cpp \
     ../Modules/UI/BlackBerry/ActivityIndicator/*.cpp \
     ../Modules/UI/BlackBerry/EmailDialog/*.cpp \
+    ../Modules/UI/BlackBerry/OptionDialog/*.cpp \
+    ../Modules/UI/BlackBerry/NavigationWindow/*.cpp \
     ../Modules/Utils/*.cpp \
     ../Modules/Blackberry/Notification/*.cpp \
     ../Modules/Blackberry/*.cpp
@@ -94,6 +96,8 @@ HEADERS += \
     ../Modules/UI/BlackBerry/ProgressBar/*.h \
     ../Modules/UI/BlackBerry/ActivityIndicator/*.h \
     ../Modules/UI/BlackBerry/EmailDialog/*.h \
+    ../Modules/UI/BlackBerry/OptionDialog/*.h \
+    ../Modules/UI/BlackBerry/NavigationWindow/*.h \
     ../Modules/Utils/*.h \
     ../Modules/Blackberry/Notification/*.h \
     ../Modules/Blackberry/*.h

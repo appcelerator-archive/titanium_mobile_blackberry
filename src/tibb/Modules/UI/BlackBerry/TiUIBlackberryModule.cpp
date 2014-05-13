@@ -29,6 +29,8 @@
 #include "ProgressBar/TiUIProgressBarProxy.h"
 #include "ActivityIndicator/TiUIActivityIndicatorProxy.h"
 #include "EmailDialog/TiUIEmailDialogProxy.h"
+#include "OptionDialog/TiUIOptionDialogProxy.h"
+#include "NavigationWindow/TiUINavigationWindow.h"
 
 #include <bb/cascades/SupportedDisplayOrientation>
 #include <bb/cascades/ActionBarPlacement>
@@ -64,6 +66,8 @@ TiUIBlackberryModule::TiUIBlackberryModule(const char* name) : Ti::TiModule(name
 	addFunction("createProgressBar", TiUIProgressBarProxy::CreateProxy);
 	addFunction("createActivityIndicator", TiUIActivityIndicatorProxy::CreateProxy);
 	addFunction("createEmailDialog", TiUIEmailDialogProxy::CreateProxy);
+	addFunction("createOptionDialog", TiUIOptionDialogProxy::CreateProxy);
+	addFunction("createNavigationWindow", TiUINavigationWindow::CreateProxy);
 
 	addNumber("WEBVIEW_NAVIGATION_TYPE_LINK_CLICKED", bb::cascades::WebNavigationType::LinkClicked);
 	addNumber("WEBVIEW_NAVIGATION_TYPE_FORM_SUBMIT", bb::cascades::WebNavigationType::FormSubmitted);
