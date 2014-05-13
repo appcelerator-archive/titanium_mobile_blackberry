@@ -79,7 +79,6 @@ Ti::TiValue TiUINavigationWindow::push(Ti::TiValue val)
 {
 	Ti::TiWindowProxy *win = static_cast<Ti::TiWindowProxy*>(val.toProxy());
 	_navigationPane->push(static_cast<bb::cascades::Page*>(win->getPane()));
-	win->getPane()->setParent(NULL);
 	_allWindows.append(win);
 	return Ti::TiValue();
 }
