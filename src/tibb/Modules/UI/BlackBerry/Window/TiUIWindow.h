@@ -14,6 +14,7 @@ namespace TiUI {
 
 class TiUIWindow : public Ti::TiView
 {
+Q_OBJECT;
 public:
 	TiUIWindow(Ti::TiViewProxy*);
 	virtual ~TiUIWindow();

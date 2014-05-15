@@ -13,6 +13,7 @@ namespace TiUI {
 
 class TiUIView : public Ti::TiView
 {
+Q_OBJECT;
 public:
 	TiUIView(Ti::TiViewProxy*);
 	virtual ~TiUIView();

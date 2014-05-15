@@ -13,20 +13,9 @@
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
 #include "TiOrientation.h"
-#include "TiUIActivityIndicator.h"
 #include "TiUIClipboardObject.h"
-#include "TiUILabel.h"
-#include "TiUIOptionDialog.h"
 #include "TiUIPicker.h"
-#include "TiUIProgressBar.h"
-#include "TiUISlider.h"
-#include "TiUISwitch.h"
-#include "TiUITextField.h"
-#include "TiUITextArea.h"
 #include "TiUIAnimation.h"
-#include "TiUIEmailDialog.h"
-#include "TiUINavigationGroup.h"
-#include "TiUIImageButton.h"
 #include <string.h>
 
 using namespace titanium;
@@ -63,20 +52,9 @@ void TiUIObject::onCreateStaticMembers()
 
     TiProxy::onCreateStaticMembers();
 
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createLabel", this, _createLabel);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createImageButton", this, _createImageButton);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createSlider", this, _createSlider);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createProgressBar", this, _createProgressBar);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTextField", this, _createTextField);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createTextArea", this, _createTextArea);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createEmailDialog", this, _createEmailDialog);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createActivityIndicator", this, _createActivityIndicator);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createSwitch", this, _createSwitch);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createOptionDialog", this, _createOptionDialog);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createPicker", this, _createPicker);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "setBackgroundColor", this, _setBackgroundColor);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createAnimation", this, _createAnimation);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createNavigationGroup", this, _createNavigationGroup);
 
     // Adding javascript constants from Ti.UI
     ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_LEFT", Number::New(Ti::UI::TEXT_ALIGNMENT_LEFT), this);
@@ -121,55 +99,6 @@ Handle<Value> TiUIObject::_createControlHelper(void* userContext, CREATEOBJECTCA
     return handleScope.Close(result);
 }
 
-Handle<Value> TiUIObject::_createLabel(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUILabel::createLabel, args);
-}
-
-Handle<Value> TiUIObject::_createImageButton(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUIImageButton::createButton, args);
-}
-
-Handle<Value> TiUIObject::_createSlider(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUISlider::createSlider, args);
-}
-
-Handle<Value> TiUIObject::_createEmailDialog(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIEmailDialog::createEmailDialog), args);
-}
-
-Handle<Value> TiUIObject::_createProgressBar(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUIProgressBar::createProgressBar, args);
-}
-
-Handle<Value> TiUIObject::_createTextField(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUITextField::createTextField, args);
-}
-
-Handle<Value> TiUIObject::_createTextArea(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUITextArea::createTextArea, args);
-}
-
-Handle<Value> TiUIObject::_createActivityIndicator(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiUIActivityIndicator::createActivityIndicator, args);
-}
-
-Handle<Value> TiUIObject::_createOptionDialog(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIOptionDialog::createOptionDialog), args);
-}
-
-Handle<Value> TiUIObject::_createSwitch(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUISwitch::createSwitch), args);
-}
 
 Handle<Value> TiUIObject::_createPicker(void* userContext, TiObject*, const Arguments& args)
 {
@@ -179,11 +108,6 @@ Handle<Value> TiUIObject::_createPicker(void* userContext, TiObject*, const Argu
 Handle<Value> TiUIObject::_createAnimation(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIAnimation::createAnimation), args);
-}
-
-Handle<Value> TiUIObject::_createNavigationGroup(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUINavigationGroup::createProxy), args);
 }
 
 Handle<Value> TiUIObject::_setBackgroundColor(void* userContext, TiObject* caller, const Arguments& args)

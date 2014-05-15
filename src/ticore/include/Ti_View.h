@@ -67,6 +67,7 @@ public:
 protected:
 	virtual TiViewProxy *getProxy() const;
 private:
+	Ti::TiView *clickSource;
 	TiViewProxy *proxy;
 	int _zIndex;
 public slots:
@@ -78,6 +79,9 @@ public slots:
 	virtual void onPinchUpdatedEvent(bb::cascades::PinchEvent*);
 	virtual void onPinchEndedEvent(bb::cascades::PinchEvent*);
 	virtual void onPinchCancelledEvent(bb::cascades::PinchEvent*);
+	virtual void onTouch(bb::cascades::TouchEvent*);
+	virtual void onTouchCapture(bb::cascades::TouchEvent*);
+
 
 };
 }

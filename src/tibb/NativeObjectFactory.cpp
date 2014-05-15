@@ -8,22 +8,14 @@
 #include "NativeObjectFactory.h"
 
 #include "NativeAccelerometerObject.h"
-#include "NativeActivityIndicatorObject.h"
 #include "NativeBlobObject.h"
 #include "NativeBufferObject.h"
-#include "NativeImageButtonObject.h"
 #include "NativeDateTimePickerObject.h"
 #include "NativeDropDownObject.h"
 #include "NativeGestureObject.h"
-#include "NativeLabelObject.h"
-#include "NativeProgressBarObject.h"
-#include "NativeSliderObject.h"
 #include "NativeStringInterface.h"
 #include "NativeTCPSocketObject.h"
 #include "NativeUDPSocketObject.h"
-#include "NativeTextFieldObject.h"
-#include "NativeTextAreaObject.h"
-#include "NativeToggleButtonObject.h"
 #include "NativeHTTPClientObject.h"
 #include "NativeDBObject.h"
 #include "NativeResultSetObject.h"
@@ -33,7 +25,6 @@
 #include "NativeAudioRecorderObject.h"
 #include "NativeVideoPlayerObject.h"
 #include "NativeAnimationObject.h"
-#include "NativeEmailDialogObject.h"
 #include "TiCascadesApp.h"
 
 #include <bb/cascades/Container>
@@ -65,48 +56,12 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
     NativeObject* obj = NULL;
     switch (type)
     {
-    case N_TYPE_LABEL:
-        obj = NativeLabelObject::createLabel(tiObj);
-        break;
-
     case N_TYPE_BLOB:
         obj = NativeBlobObject::createBlob(tiObj);
         break;
 
     case N_TYPE_BUFFER:
         obj = NativeBufferObject::createBuffer(tiObj);
-        break;
-
-    case N_TYPE_IMAGE_BUTTON:
-        obj = NativeImageButtonObject::createButton(tiObj);
-        break;
-
-    case N_TYPE_SLIDER:
-        obj = NativeSliderObject::createSlider(tiObj);
-        break;
-
-    case N_TYPE_PROGRESSBAR:
-        obj = NativeProgressBarObject::createProgressBar(tiObj);
-        break;
-
-    case N_TYPE_TEXT_FIELD:
-        obj = NativeTextFieldObject::createTextField(tiObj);
-        break;
-
-    case N_TYPE_TEXT_AREA:
-            obj = NativeTextAreaObject::createTextArea(tiObj);
-            break;
-
-    case N_TYPE_ACTIVITYINDICATOR:
-        obj = NativeActivityIndicatorObject::createActivityIndicator(tiObj);
-        break;
-
-    case N_TYPE_TOGGLEBUTTON:
-        obj = NativeToggleButtonObject::createToggleButton(tiObj);
-        break;
-
-    case N_TYPE_EMAILDIALOG:
-        obj = NativeEmailDialogObject::createEmailDialog(tiObj);
         break;
 
     case N_TYPE_DROPDOWN:

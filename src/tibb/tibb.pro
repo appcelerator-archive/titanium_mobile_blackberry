@@ -42,6 +42,18 @@ SOURCES += \
     ../Modules/UI/BlackBerry/ScrollableView/*.cpp \
     ../Modules/UI/BlackBerry/ScrollView/*.cpp \
     ../Modules/UI/BlackBerry/ImageView/*.cpp \
+    ../Modules/UI/BlackBerry/Label/*.cpp \
+    ../Modules/UI/BlackBerry/TextWidget/*.cpp \
+    ../Modules/UI/BlackBerry/TextWidget/TextArea/*.cpp \
+    ../Modules/UI/BlackBerry/TextWidget/TextField/*.cpp \
+    ../Modules/UI/BlackBerry/Switch/*.cpp \
+    ../Modules/UI/BlackBerry/Slider/*.cpp \
+    ../Modules/UI/BlackBerry/ImageButton/*.cpp \
+    ../Modules/UI/BlackBerry/ProgressBar/*.cpp \
+    ../Modules/UI/BlackBerry/ActivityIndicator/*.cpp \
+    ../Modules/UI/BlackBerry/EmailDialog/*.cpp \
+    ../Modules/UI/BlackBerry/OptionDialog/*.cpp \
+    ../Modules/UI/BlackBerry/NavigationWindow/*.cpp \
     ../Modules/Utils/*.cpp \
     ../Modules/Blackberry/Notification/*.cpp \
     ../Modules/Blackberry/*.cpp
@@ -74,6 +86,18 @@ HEADERS += \
     ../Modules/UI/BlackBerry/ScrollableView/*.h \
     ../Modules/UI/BlackBerry/ScrollView/*.h \
     ../Modules/UI/BlackBerry/ImageView/*.h \
+    ../Modules/UI/BlackBerry/Label/*.h \
+    ../Modules/UI/BlackBerry/TextWidget/*.h \
+    ../Modules/UI/BlackBerry/TextWidget/TextArea/*.h \
+    ../Modules/UI/BlackBerry/TextWidget/TextField/*.h \
+    ../Modules/UI/BlackBerry/Switch/*.h \
+    ../Modules/UI/BlackBerry/Slider/*.h \
+    ../Modules/UI/BlackBerry/ImageButton/*.h \
+    ../Modules/UI/BlackBerry/ProgressBar/*.h \
+    ../Modules/UI/BlackBerry/ActivityIndicator/*.h \
+    ../Modules/UI/BlackBerry/EmailDialog/*.h \
+    ../Modules/UI/BlackBerry/OptionDialog/*.h \
+    ../Modules/UI/BlackBerry/NavigationWindow/*.h \
     ../Modules/Utils/*.h \
     ../Modules/Blackberry/Notification/*.h \
     ../Modules/Blackberry/*.h

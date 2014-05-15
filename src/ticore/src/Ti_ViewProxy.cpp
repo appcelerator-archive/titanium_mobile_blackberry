@@ -23,13 +23,15 @@ Ti::TiViewProxy::TiViewProxy(const char* name)
 view(NULL),
 isDestroyed(true),
 _backgroundImageRepeat(false),
-_backgroundImageUrl("")
+_backgroundImageUrl(""),
+_parentProxy(NULL)
 {
 
 	createPropertyGetter("animatedCenter", _getAnimatedCenter);
 	createPropertyGetter("children", _getChildren);
 	createPropertyGetter("rect", _getRect);
 	createPropertyGetter("size", _getSize);
+	createPropertyGetter("parent", _getTiParent);
 
 	createPropertySetterGetter("accessibilityHidden", _setAccessibilityHidden,  _getAccessibilityHidden);
 	createPropertySetterGetter("accessibilityHint", _setAccessibilityHint,  _getAccessibilityHint);
@@ -85,6 +87,17 @@ _backgroundImageUrl("")
 
 }
 
+Ti::TiViewProxy *Ti::TiViewProxy::getParentProxy()
+{
+	return _parentProxy;
+}
+
+
+void Ti::TiViewProxy::fireEvent(QString str, Ti::TiEventParameters params)
+{
+	Ti::TiProxy::fireEvent(str, params);
+}
+
 void Ti::TiViewProxy::setView(Ti::TiView *_view)
 {
 	_view->setTiLayout();
@@ -126,6 +139,7 @@ bb::cascades::Control* Ti::TiViewProxy::getChildControl()
 void Ti::TiViewProxy::onEventAdded(QString eventName)
 {
 	getView()->onEventAdded(eventName);
+	Ti::TiProxy::onEventAdded(eventName);
 }
 
 void Ti::TiViewProxy::setWidth(Ti::TiValue value)
@@ -505,10 +519,28 @@ Ti::TiValue Ti::TiViewProxy::getRect()
 	val.setUndefined();
 	return val;
 }
+
+Ti::TiValue Ti::TiViewProxy::getTiParent()
+{
+	Ti::TiValue val;
+	if(_parentProxy != NULL) {
+		val.setProxy(_parentProxy);
+	}
+	return val;
+}
 Ti::TiValue Ti::TiViewProxy::getSize()
 {
 	Ti::TiValue val;
-	val.setUndefined();
+
+	Ti::TiValue width;
+	width.setNumber(Ti::TiHelper::PixelsToDP(getView()->viewLayout->_layoutNode.element._measuredWidth));
+	Ti::TiValue height;
+	height.setNumber(Ti::TiHelper::PixelsToDP(getView()->viewLayout->_layoutNode.element._measuredHeight));
+
+	QMap<QString, Ti::TiValue> size;
+	size["width"] = width;
+	size["height"] = height;
+	val.setMap(size);
 	return val;
 }
 Ti::TiValue Ti::TiViewProxy::getSoftKeyboardOnFocus()
@@ -565,7 +597,7 @@ Ti::TiValue Ti::TiViewProxy::add(Ti::TiValue value)
 		Ti::TiView* childView = childProxy->getView();
 		Ti::TiView* thisView = getView();
 		thisView->add(childView);
-		setTiValueForKey(value, "parent");
+		childProxy->_parentProxy = this;
 	}
 	else
 	{
@@ -587,7 +619,7 @@ Ti::TiValue Ti::TiViewProxy::add(Ti::TiValue value)
        }
        array->Set(array->Length(), value.toJSValue());
        childNO->release();
-       setTiValueForKey(value, "parent");
+
 	}
 
 	Ti::TiValue val;
@@ -627,7 +659,7 @@ Ti::TiValue Ti::TiViewProxy::remove(Ti::TiValue value)
 	thisView->remove(childView);
 	_childViewsProxies.removeOne(childProxy);
 
-	setTiValueForKey(Ti::TiValue(), "parent");
+	childProxy->_parentProxy = NULL;
     Local<Value> children = _jsObject->Get(String::New("children"));
     if(!children.IsEmpty() && !children->IsUndefined())
     {

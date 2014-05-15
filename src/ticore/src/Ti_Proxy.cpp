@@ -30,7 +30,6 @@ _proxyName(QString(name))
 
 Ti::TiProxy::~TiProxy()
 {
-	Ti::TiHelper::LogInternal(QString(getProxyName()).prepend("Deleting proxy: "));
 	qDeleteAll(properties);
 	properties.clear();
 
@@ -105,11 +104,14 @@ void Ti::TiProxy::createPropertySetterGetter(QString name, PROPERTY_SETTER sette
 
 void Ti::TiProxy::onEventAdded(QString str)
 {
-	Ti::TiHelper::LogInternal(str.prepend("Event Added: "));
+	events.append(str);
 	// for subclass
 }
-void Ti::TiProxy::onEventRemoved(QString)
+void Ti::TiProxy::onEventRemoved(QString str)
 {
+	if(events.contains(str)) {
+		events.removeOne(str);
+	}
 	// for subclass
 }
 
@@ -199,7 +201,13 @@ void Ti::TiProxy::fireCallback(QString eventName, Ti::TiEventParameters params)
 void Ti::TiProxy::fireEvent(QString eventName, Ti::TiEventParameters params)
 {
 	HandleScope scope;
-	Ti::TiEvent::FireEventOnObject(_jsObject, eventName, &params);
+	if(events.contains(eventName)) {
+		if(!params.contains("source"))
+		{
+			params.addParam("source", this);
+		}
+		Ti::TiEvent::FireEventOnObject(_jsObject, eventName, &params);
+	}
 	if(eventName == Ti::TiConstants::EventClose)
 	{
 		Ti::TiHelper::LogInternal("Forcing GC");
@@ -230,14 +238,14 @@ void Ti::TiProxy::setTiValueForKey(Ti::TiValue value, QString key)
 
 void Ti::TiProxy::makeWeak()
 {
-	//if(_jsObject.IsEmpty()) return;
-	Ti::TiHelper::LogInternal(QString("Make weak ").append(QString(_proxyName)));
+	// if(_jsObject.IsEmpty()) return;
+	// Ti::TiHelper::LogInternal(QString("Make weak ").append(QString(_proxyName)));
 	_jsObject.MakeWeak(this, _WeakCallback);
 }
 void Ti::TiProxy::clearWeak()
 {
-	//if(_jsObject.IsEmpty()) return;
-	Ti::TiHelper::LogInternal(QString("Clear weak ").append(QString(_proxyName)));
+	// if(_jsObject.IsEmpty()) return;
+	// Ti::TiHelper::LogInternal(QString("Clear weak ").append(QString(_proxyName)));
 	_jsObject.ClearWeak();
 	_jsObjectTemplate.ClearWeak();
 	_jsObject.MarkIndependent();
@@ -249,7 +257,7 @@ Handle<Value> Ti::TiProxy::_Getter (Local<String> property, const AccessorInfo& 
 	Handle<Object> obj = Handle<Object>::Cast(info.Holder());
 	Handle<External> proxyObject = Handle<External>::Cast(obj->GetHiddenValue(String::New("module")));
 
-	Ti::TiHelper::LogInternal(QString("Property Getter: ").append(Ti::TiHelper::QStringFromValue(property)));
+	// Ti::TiHelper::LogInternal(QString("Property Getter: ").append(Ti::TiHelper::QStringFromValue(property)));
 	if(proxyObject.IsEmpty())
 		proxyObject = Handle<External>::Cast(obj->GetHiddenValue(String::New("proxy")));
 
@@ -272,7 +280,7 @@ Handle<Value> Ti::TiProxy::_Getter (Local<String> property, const AccessorInfo& 
 Handle<Value> Ti::TiProxy::_Setter (Local<String> property, Local<Value> value, const AccessorInfo& info)
 {
 	HandleScope handleScope;
-	Ti::TiHelper::LogInternal(QString("Property Setter: ").append(Ti::TiHelper::QStringFromValue(property)));
+	// Ti::TiHelper::LogInternal(QString("Property Setter: ").append(Ti::TiHelper::QStringFromValue(property)));
 
 	// Todo: Come back to this later
 	// if(value == info.Holder()->Get(property)) {
