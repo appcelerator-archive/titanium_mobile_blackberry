@@ -14,7 +14,7 @@ const QString Ti::TiConstants::EventType = "type";
 
 const QString Ti::TiConstants::EventClick = "click";
 const QString Ti::TiConstants::EventDoubleClick = "dblclick";
-const QString Ti::TiConstants::EventSingleTap = "tap";
+const QString Ti::TiConstants::EventSingleTap = "singletap";
 const QString Ti::TiConstants::EventDoubleTap = "doubletap";
 const QString Ti::TiConstants::EventLongPress = "longpress";
 const QString Ti::TiConstants::EventLongClick = "longclick";

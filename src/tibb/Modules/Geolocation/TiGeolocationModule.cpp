@@ -95,6 +95,7 @@ void TiGeolocationModule::onEventAdded(QString eventName)
 		TiCompassSession *session = new TiCompassSession(this);
 		_compassSessions.append(session);
 	}
+	Ti::TiModule::onEventAdded(eventName);
 }
 
 void TiGeolocationModule::onEventRemoved(QString eventName)
