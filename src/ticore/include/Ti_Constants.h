@@ -25,6 +25,10 @@ public:
 	static const QString EventLongPress;
 	static const QString EventLongClick;
 	static const QString EventPinch;
+	static const QString EventTouchStart;
+	static const QString EventTouchMove;
+	static const QString EventTouchEnd;
+	static const QString EventTouchCancel;
 
 	static const QString EventReturn;
 	static const QString EventFocus;

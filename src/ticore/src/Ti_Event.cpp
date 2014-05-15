@@ -110,7 +110,6 @@ void Ti::TiEvent::FireEventOnObject(Handle<Object> proxy, QString eventName, Ti:
 		    TryCatch tryCatch;
 		    Local<Object> obj = Object::New();
 			Ti::TiEventParameters::addParametersToObject(params, obj);
-			obj->Set(String::New("source"), proxy);
 			Local<Value> args[] = { obj };
 			Local<Value> result = func->Call(proxy, 1, args);
 		    if (result.IsEmpty())
@@ -132,8 +131,8 @@ void Ti::TiEvent::FireCallbackIfNeeded(QString eventName, Handle<Object> owner, 
 		Handle<Function> callback = Handle<Function>::Cast(owner->Get(Ti::TiHelper::ValueFromQString(eventName)));
 
 		Handle<Object> obj = Object::New();
-		Ti::TiEventParameters::addParametersToObject(params, obj);
 		obj->Set(String::New("source"), owner);
+		Ti::TiEventParameters::addParametersToObject(params, obj);
 
 		Handle<Value> args[1];
 		args[0] = obj;

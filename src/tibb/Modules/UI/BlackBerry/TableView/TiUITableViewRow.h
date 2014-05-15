@@ -14,6 +14,7 @@ namespace TiUI {
 
 class TiUITableViewRow : public Ti::TiView
 {
+	Q_OBJECT;
 public:
 	TiUITableViewRow(Ti::TiViewProxy*);
 	virtual ~TiUITableViewRow();

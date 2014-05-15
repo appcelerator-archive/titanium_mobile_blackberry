@@ -118,6 +118,7 @@ public:
 	virtual Ti::TiValue getZIndex();
 	virtual Ti::TiValue getKeepScreenOn();
 	virtual Ti::TiValue getContextMenus();
+	virtual Ti::TiValue getTiParent();
 
 	virtual Ti::TiValue add(Ti::TiValue);
 	virtual Ti::TiValue animate(Ti::TiValue);
@@ -215,6 +216,7 @@ public:
 	EXPOSE_GETTER(TiViewProxy, getZIndex)
 	EXPOSE_GETTER(TiViewProxy, getKeepScreenOn)
 	EXPOSE_GETTER(TiViewProxy, getContextMenus)
+	EXPOSE_GETTER(TiViewProxy, getTiParent)
 
 	EXPOSE_METHOD(TiViewProxy, add)
 	EXPOSE_METHOD(TiViewProxy, animate)
@@ -228,14 +230,17 @@ public:
 	EXPOSE_METHOD(TiViewProxy, updateLayout)
 	EXPOSE_METHOD(TiViewProxy, convertPointToView)
 
+	virtual void fireEvent(QString, Ti::TiEventParameters);
+
 	TiView *view;
 	bool isDestroyed;
 	QList<Ti::TiViewProxy*> _childViewsProxies;
 	bb::cascades::Control* getChildControl();
-
+	Ti::TiViewProxy *getParentProxy();
 protected:
 	void setView(TiView *);
 private:
+	Ti::TiViewProxy *_parentProxy;
 	bool _backgroundImageRepeat;
 	QString _backgroundImageUrl;
 	void setBackground();

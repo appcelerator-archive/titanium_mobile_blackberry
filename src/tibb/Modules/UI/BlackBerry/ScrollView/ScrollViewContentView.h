@@ -15,6 +15,7 @@ namespace TiUI {
 
 class ScrollViewContentView : public Ti::TiView
 {
+	Q_OBJECT;
 public:
 	ScrollViewContentView(Ti::TiViewProxy* proxy);
 	virtual ~ScrollViewContentView();

@@ -148,7 +148,7 @@ public:
 	virtual void clearWeak();
 
 	QMap<QString, Ti::TiProperty*> properties;
-	QMap<QString, QList<Ti::TiEvent*> > events;
+	QList<QString> events;
 	Persistent<Object> _jsObject;
 	Persistent<ObjectTemplate> _jsObjectTemplate;
 

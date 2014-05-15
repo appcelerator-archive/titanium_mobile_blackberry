@@ -20,6 +20,11 @@ const QString Ti::TiConstants::EventLongPress = "longpress";
 const QString Ti::TiConstants::EventLongClick = "longclick";
 const QString Ti::TiConstants::EventPinch = "pinch";
 
+const QString Ti::TiConstants::EventTouchStart = "touchstart";
+const QString Ti::TiConstants::EventTouchMove = "touchmove";
+const QString Ti::TiConstants::EventTouchEnd = "touchend";
+const QString Ti::TiConstants::EventTouchCancel = "touchcancel";
+
 const QString Ti::TiConstants::EventReturn = "return";
 const QString Ti::TiConstants::EventFocus = "focus";
 const QString Ti::TiConstants::EventBlur = "blur";

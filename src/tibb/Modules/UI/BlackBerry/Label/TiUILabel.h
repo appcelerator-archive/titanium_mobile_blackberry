@@ -21,7 +21,9 @@ namespace TiUI {
 
 class TiViewProxy;
 
-class TiUILabel: public Ti::TiView {
+class TiUILabel: public Ti::TiView
+{
+	Q_OBJECT;
 public:
 	TiUILabel(Ti::TiViewProxy*);
 	virtual ~TiUILabel();

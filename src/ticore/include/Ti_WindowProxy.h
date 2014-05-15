@@ -17,6 +17,7 @@ class AbstractPane;
 }
 }
 namespace Ti {
+
 class TiWindowProxy: public Ti::TiViewProxy {
 public:
 	CREATE_PROXY(TiWindowProxy)

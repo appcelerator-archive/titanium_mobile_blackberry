@@ -22,6 +22,7 @@
 #include <bb/cascades/PinchEvent>
 #include <bb/cascades/LongPressEvent>
 #include <bb/cascades/Control>
+#include <bb/cascades/TouchPropagationMode>
 
 
 #include "Ti_Helper.h"
@@ -42,12 +43,26 @@ _bottom(""),
 _left(""),
 _right(""),
 parentView(NULL),
-_zIndex(-1)
+_zIndex(-1),
+clickSource(NULL)
 {
 	setLayout(bb::cascades::AbsoluteLayout::create());
 	setLayoutProperties(bb::cascades::AbsoluteLayoutProperties::create());
 	setChildControl(NULL);
     setImplicitLayoutAnimationsEnabled(false);
+    bool connected = QObject::connect(this,
+    		SIGNAL(touch(bb::cascades::TouchEvent*)),
+    		this,
+    		SLOT(onTouch(bb::cascades::TouchEvent*))
+    		);
+
+    connected = QObject::connect(this,
+    		SIGNAL(touchCapture(bb::cascades::TouchEvent*)),
+    		this,
+    		SLOT(onTouchCapture(bb::cascades::TouchEvent*))
+    		);
+
+    qDebug() << connected;
 }
 
 Ti::TiView::~TiView() {
@@ -63,38 +78,169 @@ Ti::TiView::~TiView() {
 	}
 }
 
-void Ti::TiView::onTapEvent(bb::cascades::TapEvent*)
+void Ti::TiView::onTouch(bb::cascades::TouchEvent* event)
 {
 	Ti::TiEventParameters clickEvent;
-	clickEvent.addParam("type", "click");
+	if(clickSource != NULL) {
+		clickEvent.addParam("source", clickSource->getProxy());
+	}
+	clickEvent.addParam("x", Ti::TiHelper::PixelsToDP(event->localX()));
+	clickEvent.addParam("y", Ti::TiHelper::PixelsToDP(event->localY()));
+	switch(event->touchType())
+	{
+	case bb::cascades::TouchType::Down:
+	{
+		clickEvent.addParam("type", Ti::TiConstants::EventTouchStart);
+		getProxy()->fireEvent(Ti::TiConstants::EventTouchStart, clickEvent);
+		break;
+	}
+	case bb::cascades::TouchType::Move:
+	{
+		clickEvent.addParam("type", Ti::TiConstants::EventTouchMove);
+		getProxy()->fireEvent(Ti::TiConstants::EventTouchMove, clickEvent);
+		break;
+	}
+	case bb::cascades::TouchType::Up:
+	{
+		clickEvent.addParam("type", Ti::TiConstants::EventTouchEnd);
+		getProxy()->fireEvent(Ti::TiConstants::EventClick, clickEvent);
+		break;
+	}
+	case bb::cascades::TouchType::Cancel:
+	{
+		clickEvent.addParam("type", Ti::TiConstants::EventTouchCancel);
+		getProxy()->fireEvent(Ti::TiConstants::EventTouchCancel, clickEvent);
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+// Get the "click source" by capturing the touch on a subview.
+// The subview is likely to be a native cascades object, to get the TiView
+// get the parent of the cascades object and check if it's a TiView subclass
+void Ti::TiView::onTouchCapture(bb::cascades::TouchEvent* event)
+{
+	QObject* target = event->target();
+	if(target != NULL) {
+		clickSource = dynamic_cast<Ti::TiView*>(target);
+		if(clickSource != NULL) return;
+		while(true) {
+			target = target->parent();
+			if(target == NULL) break;
+			clickSource = dynamic_cast<Ti::TiView*>(target);
+			if(clickSource != NULL) return;
+		}
+	}
+}
+
+// On touch events, or click, set the "click source" and then reset it to null
+void Ti::TiView::onTapEvent(bb::cascades::TapEvent* event)
+{
+	Ti::TiEventParameters clickEvent;
+	if(clickSource != NULL) {
+		clickEvent.addParam("source", clickSource->getProxy());
+	}
+	clickEvent.addParam("x", Ti::TiHelper::PixelsToDP(event->x()));
+	clickEvent.addParam("y", Ti::TiHelper::PixelsToDP(event->y()));
+
+	clickEvent.addParam("type", Ti::TiConstants::EventClick);
 	getProxy()->fireEvent(Ti::TiConstants::EventClick, clickEvent);
+
+	clickEvent.addParam("type", Ti::TiConstants::EventSingleTap);
 	getProxy()->fireEvent(Ti::TiConstants::EventSingleTap, clickEvent);
+	clickSource = NULL;
 }
-void Ti::TiView::onDoubleTapEvent(bb::cascades::DoubleTapEvent*)
+void Ti::TiView::onDoubleTapEvent(bb::cascades::DoubleTapEvent* event)
 {
+	Ti::TiEventParameters clickEvent;
+	if(clickSource != NULL) {
+		clickEvent.addParam("source", clickSource->getProxy());
+	}
+	clickEvent.addParam("x", Ti::TiHelper::PixelsToDP(event->x()));
+	clickEvent.addParam("y", Ti::TiHelper::PixelsToDP(event->y()));
 
+	clickEvent.addParam("type", Ti::TiConstants::EventDoubleClick);
+	getProxy()->fireEvent(Ti::TiConstants::EventDoubleClick, clickEvent);
+
+	clickEvent.addParam("type", Ti::TiConstants::EventDoubleTap);
+	getProxy()->fireEvent(Ti::TiConstants::EventDoubleTap, clickEvent);
+	clickSource = NULL;
 }
 
-void Ti::TiView::onLongPressEvent(bb::cascades::LongPressEvent*)
+void Ti::TiView::onLongPressEvent(bb::cascades::LongPressEvent* event)
 {
+	Ti::TiEventParameters clickEvent;
+	if(clickSource != NULL) {
+		clickEvent.addParam("source", clickSource->getProxy());
+	}
+	clickEvent.addParam("x", Ti::TiHelper::PixelsToDP(event->x()));
+	clickEvent.addParam("y", Ti::TiHelper::PixelsToDP(event->y()));
 
+	clickEvent.addParam("type", Ti::TiConstants::EventLongClick);
+	getProxy()->fireEvent(Ti::TiConstants::EventLongClick, clickEvent);
+
+	clickEvent.addParam("type", Ti::TiConstants::EventLongPress);
+	getProxy()->fireEvent(Ti::TiConstants::EventLongPress, clickEvent);
+	clickSource = NULL;
 }
 
-void Ti::TiView::onPinchStartedEvent(bb::cascades::PinchEvent*)
+void Ti::TiView::onPinchStartedEvent(bb::cascades::PinchEvent* event)
 {
+	Ti::TiEventParameters clickEvent;
+	if(clickSource != NULL) {
+		clickEvent.addParam("source", clickSource->getProxy());
+	}
+	clickEvent.addParam("x", Ti::TiHelper::PixelsToDP(event->x()));
+	clickEvent.addParam("y", Ti::TiHelper::PixelsToDP(event->y()));
 
+	clickEvent.addParam("type", Ti::TiConstants::EventPinch);
+	getProxy()->fireEvent(Ti::TiConstants::EventPinch, clickEvent);
+
+	clickSource = NULL;
 }
-void Ti::TiView::onPinchUpdatedEvent(bb::cascades::PinchEvent*)
+void Ti::TiView::onPinchUpdatedEvent(bb::cascades::PinchEvent* event)
 {
+	Ti::TiEventParameters clickEvent;
+	if(clickSource != NULL) {
+		clickEvent.addParam("source", clickSource->getProxy());
+	}
+	clickEvent.addParam("x", Ti::TiHelper::PixelsToDP(event->x()));
+	clickEvent.addParam("y", Ti::TiHelper::PixelsToDP(event->y()));
 
+	clickEvent.addParam("type", Ti::TiConstants::EventPinch);
+	getProxy()->fireEvent(Ti::TiConstants::EventPinch, clickEvent);
+
+	clickSource = NULL;
 }
-void Ti::TiView::onPinchEndedEvent(bb::cascades::PinchEvent*)
+void Ti::TiView::onPinchEndedEvent(bb::cascades::PinchEvent* event)
 {
+	Ti::TiEventParameters clickEvent;
+	if(clickSource != NULL) {
+		clickEvent.addParam("source", clickSource->getProxy());
+	}
+	clickEvent.addParam("x", Ti::TiHelper::PixelsToDP(event->x()));
+	clickEvent.addParam("y", Ti::TiHelper::PixelsToDP(event->y()));
 
+	clickEvent.addParam("type", Ti::TiConstants::EventPinch);
+	getProxy()->fireEvent(Ti::TiConstants::EventPinch, clickEvent);
+
+	clickSource = NULL;
 }
-void Ti::TiView::onPinchCancelledEvent(bb::cascades::PinchEvent*)
+void Ti::TiView::onPinchCancelledEvent(bb::cascades::PinchEvent* event)
 {
+	Ti::TiEventParameters clickEvent;
+	if(clickSource != NULL) {
+		clickEvent.addParam("source", clickSource->getProxy());
+	}
+	clickEvent.addParam("x", Ti::TiHelper::PixelsToDP(event->x()));
+	clickEvent.addParam("y", Ti::TiHelper::PixelsToDP(event->y()));
 
+	clickEvent.addParam("type", Ti::TiConstants::EventPinch);
+	getProxy()->fireEvent(Ti::TiConstants::EventPinch, clickEvent);
+
+	clickSource = NULL;
 }
 
 void Ti::TiView::onEventAdded(QString eventName)
