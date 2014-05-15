@@ -55,6 +55,7 @@ void TiUIScrollViewProxy::onEventAdded(QString eventName)
 	{
 		_scrollView->setScrollEvent();
 	}
+	Ti::TiViewProxy::onEventAdded(eventName);
 }
 
 

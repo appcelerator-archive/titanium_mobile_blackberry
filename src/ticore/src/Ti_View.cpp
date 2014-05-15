@@ -44,25 +44,19 @@ _left(""),
 _right(""),
 parentView(NULL),
 _zIndex(-1),
-clickSource(NULL)
+clickSource(NULL),
+hasTouchEvents(false)
 {
 	setLayout(bb::cascades::AbsoluteLayout::create());
 	setLayoutProperties(bb::cascades::AbsoluteLayoutProperties::create());
 	setChildControl(NULL);
     setImplicitLayoutAnimationsEnabled(false);
-    bool connected = QObject::connect(this,
-    		SIGNAL(touch(bb::cascades::TouchEvent*)),
-    		this,
-    		SLOT(onTouch(bb::cascades::TouchEvent*))
-    		);
 
-    connected = QObject::connect(this,
+    QObject::connect(this,
     		SIGNAL(touchCapture(bb::cascades::TouchEvent*)),
     		this,
     		SLOT(onTouchCapture(bb::cascades::TouchEvent*))
     		);
-
-    qDebug() << connected;
 }
 
 Ti::TiView::~TiView() {
@@ -103,7 +97,7 @@ void Ti::TiView::onTouch(bb::cascades::TouchEvent* event)
 	case bb::cascades::TouchType::Up:
 	{
 		clickEvent.addParam("type", Ti::TiConstants::EventTouchEnd);
-		getProxy()->fireEvent(Ti::TiConstants::EventClick, clickEvent);
+		getProxy()->fireEvent(Ti::TiConstants::EventTouchEnd, clickEvent);
 		break;
 	}
 	case bb::cascades::TouchType::Cancel:
@@ -245,6 +239,17 @@ void Ti::TiView::onPinchCancelledEvent(bb::cascades::PinchEvent* event)
 
 void Ti::TiView::onEventAdded(QString eventName)
 {
+
+	if(eventName == Ti::TiConstants::EventTouchStart|| eventName == Ti::TiConstants::EventTouchMove ||
+		eventName == Ti::TiConstants::EventTouchEnd  || eventName == Ti::TiConstants::EventTouchCancel)
+	{
+		if(hasTouchEvents) return;
+		hasTouchEvents = true;
+		QObject::connect(this, SIGNAL(touch(bb::cascades::TouchEvent*)), this, SLOT(onTouch(bb::cascades::TouchEvent*)));
+		return;
+	}
+
+
 	bb::cascades::GestureHandler *gesture = NULL;
 	if(eventName == Ti::TiConstants::EventClick || eventName == Ti::TiConstants::EventSingleTap)
 	{

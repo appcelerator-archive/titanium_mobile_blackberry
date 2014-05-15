@@ -70,6 +70,7 @@ private:
 	Ti::TiView *clickSource;
 	TiViewProxy *proxy;
 	int _zIndex;
+	bool hasTouchEvents;
 public slots:
 	virtual void onTapEvent(bb::cascades::TapEvent*);
 	virtual void onDoubleTapEvent(bb::cascades::DoubleTapEvent*);
