@@ -10,6 +10,9 @@
 #include "Ti_Value.h"
 #include "Ti_Constants.h"
 #include "Ti_Macros.h"
+#include "Ti_Callback.h"
+#include "Ti_AnimationProxy.h"
+
 #include "TitaniumLayout.h"
 #include <bb/cascades/ImagePaint>
 #include <bb/cascades/ActionSet>
@@ -626,11 +629,16 @@ Ti::TiValue Ti::TiViewProxy::add(Ti::TiValue value)
 	val.setUndefined();
 	return val;
 }
-Ti::TiValue Ti::TiViewProxy::animate(Ti::TiValue)
+
+Ti::TiValue Ti::TiViewProxy::animate(Ti::TiValue val)
 {
-	Ti::TiValue val;
-	val.setUndefined();
-	return val;
+	if(val.isProxy()) {
+		Ti::TiAnimationProxy *proxy = static_cast<Ti::TiAnimationProxy*>(val.toProxy());
+		proxy->animate(this, NULL);
+	}
+	Ti::TiValue result;
+	result.setUndefined();
+	return result;
 }
 Ti::TiValue Ti::TiViewProxy::finishLayout(Ti::TiValue)
 {
