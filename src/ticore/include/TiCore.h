@@ -26,5 +26,6 @@
 #include "Ti_ErrorScreen.h"
 #include "Ti_Callback.h"
 #include "Ti_WindowProxy.h"
- 
+#include "Ti_AnimationProxy.h"
+
 #endif
