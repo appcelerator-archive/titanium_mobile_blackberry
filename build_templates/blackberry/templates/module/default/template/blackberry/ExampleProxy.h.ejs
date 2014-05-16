@@ -1,0 +1,21 @@
+/*
+ * TestProxy.h
+ *
+ *  Created on: Sep 6, 2013
+ *      Author: penrique
+ */
+
+#ifndef NATIVE_<%- moduleName %>_TESTPROXY_H_
+#define NATIVE_<%- moduleName %>_TESTPROXY_H_
+
+#include "TiCore.h"
+
+class ExampleProxy : Ti::TiProxy
+{
+public:
+	CREATE_PROXY(ExampleProxy)
+	ExampleProxy(const char*);
+	virtual ~ExampleProxy();
+};
+
+#endif /* NATIVE_<%- moduleName %>_TESTPROXY_H_ */

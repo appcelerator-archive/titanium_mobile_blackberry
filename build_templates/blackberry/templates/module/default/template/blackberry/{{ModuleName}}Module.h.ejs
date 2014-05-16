@@ -1,0 +1,26 @@
+/**
+ * <%- moduleName %>.h
+ *
+ *
+ */
+
+#ifndef NATIVE_<%- moduleName %>_MODULE
+#define NATIVE_<%- moduleName %>_MODULE
+
+#include "TiCore.h"
+
+class <%- moduleName %>Module : public Ti::TiModule
+{
+public:
+	CREATE_MODULE(<%- moduleName %>Module);
+	<%- moduleName %>Module(const char*);
+	virtual ~<%- moduleName %>Module();
+
+	virtual Ti::TiValue getModuleId();
+	virtual Ti::TiValue getModuleVersion();
+	virtual Ti::TiValue getModuleName();
+
+
+};
+
+#endif
