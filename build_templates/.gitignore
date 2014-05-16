@@ -1,5 +1,3 @@
 .DS_Store
-node_modules
-!blackberry/templates/module/default/template/blackberry/node_modules
 *.sublime-project
 *.sublime-workspace
