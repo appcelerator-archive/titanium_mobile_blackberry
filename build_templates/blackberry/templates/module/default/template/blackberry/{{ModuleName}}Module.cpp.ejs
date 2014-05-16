@@ -1,0 +1,37 @@
+/**
+ * <%- moduleName %>.cpp
+ *
+ *
+ */
+
+#include "<%- moduleName %>Module.h"
+#include "ExampleProxy.h"
+
+<%- moduleName %>Module::<%- moduleName %>Module(const char* name) : Ti::TiModule(name)
+{
+	addFunction("createExample", ExampleProxy::CreateProxy);
+}
+
+<%- moduleName %>Module::~<%- moduleName %>Module()
+{
+
+}
+
+Ti::TiValue <%- moduleName %>Module::getModuleId()
+{
+	Ti::TiValue val;
+	val.setString("<%- moduleId %>");
+	return val;
+}
+Ti::TiValue <%- moduleName %>Module::getModuleVersion()
+{
+	Ti::TiValue val;
+	val.setString("1.0.0");
+	return val;
+}
+Ti::TiValue <%- moduleName %>Module::getModuleName()
+{
+	Ti::TiValue val;
+	val.setString("<%- moduleName %>");
+	return val;
+}
