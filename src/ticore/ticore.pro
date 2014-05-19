@@ -3,14 +3,14 @@ TEMPLATE = lib
 QMAKE_CC = $(NDK_CCACHE) $${QMAKE_CC}
 QMAKE_CXX = $(NDK_CCACHE) $${QMAKE_CXX}
 
-CONFIG += qt staticlib warn_on debug_and_release cascades mobility
+CONFIG += qt staticlib warn_off debug_and_release cascades mobility
 MOBILITY += sensors
 
 INCLUDEPATH += \
 	. \
     ./include \
     ../../runtime/v8/include \
-	../tibb
+	../tibb/src
 
 SOURCES += \
     ./src/Ti_Blob.cpp \
