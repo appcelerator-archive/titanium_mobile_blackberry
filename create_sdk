@@ -14,6 +14,7 @@ if [ "$OS" == 'Linux' ]; then
 fi
 
 echo "Creating Libraries"
+# source /Applications/Momentics.app/bbndk-env_10_2_0_1155.sh
 source $BB_PATH/bbndk/bbndk-env.sh
 
 echo "Creating V8 Libraries"
@@ -22,49 +23,82 @@ cd runtime
 make
 
 cd $VAR_PWD
-source $BB_PATH/bbndk/bbndk-env.sh
+# remove old library builds from tibb
+rm -rf src/tibb/a
+rm -rf src/tibb/a-g
+rm -rf src/tibb/a.le-v7
+rm -rf src/tibb/a.le-v7-g
+rm -rf src/tibb/x86/a
+rm -rf src/tibb/x86/a-g
+rm -rf src/tibb/arm/a.le-v7
+rm -rf src/tibb/arm/a.le-v7-g
 
+# remove old library builds from ticore
+rm -rf src/ticore/x86/a
+rm -rf src/ticore/x86/a-g
+rm -rf src/ticore/arm/a.le-v7
+rm -rf src/ticore/arm/a.le-v7-g
+
+cd $VAR_PWD
 echo "Creating Titanium BlackBerry Libraries"
+date
+
+# build tibb for simulator and device - only release versions
 cd src/tibb
 make clean
-make
+make Device-Release
+make Simulator-Release
 
+# build ticore for simulator and device - only release versions
 cd $VAR_PWD
 echo "Creating TiCore Libraries"
 cd src/ticore
 make clean
-make
-
-echo "Creating the BlackBerry drop-in folder at build/sdk/blackberry"
+make Device-Release
+make Simulator-Release
 
 cd $VAR_PWD
-
+echo "Creating the BlackBerry drop-in folder at build/sdk/blackberry"
+# delete the old build folder
+rm -rf build
+# create a new build folder
 mkdir -p build/sdk/blackberry
 
+# copy the templates over to the build folder
 cp -r build_templates/blackberry/. build/sdk/blackberry
 
-mkdir -p build/sdk/blackberry/libs/tibb/arm/a.le-v7
-mkdir -p build/sdk/blackberry/libs/tibb/arm/a.le-v7-g
-mkdir -p build/sdk/blackberry/libs/tibb/x86/a
-mkdir -p build/sdk/blackberry/libs/tibb/x86/a-g/
-
-cp src/tibb/arm/a.le-v7/libtibb.a  build/sdk/blackberry/libs/tibb/arm/a.le-v7/libtibb.a
-cp src/tibb/arm/a.le-v7-g/libtibb.a build/sdk/blackberry/libs/tibb/arm/a.le-v7-g/libtibb.a
-cp src/tibb/x86/a/libtibb.a build/sdk/blackberry/libs/tibb/x86/a/libtibb.a
-cp src/tibb/x86/a-g/libtibb.a build/sdk/blackberry/libs/tibb/x86/a-g/libtibb.a
-
-cp src/ticore/arm/a.le-v7/libticore.a  build/sdk/blackberry/libs/ticore/arm/a.le-v7/libticore.a
-cp src/ticore/arm/a.le-v7-g/libticore.a build/sdk/blackberry/libs/ticore/arm/a.le-v7-g/libticore.a
-cp src/ticore/x86/a/libticore.a build/sdk/blackberry/libs/ticore/x86/a/libticore.a
-cp src/ticore/x86/a-g/libticore.a build/sdk/blackberry/libs/ticore/x86/a-g/libticore.a
-
-cp -r src/ticore/include/. build/sdk/blackberry/libs/ticore/include
-
+# create a the static library folders
+# tibb
+mkdir -p build/sdk/blackberry/libs/tibb/arm
+mkdir -p build/sdk/blackberry/libs/tibb/x86
+# ticore
+mkdir -p build/sdk/blackberry/libs/ticore/x86
+mkdir -p build/sdk/blackberry/libs/ticore/arm
+# v8
 mkdir -p build/sdk/blackberry/libs/libv8/arm
 mkdir -p build/sdk/blackberry/libs/libv8/x86
 
+#create the include folders
+mkdir -p build/sdk/blackberry/libs/tibb/include
+mkdir -p build/sdk/blackberry/libs/ticore/include
+mkdir -p build/sdk/blackberry/libs/libv8/include
+
+# copy the static libraries
+# tibb
+cp src/tibb/arm/a.le-v7/libtibb.a build/sdk/blackberry/libs/tibb/arm/libtibb.a
+cp src/tibb/x86/a/libtibb.a build/sdk/blackberry/libs/tibb/x86/libtibb.a
+# ticore
+cp src/ticore/arm/a.le-v7/libticore.a  build/sdk/blackberry/libs/ticore/arm/libticore.a
+cp src/ticore/x86/a/libticore.a build/sdk/blackberry/libs/ticore/x86/libticore.a
+# v8
 cp runtime/v8/arm/libv8.a build/sdk/blackberry/libs/libv8/arm/libv8.a
 cp runtime/v8/x86/libv8.a build/sdk/blackberry/libs/libv8/x86/libv8.a
 
+# copy the header files
+cp -r src/ticore/include/. build/sdk/blackberry/libs/ticore/include
+cp -r src/tibb/include/. build/sdk/blackberry/libs/tibb/include
+cp -r runtime/v8/include/. build/sdk/blackberry/libs/libv8/include
+
+# copy the package.json
 cp package.json build/sdk/blackberry/package.json
 cd $VAR_PWD
