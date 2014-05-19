@@ -292,4 +292,7 @@
 		<resource resourceType="PROJECT" workspacePath="/tibb"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="com.qnx.tools.ide.qde.core.settings">
+		<dependencyChecking mode="ALL"/>
+	</storageModule>
 </cproject>

@@ -8,14 +8,14 @@ INCLUDEPATH += "libs/headers"
 
 device {
     CONFIG(release, debug|release) {
-        LIBS += "SDK_PATH/libs/tibb/arm/a.le-v7/libtibb.a"
-        LIBS += "SDK_PATH/libs/ticore/arm/a.le-v7/libticore.a"
+        LIBS += "SDK_PATH/libs/tibb/arm/libtibb.a"
+        LIBS += "SDK_PATH/libs/ticore/arm/libticore.a"
         LIBS += "SDK_PATH/libs/libv8/arm/libv8.a"
         ${modules_arm_a}
     }
     CONFIG(debug, debug|release) {
-        LIBS += "SDK_PATH/libs/tibb/arm/a.le-v7-g/libtibb.a"
-        LIBS += "SDK_PATH/libs/ticore/arm/a.le-v7-g/libticore.a"
+        LIBS += "SDK_PATH/libs/tibb/arm/libtibb.a"
+        LIBS += "SDK_PATH/libs/ticore/arm/libticore.a"
         LIBS += "SDK_PATH/libs/libv8/arm/libv8.a"
         ${modules_arm_a_g}
     }
@@ -23,14 +23,14 @@ device {
 
 simulator {
     CONFIG(release, debug|release) {
-        LIBS += "SDK_PATH/libs/tibb/x86/a/libtibb.a"
-        LIBS += "SDK_PATH/libs/ticore/x86/a/libticore.a"
+        LIBS += "SDK_PATH/libs/tibb/x86/libtibb.a"
+        LIBS += "SDK_PATH/libs/ticore/x86/libticore.a"
         LIBS += "SDK_PATH/libs/libv8/x86/libv8.a"
         ${modules_x86_a}
     }
     CONFIG(debug, debug|release) {
-        LIBS += "SDK_PATH/libs/tibb/x86/a-g/libtibb.a"
-        LIBS += "SDK_PATH/libs/ticore/x86/a-g/libticore.a"
+        LIBS += "SDK_PATH/libs/tibb/x86/libtibb.a"
+        LIBS += "SDK_PATH/libs/ticore/x86/libticore.a"
         LIBS += "SDK_PATH/libs/libv8/x86/libv8.a"
         ${modules_x86_a_g}
     }
