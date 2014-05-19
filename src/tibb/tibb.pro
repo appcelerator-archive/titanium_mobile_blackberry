@@ -67,7 +67,7 @@ HEADERS += \
     ../src/Contacts/*.h \
     ../src/Media/*.h \ 
     ../src/Modules/App/*.h \
-    ../src/Modules/APi/*.h \
+    ../src/Modules/API/*.h \
     ../src/Modules/Blackberry/*.h \
     ../src/Modules/Blackberry/PushNotification/*.h \
     ../src/Modules/Blackberry/PushNotification/dao/*.hpp \
