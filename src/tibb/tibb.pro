@@ -16,7 +16,7 @@ INCLUDEPATH += \
 SOURCES += \
 	./*.cpp \
 	../Contacts/*.cpp \
-    ../Media/*.cpp \ 
+    ../Media/*.cpp \
     ../Modules/App/*.cpp \
     ../Modules/API/*.cpp \
     ../Modules/Blackberry/*.cpp \
@@ -26,7 +26,7 @@ SOURCES += \
     ../Modules/Blackberry/PushNotification/vo/*.cpp \
     ../Modules/Filesystem/*.cpp \
     ../Modules/Geolocation/*.cpp \
-    ../Modules/Platform/*.cpp \    
+    ../Modules/Platform/*.cpp \
     ../Modules/UI/BlackBerry/*.cpp \
     ../Modules/UI/BlackBerry/NavButton/*.cpp \
     ../Modules/UI/BlackBerry/ApplicationMenu/*.cpp \
@@ -61,9 +61,9 @@ SOURCES += \
 HEADERS += \
 	./*.h \
     ../Contacts/*.h \
-    ../Media/*.h \ 
+    ../Media/*.h \
     ../Modules/App/*.h \
-    ../Modules/APi/*.h \
+    ../Modules/API/*.h \
     ../Modules/Blackberry/*.h \
     ../Modules/Blackberry/PushNotification/*.h \
     ../Modules/Blackberry/PushNotification/dao/*.hpp \
@@ -71,7 +71,7 @@ HEADERS += \
     ../Modules/Blackberry/PushNotification/vo/*.hpp \
     ../Modules/Filesystem/*.h \
     ../Modules/Geolocation/*.h \
-    ../Modules/Platform/*.h \    
+    ../Modules/Platform/*.h \
     ../Modules/UI/BlackBerry/*.h \
     ../Modules/UI/BlackBerry/NavButton/*.h \
     ../Modules/UI/BlackBerry/ApplicationMenu/*.h \
