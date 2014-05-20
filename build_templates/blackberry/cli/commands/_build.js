@@ -130,34 +130,38 @@ function build(logger, config, cli, finished) {
                      'distribute': ['o.le-v7', 'arm']};
     this.ndk = cli.argv['ndk'];
     this.analyticsBuildType = cli.argv['build-type'];
+
     cli.fireHook('build.pre.compile', this, function (e) {
         // Make sure we have an app.js. This used to be validated in validate(), but since plugins like
         // Alloy generate an app.js, it may not have existed during validate(), but should exist now
         // that build.pre.compile was fired.
         ti.validateAppJsExists(this.projectDir, this.logger, 'blackberry');
         var self = this;
-        var ipFound = false;
-        appc.net.interfaces(function(a){
-            for(var key in a) {
-                var obj = a[key];
-                if(!obj.gateway) continue;
-                obj.ipAddresses.forEach(function (ip) {
-                    if(ip.family == 'IPv4') {
-                        self.ipAddress = ip.address;
-                        ipFound = true;
-                        return;
-                    }
+        if(cli.argv['target'] == 'distribute') {
+            var bbndk = new BlackBerry(self);
+            bbndk.build(finished);
+        } else {
+            var ipFound = false;
+            appc.net.interfaces(function(a){
+                for(var key in a) {
+                    var obj = a[key];
+                    if(!obj.gateway) continue;
+                    obj.ipAddresses.forEach(function (ip) {
+                        if(ip.family == 'IPv4') {
+                            self.ipAddress = ip.address;
+                            ipFound = true;
+                            return;
+                        }
+                    });
+                    if(ipFound) break;
+                }
+                getAvailablePort(function(port){
+                    self.availablePort = port;
+                    var bbndk = new BlackBerry(self);
+                    bbndk.build(finished);
                 });
-                if(ipFound) break;
-            }
-            getAvailablePort(function(port){
-                self.availablePort = port;
-                var bbndk = new BlackBerry(self);
-                bbndk.build(finished);
             });
-
-        });
-
+        }
     }.bind(this));
 }
 
