@@ -1,4 +1,4 @@
-CONFIG += qt warn_on cascades10
+CONFIG += qt warn_off cascades10
 BASEDIR =  $$quote($$_PRO_FILE_PWD_)
 
 INCLUDEPATH += "SDK_PATH/libs/tibb/include"
