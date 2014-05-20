@@ -384,12 +384,35 @@ BlackBerry.prototype.build = function(_onFinish) {
 		// maybe more?
 	];
 
+	var splashPaths = [];
+	var splashImageNames = [];
+	var possibleSplashScreens = [
+		path.join(this.projectDir, 'Resources', 'Default-720x720.png'),
+		path.join(this.projectDir, 'Resources', 'Default-768x1280.png'),
+		path.join(this.projectDir, 'Resources', 'blackberry','Default-720x720.png'),
+		path.join(this.projectDir, 'Resources', 'blackberry','Default-768x1280.png')
+		// maybe more?
+	];
+
 	possibleIcons.forEach(function(icon) {
 		if(fs.existsSync(icon)) {
 			iconPath = icon;
 			return false;
 		};
 	});
+
+	possibleSplashScreens.forEach(function(splash) {
+		if(fs.existsSync(splash)) {
+			var splashParts = splash.split('/');
+			splashPaths.push(
+				'\t<asset path="' + splash + '">' + splashParts[splashParts.length-1] + '</asset>\n'
+			);
+			splashImageNames.push(
+				'\t\t<image>' + splashParts[splashParts.length-1] + '</image>\n'
+			);
+		};
+	});
+
 	this.tiapp.blackberry = this.tiapp.blackberry || {};
 	this.tiapp.blackberry.other = this.tiapp.blackberry.other || '';
 	RenderTemplate(buildBlackberry + '/bar-descriptor.xml', {
@@ -401,11 +424,12 @@ BlackBerry.prototype.build = function(_onFinish) {
 		category: 'core.games',
 		permissions: permissions || '',
 		icon: iconPath,
+		splashPaths: splashPaths,
+		splashImageNames: splashImageNames,
 		icon_name: 'appicon.png',
 		appname: this.appName,
 		other: this.tiapp.blackberry.other
 	});
-
 
 	// write app_properties.ini file 
 	var appProps = '[General]\n';

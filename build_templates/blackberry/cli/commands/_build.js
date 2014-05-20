@@ -72,10 +72,12 @@ exports.validate = function (logger, config, cli) {
  
 
 exports.run = function (logger, config, cli, finished) {
-     cli.fireHook('build.pre.construct', function () {
+    var currentTime = new Date().getTime();
+    cli.fireHook('build.pre.construct', function () {
         new build(logger, config, cli, function (err) {
             cli.fireHook('build.post.compile', this, function (postHookErr) {
                 sendAnalytics(cli);
+                logger.info('Total build time: ' + ((new Date().getTime() - currentTime) / 1000) + ' seconds\n\n');
                 if (postHookErr && postHookErr.type == 'AppcException') {
                     logger.error(postHookErr.message);
                     postHookErr.details.forEach(function (line) {
@@ -168,7 +170,7 @@ function getAvailablePort(_callback) {
         socket.on('data',function(message){
             var parts = (message + '').split('\n');
             parts.forEach(function(msg){
-                console.info('' + msg.replace(/\n\net/g, '\n'));
+                console.info('' + msg.replace(/\n\n/g, '\n'));
             });
         });
         socket.on('error',function(error){
