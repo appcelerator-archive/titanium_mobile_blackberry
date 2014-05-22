@@ -13,12 +13,12 @@ static bool _alertShowing = false;
 
 namespace TiUI {
 
-TiUIAlertDialogProxy::TiUIAlertDialogProxy(const char* name) : TiProxy(name)
+TiUIAlertDialogProxy::TiUIAlertDialogProxy(const char* name) : TiProxy(name), _cancel(-1)
 {
 	_alert = new bb::system::SystemDialog("OK");
 	_eventHandler = new TiUIAlertDialogEventHandler(this);
 
-    QObject::connect(_alert, SIGNAL(finished(bb::system::SystemUiResult::Type)), _eventHandler, SLOT(buttonSelected(bb::system::SystemUiResult::Type)));
+	QObject::connect(_alert, SIGNAL(finished(bb::system::SystemUiResult::Type)), _eventHandler, SLOT(buttonSelected(bb::system::SystemUiResult::Type)));
 
 	createPropertySetterGetter("buttonNames", _setButtonNames,  _getButtonNames);
 	createPropertySetterGetter("cancel", _setCancel,  _getCancel);
@@ -40,35 +40,57 @@ TiUIAlertDialogProxy::~TiUIAlertDialogProxy()
 	delete _eventHandler;
 }
 
-TI_GETTER_DEFER(TiUIAlertDialogProxy, getButtonNames)
-void TiUIAlertDialogProxy::setButtonNames(Ti::TiValue val)
+Ti::TiValue TiUIAlertDialogProxy::getButtonNames()
 {
-    if(val.isNull())
-    {
-        _alert->clearButtons();
-        _alert->confirmButton()->setLabel("OK");
-        return;
-    }
-    if(!val.isList())
-    {
-    	return;
-    }
-
-    _alert->confirmButton()->setLabel(QString::null);
-    _alert->cancelButton()->setLabel(QString::null);
-    _alert->clearButtons();
-
-    foreach (Ti::TiValue value, val.toList())
-    {
-        bb::system::SystemUiButton* button = new bb::system::SystemUiButton();
-        button->setLabel(value.toString());
-        _alert->appendButton(button);
-    }
+	Ti::TiValue val;
+	QList<Ti::TiValue> array;
+	foreach(QString name, _buttonNames)
+	{
+		Ti::TiValue btn;
+		btn.setString(name);
+		array.append(btn);
+	}
+	val.setList(array);
+	return val;
 }
 
-TI_GETTER_DEFER(TiUIAlertDialogProxy, getCancel)
-void TiUIAlertDialogProxy::setCancel(Ti::TiValue)
+void TiUIAlertDialogProxy::setButtonNames(Ti::TiValue val)
 {
+	if(val.isNull())
+	{
+		_alert->clearButtons();
+		_alert->confirmButton()->setLabel("OK");
+		return;
+	}
+	if(!val.isList())
+	{
+		return;
+	}
+
+	_alert->confirmButton()->setLabel(QString::null);
+	_alert->cancelButton()->setLabel(QString::null);
+	_alert->clearButtons();
+	_buttonNames.clear();
+	foreach(Ti::TiValue current, val.toList())
+	{
+		bb::system::SystemUiButton* button = new bb::system::SystemUiButton();
+		QString title = current.toString();
+		_buttonNames.append(title);
+		button->setLabel(title);
+		_alert->appendButton(button);
+	}
+}
+
+Ti::TiValue TiUIAlertDialogProxy::getCancel()
+{
+	Ti::TiValue val;
+	val.setNumber(_cancel);
+	return val;
+}
+
+void TiUIAlertDialogProxy::setCancel(Ti::TiValue val)
+{
+	_cancel = val.toNumber();
 }
 
 TI_GETTER_DEFER(TiUIAlertDialogProxy, getMessage)
@@ -109,19 +131,22 @@ Ti::TiValue TiUIAlertDialogProxy::show(Ti::TiValue)
 	}
 
 	Ti::TiValue val;
-    val.setUndefined();
+	val.setUndefined();
 	return val;
 }
 Ti::TiValue TiUIAlertDialogProxy::hide(Ti::TiValue)
 {
 	_alert->cancel();
-    _alertQueue.removeOne(_alert);
-    if(_alertQueue.isEmpty()) {
-    	_alertShowing = false;
-    } else {
-    	_alertQueue.last()->show();
-    }
-    makeWeak();
+	_alertQueue.removeOne(_alert);
+	if(_alertQueue.isEmpty())
+	{
+		_alertShowing = false;
+	}
+	else
+	{
+		_alertQueue.last()->show();
+	}
+	makeWeak();
 	Ti::TiValue val;
 	val.setUndefined();
 	return val;
@@ -132,26 +157,35 @@ TiUIAlertDialogEventHandler::TiUIAlertDialogEventHandler(TiUIAlertDialogProxy* p
 
 }
 
-void TiUIAlertDialogEventHandler::buttonSelected(bb::system::SystemUiResult::Type) {
+void TiUIAlertDialogEventHandler::buttonSelected(bb::system::SystemUiResult::Type type)
+{
+	bb::system::SystemDialog* dialog = static_cast<bb::system::SystemDialog*>(sender());
+	bb::system::SystemUiButton* selectedButton = dialog->buttonSelection();
 
-    bb::system::SystemDialog* dialog = static_cast<bb::system::SystemDialog*>(sender());
-    bb::system::SystemUiButton* selectedButton = dialog->buttonSelection();
+	_alertQueue.removeOne(dialog);
+	int index = -1;
 
-    _alertQueue.removeOne(dialog);
+	for(int i = 0, len = dialog->buttonCount(); i < len; i++) {
+		if(dialog->buttonAt(i) == selectedButton) {
+			index = i;
+			break;
+		}
+	}
+	bool cancel = index == (int)_proxy->getCancel().toNumber();
 
-    QVariant index = selectedButton->property("index");
-    QVariant cancel = selectedButton->property("cancel");
+	Ti::TiEventParameters eventParams;
+	eventParams.addParam("index", index);
+	eventParams.addParam("cancel", cancel);
+	_proxy->fireEvent(Ti::TiConstants::EventClick, eventParams);
 
-    Ti::TiEventParameters eventParams;
-    eventParams.addParam("index", index.toInt(NULL));
-    eventParams.addParam("cancel", cancel.toBool());
-    _proxy->fireEvent(Ti::TiConstants::EventClick, eventParams);
-
-    if(_alertQueue.isEmpty()) {
-    	_alertShowing = false;
-    } else {
-    	_alertQueue.last()->show();
-    }
-    _proxy->makeWeak();
+	if(_alertQueue.isEmpty())
+	{
+		_alertShowing = false;
+	}
+	else
+	{
+		_alertQueue.last()->show();
+	}
+	_proxy->makeWeak();
 }
 }
