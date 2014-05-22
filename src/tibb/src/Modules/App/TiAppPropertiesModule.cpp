@@ -115,6 +115,13 @@ QMap<QString, Ti::TiValue> TiAppPropertiesModule::createMapFromQVariant(QVariant
 				map.insert(key, newVal);
 				break;
 			}
+			case QVariant::Map:
+			{
+				Ti::TiValue newVal;
+				newVal.setMap(createMapFromQVariant(current.toMap()));
+				map.insert(key, newVal);
+				break;
+			}
 			default:
 			{
 				Ti::TiValue newVal;
@@ -156,6 +163,13 @@ QList<Ti::TiValue> TiAppPropertiesModule::createListFromQVariant(QVariant val)
 			{
 				Ti::TiValue newVal;
 				newVal.setBool(current.toBool());
+				list.append(newVal);
+				break;
+			}
+			case QVariant::Map:
+			{
+				Ti::TiValue newVal;
+				newVal.setMap(createMapFromQVariant(current.toMap()));
 				list.append(newVal);
 				break;
 			}
@@ -267,6 +281,10 @@ void TiAppPropertiesModule::setProp(Ti::TiValue value, PropertyType type)
 	Ti::TiValue key = values.at(0);
 	Ti::TiValue prop = values.at(1);
 
+	if(prop.isNull() || prop.isUndefined()) {
+		setProp(key, TiAppPropertiesModule::RemoveProperty);
+		return;
+	}
 	settings.setValue(key.toString(), convertTiValueToQVariant(prop, type));
 }
 
@@ -297,7 +315,6 @@ Ti::TiValue TiAppPropertiesModule::getProp(Ti::TiValue value, PropertyType type)
 	{
 		if(prop.isValid())
 		{
-			settings.setValue(key, prop);
 			return convertQVariantToTiValue(prop, type);
 		}
 		QSettings defaultSettings("app/native/_private_assets_/app_properties.ini", QSettings::IniFormat);
@@ -307,7 +324,7 @@ Ti::TiValue TiAppPropertiesModule::getProp(Ti::TiValue value, PropertyType type)
 		}
 	}
 	Ti::TiValue val;
-	val.setUndefined();
+	val.setNull();
 	return val;
 }
 
