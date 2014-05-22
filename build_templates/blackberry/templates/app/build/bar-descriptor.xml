@@ -74,15 +74,19 @@ ${splashImageNames}
 		<asset path="arm/o.le-v7-g/${binname}" entry="true" type="Qnx/Elf">${binname}</asset>
 	</configuration>
 	<configuration name="Device-Release">
-		<entryPointType>Qnx/Cascades</entryPointType>
+       <entryPointType>Qnx/Cascades</entryPointType>
 		<platformArchitecture>armle-v7</platformArchitecture>
-		<asset path="arm/o.le-v7/lib${binname}.so" entry="true" type="Qnx/Elf">${binname}</asset>
+		<asset path="arm/o.le-v7/${binname}.so" entry="true" type="Qnx/Elf">${binname}.so</asset>
 	</configuration>
 	<configuration name="Simulator-Debug">
 		<platformArchitecture>x86</platformArchitecture>
 		<asset path="x86/o-g/${binname}" entry="true" type="Qnx/Elf">${binname}</asset>
 	</configuration>
-		
+	<configuration name="Device-Profile">
+		<platformArchitecture>armle-v7</platformArchitecture>
+		<asset path="arm-p/o.le-v7-g/${binname}" entry="true" type="Qnx/Elf">${binname}</asset>
+	</configuration>
+
 	<!-- Unique author ID assigned by signing authority. Required if using debug tokens. -->
 	<!-- <authorId>ABC1234YjsnUk235h</authorId> -->
 		
