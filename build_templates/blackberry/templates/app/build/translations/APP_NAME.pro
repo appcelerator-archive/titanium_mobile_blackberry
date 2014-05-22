@@ -1,1 +1,1 @@
-include (../APP_NAME.pro)
+include (../_APP_NAME_.pro)

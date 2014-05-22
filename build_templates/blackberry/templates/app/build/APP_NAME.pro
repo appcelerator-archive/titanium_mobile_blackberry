@@ -1,3 +1,5 @@
+APP_NAME = _APP_NAME_
+
 CONFIG += qt warn_off cascades10
 BASEDIR =  $$quote($$_PRO_FILE_PWD_)
 

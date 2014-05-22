@@ -1,4 +1,5 @@
-#include "tibb.h"
+#include <tibb.h>
+#include <QObject>
 #include <QFile>
 #include <QIODevice>
 #include <QDebug>
@@ -28,7 +29,7 @@ QString readAppJs(QString filePath) {
 	file.close();
 	return jsContent;}
 
-int main(int argc, char** argv)
+Q_DECL_EXPORT int main(int argc, char** argv)
 {
 	QString js = readAppJs("app/native/assets/blackberry/app.js");
 	if(js.isEmpty()) {

@@ -1,4 +1,4 @@
-QMAKE_TARGET  = APP_NAME
+QMAKE_TARGET  = _APP_NAME_
 LUPDATE       = $(QNX_HOST)/usr/bin/lupdate
 LRELEASE      = $(QNX_HOST)/usr/bin/lrelease
 
