@@ -46,6 +46,8 @@ public:
 private:
 	bb::system::SystemDialog *_alert;
 	TiUIAlertDialogEventHandler* _eventHandler;
+	QList<QString> _buttonNames;
+	int _cancel;
 };
 
 class TiUIAlertDialogEventHandler : public QObject
