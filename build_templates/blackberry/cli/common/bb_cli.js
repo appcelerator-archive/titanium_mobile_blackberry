@@ -196,7 +196,7 @@ function CreateApp(appName, appId, appPath, appVersion, tiSDK) {
 			}
 
 			var fileContent = fs.readFileSync(oldFilePath).toString().trim();
-			fileContent = fileContent.replace(/APP_NAME/g, appName.replace(/ /g, '_'));
+			fileContent = fileContent.replace(/_APP_NAME_/g, appName.replace(/ /g, '_'));
 			fileContent = fileContent.replace(/APP_ID/g, appId);
 			fileContent = fileContent.replace(/APP_VERSION/g, appVersion);
 			fileContent = fileContent.replace(/SDK_PATH/g, tiSDK);
@@ -384,8 +384,8 @@ BlackBerry.prototype.build = function(_onFinish) {
 		// maybe more?
 	];
 
-	var splashPaths = [];
-	var splashImageNames = [];
+	var splashPaths = '';
+	var splashImageNames = '';
 	var possibleSplashScreens = [
 		path.join(this.projectDir, 'Resources', 'Default-720x720.png'),
 		path.join(this.projectDir, 'Resources', 'Default-768x1280.png'),
@@ -404,12 +404,8 @@ BlackBerry.prototype.build = function(_onFinish) {
 	possibleSplashScreens.forEach(function(splash) {
 		if(fs.existsSync(splash)) {
 			var splashParts = splash.split('/');
-			splashPaths.push(
-				'\t<asset path="' + splash + '">' + splashParts[splashParts.length-1] + '</asset>\n'
-			);
-			splashImageNames.push(
-				'\t\t<image>' + splashParts[splashParts.length-1] + '</image>\n'
-			);
+			splashPaths +='\t<asset path="' + splash + '">' + splashParts[splashParts.length-1] + '</asset>\n';
+			splashImageNames += '\t\t<image>' + splashParts[splashParts.length-1] + '</image>\n';
 		};
 	});
 
