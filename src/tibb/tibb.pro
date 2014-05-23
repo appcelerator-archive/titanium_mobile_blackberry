@@ -58,6 +58,7 @@ SOURCES += \
     ../src/Modules/UI/BlackBerry/EmailDialog/*.cpp \
     ../src/Modules/UI/BlackBerry/OptionDialog/*.cpp \
     ../src/Modules/UI/BlackBerry/NavigationWindow/*.cpp \
+    ../src/Modules/UI/BlackBerry/Animation/*.cpp \
     ../src/Modules/Utils/*.cpp \
     ../src/Modules/Blackberry/Notification/*.cpp \
     ../src/Modules/Blackberry/*.cpp
@@ -102,6 +103,7 @@ HEADERS += \
     ../src/Modules/UI/BlackBerry/EmailDialog/*.h \
     ../src/Modules/UI/BlackBerry/OptionDialog/*.h \
     ../src/Modules/UI/BlackBerry/NavigationWindow/*.h \
+    ../src/Modules/UI/BlackBerry/Animation/*.h \
     ../src/Modules/Utils/*.h \
     ../src/Modules/Blackberry/Notification/*.h \
     ../src/Modules/Blackberry/*.h
