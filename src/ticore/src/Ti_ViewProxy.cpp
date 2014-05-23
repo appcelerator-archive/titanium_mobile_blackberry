@@ -335,7 +335,7 @@ void Ti::TiViewProxy::setSoftKeyboardOnFocus(Ti::TiValue)
 void Ti::TiViewProxy::setTouchEnabled(Ti::TiValue value)
 {
 	if(value.toBool())
-		getChildControl()->setTouchPropagationMode(bb::cascades::TouchPropagationMode::Full);
+		getChildControl()->resetTouchPropagationMode();
 	else
 		getChildControl()->setTouchPropagationMode(bb::cascades::TouchPropagationMode::PassThrough);
 }

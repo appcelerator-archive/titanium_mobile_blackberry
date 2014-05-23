@@ -1,0 +1,11 @@
+{
+	"name": "titanium-mobile-blackberry-module-build",
+	"description": "Titanium BlackBerry module build script",
+	"version": "1.0.0",
+	"author": "Appcelerator, Inc. <info@appcelerator.com>",
+	"dependencies": {
+		"archiver": "~0.9.1",
+		"wrench": "~1.5.1"
+	},
+	"license": "Apache Public License v2"
+}

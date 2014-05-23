@@ -70,10 +70,8 @@ void Ti::TiValue::setValue(Handle<Value> value)
 		_jsValue = value;
 	}
 
-	if(_jsValue->IsBoolean())
-	{
-		_bool = value->ToBoolean()->Value();
-	} else if(_jsValue->IsNumber() || _jsValue->IsNumberObject())
+	_bool = value->ToBoolean()->Value();
+	if(_jsValue->IsNumber() || _jsValue->IsNumberObject())
 	{
 		_number = _jsValue->IsNumber() ? value->ToNumber()->Value() : value->ToNumber()->NumberValue();
 	}

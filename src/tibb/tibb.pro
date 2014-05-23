@@ -4,8 +4,12 @@ QMAKE_CC = $(NDK_CCACHE) $${QMAKE_CC}
 QMAKE_CXX = $(NDK_CCACHE) $${QMAKE_CXX}
 
 CONFIG += qt staticlib warn_on debug_and_release cascades mobility
-MOBILITY += sensors
 CONFIG += console warn_off
+MOBILITY += sensors
+
+LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut
+LIBS += -lasound -lbbmultimedia -lbbdata -lbbsystem -lbbpim -lbbcascadespickers
+LIBS += -lbbplatform -lbbnetwork -lbbutility
 
 INCLUDEPATH += \
 	. \
@@ -14,100 +18,94 @@ INCLUDEPATH += \
 	../ticore/include
 
 SOURCES += \
-	./*.cpp \
-	../Contacts/*.cpp \
-    ../Media/*.cpp \ 
-    ../Modules/App/*.cpp \
-    ../Modules/API/*.cpp \
-    ../Modules/Blackberry/*.cpp \
-    ../Modules/Blackberry/PushNotification/*.cpp \
-    ../Modules/Blackberry/PushNotification/dao/*.cpp \
-    ../Modules/Blackberry/PushNotification/service/*.cpp \
-    ../Modules/Blackberry/PushNotification/vo/*.cpp \
-    ../Modules/Filesystem/*.cpp \
-    ../Modules/Geolocation/*.cpp \
-    ../Modules/Platform/*.cpp \    
-    ../Modules/UI/BlackBerry/*.cpp \
-    ../Modules/UI/BlackBerry/NavButton/*.cpp \
-    ../Modules/UI/BlackBerry/ApplicationMenu/*.cpp \
-    ../Modules/UI/BlackBerry/View/*.cpp \
-    ../Modules/UI/BlackBerry/WebView/*.cpp \
-    ../Modules/UI/BlackBerry/Button/*.cpp \
-    ../Modules/UI/BlackBerry/Window/*.cpp \
-    ../Modules/UI/BlackBerry/TabGroup/*.cpp \
-    ../Modules/UI/BlackBerry/AlertDialog/*.cpp \
-    ../Modules/UI/BlackBerry/AlertDialog/*.cpp \
-    ../Modules/UI/BlackBerry/TableView/*.cpp \
-    ../Modules/UI/BlackBerry/TableView/Components/*.cpp \
-    ../Modules/UI/BlackBerry/ScrollableView/*.cpp \
-    ../Modules/UI/BlackBerry/ScrollView/*.cpp \
-    ../Modules/UI/BlackBerry/ImageView/*.cpp \
-    ../Modules/UI/BlackBerry/Label/*.cpp \
-    ../Modules/UI/BlackBerry/TextWidget/*.cpp \
-    ../Modules/UI/BlackBerry/TextWidget/TextArea/*.cpp \
-    ../Modules/UI/BlackBerry/TextWidget/TextField/*.cpp \
-    ../Modules/UI/BlackBerry/Switch/*.cpp \
-    ../Modules/UI/BlackBerry/Slider/*.cpp \
-    ../Modules/UI/BlackBerry/ImageButton/*.cpp \
-    ../Modules/UI/BlackBerry/ProgressBar/*.cpp \
-    ../Modules/UI/BlackBerry/ActivityIndicator/*.cpp \
-    ../Modules/UI/BlackBerry/EmailDialog/*.cpp \
-    ../Modules/UI/BlackBerry/OptionDialog/*.cpp \
-    ../Modules/UI/BlackBerry/NavigationWindow/*.cpp \
-    ../Modules/UI/BlackBerry/Animation/*.cpp \
-    ../Modules/Utils/*.cpp \
-    ../Modules/Blackberry/Notification/*.cpp \
-    ../Modules/Blackberry/*.cpp
+	../src/*.cpp \
+	../src/Contacts/*.cpp \
+    ../src/Media/*.cpp \ 
+    ../src/Modules/App/*.cpp \
+    ../src/Modules/API/*.cpp \
+    ../src/Modules/Blackberry/*.cpp \
+    ../src/Modules/Blackberry/PushNotification/*.cpp \
+    ../src/Modules/Blackberry/PushNotification/dao/*.cpp \
+    ../src/Modules/Blackberry/PushNotification/service/*.cpp \
+    ../src/Modules/Blackberry/PushNotification/vo/*.cpp \
+    ../src/Modules/Filesystem/*.cpp \
+    ../src/Modules/Geolocation/*.cpp \
+    ../src/Modules/Platform/*.cpp \    
+    ../src/Modules/UI/BlackBerry/*.cpp \
+    ../src/Modules/UI/BlackBerry/NavButton/*.cpp \
+    ../src/Modules/UI/BlackBerry/ApplicationMenu/*.cpp \
+    ../src/Modules/UI/BlackBerry/View/*.cpp \
+    ../src/Modules/UI/BlackBerry/WebView/*.cpp \
+    ../src/Modules/UI/BlackBerry/Button/*.cpp \
+    ../src/Modules/UI/BlackBerry/Window/*.cpp \
+    ../src/Modules/UI/BlackBerry/TabGroup/*.cpp \
+    ../src/Modules/UI/BlackBerry/AlertDialog/*.cpp \
+    ../src/Modules/UI/BlackBerry/AlertDialog/*.cpp \
+    ../src/Modules/UI/BlackBerry/TableView/*.cpp \
+    ../src/Modules/UI/BlackBerry/TableView/Components/*.cpp \
+    ../src/Modules/UI/BlackBerry/ScrollableView/*.cpp \
+    ../src/Modules/UI/BlackBerry/ScrollView/*.cpp \
+    ../src/Modules/UI/BlackBerry/ImageView/*.cpp \
+    ../src/Modules/UI/BlackBerry/Label/*.cpp \
+    ../src/Modules/UI/BlackBerry/TextWidget/*.cpp \
+    ../src/Modules/UI/BlackBerry/TextWidget/TextArea/*.cpp \
+    ../src/Modules/UI/BlackBerry/TextWidget/TextField/*.cpp \
+    ../src/Modules/UI/BlackBerry/Switch/*.cpp \
+    ../src/Modules/UI/BlackBerry/Slider/*.cpp \
+    ../src/Modules/UI/BlackBerry/ImageButton/*.cpp \
+    ../src/Modules/UI/BlackBerry/ProgressBar/*.cpp \
+    ../src/Modules/UI/BlackBerry/ActivityIndicator/*.cpp \
+    ../src/Modules/UI/BlackBerry/EmailDialog/*.cpp \
+    ../src/Modules/UI/BlackBerry/OptionDialog/*.cpp \
+    ../src/Modules/UI/BlackBerry/NavigationWindow/*.cpp \
+    ../src/Modules/Utils/*.cpp \
+    ../src/Modules/Blackberry/Notification/*.cpp \
+    ../src/Modules/Blackberry/*.cpp
 
 HEADERS += \
-	./*.h \
-    ../Contacts/*.h \
-    ../Media/*.h \ 
-    ../Modules/App/*.h \
-    ../Modules/APi/*.h \
-    ../Modules/Blackberry/*.h \
-    ../Modules/Blackberry/PushNotification/*.h \
-    ../Modules/Blackberry/PushNotification/dao/*.hpp \
-    ../Modules/Blackberry/PushNotification/service/*.hpp \
-    ../Modules/Blackberry/PushNotification/vo/*.hpp \
-    ../Modules/Filesystem/*.h \
-    ../Modules/Geolocation/*.h \
-    ../Modules/Platform/*.h \    
-    ../Modules/UI/BlackBerry/*.h \
-    ../Modules/UI/BlackBerry/NavButton/*.h \
-    ../Modules/UI/BlackBerry/ApplicationMenu/*.h \
-    ../Modules/UI/BlackBerry/View/*.h \
-    ../Modules/UI/BlackBerry/WebView/*.h \
-    ../Modules/UI/BlackBerry/Button/*.h \
-    ../Modules/UI/BlackBerry/Window/*.h \
-    ../Modules/UI/BlackBerry/TabGroup/*.h \
-    ../Modules/UI/BlackBerry/AlertDialog/*.h \
-    ../Modules/UI/BlackBerry/TableView/*.h \
-    ../Modules/UI/BlackBerry/TableView/Components/*.h \
-    ../Modules/UI/BlackBerry/ScrollableView/*.h \
-    ../Modules/UI/BlackBerry/ScrollView/*.h \
-    ../Modules/UI/BlackBerry/ImageView/*.h \
-    ../Modules/UI/BlackBerry/Label/*.h \
-    ../Modules/UI/BlackBerry/TextWidget/*.h \
-    ../Modules/UI/BlackBerry/TextWidget/TextArea/*.h \
-    ../Modules/UI/BlackBerry/TextWidget/TextField/*.h \
-    ../Modules/UI/BlackBerry/Switch/*.h \
-    ../Modules/UI/BlackBerry/Slider/*.h \
-    ../Modules/UI/BlackBerry/ImageButton/*.h \
-    ../Modules/UI/BlackBerry/ProgressBar/*.h \
-    ../Modules/UI/BlackBerry/ActivityIndicator/*.h \
-    ../Modules/UI/BlackBerry/EmailDialog/*.h \
-    ../Modules/UI/BlackBerry/OptionDialog/*.h \
-    ../Modules/UI/BlackBerry/NavigationWindow/*.h \
-    ../Modules/UI/BlackBerry/Animation/*.h \
-    ../Modules/Utils/*.h \
-    ../Modules/Blackberry/Notification/*.h \
-    ../Modules/Blackberry/*.h
+	../src/*.h \
+    ../src/Contacts/*.h \
+    ../src/Media/*.h \ 
+    ../src/Modules/App/*.h \
+    ../src/Modules/API/*.h \
+    ../src/Modules/Blackberry/*.h \
+    ../src/Modules/Blackberry/PushNotification/*.h \
+    ../src/Modules/Blackberry/PushNotification/dao/*.hpp \
+    ../src/Modules/Blackberry/PushNotification/service/*.hpp \
+    ../src/Modules/Blackberry/PushNotification/vo/*.hpp \
+    ../src/Modules/Filesystem/*.h \
+    ../src/Modules/Geolocation/*.h \
+    ../src/Modules/Platform/*.h \    
+    ../src/Modules/UI/BlackBerry/*.h \
+    ../src/Modules/UI/BlackBerry/NavButton/*.h \
+    ../src/Modules/UI/BlackBerry/ApplicationMenu/*.h \
+    ../src/Modules/UI/BlackBerry/View/*.h \
+    ../src/Modules/UI/BlackBerry/WebView/*.h \
+    ../src/Modules/UI/BlackBerry/Button/*.h \
+    ../src/Modules/UI/BlackBerry/Window/*.h \
+    ../src/Modules/UI/BlackBerry/TabGroup/*.h \
+    ../src/Modules/UI/BlackBerry/AlertDialog/*.h \
+    ../src/Modules/UI/BlackBerry/TableView/*.h \
+    ../src/Modules/UI/BlackBerry/TableView/Components/*.h \
+    ../src/Modules/UI/BlackBerry/ScrollableView/*.h \
+    ../src/Modules/UI/BlackBerry/ScrollView/*.h \
+    ../src/Modules/UI/BlackBerry/ImageView/*.h \
+    ../src/Modules/UI/BlackBerry/Label/*.h \
+    ../src/Modules/UI/BlackBerry/TextWidget/*.h \
+    ../src/Modules/UI/BlackBerry/TextWidget/TextArea/*.h \
+    ../src/Modules/UI/BlackBerry/TextWidget/TextField/*.h \
+    ../src/Modules/UI/BlackBerry/Switch/*.h \
+    ../src/Modules/UI/BlackBerry/Slider/*.h \
+    ../src/Modules/UI/BlackBerry/ImageButton/*.h \
+    ../src/Modules/UI/BlackBerry/ProgressBar/*.h \
+    ../src/Modules/UI/BlackBerry/ActivityIndicator/*.h \
+    ../src/Modules/UI/BlackBerry/EmailDialog/*.h \
+    ../src/Modules/UI/BlackBerry/OptionDialog/*.h \
+    ../src/Modules/UI/BlackBerry/NavigationWindow/*.h \
+    ../src/Modules/Utils/*.h \
+    ../src/Modules/Blackberry/Notification/*.h \
+    ../src/Modules/Blackberry/*.h
 
-LIBS += -lz -lsqlite3 -lQtLocationSubset -lbbcascadesmaps -lGLESv1_CM -lOpenAL -lalut -lasound -lbbmultimedia -lbbdata -lbbsystem
-LIBS += -lbbpim -lbbcascadespickers
-LIBS += -lbbplatform -lbbnetwork
-LIBS += -lbbutility
 
 device {
 	CONFIG(release, debug|release) {

@@ -38,3 +38,7 @@ simulator:
 .PHONY: Simulator-Debug
 Simulator-Debug: Makefile
 	$(MAKE) $(J_OPTION) -C ./x86 -f Makefile debug
+
+.PHONY: Simulator-Release
+Simulator-Release: Makefile
+	$(MAKE) $(J_OPTION) -C ./x86 -f Makefile release

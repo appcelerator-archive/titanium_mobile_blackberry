@@ -72,10 +72,12 @@ exports.validate = function (logger, config, cli) {
  
 
 exports.run = function (logger, config, cli, finished) {
-     cli.fireHook('build.pre.construct', function () {
+    var currentTime = new Date().getTime();
+    cli.fireHook('build.pre.construct', function () {
         new build(logger, config, cli, function (err) {
             cli.fireHook('build.post.compile', this, function (postHookErr) {
                 sendAnalytics(cli);
+                logger.info('Total build time: ' + ((new Date().getTime() - currentTime) / 1000) + ' seconds\n\n');
                 if (postHookErr && postHookErr.type == 'AppcException') {
                     logger.error(postHookErr.message);
                     postHookErr.details.forEach(function (line) {
@@ -123,39 +125,43 @@ function build(logger, config, cli, finished) {
     this.deviceInternetAddress = cli.argv['ip-address'];
     this.tiapp = cli.tiapp;
     this.target = cli.argv.target;
-    this.type2variantCpu = {'simulator': ['o-g', 'x86', 'a-g'],
-                     'device': ['o.le-v7', 'arm', 'a.le-v7'],
-                     'distribute': ['o.le-v7', 'arm', 'a.le-v7']};
+    this.type2variantCpu = {'simulator': ['o-g', 'x86'],
+                     'device': ['o.le-v7', 'arm'],
+                     'distribute': ['o.le-v7', 'arm']};
     this.ndk = cli.argv['ndk'];
     this.analyticsBuildType = cli.argv['build-type'];
+
     cli.fireHook('build.pre.compile', this, function (e) {
         // Make sure we have an app.js. This used to be validated in validate(), but since plugins like
         // Alloy generate an app.js, it may not have existed during validate(), but should exist now
         // that build.pre.compile was fired.
         ti.validateAppJsExists(this.projectDir, this.logger, 'blackberry');
         var self = this;
-        var ipFound = false;
-        appc.net.interfaces(function(a){
-            for(var key in a) {
-                var obj = a[key];
-                if(!obj.gateway) continue;
-                obj.ipAddresses.forEach(function (ip) {
-                    if(ip.family == 'IPv4') {
-                        self.ipAddress = ip.address;
-                        ipFound = true;
-                        return;
-                    }
+        if(cli.argv['target'] == 'distribute') {
+            var bbndk = new BlackBerry(self);
+            bbndk.build(finished);
+        } else {
+            var ipFound = false;
+            appc.net.interfaces(function(a){
+                for(var key in a) {
+                    var obj = a[key];
+                    if(!obj.gateway) continue;
+                    obj.ipAddresses.forEach(function (ip) {
+                        if(ip.family == 'IPv4') {
+                            self.ipAddress = ip.address;
+                            ipFound = true;
+                            return;
+                        }
+                    });
+                    if(ipFound) break;
+                }
+                getAvailablePort(function(port){
+                    self.availablePort = port;
+                    var bbndk = new BlackBerry(self);
+                    bbndk.build(finished);
                 });
-                if(ipFound) break;
-            }
-            getAvailablePort(function(port){
-                self.availablePort = port;
-                var bbndk = new BlackBerry(self);
-                bbndk.build(finished);
             });
-
-        });
-
+        }
     }.bind(this));
 }
 
@@ -168,7 +174,7 @@ function getAvailablePort(_callback) {
         socket.on('data',function(message){
             var parts = (message + '').split('\n');
             parts.forEach(function(msg){
-                console.info('' + msg.replace(/\n\net/g, '\n'));
+                console.info('' + msg.replace(/\n\n/g, '\n'));
             });
         });
         socket.on('error',function(error){
