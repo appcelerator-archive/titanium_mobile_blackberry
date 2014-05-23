@@ -20,6 +20,7 @@
 #include "TiUIBase.h"
 #include "TiObject.h"
 #include "NativeObject.h"
+#include "Modules/UI/BlackBerry/Animation/TiUIAnimationProxy.h"
 
 Ti::TiViewProxy::TiViewProxy(const char* name)
 : Ti::TiProxy(name),
@@ -632,9 +633,24 @@ Ti::TiValue Ti::TiViewProxy::add(Ti::TiValue value)
 
 Ti::TiValue Ti::TiViewProxy::animate(Ti::TiValue val)
 {
-	if(val.isProxy()) {
+	Ti::TiCallback* callback = NULL;
+
+	if(val.isList()) {
+		QList<Ti::TiValue> array = val.toList();
+		callback = new Ti::TiCallback(this, array.at(1));
+		val = Ti::TiValue(array.at(0));
+	}
+
+	if(val.isProxy())
+	{
 		Ti::TiAnimationProxy *proxy = static_cast<Ti::TiAnimationProxy*>(val.toProxy());
-		proxy->animate(this, NULL);
+		proxy->animate(this, callback);
+	}
+	else if(val.isMap())
+	{
+		TiUI::TiUIAnimationProxy *proxy = TiUI::TiUIAnimationProxy::CreateProxy();
+		proxy->applyProperties(val);
+		proxy->animate(this, callback);
 	}
 	Ti::TiValue result;
 	result.setUndefined();
