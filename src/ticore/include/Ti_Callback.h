@@ -31,6 +31,7 @@ public:
 private:
 	Ti::TiProxy* _proxy;
 	uint32_t _id;
+	bool hasFunction;
 };
 
 

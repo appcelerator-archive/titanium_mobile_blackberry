@@ -24,7 +24,6 @@
 #include "NativeAudioPlayerObject.h"
 #include "NativeAudioRecorderObject.h"
 #include "NativeVideoPlayerObject.h"
-#include "NativeAnimationObject.h"
 #include "TiCascadesApp.h"
 
 #include <bb/cascades/Container>
@@ -119,10 +118,6 @@ NativeObject* NativeObjectFactory::createNativeObject(int type, TiObject* tiObj)
     case N_TYPE_GESTURE:
        obj = NativeGestureObject::createGesture(tiObj);
        break;
-
-    case N_TYPE_ANIMATION:
-           obj = NativeAnimationObject::createAnimation(tiObj);
-           break;
 
     case N_TYPE_ACCELEROMETER:
         obj = new NativeAccelerometerObject(tiObj);

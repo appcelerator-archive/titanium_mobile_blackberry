@@ -250,6 +250,7 @@ Ti.UI.createEmailDialog = Ti.UI.BlackBerry.createEmailDialog;
 Ti.UI.createOptionDialog = Ti.UI.BlackBerry.createOptionDialog;
 Ti.UI.createNavigationGroup = Ti.UI.BlackBerry.createNavigationWindow;
 Ti.UI.createNavigationWindow = Ti.UI.BlackBerry.createNavigationWindow;
+Ti.UI.createAnimation = Ti.UI.BlackBerry.createAnimation;
 
 Ti.UI.KEYBOARD_DEFAULT = Ti.UI.BlackBerry.KEYBOARD_DEFAULT;
 Ti.UI.KEYBOARD_ASCII = Ti.UI.BlackBerry.KEYBOARD_ASCII;

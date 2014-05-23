@@ -257,7 +257,6 @@ Handle<Value> Ti::TiProxy::_Getter (Local<String> property, const AccessorInfo& 
 	Handle<Object> obj = Handle<Object>::Cast(info.Holder());
 	Handle<External> proxyObject = Handle<External>::Cast(obj->GetHiddenValue(String::New("module")));
 
-	// Ti::TiHelper::LogInternal(QString("Property Getter: ").append(Ti::TiHelper::QStringFromValue(property)));
 	if(proxyObject.IsEmpty())
 		proxyObject = Handle<External>::Cast(obj->GetHiddenValue(String::New("proxy")));
 
