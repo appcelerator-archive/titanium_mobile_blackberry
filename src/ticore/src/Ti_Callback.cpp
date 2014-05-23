@@ -11,8 +11,13 @@
 namespace Ti
 {
 
-TiCallback::TiCallback(Ti::TiProxy* proxy, Ti::TiValue val)
+TiCallback::TiCallback(Ti::TiProxy* proxy, Ti::TiValue val) : hasFunction(true)
 {
+	if(val.isUndefined()) {
+		hasFunction = false;
+		return;
+	}
+
 	HandleScope scope;
 	_proxy = proxy;
 	Local<Value> hiddenValue = proxy->_jsObject->GetHiddenValue(String::New("callbacks"));
@@ -31,11 +36,14 @@ TiCallback::TiCallback(Ti::TiProxy* proxy, Ti::TiValue val)
 }
 TiCallback::~TiCallback()
 {
-	Local<Array> callbacks = Local<Array>::Cast(_proxy->_jsObject->GetHiddenValue(String::New("callbacks")));
-	callbacks->Set(_id, Null());
+	if(hasFunction) {
+		Local<Array> callbacks = Local<Array>::Cast(_proxy->_jsObject->GetHiddenValue(String::New("callbacks")));
+		callbacks->Set(_id, Null());
+	}
 }
 void TiCallback::fire(Ti::TiEventParameters params)
 {
+	if(!hasFunction) return;
 	HandleScope scope;
 	Context::Scope context_scope(TitaniumRuntime::getContenxt());
 
@@ -43,6 +51,7 @@ void TiCallback::fire(Ti::TiEventParameters params)
 
 	Local<Array> callbackArray = Local<Array>::Cast(_proxy->_jsObject->GetHiddenValue(String::New("callbacks")));
 	Local<Function> callbackFunction = Local<Function>::Cast(callbackArray->Get(_id));
+	if(callbackFunction.IsEmpty() || callbackFunction->IsUndefined()) return;
 	Local<Object> eventObject = Object::New();
 	Ti::TiEventParameters::addParametersToObject(&params, eventObject);
 

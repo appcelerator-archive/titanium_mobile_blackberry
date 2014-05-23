@@ -1,8 +1,8 @@
-/*
- * TiUIAnimationProxy.h
- *
- *  Created on: May 16, 2014
- *      Author: penrique
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #ifndef TI_TIUIANIMATIONPROXY_H_
@@ -14,7 +14,7 @@
 #include <bb/cascades/Control>
 
 
-#include "TiCore.h"
+#include <TiCore.h>
 
 namespace TiUI {
 
@@ -82,7 +82,7 @@ private:
 	Ti::TiViewProxy *_viewProxy;
 	Ti::TiCallback* _callback;
 	Ti::TiView* _view;
-
+	bool _hasFired;
 public slots:
 	void onAnimationEnd();
 };

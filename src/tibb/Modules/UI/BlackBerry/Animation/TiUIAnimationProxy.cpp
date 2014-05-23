@@ -1,11 +1,13 @@
-/*
- * TiUIAnimationProxy.cpp
- *
- *  Created on: May 16, 2014
- *      Author: penrique
+/**
+ * Appcelerator Titanium Mobile
+ * Copyright (c) 2014 by Appcelerator, Inc. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
  */
 
 #include "TiUIAnimationProxy.h"
+#include <bb/cascades/ImplicitAnimationController>
+
 namespace TiUI {
 
 TiUIAnimationProxy::TiUIAnimationProxy(const char* name) :
@@ -214,12 +216,12 @@ void TiUIAnimationProxy::animate(Ti::TiViewProxy* viewProxy, Ti::TiCallback* cal
 		getTranslateAnimation()->setToX(-objectX + parentWidth - objectWidth - value);
 	}
 	if(_properties.contains(Bottom)) {
-		float value = Ti::Layout::ParseProperty::getDimensionValue(_properties[Right].toStdString(), Ti::TiHelper::PPI());
+		float value = Ti::Layout::ParseProperty::getDimensionValue(_properties[Bottom].toStdString(), Ti::TiHelper::PPI());
 		getTranslateAnimation()->setToY(-objectY + parentHeight - objectHeight - value);
 	}
 	if(_properties.contains(Opacity)) {
-		bool ok;
-		getFadeAnimation()->setToOpacity(_properties[Right].toFloat(&ok));
+		getFadeAnimation()->setFromOpacity(_control->opacity());
+		getFadeAnimation()->setToOpacity(_properties[Opacity].toFloat(NULL));
 	}
 	if(_properties.contains(Duration)) {
 		bool ok;
@@ -308,49 +310,54 @@ TiUIAnimationEventHandler::TiUIAnimationEventHandler(TiUIAnimationProxy* animati
 	_animationProxy = animationProxy;
 	_viewProxy = viewProxy;
 	_view = _viewProxy->getView();
-
+	_hasFired = false;
 }
+/*
+TiUIAnimationEventHandler::~TiUIAnimationEventHandler()
+{
+	delete _callback;
+}
+*/
 void TiUIAnimationEventHandler::onAnimationEnd()
 {
 	_animationProxy->removeAnimations();
+	bb::cascades::ImplicitAnimationController allDisabled = bb::cascades::ImplicitAnimationController::create(_view).enabled(false);
 	Ti::TitaniumLayout *layout = _view->viewLayout;
-	bb::cascades::Control *control = _view->childControl;
-	if(control == NULL) control = _view;
 
 	QMap<TiUIAnimationProxy::Type, QString> properties = _animationProxy->getProperties();
 	if(properties.contains(TiUIAnimationProxy::Left)) {
-		Ti::TiHelper::Log("Left " + properties[TiUIAnimationProxy::Left]);
 		layout->_setLeft(properties[TiUIAnimationProxy::Left]);
-		control->setTranslationX(0);
+		_view->setTranslationX(0);
 	}
 	if(properties.contains(TiUIAnimationProxy::Top)) {
-		Ti::TiHelper::Log("Top " + properties[TiUIAnimationProxy::Top]);
 		layout->_setTop(properties[TiUIAnimationProxy::Top]);
-		control->setTranslationY(0);
+		_view->setTranslationY(0);
 	}
 	if(properties.contains(TiUIAnimationProxy::Right)) {
-		Ti::TiHelper::Log("Right " + properties[TiUIAnimationProxy::Right]);
 		layout->_setRight(properties[TiUIAnimationProxy::Right]);
-		control->setTranslationX(0);
+		_view->setTranslationX(0);
 	}
 	if(properties.contains(TiUIAnimationProxy::Bottom)) {
-		Ti::TiHelper::Log("Bottom " + properties[TiUIAnimationProxy::Bottom]);
 		layout->_setBottom(properties[TiUIAnimationProxy::Bottom]);
-		control->setTranslationY(0);
+		_view->setTranslationY(0);
 	}
 	if(properties.contains(TiUIAnimationProxy::Opacity)) {
-		bool ok;
-		control->setOpacity(properties[TiUIAnimationProxy::Opacity].toDouble(&ok));
+		_view->setOpacity(properties[TiUIAnimationProxy::Opacity].toFloat(NULL));
 	}
 	if(properties.contains(TiUIAnimationProxy::Width)) {
 		layout->_setWidth(properties[TiUIAnimationProxy::Width]);
-		control->setScaleX(1);
-		control->setPivotX(0);
+		_view->setScaleX(1);
+		_view->setPivotX(0);
 	}
 	if(properties.contains(TiUIAnimationProxy::Height)) {
 		layout->_setHeight(properties[TiUIAnimationProxy::Height]);
-		control->setScaleY(1);
-		control->setPivotY(0);
+		_view->setScaleY(1);
+		_view->setPivotY(0);
+	}
+	if(!_hasFired && _callback != NULL)
+	{
+		_hasFired = true;
+		_callback->fire(Ti::TiEventParameters());
 	}
 }
 
