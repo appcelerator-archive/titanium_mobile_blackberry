@@ -29,8 +29,6 @@
 #include "TiEventContainer.h"
 #include "TiObject.h"
 #include "V8Utils.h"
-#include "TiUIAnimation.h"
-#include "NativeAnimationObject.h"
 #include "TiUtils.h"
 #include "TiOrientation.h"
 #include <TiCore.h>
@@ -1746,39 +1744,3 @@ int NativeControlObject::getDateTime(TiObject* obj, QDateTime& dt)
     return NATIVE_ERROR_OK;
 }
 
-NativeAnimationObject * NativeControlObject::createAnimationObject(Local<Object> obj)
-{
-    NativeObjectFactory* factory = tiObject_->getNativeObjectFactory();
-    TiUIAnimation* animation = TiUIAnimation::createAnimation(factory);
-    TiObject *itemObject = static_cast<TiObject*>(animation);
-
-    // Create a JavaScript proxy for the new animation object.
-    Handle<ObjectTemplate> templ = TiObject::getObjectTemplateFromJsObject(tiObject_->getValue());
-    Local<Object> proxy = templ->NewInstance();
-    animation->setValue(proxy);
-    TiObject::setTiObjectToJsObject(proxy, animation);
-
-    // Apply the properties in the dictionary to the new animation object.
-    animation->setParametersFromObject(animation, obj->ToObject());
-    return (NativeAnimationObject *)animation->getNativeObject();
-}
-
-void NativeControlObject::animate(NativeObject* obj)
-{
-	NativeAnimationObject *animation = static_cast<NativeAnimationObject*>(obj);
-	animation->animate(this, layoutNode_);
-}
-
-void NativeControlObject::animate(Local<Object> obj, TiV8Event* event)
-{
-	NativeAnimationObject *animation = createAnimationObject(obj);
-	animation->setCallback(event);
-	animation->animate(this, layoutNode_);
-
-}
-
-void NativeControlObject::animate(Local<Object> obj)
-{
-	NativeAnimationObject *animation = createAnimationObject(obj);
-	animation->animate(this, layoutNode_);
-}

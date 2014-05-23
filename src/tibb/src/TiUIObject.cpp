@@ -15,7 +15,6 @@
 #include "TiOrientation.h"
 #include "TiUIClipboardObject.h"
 #include "TiUIPicker.h"
-#include "TiUIAnimation.h"
 #include <string.h>
 
 using namespace titanium;
@@ -53,8 +52,6 @@ void TiUIObject::onCreateStaticMembers()
     TiProxy::onCreateStaticMembers();
 
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createPicker", this, _createPicker);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "setBackgroundColor", this, _setBackgroundColor);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createAnimation", this, _createAnimation);
 
     // Adding javascript constants from Ti.UI
     ADD_STATIC_TI_VALUE("TEXT_ALIGNMENT_LEFT", Number::New(Ti::UI::TEXT_ALIGNMENT_LEFT), this);
@@ -103,15 +100,4 @@ Handle<Value> TiUIObject::_createControlHelper(void* userContext, CREATEOBJECTCA
 Handle<Value> TiUIObject::_createPicker(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIPicker::createPicker), args);
-}
-
-Handle<Value> TiUIObject::_createAnimation(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)(TiUIAnimation::createAnimation), args);
-}
-
-Handle<Value> TiUIObject::_setBackgroundColor(void* userContext, TiObject* caller, const Arguments& args)
-{
-    // Not currently implemented.
-    return Undefined();
 }

@@ -31,8 +31,6 @@ private:
     TiUIObject(NativeObjectFactory* objectFactory);
     static Handle<Value> _createControlHelper(void* userContext, CREATEOBJECTCALLBACK createCallback, const Arguments& args);
     static Handle<Value> _createPicker(void* userContext, TiObject* caller, const Arguments& args);
-    static Handle<Value> _createAnimation(void* userContext, TiObject*, const Arguments& args);
-    static Handle<Value> _setBackgroundColor(void* userContext, TiObject* caller, const Arguments& args);
 
     NativeObjectFactory* objectFactory_;
     NativeObject* contentContainer_;

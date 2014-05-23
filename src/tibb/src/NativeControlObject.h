@@ -21,7 +21,6 @@ class QString;
 class TiObject;
 class UIViewEventHandler;
 class NativeLayoutHandler;
-class NativeAnimationObject;
 
 namespace bb
 {
@@ -195,10 +194,6 @@ public:
     // Show tab description
     virtual int setShowTabsOnActionBar(TiObject* obj);
 
-    virtual void animate(NativeObject* obj);
-    virtual void animate(v8::Local<v8::Object> obj);
-    virtual void animate(v8::Local<v8::Object> obj, TiV8Event* event);
-
     void addTiViewProxy(Ti::TiViewProxy*);
 
     Ti::Layout::Node* layout() {
@@ -230,7 +225,6 @@ private:
     void addTouchEvent(const char* name, const QObject* source, const char* signal, TiEventContainer* container);
     void updateLayoutProperty(Ti::Layout::ValueName name, TiObject* val);
 
-    NativeAnimationObject *createAnimationObject(v8::Local<v8::Object> obj);
     bb::cascades::Control* control_;
     bb::cascades::AbsoluteLayoutProperties* layout_;
     bb::cascades::Color backgroundColor_;
