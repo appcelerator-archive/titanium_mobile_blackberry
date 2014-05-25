@@ -53,21 +53,27 @@ void TiGeolocationSession::onPositionUpdated(const QGeoPositionInfo & position)
 
 	Ti::TiEventParameters eventParams;
 
-	eventParams.addParam("latitude", coords.latitude());
-	eventParams.addParam("longitude", coords.longitude());
-	eventParams.addParam("altitude", coords.altitude());
-	eventParams.addParam("direction", position.attribute(QtMobilitySubset::QGeoPositionInfo::Direction));
-	eventParams.addParam("speed", position.attribute(QtMobilitySubset::QGeoPositionInfo::GroundSpeed));
-	eventParams.addParam("groundSpeed", position.attribute(QtMobilitySubset::QGeoPositionInfo::GroundSpeed));
-	eventParams.addParam("verticalSpeed", position.attribute(QtMobilitySubset::QGeoPositionInfo::VerticalSpeed));
-	eventParams.addParam("magneticVariation", position.attribute(QtMobilitySubset::QGeoPositionInfo::MagneticVariation));
-	eventParams.addParam("heading", position.attribute(QtMobilitySubset::QGeoPositionInfo::MagneticVariation));
-	eventParams.addParam("horizontalAccuracy", position.attribute(QtMobilitySubset::QGeoPositionInfo::HorizontalAccuracy));
-	eventParams.addParam("verticalAccuracy", position.attribute(QtMobilitySubset::QGeoPositionInfo::VerticalAccuracy));
-	eventParams.addParam("accuracy", position.attribute(QtMobilitySubset::QGeoPositionInfo::HorizontalAccuracy));
-	eventParams.addParam("altitudeAccuracy", position.attribute(QtMobilitySubset::QGeoPositionInfo::VerticalAccuracy));
-	eventParams.addParam("timestamp", (int)position.timestamp().currentMSecsSinceEpoch());
+	Ti::TiEventParameters coordsParams;
+	coordsParams.addParam("accuracy", position.attribute(QtMobilitySubset::QGeoPositionInfo::HorizontalAccuracy));
+	coordsParams.addParam("altitude", coords.altitude());
+	coordsParams.addParam("altitudeAccuracy", position.attribute(QtMobilitySubset::QGeoPositionInfo::VerticalAccuracy));
+	coordsParams.addParam("heading", position.attribute(QtMobilitySubset::QGeoPositionInfo::MagneticVariation));
+	coordsParams.addParam("latitude", coords.latitude());
+	coordsParams.addParam("longitude", coords.longitude());
+	coordsParams.addParam("speed", position.attribute(QtMobilitySubset::QGeoPositionInfo::GroundSpeed));
+	coordsParams.addParam("timestamp", (int)position.timestamp().currentMSecsSinceEpoch());
 
+	Ti::TiEventParameters positionParams;
+	positionParams.addParam("timestamp", (int)position.timestamp().currentMSecsSinceEpoch());
+	positionParams.addParam("direction", position.attribute(QtMobilitySubset::QGeoPositionInfo::Direction));
+	positionParams.addParam("groundSpeed", position.attribute(QtMobilitySubset::QGeoPositionInfo::GroundSpeed));
+	positionParams.addParam("verticalSpeed", position.attribute(QtMobilitySubset::QGeoPositionInfo::VerticalSpeed));
+	positionParams.addParam("magneticVariation", position.attribute(QtMobilitySubset::QGeoPositionInfo::MagneticVariation));
+	positionParams.addParam("horizontalAccuracy", position.attribute(QtMobilitySubset::QGeoPositionInfo::HorizontalAccuracy));
+	positionParams.addParam("verticalAccuracy", position.attribute(QtMobilitySubset::QGeoPositionInfo::VerticalAccuracy));
+
+	eventParams.addParam("position", positionParams);
+	eventParams.addParam("coords", coordsParams);
 	_module->fireEvent("location", eventParams);
 
 	_lastGeoloc.clear();
