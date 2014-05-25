@@ -35,9 +35,14 @@ void TiCompassSession::onReadingChanged()
 {
 	QCompassReading *reading = _compass->reading();
 	Ti::TiEventParameters eventParams;
-	eventParams.addParam("heading", (int)reading->azimuth());
-	eventParams.addParam("calibration", (int)reading->calibrationLevel());
+	Ti::TiEventParameters headingParams;
+	headingParams.addParam("trueHeading", reading->azimuth());
+	headingParams.addParam("magneticHeading", reading->azimuth());
+	headingParams.addParam("accuracy", reading->calibrationLevel());
+	eventParams.addParam("heading", headingParams);
 	_module->fireEvent("heading", eventParams);
+
+
 	if(_callbackFunction.isValid())
 	{
 		_compass->stop();
