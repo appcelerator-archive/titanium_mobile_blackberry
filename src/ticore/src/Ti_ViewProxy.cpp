@@ -10,6 +10,9 @@
 #include "Ti_Value.h"
 #include "Ti_Constants.h"
 #include "Ti_Macros.h"
+#include "Ti_Callback.h"
+#include "Ti_AnimationProxy.h"
+
 #include "TitaniumLayout.h"
 #include <bb/cascades/ImagePaint>
 #include <bb/cascades/ActionSet>
@@ -17,6 +20,7 @@
 #include "TiUIBase.h"
 #include "TiObject.h"
 #include "NativeObject.h"
+#include "Modules/UI/BlackBerry/Animation/TiUIAnimationProxy.h"
 
 Ti::TiViewProxy::TiViewProxy(const char* name)
 : Ti::TiProxy(name),
@@ -626,11 +630,31 @@ Ti::TiValue Ti::TiViewProxy::add(Ti::TiValue value)
 	val.setUndefined();
 	return val;
 }
-Ti::TiValue Ti::TiViewProxy::animate(Ti::TiValue)
+
+Ti::TiValue Ti::TiViewProxy::animate(Ti::TiValue val)
 {
-	Ti::TiValue val;
-	val.setUndefined();
-	return val;
+	Ti::TiCallback* callback = NULL;
+
+	if(val.isList()) {
+		QList<Ti::TiValue> array = val.toList();
+		callback = new Ti::TiCallback(this, array.at(1));
+		val = Ti::TiValue(array.at(0));
+	}
+
+	if(val.isProxy())
+	{
+		Ti::TiAnimationProxy *proxy = static_cast<Ti::TiAnimationProxy*>(val.toProxy());
+		proxy->animate(this, callback);
+	}
+	else if(val.isMap())
+	{
+		TiUI::TiUIAnimationProxy *proxy = TiUI::TiUIAnimationProxy::CreateProxy();
+		proxy->applyProperties(val);
+		proxy->animate(this, callback);
+	}
+	Ti::TiValue result;
+	result.setUndefined();
+	return result;
 }
 Ti::TiValue Ti::TiViewProxy::finishLayout(Ti::TiValue)
 {

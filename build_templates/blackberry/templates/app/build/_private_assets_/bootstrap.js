@@ -225,6 +225,8 @@ Ti.UI.createSearchBar = function(args) {
     Ti.API.warn('Ti.UI.createSearchBar() is not supported in BB10, using textField instead');
     return Ti.UI.createTextField(args);
 };
+Ti.UI.backgroundColor = '';
+Ti.UI.setBackgroundColor = function(_color){Ti.UI.backgroundColor = _color;};
 Ti.UI.createWebView = Ti.UI.BlackBerry.createWebView;
 Ti.UI.createButton = Ti.UI.BlackBerry.createButton;
 Ti.UI.createWindow = Ti.UI.BlackBerry.createWindow;
@@ -250,6 +252,7 @@ Ti.UI.createEmailDialog = Ti.UI.BlackBerry.createEmailDialog;
 Ti.UI.createOptionDialog = Ti.UI.BlackBerry.createOptionDialog;
 Ti.UI.createNavigationGroup = Ti.UI.BlackBerry.createNavigationWindow;
 Ti.UI.createNavigationWindow = Ti.UI.BlackBerry.createNavigationWindow;
+Ti.UI.createAnimation = Ti.UI.BlackBerry.createAnimation;
 
 Ti.UI.KEYBOARD_DEFAULT = Ti.UI.BlackBerry.KEYBOARD_DEFAULT;
 Ti.UI.KEYBOARD_ASCII = Ti.UI.BlackBerry.KEYBOARD_ASCII;
