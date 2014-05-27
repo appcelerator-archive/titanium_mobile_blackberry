@@ -80,6 +80,7 @@ void TiUIScrollViewProxy::initEnd()
 			_scrollView->getInnerViewProxy()->view->_setHeight(Ti::TiConstants::SizeFILL);
 		}
 	}
+	Ti::TiViewProxy::initEnd();
 }
 void TiUIScrollViewProxy::setLayout(Ti::TiValue val)
 {
@@ -94,6 +95,7 @@ void TiUIScrollViewProxy::setContentHeight(Ti::TiValue val)
 {
 	_contentHeightSet = true;
 	_scrollView->getInnerViewProxy()->setHeight(val);
+	_scrollView->_contentHeight = val.toString();
 }
 void TiUIScrollViewProxy::setContentOffset(Ti::TiValue arg)
 {
@@ -132,6 +134,7 @@ void TiUIScrollViewProxy::setContentWidth(Ti::TiValue val)
 {
 	_contentWidthSet = true;
 	_scrollView->getInnerViewProxy()->setWidth(val);
+	_scrollView->_contentWidth = val.toString();
 }
 void TiUIScrollViewProxy::setDisableBounce(Ti::TiValue val)
 {
