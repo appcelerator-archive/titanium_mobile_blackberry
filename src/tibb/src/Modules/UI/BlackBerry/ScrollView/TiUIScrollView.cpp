@@ -14,7 +14,7 @@
 #include <bb/cascades/LayoutUpdateHandler>
 #include <bb/cascades/ScrollViewProperties>
 #include <bb/cascades/ScrollMode>
-
+#include <bb/cascades/Color>
 namespace TiUI {
 
 
@@ -27,20 +27,16 @@ TiUIScrollView::TiUIScrollView(Ti::TiViewProxy* proxy) :
 	_viewSize = QSize(0,0);
 
 	_innerViewProxy = ScrollViewContentViewProxy::CreateProxy();
-	qDebug() << "Clear weak" << QString(_innerViewProxy->getProxyName());
 	_innerViewProxy->clearWeak();
 	_innerView = _innerViewProxy->getView();
 
 	static_cast<ScrollViewContentView*>(_innerView)->setScrollView(this);
 
 	_innerView->setParentView(this);
-	childViews.append(_innerView);
-
 	_scrollView = new bb::cascades::ScrollView();
 	QObject::connect(_scrollView, SIGNAL(viewableAreaChanging(const QRectF&, float)), this, SLOT(onScroll(const QRectF&, float)));
-	_scrollView->setContent(_innerView);
-
 	setChildControl(_scrollView);
+	_scrollView->setContent(_innerView);
 }
 
 bool TiUIScrollView::ingoreWidth()
@@ -91,14 +87,18 @@ void TiUIScrollView::updateContentSize(QRectF rect)
 
     if(_contentSize.width() > _viewSize.width() && _contentSize.height() <= _viewSize.height())
     {
+    	_innerView->viewLayout->_setHeight(Ti::TiConstants::SizeFILL);
     	scrollViewProperties->setScrollMode(bb::cascades::ScrollMode::Horizontal);
     }
     else if(_contentSize.height() > _viewSize.height() && _contentSize.width() <= _viewSize.width())
     {
+    	_innerView->viewLayout->_setWidth(Ti::TiConstants::SizeFILL);
     	scrollViewProperties->setScrollMode(bb::cascades::ScrollMode::Vertical);
     }
     else if(_contentSize.width() <= _viewSize.width() && _contentSize.height() <= _viewSize.height())
     {
+    	_innerView->viewLayout->_setHeight(Ti::TiConstants::SizeFILL);
+    	_innerView->viewLayout->_setWidth(Ti::TiConstants::SizeFILL);
     	scrollViewProperties->setScrollMode(bb::cascades::ScrollMode::None);
     }
     else

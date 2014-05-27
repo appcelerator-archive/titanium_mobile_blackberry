@@ -33,7 +33,7 @@ public:
 
 	Ti::TiValue scrollTo(Ti::TiValue);
 	Ti::TiValue scrollToBottom(Ti::TiValue);
-
+	virtual void initEnd();
 	TI_CREATE_SETTER_GETTER(TiUIScrollViewProxy, setCanCancelEvents, getCanCancelEvents);
 	TI_CREATE_SETTER_GETTER(TiUIScrollViewProxy, setContentHeight, getContentHeight);
 	TI_CREATE_SETTER_GETTER(TiUIScrollViewProxy, setContentOffset, getContentOffset);
@@ -56,6 +56,7 @@ public:
 	EXPOSE_METHOD(TiUIScrollViewProxy, scrollToBottom)
 
 private:
+	QString _layout;
 	TiUIScrollView *_scrollView;
 	bb::cascades::ScrollView* _nativeScrollView;
 	bool _contentWidthSet;
