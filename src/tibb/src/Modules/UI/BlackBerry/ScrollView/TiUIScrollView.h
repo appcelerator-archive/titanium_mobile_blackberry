@@ -40,6 +40,8 @@ public:
 	Ti::TiViewProxy *getInnerViewProxy();
 	void updateContentSize(QRectF);
 	void setScrollEvent();
+	QString _contentWidth;
+	QString _contentHeight;
 private:
 	Ti::TiView *_innerView;
 	Ti::TiViewProxy *_innerViewProxy;

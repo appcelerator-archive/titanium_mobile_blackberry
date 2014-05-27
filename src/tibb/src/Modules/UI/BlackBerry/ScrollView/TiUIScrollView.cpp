@@ -88,17 +88,32 @@ void TiUIScrollView::updateContentSize(QRectF rect)
     if(_contentSize.width() > _viewSize.width() && _contentSize.height() <= _viewSize.height())
     {
     	_innerView->viewLayout->_setHeight(Ti::TiConstants::SizeFILL);
+    	if(_contentWidth.isEmpty())
+        	_innerView->viewLayout->_setWidth(Ti::TiConstants::SizeSIZE);
+    	else
+    		_innerView->viewLayout->_setWidth(_contentWidth);
     	scrollViewProperties->setScrollMode(bb::cascades::ScrollMode::Horizontal);
     }
     else if(_contentSize.height() > _viewSize.height() && _contentSize.width() <= _viewSize.width())
     {
     	_innerView->viewLayout->_setWidth(Ti::TiConstants::SizeFILL);
+    	if(_contentHeight.isEmpty())
+    		_innerView->viewLayout->_setHeight(Ti::TiConstants::SizeSIZE);
+    	else
+    		_innerView->viewLayout->_setHeight(_contentHeight);
     	scrollViewProperties->setScrollMode(bb::cascades::ScrollMode::Vertical);
     }
     else if(_contentSize.width() <= _viewSize.width() && _contentSize.height() <= _viewSize.height())
     {
-    	_innerView->viewLayout->_setHeight(Ti::TiConstants::SizeFILL);
-    	_innerView->viewLayout->_setWidth(Ti::TiConstants::SizeFILL);
+    	if(_contentHeight.isEmpty())
+    		_innerView->viewLayout->_setHeight(Ti::TiConstants::SizeFILL);
+    	else
+    		_innerView->viewLayout->_setHeight(_contentHeight);
+
+    	if(_contentWidth.isEmpty())
+    		_innerView->viewLayout->_setWidth(Ti::TiConstants::SizeFILL);
+    	else
+    		_innerView->viewLayout->_setWidth(_contentWidth);
     	scrollViewProperties->setScrollMode(bb::cascades::ScrollMode::None);
     }
     else
