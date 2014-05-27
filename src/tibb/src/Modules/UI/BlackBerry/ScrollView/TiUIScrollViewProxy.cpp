@@ -46,6 +46,7 @@ TiUIScrollViewProxy::TiUIScrollViewProxy(const char* name) :
 	_nativeScrollView = _scrollView->getScrollView();
 	setView(_scrollView);
 
+	_scrollView->childViews.append(_scrollView->getInnerView());
 	_scrollView->viewLayout->addChild(_scrollView->getInnerView());
 }
 
@@ -63,22 +64,26 @@ TiUIScrollViewProxy::~TiUIScrollViewProxy()
 {
 }
 
+void TiUIScrollViewProxy::initEnd()
+{
+	if(!_layout.isEmpty()) {
+		_scrollView->setLayout(_layout);
+
+		if (_layout == Ti::TiConstants::LayoutVertical && !_contentHeightSet)
+		{
+			_scrollView->getInnerViewProxy()->view->_setHeight(Ti::TiConstants::SizeSIZE);
+			_scrollView->getInnerViewProxy()->view->_setWidth(Ti::TiConstants::SizeFILL);
+		}
+		else if (_layout == Ti::TiConstants::LayoutHorizontal && !_contentWidthSet)
+		{
+			_scrollView->getInnerViewProxy()->view->_setWidth(Ti::TiConstants::SizeSIZE);
+			_scrollView->getInnerViewProxy()->view->_setHeight(Ti::TiConstants::SizeFILL);
+		}
+	}
+}
 void TiUIScrollViewProxy::setLayout(Ti::TiValue val)
 {
-	QString layout = val.toString();
-	_scrollView->setLayout(layout);
-
-	if (layout == Ti::TiConstants::LayoutVertical && !_contentHeightSet)
-	{
-		_scrollView->getInnerViewProxy()->view->_setHeight(Ti::TiConstants::SizeSIZE);
-		_scrollView->getInnerViewProxy()->view->_setWidth(Ti::TiConstants::SizeFILL);
-	}
-	else if (layout == Ti::TiConstants::LayoutHorizontal && !_contentWidthSet)
-	{
-		_scrollView->getInnerViewProxy()->view->_setWidth(Ti::TiConstants::SizeSIZE);
-		_scrollView->getInnerViewProxy()->view->_setHeight(Ti::TiConstants::SizeFILL);
-	}
-
+	_layout = val.toString();
 }
 
 
