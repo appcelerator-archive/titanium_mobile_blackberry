@@ -222,13 +222,13 @@ Ti::TiValue TiUIWebViewProxy::getWillHandleTouches()
 Ti::TiValue TiUIWebViewProxy::canGoBack(Ti::TiValue)
 {
 	Ti::TiValue val;
-	val.setUndefined();
+	val.setBool(_tiWebView->getNativeWebView()->canGoBack());
 	return val;
 }
 Ti::TiValue TiUIWebViewProxy::canGoForward(Ti::TiValue)
 {
 	Ti::TiValue val;
-	val.setUndefined();
+	val.setBool(_tiWebView->getNativeWebView()->canGoForward());
 	return val;
 }
 Ti::TiValue TiUIWebViewProxy::evalJS(Ti::TiValue val)
