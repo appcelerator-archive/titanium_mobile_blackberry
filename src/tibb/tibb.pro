@@ -60,6 +60,7 @@ SOURCES += \
     $$quote($$BASEDIR/src/Modules/UI/BlackBerry/EmailDialog/*.cpp) \
     $$quote($$BASEDIR/src/Modules/UI/BlackBerry/OptionDialog/*.cpp) \
     $$quote($$BASEDIR/src/Modules/UI/BlackBerry/NavigationWindow/*.cpp) \
+    $$quote($$BASEDIR/src/Modules/UI/BlackBerry/Animation/*.cpp) \
     $$quote($$BASEDIR/src/Modules/Utils/*.cpp) \
     $$quote($$BASEDIR/src/Modules/Blackberry/Notification/*.cpp) \
     $$quote($$BASEDIR/src/Modules/Blackberry/*.cpp)
@@ -104,6 +105,7 @@ HEADERS += \
     $$quote($$BASEDIR/src/Modules/UI/BlackBerry/EmailDialog/*.h) \
     $$quote($$BASEDIR/src/Modules/UI/BlackBerry/OptionDialog/*.h) \
     $$quote($$BASEDIR/src/Modules/UI/BlackBerry/NavigationWindow/*.h) \
+    $$quote($$BASEDIR/src/Modules/UI/BlackBerry/Animation/*.h) \
     $$quote($$BASEDIR/src/Modules/Utils/*.h) \
     $$quote($$BASEDIR/src/Modules/Blackberry/Notification/*.h) \
     $$quote($$BASEDIR/src/Modules/Blackberry/*.h)
