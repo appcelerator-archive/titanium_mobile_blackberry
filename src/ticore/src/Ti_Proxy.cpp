@@ -26,6 +26,7 @@ _proxyName(QString(name))
 	createPropertyFunction("removeEventListener", _removeEventListener);
 	createPropertyFunction("fireEvent", _fireEvent);
 	createPropertyFunction("toString", _getToString);
+	createPropertyFunction("applyProperties", _applyProperties);
 }
 
 Ti::TiProxy::~TiProxy()

@@ -156,7 +156,7 @@ public:
 	EXPOSE_METHOD(Ti::TiProxy, removeEventListener)
 	EXPOSE_METHOD(Ti::TiProxy, fireEvent)
 	EXPOSE_METHOD(Ti::TiProxy, getToString)
-
+	EXPOSE_METHOD(Ti::TiProxy, applyProperties)
 	void* __data__;
 
 protected:
