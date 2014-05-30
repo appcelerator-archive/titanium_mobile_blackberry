@@ -63,8 +63,7 @@ SOURCES += \
     $$quote($$BASEDIR/src/Modules/UI/BlackBerry/Animation/*.cpp) \
     $$quote($$BASEDIR/src/Modules/Utils/*.cpp) \
     $$quote($$BASEDIR/src/Modules/Blackberry/Notification/*.cpp) \
-    $$quote($$BASEDIR/src/Modules/Blackberry/*.cpp) \
-    $$quote($$BASEDIR/src/Modules/Media_/*.cpp)
+    $$quote($$BASEDIR/src/Modules/Blackberry/*.cpp)
 
 HEADERS += \
 	$$quote($$BASEDIR/src/*.h) \
@@ -109,8 +108,7 @@ HEADERS += \
     $$quote($$BASEDIR/src/Modules/UI/BlackBerry/Animation/*.h) \
     $$quote($$BASEDIR/src/Modules/Utils/*.h) \
     $$quote($$BASEDIR/src/Modules/Blackberry/Notification/*.h) \
-    $$quote($$BASEDIR/src/Modules/Blackberry/*.h) \
-    $$quote($$BASEDIR/src/Modules/Media_/*.h)
+    $$quote($$BASEDIR/src/Modules/Blackberry/*.h)
 
 device {
 	CONFIG(release, debug|release) {
