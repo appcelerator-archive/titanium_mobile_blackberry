@@ -162,11 +162,8 @@ Ti::TiValue Ti::TiProxy::fireEvent(Ti::TiValue value)
 		if(eParams.isMap())
 		{
 			QMap<QString, Ti::TiValue> map = eParams.toMap();
-			QList<QString> keys = map.keys();
-			int len = keys.size();
-			while(len--)
+			foreach(QString name, map.keys())
 			{
-				QString 	name 	= keys.at(len);
 				Ti::TiValue val 	= map[name];
 
 				if(val.isNumber())
@@ -205,6 +202,10 @@ void Ti::TiProxy::fireEvent(QString eventName, Ti::TiEventParameters params)
 		if(!params.contains("source"))
 		{
 			params.addParam("source", this);
+		}
+		if(!params.contains("type"))
+		{
+			params.addParam("type", eventName);
 		}
 		Ti::TiEvent::FireEventOnObject(_jsObject, eventName, &params);
 	}
