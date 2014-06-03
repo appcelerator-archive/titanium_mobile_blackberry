@@ -31,6 +31,8 @@ const QString Ti::TiConstants::EventBlur = "blur";
 const QString Ti::TiConstants::EventChange = "change";
 const QString Ti::TiConstants::EventClose = "close";
 const QString Ti::TiConstants::EventOpen = "open";
+const QString Ti::TiConstants::EventComplete = "complete";
+const QString Ti::TiConstants::EventError = "error";
 
 const QString Ti::TiConstants::SizeSIZE = "UI.SIZE";
 const QString Ti::TiConstants::SizeFILL = "UI.FILL";

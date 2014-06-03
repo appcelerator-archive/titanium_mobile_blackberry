@@ -34,6 +34,8 @@ public:
 	static const QString EventFocus;
 	static const QString EventBlur;
 	static const QString EventChange;
+	static const QString EventComplete;
+	static const QString EventError;
 
 	static const QString EventClose;
 	static const QString EventOpen;
