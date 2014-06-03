@@ -10,6 +10,7 @@ var __n = i18n.__n;
 var exec = require('child_process').exec;
 var keystorePassword = '';
 var devicePassword = '';
+var isWindows = process.platform == 'win32';
 const MOD_NATIVE = 1;
 const MOD_COMMON_JS = 2;
 
@@ -21,7 +22,7 @@ function findEnvFile(dir) {
 	for (var i = 0; i < envFiles.length; i++) {
 		var name = envFiles[i];
 		if (name.indexOf('bbndk-env') == 0) {
-			if (process.platform === 'win32') {
+			if (isWindows) {
 				if (name.indexOf('.bat', name.length - 4) != -1) {
 					envFile = name;
 				}
@@ -40,10 +41,9 @@ function findNDK() {
 	var default_dirs;
 	var ndkPath = 'not found';
 
-	if (process.platform === 'win32') {
+	if (isWindows) {
 		default_dirs = ['C:\\bbndk']
-	}
-	else {
+	} else {
 		default_dirs = ['/Applications/Momentics.app',  '/Applications/bbndk', '/Developer/SDKs/bbndk', '/opt/bbndk', '~/bbndk', '~/opt/bbndk']
 	}
 
@@ -235,7 +235,13 @@ function RunCommand(_cmd, _logger, _callback) {
 	var ndkPath = findNDK();
 	var envFile = findEnvFile(ndkPath);
 	var bashFile = path.join(ndkPath, envFile);
-	_cmd = 'source ' + bashFile + ';' + _cmd;
+
+	if (isWindows) {
+		_cmd = bashFile + ' && ' + _cmd;
+	} else {
+		_cmd = 'source ' + bashFile + ' && ' + _cmd;
+	}
+
 	exec(_cmd, function (err, stdout, stderr) {
 		if(err)
 			_logger.error('' + err);
@@ -257,18 +263,20 @@ BlackBerry.prototype.run = function(argv, _onFinish) {
 
 	var cmd = [
 		'make -j3 ' + (isDevice ? 'Device' : 'Simulator') + (isRelease ? '-Release' : '-Debug'),
-		'blackberry-nativepackager -package build/' + this.tiapp.name + '.bar bar-descriptor.xml -configuration ' + (isDevice ? 'Device' : 'Simulator') + (isRelease ? '-Release' : '-Debug')
+		'blackberry-nativepackager' + (isWindows ? '.bat' : '') + ' -package build/' + this.tiapp.name + '.bar bar-descriptor.xml -configuration ' + (isDevice ? 'Device' : 'Simulator') + (isRelease ? '-Release' : '-Debug')
 	];
 
 	keystorePassword = argv['keystore-password'] || '';
 	devicePassword = argv.password || '';
+
+
 	if(!isRelease) {
 		if(isDevice) {
 			cmd[1] += ' -debugToken "' + argv['debug-token'] + '" -devMode';
 		}
-		cmd.push('blackberry-deploy -installApp -launchApp -device ' + (argv['ip-address'] || '""') + ' -password "' + devicePassword + '" build/'+this.tiapp.name+'.bar')
+		cmd.push('blackberry-deploy' + (isWindows ? '.bat' : '') + ' -installApp -launchApp -device ' + (argv['ip-address'] || '""') + ' -password "' + devicePassword + '" build/'+this.tiapp.name+'.bar')
 	} else {
-		cmd.push('blackberry-signer -storepass "' + keystorePassword + '" build/' + this.tiapp.name + '.bar')
+		cmd.push('blackberry-signer' + (isWindows ? '.bat' : '') + ' -storepass "' + keystorePassword + '" build/' + this.tiapp.name + '.bar')
 	}
 	var self = this;
 	RunCommand(cmd[0], argv.logger, function(){
