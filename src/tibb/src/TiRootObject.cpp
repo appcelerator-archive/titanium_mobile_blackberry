@@ -50,6 +50,7 @@
 #include "Modules/App/TiAppModule.h"
 #include "Modules/API/TiAPIModule.h"
 #include "Modules/Blackberry/TiBlackberryModule.h"
+#include "Modules/Media_/TiMediaModule.h"
 
 using namespace titanium;
 
@@ -93,7 +94,7 @@ void TiRootObject::onCreateStaticMembers()
     tiObj->Set(String::New("App"), TiAppModule::CreateModule(), DontDelete);
     tiObj->Set(String::New("API"), TiAPIModule::CreateModule(), DontDelete);
     tiObj->Set(String::New("BlackBerry"), TiBlackberryModule::CreateModule(), DontDelete);
-
+    tiObj->Set(String::New("Media_"), TiMediaModule::CreateModule(), DontDelete);
 
     Local<Object> tiUI = tiObj->Get(String::New("UI"))->ToObject();
     tiUI->Set(String::New("BlackBerry"), TiUIBlackberryModule::CreateModule(), DontDelete);

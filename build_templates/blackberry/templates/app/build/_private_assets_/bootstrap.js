@@ -235,6 +235,9 @@ Ti.UI.createWindow = function(_args){
     }
     return Ti.UI.BlackBerry.createWindow(_args);
 }
+Ti.Media.createSound = Ti.Media_.createSound;
+Ti.Media.createAudioPlayer = Ti.Media_.createAudioPlayer;
+
 Ti.UI.createWebView = Ti.UI.BlackBerry.createWebView;
 Ti.UI.createButton = Ti.UI.BlackBerry.createButton;
 Ti.UI.createTabGroup = Ti.UI.BlackBerry.createTabGroup;
