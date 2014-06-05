@@ -25,7 +25,7 @@ public:
 	virtual QString defaultWidth();
 	virtual QString defaultHeight();
 	virtual void onRelayout(QRectF);
-
+	virtual void onTapEvent(bb::cascades::TapEvent*);
 	void setScrollView(TiUIScrollView* scrollView);
 private:
 	TiUIScrollView* _scrollView;

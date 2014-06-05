@@ -64,6 +64,8 @@ public:
 	bb::cascades::Control* childControl;
 	void setZIndex(int index);
 	int getZIndex();
+	void setClickSource(Ti::TiView*);
+	Ti::TiView* getClickSource();
 protected:
 	virtual TiViewProxy *getProxy() const;
 private:

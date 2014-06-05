@@ -72,6 +72,15 @@ Ti::TiView::~TiView() {
 	}
 }
 
+void Ti::TiView::setClickSource(Ti::TiView* v)
+{
+	clickSource = v;
+}
+Ti::TiView* Ti::TiView::getClickSource()
+{
+	return clickSource;
+}
+
 void Ti::TiView::onTouch(bb::cascades::TouchEvent* event)
 {
 	Ti::TiEventParameters clickEvent;

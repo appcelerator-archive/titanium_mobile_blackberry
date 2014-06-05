@@ -26,6 +26,15 @@ void ScrollViewContentView::onRelayout(QRectF rect)
 	_scrollView->updateContentSize(rect);
 }
 
+void ScrollViewContentView::onTapEvent(bb::cascades::TapEvent* event)
+{
+	if(getClickSource() == this) {
+		setClickSource(_scrollView);
+	}
+	Ti::TiView::onTapEvent(event);
+}
+
+
 bool ScrollViewContentView::ingoreWidth()
 {
 	return false;
