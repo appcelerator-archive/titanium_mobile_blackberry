@@ -20,6 +20,8 @@ TiUITableViewSectionProxy::TiUITableViewSectionProxy(const char* name) : Ti::TiP
 	createPropertySetterGetter("headerTitle", _setHeaderTitle,  _getHeaderTitle);
 	createPropertySetterGetter("headerSubTitle", _setHeaderSubTitle,  _getHeaderSubTitle);
 	createPropertySetterGetter("headerView", _setHeaderView,  _getHeaderView);
+	createPropertySetterGetter("title", _setHeaderTitle,  _getHeaderTitle);
+	createPropertySetterGetter("subTitle", _setHeaderSubTitle,  _getHeaderSubTitle);
 
 	createPropertyFunction("add", _add);
 	createPropertyFunction("remove", _remove);
