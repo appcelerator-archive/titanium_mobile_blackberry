@@ -15,6 +15,7 @@
 #include "../TiRootObject.h"
 #include "../TitaniumRuntime.h"
 #include "../V8Utils.h"
+#include <TiCore.h>
 
 using namespace bb::system;
 
@@ -96,17 +97,10 @@ void CameraInvocation::cameraCardDone(const CardDoneMessage& message) {
         Handle<Value> argv[1] = { data };
         CallV8ObjectProperty(options, "error", 1, argv);
     } else if (reason == "save") {
-        TitaniumRuntime* runtime = TitaniumRuntime::instance();
-        TiBlobObject* blob = TiBlobObject::createBlob(runtime->objectFactory());
-        Handle<Object> blobProxy = runtime->rootObject()->createProxyObject();
-        blob->setValue(blobProxy);
-        TiObject::setTiObjectToJsObject(blobProxy, blob);
-
         QString mediaFile = message.data();
-        blob->setData(mediaFile);
-
+        Ti::TiBlob *blob = Ti::TiBlob::InitWithFile(mediaFile);
         Local<Object> data = Object::New();
-        data->Set(String::NewSymbol("media"), blobProxy);
+        data->Set(String::NewSymbol("media"), blob->_jsObject);
         Handle<Value> argv[1] = { data };
         CallV8ObjectProperty(options, "success", 1, argv);
     }
