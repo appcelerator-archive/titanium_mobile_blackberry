@@ -220,9 +220,17 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 		json.append(",\"buildtype\" : \"" + _buildtype +"\"");
 	}
 	json.append("}}]");
-	sqlite3_bind_text(stmt, 1, id.data(), strlen(id.data()), 0);
-	sqlite3_bind_text(stmt, 2, json.toLocal8Bit().constData(), json.length(), 0);
 
+
+	char payload[1024];
+	sprintf(payload, json.toLocal8Bit().constData());
+	bool log = defaultSettings.value("analytics-log").toBool();
+	if (log) {
+		Ti::TiHelper::Log(QString("[INFO] Analytic Payload: ") + QString(payload));
+	}
+	int r;
+	r = sqlite3_bind_text(stmt, 1, id.data(), strlen(id.data()), 0);
+	r = sqlite3_bind_text(stmt, 2, payload, strlen(payload), 0);
 	if (sqlite3_step(stmt) != SQLITE_DONE) {
 		Ti::TiHelper::Log(QString("[ERROR] Could not step (execute) stmt."));
 	}
@@ -265,6 +273,7 @@ void TiAnalyticsObject::sendPendingAnalyticsEvents()
 			bool is_available = true;
 			netstatus_get_availability(&is_available);
 
+			bool log = defaultSettings.value("analytics-log").toBool();
 			if (is_available) {
 				// do not send an http post if a reply is pending
 				std::string id = std::string((const char*)uid, strlen((const char*)uid));
@@ -273,7 +282,6 @@ void TiAnalyticsObject::sendPendingAnalyticsEvents()
 					TiAnalyticsHandler* requestHandler = new TiAnalyticsHandler(this, (const char*)uid);
 					pendingHttpReplies[id] = requestHandler;
 
-					bool log = defaultSettings.value("analytics-log").toBool();
 					if (log) {
 						Ti::TiHelper::Log(QString("[INFO] Sending Analytic Event: ") + QString((const char*)json));
 					}
@@ -284,6 +292,10 @@ void TiAnalyticsObject::sendPendingAnalyticsEvents()
 					request_.setRawHeader("Content-Length", postDataSize);
 					QNetworkReply* reply = networkAccessManager_.post(request_, (const char*)json);
 					QObject::connect(reply, SIGNAL(finished()), requestHandler, SLOT(finished()));
+				}
+			} else {
+				if (log) {
+					Ti::TiHelper::Log(QString("[INFO] NOT Sending Analytic Event: ") + QString((const char*)json));
 				}
 			}
 		}
