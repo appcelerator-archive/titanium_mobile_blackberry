@@ -58,7 +58,6 @@ void TiTitaniumObject::onCreateStaticMembers()
     // TODO: remove hard coded version number
     ADD_STATIC_TI_VALUE("version", Number::New(2.0), this);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "globalInclude", this, _globalInclude);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "include", this, _globalInclude);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createBuffer", this, _createBuffer);
     TiUIObject::addObjectToParent(this, objectFactory_);
     TiMap::addObjectToParent(this, objectFactory_);
@@ -83,7 +82,8 @@ bool TiTitaniumObject::canAddMembers() const
 
 static Handle<Value> includeJavaScript(string id, string parentFolder, bool* error) {
     // CommonJS path rules
-    if (id.find("/") == 0) {
+
+	if (id.find("/") == 0) {
         id.replace(id.find("/"), std::string("/").length(), rootFolder);
     }
     else if (id.find("./") == 0) {
@@ -136,8 +136,7 @@ static Handle<Value> includeJavaScript(string id, string parentFolder, bool* err
         }
     }
 
-    string filename = id;
-
+	string filename = id;
     string javascript;
     {
         ifstream ifs((filename).c_str());
@@ -155,7 +154,13 @@ static Handle<Value> includeJavaScript(string id, string parentFolder, bool* err
     {
         size_t idx = filename.find_last_of("/");
         parentFolder = filename.substr(0, idx + 1);
-        static const string preWrap = "Ti.include = function () { Ti.globalInclude(Array.prototype.slice.call(arguments), '" + parentFolder + "')};\n";
+        const char* _parent = parentFolder.c_str();
+        string preWrap =   "Ti.include = function () {"
+								"var i_args = Array.prototype.slice.call(arguments);"
+								"for(var i = 0, len = i_args.length; i < len; i++) {"
+									"Ti.globalInclude([i_args[i]], '" + parentFolder + "');"
+								"}"
+							"};";
         javascript = preWrap + javascript;
     }
 
