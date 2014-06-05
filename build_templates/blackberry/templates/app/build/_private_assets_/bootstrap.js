@@ -5,7 +5,12 @@
  * Please see the LICENSE included with this distribution for details.
  */
 Ti = Ti || {};
-Ti.include = Ti.include || function (id) { Ti.globalInclude(id, "app/native/assets/") };
+Ti.include = function () {
+    var args = Array.prototype.slice.call(arguments);
+    for(var i = 0, len = args.length; i < len; i++) {
+        Ti.globalInclude([args[i]], "app/native/assets/");
+    }
+};
 var global = this;
 //var require;
 
