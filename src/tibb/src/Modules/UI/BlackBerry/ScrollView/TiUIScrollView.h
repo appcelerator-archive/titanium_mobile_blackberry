@@ -31,6 +31,7 @@ public:
 	virtual bool ingoreHeight();
 	virtual QString defaultWidth();
 	virtual QString defaultHeight();
+	virtual void onTapEvent(bb::cascades::TapEvent*);
 
 	virtual void onRelayout(QRectF);
 	void setLayout(QString);

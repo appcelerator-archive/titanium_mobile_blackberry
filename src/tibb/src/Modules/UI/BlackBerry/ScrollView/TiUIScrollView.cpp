@@ -56,6 +56,15 @@ QString TiUIScrollView::defaultHeight()
 	return Ti::TiConstants::SizeFILL;
 }
 
+void TiUIScrollView::onTapEvent(bb::cascades::TapEvent* event)
+{
+	if(getClickSource() == _innerView) {
+		setClickSource(this);
+	}
+	Ti::TiView::onTapEvent(event);
+}
+
+
 void TiUIScrollView::onScroll(const QRectF & rect, float)
 {
 	if(_hasScrollEvent)
