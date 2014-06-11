@@ -11,6 +11,8 @@
 #include "TiGesture.h"
 #include "TiGenericFunctionObject.h"
 #include "NativeGestureObject.h"
+#include <bb/cascades/UIOrientation>
+#include <bb/cascades/OrientationSupport>
 
 const static TiProperty g_tiProperties[] = {
     { "orientation", TI_PROP_PERMISSION_READ, N_GESTURE_PROP_ORIENTATION }
@@ -50,23 +52,20 @@ void TiGesture::initializeTiObject(TiObject* parentContext) {
 
 Handle<Value> TiGesture::_isLandscape(void* userContext, TiObject* caller, const Arguments& args)
 {
-	bb::device::DeviceInfo info;
-    bb::device::DeviceOrientation::Type orientation = info.orientation();
-
-    if(orientation == bb::device::DeviceOrientation::LeftUp || orientation == bb::device::DeviceOrientation::RightUp)
+    bb::cascades::OrientationSupport* orientation = bb::cascades::OrientationSupport::instance();
+    if(orientation->orientation() == bb::cascades::UIOrientation::Landscape)
     {
-    	return Boolean::New(true);
+        return Boolean::New(true);
     }
     return Boolean::New(false);
 }
 
 Handle<Value> TiGesture::_isPortrait(void* userContext, TiObject* caller, const Arguments& args)
 {
-	bb::device::DeviceInfo info;
-    bb::device::DeviceOrientation::Type orientation = info.orientation();
-    if(orientation == bb::device::DeviceOrientation::TopUp || orientation == bb::device::DeviceOrientation::BottomUp)
+    bb::cascades::OrientationSupport* orientation = bb::cascades::OrientationSupport::instance();
+    if(orientation->orientation() == bb::cascades::UIOrientation::Portrait)
     {
-    	return Boolean::New(true);
+        return Boolean::New(true);
     }
     return Boolean::New(false);
 }
