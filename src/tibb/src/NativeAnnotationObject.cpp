@@ -63,8 +63,7 @@ int NativeAnnotationObject::initialize()
     bubble->setLayoutProperties(new AbsoluteLayoutProperties());
 
 	ImageView* bubbleBackground = new ImageView();
-	QUrl u = QUrl::fromLocalFile(Ti::TiHelper::getAssetPath("map/bubble.png"));
-	bubbleBackground->setImageSource(u);
+	bubbleBackground->setImage(bb::cascades::Image(Ti::TiHelper::getAssetPath("map/bubble.png")));
 
 	bubbleContent = new Container();
 	bubbleContent->setLayoutProperties(new AbsoluteLayoutProperties());
