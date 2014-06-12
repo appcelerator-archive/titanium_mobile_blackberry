@@ -239,10 +239,12 @@ Ti.UI.createWindow = function(_args){
         _args.backgroundColor = _args.backgroundColor || Ti.UI.backgroundColor;
     }
     return Ti.UI.BlackBerry.createWindow(_args);
-}
+};
+Ti.Media.MEDIA_TYPE_VIDEO = Ti.Media_.MEDIA_TYPE_VIDEO;
+Ti.Media.MEDIA_TYPE_PHOTO = Ti.Media_.MEDIA_TYPE_PHOTO;
 Ti.Media.createSound = Ti.Media_.createSound;
 Ti.Media.createAudioPlayer = Ti.Media_.createAudioPlayer;
-
+Ti.Media.openPhotoGallery = Ti.Media_.openPhotoGallery;
 Ti.UI.createWebView = Ti.UI.BlackBerry.createWebView;
 Ti.UI.createButton = Ti.UI.BlackBerry.createButton;
 Ti.UI.createTabGroup = Ti.UI.BlackBerry.createTabGroup;

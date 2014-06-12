@@ -19,7 +19,6 @@
 #include "TiConstants.h"
 #include "TiGenericFunctionObject.h"
 #include "TiSoundObject.h"
-#include "PhotoGalleryEventHandler.h"
 
 using namespace titanium;
 
@@ -55,13 +54,10 @@ void TiMedia::onCreateStaticMembers()
 
     TiProxy::onCreateStaticMembers();
 
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createAudioPlayer", this, _createAudioPlayer);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createVideoPlayer", this, _createVideoPlayer);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createAudioRecorder", this, _createAudioRecorder);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createSound", this, _createSound);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "showCamera", this, _showCamera);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "hideCamera", this, _hideCamera);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "openPhotoGallery", this, _openPhotoGallery);
 
     // Todo fill in contants
     // Adding javascript constants from Ti.Media
@@ -90,19 +86,10 @@ Handle<Value> TiMedia::_createControlHelper(void* userContext, CREATEOBJECTCALLB
     return handleScope.Close(result);
 }
 
-Handle<Value> TiMedia::_createAudioPlayer(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiAudioPlayerObject::createAudioPlayerObject, args);
-}
 
 Handle<Value> TiMedia::_createVideoPlayer(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiVideoPlayerObject::createVideoPlayerObject, args);
-}
-
-Handle<Value> TiMedia::_createSound(void* userContext, TiObject*, const Arguments& args)
-{
-	 return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiSoundObject::createSoundObject, args);
 }
 
 Handle<Value> TiMedia::_createAudioRecorder(void* userContext, TiObject*, const Arguments& args)
@@ -114,20 +101,6 @@ Handle<Value> TiMedia::_createAudioRecorder(void* userContext, TiObject*, const 
 // a pointer to the camera invocation instance.
 static QPointer<CameraInvocation> cameraInvocation;
 
-Handle<Value> TiMedia::_openPhotoGallery(void* userContext, TiObject* caller, const Arguments& args)
-{
-
-    TiObject* options = NULL;
-    if (args.Length() && args[0]->IsObject()) {
-        options = new TiObject("CameraOptionsType", args[0]);
-    }
-
-    // Create a new invocation so we can display the camera card.
-    PhotoGalleryEventHandler *cam = new PhotoGalleryEventHandler(options);
-    cam->showPicker();
-
-    return Undefined();
-}
 
 Handle<Value> TiMedia::_showCamera(void* userContext, TiObject* caller, const Arguments& args)
 {
