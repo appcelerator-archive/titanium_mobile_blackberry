@@ -54,10 +54,8 @@ void TiMedia::onCreateStaticMembers()
 
     TiProxy::onCreateStaticMembers();
 
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createAudioPlayer", this, _createAudioPlayer);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createVideoPlayer", this, _createVideoPlayer);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "createAudioRecorder", this, _createAudioRecorder);
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "createSound", this, _createSound);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "showCamera", this, _showCamera);
     TiGenericFunctionObject::addGenericFunctionToParent(this, "hideCamera", this, _hideCamera);
 
@@ -88,19 +86,10 @@ Handle<Value> TiMedia::_createControlHelper(void* userContext, CREATEOBJECTCALLB
     return handleScope.Close(result);
 }
 
-Handle<Value> TiMedia::_createAudioPlayer(void* userContext, TiObject*, const Arguments& args)
-{
-    return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiAudioPlayerObject::createAudioPlayerObject, args);
-}
 
 Handle<Value> TiMedia::_createVideoPlayer(void* userContext, TiObject*, const Arguments& args)
 {
     return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiVideoPlayerObject::createVideoPlayerObject, args);
-}
-
-Handle<Value> TiMedia::_createSound(void* userContext, TiObject*, const Arguments& args)
-{
-	 return _createControlHelper(userContext, (CREATEOBJECTCALLBACK)TiSoundObject::createSoundObject, args);
 }
 
 Handle<Value> TiMedia::_createAudioRecorder(void* userContext, TiObject*, const Arguments& args)
@@ -112,9 +101,6 @@ Handle<Value> TiMedia::_createAudioRecorder(void* userContext, TiObject*, const 
 // a pointer to the camera invocation instance.
 static QPointer<CameraInvocation> cameraInvocation;
 
-Handle<Value> TiMedia::_openPhotoGallery(void* userContext, TiObject* caller, const Arguments& args)
-{
-}
 
 Handle<Value> TiMedia::_showCamera(void* userContext, TiObject* caller, const Arguments& args)
 {
