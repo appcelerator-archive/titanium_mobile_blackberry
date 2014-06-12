@@ -7,6 +7,8 @@
 
 #include "TiMediaModule.h"
 #include "TiMediaAudioPlayerProxy.h"
+#include "TiMediaPhotoGallery.h"
+#include <bb/cascades/pickers/FileType>
 
 using namespace TiMedia;
 TiMediaModule::TiMediaModule(const char* name) :
@@ -14,6 +16,11 @@ TiMediaModule::TiMediaModule(const char* name) :
 {
 	addFunction("createAudioPlayer", TiMediaAudioPlayerProxy::CreateProxy);
 	addFunction("createSound", TiMediaAudioPlayerProxy::CreateProxy);
+	addFunction("openPhotoGallery", TiMediaPhotoGallery::CreateProxy);
+
+	addNumber("MEDIA_TYPE_VIDEO", bb::cascades::pickers::FileType::Video);
+	addNumber("MEDIA_TYPE_PHOTO", bb::cascades::pickers::FileType::Picture);
+
 }
 
 TiMediaModule::~TiMediaModule()
