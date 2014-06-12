@@ -88,10 +88,25 @@ ContactId ContactsPersonProxy::getPersonId()
 }
 void ContactsPersonProxy::openConnection() {
     isEditing = true;
-	builder_ = contact_.edit();
+    if(contact_.isValid())
+    {
+    	builder_ = contact_.edit();
+    }
+    else
+    {
+    	builder_ = ContactBuilder();
+    }
+
 }
 void ContactsPersonProxy::closeConnection() {
-	ContactService().updateContact(contact_);
+	if(!contact_.isValid())
+	{
+		contact_ = ContactService().createContact(builder_, false);
+	}
+	else
+	{
+		ContactService().updateContact(contact_);
+	}
 	isEditing = false;
 }
 
@@ -132,15 +147,30 @@ void ContactsPersonProxy::setContactDetails(AttributeKind::Type kind, AttributeS
 {
     QString val = titanium::V8ValueToQString(value);
     if(!isEditing) {
-    	builder_ = contact_.edit();
+    	if(!contact_.isValid())
+    	{
+    		builder_ = ContactBuilder();
+    	}
+    	else
+    	{
+        	builder_ = contact_.edit();
+    	}
     }
     ContactAttributeBuilder attribute;
     attribute.setKind(kind);
     attribute.setSubKind(subKind);
     attribute.setValue(val);
     builder_.addAttribute(attribute);
-    if(!isEditing) {
-    	ContactService().updateContact(contact_);
+    if(!isEditing)
+    {
+    	if(!contact_.isValid())
+    	{
+			contact_ = ContactService().createContact(builder_, false);
+    	}
+    	else
+    	{
+    		ContactService().updateContact(contact_);
+    	}
     }
 }
 
@@ -150,6 +180,9 @@ void ContactsPersonProxy::_setAddress(void* userContext, Handle<Value> value)
 {
     ContactsPersonProxy *obj = (ContactsPersonProxy*) userContext;
     if(!obj->isEditing) {
+    	if(!obj->contact_.isValid()) {
+    		obj->contact_ = ContactService().createContact(ContactBuilder(), false);
+    	}
     	obj->builder_ = obj->contact_.edit();
     }
 
@@ -265,6 +298,9 @@ void ContactsPersonProxy::_setBirthday(void* userContext, Handle<Value> value)
     {
         QString val = titanium::V8ValueToQString(value);
         if(!obj->isEditing) {
+        	if(!obj->contact_.isValid()) {
+        		obj->contact_ = ContactService().createContact(ContactBuilder(), false);
+        	}
         	obj->builder_ = obj->contact_.edit();
     	}
         ContactAttributeBuilder attribute;
