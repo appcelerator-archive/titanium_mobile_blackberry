@@ -301,4 +301,9 @@ Ti.UI.TEXT_ALIGNMENT_CENTER = Ti.UI.BlackBerry.TEXT_ALIGNMENT_CENTER;
 Ti.UI.TEXT_ALIGNMENT_RIGHT = Ti.UI.BlackBerry.TEXT_ALIGNMENT_RIGHT;
 Ti.UI.TEXT_ALIGNMENT_DEFAULT = Ti.UI.BlackBerry.TEXT_ALIGNMENT_DEFAULT;
 
+Ti.Analytics = Ti.Analytics || {};
+Ti.Analytics.featureEvent = function(key, value) {
+    if(!Ti.Analytics._featureEvent) return;
+    Ti.Analytics._featureEvent(key, JSON.stringify(value));
+};
 Titanium = Ti;
