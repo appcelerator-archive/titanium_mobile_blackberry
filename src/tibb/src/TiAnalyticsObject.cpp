@@ -14,7 +14,7 @@
 #include <QUuid>
 #include <bps/bps.h>
 #include <bps/netstatus.h>
-
+#include <TiCore.h>
 
 /**
  A BlackBerry analytics event payload has the follow values
@@ -119,7 +119,7 @@ void TiAnalyticsObject::addObjectToParent(TiObject* parent, NativeObjectFactory*
 void TiAnalyticsObject::onCreateStaticMembers()
 {
     TiProxy::onCreateStaticMembers();
-    TiGenericFunctionObject::addGenericFunctionToParent(this, "featureEvent", this, _featureEvent);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "_featureEvent", this, _featureEvent);
 }
 
 bool TiAnalyticsObject::createAnalyticsDatabase()
@@ -221,7 +221,6 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 	}
 	json.append("}}]");
 
-
 	char payload[1024];
 	sprintf(payload, json.toLocal8Bit().constData());
 	bool log = defaultSettings.value("analytics-log").toBool();
@@ -240,12 +239,7 @@ void TiAnalyticsObject::addAnalyticsEvent(std::string const& name, std::string c
 	sqlite3_reset(stmt);
 	sqlite3_clear_bindings(stmt);
 
-	if (name == "ti.end" ) {
-		bb::cascades::Application::instance()->exit(0);
-	}
-	else {
-		sendPendingAnalyticsEvents();
-	}
+	sendPendingAnalyticsEvents();
 }
 
 void TiAnalyticsObject::sendPendingAnalyticsEvents()
@@ -314,8 +308,9 @@ void TiAnalyticsObject::sendPendingAnalyticsEvents()
 Handle<Value> TiAnalyticsObject::_featureEvent(void* userContext, TiObject*, const Arguments& args)
 {
 	TiAnalyticsObject* obj = (TiAnalyticsObject*) userContext;
-	string type = TiObject::getSTDStringFromValue(args[0]);
-	string data = TiObject::getSTDStringFromValue(args[1]);
+
+	string type = Ti::TiHelper::QStringFromValue(args[0]).toStdString();
+	string data = Ti::TiHelper::QStringFromValue(args[1]).toStdString();
 
 	obj->addAnalyticsEvent("app.feature", data, type);
 
@@ -386,14 +381,17 @@ void TiAnalyticsHandler::fullscreen()
 		if (tiAnalyticsObject_->dbCreate) {
 			tiAnalyticsObject_->addAnalyticsEvent("ti.enroll");
 		}
-		tiAnalyticsObject_->addAnalyticsEvent("ti.start");
+		// TIMOB-17220
+		// tiAnalyticsObject_->addAnalyticsEvent("ti.start");
 		tiAnalyticsObject_->appStart = false;
-	} else {
-		tiAnalyticsObject_->addAnalyticsEvent("ti.foreground");
 	}
+	tiAnalyticsObject_->addAnalyticsEvent("ti.foreground");
+
 }
 
 void TiAnalyticsHandler::manualExit()
 {
-	tiAnalyticsObject_->addAnalyticsEvent("ti.end");
+	// TIMOB-17220
+	// tiAnalyticsObject_->addAnalyticsEvent("ti.end");
+	bb::cascades::Application::instance()->exit(EXIT_SUCCESS);
 }
