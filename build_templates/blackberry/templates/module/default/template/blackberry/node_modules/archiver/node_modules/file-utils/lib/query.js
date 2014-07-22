@@ -29,6 +29,11 @@ exports.isFile = function() {
   return this.exists(filepath) && fs.statSync(filepath).isFile();
 };
 
+exports.isExecutable = function(filepath) {
+  var stats = fs.statSync(filepath);
+  return !!(1 & parseFloat((stats.mode & parseInt(777, 8)).toString(8)[0]));
+};
+
 // Is a given file path absolute?
 exports.isPathAbsolute = function() {
   var filepath = path.join.apply(path, arguments);

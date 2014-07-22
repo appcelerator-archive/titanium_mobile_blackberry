@@ -546,6 +546,20 @@ exports['file'] = {
 
     test.done();
   },
+  'copy keep file executable bit': function(test) {
+    test.expect(2);
+    var testFile = path.join(tmpdir.path, 'copy-perm.txt');
+    var targetFile = path.join(tmpdir.path, 'subfolder/copy-perm.txt');
+
+    fs.writeFileSync(testFile, 'foo', { mode: parseInt(777, 8) });
+    test.ok(file.isExecutable(testFile));
+
+    file.copy(testFile, targetFile);
+    test.ok(file.isExecutable(targetFile));
+
+    fs.unlinkSync(testFile);
+    test.done();
+  },
   'delete': function(test) {
     test.expect(2);
     var oldBase = process.cwd();

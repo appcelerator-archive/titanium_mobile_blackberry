@@ -58,6 +58,20 @@ exports['fquery'] = {
     test.equals(this.fquery.isFile('tests/fixtures/does/not/exist'), false, 'nonexistent files are not files.');
     test.done();
   },
+  'isExecutable': function(test) {
+    test.expect(2);
+
+    var isExec = path.join(tmpdir.path, 'isExecutable-true');
+    var isNotExec = path.join(tmpdir.path, 'isExecutable-false');
+
+    fs.writeFileSync(isExec, 'bar', { mode: parseInt(777, 8) });
+    fs.writeFileSync(isNotExec, 'bar', { mode: parseInt(666, 8) });
+
+    test.ok(this.fquery.isExecutable(isExec));
+    test.ok(!this.fquery.isExecutable(isNotExec));
+
+    test.done();
+  },
   'isPathAbsolute': function(test) {
     test.expect(5);
     test.ok(this.fquery.isPathAbsolute(path.resolve('/foo')), 'should return true');
