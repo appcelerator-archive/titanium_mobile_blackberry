@@ -4,8 +4,8 @@
 	"version": "1.0.0",
 	"author": "Appcelerator, Inc. <info@appcelerator.com>",
 	"dependencies": {
-		"archiver": "~0.9.1",
-		"wrench": "~1.5.1"
+		"archiver": "~0.10.1",
+		"wrench": "~1.5.8"
 	},
 	"license": "Apache Public License v2"
 }
