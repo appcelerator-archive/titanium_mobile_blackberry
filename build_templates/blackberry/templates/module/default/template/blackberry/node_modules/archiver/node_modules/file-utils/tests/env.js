@@ -126,6 +126,16 @@ exports['Env()'] = {
     this.env.setDestBase('foo');
     test.equal(this.env.fromDestBase('bar').replace(/\\/g, '/'), 'foo/bar');
     test.done();
+  },
+  'setBase as function': function(test) {
+    this.env.setBase(function () { return 'foo'; });
+    test.equal(this.env.fromBase('bar').replace(/\\/g, '/'), 'foo/bar');
+    test.done();
+  },
+  'setDestBase as function': function(test) {
+    this.env.setDestBase(function () { return 'foo'; });
+    test.equal(this.env.fromDestBase('bar').replace(/\\/g, '/'), 'foo/bar');
+    test.done();
   }
 };
 
