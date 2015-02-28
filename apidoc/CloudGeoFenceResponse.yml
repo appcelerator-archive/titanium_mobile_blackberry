@@ -1,0 +1,9 @@
+name: CloudGeoFenceResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: geo_fences
+    platforms:
+      - blackberry

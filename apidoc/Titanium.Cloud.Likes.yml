@@ -1,0 +1,16 @@
+name: Titanium.Cloud.Likes
+platforms:
+  - blackberry
+
+methods:
+  - name: create
+    platforms:
+      - blackberry
+    since:
+      blackberry: 3.2.0
+  - name: remove
+    platforms:
+      - blackberry
+    since:
+      blackberry: 3.2.0
+

@@ -1,0 +1,12 @@
+name: CloudClientsResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: ip_address
+    platforms:
+      - blackberry
+  - name: location
+    platforms:
+      - blackberry

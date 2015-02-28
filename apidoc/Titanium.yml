@@ -1,0 +1,15 @@
+name: Titanium
+platforms:
+  - blackberry
+
+methods:
+  - name: include
+    platforms:
+      - blackberry
+  - name: createBuffer
+    platforms:
+      - blackberry
+properties:
+  - name: version
+    platforms:
+      - blackberry

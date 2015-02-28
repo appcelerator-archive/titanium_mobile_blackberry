@@ -1,0 +1,12 @@
+name: textAreaSelectedParams
+platforms:
+  - blackberry
+
+
+properties:
+  - name: location
+    platforms:
+      - blackberry
+  - name: length
+    platforms:
+      - blackberry

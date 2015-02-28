@@ -1,0 +1,75 @@
+name: Titanium.UI
+platforms:
+  - blackberry
+
+
+properties:
+  - name: FACE_DOWN
+    platforms:
+      - blackberry
+  - name: FACE_UP
+    platforms:
+      - blackberry
+  - name: FILL
+    platforms:
+      - blackberry
+  - name: KEYBOARD_DEFAULT
+    platforms:
+      - blackberry
+  - name: KEYBOARD_EMAIL
+    platforms:
+      - blackberry
+  - name: KEYBOARD_NAMEPHONE_PAD
+    platforms:
+      - blackberry
+  - name: KEYBOARD_NUMBERS_PUNCTUATION
+    platforms:
+      - blackberry
+  - name: KEYBOARD_NUMBER_PAD
+    platforms:
+      - blackberry
+  - name: KEYBOARD_PHONE_PAD
+    platforms:
+      - blackberry
+  - name: KEYBOARD_URL
+    platforms:
+      - blackberry
+  - name: LANDSCAPE_LEFT
+    platforms:
+      - blackberry
+  - name: PICKER_TYPE_DATE
+    platforms:
+      - blackberry
+  - name: PICKER_TYPE_DATE_AND_TIME
+    platforms:
+      - blackberry
+  - name: PICKER_TYPE_PLAIN
+    platforms:
+      - blackberry
+  - name: PICKER_TYPE_TIME
+    platforms:
+      - blackberry
+  - name: PORTRAIT
+    platforms:
+      - blackberry
+  - name: RETURNKEY_DEFAULT
+    platforms:
+      - blackberry
+  - name: RETURNKEY_GO
+    platforms:
+      - blackberry
+  - name: SIZE
+    platforms:
+      - blackberry
+  - name: TEXT_ALIGNMENT_CENTER
+    platforms:
+      - blackberry
+  - name: TEXT_ALIGNMENT_LEFT
+    platforms:
+      - blackberry
+  - name: TEXT_ALIGNMENT_RIGHT
+    platforms:
+      - blackberry
+  - name: UNKNOWN
+    platforms:
+      - blackberry

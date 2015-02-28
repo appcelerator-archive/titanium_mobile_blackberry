@@ -1,0 +1,9 @@
+name: CloudCheckinsResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: checkins
+    platforms:
+      - blackberry

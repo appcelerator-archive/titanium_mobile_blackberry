@@ -1,0 +1,12 @@
+name: CloudStreamProgress
+platforms:
+  - blackberry
+
+
+properties:
+  - name: progress
+    platforms:
+      - blackberry
+  - name: url
+    platforms:
+      - blackberry

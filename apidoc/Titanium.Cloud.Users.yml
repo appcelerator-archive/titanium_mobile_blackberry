@@ -1,0 +1,39 @@
+name: Titanium.Cloud.Users
+platforms:
+  - blackberry
+
+methods:
+  - name: create
+    platforms:
+      - blackberry
+  - name: login
+    platforms:
+      - blackberry
+  - name: logout
+    platforms:
+      - blackberry
+  - name: query
+    platforms:
+      - blackberry
+  - name: search
+    platforms:
+      - blackberry
+  - name: show
+    platforms:
+      - blackberry
+  - name: showMe
+    platforms:
+      - blackberry
+  - name: update
+    platforms:
+      - blackberry
+  - name: remove
+    platforms:
+      - blackberry
+  - name: requestResetPassword
+    platforms:
+      - blackberry
+  - name: resendConfirmation
+    platforms:
+      - blackberry
+

@@ -1,0 +1,9 @@
+name: CloudFilesResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: files
+    platforms:
+      - blackberry

@@ -1,0 +1,15 @@
+name: PhotoGalleryOptionsType
+platforms:
+  - blackberry
+
+
+properties:
+  - name: success
+    platforms:
+      - blackberry
+  - name: error
+    platforms:
+      - blackberry
+  - name: cancel
+    platforms:
+      - blackberry

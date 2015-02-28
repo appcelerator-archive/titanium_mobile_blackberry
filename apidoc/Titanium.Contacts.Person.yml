@@ -1,0 +1,73 @@
+name: Titanium.Contacts.Person
+platforms:
+  - blackberry
+
+
+properties:
+  - name: address
+    platforms:
+      - blackberry
+  - name: birthday
+    description: On BlackBerry pass in a JavaScript Date object.
+    platforms:
+      - blackberry
+  - name: department
+    platforms:
+      - blackberry
+  - name: email
+    platforms:
+      - blackberry
+  - name: firstName
+    platforms:
+      - blackberry
+  - name: firstPhonetic
+    platforms:
+      - blackberry
+  - name: fullName
+    platforms:
+      - blackberry
+  - name: id
+    platforms:
+      - blackberry
+  - name: image
+    platforms:
+      - blackberry
+  - name: instantMessage
+    description: |
+        On BlackBerry, the following apply: `aim`, `aliwangwang`, `bbmPin`, `googleTalk`, `icq`,
+        `irc`, `jabber`, `msLcs`, `msn`, `qq`, `sametime`, `skype` or `yahooMessenger`.
+    platforms:
+      - blackberry
+  - name: jobTitle
+    platforms:
+      - blackberry
+  - name: lastName
+    platforms:
+      - blackberry
+  - name: lastPhonetic
+    platforms:
+      - blackberry
+  - name: middleName
+    platforms:
+      - blackberry
+  - name: nickname
+    platforms:
+      - blackberry
+  - name: note
+    platforms:
+      - blackberry
+  - name: organization
+    platforms:
+      - blackberry
+  - name: phone
+    platforms:
+      - blackberry
+  - name: prefix
+    platforms:
+      - blackberry
+  - name: recordId
+    platforms:
+      - blackberry
+  - name: suffix
+    platforms:
+      - blackberry

@@ -1,0 +1,15 @@
+name: launchOptions
+platforms:
+  - blackberry
+
+
+properties:
+  - name: url
+    platforms:
+      - blackberry
+  - name: source
+    platforms:
+      - blackberry
+  - name: launchOptionsLocationKey
+    platforms:
+      - blackberry

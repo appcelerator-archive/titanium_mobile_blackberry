@@ -1,0 +1,33 @@
+name: Titanium.Media.Sound
+platforms:
+  - blackberry
+events:
+  - name: complete
+    platforms:
+      - blackberry
+methods:
+  - name: pause
+    platforms:
+      - blackberry
+  - name: play
+    platforms:
+      - blackberry
+  - name: release
+    platforms:
+      - blackberry
+  - name: stop
+    platforms:
+      - blackberry
+properties:
+  - name: paused
+    platforms:
+      - blackberry
+  - name: playing
+    platforms:
+      - blackberry
+  - name: url
+    platforms:
+      - blackberry
+  - name: volume
+    platforms:
+      - blackberry

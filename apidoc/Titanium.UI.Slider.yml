@@ -1,0 +1,30 @@
+name: Titanium.UI.Slider
+platforms:
+  - blackberry
+events:
+  - name: change
+    platforms:
+      - blackberry
+methods:
+  - name: setValue
+    platforms:
+      - blackberry
+properties:
+  - name: enabled
+    summary: Boolean to indicate the enabled state of the slider.
+    description: "Set to `true` to enable or `false` to disable the view.\n\n<strong>Note:</strong> This property is deprecated on Android. Use [touchEnabled](Titanium.UI.View.touchEnabled) property instead.\n"
+    default: "Slider is enabled by default (property value may be `undefined`)."
+    type: Boolean
+    platforms:
+      - blackberry
+    since:
+      blackberry: 3.1.2
+  - name: max
+    platforms:
+      - blackberry
+  - name: min
+    platforms:
+      - blackberry
+  - name: value
+    platforms:
+      - blackberry

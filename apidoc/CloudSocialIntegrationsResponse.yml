@@ -1,0 +1,9 @@
+name: CloudSocialIntegrationsResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: users
+    platforms:
+      - blackberry

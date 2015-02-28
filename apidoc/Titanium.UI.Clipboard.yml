@@ -1,0 +1,30 @@
+name: Titanium.UI.Clipboard
+platforms:
+  - blackberry
+
+methods:
+  - name: clearData
+    platforms:
+      - blackberry
+  - name: clearText
+    platforms:
+      - blackberry
+  - name: getData
+    platforms:
+      - blackberry
+  - name: getText
+    platforms:
+      - blackberry
+  - name: hasData
+    platforms:
+      - blackberry
+  - name: hasText
+    platforms:
+      - blackberry
+  - name: setData
+    platforms:
+      - blackberry
+  - name: setText
+    platforms:
+      - blackberry
+

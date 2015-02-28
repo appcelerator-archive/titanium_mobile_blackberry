@@ -1,0 +1,9 @@
+name: CloudPushNotificationsShowChannelResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: devices
+    platforms:
+      - blackberry

@@ -1,0 +1,18 @@
+name: Titanium.Stream
+platforms:
+  - blackberry
+
+methods:
+  - name: createStream
+    platforms:
+      - blackberry
+properties:
+  - name: MODE_READ
+    platforms:
+      - blackberry
+  - name: MODE_WRITE
+    platforms:
+      - blackberry
+  - name: MODE_APPEND
+    platforms:
+      - blackberry

@@ -1,0 +1,30 @@
+name: Titanium.Cloud.Statuses
+platforms:
+  - blackberry
+
+methods:
+  - name: create
+    platforms:
+      - blackberry
+  - name: update
+    platforms:
+      - blackberry
+    since:
+      blackberry: 3.2.0
+  - name: show
+    platforms:
+      - blackberry
+    since:
+      blackberry: 3.2.0
+  - name: delete
+    platforms:
+      - blackberry
+    since:
+      blackberry: 3.2.0
+  - name: query
+    platforms:
+      - blackberry
+  - name: search
+    platforms:
+      - blackberry
+

@@ -1,0 +1,21 @@
+name: CameraOptionsType
+platforms:
+  - blackberry
+
+
+properties:
+  - name: success
+    platforms:
+      - blackberry
+  - name: error
+    platforms:
+      - blackberry
+  - name: cancel
+    platforms:
+      - blackberry
+  - name: saveToPhotoGallery
+    platforms:
+      - blackberry
+  - name: overlay
+    platforms:
+      - blackberry

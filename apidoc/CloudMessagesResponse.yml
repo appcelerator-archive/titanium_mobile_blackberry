@@ -1,0 +1,9 @@
+name: CloudMessagesResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: messages
+    platforms:
+      - blackberry

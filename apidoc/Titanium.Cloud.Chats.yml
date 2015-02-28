@@ -1,0 +1,25 @@
+name: Titanium.Cloud.Chats
+platforms:
+  - blackberry
+
+methods:
+  - name: create
+    platforms:
+      - blackberry
+  - name: remove
+    platforms:
+      - blackberry
+    since:
+      blackberry: 3.2.0
+  - name: getChatGroups
+    platforms:
+      - blackberry
+  - name: queryChatGroups
+    platforms:
+      - blackberry
+    since:
+      blackberry: 3.2.0
+  - name: query
+    platforms:
+      - blackberry
+

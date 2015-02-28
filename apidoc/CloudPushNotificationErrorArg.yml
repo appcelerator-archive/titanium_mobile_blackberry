@@ -1,0 +1,9 @@
+name: CloudPushNotificationErrorArg
+platforms:
+  - blackberry
+
+
+properties:
+  - name: error
+    platforms:
+      - blackberry

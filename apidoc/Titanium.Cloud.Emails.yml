@@ -1,0 +1,9 @@
+name: Titanium.Cloud.Emails
+platforms:
+  - blackberry
+
+methods:
+  - name: send
+    platforms:
+      - blackberry
+

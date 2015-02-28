@@ -1,0 +1,15 @@
+name: Titanium.UI.ProgressBar
+platforms:
+  - blackberry
+
+
+properties:
+  - name: max
+    platforms:
+      - blackberry
+  - name: min
+    platforms:
+      - blackberry
+  - name: value
+    platforms:
+      - blackberry

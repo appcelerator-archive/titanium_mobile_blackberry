@@ -1,0 +1,12 @@
+name: TableViewIndexEntry
+platforms:
+  - blackberry
+
+
+properties:
+  - name: title
+    platforms:
+      - blackberry
+  - name: index
+    platforms:
+      - blackberry

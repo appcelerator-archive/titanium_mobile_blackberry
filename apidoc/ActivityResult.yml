@@ -1,0 +1,15 @@
+name: ActivityResult
+platforms:
+  - blackberry
+
+
+properties:
+  - name: requestCode
+    platforms:
+      - blackberry
+  - name: resultCode
+    platforms:
+      - blackberry
+  - name: intent
+    platforms:
+      - blackberry

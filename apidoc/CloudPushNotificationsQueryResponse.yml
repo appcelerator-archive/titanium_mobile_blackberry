@@ -1,0 +1,9 @@
+name: CloudPushNotificationsQueryResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: subscriptions
+    platforms:
+      - blackberry

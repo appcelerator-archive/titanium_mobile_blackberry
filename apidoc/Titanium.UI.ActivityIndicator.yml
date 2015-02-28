@@ -1,0 +1,45 @@
+name: Titanium.UI.ActivityIndicator
+platforms:
+  - blackberry
+
+methods:
+  - name: add
+    platforms:
+      - blackberry
+  - name: hide
+    platforms:
+      - blackberry
+  - name: show
+    platforms:
+      - blackberry
+properties:
+  - name: bottom
+    platforms:
+      - blackberry
+  - name: color
+    platforms:
+      - blackberry
+  - name: font
+    platforms:
+      - blackberry
+  - name: height
+    platforms:
+      - blackberry
+  - name: left
+    platforms:
+      - blackberry
+  - name: message
+    platforms:
+      - blackberry
+  - name: messageid
+    platforms:
+      - blackberry
+  - name: right
+    platforms:
+      - blackberry
+  - name: top
+    platforms:
+      - blackberry
+  - name: width
+    platforms:
+      - blackberry

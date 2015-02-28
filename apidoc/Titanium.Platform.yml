@@ -1,0 +1,39 @@
+name: Titanium.Platform
+platforms:
+  - blackberry
+
+
+properties:
+  - name: BATTERY_STATE_CHARGING
+    platforms:
+      - blackberry
+  - name: BATTERY_STATE_FULL
+    platforms:
+      - blackberry
+  - name: BATTERY_STATE_UNKNOWN
+    platforms:
+      - blackberry
+  - name: BATTERY_STATE_UNPLUGGED
+    platforms:
+      - blackberry
+  - name: batteryLevel
+    platforms:
+      - blackberry
+  - name: batteryState
+    platforms:
+      - blackberry
+  - name: displayCaps
+    platforms:
+      - blackberry
+  - name: name
+    platforms:
+      - blackberry
+  - name: osname
+    platforms:
+      - blackberry
+  - name: runtime
+    platforms:
+      - blackberry
+  - name: version
+    platforms:
+      - blackberry

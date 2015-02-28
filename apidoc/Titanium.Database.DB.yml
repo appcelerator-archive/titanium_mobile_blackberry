@@ -1,0 +1,15 @@
+name: Titanium.Database.DB
+platforms:
+  - blackberry
+
+methods:
+  - name: close
+    platforms:
+      - blackberry
+  - name: execute
+    platforms:
+      - blackberry
+  - name: remove
+    platforms:
+      - blackberry
+

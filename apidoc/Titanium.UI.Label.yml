@@ -1,0 +1,24 @@
+name: Titanium.UI.Label
+platforms:
+  - blackberry
+
+
+properties:
+  - name: color
+    platforms:
+      - blackberry
+  - name: font
+    platforms:
+      - blackberry
+  - name: text
+    platforms:
+      - blackberry
+  - name: textAlign
+    platforms:
+      - blackberry
+  - name: wordWrap
+    platforms:
+      - blackberry
+  - name: verticalAlign
+    platforms:
+      - blackberry

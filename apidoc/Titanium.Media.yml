@@ -1,0 +1,24 @@
+name: Titanium.Media
+platforms:
+  - blackberry
+
+methods:
+  - name: showCamera
+    description: |
+        #### BlackBerry Platform Notes
+
+        To use this method on BlackBerry, you must include the `access_shared` and `use_camera`
+        permissions in the `tiapp.xml` file of your Titanium application:
+
+            <blackberry>
+                <permissions>
+                    <permission>access_shared</permission>
+                    <permission>use_camera</permission>
+                </permissions>
+            </blackberry>
+    platforms:
+      - blackberry
+properties:
+  - name: MEDIA_TYPE_PHOTO
+    platforms:
+      - blackberry

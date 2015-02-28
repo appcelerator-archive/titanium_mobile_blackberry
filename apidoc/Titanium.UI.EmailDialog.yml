@@ -1,0 +1,34 @@
+name: Titanium.UI.EmailDialog
+description: |
+    **BlackBerry Platform Notes**
+
+    On BlackBerry, the email dialog only opens on device.  It does not work on the simulator.
+platforms:
+  - blackberry
+
+methods:
+  - name: addAttachment
+    platforms:
+      - blackberry
+  - name: open
+    platforms:
+      - blackberry
+properties:
+  - name: bccRecipients
+    platforms:
+      - blackberry
+  - name: ccRecipients
+    platforms:
+      - blackberry
+  - name: html
+    platforms:
+      - blackberry
+  - name: messageBody
+    platforms:
+      - blackberry
+  - name: subject
+    platforms:
+      - blackberry
+  - name: toRecipients
+    platforms:
+      - blackberry

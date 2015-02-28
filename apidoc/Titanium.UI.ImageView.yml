@@ -1,0 +1,21 @@
+name: Titanium.UI.ImageView
+platforms:
+  - blackberry
+events:
+  - name: change
+    platforms:
+      - blackberry
+
+properties:
+  - name: image
+    platforms:
+      - blackberry
+  - name: repeatCount
+    platforms:
+      - blackberry
+  - name: reverse
+    platforms:
+      - blackberry
+  - name: url
+    platforms:
+      - blackberry

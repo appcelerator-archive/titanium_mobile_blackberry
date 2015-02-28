@@ -1,0 +1,38 @@
+name: Titanium.Cloud
+platforms:
+  - blackberry
+since:
+  blackberry: "3.3"
+
+methods:
+  - name: hasStoredSession
+    platforms:
+      - blackberry
+  - name: retrieveStoredSession
+    platforms:
+      - blackberry
+  - name: sendRequest
+    platforms:
+      - blackberry
+properties:
+  - name: debug
+    platforms:
+      - blackberry
+  - name: ondatastream
+    platforms:
+      - blackberry
+  - name: onsendstream
+    platforms:
+      - blackberry
+  - name: useSecure
+    platforms:
+      - blackberry
+  - name: sessionId
+    platforms:
+      - blackberry
+  - name: accessToken
+    platforms:
+      - blackberry
+  - name: expiresIn
+    platforms:
+      - blackberry

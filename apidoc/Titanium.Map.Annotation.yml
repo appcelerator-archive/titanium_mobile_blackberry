@@ -1,0 +1,24 @@
+name: Titanium.Map.Annotation
+platforms:
+  - blackberry
+events:
+  - name: click
+    platforms:
+      - blackberry
+
+properties:
+  - name: latitude
+    platforms:
+      - blackberry
+  - name: longitude
+    platforms:
+      - blackberry
+  - name: pincolor
+    platforms:
+      - blackberry
+  - name: subtitle
+    platforms:
+      - blackberry
+  - name: title
+    platforms:
+      - blackberry

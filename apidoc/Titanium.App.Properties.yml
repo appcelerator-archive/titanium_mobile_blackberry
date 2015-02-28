@@ -1,0 +1,51 @@
+name: Titanium.App.Properties
+platforms:
+  - blackberry
+
+methods:
+  - name: getBool
+    platforms:
+      - blackberry
+  - name: getDouble
+    platforms:
+      - blackberry
+  - name: getInt
+    platforms:
+      - blackberry
+  - name: getList
+    platforms:
+      - blackberry
+  - name: getObject
+    platforms:
+      - blackberry
+  - name: getString
+    platforms:
+      - blackberry
+  - name: hasProperty
+    platforms:
+      - blackberry
+  - name: listProperties
+    platforms:
+      - blackberry
+  - name: removeProperty
+    platforms:
+      - blackberry
+  - name: setBool
+    platforms:
+      - blackberry
+  - name: setDouble
+    platforms:
+      - blackberry
+  - name: setInt
+    platforms:
+      - blackberry
+  - name: setList
+    platforms:
+      - blackberry
+  - name: setObject
+    platforms:
+      - blackberry
+  - name: setString
+    platforms:
+      - blackberry
+

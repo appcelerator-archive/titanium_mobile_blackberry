@@ -1,0 +1,18 @@
+name: EncodeNumberDict
+platforms:
+  - blackberry
+
+
+properties:
+  - name: source
+    platforms:
+      - blackberry
+  - name: dest
+    platforms:
+      - blackberry
+  - name: type
+    platforms:
+      - blackberry
+  - name: byteOrder
+    platforms:
+      - blackberry

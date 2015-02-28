@@ -1,0 +1,9 @@
+name: CloudObjectsResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: classname
+    platforms:
+      - blackberry

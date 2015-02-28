@@ -1,0 +1,9 @@
+name: CloudLikesResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: likes
+    platforms:
+      - blackberry

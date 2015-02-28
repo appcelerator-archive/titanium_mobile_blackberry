@@ -1,0 +1,9 @@
+name: CloudACLsResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: acls
+    platforms:
+      - blackberry

@@ -1,0 +1,15 @@
+name: Titanium.UI.TableViewSection
+platforms:
+  - blackberry
+
+methods:
+  - name: add
+    platforms:
+      - blackberry
+  - name: remove
+    platforms:
+      - blackberry
+properties:
+  - name: headerTitle
+    platforms:
+      - blackberry

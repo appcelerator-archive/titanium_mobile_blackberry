@@ -1,0 +1,9 @@
+name: CloudPushNotificationsQueryChannelResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: push_channels
+    platforms:
+      - blackberry

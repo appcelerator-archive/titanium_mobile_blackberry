@@ -1,0 +1,45 @@
+name: Titanium.Filesystem.File
+platforms:
+  - blackberry
+
+methods:
+  - name: append
+    platforms:
+      - blackberry
+  - name: createDirectory
+    platforms:
+      - blackberry
+  - name: deleteDirectory
+    platforms:
+      - blackberry
+  - name: deleteFile
+    platforms:
+      - blackberry
+  - name: exists
+    platforms:
+      - blackberry
+  - name: extension
+    platforms:
+      - blackberry
+  - name: getDirectoryListing
+    platforms:
+      - blackberry
+  - name: isDirectory
+    platforms:
+      - blackberry
+  - name: isFile
+    platforms:
+      - blackberry
+  - name: read
+    platforms:
+      - blackberry
+  - name: write
+    platforms:
+      - blackberry
+properties:
+  - name: nativePath
+    platforms:
+      - blackberry
+  - name: writable
+    platforms:
+      - blackberry

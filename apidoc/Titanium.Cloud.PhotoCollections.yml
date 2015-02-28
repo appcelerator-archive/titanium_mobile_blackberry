@@ -1,0 +1,27 @@
+name: Titanium.Cloud.PhotoCollections
+platforms:
+  - blackberry
+
+methods:
+  - name: create
+    platforms:
+      - blackberry
+  - name: remove
+    platforms:
+      - blackberry
+  - name: search
+    platforms:
+      - blackberry
+  - name: show
+    platforms:
+      - blackberry
+  - name: showPhotos
+    platforms:
+      - blackberry
+  - name: showSubCollections
+    platforms:
+      - blackberry
+  - name: update
+    platforms:
+      - blackberry
+

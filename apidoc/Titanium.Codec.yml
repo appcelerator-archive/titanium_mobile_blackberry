@@ -1,0 +1,12 @@
+name: Titanium.Codec
+platforms:
+  - blackberry
+
+
+properties:
+  - name: BIG_ENDIAN
+    platforms:
+      - blackberry
+  - name: LITTLE_ENDIAN
+    platforms:
+      - blackberry

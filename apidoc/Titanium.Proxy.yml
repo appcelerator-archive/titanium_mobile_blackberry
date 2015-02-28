@@ -1,0 +1,25 @@
+name: Titanium.Proxy
+platforms:
+  - blackberry
+
+methods:
+  - name: addEventListener
+    platforms:
+      - blackberry
+  - name: removeEventListener
+    platforms:
+      - blackberry
+  - name: fireEvent
+    platforms:
+      - blackberry
+  - name: applyProperties
+    platforms:
+      - blackberry
+    since:
+      blackberry: 3.3.0
+properties:
+  - name: apiName
+    platforms:
+      - blackberry
+    since:
+      blackberry: 3.2.0

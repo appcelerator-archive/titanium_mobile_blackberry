@@ -1,0 +1,12 @@
+name: MatrixCreationDict
+platforms:
+  - blackberry
+
+
+properties:
+  - name: scale
+    platforms:
+      - blackberry
+  - name: rotate
+    platforms:
+      - blackberry

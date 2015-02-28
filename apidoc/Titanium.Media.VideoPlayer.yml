@@ -1,0 +1,48 @@
+name: Titanium.Media.VideoPlayer
+platforms:
+  - blackberry
+events:
+  - name: click
+    platforms:
+      - blackberry
+  - name: singletap
+    platforms:
+      - blackberry
+  - name: touchcancel
+    platforms:
+      - blackberry
+  - name: touchend
+    platforms:
+      - blackberry
+  - name: touchmove
+    platforms:
+      - blackberry
+  - name: complete
+    platforms:
+      - blackberry
+  - name: load
+    platforms:
+      - blackberry
+  - name: loadstate
+    platforms:
+      - blackberry
+methods:
+  - name: pause
+    platforms:
+      - blackberry
+  - name: play
+    platforms:
+      - blackberry
+  - name: release
+    platforms:
+      - blackberry
+  - name: stop
+    platforms:
+      - blackberry
+properties:
+  - name: playing
+    platforms:
+      - blackberry
+  - name: url
+    platforms:
+      - blackberry

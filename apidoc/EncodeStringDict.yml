@@ -1,0 +1,24 @@
+name: EncodeStringDict
+platforms:
+  - blackberry
+
+
+properties:
+  - name: source
+    platforms:
+      - blackberry
+  - name: dest
+    platforms:
+      - blackberry
+  - name: destPosition
+    platforms:
+      - blackberry
+  - name: sourcePosition
+    platforms:
+      - blackberry
+  - name: sourceLength
+    platforms:
+      - blackberry
+  - name: charset
+    platforms:
+      - blackberry

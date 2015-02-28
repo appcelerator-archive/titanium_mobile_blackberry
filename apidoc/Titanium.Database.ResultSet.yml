@@ -1,0 +1,30 @@
+name: Titanium.Database.ResultSet
+platforms:
+  - blackberry
+
+methods:
+  - name: close
+    platforms:
+      - blackberry
+  - name: field
+    platforms:
+      - blackberry
+  - name: fieldByName
+    platforms:
+      - blackberry
+  - name: fieldCount
+    platforms:
+      - blackberry
+  - name: isValidRow
+    platforms:
+      - blackberry
+  - name: next
+    platforms:
+      - blackberry
+properties:
+  - name: fieldCount
+    platforms:
+      - blackberry
+  - name: rowCount
+    platforms:
+      - blackberry

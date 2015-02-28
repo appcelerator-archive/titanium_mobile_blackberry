@@ -1,0 +1,9 @@
+name: CloudFriendRequestsResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: friend_requests
+    platforms:
+      - blackberry

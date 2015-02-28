@@ -1,0 +1,12 @@
+name: DecodeNumberDict
+platforms:
+  - blackberry
+
+
+properties:
+  - name: source
+    platforms:
+      - blackberry
+  - name: type
+    platforms:
+      - blackberry

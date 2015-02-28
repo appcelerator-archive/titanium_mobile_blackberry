@@ -1,0 +1,33 @@
+name: Titanium.UI.TabGroup
+platforms:
+  - blackberry
+
+methods:
+  - name: addTab
+    platforms:
+      - blackberry
+  - name: close
+    platforms:
+      - blackberry
+  - name: getActiveTab
+    platforms:
+      - blackberry
+  - name: open
+    platforms:
+      - blackberry
+  - name: removeTab
+    platforms:
+      - blackberry
+  - name: setActiveTab
+    platforms:
+      - blackberry
+  - name: getTabs
+    platforms:
+      - blackberry
+properties:
+  - name: activeTab
+    platforms:
+      - blackberry
+  - name: tabs
+    platforms:
+      - blackberry

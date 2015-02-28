@@ -1,0 +1,39 @@
+name: Titanium.Gesture
+platforms:
+  - blackberry
+events:
+  - name: orientationchange
+    platforms:
+      - blackberry
+  - name: shake
+    platforms:
+      - blackberry
+methods:
+  - name: isLandscape
+    platforms:
+      - blackberry
+  - name: isPortrait
+    platforms:
+      - blackberry
+  - name: isFaceUp
+    summary: Returns whether current window is considered face up by the device.
+    description: "Value returns `true` if in face up else `false`."
+    returns:
+      type: Boolean
+    platforms:
+      - blackberry
+    since:
+      blackberry: 3.1.2
+  - name: isFaceDown
+    summary: Returns whether current window is considered face down by the device.
+    description: "Value returns `true` if in face down else `false`."
+    returns:
+      type: Boolean
+    platforms:
+      - blackberry
+    since:
+      blackberry: 3.1.2
+properties:
+  - name: orientation
+    platforms:
+      - blackberry

@@ -1,0 +1,33 @@
+name: Titanium.UI.TableView
+platforms:
+  - blackberry
+events:
+  - name: click
+    platforms:
+      - blackberry
+  - name: singletap
+    platforms:
+      - blackberry
+  - name: touchend
+    platforms:
+      - blackberry
+methods:
+  - name: appendRow
+    platforms:
+      - blackberry
+  - name: scrollToIndex
+    platforms:
+      - blackberry
+  - name: setData
+    platforms:
+      - blackberry
+  - name: updateRow
+    platforms:
+      - blackberry
+properties:
+  - name: backgroundColor
+    platforms:
+      - blackberry
+  - name: data
+    platforms:
+      - blackberry

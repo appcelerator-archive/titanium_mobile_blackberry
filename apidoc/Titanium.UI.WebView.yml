@@ -1,0 +1,42 @@
+name: Titanium.UI.WebView
+platforms:
+  - blackberry
+events:
+  - name: beforeload
+    platforms:
+      - blackberry
+  - name: error
+    platforms:
+      - blackberry
+  - name: load
+    platforms:
+      - blackberry
+methods:
+  - name: setHtml
+    platforms:
+      - blackberry
+  - name: canGoBack
+    platforms:
+      - blackberry
+  - name: canGoForward
+    platforms:
+      - blackberry
+  - name: evalJS
+    platforms:
+      - blackberry
+  - name: goBack
+    platforms:
+      - blackberry
+  - name: goForward
+    platforms:
+      - blackberry
+  - name: reload
+    platforms:
+      - blackberry
+properties:
+  - name: html
+    platforms:
+      - blackberry
+  - name: url
+    platforms:
+      - blackberry

@@ -1,0 +1,57 @@
+name: Titanium.UI.TextField
+platforms:
+  - blackberry
+events:
+  - name: blur
+    platforms:
+      - blackberry
+  - name: change
+    platforms:
+      - blackberry
+  - name: return
+    platforms:
+      - blackberry
+methods:
+  - name: blur
+    platforms:
+      - blackberry
+  - name: focus
+    platforms:
+      - blackberry
+  - name: hasText
+    platforms:
+      - blackberry
+properties:
+  - name: enabled
+    summary: Determines whether the field is enabled.
+    description: "Set to `true` to enable or `false` to disable the view.\n\n<strong>Note:</strong> This property is deprecated on Android. Use [touchEnabled](Titanium.UI.View.touchEnabled) property instead.\n"
+    default: true
+    type: Boolean
+    platforms:
+      - blackberry
+    since:
+      blackberry: 3.1.2
+  - name: color
+    platforms:
+      - blackberry
+  - name: editable
+    platforms:
+      - blackberry
+  - name: font
+    platforms:
+      - blackberry
+  - name: hintText
+    platforms:
+      - blackberry
+  - name: keyboardType
+    platforms:
+      - blackberry
+  - name: passwordMask
+    platforms:
+      - blackberry
+  - name: returnKeyType
+    platforms:
+      - blackberry
+  - name: value
+    platforms:
+      - blackberry

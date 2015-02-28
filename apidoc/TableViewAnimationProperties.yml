@@ -1,0 +1,15 @@
+name: TableViewAnimationProperties
+platforms:
+  - blackberry
+
+
+properties:
+  - name: animated
+    platforms:
+      - blackberry
+  - name: animationStyle
+    platforms:
+      - blackberry
+  - name: position
+    platforms:
+      - blackberry

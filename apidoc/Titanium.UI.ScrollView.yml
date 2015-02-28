@@ -1,0 +1,15 @@
+name: Titanium.UI.ScrollView
+platforms:
+  - blackberry
+events:
+  - name: scroll
+    platforms:
+      - blackberry
+
+properties:
+  - name: contentHeight
+    platforms:
+      - blackberry
+  - name: contentWidth
+    platforms:
+      - blackberry

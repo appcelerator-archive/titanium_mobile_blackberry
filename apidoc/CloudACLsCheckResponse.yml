@@ -1,0 +1,9 @@
+name: CloudACLsCheckResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: permission
+    platforms:
+      - blackberry

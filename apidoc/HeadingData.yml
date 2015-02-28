@@ -1,0 +1,15 @@
+name: HeadingData
+platforms:
+  - blackberry
+
+
+properties:
+  - name: accuracy
+    platforms:
+      - blackberry
+  - name: magneticHeading
+    platforms:
+      - blackberry
+  - name: timestamp
+    platforms:
+      - blackberry

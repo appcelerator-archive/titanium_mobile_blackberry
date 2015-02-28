@@ -1,0 +1,12 @@
+name: CloudUsersSecureResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: accessToken
+    platforms:
+      - blackberry
+  - name: expiresIn
+    platforms:
+      - blackberry

@@ -1,0 +1,21 @@
+name: CloudResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: success
+    platforms:
+      - blackberry
+  - name: error
+    platforms:
+      - blackberry
+  - name: meta
+    platforms:
+      - blackberry
+  - name: code
+    platforms:
+      - blackberry
+  - name: message
+    platforms:
+      - blackberry

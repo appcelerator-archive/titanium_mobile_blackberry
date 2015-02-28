@@ -1,0 +1,21 @@
+name: Titanium.Contacts
+platforms:
+  - blackberry
+
+methods:
+  - name: createPerson
+    platforms:
+      - blackberry
+  - name: getAllPeople
+    platforms:
+      - blackberry
+  - name: getPeopleWithName
+    platforms:
+      - blackberry
+  - name: getPersonByID
+    platforms:
+      - blackberry
+  - name: removePerson
+    platforms:
+      - blackberry
+

@@ -1,0 +1,12 @@
+name: MediaScannerResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: path
+    platforms:
+      - blackberry
+  - name: uri
+    platforms:
+      - blackberry
