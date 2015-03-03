@@ -1,0 +1,9 @@
+name: Titanium.Accelerometer
+platforms:
+  - blackberry
+events:
+  - name: update
+    platforms:
+      - blackberry
+
+

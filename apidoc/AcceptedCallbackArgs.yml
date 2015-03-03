@@ -1,0 +1,12 @@
+name: AcceptedCallbackArgs
+platforms:
+  - blackberry
+
+
+properties:
+  - name: socket
+    platforms:
+      - blackberry
+  - name: inbound
+    platforms:
+      - blackberry

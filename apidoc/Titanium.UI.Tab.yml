@@ -1,0 +1,30 @@
+name: Titanium.UI.Tab
+platforms:
+  - blackberry
+events:
+  - name: click
+    platforms:
+      - blackberry
+methods:
+  - name: open
+    platforms:
+      - blackberry
+  - name: close
+    platforms:
+      - blackberry
+  - name: setWindow
+    platforms:
+      - blackberry
+properties:
+  - name: badge
+    platforms:
+      - blackberry
+  - name: icon
+    platforms:
+      - blackberry
+  - name: title
+    platforms:
+      - blackberry
+  - name: window
+    platforms:
+      - blackberry

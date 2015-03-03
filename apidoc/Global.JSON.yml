@@ -1,0 +1,12 @@
+name: Global.JSON
+platforms:
+  - blackberry
+
+methods:
+  - name: stringify
+    platforms:
+      - blackberry
+  - name: parse
+    platforms:
+      - blackberry
+

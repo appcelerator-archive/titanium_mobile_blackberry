@@ -1,0 +1,42 @@
+name: Titanium.UI.Animation
+platforms:
+  - blackberry
+events:
+  - name: complete
+    platforms:
+      - blackberry
+  - name: start
+    platforms:
+      - blackberry
+
+properties:
+  - name: bottom
+    platforms:
+      - blackberry
+  - name: delay
+    platforms:
+      - blackberry
+  - name: duration
+    platforms:
+      - blackberry
+  - name: height
+    platforms:
+      - blackberry
+  - name: left
+    platforms:
+      - blackberry
+  - name: opacity
+    platforms:
+      - blackberry
+  - name: repeat
+    platforms:
+      - blackberry
+  - name: right
+    platforms:
+      - blackberry
+  - name: top
+    platforms:
+      - blackberry
+  - name: width
+    platforms:
+      - blackberry

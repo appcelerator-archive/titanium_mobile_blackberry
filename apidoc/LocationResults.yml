@@ -1,0 +1,9 @@
+name: LocationResults
+platforms:
+  - blackberry
+
+
+properties:
+  - name: coords
+    platforms:
+      - blackberry

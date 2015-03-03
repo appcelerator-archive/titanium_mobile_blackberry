@@ -1,0 +1,27 @@
+name: Titanium.Cloud.ACLs
+platforms:
+  - blackberry
+
+methods:
+  - name: create
+    platforms:
+      - blackberry
+  - name: update
+    platforms:
+      - blackberry
+  - name: show
+    platforms:
+      - blackberry
+  - name: remove
+    platforms:
+      - blackberry
+  - name: addUser
+    platforms:
+      - blackberry
+  - name: removeUser
+    platforms:
+      - blackberry
+  - name: checkUser
+    platforms:
+      - blackberry
+

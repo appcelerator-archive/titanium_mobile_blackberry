@@ -1,0 +1,9 @@
+name: CloudChatGroupsResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: chat_groups
+    platforms:
+      - blackberry

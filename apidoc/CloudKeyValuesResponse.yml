@@ -1,0 +1,9 @@
+name: CloudKeyValuesResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: keyvalues
+    platforms:
+      - blackberry

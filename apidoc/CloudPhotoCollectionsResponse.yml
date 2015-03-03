@@ -1,0 +1,9 @@
+name: CloudPhotoCollectionsResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: collections
+    platforms:
+      - blackberry

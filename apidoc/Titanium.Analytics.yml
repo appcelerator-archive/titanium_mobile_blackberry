@@ -1,0 +1,12 @@
+name: Titanium.Analytics
+platforms:
+  - blackberry
+
+methods:
+  - name: addEvent
+    platforms:
+      - blackberry
+  - name: featureEvent
+    platforms:
+      - blackberry
+

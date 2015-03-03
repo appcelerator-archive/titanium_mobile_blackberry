@@ -1,0 +1,12 @@
+name: CloudPushNotificationConfig
+platforms:
+  - blackberry
+
+
+properties:
+  - name: success
+    platforms:
+      - blackberry
+  - name: error
+    platforms:
+      - blackberry

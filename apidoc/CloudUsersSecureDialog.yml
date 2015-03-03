@@ -1,0 +1,9 @@
+name: CloudUsersSecureDialog
+platforms:
+  - blackberry
+
+
+properties:
+  - name: title
+    platforms:
+      - blackberry

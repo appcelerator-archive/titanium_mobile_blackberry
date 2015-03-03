@@ -1,0 +1,9 @@
+name: CloudReviewsResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: reviews
+    platforms:
+      - blackberry

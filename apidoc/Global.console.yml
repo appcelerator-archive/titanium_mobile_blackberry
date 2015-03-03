@@ -1,0 +1,21 @@
+name: Global.console
+platforms:
+  - blackberry
+
+methods:
+  - name: log
+    platforms:
+      - blackberry
+  - name: info
+    platforms:
+      - blackberry
+  - name: warn
+    platforms:
+      - blackberry
+  - name: error
+    platforms:
+      - blackberry
+  - name: debug
+    platforms:
+      - blackberry
+

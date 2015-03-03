@@ -1,0 +1,9 @@
+name: HeadingResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: heading
+    platforms:
+      - blackberry

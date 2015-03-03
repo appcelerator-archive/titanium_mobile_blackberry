@@ -1,0 +1,21 @@
+name: Titanium.Cloud.Friends
+platforms:
+  - blackberry
+
+methods:
+  - name: add
+    platforms:
+      - blackberry
+  - name: requests
+    platforms:
+      - blackberry
+  - name: approve
+    platforms:
+      - blackberry
+  - name: remove
+    platforms:
+      - blackberry
+  - name: search
+    platforms:
+      - blackberry
+

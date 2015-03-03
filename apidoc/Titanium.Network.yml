@@ -1,0 +1,21 @@
+name: Titanium.Network
+platforms:
+  - blackberry
+events:
+  - name: change
+    platforms:
+      - blackberry
+methods:
+  - name: encodeURIComponent
+    platforms:
+      - blackberry
+properties:
+  - name: networkType
+    platforms:
+      - blackberry
+  - name: networkTypeName
+    platforms:
+      - blackberry
+  - name: online
+    platforms:
+      - blackberry

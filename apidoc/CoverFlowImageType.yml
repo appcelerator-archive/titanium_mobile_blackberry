@@ -1,0 +1,15 @@
+name: CoverFlowImageType
+platforms:
+  - blackberry
+
+
+properties:
+  - name: image
+    platforms:
+      - blackberry
+  - name: width
+    platforms:
+      - blackberry
+  - name: height
+    platforms:
+      - blackberry

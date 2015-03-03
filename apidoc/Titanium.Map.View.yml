@@ -1,0 +1,42 @@
+name: Titanium.Map.View
+platforms:
+  - blackberry
+events:
+  - name: click
+    platforms:
+      - blackberry
+  - name: regionchanged
+    platforms:
+      - blackberry
+methods:
+  - name: addAnnotation
+    platforms:
+      - blackberry
+  - name: removeAnnotation
+    platforms:
+      - blackberry
+  - name: selectAnnotation
+    platforms:
+      - blackberry
+properties:
+  - name: annotations
+    platforms:
+      - blackberry
+  - name: mapType
+    platforms:
+      - blackberry
+  - name: region
+    platforms:
+      - blackberry
+  - name: regionFit
+    platforms:
+      - blackberry
+  - name: userLocation
+    platforms:
+      - blackberry
+  - name: latitudeDelta
+    platforms:
+      - blackberry
+  - name: longitudeDelta
+    platforms:
+      - blackberry

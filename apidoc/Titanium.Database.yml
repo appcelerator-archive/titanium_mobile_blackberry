@@ -1,0 +1,9 @@
+name: Titanium.Database
+platforms:
+  - blackberry
+
+methods:
+  - name: open
+    platforms:
+      - blackberry
+

@@ -1,0 +1,33 @@
+name: Titanium.Cloud.Messages
+platforms:
+  - blackberry
+
+methods:
+  - name: create
+    platforms:
+      - blackberry
+  - name: reply
+    platforms:
+      - blackberry
+  - name: show
+    platforms:
+      - blackberry
+  - name: showInbox
+    platforms:
+      - blackberry
+  - name: showSent
+    platforms:
+      - blackberry
+  - name: showThreads
+    platforms:
+      - blackberry
+  - name: showThread
+    platforms:
+      - blackberry
+  - name: remove
+    platforms:
+      - blackberry
+  - name: removeThread
+    platforms:
+      - blackberry
+

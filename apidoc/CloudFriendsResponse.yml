@@ -1,0 +1,9 @@
+name: CloudFriendsResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: users
+    platforms:
+      - blackberry

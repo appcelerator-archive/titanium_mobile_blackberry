@@ -1,0 +1,47 @@
+name: Titanium.UI.Window
+platforms:
+  - blackberry
+events:
+  - name: focus
+    platforms:
+      - blackberry
+  - name: blur
+    platforms:
+      - blackberry
+  - name: close
+    platforms:
+      - blackberry
+  - name: open
+    platforms:
+      - blackberry
+methods:
+  - name: close
+    platforms:
+      - blackberry
+  - name: open
+    platforms:
+      - blackberry
+properties:
+  - name: backgroundColor
+    platforms:
+      - blackberry
+  - name: bottom
+    platforms:
+      - blackberry
+  - name: left
+    platforms:
+      - blackberry
+  - name: opacity
+    platforms:
+      - blackberry
+  - name: right
+    platforms:
+      - blackberry
+  - name: top
+    platforms:
+      - blackberry
+  - name: title
+    description: |
+        On BlackBerry, this property automatically creates a `navBar` and sets the title on it.
+    platforms:
+      - blackberry

@@ -1,0 +1,9 @@
+name: PlayerQueue
+platforms:
+  - blackberry
+
+
+properties:
+  - name: items
+    platforms:
+      - blackberry

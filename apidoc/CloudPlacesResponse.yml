@@ -1,0 +1,9 @@
+name: CloudPlacesResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: places
+    platforms:
+      - blackberry

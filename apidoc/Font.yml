@@ -1,0 +1,18 @@
+name: Font
+platforms:
+  - blackberry
+
+
+properties:
+  - name: fontFamily
+    platforms:
+      - blackberry
+  - name: fontSize
+    platforms:
+      - blackberry
+  - name: fontWeight
+    platforms:
+      - blackberry
+  - name: fontStyle
+    platforms:
+      - blackberry

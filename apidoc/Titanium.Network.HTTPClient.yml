@@ -1,0 +1,87 @@
+name: Titanium.Network.HTTPClient
+platforms:
+  - blackberry
+
+methods:
+  - name: abort
+    platforms:
+      - blackberry
+  - name: addAuthFactory
+    platforms:
+      - blackberry
+  - name: getResponseHeader
+    platforms:
+      - blackberry
+  - name: open
+    platforms:
+      - blackberry
+  - name: send
+    platforms:
+      - blackberry
+  - name: setRequestHeader
+    platforms:
+      - blackberry
+  - name: setTimeout
+    platforms:
+      - blackberry
+properties:
+  - name: DONE
+    platforms:
+      - blackberry
+  - name: HEADERS_RECEIVED
+    platforms:
+      - blackberry
+  - name: LOADING
+    platforms:
+      - blackberry
+  - name: OPENED
+    platforms:
+      - blackberry
+  - name: UNSENT
+    platforms:
+      - blackberry
+  - name: connected
+    platforms:
+      - blackberry
+  - name: connectionType
+    platforms:
+      - blackberry
+  - name: location
+    platforms:
+      - blackberry
+  - name: ondatastream
+    platforms:
+      - blackberry
+  - name: onerror
+    platforms:
+      - blackberry
+  - name: onload
+    platforms:
+      - blackberry
+  - name: onreadystatechange
+    platforms:
+      - blackberry
+  - name: onsendstream
+    platforms:
+      - blackberry
+  - name: readyState
+    platforms:
+      - blackberry
+  - name: responseData
+    platforms:
+      - blackberry
+  - name: responseText
+    platforms:
+      - blackberry
+  - name: responseXML
+    platforms:
+      - blackberry
+  - name: status
+    platforms:
+      - blackberry
+  - name: statusText
+    platforms:
+      - blackberry
+  - name: timeout
+    platforms:
+      - blackberry

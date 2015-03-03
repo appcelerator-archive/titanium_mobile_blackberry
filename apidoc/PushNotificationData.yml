@@ -1,0 +1,12 @@
+name: PushNotificationData
+platforms:
+  - blackberry
+
+
+properties:
+  - name: data
+    platforms:
+      - blackberry
+  - name: inBackground
+    platforms:
+      - blackberry

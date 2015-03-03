@@ -1,0 +1,33 @@
+name: Titanium.Cloud.Events
+platforms:
+  - blackberry
+
+methods:
+  - name: create
+    platforms:
+      - blackberry
+  - name: show
+    platforms:
+      - blackberry
+  - name: showOccurrences
+    platforms:
+      - blackberry
+  - name: query
+    platforms:
+      - blackberry
+  - name: queryOccurrences
+    platforms:
+      - blackberry
+  - name: search
+    platforms:
+      - blackberry
+  - name: searchOccurrences
+    platforms:
+      - blackberry
+  - name: remove
+    platforms:
+      - blackberry
+  - name: update
+    platforms:
+      - blackberry
+

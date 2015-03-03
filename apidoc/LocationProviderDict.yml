@@ -1,0 +1,15 @@
+name: LocationProviderDict
+platforms:
+  - blackberry
+
+
+properties:
+  - name: accuracy
+    platforms:
+      - blackberry
+  - name: name
+    platforms:
+      - blackberry
+  - name: power
+    platforms:
+      - blackberry

@@ -1,0 +1,24 @@
+name: CameraMediaItemType
+platforms:
+  - blackberry
+
+
+properties:
+  - name: success
+    platforms:
+      - blackberry
+  - name: error
+    platforms:
+      - blackberry
+  - name: code
+    platforms:
+      - blackberry
+  - name: media
+    platforms:
+      - blackberry
+  - name: mediaType
+    platforms:
+      - blackberry
+  - name: cropRect
+    platforms:
+      - blackberry

@@ -1,0 +1,107 @@
+name: Titanium.UI.View
+platforms:
+  - blackberry
+events:
+  - name: click
+    platforms:
+      - blackberry
+  - name: postlayout
+    platforms:
+      - blackberry
+  - name: singletap
+    platforms:
+      - blackberry
+  - name: touchcancel
+    platforms:
+      - blackberry
+  - name: touchend
+    platforms:
+      - blackberry
+  - name: touchmove
+    platforms:
+      - blackberry
+  - name: touchstart
+    platforms:
+      - blackberry
+methods:
+  - name: add
+    platforms:
+      - blackberry
+  - name: animate
+    platforms:
+      - blackberry
+  - name: finishLayout
+    platforms:
+      - blackberry
+  - name: hide
+    platforms:
+      - blackberry
+  - name: remove
+    platforms:
+      - blackberry
+  - name: removeAllChildren
+    platforms:
+      - blackberry
+    since:
+      blackberry: 3.3.0
+  - name: show
+    platforms:
+      - blackberry
+  - name: startLayout
+    platforms:
+      - blackberry
+  - name: updateLayout
+    platforms:
+      - blackberry
+properties:
+  - name: backgroundColor
+    platforms:
+      - blackberry
+  - name: backgroundImage
+    platforms:
+      - blackberry
+  - name: bottom
+    platforms:
+      - blackberry
+  - name: children
+    platforms:
+      - blackberry
+  - name: enabled
+    summary: Determines if the view is enabled or disabled.
+    description: "Set to `true` to enable or `false` to disable the view.\n\n<strong>Note:</strong> This property is deprecated on Android. Use [touchEnabled](Titanium.UI.View.touchEnabled) property instead.\n"
+    default: Enabled by default. (Property value may be undefined.)
+    type: Boolean
+    platforms:
+      - blackberry
+    since:
+      blackberry: 3.1.2
+  - name: height
+    platforms:
+      - blackberry
+  - name: left
+    platforms:
+      - blackberry
+  - name: layout
+    platforms:
+      - blackberry
+  - name: opacity
+    platforms:
+      - blackberry
+  - name: right
+    platforms:
+      - blackberry
+  - name: top
+    platforms:
+      - blackberry
+  - name: touchEnabled
+    platforms:
+      - blackberry
+  - name: visible
+    platforms:
+      - blackberry
+  - name: width
+    platforms:
+      - blackberry
+  - name: zIndex
+    platforms:
+      - blackberry

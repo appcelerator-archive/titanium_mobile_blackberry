@@ -1,0 +1,24 @@
+name: MapLocationType
+platforms:
+  - blackberry
+
+
+properties:
+  - name: longitude
+    platforms:
+      - blackberry
+  - name: latitude
+    platforms:
+      - blackberry
+  - name: longitudeDelta
+    platforms:
+      - blackberry
+  - name: latitudeDelta
+    platforms:
+      - blackberry
+  - name: animate
+    platforms:
+      - blackberry
+  - name: regionFit
+    platforms:
+      - blackberry

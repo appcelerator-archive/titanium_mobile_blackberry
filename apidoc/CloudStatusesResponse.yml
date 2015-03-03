@@ -1,0 +1,9 @@
+name: CloudStatusesResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: statuses
+    platforms:
+      - blackberry

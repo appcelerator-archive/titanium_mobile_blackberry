@@ -1,0 +1,24 @@
+name: Titanium.UI.OptionDialog
+platforms:
+  - blackberry
+events:
+  - name: click
+    platforms:
+      - blackberry
+methods:
+  - name: show
+    platforms:
+      - blackberry
+  - name: hide
+    platforms:
+      - blackberry
+properties:
+  - name: options
+    platforms:
+      - blackberry
+  - name: selectedIndex
+    platforms:
+      - blackberry
+  - name: title
+    platforms:
+      - blackberry

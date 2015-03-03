@@ -1,0 +1,18 @@
+name: ImageAsCroppedDict
+platforms:
+  - blackberry
+
+
+properties:
+  - name: width
+    platforms:
+      - blackberry
+  - name: height
+    platforms:
+      - blackberry
+  - name: x
+    platforms:
+      - blackberry
+  - name: "y"
+    platforms:
+      - blackberry

@@ -1,0 +1,24 @@
+name: Titanium.Network.Socket
+platforms:
+  - blackberry
+
+methods:
+  - name: createTCP
+    platforms:
+      - blackberry
+properties:
+  - name: INITIALIZED
+    platforms:
+      - blackberry
+  - name: CONNECTED
+    platforms:
+      - blackberry
+  - name: LISTENING
+    platforms:
+      - blackberry
+  - name: CLOSED
+    platforms:
+      - blackberry
+  - name: ERROR
+    platforms:
+      - blackberry

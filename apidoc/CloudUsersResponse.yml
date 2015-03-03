@@ -1,0 +1,9 @@
+name: CloudUsersResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: users
+    platforms:
+      - blackberry

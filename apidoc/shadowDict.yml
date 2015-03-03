@@ -1,0 +1,15 @@
+name: shadowDict
+platforms:
+  - blackberry
+
+
+properties:
+  - name: blurRadius
+    platforms:
+      - blackberry
+  - name: color
+    platforms:
+      - blackberry
+  - name: offset
+    platforms:
+      - blackberry

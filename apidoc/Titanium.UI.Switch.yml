@@ -1,0 +1,21 @@
+name: Titanium.UI.Switch
+platforms:
+  - blackberry
+events:
+  - name: change
+    platforms:
+      - blackberry
+
+properties:
+  - name: enabled
+    summary: Determines whether the switch is enabled.
+    description: "Be careful not to confused this with the [value](Titanium.UI.Switch.value) property, which \nis used to turn the switch on and off. \n\nSet to `true` to enable or `false` to disable the switch.\n"
+    default: undefined (equivalent to enabled)
+    type: Boolean
+    platforms:
+      - blackberry
+    since:
+      blackberry: 3.1.2
+  - name: value
+    platforms:
+      - blackberry

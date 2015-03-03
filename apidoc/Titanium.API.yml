@@ -1,0 +1,24 @@
+name: Titanium.API
+platforms:
+  - blackberry
+
+methods:
+  - name: debug
+    platforms:
+      - blackberry
+  - name: error
+    platforms:
+      - blackberry
+  - name: info
+    platforms:
+      - blackberry
+  - name: log
+    platforms:
+      - blackberry
+  - name: trace
+    platforms:
+      - blackberry
+  - name: warn
+    platforms:
+      - blackberry
+

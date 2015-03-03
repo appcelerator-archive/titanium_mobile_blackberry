@@ -1,0 +1,9 @@
+name: Titanium.Cloud.Clients
+platforms:
+  - blackberry
+
+methods:
+  - name: geolocate
+    platforms:
+      - blackberry
+

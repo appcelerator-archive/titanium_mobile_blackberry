@@ -1,0 +1,27 @@
+name: Titanium.UI.ScrollableView
+platforms:
+  - blackberry
+
+methods:
+  - name: addView
+    platforms:
+      - blackberry
+  - name: moveNext
+    platforms:
+      - blackberry
+  - name: movePrevious
+    platforms:
+      - blackberry
+  - name: removeView
+    platforms:
+      - blackberry
+  - name: scrollToView
+    platforms:
+      - blackberry
+properties:
+  - name: currentPage
+    platforms:
+      - blackberry
+  - name: views
+    platforms:
+      - blackberry

@@ -1,0 +1,21 @@
+name: Titanium.Cloud.KeyValues
+platforms:
+  - blackberry
+
+methods:
+  - name: append
+    platforms:
+      - blackberry
+  - name: get
+    platforms:
+      - blackberry
+  - name: increment
+    platforms:
+      - blackberry
+  - name: remove
+    platforms:
+      - blackberry
+  - name: set
+    platforms:
+      - blackberry
+

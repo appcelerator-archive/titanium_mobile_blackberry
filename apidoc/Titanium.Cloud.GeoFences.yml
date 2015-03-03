@@ -1,0 +1,20 @@
+name: Titanium.Cloud.GeoFences
+platforms:
+  - blackberry
+since:
+  blackberry: 3.2.1
+
+methods:
+  - name: create
+    platforms:
+      - blackberry
+  - name: query
+    platforms:
+      - blackberry
+  - name: remove
+    platforms:
+      - blackberry
+  - name: update
+    platforms:
+      - blackberry
+

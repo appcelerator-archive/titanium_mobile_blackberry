@@ -1,0 +1,24 @@
+name: Titanium.Cloud.Places
+platforms:
+  - blackberry
+
+methods:
+  - name: create
+    platforms:
+      - blackberry
+  - name: query
+    platforms:
+      - blackberry
+  - name: remove
+    platforms:
+      - blackberry
+  - name: search
+    platforms:
+      - blackberry
+  - name: show
+    platforms:
+      - blackberry
+  - name: update
+    platforms:
+      - blackberry
+

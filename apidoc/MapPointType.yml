@@ -1,0 +1,12 @@
+name: MapPointType
+platforms:
+  - blackberry
+
+
+properties:
+  - name: longitude
+    platforms:
+      - blackberry
+  - name: latitude
+    platforms:
+      - blackberry

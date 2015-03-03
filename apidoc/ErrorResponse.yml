@@ -1,0 +1,15 @@
+name: ErrorResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: success
+    platforms:
+      - blackberry
+  - name: error
+    platforms:
+      - blackberry
+  - name: code
+    platforms:
+      - blackberry

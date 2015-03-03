@@ -1,0 +1,15 @@
+name: MusicLibraryResponseType
+platforms:
+  - blackberry
+
+
+properties:
+  - name: representative
+    platforms:
+      - blackberry
+  - name: items
+    platforms:
+      - blackberry
+  - name: types
+    platforms:
+      - blackberry

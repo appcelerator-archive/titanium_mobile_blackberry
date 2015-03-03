@@ -1,0 +1,9 @@
+name: LocationCoordinatesFloor
+platforms:
+  - blackberry
+
+
+properties:
+  - name: level
+    platforms:
+      - blackberry

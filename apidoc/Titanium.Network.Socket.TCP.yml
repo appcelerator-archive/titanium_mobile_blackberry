@@ -1,0 +1,39 @@
+name: Titanium.Network.Socket.TCP
+platforms:
+  - blackberry
+
+methods:
+  - name: connect
+    platforms:
+      - blackberry
+  - name: listen
+    platforms:
+      - blackberry
+  - name: accept
+    platforms:
+      - blackberry
+properties:
+  - name: host
+    platforms:
+      - blackberry
+  - name: port
+    platforms:
+      - blackberry
+  - name: listenQueueSize
+    platforms:
+      - blackberry
+  - name: timeout
+    platforms:
+      - blackberry
+  - name: connected
+    platforms:
+      - blackberry
+  - name: error
+    platforms:
+      - blackberry
+  - name: accepted
+    platforms:
+      - blackberry
+  - name: state
+    platforms:
+      - blackberry

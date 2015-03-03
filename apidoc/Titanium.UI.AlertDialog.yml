@@ -1,0 +1,21 @@
+name: Titanium.UI.AlertDialog
+platforms:
+  - blackberry
+
+methods:
+  - name: show
+    platforms:
+      - blackberry
+  - name: hide
+    platforms:
+      - blackberry
+properties:
+  - name: message
+    platforms:
+      - blackberry
+  - name: title
+    platforms:
+      - blackberry
+  - name: ok
+    platforms:
+      - blackberry

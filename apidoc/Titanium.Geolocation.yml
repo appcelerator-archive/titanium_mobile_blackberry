@@ -1,0 +1,15 @@
+name: Titanium.Geolocation
+platforms:
+  - blackberry
+events:
+  - name: heading
+    platforms:
+      - blackberry
+  - name: location
+    platforms:
+      - blackberry
+
+properties:
+  - name: locationServicesEnabled
+    platforms:
+      - blackberry

@@ -1,0 +1,9 @@
+name: ConnectedCallbackArgs
+platforms:
+  - blackberry
+
+
+properties:
+  - name: socket
+    platforms:
+      - blackberry

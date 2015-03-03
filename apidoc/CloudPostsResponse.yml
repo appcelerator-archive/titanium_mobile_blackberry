@@ -1,0 +1,9 @@
+name: CloudPostsResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: posts
+    platforms:
+      - blackberry

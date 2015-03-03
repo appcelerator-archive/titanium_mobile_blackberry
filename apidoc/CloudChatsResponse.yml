@@ -1,0 +1,9 @@
+name: CloudChatsResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: chats
+    platforms:
+      - blackberry

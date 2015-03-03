@@ -1,0 +1,27 @@
+name: Global
+platforms:
+  - blackberry
+
+methods:
+  - name: alert
+    platforms:
+      - blackberry
+  - name: clearInterval
+    platforms:
+      - blackberry
+  - name: clearTimeout
+    platforms:
+      - blackberry
+  - name: L
+    platforms:
+      - blackberry
+  - name: require
+    platforms:
+      - blackberry
+  - name: setInterval
+    platforms:
+      - blackberry
+  - name: setTimeout
+    platforms:
+      - blackberry
+

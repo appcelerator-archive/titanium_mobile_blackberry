@@ -1,0 +1,36 @@
+name: Titanium.UI.TableViewRow
+platforms:
+  - blackberry
+events:
+  - name: click
+    platforms:
+      - blackberry
+  - name: touchcancel
+    platforms:
+      - blackberry
+  - name: touchend
+    platforms:
+      - blackberry
+  - name: touchmove
+    platforms:
+      - blackberry
+  - name: touchstart
+    platforms:
+      - blackberry
+
+properties:
+  - name: className
+    platforms:
+      - blackberry
+  - name: hasChild
+    platforms:
+      - blackberry
+  - name: leftImage
+    platforms:
+      - blackberry
+  - name: rightImage
+    platforms:
+      - blackberry
+  - name: title
+    platforms:
+      - blackberry

@@ -1,0 +1,18 @@
+name: Dimension
+platforms:
+  - blackberry
+
+
+properties:
+  - name: height
+    platforms:
+      - blackberry
+  - name: width
+    platforms:
+      - blackberry
+  - name: x
+    platforms:
+      - blackberry
+  - name: "y"
+    platforms:
+      - blackberry

@@ -1,0 +1,21 @@
+name: Titanium.Filesystem
+platforms:
+  - blackberry
+
+methods:
+  - name: getFile
+    platforms:
+      - blackberry
+properties:
+  - name: applicationDataDirectory
+    platforms:
+      - blackberry
+  - name: resourcesDirectory
+    platforms:
+      - blackberry
+  - name: tempDirectory
+    description: |
+        On BlackBerry, files in this directory *will* be deleted by the OS when the application
+        is shut down.
+    platforms:
+      - blackberry

@@ -1,0 +1,15 @@
+name: Titanium.Map
+platforms:
+  - blackberry
+
+
+properties:
+  - name: ANNOTATION_GREEN
+    platforms:
+      - blackberry
+  - name: ANNOTATION_PURPLE
+    platforms:
+      - blackberry
+  - name: ANNOTATION_RED
+    platforms:
+      - blackberry

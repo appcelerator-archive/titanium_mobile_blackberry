@@ -1,0 +1,9 @@
+name: CloudEventsResponse
+platforms:
+  - blackberry
+
+
+properties:
+  - name: events
+    platforms:
+      - blackberry

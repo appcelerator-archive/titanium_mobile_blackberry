@@ -1,0 +1,30 @@
+name: LocationCoordinates
+platforms:
+  - blackberry
+
+
+properties:
+  - name: latitude
+    platforms:
+      - blackberry
+  - name: longitude
+    platforms:
+      - blackberry
+  - name: altitude
+    platforms:
+      - blackberry
+  - name: accuracy
+    platforms:
+      - blackberry
+  - name: altitudeAccuracy
+    platforms:
+      - blackberry
+  - name: heading
+    platforms:
+      - blackberry
+  - name: speed
+    platforms:
+      - blackberry
+  - name: timestamp
+    platforms:
+      - blackberry
